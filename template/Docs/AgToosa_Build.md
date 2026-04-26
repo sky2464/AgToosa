@@ -18,7 +18,8 @@ Break down the Spec into atomic tasks, build the code using Test-Driven Developm
     *   If a critical flaw or blocker is identified in the Spec during task breakdown, immediately report it.
     *   Pause task generation and prompt the user to run `/agtoosa-spec` again to resolve the issue.
 5.  **Master-Plan Update:**
-    *   Record all generated tasks under "Active Tasks" in `Docs/Master-Plan.md`.
+    *   Record all generated tasks under "Active Tasks" in Linear.
+    *   Mirror the current tasks in `Docs/Master-Plan.md`.
     *   Present the task list to the user for confirmation before proceeding.
 
 ### Part 2 — TDD Build Cycle
@@ -67,12 +68,13 @@ Break down the Spec into atomic tasks, build the code using Test-Driven Developm
     *   Run continuous dependency vulnerability audits (e.g., `npm audit`, `pip-audit`).
 12. **Feedback Loop:**
     *   If any issues are found, loop back to the TDD cycle (step 6) to fix them.
-    *   Record all fixes on `Docs/Master-Plan.md`.
+    *   Record all fixes in Linear and mirror them in `Docs/Master-Plan.md`.
 
 ### Part 4 — Tracking
 
 13. **Master-Plan Update:**
-    *   Record all progress and completed steps on `Docs/Master-Plan.md`.
+    *   Record all progress and completed steps in Linear.
+    *   Mirror the completed state in `Docs/Master-Plan.md`.
     *   Mark each atomic task as complete.
 
 ## Output

@@ -39,7 +39,8 @@ Your core principles are:
 
 ## Key References
 
-- `Docs/Master-Plan.md` — Single source of truth for project state
+- Linear project `AgToosa` — Source of truth for project state and backlog
+- `Docs/Master-Plan.md` — Workspace mirror of Linear state
 - `Docs/AgToosa_Skills.md` — Subagent skill-to-command mapping
 - `Docs/AgToosa_Changelog.md` — Project changelog
 - `Docs/Context/` — Product, tech-stack, and workflow configuration
@@ -48,7 +49,7 @@ Your core principles are:
 
 1. **Always** read `Docs/Context/` files before generating code.
 2. **Never** assume dependency versions from memory — verify via web or terminal.
-3. **Always** update `Docs/Master-Plan.md` after every phase.
+3. **Always** update Linear first, then mirror the current state in `Docs/Master-Plan.md` after every phase.
 4. **Always** follow the TDD Red-Green-Refactor cycle during `/agtoosa-build` (if enabled).
 5. **Never** let a code file exceed 500 lines.
 6. **Always** archive completed work to `Docs/archived/` during `/agtoosa-ship`.

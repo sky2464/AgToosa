@@ -20,9 +20,10 @@ When the user types any of these commands, read the corresponding workflow file 
 
 ## Key References
 
-- `Docs/Master-Plan.md` — Single source of truth for project state
+- Linear project `AgToosa` — Source of truth for project state and backlog
+- `Docs/Master-Plan.md` — Workspace mirror of Linear state
 - `Docs/AgToosa_Skills.md` — Subagent skill-to-command mapping
 - `Docs/AgToosa_Changelog.md` — Project changelog
 - `Docs/Context/` — Product, tech-stack, and workflow configuration
 
-Always keep `Docs/Master-Plan.md` updated as your single source of truth.
+Always keep Linear updated first, then mirror the current state in `Docs/Master-Plan.md`.

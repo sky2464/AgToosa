@@ -43,7 +43,7 @@ One-time initialization that establishes project context, scans the codebase, va
         *   `workflow.md`: Sets team preferences (e.g., TDD enforcement, commit strategy, branch naming conventions, linting rules).
 4.  **Validation:**
     *   Verify that these files exist and are populated.
-    *   All subsequent `/agtoosa-spec`, `/agtoosa-build`, `/agtoosa-review`, and `/agtoosa-ship` commands MUST read these files.
+    *   All subsequent `/agtoosa-spec`, `/agtoosa-build`, `/agtoosa-review`, and `/agtoosa-ship` commands MUST read the Linear charter first and keep `Docs/Master-Plan.md` mirrored.
 
 ### Phase C — Codebase Onboarding
 
@@ -61,7 +61,8 @@ One-time initialization that establishes project context, scans the codebase, va
         *   `Docs/AgToosa_Claude.md` (Claude-specific instructions, if applicable)
         *   `Docs/AgToosa_Gemini.md` (Gemini-specific instructions, if applicable)
 9.  **Project Management Setup:**
-    *   Initialize `Docs/Master-Plan.md` with the identified Epics and an empty state for Specs and Tasks.
+    *   Initialize or update the Linear project charter with the identified Epics.
+    *   Mirror the current state in `Docs/Master-Plan.md` with an empty or current snapshot for Specs and Tasks.
     *   Initialize `Docs/AgToosa_Changelog.md`.
 
 ### Phase D — TDD Configuration
@@ -76,7 +77,7 @@ One-time initialization that establishes project context, scans the codebase, va
 
 ## Output
 *   Confirm initialization is complete.
-*   Present the updated `Master-Plan.md`.
+*   Present the updated Linear project record and the mirrored `Master-Plan.md`.
 *   Confirm all AI assistant config files are correctly wired to AgToosa.
 *   Explain: "From now on, use only **4 commands**: `/agtoosa-spec`, `/agtoosa-build`, `/agtoosa-review`, `/agtoosa-ship`."
 *   Ask the user if they are ready to run `/agtoosa-spec` for their first task.

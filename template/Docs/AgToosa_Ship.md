@@ -23,14 +23,15 @@ Deploy the completed feature, clean up the workspace, archive completed work, an
     *   Format: `[date] - [type] - [short description] - [spec reference]`.
 
 4.  **Master-Plan Pruning:**
-    *   Update `Docs/Master-Plan.md`.
+    *   Update Linear first.
+    *   Mirror the pruned state in `Docs/Master-Plan.md`.
     *   Keep only the high-level Epic description with a reference to the archived spec and changelog entry.
     *   Clear out the completed Tasks to reset for the next iteration.
 
 ### Part 3 — Suggest Next Story
 
 5.  **Next Steps Suggestion:**
-    *   Based on the overarching project goals (from `Docs/Context/product.md`) and the current state of `Master-Plan.md`, suggest the next logical Spec/Story for the team to tackle.
+    *   Based on the overarching project goals in Linear and the current mirrored state of `Master-Plan.md`, suggest the next logical Spec/Story for the team to tackle.
     *   Consider: open bugs, pending features, technical debt, and security improvements.
 
 ## Output

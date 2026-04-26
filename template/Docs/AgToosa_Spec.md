@@ -39,7 +39,8 @@ Transform a raw idea, feature, chore, or bug into a fully researched Specificati
     *   Generate a single file named `Docs/AgToosa_Spec-[short-name]-v[version].md`.
     *   This file contains BOTH the executable spec AND the architectural plan.
 8.  **Master-Plan Update:**
-    *   Link the newly generated Spec to the relevant Epic in `Docs/Master-Plan.md` under "Active Specifications & Plans".
+    *   Link the newly generated Spec to the relevant Epic in Linear.
+    *   Mirror the spec link in `Docs/Master-Plan.md` under "Active Specifications & Plans".
 
 ## Output
 *   Present the generated Spec (with embedded plan) to the user.

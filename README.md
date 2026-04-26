@@ -25,7 +25,7 @@ AgToosa is a **framework of markdown instructions** that transforms any AI codin
 - 🔒 **Security by Design** — STRIDE threat modeling, SBOM generation, PII redaction, sandboxed execution
 - 📋 **Spec-Driven** — Every feature starts with research, a formal specification, and an architectural plan
 - 🧪 **Test-Driven Development** — Red-Green-Refactor cycle enforced during build (inspired by [tdd-guard](https://github.com/nizos/tdd-guard))
-- 🧠 **Context-Aware** — The AI maintains project state via `Master-Plan.md` as a single source of truth
+- 🧠 **Context-Aware** — The AI maintains project state in Linear, with `Docs/Master-Plan.md` as the workspace mirror
 - 🔄 **4-Phase Lifecycle** — Spec → Build → Review → Ship
 - 🛡️ **Observable** — OpenTelemetry, structured logging, and distributed tracing by default
 
@@ -199,7 +199,7 @@ your-project/
     ├── AgToosa_Skills.md   # Subagent skill mapping
     ├── AgToosa_Claude.md   # Claude-specific config
     ├── AgToosa_Gemini.md   # Gemini-specific config
-    ├── Master-Plan.md        # Single source of truth for project state
+    ├── Master-Plan.md        # Workspace mirror of the Linear project state and backlog
     ├── AgToosa_Changelog.md    # Auto-maintained changelog
     ├── Context/              # Project context (created by /agtoosa-init)
     └── archived/             # Completed specs & plans

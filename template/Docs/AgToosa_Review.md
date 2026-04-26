@@ -21,7 +21,7 @@ To ensure comprehensive quality and security, the agent must simulate the follow
     *   Confirm test coverage meets acceptable thresholds.
 
 3.  **CEO / Product Owner (Alignment):**
-    *   Review the completed work against `Docs/Context/product.md` and the initial Spec to ensure feature completeness and user value.
+    *   Review the completed work against the Linear project charter and the initial Spec to ensure feature completeness and user value.
     *   Verify the feature delivers on the promised acceptance criteria.
 
 4.  **QA Lead:**
