@@ -7,6 +7,8 @@ This file mirrors the Linear project `AgToosa`. Update Linear first, then mirror
 - Linear project: AgToosa
 - Linear charter: AgToosa Project Operating Charter
 - Project URL: https://linear.app/devn1/project/agtoosa-515274d0e8fd
+- GitHub repo: https://github.com/sky2464/AgToosa
+- Current milestone: Unreleased
 
 ## Completed So Far
 
@@ -14,26 +16,26 @@ This file mirrors the Linear project `AgToosa`. Update Linear first, then mirror
 - Canonical generator script renamed to `agtoosa.sh`.
 - Template workflow docs renamed to `AgToosa_*`.
 - Linear established as the source of truth and operating manager.
-- The Linear charter now records the current state and backlog queue.
+- The Linear charter now records the current state and resolved issues.
 - The charter itself was created to hold the operating baseline and roadmap.
 
-## Next Backlog
+## Resolved Issues
 
 ### Feature
 - DEV-77 - Auto-sync AgToosa progress into Linear
-  - Goal: make Linear reflect completed work, active work, and next steps automatically.
+  - Resolved by keeping Linear as the source of truth and mirroring completed work into the workspace.
 
 ### Chore
 - DEV-78 - Turn the project charter into a living roadmap
-  - Goal: keep the charter updated with a Done / Now / Next operating view.
+  - Resolved by giving the charter a completed-so-far view, operating rules, and an update log.
 
 ### Bug
 - DEV-79 - Project overview does not surface completed work clearly
-  - Goal: make completed work visible at a glance in the project view.
+  - Resolved by expanding the project and mirror with an explicit completed-so-far section.
 
 ### Fix
 - DEV-76 - Add a canonical next-step backlog section
-  - Goal: keep a durable queue for the next item in each work type.
+  - Resolved by adding the canonical mirror section and then clearing the current cycle backlog.
 
 ## Operating Rules
 
@@ -45,13 +47,15 @@ This file mirrors the Linear project `AgToosa`. Update Linear first, then mirror
 ## Update Log
 
 - 2026-04-26: Linear designated as the source of truth.
-- 2026-04-26: Current baseline and next backlog queue recorded.
+- 2026-04-26: Current baseline and resolved issues recorded.
+- 2026-04-26: The current cycle backlog was cleared at the process level.
+- 2026-04-26: GitHub repo linked in Linear and the Unreleased milestone created.
 
 ## Active Specifications & Plans
 *(No active specifications in progress. Run `/agtoosa-spec` to create a new one.)*
 
 ## Active Tasks
-*(No active tasks currently planned. Tasks are generated within the `/agtoosa-build` phase or mirrored from Linear once a spec is approved.)*
+*(No active tasks currently planned. Record the next feature, chore, bug, or fix in Linear before updating the mirror.)*
 
 ## Completed (Archived)
 *(Completed specs are moved to `Docs/archived/` during `/agtoosa-ship`. See `AgToosa_Changelog.md` for history.)*

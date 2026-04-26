@@ -199,7 +199,7 @@ your-project/
     ├── AgToosa_Skills.md   # Subagent skill mapping
     ├── AgToosa_Claude.md   # Claude-specific config
     ├── AgToosa_Gemini.md   # Gemini-specific config
-    ├── Master-Plan.md        # Workspace mirror of the Linear project state and backlog
+    ├── Master-Plan.md        # Workspace mirror of the Linear project state
     ├── AgToosa_Changelog.md    # Auto-maintained changelog
     ├── Context/              # Project context (created by /agtoosa-init)
     └── archived/             # Completed specs & plans
