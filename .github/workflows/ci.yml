@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: './'
+          ignore: 'template'
+
+      - name: Markdown Lint
+        uses: DavidAnson/github-lint-action@v1
+        with:
+          files: |
+            **/*.md
+            **/.cursorrules
+            **/.windsurfrules
+
+      - name: Validate Template Completeness
+        run: |
+          # Extract all FILES from install.sh and verify they exist in template/
+          MISSING=0
+          FILES=$(grep -Pzo 'FILES=\(\n(  ".*"\n)+\)' install.sh | grep -oP '".*"' | tr -d '"')
+          
+          for f in $FILES; do
+            if [ ! -f "template/$f" ]; then
+              echo "❌ Error: File '$f' listed in install.sh missing from template/"
+              MISSING=$((MISSING + 1))
+            fi
+          done
+          
+          if [ $MISSING -gt 0 ]; then
+            echo "🔥 Total missing files: $MISSING"
+            exit 1
+          fi
+          echo "✅ All template files verified."
