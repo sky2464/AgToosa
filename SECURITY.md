@@ -30,10 +30,10 @@ AgToosa is a framework of markdown instructions — it does not execute code its
 
 | Feature | Description |
 |---------|-------------|
-| **STRIDE Threat Modeling** | Every `/plan` phase requires Data Flow Diagrams and STRIDE analysis before code is written |
-| **Sandboxed Execution** | `/build` and `/test` phases mandate ephemeral, isolated environments (Docker/Firecracker) |
-| **SBOM Generation** | Software Bill of Materials generated during `/build` for supply chain transparency |
-| **SAST/DAST Scanning** | Static and dynamic analysis (Semgrep, CodeQL, Gitleaks) integrated in `/test` and `/review` |
+| **STRIDE Threat Modeling** | Every `/agtoosa-spec` phase requires Data Flow Diagrams and STRIDE analysis before code is written |
+| **Sandboxed Execution** | `/agtoosa-build` mandates ephemeral, isolated environments (Docker/Firecracker) |
+| **SBOM Generation** | Software Bill of Materials generated during `/agtoosa-build` for supply chain transparency |
+| **SAST/DAST Scanning** | Static and dynamic analysis (Semgrep, CodeQL, Gitleaks) integrated in `/agtoosa-build` and `/agtoosa-review` |
 | **IaC Security Scanning** | Checkov/tfsec for infrastructure-as-code compliance |
 | **PII Redaction** | Agent instructions mandate scrubbing of PII and secrets before LLM context |
 | **Prompt Injection Guard** | Input sanitization to protect against malicious prompt injection |
