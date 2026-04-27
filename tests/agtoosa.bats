@@ -34,10 +34,12 @@ teardown() {
 }
 
 @test "preflight fails without template/ directory" {
-  # Run from a directory that has no template/
-  run bash -c "cd /tmp && bash '$SCRIPT' --version"
-  # --version exits 0 before the preflight check, so test the actual preflight via a different path
-  run bash -c "cd /tmp && echo -e '$TEST_PROJECT\n1\nn\n' | bash '$SCRIPT' 2>&1 || true"
+  # Copy the script to /tmp where there is no sibling template/ directory
+  local tmp_script
+  tmp_script="$(mktemp /tmp/agtoosa-preflight-test-XXXXXX.sh)"
+  cp "$SCRIPT" "$tmp_script"
+  run bash "$tmp_script" 2>&1 || true
+  rm -f "$tmp_script"
   [[ "$output" == *"template/"* ]]
 }
 
@@ -76,16 +78,20 @@ teardown() {
   [ "$status" -ne 0 ]
 }
 
-@test "auto-copy skips existing files without --force" {
-  mkdir -p "$TEST_PROJECT/Docs"
-  echo "old content" > "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+@test "auto-copy skips existing platform files without --force" {
+  mkdir -p "$TEST_PROJECT"
+  echo "old content" > "$TEST_PROJECT/CLAUDE.md"
 
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [[ "$output" == *"Skipping"* ]]
-  # Old file should be preserved
-  run grep -q "old content" "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+  # Platform file should be preserved (no --force)
+  run grep -q "old content" "$TEST_PROJECT/CLAUDE.md"
   [ "$status" -eq 0 ]
+  # Docs/ workflow files are always updated regardless of --force
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
+  run grep -q "old content" "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+  [ "$status" -ne 0 ]
 }
 
 @test "platform selection 1 copies .cursorrules but not CLAUDE.md" {
@@ -128,4 +134,186 @@ teardown() {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ ! -d "$BATS_TEST_DIRNAME/../ship" ]
+}
+
+# ── DEV-147: Platform coverage ────────────────────────────────
+
+@test "platform selection 2 copies .windsurfrules" {
+  run bash -c "printf '$TEST_PROJECT\n2\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.windsurfrules" ]
+  [ ! -f "$TEST_PROJECT/.cursorrules" ]
+}
+
+@test "platform selection 5 copies copilot-instructions.md" {
+  run bash -c "printf '$TEST_PROJECT\n5\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.github/copilot-instructions.md" ]
+  [ ! -f "$TEST_PROJECT/CLAUDE.md" ]
+}
+
+@test "platform selection 6 copies only Docs files with no platform config" {
+  run bash -c "printf '$TEST_PROJECT\n6\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
+  [ ! -f "$TEST_PROJECT/.cursorrules" ]
+  [ ! -f "$TEST_PROJECT/CLAUDE.md" ]
+  [ ! -f "$TEST_PROJECT/.windsurfrules" ]
+}
+
+@test "platform selection 8 copies all platform files" {
+  run bash -c "printf '$TEST_PROJECT\n8\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.cursorrules" ]
+  [ -f "$TEST_PROJECT/.windsurfrules" ]
+  [ -f "$TEST_PROJECT/CLAUDE.md" ]
+  [ -f "$TEST_PROJECT/AGENTS.md" ]
+  [ -f "$TEST_PROJECT/.github/copilot-instructions.md" ]
+  [ -f "$TEST_PROJECT/.roorules" ]
+  [ -f "$TEST_PROJECT/OPENCODE.md" ]
+}
+
+@test "--list-template-files lists core and platform files" {
+  run bash "$SCRIPT" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Agent.md"* ]]
+  [[ "$output" == *"Docs/AgToosa_QA.md"* ]]
+  [[ "$output" == *".cursorrules"* ]]
+  [[ "$output" == *"CLAUDE.md"* ]]
+  [[ "$output" == *"Docs/Context/workflow.md"* ]]
+}
+
+@test "auto-copy installs AgToosa_QA.md" {
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_QA.md" ]
+}
+
+@test "auto-copy creates Context/ directory with config stubs" {
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -d "$TEST_PROJECT/Docs/Context" ]
+  [ -f "$TEST_PROJECT/Docs/Context/workflow.md" ]
+  [ -f "$TEST_PROJECT/Docs/Context/tech-stack.md" ]
+  [ -f "$TEST_PROJECT/Docs/Context/product.md" ]
+  [ -f "$TEST_PROJECT/Docs/Context/product-guidelines.md" ]
+}
+
+# ── DEV-150: inject_version tests ────────────────────────────
+
+@test "inject_version: platform files contain AgToosa version marker" {
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  run grep -q "AgToosa v" "$TEST_PROJECT/.cursorrules"
+  [ "$status" -eq 0 ]
+}
+
+@test "inject_version: .md platform files use HTML comment marker" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  run grep -q "<!-- AgToosa v" "$TEST_PROJECT/CLAUDE.md"
+  [ "$status" -eq 0 ]
+}
+
+# ── DEV-151: extract_version tests ───────────────────────────
+
+@test "extract_version: same-version reinstall with --force keeps customizations" {
+  # Install first
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  # Reinstall with --force — same version should be kept (extract_version detects it)
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT' --force"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"keeping your customizations"* ]]
+}
+
+# ── DEV-152: version_lt tests ────────────────────────────────
+
+@test "version_lt: older version triggers update with --force" {
+  mkdir -p "$TEST_PROJECT"
+  # Create a file with an older version marker (shell-style comment for .cursorrules)
+  printf '# AgToosa v1.0.0\n# old content\n' > "$TEST_PROJECT/.cursorrules"
+
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT' --force"
+  [ "$status" -eq 0 ]
+  # Output should indicate upgrade happened
+  [[ "$output" == *"v1.0.0 →"* ]]
+}
+
+# ── DEV-153: backup_file tests ───────────────────────────────
+
+@test "backup_file: creates timestamped .bak file when upgrading" {
+  mkdir -p "$TEST_PROJECT"
+  printf '# AgToosa v1.0.0\nold content\n' > "$TEST_PROJECT/.cursorrules"
+
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT' --force"
+  [ "$status" -eq 0 ]
+  # At least one .bak file should exist
+  bak_count="$(find "$TEST_PROJECT" -name '.cursorrules.bak.*' 2>/dev/null | wc -l | tr -d ' ')"
+  [ "$bak_count" -ge 1 ]
+}
+
+@test "backup_file: .bak file contains original content" {
+  mkdir -p "$TEST_PROJECT"
+  printf '# AgToosa v1.0.0\noriginal-sentinel-content\n' > "$TEST_PROJECT/.cursorrules"
+
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT' --force"
+  [ "$status" -eq 0 ]
+  bak_file="$(find "$TEST_PROJECT" -name '.cursorrules.bak.*' 2>/dev/null | head -1)"
+  [ -n "$bak_file" ]
+  run grep -q "original-sentinel-content" "$bak_file"
+  [ "$status" -eq 0 ]
+}
+
+# ── DEV-154: copy_platform_file (new file) tests ─────────────
+
+@test "copy_platform_file: new platform file is copied with version marker" {
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.cursorrules" ]
+  # Version marker should be present
+  run grep -q "AgToosa v" "$TEST_PROJECT/.cursorrules"
+  [ "$status" -eq 0 ]
+}
+
+@test "copy_platform_file: new file copy is counted in output" {
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Copied:"* ]]
+}
+
+# ── DEV-155: copy_platform_file (force + backup) tests ───────
+
+@test "copy_platform_file: --force on older version creates .bak and overwrites" {
+  mkdir -p "$TEST_PROJECT"
+  printf '# AgToosa v1.0.0\noriginal\n' > "$TEST_PROJECT/.cursorrules"
+
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT' --force"
+  [ "$status" -eq 0 ]
+  # .bak file created
+  bak_count="$(find "$TEST_PROJECT" -name '.cursorrules.bak.*' 2>/dev/null | wc -l | tr -d ' ')"
+  [ "$bak_count" -ge 1 ]
+  # File is overwritten with new version
+  run grep -q "AgToosa v1.0.0" "$TEST_PROJECT/.cursorrules"
+  [ "$status" -ne 0 ]
+}
+
+@test "copy_platform_file: --force on same version skips backup" {
+  # Install first
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  # Reinstall with --force — same version, no backup
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT' --force"
+  [ "$status" -eq 0 ]
+  bak_count="$(find "$TEST_PROJECT" -name '.cursorrules.bak.*' 2>/dev/null | wc -l | tr -d ' ')"
+  [ "$bak_count" -eq 0 ]
+}
+
+@test "gitignore warning shown when backup files are created" {
+  mkdir -p "$TEST_PROJECT"
+  printf '# AgToosa v1.0.0\nold\n' > "$TEST_PROJECT/.cursorrules"
+
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT' --force"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Backup files created"* ]]
 }

@@ -434,6 +434,9 @@ if [[ "$FORCE" == false ]]; then
   [[ "$USE_COPILOT"  == true && -f "${PROJECT_PATH}/.github/copilot-instructions.md" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
   [[ "$USE_OPENCODE" == true && -f "${PROJECT_PATH}/.roorules" ]]                       && EXISTING_FILES=$((EXISTING_FILES + 1))
   [[ "$USE_OPENCODE" == true && -f "${PROJECT_PATH}/OPENCODE.md" ]]                     && EXISTING_FILES=$((EXISTING_FILES + 1))
+  for cfile in "${CONTEXT_FILES[@]}"; do
+    [[ -f "${PROJECT_PATH}/${cfile}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+  done
 
   if [[ $EXISTING_FILES -gt 0 ]]; then
     echo -e "${YELLOW}⚠️  ${EXISTING_FILES} file(s) already exist in your project.${NC}"
@@ -449,6 +452,14 @@ if [[ "$DRY_RUN" == true ]]; then
     target="${PROJECT_PATH}/${f}"
     if [[ ! -f "$target" ]]; then
       echo -e "  ${GREEN}✅${NC} ${f}  → New file"
+    elif [[ "$f" == Docs/Context/* ]]; then
+      # Context/ files respect --force (user may have customized them)
+      if [[ "$FORCE" == true ]]; then
+        old_ver="$(extract_version "$target")"
+        echo -e "  ${CYAN}📦${NC} ${f}  → Would backup + replace (v${old_ver:-unknown} → v${AGTOOSA_VERSION})"
+      else
+        echo -e "  ${YELLOW}⏭${NC}  ${f}  → Would skip (exists, use --force to overwrite)"
+      fi
     elif [[ "$f" == Docs/* ]]; then
       # DEV-134: Docs/ always overwrite
       echo -e "  ${GREEN}✅${NC} ${f}  → Would overwrite (workflow file, always updated)"
@@ -514,6 +525,13 @@ if [[ "$CONFIRM" =~ ^[Yy]$ ]]; then
       "${PROJECT_PATH}/.github/copilot-instructions.md" \
       ".github/copilot-instructions.md"
   fi
+
+  # Context/ config stubs — skip if already exists (user may have filled them in)
+  for cfile in "${CONTEXT_FILES[@]}"; do
+    if [[ -f "${SHIP_DIR}/${cfile}" ]]; then
+      copy_platform_file "${SHIP_DIR}/${cfile}" "${PROJECT_PATH}/${cfile}" "${cfile}"
+    fi
+  done
 
   # Summary
   echo ""
