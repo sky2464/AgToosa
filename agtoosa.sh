@@ -407,7 +407,7 @@ else
   echo ""
   echo -e "${YELLOW}Files are staged in ${BOLD}ship/${NC}${YELLOW} — copy them manually:${NC}"
   echo -e "  ${BOLD}cp -r ship/* ${PROJECT_PATH}/${NC}"
-  echo -e "  ${BOLD}cp -r ship/.* ${PROJECT_PATH}/${NC}  ${CYAN}(for dotfiles)${NC}"
+  echo -e "  ${BOLD}find ship/ -maxdepth 1 -name '.*' -exec cp -r {} ${PROJECT_PATH}/ \\;${NC}  ${CYAN}(for dotfiles)${NC}"
   echo -e "${CYAN}(Run 'rm -rf ship/' when done.)${NC}"
   echo ""
 fi

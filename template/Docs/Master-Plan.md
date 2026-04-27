@@ -1,74 +1,46 @@
 # Master-Plan
 
-This file mirrors the Linear project `AgToosa`. Update Linear first, then mirror the current state here.
+This file mirrors your Linear project. Update Linear first, then mirror the current state here.
 
 ## Source of Truth
 
-- Linear project: AgToosa
-- Linear charter: AgToosa Project Operating Charter
-- Project URL: https://linear.app/devn1/project/agtoosa-515274d0e8fd
-- GitHub repo: https://github.com/sky2464/AgToosa
-- Current milestone: Unreleased
+- Linear project: [Your project name]
+- Linear charter: [Your project charter]
+- Project URL: <!-- Add your Linear project URL here -->
+- GitHub repo: <!-- Add your GitHub repo URL here -->
+- Current milestone: <!-- e.g., v1.0, Sprint 3, Unreleased -->
 
 ## Completed So Far
 
-- Repository branding renamed from the previous brand to AgToosa.
-- Canonical generator script renamed to `agtoosa.sh`.
-- Template workflow docs renamed to `AgToosa_*`.
-- Linear established as the source of truth and operating manager.
-- The Linear charter now records the current state and resolved issues.
-- The charter itself was created to hold the operating baseline and roadmap.
+<!-- Add completed milestones and features here -->
+*(Nothing completed yet — add entries as work ships.)*
 
 ## Resolved Issues
 
-### Docs
-- DEV-80 - Fix stale GitHub repository links in the README
-  - Resolved by updating the clone and support links to the canonical `sky2464/AgToosa` repository.
-
-### Feature
-- DEV-77 - Auto-sync AgToosa progress into Linear
-  - Resolved by keeping Linear as the source of truth and mirroring completed work into the workspace.
-
-### Chore
-- DEV-78 - Turn the project charter into a living roadmap
-  - Resolved by giving the charter a completed-so-far view, operating rules, and an update log.
-
-### Bug
-- DEV-79 - Project overview does not surface completed work clearly
-  - Resolved by expanding the project and mirror with an explicit completed-so-far section.
-
-### Fix
-- DEV-76 - Add a canonical next-step backlog section
-  - Resolved by adding the canonical mirror section and then clearing the current cycle backlog.
-- DEV-81 - Resolve the GitHub sync 404 for AgToosa issues
-  - Resolved by aligning the workspace repository references with the canonical GitHub repository URL.
-
-### Research
-- DEV-82 - Research Feature Awesome
-  - Resolved by documenting the awesome-copilot patterns AgToosa should borrow, adding the business justification, and linking the research note in Linear.
+<!-- Mirror resolved Linear issues here as they close -->
+*(No resolved issues yet.)*
 
 ## Operating Rules
 
-- Treat Linear as the canonical project manager for AgToosa work.
+- Treat Linear as the canonical project manager.
 - Record every completed change, decision, and new backlog item in Linear.
-- Keep the workspace and Linear aligned, with Linear taking precedence when there is a mismatch.
+- Keep this file and Linear aligned, with Linear taking precedence when there is a mismatch.
 - Prefer short, explicit updates that show what is done, what is active, and what comes next.
 
 ## Update Log
 
-- 2026-04-26: Linear designated as the source of truth.
-- 2026-04-26: Current baseline and resolved issues recorded.
-- 2026-04-26: The current cycle backlog was cleared at the process level.
-- 2026-04-26: GitHub repo linked in Linear and the Unreleased milestone created.
-- 2026-04-26: README GitHub repository links updated to the canonical repo URL.
-- 2026-04-26: Linear issues DEV-80 and DEV-81 mirrored as resolved in the workspace.
-- 2026-04-27: DEV-82 research completed and mirrored in the workspace.
+<!-- Add dated entries as the project evolves -->
+<!-- Example: 2026-01-01: Initial project setup. -->
+*(No entries yet — add the first entry when you run `/agtoosa-init`.)*
 
 ## Active Specifications & Plans
+
 *(No active specifications in progress. Run `/agtoosa-spec` to create a new one.)*
 
 ## Active Tasks
-*(No active tasks currently planned. Record the next feature, chore, bug, or fix in Linear before updating the mirror.)*
+
+*(No active tasks currently planned. Record the next feature, chore, bug, or fix in Linear before updating this mirror.)*
 
 ## Completed (Archived)
+
 *(Completed specs are moved to `Docs/archived/` during `/agtoosa-ship`. See `AgToosa_Changelog.md` for history.)*

@@ -5,7 +5,7 @@
 **The Spec-Driven Agentic AI Framework for Software Development**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.0.0-green.svg)]()
+[![Version](https://img.shields.io/badge/version-2.1.0-green.svg)]()
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 *Turn your AI coding assistant into an autonomous, security-first development team.*
