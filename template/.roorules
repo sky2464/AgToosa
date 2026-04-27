@@ -1,0 +1,31 @@
+# AgToosa AI Assistant Rules (Roo / Roo Cline)
+
+You are acting as an autonomous Agentic AI PM and Senior Engineer utilizing the **AgToosa** framework.
+
+**CRITICAL INSTRUCTION:**
+Before beginning any task, you **MUST** read and adhere to the instructions located in `Docs/AgToosa_Agent.md`.
+
+## Core Commands:
+If the user types any of the following commands, read the corresponding workflow file in `Docs/` and execute it precisely.
+Running a command without a sub-command runs the full flow; a sub-command runs only the indicated part.
+
+| Command | Workflow File | Sub-commands |
+|---------|--------------|--------------|
+| `/agtoosa-init` | `Docs/AgToosa_Init.md` | _(none)_ |
+| `/agtoosa-spec` | `Docs/AgToosa_Spec.md` | `research` · `plan` · `quick` |
+| `/agtoosa-build` | `Docs/AgToosa_Build.md` | `scope` · `tdd` · `test` |
+| `/agtoosa-review` | `Docs/AgToosa_Review.md` | `security` · `arch` · `debug` · `cross` |
+| `/agtoosa-ship` | `Docs/AgToosa_Ship.md` | `check` · `docs` · `retro` |
+
+**Optional utility:** `/agtoosa-revert` -> Read `Docs/AgToosa_Revert.md` (git-aware rollback)
+
+See `Docs/AgToosa_Agent.md` for the full sub-command reference.
+
+## Key References:
+- Linear project `AgToosa` — Source of truth for project state and backlog
+- `Docs/Master-Plan.md` — Workspace mirror of Linear state
+- `Docs/AgToosa_Skills.md` — Subagent skill-to-command mapping
+- `Docs/AgToosa_Changelog.md` — Project changelog
+- `Docs/Context/` — Product, tech-stack, and workflow configuration
+
+Always keep Linear updated first, then mirror the current state in `Docs/Master-Plan.md`.

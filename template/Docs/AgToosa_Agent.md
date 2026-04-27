@@ -16,25 +16,63 @@ Your core principles are:
 
 ## Commands
 
-> After one-time `/agtoosa-init`, use only these 4 core commands for every development cycle:
+> After one-time `/agtoosa-init`, use only these 4 core commands for every development cycle.
+> Each command supports **sub-commands** for targeted, focused execution. Run the bare command for the full phase flow.
 
+### `/agtoosa-spec` — Research, specify, and architect
+
+| Sub-command | What it does |
+|-------------|-------------|
+| `/agtoosa-spec` | **Full flow:** context research → 6 forcing questions → executable spec → architecture blueprint + threat model |
+| `/agtoosa-spec research` | **Part 1 only:** context gathering, web research, and clarifying Q&A — outputs raw findings, no spec yet |
+| `/agtoosa-spec plan` | **Part 2 only:** architecture blueprint + STRIDE threat model against an existing spec |
+| `/agtoosa-spec quick` | **Abbreviated:** condensed Q&A + spec for small bug fixes or chores; skips full threat modelling |
+
+### `/agtoosa-build` — Break down, implement with TDD, test
+
+| Sub-command | What it does |
+|-------------|-------------|
+| `/agtoosa-build` | **Full flow:** scope declaration → task breakdown → TDD Red-Green-Refactor → comprehensive testing + security scan |
+| `/agtoosa-build scope` | **Scope only:** declare the build boundary (files/dirs in-scope and out-of-scope) and confirm with user |
+| `/agtoosa-build tdd` | **TDD cycle only:** Red-Green-Refactor loop against an already-declared scope and task list |
+| `/agtoosa-build test` | **Testing only:** run the full testing army (unit + integration + E2E + security scans) on existing code |
+
+### `/agtoosa-review` — Multi-persona code review
+
+| Sub-command | What it does |
+|-------------|-------------|
+| `/agtoosa-review` | **Full flow:** Security Officer + Engineering Manager + CEO + QA Lead reviews → cross-platform suggestion |
+| `/agtoosa-review security` | **Security only:** OWASP Top 10 + STRIDE audit on the diff |
+| `/agtoosa-review arch` | **Architecture only:** 500-line limit, OOP compliance, observability, test coverage |
+| `/agtoosa-review debug` | **Iron Law debug:** systematic root-cause investigation for a specific bug or test failure |
+| `/agtoosa-review cross` | **Cross-platform:** guidance for getting a second-opinion review on a different AI platform |
+
+### `/agtoosa-ship` — Deploy, archive, suggest next
+
+| Sub-command | What it does |
+|-------------|-------------|
+| `/agtoosa-ship` | **Full flow:** readiness gate → WIP squash → deploy → archive specs → changelog → suggest next story |
+| `/agtoosa-ship check` | **Readiness gate only:** verify all pre-ship conditions without deploying |
+| `/agtoosa-ship docs` | **Docs only:** archive completed specs, update changelog and Master-Plan |
+| `/agtoosa-ship retro` | **Retrospective:** sprint review — what shipped vs. planned, quality trends, keep/stop/start |
+
+### Utility Commands
 | Command | Workflow File | Description |
 |---------|--------------|-------------|
 | `/agtoosa-init` | `Docs/AgToosa_Init.md` | **One-time:** Scan codebase, validate AI configs, establish context |
-| `/agtoosa-spec` | `Docs/AgToosa_Spec.md` | Research, specify, and architect a feature/fix/chore/bug |
-| `/agtoosa-build` | `Docs/AgToosa_Build.md` | Break down tasks, implement with TDD, test rigorously |
-| `/agtoosa-review` | `Docs/AgToosa_Review.md` | Multi-persona code review + code simplification |
-| `/agtoosa-ship` | `Docs/AgToosa_Ship.md` | Deploy, archive, and suggest the next story |
-
-### Optional Utility
-| `/agtoosa-revert` | `Docs/AgToosa_Revert.md` | Git-aware logical revert (most AI tools have checkpoints; use when needed) |
+| `/agtoosa-revert` | `Docs/AgToosa_Revert.md` | Git-aware logical revert |
 
 ## Development Cycle
 
 ```
-/agtoosa-init  →  /agtoosa-spec  →  /agtoosa-build  →  /agtoosa-review  →  /agtoosa-ship  →  /agtoosa-spec  → ...
-      ↑                                                                                            ↓
-      └───────────────────── (one-time, re-run only for major changes) ───────────────────────────┘
+/agtoosa-init  →  /agtoosa-spec  →  /agtoosa-build  →  /agtoosa-review  →  /agtoosa-ship
+      ↑                                                                            ↓
+      └──────────────────── (one-time, re-run only for major changes) ─────────────┘
+```
+
+Use sub-commands to re-run individual parts without repeating the full phase:
+```
+e.g.  /agtoosa-review debug   →  /agtoosa-build tdd   →  /agtoosa-ship check  →  /agtoosa-ship
 ```
 
 ## Key References

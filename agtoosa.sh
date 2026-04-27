@@ -10,10 +10,20 @@ set -euo pipefail
 #   bash agtoosa.sh [--force] [--version] [--help]
 # ──────────────────────────────────────────────────────────────
 
-AGTOOSA_VERSION="2.0.0"
+AGTOOSA_VERSION="2.1.0"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
 SHIP_DIR="${SCRIPT_DIR}/ship"
+
+# ── Cleanup trap (DEV-86) ─────────────────────────────────────
+# Keeps ship/ only when user chose manual copy (KEEP_SHIP=true)
+KEEP_SHIP=false
+_cleanup() {
+  if [[ "$KEEP_SHIP" == false ]]; then
+    rm -rf "$SHIP_DIR" 2>/dev/null || true
+  fi
+}
+trap _cleanup EXIT
 
 # ── Colors ───────────────────────────────────────────────────
 RED='\033[0;31m'
@@ -27,9 +37,11 @@ NC='\033[0m' # No Color
 
 # ── Flags ────────────────────────────────────────────────────
 FORCE=false
+DRY_RUN=false
 for arg in "$@"; do
   case "$arg" in
     --force) FORCE=true ;;
+    --dry-run) DRY_RUN=true ;;
     --version) echo "AgToosa v${AGTOOSA_VERSION}"; exit 0 ;;
     --help)
       echo "AgToosa Generator v${AGTOOSA_VERSION}"
@@ -38,6 +50,7 @@ for arg in "$@"; do
       echo ""
       echo "Options:"
       echo "  --force     Overwrite existing files in target project"
+      echo "  --dry-run   Show what would be copied without making changes"
       echo "  --version   Print version and exit"
       echo "  --help      Show this help message"
       exit 0
@@ -71,6 +84,11 @@ echo -e "  5. Then use: ${BOLD}/agtoosa-spec → /agtoosa-build → /agtoosa-rev
 echo ""
 echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
 echo ""
+
+if [[ "$DRY_RUN" == true ]]; then
+  echo -e "${YELLOW}${BOLD}[DRY RUN] No files will be written.${NC}"
+  echo ""
+fi
 
 # ── Project Path ─────────────────────────────────────────────
 echo -e "${BOLD}Where is your project?${NC}"
@@ -117,6 +135,7 @@ USE_WINDSURF=false
 USE_CLAUDE=false
 USE_GEMINI=false
 USE_COPILOT=false
+USE_OPENCODE=false
 
 if [[ "$SELECTION" == *"8"* ]]; then
   USE_CURSOR=true
@@ -124,13 +143,15 @@ if [[ "$SELECTION" == *"8"* ]]; then
   USE_CLAUDE=true
   USE_GEMINI=true
   USE_COPILOT=true
+  USE_OPENCODE=true
 else
   [[ "$SELECTION" == *"1"* ]] && USE_CURSOR=true
   [[ "$SELECTION" == *"2"* ]] && USE_WINDSURF=true
   [[ "$SELECTION" == *"3"* ]] && USE_CLAUDE=true
   [[ "$SELECTION" == *"4"* ]] && USE_GEMINI=true
   [[ "$SELECTION" == *"5"* ]] && USE_COPILOT=true
-  # Options 6 and 7 just use the generic Docs/AgToosa_Agent.md (always included)
+  [[ "$SELECTION" == *"7"* ]] && USE_OPENCODE=true
+  # Option 6 (VS Code generic) uses only Docs/AgToosa_Agent.md (always included)
 fi
 
 echo ""
@@ -159,8 +180,6 @@ DOCS_FILES=(
   "Docs/AgToosa_Ship.md"
   "Docs/AgToosa_Revert.md"
   "Docs/AgToosa_Skills.md"
-  "Docs/AgToosa_Claude.md"
-  "Docs/AgToosa_Gemini.md"
   "Docs/Master-Plan.md"
   "Docs/AgToosa_Changelog.md"
 )
@@ -188,14 +207,16 @@ fi
 
 if [[ "$USE_CLAUDE" == true ]]; then
   cp "${TEMPLATE_DIR}/CLAUDE.md" "${SHIP_DIR}/CLAUDE.md"
-  echo -e "  ${GREEN}✅${NC} CLAUDE.md ${CYAN}(Claude Code)${NC}"
-  GENERATED=$((GENERATED + 1))
+  cp "${TEMPLATE_DIR}/Docs/AgToosa_Claude.md" "${SHIP_DIR}/Docs/AgToosa_Claude.md"
+  echo -e "  ${GREEN}✅${NC} CLAUDE.md + Docs/AgToosa_Claude.md ${CYAN}(Claude Code)${NC}"
+  GENERATED=$((GENERATED + 2))
 fi
 
 if [[ "$USE_GEMINI" == true ]]; then
   cp "${TEMPLATE_DIR}/AGENTS.md" "${SHIP_DIR}/AGENTS.md"
-  echo -e "  ${GREEN}✅${NC} AGENTS.md ${CYAN}(Gemini CLI / Jules)${NC}"
-  GENERATED=$((GENERATED + 1))
+  cp "${TEMPLATE_DIR}/Docs/AgToosa_Gemini.md" "${SHIP_DIR}/Docs/AgToosa_Gemini.md"
+  echo -e "  ${GREEN}✅${NC} AGENTS.md + Docs/AgToosa_Gemini.md ${CYAN}(Gemini CLI / Jules)${NC}"
+  GENERATED=$((GENERATED + 2))
 fi
 
 if [[ "$USE_COPILOT" == true ]]; then
@@ -203,6 +224,13 @@ if [[ "$USE_COPILOT" == true ]]; then
   cp "${TEMPLATE_DIR}/.github/copilot-instructions.md" "${SHIP_DIR}/.github/copilot-instructions.md"
   echo -e "  ${GREEN}✅${NC} .github/copilot-instructions.md ${CYAN}(GitHub Copilot)${NC}"
   GENERATED=$((GENERATED + 1))
+fi
+
+if [[ "$USE_OPENCODE" == true ]]; then
+  [[ -f "${TEMPLATE_DIR}/.roorules" ]] && cp "${TEMPLATE_DIR}/.roorules" "${SHIP_DIR}/.roorules"
+  [[ -f "${TEMPLATE_DIR}/OPENCODE.md" ]] && cp "${TEMPLATE_DIR}/OPENCODE.md" "${SHIP_DIR}/OPENCODE.md"
+  echo -e "  ${GREEN}✅${NC} .roorules + OPENCODE.md ${CYAN}(Roo / OpenCode)${NC}"
+  GENERATED=$((GENERATED + 2))
 fi
 
 echo ""
@@ -234,6 +262,18 @@ if [[ "$FORCE" == false ]]; then
   fi
 fi
 
+if [[ "$DRY_RUN" == true ]]; then
+  echo -e "${YELLOW}[DRY RUN] Would copy the following files to ${PROJECT_PATH}:${NC}"
+  echo ""
+  find "$SHIP_DIR" -type f | sed "s|${SHIP_DIR}/||" | sort | while IFS= read -r f; do
+    echo -e "  ${CYAN}${f}${NC}"
+  done
+  echo ""
+  echo -e "${YELLOW}[DRY RUN] No changes made. Remove --dry-run to apply.${NC}"
+  echo ""
+  exit 0
+fi
+
 read -rp "Copy files now? (Y/n): " CONFIRM
 CONFIRM="${CONFIRM:-Y}"
 
@@ -259,8 +299,8 @@ if [[ "$CONFIRM" =~ ^[Yy]$ ]]; then
     fi
   done
 
-  # Platform files
-  for dotfile in .cursorrules .windsurfrules; do
+  # Platform files — copy everything staged in ship/ that isn't in DOCS_FILES
+  for dotfile in .cursorrules .windsurfrules .roorules; do
     if [[ -f "${SHIP_DIR}/${dotfile}" ]]; then
       if [[ -f "${PROJECT_PATH}/${dotfile}" && "$FORCE" == false ]]; then
         echo -e "  ${YELLOW}⏭${NC}  Skipping ${dotfile} (exists)"
@@ -273,7 +313,7 @@ if [[ "$CONFIRM" =~ ^[Yy]$ ]]; then
     fi
   done
 
-  for mdfile in CLAUDE.md AGENTS.md; do
+  for mdfile in CLAUDE.md AGENTS.md OPENCODE.md; do
     if [[ -f "${SHIP_DIR}/${mdfile}" ]]; then
       if [[ -f "${PROJECT_PATH}/${mdfile}" && "$FORCE" == false ]]; then
         echo -e "  ${YELLOW}⏭${NC}  Skipping ${mdfile} (exists)"
@@ -281,6 +321,20 @@ if [[ "$CONFIRM" =~ ^[Yy]$ ]]; then
       else
         cp "${SHIP_DIR}/${mdfile}" "${PROJECT_PATH}/${mdfile}"
         echo -e "  ${GREEN}✅${NC} ${mdfile}"
+        COPIED=$((COPIED + 1))
+      fi
+    fi
+  done
+
+  # Platform Docs
+  for pdoc in Docs/AgToosa_Claude.md Docs/AgToosa_Gemini.md; do
+    if [[ -f "${SHIP_DIR}/${pdoc}" ]]; then
+      if [[ -f "${PROJECT_PATH}/${pdoc}" && "$FORCE" == false ]]; then
+        echo -e "  ${YELLOW}⏭${NC}  Skipping ${pdoc} (exists)"
+        SKIPPED=$((SKIPPED + 1))
+      else
+        cp "${SHIP_DIR}/${pdoc}" "${PROJECT_PATH}/${pdoc}"
+        echo -e "  ${GREEN}✅${NC} ${pdoc}"
         COPIED=$((COPIED + 1))
       fi
     fi
@@ -321,12 +375,14 @@ if [[ "$CONFIRM" =~ ^[Yy]$ ]]; then
   echo ""
 
 else
+  # DEV-83: User chose manual copy — keep ship/ intact for them to use
+  KEEP_SHIP=true
   echo ""
-  echo -e "${YELLOW}Files are staged in ${BOLD}ship/${NC}${YELLOW} — you can copy them manually:${NC}"
+  echo -e "${YELLOW}Files are staged in ${BOLD}ship/${NC}${YELLOW} — copy them manually:${NC}"
   echo -e "  ${BOLD}cp -r ship/* ${PROJECT_PATH}/${NC}"
   echo -e "  ${BOLD}cp -r ship/.* ${PROJECT_PATH}/${NC}  ${CYAN}(for dotfiles)${NC}"
+  echo -e "${CYAN}(Run 'rm -rf ship/' when done.)${NC}"
   echo ""
 fi
 
-# ── Cleanup staging ──────────────────────────────────────────
-rm -rf "$SHIP_DIR"
+# ── Cleanup staging (handled by trap for errors; manual path keeps ship/) ────

@@ -13,34 +13,36 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: ShellCheck
-        uses: ludeeus/action-shellcheck@master
+        uses: ludeeus/action-shellcheck@2.0.0
         with:
           scandir: './'
           ignore: 'template'
 
       - name: Markdown Lint
-        uses: DavidAnson/github-lint-action@v1
-        with:
-          files: |
-            **/*.md
-            **/.cursorrules
-            **/.windsurfrules
+        run: |
+          npx --yes markdownlint-cli2 \
+            "**/*.md" \
+            "template/**/.cursorrules" \
+            "template/**/.windsurfrules" \
+            "template/**/.roorules" \
+            "#node_modules"
 
       - name: Validate Template Completeness
         run: |
-          # Extract all FILES from install.sh and verify they exist in template/
+          # Extract DOCS_FILES array from agtoosa.sh and verify every file exists in template/
           MISSING=0
-          FILES=$(grep -Pzo 'FILES=\(\n(  ".*"\n)+\)' install.sh | grep -oP '".*"' | tr -d '"')
-          
+          # Parse lines inside DOCS_FILES=( ... ) block
+          FILES=$(awk '/^DOCS_FILES=\(/,/^\)/' agtoosa.sh | grep -oP '"[^"]+"' | tr -d '"')
+
           for f in $FILES; do
             if [ ! -f "template/$f" ]; then
-              echo "❌ Error: File '$f' listed in install.sh missing from template/"
+              echo "❌ Missing: template/$f"
               MISSING=$((MISSING + 1))
             fi
           done
-          
-          if [ $MISSING -gt 0 ]; then
-            echo "🔥 Total missing files: $MISSING"
+
+          if [ "$MISSING" -gt 0 ]; then
+            echo "🔥 Total missing: $MISSING"
             exit 1
           fi
           echo "✅ All template files verified."

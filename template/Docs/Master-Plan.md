@@ -21,6 +21,10 @@ This file mirrors the Linear project `AgToosa`. Update Linear first, then mirror
 
 ## Resolved Issues
 
+### Docs
+- DEV-80 - Fix stale GitHub repository links in the README
+  - Resolved by updating the clone and support links to the canonical `sky2464/AgToosa` repository.
+
 ### Feature
 - DEV-77 - Auto-sync AgToosa progress into Linear
   - Resolved by keeping Linear as the source of truth and mirroring completed work into the workspace.
@@ -36,6 +40,12 @@ This file mirrors the Linear project `AgToosa`. Update Linear first, then mirror
 ### Fix
 - DEV-76 - Add a canonical next-step backlog section
   - Resolved by adding the canonical mirror section and then clearing the current cycle backlog.
+- DEV-81 - Resolve the GitHub sync 404 for AgToosa issues
+  - Resolved by aligning the workspace repository references with the canonical GitHub repository URL.
+
+### Research
+- DEV-82 - Research Feature Awesome
+  - Resolved by documenting the awesome-copilot patterns AgToosa should borrow, adding the business justification, and linking the research note in Linear.
 
 ## Operating Rules
 
@@ -50,6 +60,9 @@ This file mirrors the Linear project `AgToosa`. Update Linear first, then mirror
 - 2026-04-26: Current baseline and resolved issues recorded.
 - 2026-04-26: The current cycle backlog was cleared at the process level.
 - 2026-04-26: GitHub repo linked in Linear and the Unreleased milestone created.
+- 2026-04-26: README GitHub repository links updated to the canonical repo URL.
+- 2026-04-26: Linear issues DEV-80 and DEV-81 mirrored as resolved in the workspace.
+- 2026-04-27: DEV-82 research completed and mirrored in the workspace.
 
 ## Active Specifications & Plans
 *(No active specifications in progress. Run `/agtoosa-spec` to create a new one.)*

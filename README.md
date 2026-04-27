@@ -81,7 +81,7 @@ graph LR
 1. Clone this repository:
 
 ```bash
-git clone https://github.com/AgToosa/AgToosa.git
+git clone https://github.com/sky2464/AgToosa.git
 cd AgToosa
 ```
 
@@ -243,6 +243,6 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 **Built with ❤️ for the agentic AI era.**
 
-[Report Bug](https://github.com/AgToosa/AgToosa/issues) · [Request Feature](https://github.com/AgToosa/AgToosa/issues) · [Discussions](https://github.com/AgToosa/AgToosa/discussions)
+[Report Bug](https://github.com/sky2464/AgToosa/issues) · [Request Feature](https://github.com/sky2464/AgToosa/issues) · [Discussions](https://github.com/sky2464/AgToosa/discussions)
 
 </div>
