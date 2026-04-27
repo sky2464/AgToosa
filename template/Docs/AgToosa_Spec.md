@@ -10,7 +10,7 @@
 | `/agtoosa-spec quick` | Abbreviated — 2–3 targeted questions + spec + skip full threat model (use for small bugs/chores) |
 
 ## Objective
-Transform a raw idea, feature, chore, or bug into a fully researched Specification **with** an architectural blueprint — all in one phase. This combines spec and planning into a single command.
+Transform a raw idea, feature, chore, or bug into a researched Specification with an architectural blueprint.
 
 ## Workflow
 

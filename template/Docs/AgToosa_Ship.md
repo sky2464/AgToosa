@@ -47,19 +47,11 @@ Before deploying, clean the branch history:
 
 ### Part 3 — Workspace Cleanup & Archiving (`/agtoosa-ship docs` runs Parts 3 + 4)
 
-3.  **Archive Completed Work:**
-    *   Automatically move all completed `AgToosa_Spec-*.md` files from `/Docs` into `/Docs/archived/`.
-    *   This ensures the main Docs folder remains clean and focused only on in-progress work, while allowing the Project Management AI to query historical context.
+3.  **Archive Completed Work:** Move all completed `AgToosa_Spec-*.md` from `Docs/` to `Docs/archived/`.
 
-4.  **Changelog Update:**
-    *   Automate the update of `Docs/AgToosa_Changelog.md` with a summary of the completed feature, fix, chore, or bug.
-    *   Format: `[date] - [type] - [short description] - [spec reference]`.
+4.  **Changelog Update:** Update `Docs/AgToosa_Changelog.md` with a summary entry: `[date] - [type] - [short description] - [spec reference]`.
 
-5.  **Master-Plan Pruning:**
-    *   Update Linear first.
-    *   Mirror the pruned state in `Docs/Master-Plan.md`.
-    *   Keep only the high-level Epic description with a reference to the archived spec and changelog entry.
-    *   Clear out the completed Tasks to reset for the next iteration.
+5.  **Master-Plan Pruning:** Update Linear first, then mirror in `Docs/Master-Plan.md` — keep only the Epic description with a reference to the archived spec; clear completed tasks.
 
 ### Part 4 — Suggest Next Story
 
@@ -77,9 +69,9 @@ Run this after shipping to close the feedback loop on the sprint.
     *   Scan `Docs/archived/` for all specs closed this sprint.
 
 8.  **Quality & Process Health:**
-    *   Did test coverage improve or regress vs. the prior sprint?
-    *   How many 🔴 Critical findings appeared in `/agtoosa-review`? Is the trend improving?
-    *   Identify phases that required re-runs (e.g., spec → build loopbacks) as friction signals.
+    *   Did test coverage improve or regress vs. prior sprint?
+    *   How many 🔴 Critical findings appeared in `/agtoosa-review`? Trend improving?
+    *   Note phases that required re-runs (spec → build loopbacks) as friction signals.
 
 9.  **Keep / Stop / Start:**
 

@@ -10,7 +10,7 @@
 | `/agtoosa-build test` | Part 3 only — run the full testing army + security scans on existing code |
 
 ## Objective
-Break down the Spec into atomic tasks, build the code using Test-Driven Development, and rigorously test — all within a single phase. This combines task breakdown, building, and testing into one command.
+Break down the Spec into atomic tasks, build with TDD, and rigorously test.
 
 ## Workflow
 
@@ -32,15 +32,11 @@ Break down the Spec into atomic tasks, build the code using Test-Driven Developm
     - The scope check runs before every file write during the TDD cycle.
 
 2.  **Dependency Validation:**
-    *   **CRITICAL RULE:** Never assume the latest stable version of any language, package, or dependency from memory.
-    *   Use web search or local terminal queries (e.g., `npm view`, `pip index`, `dart pub outdated`) to check and lock in the latest stable versions.
+    *   **CRITICAL:** Never assume dependency versions from memory — verify via web search or terminal (`npm view`, `pip index`, `dart pub outdated`).
 3.  **Atomic Task Breakdown:**
     *   Read the active `AgToosa_Spec-*.md` and translate it into atomic, clear, step-by-step actionable tasks.
-4.  **Parallelization Strategy:**
-    *   Identify which tasks can be run in parallel or by different sub-agents simultaneously (e.g., writing documentation alongside developing independent components).
-5.  **Error Escalation:**
-    *   If a critical flaw or blocker is identified in the Spec during task breakdown, immediately report it.
-    *   Pause task generation and prompt the user to run `/agtoosa-spec` again to resolve the issue.
+4.  **Parallelization:** Identify tasks that can run in parallel or be handled by sub-agents.
+5.  **Error Escalation:** If a critical flaw is found during task breakdown, stop and ask the user to re-run `/agtoosa-spec`.
 6.  **Master-Plan Update:**
     *   Record all generated tasks under "Active Tasks" in Linear.
     *   Mirror the current tasks in `Docs/Master-Plan.md`.
@@ -80,31 +76,16 @@ Break down the Spec into atomic tasks, build the code using Test-Driven Developm
 
 ### Part 3 — Comprehensive Testing
 
-8.  **Unbiased Testing Army:**
-    *   After all tasks are built, adopt a completely unbiased testing mindset.
-    *   Drop prior assumptions about how the code *should* work.
-    *   Evaluate the codebase purely to find bugs, edge cases, and regressions.
-9.  **Rigorous Testing Suite:**
-    *   Run all unit, integration, and E2E tests.
-    *   Implement automated **Real Browser QA Testing** where applicable (e.g., Playwright/Puppeteer).
-10. **Security Scanning:**
-    *   **SAST** (Static Application Security Testing): Semgrep, CodeQL.
-    *   **DAST** (Dynamic Application Security Testing): Runtime vulnerability checks.
-    *   **Secrets Scanning**: Gitleaks or equivalent.
-    *   **IaC Scanning** (if applicable): Checkov, tfsec for cloud infrastructure.
-11. **SBOM Generation:**
-    *   Automatically generate a Software Bill of Materials (SBOM) for supply chain security.
-    *   Run continuous dependency vulnerability audits (e.g., `npm audit`, `pip-audit`).
-12. **Feedback Loop:**
-    *   If any issues are found, loop back to the TDD cycle (step 6) to fix them.
-    *   Record all fixes in Linear and mirror them in `Docs/Master-Plan.md`.
+8.  **Unbiased Testing:**
+    *   Drop prior assumptions about how the code should work; evaluate purely to find bugs and regressions.
+    *   Run all unit, integration, and E2E tests; add browser QA (Playwright/Puppeteer) where applicable.
+9.  **Security Scanning:** SAST (Semgrep/CodeQL), DAST (runtime checks), Secrets scanning (Gitleaks), IaC scanning (Checkov/tfsec).
+10. **SBOM:** Generate a Software Bill of Materials; run dependency audits (`npm audit`, `pip-audit`).
+11. **Feedback Loop:** Loop back to the TDD cycle for any issues found; record fixes in Linear and `Master-Plan.md`.
 
 ### Part 4 — Tracking
 
-13. **Master-Plan Update:**
-    *   Record all progress and completed steps in Linear.
-    *   Mirror the completed state in `Docs/Master-Plan.md`.
-    *   Mark each atomic task as complete.
+12. **Master-Plan Update:** Mark all completed tasks in Linear and mirror in `Docs/Master-Plan.md`.
 
 ## Output
 *   Confirm build and test phases are complete and all tests pass.

@@ -11,32 +11,17 @@
 | `/agtoosa-review cross` | Cross-platform second-opinion guidance (switch to another installed AI platform and re-run review) |
 
 ## Objective
-Ensure code quality, security, and simplicity through multi-persona review and automated code simplification.
-
-## Workflow
+Ensure code quality, security, and simplicity through multi-persona review.
 
 ### Part 1 — Virtual Specialist Reviews
 
-To ensure comprehensive quality and security, the agent must simulate the following roles:
+1.  **Security Officer:** OWASP Top 10 + STRIDE audit; SAST/DAST/Secrets scanning (Semgrep, CodeQL, Gitleaks); verify threat model from Spec.
 
-1.  **Security Officer (Audits & SAST/DAST):**
-    *   Conduct OWASP Top 10 and STRIDE security audits on the implemented code.
-    *   Integrate SAST, DAST, and Secrets Scanning (e.g., Semgrep, CodeQL, Gitleaks) to block vulnerabilities and secret leaks.
-    *   Verify that the implementation matches the threat model from the Spec.
+2.  **Engineering Manager:** Confirm no file exceeds 500 lines; check OOP compliance, observability hooks, and test coverage thresholds.
 
-2.  **Engineering Manager (Architecture):**
-    *   Perform a final compliance check: Ensure no file exceeds the 500-line limit.
-    *   Verify strict adherence to Object-Oriented principles and architectural guidelines.
-    *   Fix any lingering code smells and ensure OpenTelemetry observability is present.
-    *   Confirm test coverage meets acceptable thresholds.
+3.  **CEO / Product Owner:** Verify feature completeness against the Linear charter and acceptance criteria.
 
-3.  **CEO / Product Owner (Alignment):**
-    *   Review the completed work against the Linear project charter and the initial Spec to ensure feature completeness and user value.
-    *   Verify the feature delivers on the promised acceptance criteria.
-
-4.  **QA Lead:**
-    *   Ensure all tests (including browser QA where applicable) pass and edge cases are covered.
-    *   Verify the TDD cycle was followed (if enabled) — every feature has a corresponding test.
+4.  **QA Lead:** Confirm all tests pass (including browser QA); verify TDD cycle was followed if enabled.
 
     **🔬 Iron Law — Bug Root Cause Protocol** (`/agtoosa-review debug` runs this exclusively):
 
@@ -51,36 +36,22 @@ To ensure comprehensive quality and security, the agent must simulate the follow
 
 ### Part 2 — Code Simplification
 
-5.  **Code Simplification:**
-    *   Implement review strategies inspired by [agent-skills](https://github.com/addyosmani/agent-skills).
-    *   Identify complex, repetitive, or overly verbose code.
-    *   Refactor for ultimate simplicity, readability, and maintainability.
-    *   **Principle: Clarity over Cleverness.**
-    *   Run linting rules from `Docs/Context/workflow.md`.
-    *   Run the full test suite after every refactor to ensure nothing breaks.
+5.  **Simplify:** Identify complex or repetitive code and refactor for clarity. **Principle: Clarity over Cleverness.** Apply linting rules from `workflow.md`; re-run tests after every refactor.
 
 ### Part 3 — Final Verdict
 
-6.  **Review Summary:**
-    *   Generate a structured review report with findings from all 4 personas.
-    *   Categorize findings as: 🔴 Critical, 🟡 Warning, 🟢 Passed.
-    *   For every 🔴 Critical finding, include the documented root cause (from Iron Law protocol).
-    *   If any 🔴 Critical findings exist, block `/agtoosa-ship` and loop back to `/agtoosa-build` for fixes.
+6.  **Review Report:** Structured findings from all 4 personas — 🔴 Critical / 🟡 Warning / 🟢 Passed. Every 🔴 Critical must include the Iron Law root cause. Block `/agtoosa-ship` if any 🔴 Critical findings remain.
 
 ### Part 4 — Cross-Platform Second Opinion (`/agtoosa-review cross`)
 
-AgToosa is installed on multiple AI platforms simultaneously. Different models surface different classes of bugs — a second platform review is a free, high-signal quality gate.
+Different AI models surface different classes of bugs — a second platform review is a free, high-signal quality gate.
 
 7.  **Cross-Platform Review:**
-    *   If this project has AgToosa installed on more than one AI platform, run `/agtoosa-review` on a second platform for an independent perspective.
-    *   To get a second opinion:
-        1. Open your secondary AI platform (e.g., if primary is Claude Code, open Cursor or GitHub Copilot)
-        2. Run `/agtoosa-review` on the same branch
-        3. Compare findings — issues flagged by **both** platforms are high-confidence; issues flagged by only one warrant investigation
-    *   Merge findings from both review reports before running `/agtoosa-ship`.
-    *   For security-sensitive changes, cross-platform review is **strongly recommended**.
+    1. Open a secondary AI platform (e.g., if primary is Claude Code, open Cursor or GitHub Copilot)
+    2. Run `/agtoosa-review` on the same branch
+    3. Compare findings — issues flagged by **both** platforms are high-confidence; issues flagged by only one warrant investigation
+    *   Merge findings from both reports before running `/agtoosa-ship`. Cross-platform review is **strongly recommended** for security-sensitive changes.
 
 ## Output
-*   Present the review report to the user.
-*   If all checks pass, prompt the user to run `/agtoosa-ship`.
-*   If issues were found and fixed, confirm fixes and re-run the review automatically.
+*   Present the review report. If all checks pass, prompt `/agtoosa-ship`.
+*   If issues were found and fixed, confirm and re-run the review.
