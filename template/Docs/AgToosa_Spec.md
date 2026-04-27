@@ -61,4 +61,12 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 
 ## Output
 *   Present the generated Spec (with embedded plan) to the user.
-*   Prompt the user to review and, if approved, run `/agtoosa-build` to start implementation.
+*   Ask the user to review. When the user approves, **append the following section verbatim** to the spec file before running `/agtoosa-build`:
+
+```
+## ✅ Spec Approved
+
+Approved: [YYYY-MM-DD HH:MM]
+```
+
+This approval marker is required by `/agtoosa-ship check` to verify the spec was signed off before deployment. Do not proceed to `/agtoosa-build` without appending it.

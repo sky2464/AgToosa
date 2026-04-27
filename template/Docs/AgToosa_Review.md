@@ -53,5 +53,6 @@ Different AI models surface different classes of bugs — a second platform revi
     *   Merge findings from both reports before running `/agtoosa-ship`. Cross-platform review is **strongly recommended** for security-sensitive changes.
 
 ## Output
-*   Present the review report. If all checks pass, prompt `/agtoosa-ship`.
+*   Save the review report to `Docs/AgToosa_Review-[spec-short-name]-v[version].md`. This file is required by `/agtoosa-ship check`. The file must contain the structured findings table with all 🔴 / 🟡 / 🟢 items.
+*   If all checks pass (no unresolved 🔴 Critical findings), prompt `/agtoosa-ship`.
 *   If issues were found and fixed, confirm and re-run the review.

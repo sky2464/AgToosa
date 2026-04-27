@@ -20,8 +20,8 @@ Before any deployment, verify all of the following. If **any** check fails, list
 
 | Check | How to Verify |
 |-------|--------------|
-| ✅ Spec was approved | `Docs/AgToosa_Spec-*.md` exists with a user-approval note |
-| ✅ `/agtoosa-review` completed | Review report exists with no unresolved 🔴 Critical findings |
+| ✅ Spec was approved | `Docs/AgToosa_Spec-*.md` contains a `## ✅ Spec Approved` section with a timestamp |
+| ✅ `/agtoosa-review` completed | `Docs/AgToosa_Review-*.md` exists and contains no unresolved 🔴 Critical findings |
 | ✅ All tests pass | Run full test suite and confirm green |
 | ✅ Changelog entry drafted | `Docs/AgToosa_Changelog.md` has an entry for this feature |
 | ✅ No `WIP:` commits remain | `git log` shows no commits prefixed with `WIP:` |
