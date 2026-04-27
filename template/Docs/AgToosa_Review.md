@@ -21,18 +21,38 @@ Ensure code quality, security, and simplicity through multi-persona review.
 
 3.  **CEO / Product Owner:** Verify feature completeness against the Linear charter and acceptance criteria.
 
-4.  **QA Lead:** Confirm all tests pass (including browser QA); verify TDD cycle was followed if enabled.
+4.  **QA Lead:**
+
+    a. **Test suite** — Confirm all unit, integration, E2E, and browser QA tests pass; verify TDD cycle was followed if enabled.
+
+    b. **Coverage gate** — Read `coverage_threshold` from `Docs/Context/workflow.md`; flag below-threshold as 🔴 Critical.
+
+    c. **AC coverage** — Verify every `AC-NNN` (Must-priority) in the active spec has at least one passing test in the test plan. Any uncovered AC is 🔴 Critical.
+
+    d. **Regression check** — If this is a bug fix, confirm a regression test exists and passes (name pattern: `regression_[bug-id]_*`).
+
+    e. **Accessibility** — For web/mobile: run axe-core or Playwright a11y checks; flag WCAG 2.1 AA violations as 🟡 Warning.
+
+    f. **Performance baseline** — For web: verify Core Web Vitals are not regressed vs. prior run; flag regressions as 🟡 Warning.
+
+    g. **Browser/device matrix** — Check the `browser_matrix` list in `Docs/Context/tech-stack.md`; flag untested combinations as 🟡 Warning.
+
+    h. **Flaky test detection** — Run test suite 3× and flag any test that passes/fails non-deterministically as 🟡 Warning.
 
     **🔬 Iron Law — Bug Root Cause Protocol** (`/agtoosa-review debug` runs this exclusively):
 
     When a test failure or bug is found, follow this protocol before writing any fix:
     1. State a **hypothesis** — which specific code path or assumption is causing this?
     2. Write a **targeted reproduction test** that isolates the failure
-    3. If the test confirms the hypothesis → document the root cause in one sentence, then fix it
-    4. If the test disproves the hypothesis → document why it was wrong, form a new hypothesis, repeat
+    3. Once the hypothesis is confirmed, write a **regression test** named `regression_[bug-id]_[short-desc]`:
+       - The regression test MUST fail on the unfixed code
+       - The regression test MUST pass after the fix
+       - The regression test MUST NOT be deleted or skipped
+       - Record the regression test ID in the 🔴 Critical finding row
+    4. If the reproduction test disproves the hypothesis → document why it was wrong, form a new hypothesis, repeat
     5. After **3 failed hypotheses** → stop and escalate to the user with the hypothesis log; do NOT apply a blind fix
 
-    The root cause must appear in the review report alongside every 🔴 Critical finding.
+    The root cause AND regression test ID must appear in the review report alongside every 🔴 Critical finding.
 
 ### Part 2 — Code Simplification
 

@@ -37,6 +37,16 @@ Your core principles are:
 | `/agtoosa-build tdd` | **TDD cycle only:** Red-Green-Refactor loop against an already-declared scope and task list |
 | `/agtoosa-build test` | **Testing only:** run the full testing army (unit + integration + E2E + security scans) on existing code |
 
+### `/agtoosa-qa` — QA test planning, execution, and defect lifecycle
+
+| Sub-command | What it does |
+|-------------|-------------|
+| `/agtoosa-qa` | **Full flow:** test plan → test execution → QA report → defect triage |
+| `/agtoosa-qa plan` | **Test plan only:** map spec ACs to test IDs, categories, and smoke set |
+| `/agtoosa-qa run` | **Execute only:** run test suite with structured AC coverage capture |
+| `/agtoosa-qa report` | **Report only:** generate `Docs/AgToosa_QAReport-[name].md` |
+| `/agtoosa-qa triage` | **Triage only:** P0–P4 severity scoring; auto-create Linear issues for P0–P2 defects |
+
 ### `/agtoosa-review` — Multi-persona code review
 
 | Sub-command | What it does |
@@ -65,10 +75,12 @@ Your core principles are:
 ## Development Cycle
 
 ```
-/agtoosa-init  →  /agtoosa-spec  →  /agtoosa-build  →  /agtoosa-review  →  /agtoosa-ship
-      ↑                                                                            ↓
-      └──────────────────── (one-time, re-run only for major changes) ─────────────┘
+/agtoosa-init  →  /agtoosa-spec  →  /agtoosa-build  →  [/agtoosa-qa]  →  /agtoosa-review  →  /agtoosa-ship
+      ↑                                                                                              ↓
+      └───────────────────────────── (one-time, re-run only for major changes) ────────────────────┘
 ```
+
+`/agtoosa-qa` is optional but recommended for teams that need a dedicated QA gate between build and review.
 
 Use sub-commands to re-run individual parts without repeating the full phase:
 ```

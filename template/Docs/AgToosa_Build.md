@@ -30,6 +30,14 @@ Break down the Spec into atomic tasks, build with TDD, and rigorously test.
     - Save the scope declaration under a `## Build Scope` heading at the top of the active `AgToosa_Spec-*.md`.
     - Any edit to a file **not** in the declared scope requires stopping and asking: _"This file is outside the declared scope. Include it? (Yes / No / Update scope)"_
     - The scope check runs before every file write during the TDD cycle.
+    - After user confirms scope, generate **`Docs/AgToosa_TestPlan-[name].md`** containing:
+      - Spec reference (link to `AgToosa_Spec-*.md`)
+      - AC coverage table — each `AC-NNN` from the spec mapped to test IDs (`T-001`, `T-002`, ...)
+      - Test category per ID: Unit · Integration · E2E · Security · Performance
+      - Coverage target from `Docs/Context/workflow.md` (`coverage_threshold`), default 80%
+      - At least one negative/edge scenario per Must-priority AC
+      - Smoke set — at least one test per Must-priority AC tagged `@smoke`
+    - Present the test plan to the user and wait for confirmation before writing any code.
 
 2.  **Dependency Validation:**
     *   **CRITICAL:** Never assume dependency versions from memory — verify via web search or terminal (`npm view`, `pip index`, `dart pub outdated`).
@@ -54,6 +62,12 @@ Break down the Spec into atomic tasks, build with TDD, and rigorously test.
     *   Before writing ANY implementation code, write a test that describes the expected behavior.
     *   The test MUST fail initially (confirming it tests something real).
     *   Test types: unit tests, integration tests, or E2E tests as appropriate.
+    *   **Test Data Rules:**
+        - Use clearly fake values only — names like "Test User", emails like "test@example.com"
+        - Never use real PII in test fixtures — 🔴 Critical finding in `/agtoosa-review` if found
+        - Define fixtures and factories in `tests/fixtures/` or `tests/factories/`
+        - Integration tests that touch a database must use isolated transactions or a dedicated test schema
+        - Seed data scripts must be idempotent (safe to run multiple times)
 
     **🟢 GREEN — Minimal Implementation:**
     *   Write the MINIMUM code necessary to make the failing test pass.

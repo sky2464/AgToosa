@@ -18,7 +18,16 @@ Map specific agent personas and functional skills to slash commands so that the 
     *   **Sub-Skills (activated per task):** `frontend-ui-engineering`, `api-and-interface-design`, `database-schema-design`, `devops-infrastructure`.
     *   **Focus:** Breaking down the Spec, writing tests FIRST (Red), implementing minimal code (Green), refactoring (Blue), then comprehensive unbiased testing in isolated sandboxes.
 
-4.  **`/agtoosa-review` (The Evaluators):**
+4.  **`/agtoosa-qa` (The QA Engineer):**
+    *   **Skills:** Test plan generation, AC-to-test-ID mapping, smoke set tagging, defect triage, severity scoring (P0–P4), Linear issue creation.
+    *   **Personas:**
+        *   🧪 Test Planner — maps spec ACs to test IDs and edge cases
+        *   🔎 Test Runner — executes suite and captures AC coverage gaps
+        *   📋 Report Writer — generates structured QA reports
+        *   🚦 Triage Lead — scores defects and creates P0–P2 Linear issues
+    *   **Focus:** Giving QA testers a dedicated command to own — from test plan through defect lifecycle — separate from code review.
+
+5.  **`/agtoosa-review` (The Evaluators):**
     *   **Skills:** Code simplification, OWASP audits, Secrets scanning, Lint enforcement.
     *   **Personas:**
         *   🔒 Security Officer — Audits & SAST/DAST
@@ -26,8 +35,8 @@ Map specific agent personas and functional skills to slash commands so that the 
         *   📊 CEO / Product Owner — Feature alignment
         *   🧪 QA Lead — Test coverage & edge cases
 
-5.  **`/agtoosa-ship` (The DevOps Engineer & PM):**
+6.  **`/agtoosa-ship` (The DevOps Engineer & PM):**
     *   **Skills:** Automated health checks, Zero-downtime deployment strategies, Workspace archiving, Changelog generation, Next-story suggestion.
 
-6.  **`/agtoosa-revert` (The Safety Net):**
+7.  **`/agtoosa-revert` (The Safety Net):**
     *   **Skills:** Git-aware logical rollbacks by phase/task, Context & plan synchronization.

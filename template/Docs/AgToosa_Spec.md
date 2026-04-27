@@ -52,10 +52,26 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 
 ### Part 3 — Output
 
-7.  **File Generation:**
+7.  **Acceptance Criteria:**
+    *   Before writing the spec file, generate a `## Acceptance Criteria` table using Given/When/Then format:
+
+    ```
+    ## Acceptance Criteria
+
+    | ID | Scenario | Given | When | Then | Priority |
+    |----|----------|-------|------|------|----------|
+    | AC-001 | ... | ... | ... | ... | Must |
+    | AC-002 | ... | ... | ... | ... | Should |
+    ```
+
+    *   IDs use `AC-NNN` format. Priority: **Must** / **Should** / **Could** (MoSCoW).
+    *   Every Must-priority AC must have at least one explicit failure mode from question 5.
+    *   This table is required by `/agtoosa-qa plan` and `/agtoosa-ship check`.
+
+8.  **File Generation:**
     *   Generate a single file named `Docs/AgToosa_Spec-[short-name]-v[version].md`.
-    *   This file contains BOTH the executable spec AND the architectural plan.
-8.  **Master-Plan Update:**
+    *   This file contains the executable spec, architectural plan, AND the acceptance criteria table.
+9.  **Master-Plan Update:**
     *   Link the newly generated Spec to the relevant Epic in Linear.
     *   Mirror the spec link in `Docs/Master-Plan.md` under "Active Specifications & Plans".
 

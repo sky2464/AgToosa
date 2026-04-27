@@ -22,6 +22,7 @@ DOCS_FILES=(
   "Docs/AgToosa_Build.md"
   "Docs/AgToosa_Review.md"
   "Docs/AgToosa_Ship.md"
+  "Docs/AgToosa_QA.md"
   "Docs/AgToosa_Revert.md"
   "Docs/AgToosa_Skills.md"
   "Docs/Master-Plan.md"
@@ -40,6 +41,13 @@ OPTIONAL_TEMPLATE_FILES=(
   "OPENCODE.md"
 )
 
+CONTEXT_FILES=(
+  "Docs/Context/workflow.md"
+  "Docs/Context/tech-stack.md"
+  "Docs/Context/product.md"
+  "Docs/Context/product-guidelines.md"
+)
+
 print_usage() {
   echo "AgToosa Generator v${AGTOOSA_VERSION}"
   echo ""
@@ -54,7 +62,7 @@ print_usage() {
 }
 
 print_template_files() {
-  printf '%s\n' "${DOCS_FILES[@]}" "${OPTIONAL_TEMPLATE_FILES[@]}"
+  printf '%s\n' "${DOCS_FILES[@]}" "${OPTIONAL_TEMPLATE_FILES[@]}" "${CONTEXT_FILES[@]}"
 }
 
 # ── Version marker helpers (DEV-129) ─────────────────────────
@@ -174,6 +182,11 @@ for arg in "$@"; do
       ;;
   esac
 done
+
+# ── Source guard (allows sourcing for unit tests) ─────────────
+# When sourced (e.g., via bats), all functions/variables are available but interactive
+# code below is skipped. Direct execution (bash agtoosa.sh) proceeds normally.
+[[ "${BASH_SOURCE[0]}" == "${0}" ]] || return 0
 
 # ── Preflight ────────────────────────────────────────────────
 if [[ ! -d "$TEMPLATE_DIR" ]]; then
@@ -385,11 +398,21 @@ if [[ "$USE_OPENCODE" == true ]]; then
   fi
 fi
 
+# Context/ template files — stage in ship/ (copy to project is skip-if-exists)
+CONTEXT_STAGED=0
+for cfile in "${CONTEXT_FILES[@]}"; do
+  if [[ -f "${TEMPLATE_DIR}/${cfile}" ]]; then
+    cp "${TEMPLATE_DIR}/${cfile}" "${SHIP_DIR}/${cfile}"
+    CONTEXT_STAGED=$((CONTEXT_STAGED + 1))
+    GENERATED=$((GENERATED + 1))
+  fi
+done
+if [[ $CONTEXT_STAGED -gt 0 ]]; then
+  echo -e "  ${GREEN}✅${NC} Docs/Context/ ${CYAN}(${CONTEXT_STAGED} config stubs — fill in during /agtoosa-init)${NC}"
+fi
+
 echo ""
 echo -e "${GREEN}${BOLD}Generated ${GENERATED} files.${NC}"
-echo ""
-
-# ── Copy to project ─────────────────────────────────────────
 echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
 echo ""
 echo -e "${BOLD}Ready to copy AgToosa files to:${NC}"

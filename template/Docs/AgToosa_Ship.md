@@ -21,8 +21,10 @@ Before any deployment, verify all of the following. If **any** check fails, list
 | Check | How to Verify |
 |-------|--------------|
 | ✅ Spec was approved | `Docs/AgToosa_Spec-*.md` contains a `## ✅ Spec Approved` section with a timestamp |
+| ✅ Acceptance criteria exist | `Docs/AgToosa_Spec-*.md` contains `## Acceptance Criteria` with at least one Must-priority row |
 | ✅ `/agtoosa-review` completed | `Docs/AgToosa_Review-*.md` exists and contains no unresolved 🔴 Critical findings |
 | ✅ All tests pass | Run full test suite and confirm green |
+| ✅ Smoke tests tagged | Test plan or test suite has at least one `@smoke`-tagged test per Must-priority AC |
 | ✅ Changelog entry drafted | `Docs/AgToosa_Changelog.md` has an entry for this feature |
 | ✅ No `WIP:` commits remain | `git log` shows no commits prefixed with `WIP:` |
 
@@ -44,6 +46,13 @@ Before deploying, clean the branch history:
     *   Initiate deployment logic targeting the environment (e.g., staging or production).
     *   Monitor post-deployment automated health checks.
     *   Trigger automated rollbacks if error rates or latencies spike to ensure zero-downtime. If automated rollback is unavailable, use `/agtoosa-revert` for manual git-aware rollback.
+
+3.  **Post-Deploy Smoke Tests:**
+    *   Run all `@smoke`-tagged tests against the deployed environment.
+    *   Verify that every Must-priority AC from the spec is reachable in production.
+    *   Verify the health endpoint returns 200 (if applicable).
+    *   **If any smoke test fails:** halt immediately, do NOT archive specs, trigger `/agtoosa-revert`.
+    *   Capture smoke test pass/fail status in the changelog entry.
 
 ### Part 3 — Workspace Cleanup & Archiving (`/agtoosa-ship docs` runs Parts 3 + 4)
 
