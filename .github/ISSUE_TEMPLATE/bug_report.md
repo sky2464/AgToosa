@@ -18,7 +18,7 @@ body:
     id: version
     attributes:
       label: AgToosa Version
-      description: Run `bash install.sh --version`
+      description: Run `bash agtoosa.sh --version`
       placeholder: e.g. 1.0.0
     validations:
       required: true
