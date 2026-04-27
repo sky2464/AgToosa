@@ -7,7 +7,7 @@
 | `/agtoosa-build` | Full flow: Parts 1 + 2 + 3 + 4 |
 | `/agtoosa-build scope` | Part 1 only — scope declaration + task breakdown; stops before any code is written |
 | `/agtoosa-build tdd` | Part 2 only — TDD Red-Green-Refactor loop against an already-declared scope and task list |
-| `/agtoosa-build test` | Part 3 only — run the full testing army + security scans on existing code |
+| `/agtoosa-build test` | Parts 3 + 4 — run the full testing army + security scans, then update tracking |
 
 ## Objective
 Break down the Spec into atomic tasks, build with TDD, and rigorously test.
@@ -44,7 +44,7 @@ Break down the Spec into atomic tasks, build with TDD, and rigorously test.
 
 ### Part 2 — TDD Build Cycle
 
-> **TDD Enforcement** (inspired by [tdd-guard](https://github.com/nizos/tdd-guard)):
+> **TDD Enforcement:**
 > If `Docs/Context/workflow.md` has `tdd: true`, strictly follow the Red-Green-Refactor cycle below.
 > If TDD is disabled, still write tests but the strict ordering is relaxed.
 
