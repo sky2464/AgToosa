@@ -15,6 +15,48 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
 SHIP_DIR="${SCRIPT_DIR}/ship"
 
+DOCS_FILES=(
+  "Docs/AgToosa_Agent.md"
+  "Docs/AgToosa_Init.md"
+  "Docs/AgToosa_Spec.md"
+  "Docs/AgToosa_Build.md"
+  "Docs/AgToosa_Review.md"
+  "Docs/AgToosa_Ship.md"
+  "Docs/AgToosa_Revert.md"
+  "Docs/AgToosa_Skills.md"
+  "Docs/Master-Plan.md"
+  "Docs/AgToosa_Changelog.md"
+)
+
+OPTIONAL_TEMPLATE_FILES=(
+  "Docs/AgToosa_Claude.md"
+  "Docs/AgToosa_Gemini.md"
+  ".cursorrules"
+  ".windsurfrules"
+  "CLAUDE.md"
+  "AGENTS.md"
+  ".github/copilot-instructions.md"
+  ".roorules"
+  "OPENCODE.md"
+)
+
+print_usage() {
+  echo "AgToosa Generator v${AGTOOSA_VERSION}"
+  echo ""
+  echo "Usage: bash agtoosa.sh [OPTIONS]"
+  echo ""
+  echo "Options:"
+  echo "  --force                Overwrite existing files in target project"
+  echo "  --dry-run              Show what would be copied without making changes"
+  echo "  --list-template-files  Print every template file path and exit"
+  echo "  --version              Print version and exit"
+  echo "  --help                 Show this help message"
+}
+
+print_template_files() {
+  printf '%s\n' "${DOCS_FILES[@]}" "${OPTIONAL_TEMPLATE_FILES[@]}"
+}
+
 # ── Cleanup trap (DEV-86) ─────────────────────────────────────
 # Keeps ship/ only when user chose manual copy (KEEP_SHIP=true)
 KEEP_SHIP=false
@@ -42,18 +84,17 @@ for arg in "$@"; do
   case "$arg" in
     --force) FORCE=true ;;
     --dry-run) DRY_RUN=true ;;
+    --list-template-files) print_template_files; exit 0 ;;
     --version) echo "AgToosa v${AGTOOSA_VERSION}"; exit 0 ;;
     --help)
-      echo "AgToosa Generator v${AGTOOSA_VERSION}"
-      echo ""
-      echo "Usage: bash agtoosa.sh [OPTIONS]"
-      echo ""
-      echo "Options:"
-      echo "  --force     Overwrite existing files in target project"
-      echo "  --dry-run   Show what would be copied without making changes"
-      echo "  --version   Print version and exit"
-      echo "  --help      Show this help message"
+      print_usage
       exit 0
+      ;;
+    *)
+      echo -e "${RED}❌ Error: Unknown option '${arg}'.${NC}"
+      echo ""
+      print_usage
+      exit 1
       ;;
   esac
 done
@@ -169,20 +210,6 @@ GENERATED=0
 
 echo -e "${BOLD}Generating files...${NC}"
 echo ""
-
-# Always copy the Docs/ workflow files (core of AgToosa)
-DOCS_FILES=(
-  "Docs/AgToosa_Agent.md"
-  "Docs/AgToosa_Init.md"
-  "Docs/AgToosa_Spec.md"
-  "Docs/AgToosa_Build.md"
-  "Docs/AgToosa_Review.md"
-  "Docs/AgToosa_Ship.md"
-  "Docs/AgToosa_Revert.md"
-  "Docs/AgToosa_Skills.md"
-  "Docs/Master-Plan.md"
-  "Docs/AgToosa_Changelog.md"
-)
 
 for file in "${DOCS_FILES[@]}"; do
   if [[ -f "${TEMPLATE_DIR}/${file}" ]]; then

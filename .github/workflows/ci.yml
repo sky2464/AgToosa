@@ -19,30 +19,35 @@ jobs:
           ignore: 'template'
 
       - name: Markdown Lint
-        run: |
-          npx --yes markdownlint-cli2 \
-            "**/*.md" \
-            "template/**/.cursorrules" \
-            "template/**/.windsurfrules" \
-            "template/**/.roorules" \
-            "#node_modules"
+        uses: DavidAnson/markdownlint-cli2-action@v23.0.0
+        with:
+          globs: |
+            **/*.md
+            **/.cursorrules
+            **/.windsurfrules
+            **/.roorules
 
       - name: Validate Template Completeness
         run: |
-          # Extract DOCS_FILES array from agtoosa.sh and verify every file exists in template/
+          set -euo pipefail
           MISSING=0
-          # Parse lines inside DOCS_FILES=( ... ) block
-          FILES=$(awk '/^DOCS_FILES=\(/,/^\)/' agtoosa.sh | grep -oP '"[^"]+"' | tr -d '"')
-
-          for f in $FILES; do
+          while IFS= read -r f; do
             if [ ! -f "template/$f" ]; then
               echo "❌ Missing: template/$f"
               MISSING=$((MISSING + 1))
             fi
-          done
+          done < <(bash agtoosa.sh --list-template-files)
 
           if [ "$MISSING" -gt 0 ]; then
             echo "🔥 Total missing: $MISSING"
             exit 1
           fi
           echo "✅ All template files verified."
+
+      - name: Install BATS
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bats
+
+      - name: Run generator smoke tests
+        run: bats tests/agtoosa.bats
