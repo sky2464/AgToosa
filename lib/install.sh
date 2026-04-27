@@ -26,6 +26,7 @@ count_existing_files() {
   for cfile in "${CONTEXT_FILES[@]}"; do
     [[ -f "${PROJECT_PATH}/${cfile}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
   done
+  return 0
 }
 
 # Copy all staged files from ship/ into PROJECT_PATH, then print summary + next steps.
