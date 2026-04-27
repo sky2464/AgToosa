@@ -1,5 +1,14 @@
 # AgToosa /agtoosa-build Workflow
 
+## Sub-Commands
+
+| Sub-command | Runs |
+|-------------|------|
+| `/agtoosa-build` | Full flow: Parts 1 + 2 + 3 + 4 |
+| `/agtoosa-build scope` | Part 1 only — scope declaration + task breakdown; stops before any code is written |
+| `/agtoosa-build tdd` | Part 2 only — TDD Red-Green-Refactor loop against an already-declared scope and task list |
+| `/agtoosa-build test` | Part 3 only — run the full testing army + security scans on existing code |
+
 ## Objective
 Break down the Spec into atomic tasks, build the code using Test-Driven Development, and rigorously test — all within a single phase. This combines task breakdown, building, and testing into one command.
 
@@ -7,17 +16,32 @@ Break down the Spec into atomic tasks, build the code using Test-Driven Developm
 
 ### Part 1 — Task Breakdown
 
-1.  **Dependency Validation:**
+1.  **Step 0 — Declare Scope Boundary (before any code is written):**
+
+    Output the following scope declaration and wait for user confirmation before proceeding:
+
+    ```
+    📌 Scope Boundary for this Build
+    Files in scope      : [list specific files from the spec]
+    Directories in scope: [list directories]
+    Out of scope        : [list anything that must NOT be touched]
+    ```
+
+    - Save the scope declaration under a `## Build Scope` heading at the top of the active `AgToosa_Spec-*.md`.
+    - Any edit to a file **not** in the declared scope requires stopping and asking: _"This file is outside the declared scope. Include it? (Yes / No / Update scope)"_
+    - The scope check runs before every file write during the TDD cycle.
+
+2.  **Dependency Validation:**
     *   **CRITICAL RULE:** Never assume the latest stable version of any language, package, or dependency from memory.
     *   Use web search or local terminal queries (e.g., `npm view`, `pip index`, `dart pub outdated`) to check and lock in the latest stable versions.
-2.  **Atomic Task Breakdown:**
+3.  **Atomic Task Breakdown:**
     *   Read the active `AgToosa_Spec-*.md` and translate it into atomic, clear, step-by-step actionable tasks.
-3.  **Parallelization Strategy:**
+4.  **Parallelization Strategy:**
     *   Identify which tasks can be run in parallel or by different sub-agents simultaneously (e.g., writing documentation alongside developing independent components).
-4.  **Error Escalation:**
+5.  **Error Escalation:**
     *   If a critical flaw or blocker is identified in the Spec during task breakdown, immediately report it.
     *   Pause task generation and prompt the user to run `/agtoosa-spec` again to resolve the issue.
-5.  **Master-Plan Update:**
+6.  **Master-Plan Update:**
     *   Record all generated tasks under "Active Tasks" in Linear.
     *   Mirror the current tasks in `Docs/Master-Plan.md`.
     *   Present the task list to the user for confirmation before proceeding.
@@ -39,6 +63,11 @@ Break down the Spec into atomic tasks, build the code using Test-Driven Developm
     *   Write the MINIMUM code necessary to make the failing test pass.
     *   Do NOT add features, optimizations, or abstractions beyond what the test requires.
     *   Run the test suite to confirm the new test passes and no existing tests break.
+    *   **WIP Micro-Commit:** once green, immediately commit progress:
+        ```
+        git add -p && git commit -m "WIP: [task-id] [short description]"
+        ```
+        This preserves progress and allows context restoration if the session is interrupted.
 
     **🔵 REFACTOR — Clean Up:**
     *   With all tests green, refactor the code for clarity, readability, and maintainability.

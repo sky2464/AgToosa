@@ -8,15 +8,19 @@ Before beginning any task, read and follow `Docs/AgToosa_Agent.md` for core rule
 
 ## Core Commands
 
-| Command | Workflow File |
-|---------|--------------|
-| `/agtoosa-init` | `Docs/AgToosa_Init.md` |
-| `/agtoosa-spec` | `Docs/AgToosa_Spec.md` |
-| `/agtoosa-build` | `Docs/AgToosa_Build.md` |
-| `/agtoosa-review` | `Docs/AgToosa_Review.md` |
-| `/agtoosa-ship` | `Docs/AgToosa_Ship.md` |
+Running a command without a sub-command runs the full flow; a sub-command runs only the indicated part.
+
+| Command | Workflow File | Sub-commands |
+|---------|--------------|--------------|
+| `/agtoosa-init` | `Docs/AgToosa_Init.md` | _(none)_ |
+| `/agtoosa-spec` | `Docs/AgToosa_Spec.md` | `research` · `plan` · `quick` |
+| `/agtoosa-build` | `Docs/AgToosa_Build.md` | `scope` · `tdd` · `test` |
+| `/agtoosa-review` | `Docs/AgToosa_Review.md` | `security` · `arch` · `debug` · `cross` |
+| `/agtoosa-ship` | `Docs/AgToosa_Ship.md` | `check` · `docs` · `retro` |
 
 **Optional utility:** `/agtoosa-revert` → `Docs/AgToosa_Revert.md` (git-aware rollback)
+
+See `Docs/AgToosa_Agent.md` for the full sub-command reference.
 
 ## Key References
 
