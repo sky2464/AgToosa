@@ -43,7 +43,7 @@ Before deploying, clean the branch history:
 2.  **Deployment (Zero-Downtime):**
     *   Initiate deployment logic targeting the environment (e.g., staging or production).
     *   Monitor post-deployment automated health checks.
-    *   Trigger automated rollbacks (`/agtoosa-revert` equivalent) if error rates or latencies spike to ensure zero-downtime.
+    *   Trigger automated rollbacks if error rates or latencies spike to ensure zero-downtime. If automated rollback is unavailable, use `/agtoosa-revert` for manual git-aware rollback.
 
 ### Part 3 — Workspace Cleanup & Archiving (`/agtoosa-ship docs` runs Parts 3 + 4)
 

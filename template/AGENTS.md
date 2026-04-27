@@ -8,6 +8,7 @@ Before beginning any task, read and follow `Docs/AgToosa_Agent.md` for core rule
 
 ## Core Commands
 
+When the user types any of these commands, read the corresponding workflow file and execute it precisely.
 Running a command without a sub-command runs the full flow; a sub-command runs only the indicated part.
 
 | Command | Workflow File | Sub-commands |

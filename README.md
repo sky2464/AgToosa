@@ -24,9 +24,9 @@ AgToosa is a **framework of markdown instructions** that transforms any AI codin
 
 - 🔒 **Security by Design** — STRIDE threat modeling, SBOM generation, PII redaction, sandboxed execution
 - 📋 **Spec-Driven** — Every feature starts with research, a formal specification, and an architectural plan
-- 🧪 **Test-Driven Development** — Red-Green-Refactor cycle enforced during build (inspired by [tdd-guard](https://github.com/nizos/tdd-guard))
+- 🧪 **Test-Driven Development** — Red-Green-Refactor cycle enforced during build
 - 🧠 **Context-Aware** — The AI maintains project state in Linear, with `Docs/Master-Plan.md` as the workspace mirror
-- 🔄 **4-Phase Lifecycle** — Spec → Build → Review → Ship
+- 🔄 **4-Phase Lifecycle** — Spec → Build → Review → Ship (after a one-time `/agtoosa-init` setup)
 - 🛡️ **Observable** — OpenTelemetry, structured logging, and distributed tracing by default
 
 ---
@@ -130,7 +130,7 @@ The init command is intelligent — it doesn't just scaffold files, it validates
 
 ## TDD Enforcement
 
-AgToosa integrates Test-Driven Development principles inspired by [tdd-guard](https://github.com/nizos/tdd-guard) directly into its workflow:
+AgToosa integrates Test-Driven Development principles directly into its workflow:
 
 | TDD Phase | What Happens | When |
 |-----------|-------------|------|
