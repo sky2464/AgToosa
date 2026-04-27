@@ -170,6 +170,23 @@ teardown() {
   [ ! -f "$TEST_PROJECT/CLAUDE.md" ]
 }
 
+@test "re-run with existing copilot-instructions.md appends AgToosa block without --force" {
+  mkdir -p "$TEST_PROJECT/.github"
+  echo "# My existing Copilot instructions" > "$TEST_PROJECT/.github/copilot-instructions.md"
+
+  run bash -c "printf '$TEST_PROJECT\n5\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"appended"* ]]
+  # A .bak of the original file should have been created
+  [ "$(find "$TEST_PROJECT/.github" -name 'copilot-instructions.md.bak.*' | wc -l)" -gt 0 ]
+  # Original user content should be preserved
+  run grep -q "My existing Copilot instructions" "$TEST_PROJECT/.github/copilot-instructions.md"
+  [ "$status" -eq 0 ]
+  # AgToosa block should have been appended
+  run grep -q "AgToosa" "$TEST_PROJECT/.github/copilot-instructions.md"
+  [ "$status" -eq 0 ]
+}
+
 @test "platform selection 6 copies only Docs files with no platform config" {
   run bash -c "printf '$TEST_PROJECT\n6\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
