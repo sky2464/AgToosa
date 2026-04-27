@@ -78,20 +78,38 @@ teardown() {
   [ "$status" -ne 0 ]
 }
 
-@test "auto-copy skips existing platform files without --force" {
+@test "auto-copy appends AgToosa block to existing platform files without --force" {
   mkdir -p "$TEST_PROJECT"
   echo "old content" > "$TEST_PROJECT/CLAUDE.md"
 
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
-  [[ "$output" == *"Skipping"* ]]
-  # Platform file should be preserved (no --force)
+  [[ "$output" == *"appended"* ]]
+  # A .bak of the original file should have been created
+  [ "$(find "$TEST_PROJECT" -name 'CLAUDE.md.bak.*' | wc -l)" -gt 0 ]
+  # Original user content should be preserved
   run grep -q "old content" "$TEST_PROJECT/CLAUDE.md"
   [ "$status" -eq 0 ]
-  # Docs/ workflow files are always updated regardless of --force
+  # AgToosa block should have been appended
+  run grep -q "AgToosa" "$TEST_PROJECT/CLAUDE.md"
+  [ "$status" -eq 0 ]
+  # Docs/ workflow files are always updated regardless
   [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
   run grep -q "old content" "$TEST_PROJECT/Docs/AgToosa_Agent.md"
   [ "$status" -ne 0 ]
+}
+
+@test "auto-copy does not duplicate AgToosa block on re-run" {
+  # First install
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/CLAUDE.md" ]
+  # Second run (same version) — shows 'up to date', does not duplicate the block
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"up to date"* ]]
+  # Block should appear exactly once
+  [ "$(grep -c 'AgToosa.*START' "$TEST_PROJECT/CLAUDE.md")" -eq 1 ]
 }
 
 @test "platform selection 1 copies .cursorrules but not CLAUDE.md" {

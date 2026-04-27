@@ -66,12 +66,24 @@ print_template_files() {
 }
 
 # ── Version marker helpers (DEV-129) ─────────────────────────
-# Inject AgToosa version header at top of a platform entry-point file
+# Inject AgToosa version header wrapping a platform entry-point file in START/END delimiters
 inject_version() {
   local src="$1" dst="$2"
   case "$src" in
-    *.md) { printf '<!-- AgToosa v%s -->\n\n' "${AGTOOSA_VERSION}"; cat "$src"; } > "$dst" ;;
-    *)    { printf '# AgToosa v%s\n\n' "${AGTOOSA_VERSION}"; cat "$src"; } > "$dst" ;;
+    *.md)
+      {
+        printf '<!-- AgToosa v%s START -->\n\n' "${AGTOOSA_VERSION}"
+        cat "$src"
+        printf '\n<!-- AgToosa END -->\n'
+      } > "$dst"
+      ;;
+    *)
+      {
+        printf '# AgToosa v%s START\n\n' "${AGTOOSA_VERSION}"
+        cat "$src"
+        printf '\n# AgToosa END\n'
+      } > "$dst"
+      ;;
   esac
 }
 
@@ -141,6 +153,95 @@ copy_platform_file() {
   BAK_FILES+=("$bak")
   cp "$src" "$dst"
   echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(v${old_ver:-unknown} → v${AGTOOSA_VERSION}, backup: $(basename "$bak"))${NC}"
+  COPIED=$((COPIED + 1))
+}
+
+# Merge/append AgToosa block into a platform entry-point file
+# Without --force: appends new block (Case D) or replaces block in-place (Case B)
+# With --force: backup + full replace (same as copy_platform_file)
+merge_platform_file() {
+  local src="$1" dst="$2" label="$3"
+  mkdir -p "$(dirname "$dst")"
+
+  # Case A: destination does not exist — plain copy
+  if [[ ! -f "$dst" ]]; then
+    cp "$src" "$dst"
+    echo -e "  ${GREEN}✅${NC} ${label}"
+    COPIED=$((COPIED + 1))
+    return
+  fi
+
+  local old_ver
+  old_ver="$(extract_version "$dst")"
+
+  # --force: backup + full replace (power-user escape hatch)
+  if [[ "$FORCE" == true ]]; then
+    if [[ -n "$old_ver" ]] && ! version_lt "$old_ver" "$AGTOOSA_VERSION"; then
+      echo -e "  ${YELLOW}⏭${NC}  ${label} ${CYAN}(v${AGTOOSA_VERSION} — keeping your customizations)${NC}"
+      SKIPPED=$((SKIPPED + 1))
+      return
+    fi
+    local bak
+    bak="$(backup_file "$dst")"
+    BAK_FILES+=("$bak")
+    cp "$src" "$dst"
+    echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(v${old_ver:-unknown} → v${AGTOOSA_VERSION}, backup: $(basename "$bak"))${NC}"
+    COPIED=$((COPIED + 1))
+    return
+  fi
+
+  # Without --force: smart merge
+  # Case B: file has new-style START/END AgToosa block — update block in-place
+  if grep -qE 'AgToosa v[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]* START' "$dst" 2>/dev/null; then
+    if [[ -n "$old_ver" ]] && ! version_lt "$old_ver" "$AGTOOSA_VERSION"; then
+      # Same or newer version — block already contains current content, nothing to do
+      echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(v${AGTOOSA_VERSION}, up to date)${NC}"
+      COPIED=$((COPIED + 1))
+      return
+    fi
+    # Older version — backup, strip old block, append updated block
+    local bak
+    bak="$(backup_file "$dst")"
+    BAK_FILES+=("$bak")
+    local tmp_out
+    tmp_out="$(mktemp)"
+    awk '/AgToosa v[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]* START/{in_block=1;next} in_block && /AgToosa END/{in_block=0;next} !in_block{print}' "$dst" > "$tmp_out"
+    printf '\n' >> "$tmp_out"
+    cat "$src" >> "$tmp_out"
+    mv "$tmp_out" "$dst"
+    echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(merged: v${old_ver:-unknown} → v${AGTOOSA_VERSION}, backup: $(basename "$bak"))${NC}"
+    COPIED=$((COPIED + 1))
+    return
+  fi
+
+  # Case C: old-format AgToosa file (whole file is AgToosa content, no START/END)
+  if [[ -n "$old_ver" ]]; then
+    if ! version_lt "$old_ver" "$AGTOOSA_VERSION"; then
+      # Same or newer version — already up to date, nothing to do
+      echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(v${AGTOOSA_VERSION}, up to date)${NC}"
+      COPIED=$((COPIED + 1))
+      return
+    fi
+    local bak
+    bak="$(backup_file "$dst")"
+    BAK_FILES+=("$bak")
+    cp "$src" "$dst"
+    echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(v${old_ver} → v${AGTOOSA_VERSION}, backup: $(basename "$bak"))${NC}"
+    COPIED=$((COPIED + 1))
+    return
+  fi
+
+  # Case D: user's own file — no AgToosa content — backup then append block at bottom
+  local bak
+  bak="$(backup_file "$dst")"
+  BAK_FILES+=("$bak")
+  local tmp_out
+  tmp_out="$(mktemp)"
+  cat "$dst" > "$tmp_out"
+  printf '\n\n' >> "$tmp_out"
+  cat "$src" >> "$tmp_out"
+  mv "$tmp_out" "$dst"
+  echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(appended to existing file, backup: $(basename "$bak"))${NC}"
   COPIED=$((COPIED + 1))
 }
 
@@ -439,7 +540,7 @@ if [[ "$FORCE" == false ]]; then
   done
 
   if [[ $EXISTING_FILES -gt 0 ]]; then
-    echo -e "${YELLOW}⚠️  ${EXISTING_FILES} file(s) already exist in your project.${NC}"
+    echo -e "${CYAN}ℹ️  ${EXISTING_FILES} file(s) already exist — platform configs will be merged, Context/ files preserved.${NC}"
     echo ""
   fi
 fi
@@ -471,7 +572,17 @@ if [[ "$DRY_RUN" == true ]]; then
         echo -e "  ${CYAN}📦${NC} ${f}  → Would backup + replace (v${old_ver:-unknown} → v${AGTOOSA_VERSION})"
       fi
     else
-      echo -e "  ${YELLOW}⏭${NC}  ${f}  → Would skip (exists, use --force to overwrite)"
+      # No --force: smart merge behaviour
+      old_ver="$(extract_version "$target")"
+      if [[ -n "$old_ver" ]] && ! version_lt "$old_ver" "$AGTOOSA_VERSION"; then
+        echo -e "  ${GREEN}✅${NC} ${f}  → Already up to date (v${AGTOOSA_VERSION})"
+      elif grep -qE 'AgToosa v[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]* START' "$target" 2>/dev/null; then
+        echo -e "  ${CYAN}🔀${NC} ${f}  → Would backup + merge AgToosa block (v${old_ver:-unknown} → v${AGTOOSA_VERSION})"
+      elif [[ -n "$old_ver" ]]; then
+        echo -e "  ${CYAN}📦${NC} ${f}  → Would backup + replace (v${old_ver} → v${AGTOOSA_VERSION}, old format)"
+      else
+        echo -e "  ${CYAN}🔀${NC} ${f}  → Would backup + append AgToosa block to existing file"
+      fi
     fi
   done < <(find "$SHIP_DIR" -type f | sed "s|${SHIP_DIR}/||" | sort)
   echo ""
@@ -500,28 +611,31 @@ if [[ "$CONFIRM" =~ ^[Yy]$ ]]; then
     fi
   done
 
-  # Platform files — version-aware copy with .bak backup (DEV-128, DEV-129, DEV-130, DEV-139)
+  # Platform entry-point files — smart merge/append (new AgToosa block or update in-place)
   for dotfile in .cursorrules .windsurfrules .roorules; do
     if [[ -f "${SHIP_DIR}/${dotfile}" ]]; then
-      copy_platform_file "${SHIP_DIR}/${dotfile}" "${PROJECT_PATH}/${dotfile}" "${dotfile}"
+      merge_platform_file "${SHIP_DIR}/${dotfile}" "${PROJECT_PATH}/${dotfile}" "${dotfile}"
     fi
   done
 
   for mdfile in CLAUDE.md AGENTS.md OPENCODE.md; do
     if [[ -f "${SHIP_DIR}/${mdfile}" ]]; then
-      copy_platform_file "${SHIP_DIR}/${mdfile}" "${PROJECT_PATH}/${mdfile}" "${mdfile}"
+      merge_platform_file "${SHIP_DIR}/${mdfile}" "${PROJECT_PATH}/${mdfile}" "${mdfile}"
     fi
   done
 
+  # Docs/AgToosa_Claude.md and Docs/AgToosa_Gemini.md are pure AgToosa content — always overwrite
   for pdoc in Docs/AgToosa_Claude.md Docs/AgToosa_Gemini.md; do
     if [[ -f "${SHIP_DIR}/${pdoc}" ]]; then
-      copy_platform_file "${SHIP_DIR}/${pdoc}" "${PROJECT_PATH}/${pdoc}" "${pdoc}"
+      cp "${SHIP_DIR}/${pdoc}" "${PROJECT_PATH}/${pdoc}"
+      echo -e "  ${GREEN}✅${NC} ${pdoc}"
+      COPIED=$((COPIED + 1))
     fi
   done
 
   if [[ -f "${SHIP_DIR}/.github/copilot-instructions.md" ]]; then
     mkdir -p "${PROJECT_PATH}/.github"
-    copy_platform_file "${SHIP_DIR}/.github/copilot-instructions.md" \
+    merge_platform_file "${SHIP_DIR}/.github/copilot-instructions.md" \
       "${PROJECT_PATH}/.github/copilot-instructions.md" \
       ".github/copilot-instructions.md"
   fi
