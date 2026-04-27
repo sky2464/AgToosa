@@ -103,7 +103,6 @@ backup_file() {
   local f="$1"
   local bak="${f}.bak.$(date +%Y%m%d-%H%M)"
   cp "$f" "$bak"
-  BAK_FILES+=("$bak")
   printf '%s' "$bak"
 }
 
@@ -139,6 +138,7 @@ copy_platform_file() {
   # Older or unknown version — backup and replace
   local bak
   bak="$(backup_file "$dst")"
+  BAK_FILES+=("$bak")
   cp "$src" "$dst"
   echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(v${old_ver:-unknown} → v${AGTOOSA_VERSION}, backup: $(basename "$bak"))${NC}"
   COPIED=$((COPIED + 1))
