@@ -1,0 +1,31 @@
+name: Semantic Commit Lint
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  semantic-lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate conventional commits
+        run: |
+          set -e
+          VALID_TYPES="feat|fix|docs|style|refactor|perf|test|chore|ci|revert|build"
+          
+          # Get commit messages from PR
+          git log origin/main..HEAD --pretty=format:"%H %s" | while read commit msg; do
+            if ! echo "$msg" | grep -qE "^($VALID_TYPES)(\(.+\))?!?: .{1,}"; then
+              echo "❌ Invalid commit message format: $msg"
+              echo "   Expected format: type(scope)?: description"
+              echo "   Valid types: feat, fix, docs, style, refactor, perf, test, chore, ci, revert, build"
+              exit 1
+            fi
+          done
+          
+          echo "✅ All commits follow conventional commit format"

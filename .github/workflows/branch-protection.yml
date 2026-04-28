@@ -1,0 +1,49 @@
+name: Branch Protection Rules
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  require-labels:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check PR has at least one label
+        if: github.event.pull_request.labels.length == 0
+        run: |
+          echo "❌ PR must have at least one label (bug, enhancement, documentation, chore)"
+          exit 1
+
+  require-description:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check PR has description
+        if: github.event.pull_request.body == '' || github.event.pull_request.body == null
+        run: |
+          echo "❌ PR must include a description"
+          exit 1
+
+  link-issue:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check PR links to issue
+        run: |
+          PR_BODY="${{ github.event.pull_request.body }}"
+          # Check for "Closes #123", "Fixes #123", or "Resolves #123"
+          if ! echo "$PR_BODY" | grep -qiE '(closes|fixes|resolves) #[0-9]+'; then
+            echo "⚠️  PR should reference an issue (e.g., 'Closes #123')"
+            # Note: This is a warning, not a hard requirement
+          fi
+
+  all-checks-pass:
+    needs: [ require-labels, require-description, link-issue ]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: All branch protection checks passed
+        run: echo "✅ PR meets all requirements"
