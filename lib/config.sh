@@ -42,6 +42,37 @@ OPTIONAL_TEMPLATE_FILES=(
   ".cursor/rules/agtoosa-review.mdc"
   ".cursor/rules/agtoosa-ship.mdc"
   ".cursor/rules/agtoosa-revert.mdc"
+  ".gemini/commands/agtoosa-init.toml"
+  ".gemini/commands/agtoosa-spec.toml"
+  ".gemini/commands/agtoosa-build.toml"
+  ".gemini/commands/agtoosa-qa.toml"
+  ".gemini/commands/agtoosa-review.toml"
+  ".gemini/commands/agtoosa-ship.toml"
+  ".gemini/commands/agtoosa-revert.toml"
+  ".gemini/commands/agtoosa-help.toml"
+  ".github/prompts/agtoosa-init.prompt.md"
+  ".github/prompts/agtoosa-spec.prompt.md"
+  ".github/prompts/agtoosa-build.prompt.md"
+  ".github/prompts/agtoosa-qa.prompt.md"
+  ".github/prompts/agtoosa-review.prompt.md"
+  ".github/prompts/agtoosa-ship.prompt.md"
+  ".github/prompts/agtoosa-revert.prompt.md"
+  ".github/prompts/agtoosa-help.prompt.md"
+  ".github/agents/agtoosa.agent.md"
+  ".windsurf/rules/agtoosa-core.md"
+  ".windsurf/rules/agtoosa-spec.md"
+  ".windsurf/rules/agtoosa-build.md"
+  ".windsurf/rules/agtoosa-qa.md"
+  ".windsurf/rules/agtoosa-review.md"
+  ".windsurf/rules/agtoosa-ship.md"
+  ".windsurf/rules/agtoosa-revert.md"
+  ".roo/rules/agtoosa-core.md"
+  ".roo/rules/agtoosa-spec.md"
+  ".roo/rules/agtoosa-build.md"
+  ".roo/rules/agtoosa-qa.md"
+  ".roo/rules/agtoosa-review.md"
+  ".roo/rules/agtoosa-ship.md"
+  ".roo/rules/agtoosa-revert.md"
 )
 
 CONTEXT_FILES=(
@@ -78,6 +109,52 @@ CURSOR_RULE_FILES=(
   ".cursor/rules/agtoosa-review.mdc"
   ".cursor/rules/agtoosa-ship.mdc"
   ".cursor/rules/agtoosa-revert.mdc"
+)
+
+GEMINI_COMMAND_FILES=(
+  ".gemini/commands/agtoosa-init.toml"
+  ".gemini/commands/agtoosa-spec.toml"
+  ".gemini/commands/agtoosa-build.toml"
+  ".gemini/commands/agtoosa-qa.toml"
+  ".gemini/commands/agtoosa-review.toml"
+  ".gemini/commands/agtoosa-ship.toml"
+  ".gemini/commands/agtoosa-revert.toml"
+  ".gemini/commands/agtoosa-help.toml"
+)
+
+COPILOT_PROMPT_FILES=(
+  ".github/prompts/agtoosa-init.prompt.md"
+  ".github/prompts/agtoosa-spec.prompt.md"
+  ".github/prompts/agtoosa-build.prompt.md"
+  ".github/prompts/agtoosa-qa.prompt.md"
+  ".github/prompts/agtoosa-review.prompt.md"
+  ".github/prompts/agtoosa-ship.prompt.md"
+  ".github/prompts/agtoosa-revert.prompt.md"
+  ".github/prompts/agtoosa-help.prompt.md"
+)
+
+COPILOT_AGENT_FILES=(
+  ".github/agents/agtoosa.agent.md"
+)
+
+WINDSURF_RULE_FILES=(
+  ".windsurf/rules/agtoosa-core.md"
+  ".windsurf/rules/agtoosa-spec.md"
+  ".windsurf/rules/agtoosa-build.md"
+  ".windsurf/rules/agtoosa-qa.md"
+  ".windsurf/rules/agtoosa-review.md"
+  ".windsurf/rules/agtoosa-ship.md"
+  ".windsurf/rules/agtoosa-revert.md"
+)
+
+ROO_RULE_FILES=(
+  ".roo/rules/agtoosa-core.md"
+  ".roo/rules/agtoosa-spec.md"
+  ".roo/rules/agtoosa-build.md"
+  ".roo/rules/agtoosa-qa.md"
+  ".roo/rules/agtoosa-review.md"
+  ".roo/rules/agtoosa-ship.md"
+  ".roo/rules/agtoosa-revert.md"
 )
 
 print_usage() {

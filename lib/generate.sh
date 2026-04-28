@@ -120,4 +120,68 @@ stage_files() {
     done
     [[ $rule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .cursor/rules/ ${CYAN}(${rule_count} MDX rules — native Cursor rule injection)${NC}"
   fi
+
+  # Gemini CLI native commands — staged when Gemini selected
+  if [[ "$USE_GEMINI" == true ]]; then
+    mkdir -p "${SHIP_DIR}/.gemini/commands"
+    local gcmd gcmd_count=0
+    for gcmd in "${GEMINI_COMMAND_FILES[@]}"; do
+      if [[ -f "${TEMPLATE_DIR}/${gcmd}" ]]; then
+        cp "${TEMPLATE_DIR}/${gcmd}" "${SHIP_DIR}/${gcmd}"
+        gcmd_count=$((gcmd_count + 1))
+        GENERATED=$((GENERATED + 1))
+      fi
+    done
+    [[ $gcmd_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .gemini/commands/ ${CYAN}(${gcmd_count} TOML commands — native /agtoosa-* in Gemini CLI)${NC}"
+  fi
+
+  # GitHub Copilot reusable prompts + custom agent — staged when Copilot selected
+  if [[ "$USE_COPILOT" == true ]]; then
+    mkdir -p "${SHIP_DIR}/.github/prompts" "${SHIP_DIR}/.github/agents"
+    local pprompt pprompt_count=0
+    for pprompt in "${COPILOT_PROMPT_FILES[@]}"; do
+      if [[ -f "${TEMPLATE_DIR}/${pprompt}" ]]; then
+        cp "${TEMPLATE_DIR}/${pprompt}" "${SHIP_DIR}/${pprompt}"
+        pprompt_count=$((pprompt_count + 1))
+        GENERATED=$((GENERATED + 1))
+      fi
+    done
+    [[ $pprompt_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .github/prompts/ ${CYAN}(${pprompt_count} reusable prompts — native Copilot prompt files)${NC}"
+    local pagent
+    for pagent in "${COPILOT_AGENT_FILES[@]}"; do
+      if [[ -f "${TEMPLATE_DIR}/${pagent}" ]]; then
+        cp "${TEMPLATE_DIR}/${pagent}" "${SHIP_DIR}/${pagent}"
+        GENERATED=$((GENERATED + 1))
+      fi
+    done
+    echo -e "  ${GREEN}✅${NC} .github/agents/agtoosa.agent.md ${CYAN}(custom Copilot agent)${NC}"
+  fi
+
+  # Windsurf rules — staged when Windsurf selected
+  if [[ "$USE_WINDSURF" == true ]]; then
+    mkdir -p "${SHIP_DIR}/.windsurf/rules"
+    local wrule wrule_count=0
+    for wrule in "${WINDSURF_RULE_FILES[@]}"; do
+      if [[ -f "${TEMPLATE_DIR}/${wrule}" ]]; then
+        cp "${TEMPLATE_DIR}/${wrule}" "${SHIP_DIR}/${wrule}"
+        wrule_count=$((wrule_count + 1))
+        GENERATED=$((GENERATED + 1))
+      fi
+    done
+    [[ $wrule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .windsurf/rules/ ${CYAN}(${wrule_count} rules — native Windsurf rule injection)${NC}"
+  fi
+
+  # Roo / OpenCode rules — staged when OpenCode selected
+  if [[ "$USE_OPENCODE" == true ]]; then
+    mkdir -p "${SHIP_DIR}/.roo/rules"
+    local rrule rrule_count=0
+    for rrule in "${ROO_RULE_FILES[@]}"; do
+      if [[ -f "${TEMPLATE_DIR}/${rrule}" ]]; then
+        cp "${TEMPLATE_DIR}/${rrule}" "${SHIP_DIR}/${rrule}"
+        rrule_count=$((rrule_count + 1))
+        GENERATED=$((GENERATED + 1))
+      fi
+    done
+    [[ $rrule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .roo/rules/ ${CYAN}(${rrule_count} rules — native Roo/OpenCode rule injection)${NC}"
+  fi
 }

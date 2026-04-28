@@ -42,6 +42,33 @@ count_existing_files() {
       [[ -f "${PROJECT_PATH}/${crule}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
     done
   fi
+  if [[ "$USE_GEMINI" == true ]]; then
+    local gcmd
+    for gcmd in "${GEMINI_COMMAND_FILES[@]}"; do
+      [[ -f "${PROJECT_PATH}/${gcmd}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    done
+  fi
+  if [[ "$USE_COPILOT" == true ]]; then
+    local pprompt pagent
+    for pprompt in "${COPILOT_PROMPT_FILES[@]}"; do
+      [[ -f "${PROJECT_PATH}/${pprompt}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    done
+    for pagent in "${COPILOT_AGENT_FILES[@]}"; do
+      [[ -f "${PROJECT_PATH}/${pagent}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    done
+  fi
+  if [[ "$USE_WINDSURF" == true ]]; then
+    local wrule
+    for wrule in "${WINDSURF_RULE_FILES[@]}"; do
+      [[ -f "${PROJECT_PATH}/${wrule}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    done
+  fi
+  if [[ "$USE_OPENCODE" == true ]]; then
+    local rrule
+    for rrule in "${ROO_RULE_FILES[@]}"; do
+      [[ -f "${PROJECT_PATH}/${rrule}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    done
+  fi
   return 0
 }
 
@@ -139,6 +166,70 @@ install_files() {
       fi
     done
     [[ $crule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .cursor/rules/ (${crule_count} MDX rules)"
+  fi
+
+  # Gemini CLI native commands — always overwrite (AgToosa-owned)
+  if [[ "$USE_GEMINI" == true ]]; then
+    mkdir -p "${PROJECT_PATH}/.gemini/commands"
+    local gcmd gcmd_count=0
+    for gcmd in "${GEMINI_COMMAND_FILES[@]}"; do
+      if [[ -f "${SHIP_DIR}/${gcmd}" ]]; then
+        cp "${SHIP_DIR}/${gcmd}" "${PROJECT_PATH}/${gcmd}"
+        gcmd_count=$((gcmd_count + 1))
+        COPIED=$((COPIED + 1))
+      fi
+    done
+    [[ $gcmd_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .gemini/commands/ (${gcmd_count} TOML commands)"
+  fi
+
+  # GitHub Copilot reusable prompts + custom agent — always overwrite (AgToosa-owned)
+  if [[ "$USE_COPILOT" == true ]]; then
+    mkdir -p "${PROJECT_PATH}/.github/prompts" "${PROJECT_PATH}/.github/agents"
+    local pprompt pprompt_count=0
+    for pprompt in "${COPILOT_PROMPT_FILES[@]}"; do
+      if [[ -f "${SHIP_DIR}/${pprompt}" ]]; then
+        cp "${SHIP_DIR}/${pprompt}" "${PROJECT_PATH}/${pprompt}"
+        pprompt_count=$((pprompt_count + 1))
+        COPIED=$((COPIED + 1))
+      fi
+    done
+    [[ $pprompt_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .github/prompts/ (${pprompt_count} reusable prompts)"
+    local pagent
+    for pagent in "${COPILOT_AGENT_FILES[@]}"; do
+      if [[ -f "${SHIP_DIR}/${pagent}" ]]; then
+        cp "${SHIP_DIR}/${pagent}" "${PROJECT_PATH}/${pagent}"
+        COPIED=$((COPIED + 1))
+        echo -e "  ${GREEN}✅${NC} .github/agents/agtoosa.agent.md"
+      fi
+    done
+  fi
+
+  # Windsurf rules — always overwrite (AgToosa-owned)
+  if [[ "$USE_WINDSURF" == true ]]; then
+    mkdir -p "${PROJECT_PATH}/.windsurf/rules"
+    local wrule wrule_count=0
+    for wrule in "${WINDSURF_RULE_FILES[@]}"; do
+      if [[ -f "${SHIP_DIR}/${wrule}" ]]; then
+        cp "${SHIP_DIR}/${wrule}" "${PROJECT_PATH}/${wrule}"
+        wrule_count=$((wrule_count + 1))
+        COPIED=$((COPIED + 1))
+      fi
+    done
+    [[ $wrule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .windsurf/rules/ (${wrule_count} rules)"
+  fi
+
+  # Roo / OpenCode rules — always overwrite (AgToosa-owned)
+  if [[ "$USE_OPENCODE" == true ]]; then
+    mkdir -p "${PROJECT_PATH}/.roo/rules"
+    local rrule rrule_count=0
+    for rrule in "${ROO_RULE_FILES[@]}"; do
+      if [[ -f "${SHIP_DIR}/${rrule}" ]]; then
+        cp "${SHIP_DIR}/${rrule}" "${PROJECT_PATH}/${rrule}"
+        rrule_count=$((rrule_count + 1))
+        COPIED=$((COPIED + 1))
+      fi
+    done
+    [[ $rrule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .roo/rules/ (${rrule_count} rules)"
   fi
 
   # Summary

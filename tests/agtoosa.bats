@@ -206,6 +206,64 @@ teardown() {
   [ -f "$TEST_PROJECT/.github/copilot-instructions.md" ]
   [ -f "$TEST_PROJECT/.roorules" ]
   [ -f "$TEST_PROJECT/OPENCODE.md" ]
+  # Native platform rule/command directories
+  [ -d "$TEST_PROJECT/.cursor/rules" ]
+  [ -d "$TEST_PROJECT/.claude/commands" ]
+  [ -d "$TEST_PROJECT/.gemini/commands" ]
+  [ -d "$TEST_PROJECT/.github/prompts" ]
+  [ -d "$TEST_PROJECT/.github/agents" ]
+  [ -d "$TEST_PROJECT/.windsurf/rules" ]
+  [ -d "$TEST_PROJECT/.roo/rules" ]
+}
+
+@test "platform selection 1 installs .cursor/rules/ MDX files" {
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-core.mdc" ]
+  [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-spec.mdc" ]
+  [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-build.mdc" ]
+  [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-revert.mdc" ]
+}
+
+@test "platform selection 2 installs .windsurf/rules/ files" {
+  run bash -c "printf '$TEST_PROJECT\n2\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.windsurf/rules/agtoosa-core.md" ]
+  [ -f "$TEST_PROJECT/.windsurf/rules/agtoosa-spec.md" ]
+  [ -f "$TEST_PROJECT/.windsurf/rules/agtoosa-revert.md" ]
+}
+
+@test "platform selection 3 installs .claude/commands/ slash commands" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.claude/commands/agtoosa-init.md" ]
+  [ -f "$TEST_PROJECT/.claude/commands/agtoosa-spec.md"  ]
+  [ -f "$TEST_PROJECT/.claude/commands/agtoosa-ship.md" ]
+  [ -f "$TEST_PROJECT/.claude/commands/agtoosa-help.md" ]
+}
+
+@test "platform selection 4 installs .gemini/commands/ TOML files" {
+  run bash -c "printf '$TEST_PROJECT\n4\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.gemini/commands/agtoosa-init.toml" ]
+  [ -f "$TEST_PROJECT/.gemini/commands/agtoosa-spec.toml" ]
+  [ -f "$TEST_PROJECT/.gemini/commands/agtoosa-help.toml" ]
+}
+
+@test "platform selection 5 installs .github/prompts/ and .github/agents/" {
+  run bash -c "printf '$TEST_PROJECT\n5\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.github/prompts/agtoosa-init.prompt.md" ]
+  [ -f "$TEST_PROJECT/.github/prompts/agtoosa-spec.prompt.md" ]
+  [ -f "$TEST_PROJECT/.github/agents/agtoosa.agent.md" ]
+}
+
+@test "platform selection 7 installs .roo/rules/ files" {
+  run bash -c "printf '$TEST_PROJECT\n7\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.roo/rules/agtoosa-core.md" ]
+  [ -f "$TEST_PROJECT/.roo/rules/agtoosa-spec.md" ]
+  [ -f "$TEST_PROJECT/.roo/rules/agtoosa-revert.md" ]
 }
 
 @test "--list-template-files lists core and platform files" {
