@@ -488,6 +488,14 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ -z "$dupes" ]
 }
 
+# ── Update wiring: AgToosa_Update.md in DOCS_FILES ───────────
+
+@test "--list-template-files includes Docs/AgToosa_Update.md" {
+  run bash "$SCRIPT" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Update.md"* ]]
+}
+
 # ── DEV-178: unknown flag ─────────────────────────────────────
 
 @test "unknown flag exits 1 with error message" {
