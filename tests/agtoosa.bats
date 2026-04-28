@@ -494,3 +494,263 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   dupes="$(echo "$output" | sort | uniq -d)"
   [ -z "$dupes" ]
 }
+
+# ── DEV-178: unknown flag ─────────────────────────────────────
+
+@test "unknown flag exits 1 with error message" {
+  run bash "$SCRIPT" --foo
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"Unknown option"* ]]
+  [[ "$output" == *"Usage:"* ]]
+}
+
+# ── DEV-179: non-existent path ────────────────────────────────
+
+@test "non-existent project path exits with error" {
+  run bash -c "printf '/tmp/agtoosa-nonexistent-99999\n' | bash '$SCRIPT'"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"does not exist"* ]]
+}
+
+# ── DEV-177: self-targeting block ─────────────────────────────
+
+@test "self-targeting AgToosa source directory is blocked" {
+  local src_dir
+  src_dir="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  run bash -c "printf '$src_dir\n' | bash '$SCRIPT'"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"Target path cannot be the AgToosa source directory"* ]]
+}
+
+# ── DEV-175: invalid selection warning ───────────────────────
+
+@test "invalid selection number shows warning but continues" {
+  # '9' is out of range → warning; then no valid platform → no-platform prompt → default N → exit 0
+  run bash -c "printf '$TEST_PROJECT\n9\n\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Unknown selection"* ]]
+}
+
+# ── DEV-176: empty platform selection ────────────────────────
+
+@test "empty selection + default N exits with re-run suggestion" {
+  run bash -c "printf '$TEST_PROJECT\n\n\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"No AI platform selected"* ]]
+  [[ "$output" == *"Re-run"* ]]
+}
+
+@test "empty selection + explicit y installs only Docs files" {
+  run bash -c "printf '$TEST_PROJECT\n\ny\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
+  [ ! -f "$TEST_PROJECT/CLAUDE.md" ]
+  [ ! -f "$TEST_PROJECT/.cursorrules" ]
+  [ ! -f "$TEST_PROJECT/AGENTS.md" ]
+}
+
+# ── DEV-180: multi-platform combo ────────────────────────────
+
+@test "multi-platform combo '1 3' installs both Cursor and Claude files" {
+  run bash -c "printf '$TEST_PROJECT\n1 3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.cursorrules" ]
+  [ -f "$TEST_PROJECT/CLAUDE.md" ]
+  [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-core.mdc" ]
+  [ -f "$TEST_PROJECT/.claude/commands/agtoosa-init.md" ]
+  [ ! -f "$TEST_PROJECT/.windsurfrules" ]
+  [ ! -f "$TEST_PROJECT/AGENTS.md" ]
+}
+
+@test "multi-platform combo '3 4' installs both Claude and Gemini files" {
+  run bash -c "printf '$TEST_PROJECT\n3 4\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/CLAUDE.md" ]
+  [ -f "$TEST_PROJECT/AGENTS.md" ]
+  [ -f "$TEST_PROJECT/.claude/commands/agtoosa-init.md" ]
+  [ -f "$TEST_PROJECT/.gemini/commands/agtoosa-init.toml" ]
+  [ ! -f "$TEST_PROJECT/.cursorrules" ]
+}
+
+# ── DEV-172: merge_platform_file Case B (older version) ──────
+
+@test "merge_platform_file Case B: older AgToosa block upgraded in-place with .bak" {
+  mkdir -p "$TEST_PROJECT"
+  printf '<!-- AgToosa v1.0.0 START -->\nold block content\n<!-- AgToosa END -->\n' \
+    > "$TEST_PROJECT/CLAUDE.md"
+
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  local main_output="$output"
+  # .bak file created
+  local bak_count
+  bak_count="$(find "$TEST_PROJECT" -name 'CLAUDE.md.bak.*' 2>/dev/null | wc -l | tr -d ' ')"
+  [ "$bak_count" -ge 1 ]
+  # Old version marker gone, new one present
+  run grep -q "v1.0.0 START" "$TEST_PROJECT/CLAUDE.md"
+  [ "$status" -ne 0 ]
+  run grep -q "AgToosa v.*START" "$TEST_PROJECT/CLAUDE.md"
+  [ "$status" -eq 0 ]
+  # Only one START block
+  [ "$(grep -c 'AgToosa.*START' "$TEST_PROJECT/CLAUDE.md")" -eq 1 ]
+  [[ "$main_output" == *"merged:"* ]]
+}
+
+# ── DEV-173: merge_platform_file Case C (old-format, no START/END) ──
+
+@test "merge_platform_file Case C: old-format AgToosa file replaced with backup" {
+  mkdir -p "$TEST_PROJECT"
+  printf '<!-- AgToosa v1.0.0 -->\nold format content without delimiters\n' \
+    > "$TEST_PROJECT/CLAUDE.md"
+
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  # .bak file created
+  local bak_count
+  bak_count="$(find "$TEST_PROJECT" -name 'CLAUDE.md.bak.*' 2>/dev/null | wc -l | tr -d ' ')"
+  [ "$bak_count" -ge 1 ]
+  # New file uses START/END delimiter format
+  run grep -q "AgToosa v.*START" "$TEST_PROJECT/CLAUDE.md"
+  [ "$status" -eq 0 ]
+}
+
+# ── DEV-174: merge_platform_file Case D + --force ────────────
+
+@test "merge_platform_file Case D + --force: user-owned file fully replaced" {
+  mkdir -p "$TEST_PROJECT"
+  printf 'my-sentinel-user-content-only\n' > "$TEST_PROJECT/CLAUDE.md"
+
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT' --force"
+  [ "$status" -eq 0 ]
+  local main_output="$output"
+  # .bak file created with original content
+  local bak_file
+  bak_file="$(find "$TEST_PROJECT" -name 'CLAUDE.md.bak.*' 2>/dev/null | head -1)"
+  [ -n "$bak_file" ]
+  run grep -q "my-sentinel-user-content-only" "$bak_file"
+  [ "$status" -eq 0 ]
+  # Main file replaced — original content gone
+  run grep -q "my-sentinel-user-content-only" "$TEST_PROJECT/CLAUDE.md"
+  [ "$status" -ne 0 ]
+  # New file has AgToosa version marker
+  run grep -q "AgToosa v.*START" "$TEST_PROJECT/CLAUDE.md"
+  [ "$status" -eq 0 ]
+  [[ "$main_output" == *"vunknown →"* ]]
+}
+
+# ── DEV-181: --dry-run --force combined ──────────────────────
+
+@test "--dry-run --force shows 'Would backup + replace' for older-versioned file" {
+  mkdir -p "$TEST_PROJECT"
+  printf '# AgToosa v1.0.0 START\nold\n# AgToosa END\n' > "$TEST_PROJECT/.cursorrules"
+
+  run bash -c "printf '$TEST_PROJECT\n1\n' | bash '$SCRIPT' --dry-run --force"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Would backup + replace"* ]]
+  [[ "$output" == *"No changes made"* ]]
+  # File untouched
+  run grep -q "old" "$TEST_PROJECT/.cursorrules"
+  [ "$status" -eq 0 ]
+}
+
+@test "--dry-run --force shows 'Would keep' for same-version file" {
+  # Install first to get a current-version file
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+
+  run bash -c "printf '$TEST_PROJECT\n1\n' | bash '$SCRIPT' --dry-run --force"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Would keep"* ]]
+  [[ "$output" == *"No changes made"* ]]
+}
+
+# ── DEV-182: --dry-run messages for existing platform files ──
+
+@test "--dry-run shows 'Would backup + merge' for file with older AgToosa block" {
+  mkdir -p "$TEST_PROJECT"
+  printf '<!-- AgToosa v1.0.0 START -->\nold block\n<!-- AgToosa END -->\n' \
+    > "$TEST_PROJECT/CLAUDE.md"
+
+  run bash -c "printf '$TEST_PROJECT\n3\n' | bash '$SCRIPT' --dry-run"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Would backup + merge AgToosa block"* ]]
+  [[ "$output" == *"No changes made"* ]]
+}
+
+@test "--dry-run shows 'Would backup + append' for user-owned file" {
+  mkdir -p "$TEST_PROJECT"
+  printf 'user-only content no agtoosa markers\n' > "$TEST_PROJECT/CLAUDE.md"
+
+  run bash -c "printf '$TEST_PROJECT\n3\n' | bash '$SCRIPT' --dry-run"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Would backup + append AgToosa block"* ]]
+  [[ "$output" == *"No changes made"* ]]
+}
+
+@test "--dry-run shows 'Already up to date' for current-version file" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+
+  run bash -c "printf '$TEST_PROJECT\n3\n' | bash '$SCRIPT' --dry-run"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Already up to date"* ]]
+  [[ "$output" == *"No changes made"* ]]
+}
+
+# ── DEV-183: Context/ stubs preserved on re-run ──────────────
+
+@test "Context/ stubs are skipped on re-run to preserve user edits" {
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/Docs/Context/tech-stack.md" ]
+
+  echo "my-custom-tech-stack-sentinel" >> "$TEST_PROJECT/Docs/Context/tech-stack.md"
+
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  local rerun_output="$output"
+  run grep -q "my-custom-tech-stack-sentinel" "$TEST_PROJECT/Docs/Context/tech-stack.md"
+  [ "$status" -eq 0 ]
+  [[ "$rerun_output" == *"Skipping"* ]]
+}
+
+# ── DEV-184: .gitignore warning absent when no backups ────────
+
+@test "gitignore warning NOT shown on clean install with no backups" {
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" != *"Backup files created"* ]]
+}
+
+@test "gitignore warning NOT shown on same-version re-run" {
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" != *"Backup files created"* ]]
+}
+
+# ── DEV-185: merge_settings_json invalid JSON fallback ───────
+
+@test "merge_settings_json: invalid JSON in existing settings.json skips gracefully" {
+  mkdir -p "$TEST_PROJECT/.claude"
+  printf '{ invalid json here }' > "$TEST_PROJECT/.claude/settings.json"
+
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  # Warning shown, file not silently cleared
+  [[ "$output" == *"skipped"* ]] || [[ "$output" == *"JSON parse error"* ]] || [[ "$output" == *"unavailable"* ]]
+  # Original invalid content still present (not overwritten with valid JSON)
+  run grep -q "invalid json here" "$TEST_PROJECT/.claude/settings.json"
+  [ "$status" -eq 0 ]
+}
+
+# ── DEV-186: manual copy instructions ────────────────────────
+
+@test "declining copy shows manual copy instructions" {
+  run bash -c "printf '$TEST_PROJECT\n1\nn\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"copy them manually"* ]]
+  [[ "$output" == *"cp -r ship/"* ]]
+  [[ "$output" == *"find ship/"* ]]
+}
