@@ -138,19 +138,19 @@ echo ""
 read -rp "Your selection: " SELECTION
 
 USE_CURSOR=false; USE_WINDSURF=false; USE_CLAUDE=false
-USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
+USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false; USE_VSCODE=false
 
 if [[ "$SELECTION" == *"8"* ]]; then
   USE_CURSOR=true; USE_WINDSURF=true; USE_CLAUDE=true
-  USE_GEMINI=true; USE_COPILOT=true; USE_OPENCODE=true
+  USE_GEMINI=true; USE_COPILOT=true; USE_OPENCODE=true; USE_VSCODE=true
 else
   [[ "$SELECTION" == *"1"* ]] && USE_CURSOR=true
   [[ "$SELECTION" == *"2"* ]] && USE_WINDSURF=true
   [[ "$SELECTION" == *"3"* ]] && USE_CLAUDE=true
   [[ "$SELECTION" == *"4"* ]] && USE_GEMINI=true
   [[ "$SELECTION" == *"5"* ]] && USE_COPILOT=true
+  [[ "$SELECTION" == *"6"* ]] && USE_VSCODE=true
   [[ "$SELECTION" == *"7"* ]] && USE_OPENCODE=true
-  # Option 6 (VS Code generic) uses only Docs/ files — always included
 fi
 
 echo ""
@@ -169,8 +169,8 @@ fi
 # DEV-136: Warn if no platform selected
 SOME_PLATFORM_SELECTED=false
 [[ "$USE_CURSOR" == true || "$USE_WINDSURF" == true || "$USE_CLAUDE" == true || \
-   "$USE_GEMINI" == true || "$USE_COPILOT" == true || "$USE_OPENCODE" == true ]] && SOME_PLATFORM_SELECTED=true
-[[ "$SELECTION" == *"6"* ]] && SOME_PLATFORM_SELECTED=true
+   "$USE_GEMINI" == true || "$USE_COPILOT" == true || "$USE_OPENCODE" == true || \
+   "$USE_VSCODE" == true ]] && SOME_PLATFORM_SELECTED=true
 
 if [[ "$SOME_PLATFORM_SELECTED" == false ]]; then
   echo -e "${YELLOW}⚠️  No AI platform selected. Only Docs/ workflow files will be copied.${NC}"

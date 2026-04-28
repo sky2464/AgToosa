@@ -157,6 +157,31 @@ stage_files() {
     echo -e "  ${GREEN}✅${NC} .github/agents/agtoosa.agent.md ${CYAN}(custom Copilot agent)${NC}"
   fi
 
+  # VS Code generic — staged when VS Code selected (skipped if Copilot already covers it)
+  if [[ "$USE_VSCODE" == true && "$USE_COPILOT" != true ]]; then
+    mkdir -p "${SHIP_DIR}/.github/prompts" "${SHIP_DIR}/.github/agents"
+    inject_version "${TEMPLATE_DIR}/.github/copilot-instructions.md" "${SHIP_DIR}/.github/copilot-instructions.md"
+    echo -e "  ${GREEN}✅${NC} .github/copilot-instructions.md ${CYAN}(VS Code)${NC}"
+    GENERATED=$((GENERATED + 1))
+    local vprompt vprompt_count=0
+    for vprompt in "${COPILOT_PROMPT_FILES[@]}"; do
+      if [[ -f "${TEMPLATE_DIR}/${vprompt}" ]]; then
+        cp "${TEMPLATE_DIR}/${vprompt}" "${SHIP_DIR}/${vprompt}"
+        vprompt_count=$((vprompt_count + 1))
+        GENERATED=$((GENERATED + 1))
+      fi
+    done
+    [[ $vprompt_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .github/prompts/ ${CYAN}(${vprompt_count} slash commands — /agtoosa-* in VS Code Copilot)${NC}"
+    local vagent
+    for vagent in "${COPILOT_AGENT_FILES[@]}"; do
+      if [[ -f "${TEMPLATE_DIR}/${vagent}" ]]; then
+        cp "${TEMPLATE_DIR}/${vagent}" "${SHIP_DIR}/${vagent}"
+        GENERATED=$((GENERATED + 1))
+      fi
+    done
+    echo -e "  ${GREEN}✅${NC} .github/agents/agtoosa.agent.md ${CYAN}(custom Copilot agent)${NC}"
+  fi
+
   # Windsurf rules — staged when Windsurf selected
   if [[ "$USE_WINDSURF" == true ]]; then
     mkdir -p "${SHIP_DIR}/.windsurf/rules"
