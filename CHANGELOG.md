@@ -11,6 +11,28 @@ _(nothing yet)_
 
 ---
 
+## [2.4.0] — 2026-05-14
+
+### Added
+- `/agtoosa-task` command (`Docs/AgToosa_Task.md`): lightweight Linear issue capture for bugs, chores, spikes, and fixes without a full spec cycle; includes type-specific DoD checklists and Discovery Triage origin tracking (DEV-167)
+- Platform-native command files for `/agtoosa-task` on all 6 platforms: `.claude/commands/agtoosa-task.md`, `.cursor/rules/agtoosa-task.mdc`, `.gemini/commands/agtoosa-task.toml`, `.github/prompts/agtoosa-task.prompt.md`, `.windsurf/rules/agtoosa-task.md`, `.roo/rules/agtoosa-task.md`
+- Linear Issue Standard anatomy in `AgToosa_Agent.md`: canonical title format `[Type]: [description]`, required description sections (Context, Scope, ACs, DoD, Related), Epic→Story→Task hierarchy table, field defaults, Phase Comment Protocol, and Discovery Triage Protocol (DEV-164, DEV-165)
+- Epic creation instructions in `/agtoosa-init` Step 9: agent now creates Linear Epic issues with correct labels/status and records IDs in `Docs/Master-Plan.md` (DEV-165)
+- Story creation with T-shirt sizing and cycle enrollment in `/agtoosa-spec` Steps 9–10: agent creates a Linear Story issue (parent: Epic), records estimate, and enrolls in the active cycle if selected (DEV-165, DEV-168)
+- Task sub-issue creation in `/agtoosa-build` Part 1 Step 6: agent creates Linear Task issues (parent: Story) per build task; transitions Story to `In Progress`; posts "Build 🏗️ Started" phase comment (DEV-165, DEV-166, DEV-171)
+- Discovery Triage Protocol in `/agtoosa-build`: classify out-of-scope findings, size them, and route to create-issue / expand-scope / ignore — preventing silent scope creep (DEV-169)
+- Status transition protocol across phase commands: Story moves `Todo → In Progress → In Review → Done` (or back) at Build/Review/Ship boundaries; rollback resets to `In Review` (DEV-166)
+- Phase progress comments on Linear Story issues at every phase transition: Spec ✅ Approved, Build 🏗️ Started, Task 🟢 N/M complete, Review 🔍 Started, Review ✅/🔴 verdict, Ship 🚀 Deployed / Rollback 🔙 Triggered (DEV-171)
+- Rich `Docs/Master-Plan.md` template: replaced stub with 8-section structured template (Project Charter, Epics, Active Cycle, Active Tasks, Backlog, Blocked, Completed This Cycle, Update Log) (DEV-170)
+- `/agtoosa-task` added to Utility Commands table in `AgToosa_Agent.md` and to all platform entry-point "Optional utilities" lines
+
+### Changed
+- All 7 platform entry-point files updated: "Optional utility" → "Optional utilities" with both `/agtoosa-revert` and `/agtoosa-task` listed
+- Help command files (`.claude/commands/agtoosa-help.md`, `.github/prompts/agtoosa-help.prompt.md`, `.gemini/commands/agtoosa-help.toml`) updated with `/agtoosa-task` row
+- `lib/config.sh` `OPTIONAL_TEMPLATE_FILES` expanded with all 6 new agtoosa-task platform files; all specific platform arrays updated to match
+
+---
+
 ## [2.3.0] — 2026-04-27
 
 ### Added

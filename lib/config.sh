@@ -10,6 +10,7 @@ DOCS_FILES=(
   "Docs/AgToosa_Ship.md"
   "Docs/AgToosa_QA.md"
   "Docs/AgToosa_Revert.md"
+  "Docs/AgToosa_Task.md"
   "Docs/AgToosa_Skills.md"
   "Docs/Master-Plan.md"
   "Docs/AgToosa_Changelog.md"
@@ -32,6 +33,7 @@ OPTIONAL_TEMPLATE_FILES=(
   ".claude/commands/agtoosa-review.md"
   ".claude/commands/agtoosa-ship.md"
   ".claude/commands/agtoosa-revert.md"
+  ".claude/commands/agtoosa-task.md"
   ".claude/commands/agtoosa-help.md"
   ".claude/settings.json"
   ".claude/skills/agtoosa-review.md"
@@ -42,6 +44,7 @@ OPTIONAL_TEMPLATE_FILES=(
   ".cursor/rules/agtoosa-review.mdc"
   ".cursor/rules/agtoosa-ship.mdc"
   ".cursor/rules/agtoosa-revert.mdc"
+  ".cursor/rules/agtoosa-task.mdc"
   ".gemini/commands/agtoosa-init.toml"
   ".gemini/commands/agtoosa-spec.toml"
   ".gemini/commands/agtoosa-build.toml"
@@ -49,6 +52,7 @@ OPTIONAL_TEMPLATE_FILES=(
   ".gemini/commands/agtoosa-review.toml"
   ".gemini/commands/agtoosa-ship.toml"
   ".gemini/commands/agtoosa-revert.toml"
+  ".gemini/commands/agtoosa-task.toml"
   ".gemini/commands/agtoosa-help.toml"
   ".github/prompts/agtoosa-init.prompt.md"
   ".github/prompts/agtoosa-spec.prompt.md"
@@ -57,6 +61,7 @@ OPTIONAL_TEMPLATE_FILES=(
   ".github/prompts/agtoosa-review.prompt.md"
   ".github/prompts/agtoosa-ship.prompt.md"
   ".github/prompts/agtoosa-revert.prompt.md"
+  ".github/prompts/agtoosa-task.prompt.md"
   ".github/prompts/agtoosa-help.prompt.md"
   ".github/agents/agtoosa.agent.md"
   ".windsurf/rules/agtoosa-core.md"
@@ -66,6 +71,7 @@ OPTIONAL_TEMPLATE_FILES=(
   ".windsurf/rules/agtoosa-review.md"
   ".windsurf/rules/agtoosa-ship.md"
   ".windsurf/rules/agtoosa-revert.md"
+  ".windsurf/rules/agtoosa-task.md"
   ".roo/rules/agtoosa-core.md"
   ".roo/rules/agtoosa-spec.md"
   ".roo/rules/agtoosa-build.md"
@@ -73,6 +79,7 @@ OPTIONAL_TEMPLATE_FILES=(
   ".roo/rules/agtoosa-review.md"
   ".roo/rules/agtoosa-ship.md"
   ".roo/rules/agtoosa-revert.md"
+  ".roo/rules/agtoosa-task.md"
 )
 
 CONTEXT_FILES=(
@@ -90,6 +97,7 @@ CLAUDE_COMMAND_FILES=(
   ".claude/commands/agtoosa-review.md"
   ".claude/commands/agtoosa-ship.md"
   ".claude/commands/agtoosa-revert.md"
+  ".claude/commands/agtoosa-task.md"
   ".claude/commands/agtoosa-help.md"
 )
 
@@ -109,6 +117,7 @@ CURSOR_RULE_FILES=(
   ".cursor/rules/agtoosa-review.mdc"
   ".cursor/rules/agtoosa-ship.mdc"
   ".cursor/rules/agtoosa-revert.mdc"
+  ".cursor/rules/agtoosa-task.mdc"
 )
 
 GEMINI_COMMAND_FILES=(
@@ -119,6 +128,7 @@ GEMINI_COMMAND_FILES=(
   ".gemini/commands/agtoosa-review.toml"
   ".gemini/commands/agtoosa-ship.toml"
   ".gemini/commands/agtoosa-revert.toml"
+  ".gemini/commands/agtoosa-task.toml"
   ".gemini/commands/agtoosa-help.toml"
 )
 
@@ -130,6 +140,7 @@ COPILOT_PROMPT_FILES=(
   ".github/prompts/agtoosa-review.prompt.md"
   ".github/prompts/agtoosa-ship.prompt.md"
   ".github/prompts/agtoosa-revert.prompt.md"
+  ".github/prompts/agtoosa-task.prompt.md"
   ".github/prompts/agtoosa-help.prompt.md"
 )
 
@@ -145,6 +156,7 @@ WINDSURF_RULE_FILES=(
   ".windsurf/rules/agtoosa-review.md"
   ".windsurf/rules/agtoosa-ship.md"
   ".windsurf/rules/agtoosa-revert.md"
+  ".windsurf/rules/agtoosa-task.md"
 )
 
 ROO_RULE_FILES=(
@@ -155,6 +167,7 @@ ROO_RULE_FILES=(
   ".roo/rules/agtoosa-review.md"
   ".roo/rules/agtoosa-ship.md"
   ".roo/rules/agtoosa-revert.md"
+  ".roo/rules/agtoosa-task.md"
 )
 
 print_usage() {

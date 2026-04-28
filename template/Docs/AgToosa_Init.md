@@ -44,8 +44,13 @@ One-time initialization: establish project context, scan the codebase, validate 
     *   `Docs/AgToosa_Gemini.md` (Gemini-specific, if applicable)
 
 9.  **Project Management Setup:**
-    *   Initialize the Linear project charter with identified Epics.
-    *   Mirror state in `Docs/Master-Plan.md`.
+    *   For each Epic identified in Phase B, create a Linear **Epic issue**:
+        - Title: `Epic: [product area name]` (e.g., `Epic: Authentication`)
+        - Label: Feature
+        - Status: `Backlog`
+        - Description: one-paragraph charter — goal, scope, and success criteria for this product area
+    *   Record all Epic IDs (e.g., `DEV-12`) in `Docs/Master-Plan.md` under `## Epics`.
+    *   Mirror the full current state in `Docs/Master-Plan.md` using the structured template (Charter, Epics table, empty Backlog, Update Log first entry).
     *   Initialize `Docs/AgToosa_Changelog.md`.
 
 ### Phase D — TDD Configuration

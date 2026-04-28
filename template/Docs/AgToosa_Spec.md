@@ -71,9 +71,23 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 8.  **File Generation:**
     *   Generate a single file named `Docs/AgToosa_Spec-[short-name]-v[version].md`.
     *   This file contains the executable spec, architectural plan, AND the acceptance criteria table.
-9.  **Master-Plan Update:**
-    *   Link the newly generated Spec to the relevant Epic in Linear.
-    *   Mirror the spec link in `Docs/Master-Plan.md` under "Active Specifications & Plans".
+9.  **Linear Story Issue:**
+    *   Create a Linear **Story issue** for this spec:
+        - Title: `Feature: [spec short name]` (use `Bug:` / `Chore:` / `Fix:` as appropriate)
+        - Label: Feature (or Bug / Chore / Fix as appropriate)
+        - Status: `Todo`
+        - Priority: derived from the urgency signal (Q3 answer)
+        - Parent: link to the relevant Epic issue ID from `/agtoosa-init`
+        - Description: paste the spec's Context section + ACs table + Definition of Done checklist
+    *   Record the Story issue ID (e.g., `DEV-15`) in the spec file header.
+    *   Update `Docs/Master-Plan.md`: add the Story row to `## Backlog` (or `## Active Cycle` if enrolling now).
+
+10. **Estimation & Cycle Enrollment:**
+    *   Ask the user: "How big is this Story? T-shirt size: **XS** (< 4 h) / **S** (1 d) / **M** (2–3 d) / **L** (4–5 d) / **XL** (6+ d)"
+    *   If the user picks **L** or **XL**, prompt: "This is large. Should we split it into smaller Stories now, or proceed as one?"
+    *   Record the estimate on the Linear Story issue.
+    *   Ask: "Enroll this Story in the current active cycle/sprint? (Yes / No)"
+    *   If Yes: add the Story to the active cycle in Linear and update `Docs/Master-Plan.md` under `## Active Cycle`.
 
 ## Output
 *   Present the generated Spec (with embedded plan) to the user.
@@ -86,3 +100,16 @@ Approved: [YYYY-MM-DD HH:MM]
 ```
 
 This approval marker is required by `/agtoosa-ship check` to verify the spec was signed off before deployment. Do not proceed to `/agtoosa-build` without appending it.
+
+*   **Linear Comment (Spec Approved):** Immediately after appending the approval marker, post a progress comment on the Story issue:
+
+    ```
+    Spec ✅ Approved
+    Date: [YYYY-MM-DD HH:MM]
+
+    Spec [AgToosa_Spec-[name]-v[N].md] approved. Estimate: [XS/S/M/L/XL]. [Enrolled in cycle / Not yet enrolled].
+
+    Next: /agtoosa-build to break down tasks and start TDD.
+    ```
+
+*   Transition the Story issue status from `Todo` to `Todo` (no change yet — status moves to `In Progress` when `/agtoosa-build` starts the first TDD task).

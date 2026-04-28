@@ -13,6 +13,7 @@ Display the AgToosa command reference. Do not read any Docs file — output this
 | `/agtoosa-review` | 4-persona parallel review (Security · Arch · Product · QA) + Simplifier pass | `security` · `arch` · `debug` · `cross` |
 | `/agtoosa-ship` | Pre-flight → deploy → archive spec → update changelog → suggest next story | `check` · `docs` · `retro` |
 | `/agtoosa-revert` | Git-aware logical rollback by phase or commit | _(phase or commit)_ |
+| `/agtoosa-task` | Fast Linear issue creation for bugs, chores, spikes, and fixes | _(type and description)_ |
 
 ### Typical workflow
 ```

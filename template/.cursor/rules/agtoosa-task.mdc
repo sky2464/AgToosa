@@ -1,0 +1,9 @@
+---
+description: AgToosa task workflow rules — activates when capturing a new bug, chore, spike, or fix.
+globs: Docs/AgToosa_Task.md
+alwaysApply: false
+---
+
+# AgToosa Task Rules
+
+When executing `/agtoosa-task` or any lightweight issue capture, follow `Docs/AgToosa_Task.md` precisely.

@@ -71,6 +71,7 @@ Your core principles are:
 |---------|--------------|-------------|
 | `/agtoosa-init` | `Docs/AgToosa_Init.md` | **One-time:** Scan codebase, validate AI configs, establish context |
 | `/agtoosa-revert` | `Docs/AgToosa_Revert.md` | Git-aware logical revert |
+| `/agtoosa-task` | `Docs/AgToosa_Task.md` | Fast Linear issue creation for bugs, chores, spikes, and fixes |
 
 ## Development Cycle
 
@@ -89,17 +90,95 @@ e.g.  /agtoosa-review debug   →  /agtoosa-build tdd   →  /agtoosa-ship check
 
 ## Key References
 
-- Linear project `AgToosa` — Source of truth for project state and backlog
-- `Docs/Master-Plan.md` — Workspace mirror of Linear state
+- Linear project — Source of truth for project state and backlog
+- `Docs/Master-Plan.md` — Workspace mirror of Linear state (read before every command)
 - `Docs/AgToosa_Skills.md` — Subagent skill-to-command mapping
 - `Docs/AgToosa_Changelog.md` — Project changelog
 - `Docs/Context/` — Product, tech-stack, and workflow configuration
 
+## Linear Issue Standard
+
+All Linear issues created by AgToosa must follow this anatomy.
+
+### Title Format
+
+`[Type]: [description]` — e.g., `Feature: Add OAuth login`, `Bug: Fix null pointer in auth`, `Epic: Authentication`, `Task: Write failing test for merge_settings()`
+
+Valid types: **Epic** · **Feature** · **Bug** · **Chore** · **Fix** · **Improvement** · **Spike** · **Task**
+
+### Required Description Sections
+
+```
+## Context
+[Why this work exists. 2–4 sentences.]
+
+## Scope
+[What is in scope and explicitly out of scope.]
+
+## Acceptance Criteria
+[AC-NNN list or bullets for bugs/chores.]
+
+## Definition of Done
+- [ ] All ACs pass
+- [ ] Tests written and green
+- [ ] Review approved (no 🔴 Critical)
+- [ ] Spec archived (Features/Bugs only)
+- [ ] Changelog entry added
+
+## Related
+[Parent Epic ID · linked issues · spec file path]
+```
+
+### Issue Hierarchy
+
+| Level | Title Prefix | Created at | Parent |
+|-------|-------------|------------|--------|
+| Epic | `Epic: [product area]` | `/agtoosa-init` | — |
+| Story | `Feature/Bug/Chore: [name]` | `/agtoosa-spec` | Epic |
+| Task | `Task: [short description]` | `/agtoosa-build scope` | Story |
+
+### Field Defaults
+
+| Field | Default |
+|-------|---------|
+| Label | Match the type (Feature / Bug / Chore / Fix / Improvement) |
+| Status | `Backlog` → `Todo` (spec approved) → `In Progress` (build started) → `In Review` (review started) → `Done` (shipped) |
+| Priority | Urgent: P0 blockers · High: Features/Bugs blocking users · Medium: Improvements · Low: Chores |
+
+### Phase Comment Protocol
+
+Post a comment on the active Story issue at each phase transition:
+
+```
+[Phase] [emoji] [brief summary]
+Date: [YYYY-MM-DD HH:MM]
+
+[1–3 sentences describing what happened.]
+
+Next: [what happens next in the workflow]
+```
+
+Phase emojis: Spec ✅ · Build started 🏗️ · Task complete 🟢 · Review started 🔍 · Review passed ✅ · Review blocked 🔴 · Shipped 🚀 · Rollback 🔙 · Blocked 🚧
+
+### Discovery Triage Protocol
+
+During `/agtoosa-build`, when the agent notices anything outside the declared scope:
+
+1. **Classify** — Bug / Chore / Feature / Security?
+2. **Size** — Can it be fixed in < 15 min without scope creep? If yes → fix it now and note it in the build summary. If no → step 3.
+3. **Ask the user** — "I found [brief description]. Should I: (A) create a Linear issue for later, (B) add to current scope, or (C) ignore?"
+4. **If A** — create a Linear issue via `/agtoosa-task`; add `Discovered during /agtoosa-build on [Story ID] on [date]` to the description; record in `Docs/Master-Plan.md` under `## Backlog`.
+5. **If B** — update the Scope Boundary in the active spec; create a new Task sub-issue under the Story; continue TDD cycle.
+
+Never silently fix or drop an out-of-scope discovery.
+
 ## Rules
 
-1. **Always** read `Docs/Context/` files before generating code.
+1. **Always** read `Docs/Context/` files AND `Docs/Master-Plan.md` before generating code. Use `Master-Plan.md` as the cycle/backlog snapshot; do not make redundant Linear API calls for information already mirrored there.
 2. **Never** assume dependency versions from memory — verify via web or terminal.
 3. **Always** update Linear first, then mirror the current state in `Docs/Master-Plan.md` after every phase.
 4. **Always** follow the TDD Red-Green-Refactor cycle during `/agtoosa-build` (if enabled).
 5. **Never** let a code file exceed 500 lines.
 6. **Always** archive completed work to `Docs/archived/` during `/agtoosa-ship`.
+7. **Always** post a progress comment on the active Story issue at each phase transition using the Phase Comment Protocol above.
+8. **Always** triage any out-of-scope discovery during `/agtoosa-build` using the Discovery Triage Protocol above. Never silently fix or drop an out-of-scope finding.

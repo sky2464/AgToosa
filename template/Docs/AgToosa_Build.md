@@ -45,9 +45,13 @@ Break down the Spec into atomic tasks, build with TDD, and rigorously test.
     *   Read the active `AgToosa_Spec-*.md` and translate it into atomic, clear, step-by-step actionable tasks.
 4.  **Parallelization:** Identify tasks that can run in parallel or be handled by sub-agents.
 5.  **Error Escalation:** If a critical flaw is found during task breakdown, stop and ask the user to re-run `/agtoosa-spec`.
-6.  **Master-Plan Update:**
-    *   Record all generated tasks under "Active Tasks" in Linear.
-    *   Mirror the current tasks in `Docs/Master-Plan.md`.
+6.  **Linear Task Issues & Master-Plan Update:**
+    *   For each atomic task, create a Linear **Task sub-issue** under the active Story:
+        - Title: `Task: [short description]`
+        - Label: Chore
+        - Status: `Todo`
+        - Parent: the Story issue ID (e.g., `DEV-15`)
+    *   Record all Task issue IDs and titles in `Docs/Master-Plan.md` under `## Active Tasks`.
     *   Present the task list to the user for confirmation before proceeding.
 
 ### Part 2 — TDD Build Cycle
@@ -55,6 +59,20 @@ Break down the Spec into atomic tasks, build with TDD, and rigorously test.
 > **TDD Enforcement:**
 > If `Docs/Context/workflow.md` has `tdd: true`, strictly follow the Red-Green-Refactor cycle below.
 > If TDD is disabled, still write tests but the strict ordering is relaxed.
+
+**Before starting the first TDD task:**
+- Transition the Story issue status to `In Progress` in Linear.
+- Update `Docs/Master-Plan.md`: move the Story row from `## Backlog` to `## Active Cycle`, set status to `In Progress`.
+- Post a Linear comment on the Story issue:
+
+    ```
+    Build 🏗️ Started
+    Date: [YYYY-MM-DD HH:MM]
+
+    Starting TDD cycle. [N] tasks declared. Scope: [list key files in scope].
+
+    Next: Task 1/[N] — [task title].
+    ```
 
 6.  **For each atomic task, execute the TDD Cycle:**
 
@@ -85,8 +103,41 @@ Break down the Spec into atomic tasks, build with TDD, and rigorously test.
     *   Ensure no file exceeds 500 lines of code.
     *   Ensure OpenTelemetry observability hooks are present (structured logging, metrics, tracing).
     *   Run the full test suite again to confirm nothing broke.
+    *   **Linear update (per task):** After the Refactor step passes:
+        - Transition the Task sub-issue status to `Done` in Linear.
+        - Update `Docs/Master-Plan.md`: increment the Tasks Done count for the Story row.
+        - Post a Linear comment on the Story issue:
+
+            ```
+            Task 🟢 [N]/[M] complete
+            Date: [YYYY-MM-DD HH:MM]
+
+            Completed: Task [N] — [task title]. Tests: [X] new, all green.
+
+            Next: Task [N+1]/[M] — [next task title].
+            ```
 
 7.  **Repeat** the Red-Green-Refactor cycle for every atomic task.
+
+### Discovery Triage
+
+Any bug, edge case, or out-of-scope requirement discovered during the TDD cycle must be triaged immediately — **never silently fixed or dropped**.
+
+**Trigger conditions** (run triage when any of these are noticed):
+- A bug in existing code not related to the current task
+- An edge case not covered by the active spec's ACs
+- A missing test for existing behavior
+- A new requirement raised by the user mid-build
+- Technical debt that would take > 30 min to fix now
+- A dependency security issue found during SBOM/audit step
+
+**Triage steps** (non-blocking — inline, < 2 min):
+1. Classify: Bug / Chore / Feature / Security
+2. Size: can it be fixed in < 15 min without scope creep? If yes → fix it now and note it in the build summary.
+3. If not trivial — ask the user: "I found [brief description]. Should I: (A) create a Linear issue for later, (B) add to current scope, or (C) ignore?"
+4. **If A** — run `/agtoosa-task`, add `Discovered during /agtoosa-build on [Story ID] on [date]` to the description, record in `Docs/Master-Plan.md` under `## Backlog`.
+5. **If B** — update the Scope Boundary in the active spec, create a new Task sub-issue under the Story, continue TDD.
+6. Record the triage decision (fix now / issue created / ignored) in the build summary output.
 
 ### Part 3 — Comprehensive Testing
 

@@ -51,7 +51,32 @@ Before deploying, clean the branch history:
     *   Run all `@smoke`-tagged tests against the deployed environment.
     *   Verify that every Must-priority AC from the spec is reachable in production.
     *   Verify the health endpoint returns 200 (if applicable).
-    *   **If any smoke test fails:** halt immediately, do NOT archive specs, trigger `/agtoosa-revert`.
+    *   **If smoke tests pass:**
+        - Transition the Story issue status to `Done` in Linear.
+        - Update `Docs/Master-Plan.md`: move the Story row from `## Active Cycle` to `## Completed This Cycle`.
+        - Post a Linear comment on the Story issue:
+
+            ```
+            Ship 🚀 Deployed
+            Date: [YYYY-MM-DD HH:MM]
+
+            Smoke tests: PASS. All Must-priority ACs verified in production. Spec archived to Docs/archived/.
+
+            Next: Story closed. See /agtoosa-ship retro to close the sprint loop.
+            ```
+
+    *   **If any smoke test fails:** halt immediately, do NOT archive specs, trigger `/agtoosa-revert`, and post:
+
+            ```
+            Rollback 🔙 Triggered
+            Date: [YYYY-MM-DD HH:MM]
+
+            Smoke test failure: [brief description of failing test]. Deployment rolled back. Story reset to In Review.
+
+            Next: /agtoosa-build tdd to fix the failure, then re-run /agtoosa-ship.
+            ```
+
+        Transition the Story status back to `In Review` in Linear and update `Docs/Master-Plan.md`.
     *   Capture smoke test pass/fail status in the changelog entry.
 
 ### Part 3 — Workspace Cleanup & Archiving (`/agtoosa-ship docs` runs Parts 3 + 4)

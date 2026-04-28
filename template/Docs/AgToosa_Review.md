@@ -15,6 +15,20 @@ Ensure code quality, security, and simplicity through multi-persona review.
 
 ### Part 1 — Virtual Specialist Reviews
 
+**Before starting reviews:**
+- Transition the Story issue status to `In Review` in Linear.
+- Update `Docs/Master-Plan.md`: set the Story row status to `In Review`.
+- Post a Linear comment on the Story issue:
+
+    ```
+    Review 🔍 Started
+    Date: [YYYY-MM-DD HH:MM]
+
+    Code review started. Running 4-persona review (Security, Eng Manager, CEO, QA Lead).
+
+    Next: Review verdict — pass unblocks /agtoosa-ship; any 🔴 Critical blocks it.
+    ```
+
 1.  **Security Officer:** OWASP Top 10 + STRIDE audit; SAST/DAST/Secrets scanning (Semgrep, CodeQL, Gitleaks); verify threat model from Spec.
 
 2.  **Engineering Manager:** Confirm no file exceeds 500 lines; check OOP compliance, observability hooks, and test coverage thresholds.
@@ -61,6 +75,29 @@ Ensure code quality, security, and simplicity through multi-persona review.
 ### Part 3 — Final Verdict
 
 6.  **Review Report:** Structured findings from all 4 personas — 🔴 Critical / 🟡 Warning / 🟢 Passed. Every 🔴 Critical must include the Iron Law root cause. Block `/agtoosa-ship` if any 🔴 Critical findings remain.
+
+    **Linear update (after verdict):**
+    - If **all clear** (no unresolved 🔴 Critical): post a comment on the Story issue:
+
+        ```
+        Review ✅ Passed
+        Date: [YYYY-MM-DD HH:MM]
+
+        All 4 personas passed. No 🔴 Critical findings. [N] 🟡 Warnings (accepted / fixed — list them).
+
+        Next: /agtoosa-ship to deploy.
+        ```
+
+    - If **blocked** (unresolved 🔴 Critical): post a comment and transition the Story back to `In Progress`:
+
+        ```
+        Review 🔴 Blocked
+        Date: [YYYY-MM-DD HH:MM]
+
+        [N] 🔴 Critical finding(s) must be resolved before shipping: [brief list]. Story reset to In Progress.
+
+        Next: /agtoosa-build tdd to address findings, then re-run /agtoosa-review.
+        ```
 
 ### Part 4 — Cross-Platform Second Opinion (`/agtoosa-review cross`)
 
