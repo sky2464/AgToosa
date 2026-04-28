@@ -99,6 +99,10 @@ run_update() {
   local detected_names=()
   local f src dst
 
+  COPIED=${COPIED:-0}
+  SKIPPED=${SKIPPED:-0}
+  BAK_FILES=("${BAK_FILES[@]+"${BAK_FILES[@]}"}")
+
   echo -e "${YELLOW}Updating workflow files...${NC}"
 
   # Step 1: Workflow files — plain overwrite (never touch Master-Plan or Changelog)
