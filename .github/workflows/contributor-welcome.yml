@@ -1,0 +1,109 @@
+name: Welcome First-Time Contributors
+
+on:
+  pull_request:
+    types: [opened]
+  issues:
+    types: [opened]
+
+jobs:
+  first-time-contributor:
+    name: Welcome New Contributors
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Check if first-time contributor
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const user = context.payload.sender.login;
+            
+            // Get all commits by this user
+            const commits = await github.rest.repos.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              author: user,
+              per_page: 1
+            });
+            
+            const isFirstTime = commits.data.length === 0;
+            core.setOutput('is-first-time', isFirstTime);
+
+      - name: Welcome first-time contributor to PR
+        if: github.event_name == 'pull_request' && steps.check.outputs.is-first-time == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const author = pr.user.login;
+            
+            const message = "👋 Welcome to AgToosa, @" + author + "! 🎉\n\n" +
+              "Thanks for submitting your first pull request. We appreciate your contribution!\n\n" +
+              "**Quick checklist for maintainers:**\n" +
+              "- [ ] Code review completed\n" +
+              "- [ ] Tests passing\n" +
+              "- [ ] Docs updated (if applicable)\n" +
+              "- [ ] CHANGELOG.md entry added\n\n" +
+              "Feel free to ask questions in the comments. Looking forward to merging this! 🚀";
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body: message
+            });
+
+      - name: Welcome first-time contributor to issue
+        if: github.event_name == 'issues' && steps.check.outputs.is-first-time == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const author = issue.user.login;
+            
+            const message = "👋 Welcome to AgToosa, @" + author + "! 🎉\n\n" +
+              "Thanks for opening an issue. We'll review it soon and get back to you.\n\n" +
+              "**To help us better understand:**\n" +
+              "- Be as specific as possible\n" +
+              "- Include error messages or screenshots if applicable\n" +
+              "- Mention your environment (OS, shell, platform)\n\n" +
+              "Thanks for being part of our community! 💙";
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body: message
+            });
+
+      - name: Add "good-first-issue" label to simple issues
+        if: github.event_name == 'issues'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const body = issue.body?.toLowerCase() || '';
+            const title = issue.title.toLowerCase();
+            
+            // Heuristic: if very short and specific, might be good-first-issue
+            const isSimple = (body.length < 300 && body.length > 20) &&
+                            (title.length < 50) &&
+                            !body.includes('complex') &&
+                            !body.includes('refactor');
+            
+            if (isSimple) {
+              try {
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  labels: ['good-first-issue']
+                });
+              } catch (error) {
+                console.log('Could not add label:', error);
+              }
+            }

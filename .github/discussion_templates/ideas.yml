@@ -1,0 +1,28 @@
+---
+title: "Ideas"
+labels: enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share your ideas for improving AgToosa!
+  - type: textarea
+    id: idea
+    attributes:
+      label: "What's your idea?"
+      placeholder: "Describe the feature or improvement you'd like to see"
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: "Why would this be useful?"
+      placeholder: "What problem does it solve? Who would benefit?"
+  - type: textarea
+    id: alternative
+    attributes:
+      label: "Alternatives considered"
+      placeholder: "Any other approaches you've thought about?"
+  - type: markdown
+    attributes:
+      value: |
+        **Note:** Popular ideas may be converted to [Issues](https://github.com/sky2464/AgToosa/issues) for tracking.

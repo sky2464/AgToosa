@@ -1,0 +1,33 @@
+version: 2
+updates:
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "sky2464"
+    labels:
+      - "dependencies"
+      - "chore"
+    commit-message:
+      prefix: "chore(deps):"
+      prefix-development: "chore(deps):"
+      include: "scope"
+
+  # Markdown and Shell Linting Tools (via pip/npm if used)
+  - package-ecosystem: "pip"
+    directory: "/tests"
+    schedule:
+      interval: "monthly"
+      day: "first"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "sky2464"
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "chore(deps):"

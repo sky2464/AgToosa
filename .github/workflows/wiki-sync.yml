@@ -1,0 +1,102 @@
+name: Sync Docs to Wiki
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'template/Docs/AgToosa_*.md'
+      - 'template/Docs/Context/**'
+      - '.github/PROJECT.md'
+      - '.github/DISCUSSIONS.md'
+  workflow_dispatch:
+
+jobs:
+  sync-wiki:
+    name: Sync Documentation to GitHub Wiki
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main repository
+        uses: actions/checkout@v4
+
+      - name: Checkout wiki repository
+        uses: actions/checkout@v4
+        with:
+          repository: sky2464/AgToosa.wiki
+          path: wiki
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync workflow files to wiki
+        run: |
+          # Copy main AgToosa docs
+          cp template/Docs/AgToosa_Agent.md wiki/AgToosa-Workflow.md
+          cp template/Docs/AgToosa_Spec.md wiki/Phase-1-Specification.md
+          cp template/Docs/AgToosa_Build.md wiki/Phase-2-Build.md
+          cp template/Docs/AgToosa_Review.md wiki/Phase-3-Review.md
+          cp template/Docs/AgToosa_Ship.md wiki/Phase-4-Ship.md
+          
+          # Copy setup guides
+          cp template/Docs/AgToosa_Init.md wiki/Getting-Started.md
+          
+          # Copy project configuration
+          cp .github/PROJECT.md wiki/GitHub-Project-Setup.md
+          cp .github/DISCUSSIONS.md wiki/Community-Discussions.md
+
+      - name: Update wiki Home.md with links
+        run: |
+          cat > wiki/Home.md << 'WIKI_EOF'
+          # AgToosa Documentation Hub
+          
+          Welcome to the AgToosa wiki! Here you'll find documentation on workflows, setup, and community.
+          
+          ## Getting Started
+          - [Quick Start Guide](./Getting-Started)
+          - [Installation & Setup](./Getting-Started)
+          
+          ## Workflow Phases
+          AgToosa follows a 4-phase lifecycle for AI-driven development:
+          
+          1. **[Phase 1: Specification](./Phase-1-Specification)** — Spec ✅ Approved
+          2. **[Phase 2: Build](./Phase-2-Build)** — Build 🏗️ Started
+          3. **[Phase 3: Review](./Phase-3-Review)** — Review 🔍 Started
+          4. **[Phase 4: Ship](./Phase-4-Ship)** — Ship 🚀 Deployed
+          
+          📖 [Full Workflow Documentation](./AgToosa-Workflow)
+          
+          ## Setup & Configuration
+          - [GitHub Project Setup](./GitHub-Project-Setup)
+          - [Community Discussions](./Community-Discussions)
+          
+          ## Platform Integration
+          AgToosa supports multiple AI platforms:
+          - Claude Code
+          - GitHub Copilot
+          - Cursor
+          - Windsurf
+          - Gemini CLI
+          - Roo
+          
+          ## Community
+          - [Discussions](https://github.com/sky2464/AgToosa/discussions) — Q&A, Ideas, Show & Tell
+          - [Issues](https://github.com/sky2464/AgToosa/issues) — Bug reports and feature requests
+          - [Contributing](https://github.com/sky2464/AgToosa/blob/main/CONTRIBUTING.md)
+          
+          ---
+          
+          Last updated: $(date)
+          WIKI_EOF
+
+      - name: Commit and push wiki changes
+        working-directory: wiki
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          
+          git add .
+          
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          
+          git commit -m "chore: sync docs from main repository"
+          git push origin main

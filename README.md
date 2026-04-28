@@ -6,9 +6,10 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-2.4.0-green.svg)](https://github.com/sky2464/AgToosa/releases)
-[![Tests](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml)
+[![CI Status](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml)
+[![Security Scan](https://github.com/sky2464/AgToosa/actions/workflows/security-scan.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/security-scan.yml)
+[![Semantic Release](https://github.com/sky2464/AgToosa/actions/workflows/release.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/release.yml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![Discord](https://img.shields.io/badge/Discord-chat-blue.svg)](https://discord.gg/agtoosa)
 [![Discussions](https://img.shields.io/badge/Discussions-GitHub-blue.svg)](https://github.com/sky2464/AgToosa/discussions)
 
 *Turn your AI coding assistant into an autonomous, security-first development team.*
@@ -225,6 +226,39 @@ your-project/
 | Multi-platform AI support | ✅ | ❌ | ❌ | ❌ |
 | Local-first (no curl install) | ✅ | ❌ | ❌ | ❌ |
 | One-click project copy | ✅ | ❌ | ❌ | ❌ |
+
+---
+
+## GitHub Automation & Workflow
+
+AgToosa ships with comprehensive GitHub automation to keep your project healthy and contributors engaged:
+
+### Automated Workflows
+
+| Workflow | Purpose | Trigger |
+|----------|---------|---------|
+| **Semantic Release** | Auto-publish releases from git tags with changelog extraction | `git tag v*` |
+| **Stale Issues** | Auto-close inactive issues after 30 days | Daily schedule |
+| **Auto-Label** | Automatically label issues and PRs by keywords | Issue/PR opened |
+| **Security Scan** | SAST, dependency vulnerabilities, secret scanning | Push to main, weekly schedule |
+| **Wiki Sync** | Keep GitHub Wiki in sync with `template/Docs/` | Push to main |
+| **Contributor Welcome** | Greet first-time contributors, suggest good-first-issues | PR/Issue opened |
+| **Project Auto-Assign** | Assign new issues to GitHub Project backlog | Issue opened |
+| **Dependabot** | Automated dependency updates for Actions and tools | Weekly |
+
+### Community Features
+
+- **Discussions** — Q&A, Ideas, Show & Tell categories for community engagement
+- **GitHub Projects** — Public project board synced with Linear (AgToosa)
+- **Issue Templates** — Structured bug/feature forms (`.github/ISSUE_TEMPLATE/`)
+- **Discussion Templates** — Q&A, Ideas, Show & Tell templates (`.github/discussion_templates/`)
+
+### Release Management
+
+- **Semantic Versioning** — Enforced tag format validation
+- **CHANGELOG Extraction** — Release notes automatically extracted from CHANGELOG.md
+- **Milestone Auto-Creation** — Next version milestone created automatically
+- **Pre-release Support** — `prerelease` flag for release candidates
 
 ---
 

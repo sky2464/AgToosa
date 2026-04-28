@@ -1,0 +1,68 @@
+name: Setup GitHub Labels
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-labels:
+    name: Create Standard GitHub Labels
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Setup labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = [
+              // Issue types
+              { name: 'bug', color: 'd73a49', description: 'Something is broken' },
+              { name: 'enhancement', color: 'a2eeef', description: 'New feature request' },
+              { name: 'documentation', color: '0075ca', description: 'Docs improvements' },
+              { name: 'chore', color: 'bfdadc', description: 'Maintenance & tooling' },
+              { name: 'question', color: 'cc317c', description: 'Questions & discussions' },
+              { name: 'testing', color: '28a745', description: 'Test suite improvements' },
+              
+              // Priority
+              { name: 'priority-critical', color: 'ff0000', description: 'Critical — blocks users' },
+              { name: 'priority-high', color: 'ff6600', description: 'High priority' },
+              { name: 'priority-normal', color: 'ffaa00', description: 'Normal priority' },
+              { name: 'priority-low', color: 'dddddd', description: 'Low priority' },
+              
+              // Status
+              { name: 'status-backlog', color: '9e9e9e', description: 'Backlog' },
+              { name: 'status-in-progress', color: '0075ca', description: 'Currently being worked on' },
+              { name: 'status-blocked', color: 'ff6666', description: 'Blocked by something' },
+              { name: 'status-review', color: 'fbca04', description: 'Under review' },
+              
+              // Special
+              { name: 'good-first-issue', color: '7057ff', description: 'Good for newcomers' },
+              { name: 'dependencies', color: '0366d6', description: 'Dependency updates' },
+              { name: 'security', color: 'e74c3c', description: 'Security & vulnerabilities' },
+              { name: 'performance', color: '11af41', description: 'Performance improvements' },
+              { name: 'help-wanted', color: '33aa3c', description: 'Extra attention needed' },
+              { name: 'duplicate', color: 'cfd3d7', description: 'Duplicate issue' },
+              { name: 'wontfix', color: 'ffffff', description: 'Will not be fixed' },
+              { name: 'invalid', color: 'e6e6e6', description: 'Invalid issue' },
+              { name: 'stale', color: '9ca3af', description: 'Inactive for 30 days' },
+            ];
+            
+            for (const label of labels) {
+              try {
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: label.name,
+                  color: label.color,
+                  description: label.description
+                });
+                console.log(`✅ Created label: ${label.name}`);
+              } catch (error) {
+                if (error.status === 422) {
+                  console.log(`⏭️  Label already exists: ${label.name}`);
+                } else {
+                  console.error(`❌ Error creating ${label.name}:`, error.message);
+                }
+              }
+            }

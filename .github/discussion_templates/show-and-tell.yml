@@ -1,0 +1,24 @@
+---
+title: "Show & Tell"
+labels: show-and-tell
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share what you've built with AgToosa! 🎉
+  - type: textarea
+    id: showcase
+    attributes:
+      label: "What did you build?"
+      placeholder: "Describe your project or workflow"
+      required: true
+  - type: textarea
+    id: link
+    attributes:
+      label: "Link (optional)"
+      placeholder: "GitHub repo, demo, blog post, etc."
+  - type: textarea
+    id: story
+    attributes:
+      label: "How AgToosa helped"
+      placeholder: "What made this easier or better?"

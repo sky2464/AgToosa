@@ -1,0 +1,118 @@
+name: Auto-Label Issues and PRs
+
+on:
+  issues:
+    types: [opened, edited]
+  pull_request:
+    types: [opened, edited]
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Auto-label issues
+        if: github.event_name == 'issues'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const title = issue.title.toLowerCase();
+            const body = issue.body?.toLowerCase() || '';
+            const content = title + ' ' + body;
+            
+            const labels = [];
+            
+            // Bug label patterns
+            if (content.includes('bug') || content.includes('error') || 
+                content.includes('broken') || content.includes('not working') ||
+                content.includes('exception') || content.includes('crash')) {
+              labels.push('bug');
+            }
+            
+            // Feature label patterns
+            if (content.includes('feature') || content.includes('enhancement') ||
+                content.includes('request') || content.includes('add support') ||
+                content.includes('new') || content.includes('implement')) {
+              labels.push('enhancement');
+            }
+            
+            // Documentation label patterns
+            if (content.includes('documentation') || content.includes('docs') ||
+                content.includes('readme') || content.includes('guide') ||
+                content.includes('example') || content.includes('tutorial')) {
+              labels.push('documentation');
+            }
+            
+            // Question label patterns
+            if (title.includes('?') || content.includes('how do i') ||
+                content.includes('how to') || content.includes('can i')) {
+              labels.push('question');
+            }
+            
+            // Chore label patterns
+            if (content.includes('cleanup') || content.includes('refactor') ||
+                content.includes('dependencies') || content.includes('maintenance')) {
+              labels.push('chore');
+            }
+            
+            if (labels.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                labels: labels
+              });
+            }
+      
+      - name: Auto-label PRs
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const title = pr.title.toLowerCase();
+            const body = pr.body?.toLowerCase() || '';
+            const content = title + ' ' + body;
+            
+            const labels = [];
+            
+            // Docs PR
+            if (content.includes('docs') || content.includes('documentation') ||
+                content.includes('readme') || content.includes('wiki')) {
+              labels.push('documentation');
+            }
+            
+            // Test PR
+            if (content.includes('test') || content.includes('spec') ||
+                content.includes('bats') || content.includes('coverage')) {
+              labels.push('testing');
+            }
+            
+            // Chore/CI PR
+            if (content.includes('ci') || content.includes('workflow') ||
+                content.includes('github actions') || content.includes('chore')) {
+              labels.push('chore');
+            }
+            
+            // Feature PR
+            if (content.includes('feature') || content.includes('new')) {
+              labels.push('enhancement');
+            }
+            
+            // Bug fix PR
+            if (content.includes('fix') || content.includes('bug')) {
+              labels.push('bug');
+            }
+            
+            if (labels.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                labels: labels
+              });
+            }
