@@ -485,3 +485,12 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [[ "$output" == *".claude/commands"* ]]
   [[ "$output" == *"AgToosa-owned"* ]]
 }
+
+@test "--list-template-files output has no duplicates" {
+  run bash "$SCRIPT" --list-template-files
+  [ "$status" -eq 0 ]
+  # Sort and find any lines that appear more than once
+  local dupes
+  dupes="$(echo "$output" | sort | uniq -d)"
+  [ -z "$dupes" ]
+}

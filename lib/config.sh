@@ -171,7 +171,5 @@ print_usage() {
 }
 
 print_template_files() {
-  printf '%s\n' "${DOCS_FILES[@]}" "${OPTIONAL_TEMPLATE_FILES[@]}" "${CONTEXT_FILES[@]}" \
-    "${CLAUDE_COMMAND_FILES[@]}" "${CLAUDE_HOOK_FILES[@]}" "${CLAUDE_SKILL_FILES[@]}" \
-    "${CURSOR_RULE_FILES[@]}"
+  printf '%s\n' "${DOCS_FILES[@]}" "${OPTIONAL_TEMPLATE_FILES[@]}" "${CONTEXT_FILES[@]}"
 }
