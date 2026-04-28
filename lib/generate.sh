@@ -43,10 +43,20 @@ stage_files() {
   fi
 
   if [[ "$USE_COPILOT" == true ]]; then
-    mkdir -p "${SHIP_DIR}/.github"
+    mkdir -p "${SHIP_DIR}/.github" "${SHIP_DIR}/.github/instructions"
     inject_version "${TEMPLATE_DIR}/.github/copilot-instructions.md" "${SHIP_DIR}/.github/copilot-instructions.md"
     echo -e "  ${GREEN}✅${NC} .github/copilot-instructions.md ${CYAN}(GitHub Copilot)${NC}"
     GENERATED=$((GENERATED + 1))
+
+    local cinstr cinstr_count=0
+    for cinstr in "${COPILOT_INSTRUCTION_FILES[@]}"; do
+      if [[ -f "${TEMPLATE_DIR}/${cinstr}" ]]; then
+        cp "${TEMPLATE_DIR}/${cinstr}" "${SHIP_DIR}/${cinstr}"
+        cinstr_count=$((cinstr_count + 1))
+        GENERATED=$((GENERATED + 1))
+      fi
+    done
+    [[ $cinstr_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .github/instructions/ ${CYAN}(${cinstr_count} scoped instruction files)${NC}"
   fi
 
   if [[ "$USE_OPENCODE" == true ]]; then
@@ -155,10 +165,21 @@ stage_files() {
 
   # VS Code generic — staged when VS Code selected (skipped if Copilot already covers it)
   if [[ "$USE_VSCODE" == true && "$USE_COPILOT" != true ]]; then
-    mkdir -p "${SHIP_DIR}/.github/prompts" "${SHIP_DIR}/.github/agents"
+    mkdir -p "${SHIP_DIR}/.github/prompts" "${SHIP_DIR}/.github/agents" "${SHIP_DIR}/.github/instructions"
     inject_version "${TEMPLATE_DIR}/.github/copilot-instructions.md" "${SHIP_DIR}/.github/copilot-instructions.md"
     echo -e "  ${GREEN}✅${NC} .github/copilot-instructions.md ${CYAN}(VS Code)${NC}"
     GENERATED=$((GENERATED + 1))
+
+    local vinstr vinstr_count=0
+    for vinstr in "${COPILOT_INSTRUCTION_FILES[@]}"; do
+      if [[ -f "${TEMPLATE_DIR}/${vinstr}" ]]; then
+        cp "${TEMPLATE_DIR}/${vinstr}" "${SHIP_DIR}/${vinstr}"
+        vinstr_count=$((vinstr_count + 1))
+        GENERATED=$((GENERATED + 1))
+      fi
+    done
+    [[ $vinstr_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .github/instructions/ ${CYAN}(${vinstr_count} scoped instruction files)${NC}"
+
     local vprompt vprompt_count=0
     for vprompt in "${COPILOT_PROMPT_FILES[@]}"; do
       if [[ -f "${TEMPLATE_DIR}/${vprompt}" ]]; then

@@ -64,6 +64,10 @@ OPTIONAL_TEMPLATE_FILES=(
   ".github/prompts/agtoosa-task.prompt.md"
   ".github/prompts/agtoosa-help.prompt.md"
   ".github/agents/agtoosa.agent.md"
+  ".github/instructions/agtoosa-core.instructions.md"
+  ".github/instructions/agtoosa-testing.instructions.md"
+  ".github/instructions/agtoosa-security.instructions.md"
+  ".github/instructions/agtoosa-changelog.instructions.md"
   ".windsurf/rules/agtoosa-core.md"
   ".windsurf/rules/agtoosa-spec.md"
   ".windsurf/rules/agtoosa-build.md"
@@ -134,6 +138,13 @@ COPILOT_PROMPT_FILES=(
 
 COPILOT_AGENT_FILES=(
   ".github/agents/agtoosa.agent.md"
+)
+
+COPILOT_INSTRUCTION_FILES=(
+  ".github/instructions/agtoosa-core.instructions.md"
+  ".github/instructions/agtoosa-testing.instructions.md"
+  ".github/instructions/agtoosa-security.instructions.md"
+  ".github/instructions/agtoosa-changelog.instructions.md"
 )
 
 WINDSURF_RULE_FILES=(

@@ -167,6 +167,11 @@ teardown() {
   run bash -c "printf '$TEST_PROJECT\n5\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/.github/copilot-instructions.md" ]
+  [ -d "$TEST_PROJECT/.github/instructions" ]
+  [ -f "$TEST_PROJECT/.github/instructions/agtoosa-core.instructions.md" ]
+  [ -f "$TEST_PROJECT/.github/instructions/agtoosa-testing.instructions.md" ]
+  [ -f "$TEST_PROJECT/.github/instructions/agtoosa-security.instructions.md" ]
+  [ -f "$TEST_PROJECT/.github/instructions/agtoosa-changelog.instructions.md" ]
   [ ! -f "$TEST_PROJECT/CLAUDE.md" ]
 }
 
@@ -192,6 +197,11 @@ teardown() {
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
   [ -f "$TEST_PROJECT/.github/copilot-instructions.md" ]
+  [ -d "$TEST_PROJECT/.github/instructions" ]
+  [ -f "$TEST_PROJECT/.github/instructions/agtoosa-core.instructions.md" ]
+  [ -f "$TEST_PROJECT/.github/instructions/agtoosa-testing.instructions.md" ]
+  [ -f "$TEST_PROJECT/.github/instructions/agtoosa-security.instructions.md" ]
+  [ -f "$TEST_PROJECT/.github/instructions/agtoosa-changelog.instructions.md" ]
   [ -f "$TEST_PROJECT/.github/prompts/agtoosa-init.prompt.md" ]
   [ -f "$TEST_PROJECT/.github/agents/agtoosa.agent.md" ]
   [ ! -f "$TEST_PROJECT/.cursorrules" ]
@@ -207,6 +217,8 @@ teardown() {
   [ -f "$TEST_PROJECT/CLAUDE.md" ]
   [ -f "$TEST_PROJECT/AGENTS.md" ]
   [ -f "$TEST_PROJECT/.github/copilot-instructions.md" ]
+  [ -d "$TEST_PROJECT/.github/instructions" ]
+  [ -f "$TEST_PROJECT/.github/instructions/agtoosa-core.instructions.md" ]
   [ -f "$TEST_PROJECT/OPENCODE.md" ]
   # Native platform rule/command directories
   [ -d "$TEST_PROJECT/.cursor/rules" ]

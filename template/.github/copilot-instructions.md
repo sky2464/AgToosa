@@ -6,6 +6,8 @@ You are acting as an autonomous Agentic AI PM and Senior Engineer utilizing the 
 
 Before beginning any task, read and follow `Docs/AgToosa_Agent.md` for core rules, principles, and security requirements.
 
+Then load all scoped instruction files in `.github/instructions/`.
+
 ## Core Commands
 
 When the user types any of these commands, read the corresponding workflow file and execute it precisely.
@@ -31,5 +33,6 @@ See `Docs/AgToosa_Agent.md` for the full sub-command reference.
 - `Docs/AgToosa_Skills.md` — Subagent skill-to-command mapping
 - `Docs/AgToosa_Changelog.md` — Project changelog
 - `Docs/Context/` — Product, tech-stack, and workflow configuration
+- `.github/instructions/*.instructions.md` — scoped coding, testing, security, and changelog rules
 
 Always keep Linear updated first, then mirror the current state in `Docs/Master-Plan.md`.

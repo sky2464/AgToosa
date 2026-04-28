@@ -21,6 +21,12 @@ count_existing_files() {
   [[ "$USE_GEMINI"   == true && -f "${PROJECT_PATH}/AGENTS.md" ]]                       && EXISTING_FILES=$((EXISTING_FILES + 1))
   [[ "$USE_GEMINI"   == true && -f "${PROJECT_PATH}/Docs/AgToosa_Gemini.md" ]]          && EXISTING_FILES=$((EXISTING_FILES + 1))
   [[ "$USE_COPILOT"  == true && -f "${PROJECT_PATH}/.github/copilot-instructions.md" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+  if [[ "$USE_COPILOT" == true || "$USE_VSCODE" == true ]]; then
+    local cinstr
+    for cinstr in "${COPILOT_INSTRUCTION_FILES[@]}"; do
+      [[ -f "${PROJECT_PATH}/${cinstr}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    done
+  fi
 
   [[ "$USE_OPENCODE" == true && -f "${PROJECT_PATH}/OPENCODE.md" ]]                     && EXISTING_FILES=$((EXISTING_FILES + 1))
   for cfile in "${CONTEXT_FILES[@]}"; do
@@ -123,6 +129,19 @@ install_files() {
       ".github/copilot-instructions.md"
   fi
 
+  if [[ "$USE_COPILOT" == true || "$USE_VSCODE" == true ]]; then
+    mkdir -p "${PROJECT_PATH}/.github/instructions"
+    local cinstr cinstr_count=0
+    for cinstr in "${COPILOT_INSTRUCTION_FILES[@]}"; do
+      if [[ -f "${SHIP_DIR}/${cinstr}" ]]; then
+        cp "${SHIP_DIR}/${cinstr}" "${PROJECT_PATH}/${cinstr}"
+        cinstr_count=$((cinstr_count + 1))
+        COPIED=$((COPIED + 1))
+      fi
+    done
+    [[ $cinstr_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .github/instructions/ (${cinstr_count} scoped instruction files)"
+  fi
+
   # Context/ stubs — skip if exists (user may have filled them in)
   local cfile
   for cfile in "${CONTEXT_FILES[@]}"; do
@@ -202,6 +221,28 @@ install_files() {
     for pagent in "${COPILOT_AGENT_FILES[@]}"; do
       if [[ -f "${SHIP_DIR}/${pagent}" ]]; then
         cp "${SHIP_DIR}/${pagent}" "${PROJECT_PATH}/${pagent}"
+        COPIED=$((COPIED + 1))
+        echo -e "  ${GREEN}✅${NC} .github/agents/agtoosa.agent.md"
+      fi
+    done
+  fi
+
+  # VS Code generic prompts + custom agent — always overwrite (AgToosa-owned)
+  if [[ "$USE_VSCODE" == true && "$USE_COPILOT" != true ]]; then
+    mkdir -p "${PROJECT_PATH}/.github/prompts" "${PROJECT_PATH}/.github/agents"
+    local vprompt vprompt_count=0
+    for vprompt in "${COPILOT_PROMPT_FILES[@]}"; do
+      if [[ -f "${SHIP_DIR}/${vprompt}" ]]; then
+        cp "${SHIP_DIR}/${vprompt}" "${PROJECT_PATH}/${vprompt}"
+        vprompt_count=$((vprompt_count + 1))
+        COPIED=$((COPIED + 1))
+      fi
+    done
+    [[ $vprompt_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .github/prompts/ (${vprompt_count} reusable prompts)"
+    local vagent
+    for vagent in "${COPILOT_AGENT_FILES[@]}"; do
+      if [[ -f "${SHIP_DIR}/${vagent}" ]]; then
+        cp "${SHIP_DIR}/${vagent}" "${PROJECT_PATH}/${vagent}"
         COPIED=$((COPIED + 1))
         echo -e "  ${GREEN}✅${NC} .github/agents/agtoosa.agent.md"
       fi

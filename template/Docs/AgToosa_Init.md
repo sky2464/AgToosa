@@ -11,9 +11,11 @@ One-time initialization: establish project context, scan the codebase, validate 
 
 1.  **Detect AI Configs:**
     *   Scan the project root for AI config files: `.cursorrules`, `.windsurfrules`, `CLAUDE.md`, `AGENTS.md`, `.github/copilot-instructions.md`, `OPENCODE.md`, and any other rules/memory files.
+    *   Scan `.github/instructions/` for `*.instructions.md` scoped instruction files.
     *   Check each config correctly references `Docs/AgToosa_Agent.md` and the `/agtoosa-*` commands.
     *   If a config exists but is NOT wired to AgToosa, ask the user whether to update it.
     *   If a config for the selected AI tool is missing, create it with proper AgToosa references.
+    *   If `.github/instructions/` is missing, create it and scaffold baseline files: `agtoosa-core.instructions.md`, `agtoosa-testing.instructions.md`, `agtoosa-security.instructions.md`, and `agtoosa-changelog.instructions.md`.
 
 2.  **Platform Notes:**
     *   All supported platforms auto-load their config (`.cursorrules`, `CLAUDE.md`, `AGENTS.md`, etc.).

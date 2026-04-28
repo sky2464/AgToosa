@@ -95,6 +95,7 @@ e.g.  /agtoosa-review debug   →  /agtoosa-build tdd   →  /agtoosa-ship check
 - `Docs/AgToosa_Skills.md` — Subagent skill-to-command mapping
 - `Docs/AgToosa_Changelog.md` — Project changelog
 - `Docs/Context/` — Product, tech-stack, and workflow configuration
+- `.github/instructions/` — Scoped agent instructions for core, testing, security, and changelog rules
 
 ## Linear Issue Standard
 
@@ -174,7 +175,7 @@ Never silently fix or drop an out-of-scope discovery.
 
 ## Rules
 
-1. **Always** read `Docs/Context/` files AND `Docs/Master-Plan.md` before generating code. Use `Master-Plan.md` as the cycle/backlog snapshot; do not make redundant Linear API calls for information already mirrored there.
+1. **Always** read `Docs/Context/`, `Docs/Master-Plan.md`, and `.github/instructions/*.instructions.md` (if present) before generating code. Use `Master-Plan.md` as the cycle/backlog snapshot; do not make redundant Linear API calls for information already mirrored there.
 2. **Never** assume dependency versions from memory — verify via web or terminal.
 3. **Always** update Linear first, then mirror the current state in `Docs/Master-Plan.md` after every phase.
 4. **Always** follow the TDD Red-Green-Refactor cycle during `/agtoosa-build` (if enabled).
