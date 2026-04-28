@@ -43,7 +43,7 @@ jobs:
 
       - name: Update wiki Home.md with links
         run: |
-          cat > wiki/Home.md << 'WIKI_EOF'
+          cat > wiki/Home.md << "WIKI_EOF"
           # AgToosa Documentation Hub
           
           Welcome to the AgToosa wiki! Here you'll find documentation on workflows, setup, and community.
