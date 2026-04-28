@@ -1,0 +1,17 @@
+---
+description: AgToosa QA workflow rules — activates when running or planning quality assurance.
+globs: Docs/AgToosa_QA.md
+alwaysApply: false
+---
+
+# AgToosa QA Rules
+
+When executing `/agtoosa-qa` or any QA work, follow `Docs/AgToosa_QA.md` precisely.
+
+## Key constraints
+
+- Every Must-priority AC from the active spec must have a passing test.
+- Coverage must meet or exceed the threshold in `Docs/Context/workflow.md`.
+- Browser/device matrix from `Docs/Context/tech-stack.md` must be fully covered.
+- Run the test suite 3× to detect flaky tests before reporting pass.
+- Regression tests for bug fixes must follow the naming pattern `regression_[bug-id]_*`.

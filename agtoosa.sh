@@ -188,7 +188,9 @@ fi
 
 # ── Stage files into ship/ ────────────────────────────────────
 [[ -d "$SHIP_DIR" ]] && rm -rf "$SHIP_DIR"
-mkdir -p "$SHIP_DIR/Docs/archived" "$SHIP_DIR/Docs/Context"
+mkdir -p "$SHIP_DIR/Docs/archived" "$SHIP_DIR/Docs/Context" \
+         "$SHIP_DIR/.claude/commands" "$SHIP_DIR/.claude/skills" \
+         "$SHIP_DIR/.cursor/rules"
 
 echo -e "${BOLD}Generating files...${NC}"
 echo ""

@@ -1,0 +1,17 @@
+---
+description: AgToosa build workflow rules — activates when implementing or testing features.
+globs: Docs/AgToosa_Build.md
+alwaysApply: false
+---
+
+# AgToosa Build Rules
+
+When executing `/agtoosa-build` or any implementation work, follow `Docs/AgToosa_Build.md` precisely.
+
+## Key constraints
+
+- **Red before Green** — the failing test MUST exist before any implementation code is written.
+- **Atomic tasks** — break the spec into the smallest independently testable units before coding.
+- **No file > 500 lines** — refactor immediately if a file approaches the limit.
+- Run SAST/DAST (Semgrep, CodeQL, Gitleaks) after each task, not just at the end.
+- Update the task list in Linear and `Docs/Master-Plan.md` as tasks complete.

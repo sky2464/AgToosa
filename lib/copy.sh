@@ -133,3 +133,55 @@ merge_platform_file() {
   echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(appended to existing file, backup: $(basename "$bak"))${NC}"
   COPIED=$((COPIED + 1))
 }
+
+# Deep-merge AgToosa hooks into an existing .claude/settings.json without touching user settings.
+# New file → plain copy. Existing file → Python3 merges hooks arrays, deduplicating by command string.
+merge_settings_json() {
+  local src="$1" dst="$2" label="$3"
+  mkdir -p "$(dirname "$dst")"
+
+  if [[ ! -f "$dst" ]]; then
+    cp "$src" "$dst"
+    echo -e "  ${GREEN}✅${NC} ${label}"
+    COPIED=$((COPIED + 1))
+    return
+  fi
+
+  local tmp
+  tmp="$(mktemp)"
+  if python3 - "$src" "$dst" "$tmp" <<'PYEOF'
+import json, sys
+
+src_path, dst_path, out_path = sys.argv[1], sys.argv[2], sys.argv[3]
+
+with open(src_path) as f:
+    new_cfg = json.load(f)
+with open(dst_path) as f:
+    existing = json.load(f)
+
+for event, handlers in new_cfg.get('hooks', {}).items():
+    existing.setdefault('hooks', {}).setdefault(event, [])
+    existing_cmds = {
+        h.get('command', '')
+        for entry in existing['hooks'][event]
+        for h in entry.get('hooks', [])
+    }
+    for handler in handlers:
+        new_cmds = {h.get('command', '') for h in handler.get('hooks', [])}
+        if not new_cmds.issubset(existing_cmds):
+            existing['hooks'][event].append(handler)
+
+with open(out_path, 'w') as f:
+    json.dump(existing, f, indent=2)
+    f.write('\n')
+PYEOF
+  then
+    mv "$tmp" "$dst"
+    echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(hooks merged)${NC}"
+    COPIED=$((COPIED + 1))
+  else
+    rm -f "$tmp"
+    echo -e "  ${YELLOW}⚠️${NC}  ${label} — Python3 unavailable or JSON parse error, skipped"
+    SKIPPED=$((SKIPPED + 1))
+  fi
+}

@@ -1,0 +1,17 @@
+---
+description: AgToosa ship workflow rules — activates when deploying or archiving completed work.
+globs: Docs/AgToosa_Ship.md
+alwaysApply: false
+---
+
+# AgToosa Ship Rules
+
+When executing `/agtoosa-ship` or any shipping work, follow `Docs/AgToosa_Ship.md` precisely.
+
+## Key constraints
+
+- All pre-flight checks must pass before deployment begins (no 🔴 Critical findings, all Linear tickets closed).
+- Zero-downtime deployment strategy is required — verify rollback plan exists before deploying.
+- Archive the active spec to `Docs/archived/` with the completion date in the filename.
+- Update `Docs/AgToosa_Changelog.md` and sync Linear after a successful ship.
+- Always end with a retro summary and a suggested next story.

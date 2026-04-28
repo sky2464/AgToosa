@@ -10,7 +10,17 @@ print_dryrun_preview() {
   while IFS= read -r f; do
     target="${PROJECT_PATH}/${f}"
 
-    if [[ ! -f "$target" ]]; then
+    if [[ "$f" == .claude/commands/* || "$f" == .claude/skills/* || "$f" == .cursor/rules/* ]]; then
+      echo -e "  ${GREEN}✅${NC} ${f}  → Would overwrite (AgToosa-owned, always updated)"
+
+    elif [[ "$f" == .claude/settings.json ]]; then
+      if [[ -f "$target" ]]; then
+        echo -e "  ${CYAN}🔀${NC} ${f}  → Would merge AgToosa hooks into existing settings"
+      else
+        echo -e "  ${GREEN}✅${NC} ${f}  → New file"
+      fi
+
+    elif [[ ! -f "$target" ]]; then
       echo -e "  ${GREEN}✅${NC} ${f}  → New file"
 
     elif [[ "$f" == Docs/Context/* ]]; then

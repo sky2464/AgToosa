@@ -77,4 +77,47 @@ stage_files() {
   if [[ $context_staged -gt 0 ]]; then
     echo -e "  ${GREEN}✅${NC} Docs/Context/ ${CYAN}(${context_staged} config stubs — fill in during /agtoosa-init)${NC}"
   fi
+
+  # Claude Code native commands, hooks, and skills — staged when Claude selected
+  if [[ "$USE_CLAUDE" == true ]]; then
+    mkdir -p "${SHIP_DIR}/.claude/commands" "${SHIP_DIR}/.claude/skills"
+    local cmd cmd_count=0 skill skill_count=0
+    for cmd in "${CLAUDE_COMMAND_FILES[@]}"; do
+      if [[ -f "${TEMPLATE_DIR}/${cmd}" ]]; then
+        cp "${TEMPLATE_DIR}/${cmd}" "${SHIP_DIR}/${cmd}"
+        cmd_count=$((cmd_count + 1))
+        GENERATED=$((GENERATED + 1))
+      fi
+    done
+    [[ $cmd_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .claude/commands/ ${CYAN}(${cmd_count} slash commands — native /agtoosa-* in Claude Code)${NC}"
+
+    if [[ -f "${TEMPLATE_DIR}/.claude/settings.json" ]]; then
+      cp "${TEMPLATE_DIR}/.claude/settings.json" "${SHIP_DIR}/.claude/settings.json"
+      echo -e "  ${GREEN}✅${NC} .claude/settings.json ${CYAN}(hooks: Stop, PreToolUse, PostToolUse)${NC}"
+      GENERATED=$((GENERATED + 1))
+    fi
+
+    for skill in "${CLAUDE_SKILL_FILES[@]}"; do
+      if [[ -f "${TEMPLATE_DIR}/${skill}" ]]; then
+        cp "${TEMPLATE_DIR}/${skill}" "${SHIP_DIR}/${skill}"
+        skill_count=$((skill_count + 1))
+        GENERATED=$((GENERATED + 1))
+      fi
+    done
+    [[ $skill_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .claude/skills/ ${CYAN}(${skill_count} project skill — agtoosa-review)${NC}"
+  fi
+
+  # Cursor rules — staged when Cursor selected
+  if [[ "$USE_CURSOR" == true ]]; then
+    mkdir -p "${SHIP_DIR}/.cursor/rules"
+    local rule rule_count=0
+    for rule in "${CURSOR_RULE_FILES[@]}"; do
+      if [[ -f "${TEMPLATE_DIR}/${rule}" ]]; then
+        cp "${TEMPLATE_DIR}/${rule}" "${SHIP_DIR}/${rule}"
+        rule_count=$((rule_count + 1))
+        GENERATED=$((GENERATED + 1))
+      fi
+    done
+    [[ $rule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .cursor/rules/ ${CYAN}(${rule_count} MDX rules — native Cursor rule injection)${NC}"
+  fi
 }

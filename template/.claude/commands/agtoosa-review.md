@@ -1,0 +1,15 @@
+Read @Docs/AgToosa_Review.md and execute the multi-persona review workflow.
+
+Arguments provided: $ARGUMENTS
+
+Dispatch rules based on arguments:
+- No argument → execute the full review: all 4 parallel specialist personas followed by the Simplifier pass.
+- `security` → Security Officer persona only: OWASP Top 10 + STRIDE audit, SAST/DAST/Secrets scanning.
+- `arch` → Engineering Manager persona only: 500-line limit check, OOP compliance, observability hooks, test coverage.
+- `debug` → Iron Law root-cause investigation: hypothesis, reproduction test, regression test for a failing test or bug.
+- `cross` → Cross-platform second-opinion guidance: suggest switching to another installed AI platform and re-running review.
+
+If no arguments were given, run the full flow:
+1. Launch 4 parallel specialist reviews (Security Officer, Engineering Manager, CEO/Product Owner, QA Lead) using the Agent tool.
+2. Consolidate findings into a unified report sorted by severity (🔴 Critical → 🟡 Warning → 🟢 Passed).
+3. Run the Simplifier pass: refactor for clarity, re-run tests.

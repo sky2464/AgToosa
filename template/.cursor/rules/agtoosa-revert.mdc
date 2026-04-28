@@ -1,0 +1,16 @@
+---
+description: AgToosa revert workflow rules — activates when performing git-aware rollback operations.
+globs: Docs/AgToosa_Revert.md
+alwaysApply: false
+---
+
+# AgToosa Revert Rules
+
+When executing `/agtoosa-revert` or any rollback work, follow `Docs/AgToosa_Revert.md` precisely.
+
+## Key constraints
+
+- Always identify the exact phase or commit to revert to before touching any files.
+- Create a git stash or backup branch before reverting — never lose uncommitted work.
+- After revert, confirm the test suite passes at the target state.
+- Update Linear and `Docs/Master-Plan.md` to reflect the rolled-back state.

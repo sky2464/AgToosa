@@ -26,6 +26,22 @@ count_existing_files() {
   for cfile in "${CONTEXT_FILES[@]}"; do
     [[ -f "${PROJECT_PATH}/${cfile}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
   done
+  if [[ "$USE_CLAUDE" == true ]]; then
+    local ccmd cskill
+    for ccmd in "${CLAUDE_COMMAND_FILES[@]}"; do
+      [[ -f "${PROJECT_PATH}/${ccmd}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    done
+    [[ -f "${PROJECT_PATH}/.claude/settings.json" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    for cskill in "${CLAUDE_SKILL_FILES[@]}"; do
+      [[ -f "${PROJECT_PATH}/${cskill}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    done
+  fi
+  if [[ "$USE_CURSOR" == true ]]; then
+    local crule
+    for crule in "${CURSOR_RULE_FILES[@]}"; do
+      [[ -f "${PROJECT_PATH}/${crule}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    done
+  fi
   return 0
 }
 
@@ -82,6 +98,48 @@ install_files() {
     [[ -f "${SHIP_DIR}/${cfile}" ]] \
       && copy_platform_file "${SHIP_DIR}/${cfile}" "${PROJECT_PATH}/${cfile}" "${cfile}"
   done
+
+  # Claude Code commands, hooks, and skills — always overwrite (AgToosa-owned)
+  if [[ "$USE_CLAUDE" == true ]]; then
+    mkdir -p "${PROJECT_PATH}/.claude/commands" "${PROJECT_PATH}/.claude/skills"
+    local ccmd ccmd_count=0 cskill cskill_count=0
+    for ccmd in "${CLAUDE_COMMAND_FILES[@]}"; do
+      if [[ -f "${SHIP_DIR}/${ccmd}" ]]; then
+        cp "${SHIP_DIR}/${ccmd}" "${PROJECT_PATH}/${ccmd}"
+        ccmd_count=$((ccmd_count + 1))
+        COPIED=$((COPIED + 1))
+      fi
+    done
+    [[ $ccmd_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .claude/commands/ (${ccmd_count} slash commands)"
+
+    [[ -f "${SHIP_DIR}/.claude/settings.json" ]] \
+      && merge_settings_json "${SHIP_DIR}/.claude/settings.json" \
+                             "${PROJECT_PATH}/.claude/settings.json" \
+                             ".claude/settings.json"
+
+    for cskill in "${CLAUDE_SKILL_FILES[@]}"; do
+      if [[ -f "${SHIP_DIR}/${cskill}" ]]; then
+        cp "${SHIP_DIR}/${cskill}" "${PROJECT_PATH}/${cskill}"
+        cskill_count=$((cskill_count + 1))
+        COPIED=$((COPIED + 1))
+      fi
+    done
+    [[ $cskill_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .claude/skills/ (${cskill_count} project skill)"
+  fi
+
+  # Cursor rules — always overwrite (AgToosa-owned)
+  if [[ "$USE_CURSOR" == true ]]; then
+    mkdir -p "${PROJECT_PATH}/.cursor/rules"
+    local crule crule_count=0
+    for crule in "${CURSOR_RULE_FILES[@]}"; do
+      if [[ -f "${SHIP_DIR}/${crule}" ]]; then
+        cp "${SHIP_DIR}/${crule}" "${PROJECT_PATH}/${crule}"
+        crule_count=$((crule_count + 1))
+        COPIED=$((COPIED + 1))
+      fi
+    done
+    [[ $crule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .cursor/rules/ (${crule_count} MDX rules)"
+  fi
 
   # Summary
   echo ""

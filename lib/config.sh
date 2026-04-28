@@ -25,6 +25,23 @@ OPTIONAL_TEMPLATE_FILES=(
   ".github/copilot-instructions.md"
   ".roorules"
   "OPENCODE.md"
+  ".claude/commands/agtoosa-init.md"
+  ".claude/commands/agtoosa-spec.md"
+  ".claude/commands/agtoosa-build.md"
+  ".claude/commands/agtoosa-qa.md"
+  ".claude/commands/agtoosa-review.md"
+  ".claude/commands/agtoosa-ship.md"
+  ".claude/commands/agtoosa-revert.md"
+  ".claude/commands/agtoosa-help.md"
+  ".claude/settings.json"
+  ".claude/skills/agtoosa-review.md"
+  ".cursor/rules/agtoosa-core.mdc"
+  ".cursor/rules/agtoosa-spec.mdc"
+  ".cursor/rules/agtoosa-build.mdc"
+  ".cursor/rules/agtoosa-qa.mdc"
+  ".cursor/rules/agtoosa-review.mdc"
+  ".cursor/rules/agtoosa-ship.mdc"
+  ".cursor/rules/agtoosa-revert.mdc"
 )
 
 CONTEXT_FILES=(
@@ -32,6 +49,35 @@ CONTEXT_FILES=(
   "Docs/Context/tech-stack.md"
   "Docs/Context/product.md"
   "Docs/Context/product-guidelines.md"
+)
+
+CLAUDE_COMMAND_FILES=(
+  ".claude/commands/agtoosa-init.md"
+  ".claude/commands/agtoosa-spec.md"
+  ".claude/commands/agtoosa-build.md"
+  ".claude/commands/agtoosa-qa.md"
+  ".claude/commands/agtoosa-review.md"
+  ".claude/commands/agtoosa-ship.md"
+  ".claude/commands/agtoosa-revert.md"
+  ".claude/commands/agtoosa-help.md"
+)
+
+CLAUDE_HOOK_FILES=(
+  ".claude/settings.json"
+)
+
+CLAUDE_SKILL_FILES=(
+  ".claude/skills/agtoosa-review.md"
+)
+
+CURSOR_RULE_FILES=(
+  ".cursor/rules/agtoosa-core.mdc"
+  ".cursor/rules/agtoosa-spec.mdc"
+  ".cursor/rules/agtoosa-build.mdc"
+  ".cursor/rules/agtoosa-qa.mdc"
+  ".cursor/rules/agtoosa-review.mdc"
+  ".cursor/rules/agtoosa-ship.mdc"
+  ".cursor/rules/agtoosa-revert.mdc"
 )
 
 print_usage() {
@@ -48,5 +94,7 @@ print_usage() {
 }
 
 print_template_files() {
-  printf '%s\n' "${DOCS_FILES[@]}" "${OPTIONAL_TEMPLATE_FILES[@]}" "${CONTEXT_FILES[@]}"
+  printf '%s\n' "${DOCS_FILES[@]}" "${OPTIONAL_TEMPLATE_FILES[@]}" "${CONTEXT_FILES[@]}" \
+    "${CLAUDE_COMMAND_FILES[@]}" "${CLAUDE_HOOK_FILES[@]}" "${CLAUDE_SKILL_FILES[@]}" \
+    "${CURSOR_RULE_FILES[@]}"
 }

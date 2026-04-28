@@ -1,0 +1,17 @@
+---
+description: AgToosa review workflow rules — activates during code review and quality gate checks.
+globs: Docs/AgToosa_Review.md
+alwaysApply: false
+---
+
+# AgToosa Review Rules
+
+When executing `/agtoosa-review` or any review work, follow `Docs/AgToosa_Review.md` precisely.
+
+## Key constraints
+
+- All 4 specialist personas (Security Officer, Engineering Manager, CEO/PO, QA Lead) must complete before shipping.
+- Any 🔴 Critical finding blocks the ship — do not proceed to `/agtoosa-ship` until all are resolved.
+- The Simplifier pass is not optional — always refactor the top 3 complex sections.
+- Apply the Iron Law root-cause protocol for every failing test or bug found during review.
+- Update Linear and `Docs/Master-Plan.md` with review status after each run.

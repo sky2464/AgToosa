@@ -352,3 +352,78 @@ teardown() {
   [ "$status" -eq 0 ]
   [[ "$output" == *"Backup files created"* ]]
 }
+
+# ── Native platform command/rule tests ───────────────────────────────────────
+
+@test "Claude option installs .claude/commands/ slash commands" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.claude/commands/agtoosa-init.md" ]
+  [ -f "$TEST_PROJECT/.claude/commands/agtoosa-spec.md" ]
+  [ -f "$TEST_PROJECT/.claude/commands/agtoosa-build.md" ]
+  [ -f "$TEST_PROJECT/.claude/commands/agtoosa-review.md" ]
+  [ -f "$TEST_PROJECT/.claude/commands/agtoosa-ship.md" ]
+  [ -f "$TEST_PROJECT/.claude/commands/agtoosa-help.md" ]
+}
+
+@test "Claude option installs .claude/settings.json with hooks" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.claude/settings.json" ]
+  run python3 -c "import json; d=json.load(open('$TEST_PROJECT/.claude/settings.json')); exit(0 if 'hooks' in d else 1)"
+  [ "$status" -eq 0 ]
+}
+
+@test "Claude option installs .claude/skills/agtoosa-review.md" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.claude/skills/agtoosa-review.md" ]
+}
+
+@test "Cursor option installs .cursor/rules/ MDX files" {
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-core.mdc" ]
+  [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-spec.mdc" ]
+  [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-build.mdc" ]
+  [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-review.mdc" ]
+  [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-ship.mdc" ]
+}
+
+@test "non-Claude option does not install .claude/ directory" {
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ ! -f "$TEST_PROJECT/.claude/commands/agtoosa-init.md" ]
+  [ ! -f "$TEST_PROJECT/.claude/settings.json" ]
+}
+
+@test "non-Cursor option does not install .cursor/rules/" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ ! -f "$TEST_PROJECT/.cursor/rules/agtoosa-core.mdc" ]
+}
+
+@test "settings.json hooks not duplicated on re-run" {
+  # First install
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.claude/settings.json" ]
+  # Second install — hooks must not be duplicated
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  # Stop hook command should appear exactly once in the JSON
+  stop_count="$(python3 -c "
+import json
+d = json.load(open('$TEST_PROJECT/.claude/settings.json'))
+cmds = [h.get('command','') for e in d.get('hooks',{}).get('Stop',[]) for h in e.get('hooks',[])]
+print(sum(1 for c in cmds if 'Master-Plan' in c))
+")"
+  [ "$stop_count" -eq 1 ]
+}
+
+@test "dry-run shows .claude/commands as AgToosa-owned overwrite" {
+  run bash -c "printf '$TEST_PROJECT\n3\n' | bash '$SCRIPT' --dry-run"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *".claude/commands"* ]]
+  [[ "$output" == *"AgToosa-owned"* ]]
+}
