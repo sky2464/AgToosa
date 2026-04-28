@@ -133,11 +133,11 @@ teardown() {
   [ -f "$TEST_PROJECT/Docs/AgToosa_Gemini.md" ]
 }
 
-@test "platform selection 7 copies .roorules and OPENCODE.md" {
+@test "platform selection 7 copies OPENCODE.md" {
   run bash -c "printf '$TEST_PROJECT\n7\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
-  [ -f "$TEST_PROJECT/.roorules" ]
   [ -f "$TEST_PROJECT/OPENCODE.md" ]
+  [ ! -f "$TEST_PROJECT/.roorules" ]
 }
 
 # ── No-copy path tests ────────────────────────────────────────────────────────
@@ -187,10 +187,13 @@ teardown() {
   [ "$status" -eq 0 ]
 }
 
-@test "platform selection 6 copies only Docs files with no platform config" {
+@test "platform selection 6 (VS Code) installs copilot-instructions, prompts, and agent" {
   run bash -c "printf '$TEST_PROJECT\n6\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
+  [ -f "$TEST_PROJECT/.github/copilot-instructions.md" ]
+  [ -f "$TEST_PROJECT/.github/prompts/agtoosa-init.prompt.md" ]
+  [ -f "$TEST_PROJECT/.github/agents/agtoosa.agent.md" ]
   [ ! -f "$TEST_PROJECT/.cursorrules" ]
   [ ! -f "$TEST_PROJECT/CLAUDE.md" ]
   [ ! -f "$TEST_PROJECT/.windsurfrules" ]
@@ -204,7 +207,6 @@ teardown() {
   [ -f "$TEST_PROJECT/CLAUDE.md" ]
   [ -f "$TEST_PROJECT/AGENTS.md" ]
   [ -f "$TEST_PROJECT/.github/copilot-instructions.md" ]
-  [ -f "$TEST_PROJECT/.roorules" ]
   [ -f "$TEST_PROJECT/OPENCODE.md" ]
   # Native platform rule/command directories
   [ -d "$TEST_PROJECT/.cursor/rules" ]
@@ -213,7 +215,6 @@ teardown() {
   [ -d "$TEST_PROJECT/.github/prompts" ]
   [ -d "$TEST_PROJECT/.github/agents" ]
   [ -d "$TEST_PROJECT/.windsurf/rules" ]
-  [ -d "$TEST_PROJECT/.roo/rules" ]
 }
 
 @test "platform selection 1 installs .cursor/rules/ MDX files" {
@@ -256,14 +257,6 @@ teardown() {
   [ -f "$TEST_PROJECT/.github/prompts/agtoosa-init.prompt.md" ]
   [ -f "$TEST_PROJECT/.github/prompts/agtoosa-spec.prompt.md" ]
   [ -f "$TEST_PROJECT/.github/agents/agtoosa.agent.md" ]
-}
-
-@test "platform selection 7 installs .roo/rules/ files" {
-  run bash -c "printf '$TEST_PROJECT\n7\nY\n' | bash '$SCRIPT'"
-  [ "$status" -eq 0 ]
-  [ -f "$TEST_PROJECT/.roo/rules/agtoosa-core.md" ]
-  [ -f "$TEST_PROJECT/.roo/rules/agtoosa-spec.md" ]
-  [ -f "$TEST_PROJECT/.roo/rules/agtoosa-revert.md" ]
 }
 
 @test "--list-template-files lists core and platform files" {
@@ -570,6 +563,16 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ -f "$TEST_PROJECT/.claude/commands/agtoosa-init.md" ]
   [ -f "$TEST_PROJECT/.gemini/commands/agtoosa-init.toml" ]
   [ ! -f "$TEST_PROJECT/.cursorrules" ]
+}
+
+@test "multi-platform combo '5 6' deduplicates .github/ files (no double install)" {
+  run bash -c "printf '$TEST_PROJECT\n5 6\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.github/copilot-instructions.md" ]
+  [ -f "$TEST_PROJECT/.github/prompts/agtoosa-init.prompt.md" ]
+  [ -f "$TEST_PROJECT/.github/agents/agtoosa.agent.md" ]
+  # Only one AgToosa START block — no duplicate from VS Code path
+  [ "$(grep -c 'AgToosa.*START' "$TEST_PROJECT/.github/copilot-instructions.md")" -eq 1 ]
 }
 
 # ── DEV-172: merge_platform_file Case B (older version) ──────

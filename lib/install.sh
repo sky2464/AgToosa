@@ -21,7 +21,7 @@ count_existing_files() {
   [[ "$USE_GEMINI"   == true && -f "${PROJECT_PATH}/AGENTS.md" ]]                       && EXISTING_FILES=$((EXISTING_FILES + 1))
   [[ "$USE_GEMINI"   == true && -f "${PROJECT_PATH}/Docs/AgToosa_Gemini.md" ]]          && EXISTING_FILES=$((EXISTING_FILES + 1))
   [[ "$USE_COPILOT"  == true && -f "${PROJECT_PATH}/.github/copilot-instructions.md" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
-  [[ "$USE_OPENCODE" == true && -f "${PROJECT_PATH}/.roorules" ]]                       && EXISTING_FILES=$((EXISTING_FILES + 1))
+
   [[ "$USE_OPENCODE" == true && -f "${PROJECT_PATH}/OPENCODE.md" ]]                     && EXISTING_FILES=$((EXISTING_FILES + 1))
   for cfile in "${CONTEXT_FILES[@]}"; do
     [[ -f "${PROJECT_PATH}/${cfile}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
@@ -57,16 +57,20 @@ count_existing_files() {
       [[ -f "${PROJECT_PATH}/${pagent}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
     done
   fi
+  if [[ "$USE_VSCODE" == true && "$USE_COPILOT" != true ]]; then
+    [[ -f "${PROJECT_PATH}/.github/copilot-instructions.md" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    local vprompt vagent
+    for vprompt in "${COPILOT_PROMPT_FILES[@]}"; do
+      [[ -f "${PROJECT_PATH}/${vprompt}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    done
+    for vagent in "${COPILOT_AGENT_FILES[@]}"; do
+      [[ -f "${PROJECT_PATH}/${vagent}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    done
+  fi
   if [[ "$USE_WINDSURF" == true ]]; then
     local wrule
     for wrule in "${WINDSURF_RULE_FILES[@]}"; do
       [[ -f "${PROJECT_PATH}/${wrule}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
-    done
-  fi
-  if [[ "$USE_OPENCODE" == true ]]; then
-    local rrule
-    for rrule in "${ROO_RULE_FILES[@]}"; do
-      [[ -f "${PROJECT_PATH}/${rrule}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
     done
   fi
   return 0
@@ -88,7 +92,7 @@ install_files() {
 
   # Platform entry-point dotfiles — smart merge/append
   local dotfile
-  for dotfile in .cursorrules .windsurfrules .roorules; do
+  for dotfile in .cursorrules .windsurfrules; do
     [[ -f "${SHIP_DIR}/${dotfile}" ]] \
       && merge_platform_file "${SHIP_DIR}/${dotfile}" "${PROJECT_PATH}/${dotfile}" "${dotfile}"
   done
@@ -218,19 +222,6 @@ install_files() {
     [[ $wrule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .windsurf/rules/ (${wrule_count} rules)"
   fi
 
-  # Roo / OpenCode rules — always overwrite (AgToosa-owned)
-  if [[ "$USE_OPENCODE" == true ]]; then
-    mkdir -p "${PROJECT_PATH}/.roo/rules"
-    local rrule rrule_count=0
-    for rrule in "${ROO_RULE_FILES[@]}"; do
-      if [[ -f "${SHIP_DIR}/${rrule}" ]]; then
-        cp "${SHIP_DIR}/${rrule}" "${PROJECT_PATH}/${rrule}"
-        rrule_count=$((rrule_count + 1))
-        COPIED=$((COPIED + 1))
-      fi
-    done
-    [[ $rrule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .roo/rules/ (${rrule_count} rules)"
-  fi
 
   # Summary
   echo ""

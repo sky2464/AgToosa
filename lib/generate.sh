@@ -51,16 +51,12 @@ stage_files() {
 
   if [[ "$USE_OPENCODE" == true ]]; then
     local opencode_count=0
-    if [[ -f "${TEMPLATE_DIR}/.roorules" ]]; then
-      inject_version "${TEMPLATE_DIR}/.roorules" "${SHIP_DIR}/.roorules"
-      opencode_count=$((opencode_count + 1))
-    fi
     if [[ -f "${TEMPLATE_DIR}/OPENCODE.md" ]]; then
       inject_version "${TEMPLATE_DIR}/OPENCODE.md" "${SHIP_DIR}/OPENCODE.md"
       opencode_count=$((opencode_count + 1))
     fi
     if [[ $opencode_count -gt 0 ]]; then
-      echo -e "  ${GREEN}✅${NC} .roorules + OPENCODE.md ${CYAN}(Roo / OpenCode)${NC}"
+      echo -e "  ${GREEN}\u2705${NC} OPENCODE.md ${CYAN}(OpenCode)${NC}"
       GENERATED=$((GENERATED + opencode_count))
     fi
   fi
@@ -194,19 +190,5 @@ stage_files() {
       fi
     done
     [[ $wrule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .windsurf/rules/ ${CYAN}(${wrule_count} rules — native Windsurf rule injection)${NC}"
-  fi
-
-  # Roo / OpenCode rules — staged when OpenCode selected
-  if [[ "$USE_OPENCODE" == true ]]; then
-    mkdir -p "${SHIP_DIR}/.roo/rules"
-    local rrule rrule_count=0
-    for rrule in "${ROO_RULE_FILES[@]}"; do
-      if [[ -f "${TEMPLATE_DIR}/${rrule}" ]]; then
-        cp "${TEMPLATE_DIR}/${rrule}" "${SHIP_DIR}/${rrule}"
-        rrule_count=$((rrule_count + 1))
-        GENERATED=$((GENERATED + 1))
-      fi
-    done
-    [[ $rrule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .roo/rules/ ${CYAN}(${rrule_count} rules — native Roo/OpenCode rule injection)${NC}"
   fi
 }

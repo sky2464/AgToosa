@@ -24,7 +24,6 @@ OPTIONAL_TEMPLATE_FILES=(
   "CLAUDE.md"
   "AGENTS.md"
   ".github/copilot-instructions.md"
-  ".roorules"
   "OPENCODE.md"
   ".claude/commands/agtoosa-init.md"
   ".claude/commands/agtoosa-spec.md"
@@ -72,14 +71,6 @@ OPTIONAL_TEMPLATE_FILES=(
   ".windsurf/rules/agtoosa-ship.md"
   ".windsurf/rules/agtoosa-revert.md"
   ".windsurf/rules/agtoosa-task.md"
-  ".roo/rules/agtoosa-core.md"
-  ".roo/rules/agtoosa-spec.md"
-  ".roo/rules/agtoosa-build.md"
-  ".roo/rules/agtoosa-qa.md"
-  ".roo/rules/agtoosa-review.md"
-  ".roo/rules/agtoosa-ship.md"
-  ".roo/rules/agtoosa-revert.md"
-  ".roo/rules/agtoosa-task.md"
 )
 
 CONTEXT_FILES=(
@@ -99,10 +90,6 @@ CLAUDE_COMMAND_FILES=(
   ".claude/commands/agtoosa-revert.md"
   ".claude/commands/agtoosa-task.md"
   ".claude/commands/agtoosa-help.md"
-)
-
-CLAUDE_HOOK_FILES=(
-  ".claude/settings.json"
 )
 
 CLAUDE_SKILL_FILES=(
@@ -157,17 +144,6 @@ WINDSURF_RULE_FILES=(
   ".windsurf/rules/agtoosa-ship.md"
   ".windsurf/rules/agtoosa-revert.md"
   ".windsurf/rules/agtoosa-task.md"
-)
-
-ROO_RULE_FILES=(
-  ".roo/rules/agtoosa-core.md"
-  ".roo/rules/agtoosa-spec.md"
-  ".roo/rules/agtoosa-build.md"
-  ".roo/rules/agtoosa-qa.md"
-  ".roo/rules/agtoosa-review.md"
-  ".roo/rules/agtoosa-ship.md"
-  ".roo/rules/agtoosa-revert.md"
-  ".roo/rules/agtoosa-task.md"
 )
 
 print_usage() {

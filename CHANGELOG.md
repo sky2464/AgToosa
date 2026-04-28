@@ -11,7 +11,24 @@ _(nothing yet)_
 
 ---
 
-## [2.4.0] — 2026-05-14
+## [2.5.0] — 2026-04-28
+
+### Added
+- `.mdc` files (Cursor rules) now linted by CI markdownlint step (DEV-TBD)
+- Bats test for VS Code + Copilot combo (`5 6`) verifying `.github/` deduplication (DEV-TBD)
+
+### Changed
+- Platform option 7 renamed from "OpenCode / Roo / Other" to "OpenCode / Other" — Roo Code sunsets 2026-05-15 (DEV-TBD)
+- `OPTIONAL_TEMPLATE_FILES` and `ROO_RULE_FILES` array removed; `.roorules` and `.roo/rules/` are no longer generated or installed (DEV-TBD)
+- Platform entry-point files `AGENTS.md` and `OPENCODE.md` updated: optional utilities line now includes "Read" prefix to match all other platform files (DEV-TBD)
+- `count_existing_files()` in `lib/install.sh` now correctly counts VS Code-specific files when option 6 is selected without option 5 (DEV-TBD)
+- Bats test for platform selection 6 renamed and strengthened with positive assertions for `.github/copilot-instructions.md`, prompts, and agent file (DEV-TBD)
+- `CLAUDE_HOOK_FILES` dead config array removed from `lib/config.sh` (DEV-TBD)
+- v2.4.0 CHANGELOG date corrected from 2026-05-14 to 2026-04-28 (DEV-TBD)
+
+---
+
+## [2.4.0] — 2026-04-28
 
 ### Added
 - `/agtoosa-task` command (`Docs/AgToosa_Task.md`): lightweight Linear issue capture for bugs, chores, spikes, and fixes without a full spec cycle; includes type-specific DoD checklists and Discovery Triage origin tracking (DEV-167)

@@ -10,7 +10,7 @@ set -euo pipefail
 #   bash agtoosa.sh [--force] [--dry-run] [--version] [--help]
 # ──────────────────────────────────────────────────────────────
 
-AGTOOSA_VERSION="2.4.0"
+AGTOOSA_VERSION="2.5.0"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
 SHIP_DIR="${SCRIPT_DIR}/ship"
@@ -132,7 +132,7 @@ echo "  3) Claude Code"
 echo "  4) Gemini CLI / Jules"
 echo "  5) GitHub Copilot"
 echo "  6) VS Code (generic)"
-echo "  7) OpenCode / Roo / Other"
+echo "  7) OpenCode / Other"
 echo "  8) All of the above"
 echo ""
 read -rp "Your selection: " SELECTION
@@ -193,8 +193,7 @@ mkdir -p "$SHIP_DIR/Docs/archived" "$SHIP_DIR/Docs/Context" \
            "$SHIP_DIR/.cursor/rules" \
            "$SHIP_DIR/.gemini/commands" \
            "$SHIP_DIR/.github/prompts" "$SHIP_DIR/.github/agents" \
-           "$SHIP_DIR/.windsurf/rules" \
-           "$SHIP_DIR/.roo/rules"
+           "$SHIP_DIR/.windsurf/rules"
 echo ""
 GENERATED=0
 stage_files
