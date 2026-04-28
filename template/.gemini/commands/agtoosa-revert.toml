@@ -1,0 +1,6 @@
+description = "AgToosa: git-aware logical rollback by phase or commit"
+prompt = """
+Read Docs/AgToosa_Revert.md and execute the rollback workflow.
+
+Use any argument provided after the command to identify the phase or commit to revert to (e.g. "spec", "build task 3", a commit hash, or a branch name). If no argument is given, ask the user which phase or commit to revert to before proceeding.
+"""

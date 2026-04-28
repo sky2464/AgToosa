@@ -1,0 +1,21 @@
+---
+mode: ask
+description: "AgToosa: show command reference index"
+tools: []
+---
+
+Display the AgToosa command reference. Output this table directly without reading any Docs file.
+
+## AgToosa Command Reference
+
+| Command | Purpose | Sub-commands |
+|---------|---------|--------------|
+| `/agtoosa-init` | One-time setup: scan codebase, validate configs, create Docs/Context/ | _(none)_ |
+| `/agtoosa-spec` | Research → 6 questions → Spec → STRIDE threat model | `research` · `plan` · `quick` |
+| `/agtoosa-build` | Atomic tasks → TDD Red-Green-Refactor → tests + SAST/DAST | `scope` · `tdd` · `test` |
+| `/agtoosa-qa` | Plan → run → report → triage all test types | `plan` · `run` · `report` · `triage` |
+| `/agtoosa-review` | 4-persona parallel review + Simplifier pass | `security` · `arch` · `debug` · `cross` |
+| `/agtoosa-ship` | Pre-flight → deploy → archive → changelog → next story | `check` · `docs` · `retro` |
+| `/agtoosa-revert` | Git-aware logical rollback by phase or commit | _(phase or commit)_ |
+
+Typical workflow: `/agtoosa-spec` → `/agtoosa-build` → `/agtoosa-qa` → `/agtoosa-review` → `/agtoosa-ship`

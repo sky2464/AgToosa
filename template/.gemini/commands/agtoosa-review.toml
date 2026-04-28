@@ -1,0 +1,11 @@
+description = "AgToosa: 4-persona parallel review (Security · Arch · Product · QA) + Simplifier pass"
+prompt = """
+Read Docs/AgToosa_Review.md and execute the multi-persona review workflow.
+
+Dispatch based on any arguments provided after the command:
+- /agtoosa-review           → full review: all 4 personas + Simplifier pass
+- /agtoosa-review security  → Security Officer only: OWASP + STRIDE audit
+- /agtoosa-review arch      → Engineering Manager only: 500-line limit, OOP, observability
+- /agtoosa-review debug     → Iron Law root-cause investigation for a failing test or bug
+- /agtoosa-review cross     → cross-platform second-opinion guidance
+"""

@@ -1,0 +1,11 @@
+description = "AgToosa: plan → run → report → triage: unit, integration, E2E, browser, a11y, performance"
+prompt = """
+Read Docs/AgToosa_QA.md and execute the QA workflow.
+
+Dispatch based on any arguments provided after the command:
+- /agtoosa-qa           → full QA workflow
+- /agtoosa-qa plan      → create QA test plan for the active spec
+- /agtoosa-qa run       → execute the full test suite
+- /agtoosa-qa report    → generate QA report
+- /agtoosa-qa triage    → triage failing tests with Iron Law root-cause protocol
+"""

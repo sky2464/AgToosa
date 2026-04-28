@@ -1,0 +1,10 @@
+description = "AgToosa: research → 6 forcing questions → Executable Specification → STRIDE threat model"
+prompt = """
+Read Docs/AgToosa_Spec.md and execute the specification workflow.
+
+Dispatch based on any arguments provided after the command:
+- /agtoosa-spec                   → full workflow (Parts 1 + 2 + 3)
+- /agtoosa-spec research <topic>  → Part 1 only: context, research, 6 forcing questions
+- /agtoosa-spec plan              → Part 2 only: architecture blueprint + threat model
+- /agtoosa-spec quick <desc>      → abbreviated: 3 questions + spec, skip full threat model
+"""
