@@ -28,7 +28,7 @@ if [[ ! -d "${SCRIPT_DIR}/lib" ]]; then
 fi
 
 # ── Source modular libraries ──────────────────────────────────
-for _lib in config version copy generate dryrun install; do
+for _lib in config version copy generate dryrun install update; do
   # shellcheck source=/dev/null
   source "${SCRIPT_DIR}/lib/${_lib}.sh"
 done
@@ -56,24 +56,88 @@ NC='\033[0m'
 # ── Flags ─────────────────────────────────────────────────────
 FORCE=false
 DRY_RUN=false
+UPDATE=false
+UPDATE_PATH=""
 for arg in "$@"; do
   case "$arg" in
+    --update)              UPDATE=true ;;
     --force)               FORCE=true ;;
     --dry-run)             DRY_RUN=true ;;
     --list-template-files) print_template_files; exit 0 ;;
     --version)             echo "AgToosa v${AGTOOSA_VERSION}"; exit 0 ;;
     --help)                print_usage; exit 0 ;;
     *)
-      echo -e "${RED}❌ Error: Unknown option '${arg}'.${NC}"
-      echo ""
-      print_usage
-      exit 1
+      if [[ "$UPDATE" == true && -z "$UPDATE_PATH" && "$arg" != --* ]]; then
+        UPDATE_PATH="$arg"
+      else
+        echo -e "${RED}❌ Error: Unknown option '${arg}'.${NC}"
+        echo ""
+        print_usage
+        exit 1
+      fi
       ;;
   esac
 done
 
 # ── Source guard (allows sourcing for unit tests) ─────────────
 [[ "${BASH_SOURCE[0]}" == "${0}" ]] || return 0
+
+# ── Update mode ───────────────────────────────────────────────
+if [[ "$UPDATE" == true ]]; then
+  if [[ -z "$UPDATE_PATH" ]]; then
+    echo -e "${BOLD}Project path to update:${NC}"
+    read -rp "Project path: " UPDATE_PATH
+    UPDATE_PATH="${UPDATE_PATH/#\~/$HOME}"
+    UPDATE_PATH="${UPDATE_PATH%/}"
+  fi
+  PROJECT_PATH="$UPDATE_PATH"
+
+  if [[ ! -d "$PROJECT_PATH" ]]; then
+    echo -e "${RED}❌ Error: Directory '${PROJECT_PATH}' does not exist.${NC}"
+    exit 1
+  fi
+
+  _rp_project="$(cd "$PROJECT_PATH" && pwd)"
+  _rp_script="$(cd "$SCRIPT_DIR" && pwd)"
+  if [[ "$_rp_project" == "$_rp_script" ]]; then
+    echo -e "${RED}❌ Error: Target path cannot be the AgToosa source directory itself.${NC}"
+    exit 1
+  fi
+
+  if [[ ! -d "${PROJECT_PATH}/Docs" ]]; then
+    echo -e "${RED}❌ Error: No Docs/ directory found in '${PROJECT_PATH}'.${NC}"
+    echo -e "${YELLOW}Run the full install first: bash agtoosa.sh${NC}"
+    exit 1
+  fi
+
+  if [[ "$DRY_RUN" == true ]]; then
+    detect_installed_platforms
+    _dnames=()
+    [[ "$USE_CURSOR"   == true ]] && _dnames+=("cursor")
+    [[ "$USE_WINDSURF" == true ]] && _dnames+=("windsurf")
+    [[ "$USE_CLAUDE"   == true ]] && _dnames+=("claude")
+    [[ "$USE_GEMINI"   == true ]] && _dnames+=("gemini")
+    [[ "$USE_COPILOT"  == true ]] && _dnames+=("copilot")
+    [[ "$USE_OPENCODE" == true ]] && _dnames+=("opencode")
+    echo -e "${YELLOW}[DRY RUN] Would update AgToosa in '${PROJECT_PATH}'${NC}"
+    echo -e "  Would overwrite: all Docs/AgToosa_*.md (except Master-Plan.md and AgToosa_Changelog.md)"
+    echo -e "  Would merge platform entry-points: ${_dnames[*]:-none detected}"
+    echo -e "  Would preserve: Docs/Context/, Docs/Master-Plan.md, Docs/AgToosa_Changelog.md"
+    echo ""
+    echo -e "${YELLOW}[DRY RUN] No changes made. Remove --dry-run to apply.${NC}"
+    exit 0
+  fi
+
+  OLD_VERSION="$(read_installed_version "$PROJECT_PATH")"
+  echo ""
+  echo -e "${PURPLE}${BOLD}Updating AgToosa v${OLD_VERSION} → v${AGTOOSA_VERSION}${NC}"
+  echo -e "${PURPLE}${BOLD}Project: ${PROJECT_PATH}${NC}"
+  echo ""
+
+  COPIED=0; SKIPPED=0; BAK_FILES=()
+  run_update "$OLD_VERSION"
+  exit 0
+fi
 
 # ── Welcome ───────────────────────────────────────────────────
 clear 2>/dev/null || true

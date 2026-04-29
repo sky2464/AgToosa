@@ -30,6 +30,9 @@ detect_installed_platforms() {
   [[ -f "${PROJECT_PATH}/AGENTS.md" ]]                       && USE_GEMINI=true
   [[ -f "${PROJECT_PATH}/.github/copilot-instructions.md" ]] && USE_COPILOT=true
   [[ -f "${PROJECT_PATH}/OPENCODE.md" ]]                     && USE_OPENCODE=true
+
+  # Never propagate a non-zero status from probe checks under set -e.
+  return 0
 }
 
 # Copy AgToosa-owned files into existing platform native directories.

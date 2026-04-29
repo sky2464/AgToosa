@@ -777,3 +777,168 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [[ "$output" == *"cp -r ship/"* ]]
   [[ "$output" == *"find ship/"* ]]
 }
+
+# ── --update: flag wiring ─────────────────────────────────────
+
+@test "--update on path with no Docs/ exits with error" {
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"No Docs/"* ]]
+}
+
+@test "--update on non-existent path exits with error" {
+  run bash "$SCRIPT" --update "/tmp/agtoosa-nonexistent-update-99999"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"does not exist"* ]]
+}
+
+@test "--update on AgToosa source directory is blocked" {
+  local src_dir
+  src_dir="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  run bash "$SCRIPT" --update "$src_dir"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"Target path cannot be the AgToosa source directory"* ]]
+}
+
+# ── --update: core behavior ───────────────────────────────────
+
+@test "--update overwrites workflow files" {
+  run bash -c "printf '$TEST_PROJECT\n8\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  echo "STALE CONTENT" > "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  [[ "$(cat "$TEST_PROJECT/Docs/AgToosa_Agent.md")" != "STALE CONTENT" ]]
+}
+
+@test "--update preserves Docs/Context/ files" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  echo "my custom stack" > "$TEST_PROJECT/Docs/Context/tech-stack.md"
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  grep -q "my custom stack" "$TEST_PROJECT/Docs/Context/tech-stack.md"
+}
+
+@test "--update preserves Docs/Master-Plan.md" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  echo "# My Master Plan" > "$TEST_PROJECT/Docs/Master-Plan.md"
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  grep -q "My Master Plan" "$TEST_PROJECT/Docs/Master-Plan.md"
+}
+
+@test "--update preserves Docs/AgToosa_Changelog.md" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  echo "# My Changelog" > "$TEST_PROJECT/Docs/AgToosa_Changelog.md"
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  grep -q "My Changelog" "$TEST_PROJECT/Docs/AgToosa_Changelog.md"
+}
+
+@test "--update writes Docs/.agtoosa-version" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
+  local ver
+  ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
+  [[ "$ver" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+}
+
+# ── --update: version display ─────────────────────────────────
+
+@test "--update shows 'unknown' when no prior version file" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  rm -f "$TEST_PROJECT/Docs/.agtoosa-version"
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"unknown"* ]]
+}
+
+@test "--update shows old version when prior version file exists" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  echo "2.0.0" > "$TEST_PROJECT/Docs/.agtoosa-version"
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"2.0.0"* ]]
+}
+
+# ── --update: platform detection ─────────────────────────────
+
+@test "--update detects installed Claude platform and merges CLAUDE.md" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/CLAUDE.md" ]
+  printf '<!-- AgToosa v1.0.0 START -->\nold content\n<!-- AgToosa END -->\n' \
+    > "$TEST_PROJECT/CLAUDE.md"
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  local bak_count
+  bak_count="$(find "$TEST_PROJECT" -name "CLAUDE.md.bak.*" | wc -l | tr -d ' ')"
+  [ "$bak_count" -ge 1 ]
+  ! grep -q "v1.0.0 START" "$TEST_PROJECT/CLAUDE.md"
+}
+
+@test "--update does not create .cursorrules when not previously installed" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ ! -f "$TEST_PROJECT/.cursorrules" ]
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  [ ! -f "$TEST_PROJECT/.cursorrules" ]
+}
+
+# ── --update --dry-run / --force ─────────────────────────────
+
+@test "--update --dry-run writes no files and shows DRY RUN" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  echo "STALE" > "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+  run bash "$SCRIPT" --update --dry-run "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"DRY RUN"* ]]
+  grep -q "STALE" "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+}
+
+@test "--update --force replaces user-owned platform entry-point with backup" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  echo "my own CLAUDE content, no agtoosa markers" > "$TEST_PROJECT/CLAUDE.md"
+  run bash "$SCRIPT" --update --force "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  local bak_count
+  bak_count="$(find "$TEST_PROJECT" -name "CLAUDE.md.bak.*" | wc -l | tr -d ' ')"
+  [ "$bak_count" -ge 1 ]
+  ! grep -q "my own CLAUDE content" "$TEST_PROJECT/CLAUDE.md"
+}
+
+# ── /agtoosa-update wiring ────────────────────────────────────
+
+@test "all platform entry-point templates include /agtoosa-update" {
+  local files=(
+    "$TEMPLATE_DIR/CLAUDE.md"
+    "$TEMPLATE_DIR/.cursorrules"
+    "$TEMPLATE_DIR/AGENTS.md"
+    "$TEMPLATE_DIR/.windsurfrules"
+    "$TEMPLATE_DIR/.roorules"
+    "$TEMPLATE_DIR/OPENCODE.md"
+    "$TEMPLATE_DIR/.github/copilot-instructions.md"
+  )
+  local f
+  for f in "${files[@]}"; do
+    grep -q "agtoosa-update" "$f" || {
+      echo "Missing /agtoosa-update in: $f"
+      return 1
+    }
+  done
+}
+
+@test "AgToosa_Agent.md utility table includes /agtoosa-update" {
+  grep -q "agtoosa-update" "$TEMPLATE_DIR/Docs/AgToosa_Agent.md"
+}
