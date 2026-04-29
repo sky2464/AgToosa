@@ -69,8 +69,9 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
     *   This table is required by `/agtoosa-qa plan` and `/agtoosa-ship check`.
 
 8.  **File Generation:**
-    *   Generate a single file named `Docs/AgToosa_Spec-[short-name]-v[version].md`.
+    *   Generate a single file named `Docs/archived/spec-[story-id].md` (e.g., `Docs/archived/spec-DEV-15.md`).
     *   This file contains the executable spec, architectural plan, AND the acceptance criteria table.
+    *   The `Docs/archived/` directory is created automatically by `/agtoosa-init`. If it is missing, create it with `mkdir -p Docs/archived`.
 9.  **Linear Story Issue:**
     *   Create a Linear **Story issue** for this spec:
         - Title: `Feature: [spec short name]` (use `Bug:` / `Chore:` / `Fix:` as appropriate)

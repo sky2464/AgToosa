@@ -3,65 +3,115 @@ name: Auto-Assign to Project
 on:
   issues:
     types: [opened]
+  pull_request:
+    types: [opened]
 
 jobs:
-  assign:
+  assign-issue:
+    if: github.event_name == 'issues'
     runs-on: ubuntu-latest
     permissions:
       issues: write
 
     steps:
       - name: Auto-assign new issues to GitHub Project
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |
             const issue = context.payload.issue;
-            
-            // Skip if already assigned to project
-            if (issue.pull_request) return;
-            
+
             try {
-              // Get repository project ID (AgToosa board)
               const projects = await github.rest.projects.listForRepo({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 state: 'open'
               });
-              
-              const agtoosaProject = projects.data.find(p => 
+
+              const agtoosaProject = projects.data.find(p =>
                 p.name.toLowerCase().includes('agtoosa')
               );
-              
+
               if (!agtoosaProject) {
                 console.log('AgToosa project not found');
                 return;
               }
-              
-              // Get project columns
+
               const columns = await github.rest.projects.listColumns({
                 project_id: agtoosaProject.id
               });
-              
-              // Find "Backlog" or "Todo" column
-              const backlogColumn = columns.data.find(c => 
-                c.name.toLowerCase() === 'backlog' || 
+
+              const backlogColumn = columns.data.find(c =>
+                c.name.toLowerCase() === 'backlog' ||
                 c.name.toLowerCase() === 'todo'
               );
-              
+
               if (!backlogColumn) {
                 console.log('Backlog column not found');
                 return;
               }
-              
-              // Create card in column
+
               await github.rest.projects.createCard({
                 column_id: backlogColumn.id,
                 content_id: issue.id,
                 content_type: 'Issue'
               });
-              
+
               console.log(`Issue #${issue.number} assigned to project ${agtoosaProject.name}`);
             } catch (error) {
-              console.error('Error assigning to project:', error);
-              // Don't fail the workflow if project assignment fails
+              console.error('Error assigning issue to project:', error);
+            }
+
+  assign-pr:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Auto-assign new PRs to GitHub Project (In Review column)
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+
+            try {
+              const projects = await github.rest.projects.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open'
+              });
+
+              const agtoosaProject = projects.data.find(p =>
+                p.name.toLowerCase().includes('agtoosa')
+              );
+
+              if (!agtoosaProject) {
+                console.log('AgToosa project not found');
+                return;
+              }
+
+              const columns = await github.rest.projects.listColumns({
+                project_id: agtoosaProject.id
+              });
+
+              const inReviewColumn = columns.data.find(c =>
+                c.name.toLowerCase() === 'in review' ||
+                c.name.toLowerCase() === 'in-review' ||
+                c.name.toLowerCase() === 'review'
+              );
+
+              if (!inReviewColumn) {
+                console.log('In Review column not found');
+                return;
+              }
+
+              await github.rest.projects.createCard({
+                column_id: inReviewColumn.id,
+                content_id: pr.id,
+                content_type: 'PullRequest'
+              });
+
+              console.log(`PR #${pr.number} assigned to project ${agtoosaProject.name} (In Review)`);
+            } catch (error) {
+              console.error('Error assigning PR to project:', error);
             }

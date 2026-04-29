@@ -153,6 +153,15 @@ teardown() {
   [ ! -d "$BATS_TEST_DIRNAME/../ship" ]
 }
 
+@test "ship/ is cleaned up after unexpected EOF (forced failure scenario)" {
+  # Provide project path and platform but no answer to copy prompt.
+  # The read for "Copy files now?" gets EOF and exits non-zero.
+  # The EXIT trap must remove ship/ regardless.
+  run bash -c "printf '$TEST_PROJECT\n1\n' | bash '$SCRIPT'"
+  # ship/ must be absent whether the script succeeded or failed
+  [ ! -d "$BATS_TEST_DIRNAME/../ship" ]
+}
+
 # ── DEV-147: Platform coverage ────────────────────────────────
 
 @test "platform selection 2 copies .windsurfrules" {
