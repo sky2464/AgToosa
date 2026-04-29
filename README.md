@@ -167,28 +167,39 @@ flowchart TD
 
 ## Installation
 
-### Local Generator (Recommended)
+### One-line install — macOS / Linux
 
-1. Clone this repository:
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/agtoosa.sh)
+```
+
+### One-line install — Windows (Git Bash or WSL)
+
+```bash
+# Git Bash (recommended — ships with Git for Windows)
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/agtoosa.sh)
+
+# PowerShell + WSL
+wsl bash -c "bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/agtoosa.sh)"
+```
+
+> **Windows native support** (PowerShell `.ps1` script) is tracked in [#18](https://github.com/sky2464/AgToosa/issues/18). For now, [Git Bash](https://gitforwindows.org/) or [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) are the recommended options.
+
+### Manual install (clone + run)
 
 ```bash
 git clone https://github.com/sky2464/AgToosa.git
 cd AgToosa
-```
-
-2. Run the interactive generator:
-
-```bash
 bash agtoosa.sh
 ```
 
-3. Enter your project path when prompted — the generator copies files directly to your project
-4. That's it! Open your AI assistant and run `/agtoosa-init`
+Enter your project path when prompted — the generator copies the workflow files directly into your project.
 
 ### Flags
 
 ```bash
 bash agtoosa.sh --force    # Overwrite existing files
+bash agtoosa.sh --update /path/to/project  # Update an existing install
 bash agtoosa.sh --version  # Print version
 bash agtoosa.sh --help     # Show help
 ```
