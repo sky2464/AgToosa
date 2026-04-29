@@ -1,6 +1,6 @@
 name: "🐛 Bug Report"
 description: Report a bug or issue with AgToosa
-labels: ["bug"]
+labels: ["bug", "status-needs-triage"]
 assignees: []
 
 body:
@@ -36,12 +36,16 @@ body:
         1. Run `bash agtoosa.sh`
         2. Select platform...
         3. Observe...
+    validations:
+      required: true
 
   - type: textarea
     id: expected
     attributes:
       label: Expected Behavior
       description: What should have happened?
+    validations:
+      required: true
 
   - type: textarea
     id: logs

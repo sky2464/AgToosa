@@ -1,22 +1,37 @@
 ## Description
-<!-- Provide a brief description of the changes in this PR -->
+<!-- Concise summary of what changed and why -->
 
 ## Related Issues
-<!-- Link to any related issues: e.g. Fixes #123 -->
+<!-- Required: link every issue this resolves. e.g. Closes #123, Fixes #456 -->
+Closes #
 
 ## Type of Change
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] Documentation update
-- [ ] Chore (refactoring, linting, etc.)
+- [ ] `fix` — bug fix (non-breaking)
+- [ ] `feat` — new feature (non-breaking)
+- [ ] `feat!` — breaking change
+- [ ] `docs` — documentation only
+- [ ] `chore` — refactor / lint / CI — no behaviour change
+- [ ] `security` — security fix
+
+## Release Impact
+- [ ] No release notes needed (chore/docs only)
+- [ ] Patch release (bug fix)
+- [ ] Minor release (new feature)
+- [ ] Major release (breaking change) — migration path documented below
+
+<!-- If breaking: describe the migration path for existing users -->
+
+## Testing Evidence
+<!-- Required: paste or link test output showing this works -->
+```
+# paste bats test run output, shellcheck output, or manual verification steps
+```
 
 ## Checklist
-- [ ] I have read the [CONTRIBUTING.md](CONTRIBUTING.md) document.
-- [ ] My code follows the style guidelines of this project.
-- [ ] I have performed a self-review of my own code.
-- [ ] I have commented my code, particularly in hard-to-understand areas.
-- [ ] I have made corresponding changes to the documentation.
-- [ ] My changes generate no new warnings.
-- [ ] Any dependent changes have been merged and published in downstream modules.
-- [ ] I have checked my script with `shellcheck` (if applicable).
+- [ ] I have read [CONTRIBUTING.md](CONTRIBUTING.md)
+- [ ] Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `chore:`, etc.)
+- [ ] `bash agtoosa.sh --list-template-files` passes (if template files were added/removed)
+- [ ] `bats tests/agtoosa.bats` passes locally
+- [ ] `shellcheck agtoosa.sh lib/*.sh` passes (if shell files were changed)
+- [ ] CHANGELOG.md updated (for `feat` and `fix` PRs)
+- [ ] Docs updated to match behaviour changes

@@ -1,6 +1,6 @@
 name: "✨ Feature Request"
 description: Suggest a new feature or improvement
-labels: ["enhancement"]
+labels: ["enhancement", "status-needs-triage"]
 assignees: []
 
 body:
@@ -47,3 +47,16 @@ body:
         - "Low - Nice to have"
         - "Medium - Useful improvement"
         - "High - Solves major pain point"
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: How will we know when this feature is done?
+      placeholder: |
+        - [ ] AC-1: ...
+        - [ ] AC-2: ...
+    validations:
+      required: true

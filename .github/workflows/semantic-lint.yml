@@ -3,29 +3,49 @@ name: Semantic Commit Lint
 on:
   pull_request:
     branches: [ main ]
+    types: [opened, synchronize, reopened, edited]
 
 jobs:
   semantic-lint:
+    name: Conventional Commits (required)
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Validate conventional commits
+        # This is a REQUIRED check — PRs cannot merge if it fails.
+        # All commits must follow: type(scope)?: description
+        # Valid types: feat, fix, docs, style, refactor, perf, test, chore, ci, revert, build
         run: |
-          set -e
+          set -euo pipefail
           VALID_TYPES="feat|fix|docs|style|refactor|perf|test|chore|ci|revert|build"
-          
-          # Get commit messages from PR
-          git log origin/main..HEAD --pretty=format:"%H %s" | while read commit msg; do
-            if ! echo "$msg" | grep -qE "^($VALID_TYPES)(\(.+\))?!?: .{1,}"; then
-              echo "❌ Invalid commit message format: $msg"
-              echo "   Expected format: type(scope)?: description"
-              echo "   Valid types: feat, fix, docs, style, refactor, perf, test, chore, ci, revert, build"
-              exit 1
+          FAILED=0
+
+          while IFS= read -r line; do
+            HASH=$(echo "$line" | cut -d' ' -f1)
+            MSG=$(echo "$line" | cut -d' ' -f2-)
+            if ! echo "$MSG" | grep -qE "^($VALID_TYPES)(\(.+\))?!?: .{1,}"; then
+              echo "❌ [$HASH] Invalid commit: $MSG"
+              echo "   Expected: type(scope)?: description"
+              FAILED=$((FAILED + 1))
+            else
+              echo "✅ [$HASH] $MSG"
             fi
-          done
-          
-          echo "✅ All commits follow conventional commit format"
+          done < <(git log origin/main..HEAD --pretty=format:"%h %s")
+
+          if [ "$FAILED" -gt 0 ]; then
+            echo ""
+            echo "💥 $FAILED commit(s) failed conventional commit validation."
+            echo "   Valid types: feat fix docs style refactor perf test chore ci revert build"
+            echo "   Examples:"
+            echo "     feat: add Windsurf platform support"
+            echo "     fix(generator): handle spaces in project path"
+            echo "     docs: update installation instructions"
+            exit 1
+          fi
+
+          echo ""
+          echo "✅ All commits follow Conventional Commits format."

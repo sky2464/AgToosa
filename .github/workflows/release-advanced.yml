@@ -157,19 +157,73 @@ jobs:
     runs-on: ubuntu-latest
     needs: [version-validation, publish-release]
     if: success()
+    # A failure here must NOT block the release — announcements are best-effort
+    continue-on-error: true
     steps:
-      - name: Create release announcement
+      - name: Create release announcement discussion
         uses: actions/github-script@v7
         with:
           script: |
             const version = "${{ needs.version-validation.outputs.tag }}";
-            
-            const discussion = await github.rest.discussions.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: `📦 ${version} Released`,
-              category_id: 'DIC_kwDOPBqjKc4Ck4Kh',
-              body: `[See release details](https://github.com/${{ github.repository }}/releases/tag/${version})`
+
+            // Safely look up the Announcements discussion category
+            let categoryId = null;
+            try {
+              const query = `
+                query($owner: String!, $repo: String!) {
+                  repository(owner: $owner, name: $repo) {
+                    discussionCategories(first: 20) {
+                      nodes { id name }
+                    }
+                  }
+                }`;
+              const result = await github.graphql(query, {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              });
+              const categories = result.repository.discussionCategories.nodes;
+              const announcements = categories.find(
+                c => c.name.toLowerCase().includes('announcement')
+              );
+              const general = categories.find(
+                c => c.name.toLowerCase().includes('general')
+              );
+              categoryId = (announcements || general || categories[0])?.id;
+            } catch (err) {
+              console.warn('Could not fetch discussion categories:', err.message);
+            }
+
+            if (!categoryId) {
+              console.log('No discussion category found — skipping announcement.');
+              return;
+            }
+
+            const mutation = `
+              mutation($input: CreateDiscussionInput!) {
+                createDiscussion(input: $input) {
+                  discussion { url }
+                }
+              }`;
+            const disc = await github.graphql(mutation, {
+              input: {
+                repositoryId: (await github.rest.repos.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                })).data.node_id,
+                categoryId,
+                title: `\ud83d\udce6 ${version} Released`,
+                body: [
+                  `**AgToosa ${version} is now available!**`,
+                  '',
+                  `[View release notes \u2192](https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/${version})`,
+                  '',
+                  'Install or update:',
+                  '```bash',
+                  `git clone https://github.com/${context.repo.owner}/${context.repo.repo}.git`,
+                  '# or pull the latest in your existing clone',
+                  'git pull && bash agtoosa.sh',
+                  '```',
+                ].join('\n'),
+              },
             });
-            
-            console.log(`Created announcement: ${discussion.data.html_url}`);
+            console.log(`Created announcement: ${disc.createDiscussion.discussion.url}`);

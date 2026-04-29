@@ -1,0 +1,31 @@
+# CODEOWNERS — Auto-request reviews from the right people
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner — all files not matched below
+* @sky2464
+
+# Core generator script — highest scrutiny
+agtoosa.sh @sky2464
+
+# Library modules — any shell logic change
+lib/ @sky2464
+
+# Template workflow files — impacts every user project
+template/Docs/ @sky2464
+
+# Platform entry-point files
+template/AGENTS.md @sky2464
+template/CLAUDE.md @sky2464
+template/OPENCODE.md @sky2464
+
+# CI/CD and automation — requires release owner review
+.github/workflows/ @sky2464
+
+# Test suite — requires test owner review
+tests/ @sky2464
+
+# Governance docs — maintainer sign-off required
+SECURITY.md @sky2464
+CODE_OF_CONDUCT.md @sky2464
+CONTRIBUTING.md @sky2464
+LICENSE @sky2464
