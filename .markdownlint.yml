@@ -1,0 +1,17 @@
+# AgToosa markdownlint configuration
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+
+default: true
+
+# MD013: Line length — disabled; long lines are common in workflow/instruction docs
+MD013: false
+
+# MD033: Allow inline HTML — used in README hero section (<div align="center">)
+MD033: false
+
+# MD041: First line should be H1 — some template files intentionally start differently
+MD041: false
+
+# MD024: No duplicate headings — allow in different sections
+MD024:
+  siblings_only: true

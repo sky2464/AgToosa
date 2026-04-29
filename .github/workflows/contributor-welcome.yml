@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Check author association
         id: check
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |
             const association = context.payload.pull_request?.author_association ||
@@ -30,7 +30,7 @@ jobs:
 
       - name: Welcome first-time contributor to PR
         if: github.event_name == 'pull_request' && steps.check.outputs.is-first-time == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |
             const pr = context.payload.pull_request;
@@ -58,7 +58,7 @@ jobs:
 
       - name: Welcome first-time contributor to issue
         if: github.event_name == 'issues' && steps.check.outputs.is-first-time == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |
             const issue = context.payload.issue;
@@ -85,7 +85,7 @@ jobs:
 
       - name: Add "good-first-issue" label to simple issues
         if: github.event_name == 'issues'
-        uses: actions/github-script@v7
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
         with:
           script: |
             const issue = context.payload.issue;

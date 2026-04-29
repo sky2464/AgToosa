@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
 
       - name: Run ShellCheck with security flags
         run: |
@@ -38,10 +38,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
 
       - name: Run OWASP Dependency-Check
-        uses: dependency-check/Dependency-Check_Action@1.1.0
+        uses: dependency-check/Dependency-Check_Action@75ba02d6183445fe0761d26e836bde58b1560600 # 1.1.0
         with:
           project: 'AgToosa'
           path: '.'
@@ -50,7 +50,7 @@ jobs:
             --exclude node_modules,tests,.git,.github,.wiki,template
 
       - name: Upload SARIF to GitHub Security
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@b25d0ebf40e5b63ee81e1bd6e5d2a12b7c2aeb61 # v4
         if: ${{ (github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false) && always() && hashFiles('reports/dependency-check-report.sarif') != '' }}
         with:
           sarif_file: reports/dependency-check-report.sarif
@@ -61,12 +61,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           fetch-depth: 0
 
-      - name: Detect Secrets (truffleHog)
-        uses: trufflesecurity/trufflehog@main
+      - name: Detect Secrets (truffleHog) — PR diff only
+        if: github.event_name == 'pull_request'
+        uses: trufflesecurity/trufflehog@cf31c26af3131bd053d161a3b2155ed0cc47a050 # main
+        with:
+          path: ./
+          base: ${{ github.event.pull_request.base.sha }}
+          head: ${{ github.event.pull_request.head.sha }}
+          extra_args: --only-verified
+
+      - name: Detect Secrets (truffleHog) — full history
+        if: github.event_name != 'pull_request'
+        uses: trufflesecurity/trufflehog@cf31c26af3131bd053d161a3b2155ed0cc47a050 # main
         with:
           path: ./
           extra_args: --only-verified
@@ -80,10 +90,10 @@ jobs:
       security-events: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
 
       - name: Run Trivy scan
-        uses: aquasecurity/trivy-action@v0.36.0
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -96,7 +106,7 @@ jobs:
           severity: 'HIGH,CRITICAL'
 
       - name: Upload Trivy SARIF
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@b25d0ebf40e5b63ee81e1bd6e5d2a12b7c2aeb61 # v4
         if: ${{ (github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork == false) && always() && hashFiles('trivy-results.sarif') != '' }}
         with:
           sarif_file: 'trivy-results.sarif'

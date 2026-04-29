@@ -20,9 +20,9 @@ Before any deployment, verify all of the following. If **any** check fails, list
 
 | Check | How to Verify |
 |-------|--------------|
-| ✅ Spec was approved | `Docs/AgToosa_Spec-*.md` contains a `## ✅ Spec Approved` section with a timestamp |
-| ✅ Acceptance criteria exist | `Docs/AgToosa_Spec-*.md` contains `## Acceptance Criteria` with at least one Must-priority row |
-| ✅ `/agtoosa-review` completed | `Docs/AgToosa_Review-*.md` exists and contains no unresolved 🔴 Critical findings |
+| ✅ Spec was approved | `Docs/archived/spec-*.md` contains a `## ✅ Spec Approved` section with a timestamp |
+| ✅ Acceptance criteria exist | `Docs/archived/spec-*.md` contains `## Acceptance Criteria` with at least one Must-priority row |
+| ✅ `/agtoosa-review` completed | `Docs/archived/review-*.md` exists and contains no unresolved 🔴 Critical findings |
 | ✅ All tests pass | Run full test suite and confirm green |
 | ✅ Smoke tests tagged | Test plan or test suite has at least one `@smoke`-tagged test per Must-priority AC |
 | ✅ Changelog entry drafted | `Docs/AgToosa_Changelog.md` has an entry for this feature |
@@ -81,7 +81,7 @@ Before deploying, clean the branch history:
 
 ### Part 3 — Workspace Cleanup & Archiving (`/agtoosa-ship docs` runs Parts 3 + 4)
 
-3.  **Archive Completed Work:** Move all completed `AgToosa_Spec-*.md` from `Docs/` to `Docs/archived/`.
+3.  **Archive Completed Work:** Spec and review artifacts are already saved to `Docs/archived/` (as `spec-[story-id].md` and `review-[story-id].md`). Verify both files exist there before proceeding.
 
 4.  **Changelog Update:** Update `Docs/AgToosa_Changelog.md` with a summary entry: `[date] - [type] - [short description] - [spec reference]`.
 
