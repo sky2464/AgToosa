@@ -60,3 +60,31 @@ jobs:
 
       - name: Run generator smoke tests
         run: bats tests/agtoosa.bats
+
+  windows-smoke:
+    name: Windows PowerShell Smoke Test
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Verify agtoosa.ps1 exists and reports version
+        shell: pwsh
+        run: |
+          $output = & "$env:GITHUB_WORKSPACE\agtoosa.ps1" -Version 2>&1
+          Write-Output "Output: $output"
+          if ($output -notmatch '\d+\.\d+\.\d+') {
+            Write-Error "agtoosa.ps1 --version did not print a version string"
+            exit 1
+          }
+          Write-Output "✅ agtoosa.ps1 -Version passed"
+
+      - name: Verify agtoosa.ps1 --help flag
+        shell: pwsh
+        run: |
+          $output = & "$env:GITHUB_WORKSPACE\agtoosa.ps1" -Help 2>&1
+          Write-Output "Output: $output"
+          if ($output -notmatch 'AgToosa') {
+            Write-Error "agtoosa.ps1 -Help did not print expected output"
+            exit 1
+          }
+          Write-Output "✅ agtoosa.ps1 -Help passed"
