@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # ── AgToosa: install helpers ──────────────────────────────────
 # Sourced by agtoosa.sh.
 # Globals read: PROJECT_PATH, SHIP_DIR, FORCE, USE_*, DOCS_FILES, CONTEXT_FILES,

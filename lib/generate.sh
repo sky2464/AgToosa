@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # ── AgToosa: stage files into ship/ ──────────────────────────
 # Sourced by agtoosa.sh.
 # Globals read: TEMPLATE_DIR, SHIP_DIR, USE_*, DOCS_FILES, CONTEXT_FILES, colors.

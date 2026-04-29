@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # ── AgToosa: self-update helpers ─────────────────────────────────────────────
 # Sourced by agtoosa.sh.
 # Globals read: PROJECT_PATH, TEMPLATE_DIR, AGTOOSA_VERSION, FORCE,

@@ -134,7 +134,7 @@ if [[ "$UPDATE" == true ]]; then
   echo -e "${PURPLE}${BOLD}Project: ${PROJECT_PATH}${NC}"
   echo ""
 
-  COPIED=0; SKIPPED=0; BAK_FILES=()
+  COPIED=0; SKIPPED=0
   run_update "$OLD_VERSION"
   exit 0
 fi

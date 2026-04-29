@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # ── AgToosa: version marker helpers (DEV-129) ────────────────
 # Sourced by agtoosa.sh. Globals: AGTOOSA_VERSION (read-only here).
 

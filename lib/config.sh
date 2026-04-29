@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # ── AgToosa: file lists and usage text ───────────────────────
 # Sourced by agtoosa.sh. Globals: AGTOOSA_VERSION (read-only here).
 

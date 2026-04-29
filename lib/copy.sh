@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # ── AgToosa: file copy/merge helpers (DEV-128, DEV-130, DEV-139, DEV-157) ───
 # Sourced by agtoosa.sh.
 # Globals read: FORCE, AGTOOSA_VERSION, colors (GREEN/YELLOW/CYAN/NC).
@@ -8,7 +10,8 @@ BAK_FILES=()
 # Create a timestamped .bak and return its path.
 backup_file() {
   local f="$1"
-  local bak="${f}.bak.$(date +%Y%m%d-%H%M)"
+  local bak
+  bak="${f}.bak.$(date +%Y%m%d-%H%M)"
   cp "$f" "$bak"
   printf '%s' "$bak"
 }
