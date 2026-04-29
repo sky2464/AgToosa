@@ -137,7 +137,6 @@ teardown() {
   run bash -c "printf '$TEST_PROJECT\n7\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/OPENCODE.md" ]
-  [ ! -f "$TEST_PROJECT/.roorules" ]
 }
 
 # ── No-copy path tests ────────────────────────────────────────────────────────
@@ -926,7 +925,6 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
     "$TEMPLATE_DIR/.cursorrules"
     "$TEMPLATE_DIR/AGENTS.md"
     "$TEMPLATE_DIR/.windsurfrules"
-    "$TEMPLATE_DIR/.roorules"
     "$TEMPLATE_DIR/OPENCODE.md"
     "$TEMPLATE_DIR/.github/copilot-instructions.md"
   )

@@ -11,20 +11,37 @@ _(nothing yet)_
 
 ---
 
+## [2.6.0] — 2026-04-28
+
+### Added
+- `--update` mode in `agtoosa.sh` to update an existing project install non-interactively: `bash agtoosa.sh --update /path/to/project`
+- New workflow file `Docs/AgToosa_Update.md` and `/agtoosa-update` utility wiring across platform entry-point templates
+- Expanded bats coverage for update mode, including error paths, preservation rules, dry-run behavior, and platform merge detection
+
+### Changed
+- Update flow now sources and uses `lib/update.sh` end-to-end from the main entrypoint
+- CI now installs a pinned bats-core version instead of using an unversioned distro package
+
+### Fixed
+- `detect_installed_platforms()` in `lib/update.sh` now returns success explicitly to avoid `set -e` exits during update runs
+- Removed deprecated Roo template artifacts (`template/.roorules`, `template/.roo/`) from active template surface
+
+---
+
 ## [2.5.0] — 2026-04-28
 
 ### Added
-- `.mdc` files (Cursor rules) now linted by CI markdownlint step (DEV-TBD)
-- Bats test for VS Code + Copilot combo (`5 6`) verifying `.github/` deduplication (DEV-TBD)
+- `.mdc` files (Cursor rules) now linted by CI markdownlint step
+- Bats test for VS Code + Copilot combo (`5 6`) verifying `.github/` deduplication
 
 ### Changed
-- Platform option 7 renamed from "OpenCode / Roo / Other" to "OpenCode / Other" — Roo Code sunsets 2026-05-15 (DEV-TBD)
-- `OPTIONAL_TEMPLATE_FILES` and `ROO_RULE_FILES` array removed; `.roorules` and `.roo/rules/` are no longer generated or installed (DEV-TBD)
-- Platform entry-point files `AGENTS.md` and `OPENCODE.md` updated: optional utilities line now includes "Read" prefix to match all other platform files (DEV-TBD)
-- `count_existing_files()` in `lib/install.sh` now correctly counts VS Code-specific files when option 6 is selected without option 5 (DEV-TBD)
-- Bats test for platform selection 6 renamed and strengthened with positive assertions for `.github/copilot-instructions.md`, prompts, and agent file (DEV-TBD)
-- `CLAUDE_HOOK_FILES` dead config array removed from `lib/config.sh` (DEV-TBD)
-- v2.4.0 CHANGELOG date corrected from 2026-05-14 to 2026-04-28 (DEV-TBD)
+- Platform option 7 renamed from "OpenCode / Roo / Other" to "OpenCode / Other" — Roo Code sunsets 2026-05-15
+- `OPTIONAL_TEMPLATE_FILES` and `ROO_RULE_FILES` array removed; `.roorules` and `.roo/rules/` are no longer generated or installed
+- Platform entry-point files `AGENTS.md` and `OPENCODE.md` updated: optional utilities line now includes "Read" prefix to match all other platform files
+- `count_existing_files()` in `lib/install.sh` now correctly counts VS Code-specific files when option 6 is selected without option 5
+- Bats test for platform selection 6 renamed and strengthened with positive assertions for `.github/copilot-instructions.md`, prompts, and agent file
+- `CLAUDE_HOOK_FILES` dead config array removed from `lib/config.sh`
+- v2.4.0 CHANGELOG date corrected from 2026-05-14 to 2026-04-28
 
 ---
 
