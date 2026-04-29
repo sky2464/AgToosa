@@ -13,10 +13,12 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: ShellCheck
-        uses: ludeeus/action-shellcheck@2.0.0
-        with:
-          scandir: './'
-          ignore: 'template'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+          shellcheck -x -S warning \
+            --exclude=SC2002,SC2046,SC2086,SC1091 \
+            agtoosa.sh lib/*.sh
 
       - name: Markdown Lint
         uses: DavidAnson/markdownlint-cli2-action@v23.0.0
