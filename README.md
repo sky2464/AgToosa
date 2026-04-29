@@ -14,6 +14,10 @@
 
 *Turn your AI coding assistant into an autonomous, security-first development team.*
 
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/agtoosa.sh)
+```
+
 </div>
 
 ---
@@ -166,6 +170,14 @@ flowchart TD
 ---
 
 ## Installation
+
+### Homebrew (macOS / Linux)
+
+```bash
+brew install sky2464/agtoosa/agtoosa
+```
+
+> **Note:** The Homebrew tap (`sky2464/agtoosa`) must be set up separately. If it isn't available yet, use the one-line install below.
 
 ### One-line install — macOS / Linux
 
