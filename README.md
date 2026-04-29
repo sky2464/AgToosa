@@ -14,8 +14,16 @@
 
 *Turn your AI coding assistant into an autonomous, security-first development team.*
 
+**One-line install — macOS / Linux / Git Bash:**
+
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/agtoosa.sh)
+```
+
+**Or clone and run:**
+
+```bash
+git clone https://github.com/sky2464/AgToosa.git && cd AgToosa && bash agtoosa.sh
 ```
 
 </div>
@@ -195,7 +203,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/agtoosa
 wsl bash -c "bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/agtoosa.sh)"
 ```
 
-> **Windows native support** (PowerShell `.ps1` script) is tracked in [#18](https://github.com/sky2464/AgToosa/issues/18). For now, [Git Bash](https://gitforwindows.org/) or [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) are the recommended options.
+> **Windows native support** is available via `agtoosa.ps1` — run `irm https://raw.githubusercontent.com/sky2464/AgToosa/main/agtoosa.ps1 | iex` in PowerShell, or use [Git Bash](https://gitforwindows.org/) / [WSL](https://learn.microsoft.com/en-us/windows/wsl/install).
 
 ### Manual install (clone + run)
 
