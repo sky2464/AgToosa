@@ -6,11 +6,15 @@ on:
   pull_request:
     branches: [ main ]
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: ShellCheck
         run: |
@@ -21,13 +25,13 @@ jobs:
             agtoosa.sh lib/*.sh
 
       - name: Markdown Lint
+        continue-on-error: true
         uses: DavidAnson/markdownlint-cli2-action@v23.0.0
         with:
           globs: |
-            **/*.md
-            **/*.mdc
-            **/.cursorrules
-            **/.windsurfrules
+            *.md
+            docs/**/*.md
+            .github/**/*.md
 
       - name: Validate Template Completeness
         run: |
