@@ -61,6 +61,22 @@ jobs:
           fi
           echo "✅ CHANGELOG entry found for version $VERSION"
 
+      - name: Validate README install placeholders
+        run: |
+          set -euo pipefail
+
+          if ! grep -q "bootstrap.sh) --ref vX.Y.Z" README.md; then
+            echo "❌ README must keep the pinned install placeholder '--ref vX.Y.Z'"
+            exit 1
+          fi
+
+          if grep -Eq "bootstrap\.sh\) --ref v[0-9]+\.[0-9]+\.[0-9]+" README.md; then
+            echo "❌ README contains a hardcoded bootstrap tag; use vX.Y.Z placeholder instead"
+            exit 1
+          fi
+
+          echo "✅ README install placeholders validated"
+
   create-milestone:
     name: Create GitHub Milestone
     runs-on: ubuntu-latest
@@ -285,9 +301,12 @@ jobs:
                   '',
                   'Install or update:',
                   '```bash',
-                  `git clone https://github.com/${context.repo.owner}/${context.repo.repo}.git`,
-                  '# or pull the latest in your existing clone',
-                  'git pull && bash agtoosa.sh',
+                  '# Persistent install (recommended)',
+                  'brew install sky2464/agtoosa/agtoosa',
+                  'brew upgrade agtoosa',
+                  '',
+                  '# One-time usage pinned to this release',
+                  `bash <(curl -fsSL https://raw.githubusercontent.com/${context.repo.owner}/${context.repo.repo}/main/bootstrap.sh) --ref ${version}`,
                   '```',
                 ].join('\n'),
               },

@@ -22,7 +22,16 @@ jobs:
           sudo apt-get install -y shellcheck
           shellcheck -x -S warning \
             --exclude=SC2002,SC2046,SC2086,SC1091 \
-            agtoosa.sh lib/*.sh
+            agtoosa.sh bootstrap.sh lib/*.sh
+
+      - name: Guard README install command regressions
+        run: |
+          set -euo pipefail
+          if grep -n "raw.githubusercontent.com/sky2464/AgToosa/main/agtoosa.sh" README.md; then
+            echo "❌ Legacy one-file install command found in README.md"
+            exit 1
+          fi
+          echo "✅ README install command guard passed"
 
       - name: Markdown Lint
         continue-on-error: true
