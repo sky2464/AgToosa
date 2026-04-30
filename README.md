@@ -17,7 +17,8 @@
 **One-time usage (pinned release):**
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v2.6.0
+# Replace vX.Y.Z with the latest release tag
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref vX.Y.Z
 ```
 
 **Or clone and run:**

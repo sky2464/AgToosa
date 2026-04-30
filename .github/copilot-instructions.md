@@ -2,7 +2,7 @@
 
 ## What This Repo Is
 
-AgToosa is a **framework generator** — a bash script plus a library of markdown workflow files. When a developer runs `bash agtoosa.sh`, it interactively collects their project path and AI platform preferences, then copies the appropriate markdown files into their project. There is no SDK, runtime, or package manager involved.
+AgToosa is a **framework generator** — a bash script plus a library of markdown workflow files. When a developer runs `bash agtoosa.sh`, it interactively collects their project path and AI platform preferences, then copies the appropriate markdown files into their project. There is no SDK or runtime in user projects; installation can be persistent (Homebrew) or one-time (bootstrap), but generated project output remains markdown/config only.
 
 ## Running the Generator
 
