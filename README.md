@@ -14,10 +14,10 @@
 
 *Turn your AI coding assistant into an autonomous, security-first development team.*
 
-**One-line install — macOS / Linux / Git Bash:**
+**One-time usage (pinned release):**
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/agtoosa.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v2.6.0
 ```
 
 **Or clone and run:**
@@ -179,38 +179,78 @@ flowchart TD
 
 ## Installation
 
-### Homebrew (macOS / Linux)
+### Option 1: Persistent Installation (Recommended)
+
+Install once and use everywhere:
 
 ```bash
 brew install sky2464/agtoosa/agtoosa
 ```
 
-> **Note:** The Homebrew tap (`sky2464/agtoosa`) must be set up separately. If it isn't available yet, use the one-line install below.
-
-### One-line install — macOS / Linux
+Then verify:
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/agtoosa.sh)
+agtoosa --version
 ```
 
-### One-line install — Windows (Git Bash or WSL)
+Run the generator:
 
 ```bash
-# Git Bash (recommended — ships with Git for Windows)
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/agtoosa.sh)
-
-# PowerShell + WSL
-wsl bash -c "bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/agtoosa.sh)"
+agtoosa
 ```
 
-> **Windows native support** is available via `agtoosa.ps1` — run `irm https://raw.githubusercontent.com/sky2464/AgToosa/main/agtoosa.ps1 | iex` in PowerShell, or use [Git Bash](https://gitforwindows.org/) / [WSL](https://learn.microsoft.com/en-us/windows/wsl/install).
+Upgrade later:
 
-### Manual install (clone + run)
+```bash
+brew upgrade agtoosa
+```
+
+> **Note:** If the Homebrew tap (`sky2464/agtoosa`) is not available in your environment yet, use Option 2.
+
+### Option 2: One-time Usage (No Installation)
+
+Run directly without installing. Recommended approach is to pin a release tag:
+
+```bash
+# Replace vX.Y.Z with the latest release tag
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref vX.Y.Z
+```
+
+Or use the latest from `main` (may include unreleased changes):
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh)
+```
+
+You can pass generator flags by adding `--` before script arguments:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref vX.Y.Z -- --dry-run
+```
+
+### Option 3: Manual Install (Clone + Run)
 
 ```bash
 git clone https://github.com/sky2464/AgToosa.git
 cd AgToosa
 bash agtoosa.sh
+```
+
+### Windows
+
+One-time usage in Git Bash / WSL:
+
+```bash
+# Git Bash or WSL
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref vX.Y.Z
+```
+
+Native PowerShell (clone + run):
+
+```powershell
+git clone https://github.com/sky2464/AgToosa.git
+cd AgToosa
+./agtoosa.ps1
 ```
 
 Enter your project path when prompted — the generator copies the workflow files directly into your project.
