@@ -5,6 +5,7 @@
 
 SCRIPT="$BATS_TEST_DIRNAME/../agtoosa.sh"
 TEMPLATE_DIR="$BATS_TEST_DIRNAME/../template"
+BOOTSTRAP_SCRIPT="$BATS_TEST_DIRNAME/../bootstrap.sh"
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 setup() {
@@ -31,6 +32,42 @@ teardown() {
   [[ "$output" == *"Usage:"* ]]
   [[ "$output" == *"--force"* ]]
   [[ "$output" == *"--dry-run"* ]]
+}
+
+@test "bootstrap --help prints options" {
+  run bash "$BOOTSTRAP_SCRIPT" --help
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"--ref"* ]]
+  [[ "$output" == *"--archive"* ]]
+  [[ "$output" == *"-- --version"* ]]
+}
+
+@test "bootstrap parses pinned ref and fails clearly for missing local archive" {
+  run bash "$BOOTSTRAP_SCRIPT" --ref v9.9.9 --archive /tmp/does-not-exist-agtoosa.tgz
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"--archive file not found"* ]]
+}
+
+@test "bootstrap rejects incomplete archive payload" {
+  local fixture_dir
+  local archive_path
+  fixture_dir="$(mktemp -d)"
+  archive_path="$(mktemp /tmp/agtoosa-bootstrap-fixture-XXXXXX.tar.gz)"
+
+  mkdir -p "$fixture_dir/AgToosa-fixture"
+  cat > "$fixture_dir/AgToosa-fixture/agtoosa.sh" <<'EOF'
+#!/usr/bin/env bash
+echo "fixture"
+EOF
+  chmod +x "$fixture_dir/AgToosa-fixture/agtoosa.sh"
+
+  tar -czf "$archive_path" -C "$fixture_dir" AgToosa-fixture
+  run bash "$BOOTSTRAP_SCRIPT" --archive "$archive_path"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"Extracted archive is incomplete"* ]]
+
+  rm -rf "$fixture_dir"
+  rm -f "$archive_path"
 }
 
 @test "preflight fails without template/ directory" {
