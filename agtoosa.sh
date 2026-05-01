@@ -139,6 +139,19 @@ if [[ "$UPDATE" == true ]]; then
   exit 0
 fi
 
+# ── Verify git is available ────────────────────────────────────
+if ! command -v git &>/dev/null; then
+  echo -e "${RED}❌ Error: git not found.${NC}" >&2
+  echo "" >&2
+  echo "AgToosa uses git to initialize and track projects." >&2
+  echo "Please install git:" >&2
+  echo "  macOS: brew install git" >&2
+  echo "  Linux: sudo apt-get install -y git (Ubuntu/Debian)" >&2
+  echo "         sudo dnf install -y git (Fedora/RHEL)" >&2
+  echo "" >&2
+  exit 1
+fi
+
 # ── Welcome ───────────────────────────────────────────────────
 clear 2>/dev/null || true
 echo ""

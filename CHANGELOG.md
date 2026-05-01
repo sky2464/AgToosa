@@ -7,7 +7,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
-_(nothing yet)_
+### Added
+- Smart dependency checking in `bootstrap.sh`: detects missing bash/git/curl/tar and prints platform-specific install guidance
+- Platform detection in bootstrap (macOS, Linux distros, WSL2) with contextual error messages
+- `System Requirements` section in README documenting required tools (bash 4+, git, curl, tar)
+- Git availability check in `agtoosa.sh` with helpful error messages if missing
+
+### Changed
+- Installation guidance now explicit in README: Windows users directed to WSL2 for v2.8.0 (native Windows support planned for future release)
+- Bootstrap script exits gracefully with clear instructions if dependencies are missing (instead of silent/cryptic failures)
 
 ---
 

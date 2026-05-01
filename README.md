@@ -31,6 +31,48 @@ git clone https://github.com/sky2464/AgToosa.git && cd AgToosa && bash agtoosa.s
 
 ---
 
+## Installation
+
+### System Requirements
+
+AgToosa requires these tools (all present by default on modern macOS/Linux):
+- **bash** 4.0+
+- **git** (any recent version)
+- **curl** (any recent version)
+- **tar** (any recent version)
+
+If any are missing, the bootstrap script will tell you how to install them.
+
+### Quick Start
+
+**macOS & Linux:**
+```bash
+# Using a specific release (recommended)
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v2.7.0
+
+# Or using latest main branch
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh)
+```
+
+**Windows (WSL2):**
+1. [Set up WSL2 on Windows](https://docs.microsoft.com/en-us/windows/wsl/install)
+2. Open your WSL2 terminal and run the macOS/Linux command above
+
+> **Note:** Native Windows support is planned for a future release. WSL2 provides full AgToosa functionality today.
+
+**Or clone and run:**
+```bash
+git clone https://github.com/sky2464/AgToosa.git && cd AgToosa && bash agtoosa.sh
+```
+
+### Troubleshooting
+
+If you see an error like `Missing: curl`, the bootstrap script will print installation instructions for your OS. Follow them and try again.
+
+For more help, open a [discussion](https://github.com/sky2464/AgToosa/discussions) or [issue](https://github.com/sky2464/AgToosa/issues).
+
+---
+
 ## What is AgToosa?
 
 AgToosa is a **framework of markdown instructions** that transforms any AI coding assistant into a structured, spec-driven development team. Run the local generator, tell it your project path, and your AI assistant gains a complete Software Development Lifecycle — from research and planning to building, testing, reviewing, and shipping.

@@ -34,6 +34,132 @@ Examples:
 EOF
 }
 
+detect_platform() {
+  local os
+  os="$(uname -s)"
+  case "$os" in
+    Darwin)
+      echo "darwin"
+      ;;
+    Linux)
+      if [[ -f /etc/os-release ]]; then
+        # Check for WSL2
+        if grep -qi "microsoft\|wsl" /proc/version 2>/dev/null || uname -r | grep -qi "microsoft"; then
+          echo "windows-wsl2"
+        elif grep -qi "ubuntu\|debian" /etc/os-release; then
+          echo "linux-ubuntu"
+        elif grep -qi "fedora\|rhel\|centos" /etc/os-release; then
+          echo "linux-fedora"
+        else
+          echo "linux-generic"
+        fi
+      else
+        echo "linux-generic"
+      fi
+      ;;
+    *)
+      echo "unsupported"
+      ;;
+  esac
+}
+
+print_install_guide() {
+  local missing="$1"
+  local platform="$2"
+
+  case "$platform" in
+    darwin)
+      echo "Missing: $missing"
+      echo "To install on macOS, run:"
+      echo "  brew install $missing"
+      echo "Or use: macOS 26+ ships with bash 5.2+, git, curl, tar by default."
+      ;;
+    linux-ubuntu)
+      echo "Missing: $missing"
+      echo "To install on Ubuntu/Debian, run:"
+      echo "  sudo apt-get update && sudo apt-get install -y $missing"
+      ;;
+    linux-fedora)
+      echo "Missing: $missing"
+      echo "To install on Fedora/RHEL, run:"
+      echo "  sudo dnf install -y $missing"
+      ;;
+    linux-generic)
+      echo "Missing: $missing"
+      echo "Please install $missing using your system package manager."
+      echo "Examples:"
+      echo "  Ubuntu/Debian: sudo apt-get install -y $missing"
+      echo "  Fedora/RHEL: sudo dnf install -y $missing"
+      echo "  Alpine: apk add $missing"
+      ;;
+    windows-wsl2)
+      echo "Missing: $missing (in WSL2)"
+      echo "To install inside WSL2, run:"
+      echo "  sudo apt-get update && sudo apt-get install -y $missing"
+      ;;
+    *)
+      echo "Missing: $missing"
+      echo "Please install $missing using your system package manager."
+      ;;
+  esac
+}
+
+check_dependencies() {
+  local platform
+  platform="$(detect_platform)"
+
+  if [[ "$platform" == "unsupported" ]]; then
+    echo "Error: Unsupported operating system. AgToosa currently supports macOS, Linux, and WSL2." >&2
+    echo "Detected: $(uname -s)" >&2
+    return 1
+  fi
+
+  local missing_tools=()
+
+  # Check bash (4.0+)
+  if ! command -v bash &>/dev/null; then
+    missing_tools+=("bash")
+  else
+    local bash_version
+    bash_version=$(bash --version | head -n1 | grep -oE '[0-9]+\.[0-9]+' | head -n1)
+    if [[ -z "$bash_version" ]]; then
+      # Try alternative parsing
+      bash_version=$(bash -c 'echo ${BASH_VERSINFO[0]}')
+    fi
+    if [[ -z "$bash_version" ]] || [[ $(echo "$bash_version" | cut -d. -f1) -lt 4 ]]; then
+      echo "Warning: bash version ${bash_version:-unknown} detected. bash 4.0+ recommended." >&2
+    fi
+  fi
+
+  # Check git
+  if ! command -v git &>/dev/null; then
+    missing_tools+=("git")
+  fi
+
+  # Check curl
+  if ! command -v curl &>/dev/null; then
+    missing_tools+=("curl")
+  fi
+
+  # Check tar
+  if ! command -v tar &>/dev/null; then
+    missing_tools+=("tar")
+  fi
+
+  # Report missing tools
+  if [[ ${#missing_tools[@]} -gt 0 ]]; then
+    echo "Error: Missing required tool(s):" >&2
+    for tool in "${missing_tools[@]}"; do
+      echo "" >&2
+      print_install_guide "$tool" "$platform" >&2
+    done
+    echo "" >&2
+    return 1
+  fi
+
+  return 0
+}
+
 forwarded_args=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -121,6 +247,12 @@ cleanup() {
   fi
 }
 trap cleanup EXIT
+
+# Check dependencies before attempting download
+echo "Checking system dependencies..."
+if ! check_dependencies; then
+  exit 1
+fi
 
 echo "Downloading AgToosa (${REF})..."
 if [[ -n "$LOCAL_ARCHIVE" ]]; then
