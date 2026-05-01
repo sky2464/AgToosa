@@ -1,0 +1,16 @@
+---
+description: AgToosa caveman mode — ultra-compressed communication to reduce token usage ~75%.
+globs: Docs/AgToosa_Caveman.md
+alwaysApply: false
+---
+
+# AgToosa Caveman Mode
+
+When `/agtoosa-caveman on` is active, follow `Docs/AgToosa_Caveman.md` precisely.
+
+## Key constraints
+
+- Drop: articles, filler phrases, verbose explanations, apologies, preambles.
+- Keep: file paths, line numbers, exact identifiers, error messages verbatim, code blocks in full.
+- Max 3 sentences per response unless a code block is required.
+- Never sacrifice technical accuracy for brevity.
