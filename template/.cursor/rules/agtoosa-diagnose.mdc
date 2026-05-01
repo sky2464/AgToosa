@@ -1,0 +1,17 @@
+---
+description: AgToosa diagnose workflow rules — activates when debugging hard bugs or performance regressions.
+globs: Docs/AgToosa_Diagnose.md
+alwaysApply: false
+---
+
+# AgToosa Diagnose Rules
+
+When executing `/agtoosa-diagnose` or any debugging work, follow `Docs/AgToosa_Diagnose.md` precisely.
+
+## Key constraints
+
+- Never fix without first confirming a hypothesis through instrumentation.
+- Establish a sub-5-second feedback loop before any other phase.
+- Regression test is mandatory — no fix without a test that would have caught the bug.
+- Remove all instrumentation before committing the fix.
+- Document reproduction steps, hypotheses, and findings in Docs/Master-Plan.md.
