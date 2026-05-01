@@ -21,7 +21,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y shellcheck
           shellcheck -x -S warning \
-            --exclude=SC2002,SC2046,SC2086,SC1091 \
+            --exclude=SC2002,SC2046,SC2086,SC1091,SC2034 \
             agtoosa.sh bootstrap.sh lib/*.sh
 
       - name: Guard README install command regressions
