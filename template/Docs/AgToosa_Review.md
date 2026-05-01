@@ -41,7 +41,7 @@ Ensure code quality, security, and simplicity through multi-persona review.
     **Domain Language Alignment** (see `Docs/LANGUAGE.md` + `Docs/Context/CONTEXT.md`):
     - Verify that variable names, function names, error messages, and API endpoints use terms from `Docs/Context/CONTEXT.md`.
     - Flag any inconsistency (e.g., `userId` when domain says `accountId`) as 🟡 Warning.
-    - If `Docs/Context/CONTEXT.md` doesn't exist, note it as 🟡 Warning and suggest running `/agtoosa-spec grill`.
+    - If `Docs/Context/CONTEXT.md` doesn't exist, note it as 🟡 Warning and suggest running `/agtoosa-spec` to establish domain language alignment.
 
     **ADR Coverage:**
     - Identify any significant architectural decisions made in this change that lack a corresponding ADR in `Docs/adr/`.

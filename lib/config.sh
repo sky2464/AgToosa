@@ -43,17 +43,17 @@ OPTIONAL_TEMPLATE_FILES=(
   ".claude/commands/agtoosa-help.md"
   ".claude/settings.json"
   ".claude/hooks/block-dangerous-git.sh"
-  ".claude/commands/agtoosa-diagnose.md"
-  ".claude/commands/agtoosa-caveman.md"
-  ".claude/skills/agtoosa-diagnose.md"
-  ".cursor/rules/agtoosa-diagnose.mdc"
-  ".cursor/rules/agtoosa-caveman.mdc"
-  ".windsurf/rules/agtoosa-diagnose.md"
-  ".windsurf/rules/agtoosa-caveman.md"
-  ".gemini/commands/agtoosa-diagnose.toml"
-  ".gemini/commands/agtoosa-caveman.toml"
-  ".github/prompts/agtoosa-diagnose.prompt.md"
-  ".github/prompts/agtoosa-caveman.prompt.md"
+  ".claude/commands/agtoosa-debug.md"
+  ".claude/commands/agtoosa-concise.md"
+  ".claude/skills/agtoosa-debug.md"
+  ".cursor/rules/agtoosa-debug.mdc"
+  ".cursor/rules/agtoosa-concise.mdc"
+  ".windsurf/rules/agtoosa-debug.md"
+  ".windsurf/rules/agtoosa-concise.md"
+  ".gemini/commands/agtoosa-debug.toml"
+  ".gemini/commands/agtoosa-concise.toml"
+  ".github/prompts/agtoosa-debug.prompt.md"
+  ".github/prompts/agtoosa-concise.prompt.md"
   ".claude/skills/agtoosa-review.md"
   ".cursor/rules/agtoosa-core.mdc"
   ".cursor/rules/agtoosa-spec.mdc"
@@ -113,13 +113,13 @@ CLAUDE_COMMAND_FILES=(
   ".claude/commands/agtoosa-revert.md"
   ".claude/commands/agtoosa-task.md"
   ".claude/commands/agtoosa-help.md"
-  ".claude/commands/agtoosa-diagnose.md"
-  ".claude/commands/agtoosa-caveman.md"
+  ".claude/commands/agtoosa-debug.md"
+  ".claude/commands/agtoosa-concise.md"
 )
 
 CLAUDE_SKILL_FILES=(
   ".claude/skills/agtoosa-review.md"
-  ".claude/skills/agtoosa-diagnose.md"
+  ".claude/skills/agtoosa-debug.md"
 )
 
 CURSOR_RULE_FILES=(
@@ -131,8 +131,8 @@ CURSOR_RULE_FILES=(
   ".cursor/rules/agtoosa-ship.mdc"
   ".cursor/rules/agtoosa-revert.mdc"
   ".cursor/rules/agtoosa-task.mdc"
-  ".cursor/rules/agtoosa-diagnose.mdc"
-  ".cursor/rules/agtoosa-caveman.mdc"
+  ".cursor/rules/agtoosa-debug.mdc"
+  ".cursor/rules/agtoosa-concise.mdc"
 )
 
 GEMINI_COMMAND_FILES=(
@@ -145,8 +145,8 @@ GEMINI_COMMAND_FILES=(
   ".gemini/commands/agtoosa-revert.toml"
   ".gemini/commands/agtoosa-task.toml"
   ".gemini/commands/agtoosa-help.toml"
-  ".gemini/commands/agtoosa-diagnose.toml"
-  ".gemini/commands/agtoosa-caveman.toml"
+  ".gemini/commands/agtoosa-debug.toml"
+  ".gemini/commands/agtoosa-concise.toml"
 )
 
 COPILOT_PROMPT_FILES=(
@@ -159,8 +159,8 @@ COPILOT_PROMPT_FILES=(
   ".github/prompts/agtoosa-revert.prompt.md"
   ".github/prompts/agtoosa-task.prompt.md"
   ".github/prompts/agtoosa-help.prompt.md"
-  ".github/prompts/agtoosa-diagnose.prompt.md"
-  ".github/prompts/agtoosa-caveman.prompt.md"
+  ".github/prompts/agtoosa-debug.prompt.md"
+  ".github/prompts/agtoosa-concise.prompt.md"
 )
 
 COPILOT_AGENT_FILES=(
@@ -183,8 +183,8 @@ WINDSURF_RULE_FILES=(
   ".windsurf/rules/agtoosa-ship.md"
   ".windsurf/rules/agtoosa-revert.md"
   ".windsurf/rules/agtoosa-task.md"
-  ".windsurf/rules/agtoosa-diagnose.md"
-  ".windsurf/rules/agtoosa-caveman.md"
+  ".windsurf/rules/agtoosa-debug.md"
+  ".windsurf/rules/agtoosa-concise.md"
 )
 
 print_usage() {

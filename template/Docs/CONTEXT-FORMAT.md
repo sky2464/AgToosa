@@ -6,7 +6,7 @@
 
 Create or update `Docs/Context/CONTEXT.md` when:
 - Starting a new project (`/agtoosa-init`)
-- Running `/agtoosa-spec grill` to align terminology before writing a spec
+- Running `/agtoosa-spec` (Part 1) to align terminology before writing a spec
 - A new domain concept emerges during build that needs a canonical name
 
 ## Format
@@ -44,4 +44,4 @@ Optionally add a `Not:` suffix to document rejected synonyms:
 - AI agents: read `Docs/Context/CONTEXT.md` at the start of every spec and build task.
 - When the agent uses a wrong term, correct it and update CONTEXT.md immediately.
 - New terms discovered during build: add to CONTEXT.md before writing code that uses them.
-- Run `/agtoosa-spec grill` to validate terminology alignment before any new spec.
+- Run `/agtoosa-spec` (Part 1) to validate terminology alignment before any new spec.

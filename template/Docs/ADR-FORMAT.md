@@ -63,6 +63,6 @@ Why this option over the alternatives? Reference concrete requirements or constr
 
 ## Integration with AgToosa
 
-- `/agtoosa-spec grill` creates ADRs for architectural decisions identified during domain grilling.
+- `/agtoosa-spec` (Part 1) creates ADRs for architectural decisions identified during domain language alignment.
 - `/agtoosa-review arch` checks that new architectural decisions have corresponding ADRs.
 - ADR status is updated as decisions evolve: Proposed → Accepted → (Deprecated | Superseded).

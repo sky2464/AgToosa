@@ -2,30 +2,25 @@
 # AgToosa generator smoke tests
 # Run: bats tests/agtoosa.bats
 # Requires: bats-core (https://github.com/bats-core/bats-core)
-
 SCRIPT="$BATS_TEST_DIRNAME/../agtoosa.sh"
 TEMPLATE_DIR="$BATS_TEST_DIRNAME/../template"
 BOOTSTRAP_SCRIPT="$BATS_TEST_DIRNAME/../bootstrap.sh"
-
 # ── Helpers ──────────────────────────────────────────────────────────────────
 setup() {
   # Create a fresh temp project dir for each test
   TEST_PROJECT="$(mktemp -d)"
 }
-
 teardown() {
   rm -rf "$TEST_PROJECT"
   # Clean up any ship/ left by the generator
   rm -rf "$BATS_TEST_DIRNAME/../ship"
 }
-
 # ── Flag tests ────────────────────────────────────────────────────────────────
 @test "--version prints version string" {
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
   [[ "$output" == AgToosa\ v* ]]
 }
-
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
   [ "$status" -eq 0 ]
@@ -33,7 +28,6 @@ teardown() {
   [[ "$output" == *"--force"* ]]
   [[ "$output" == *"--dry-run"* ]]
 }
-
 @test "bootstrap --help prints options" {
   run bash "$BOOTSTRAP_SCRIPT" --help
   [ "$status" -eq 0 ]
@@ -41,35 +35,29 @@ teardown() {
   [[ "$output" == *"--archive"* ]]
   [[ "$output" == *"-- --version"* ]]
 }
-
 @test "bootstrap parses pinned ref and fails clearly for missing local archive" {
   run bash "$BOOTSTRAP_SCRIPT" --ref v9.9.9 --archive /tmp/does-not-exist-agtoosa.tgz
   [ "$status" -ne 0 ]
   [[ "$output" == *"--archive file not found"* ]]
 }
-
 @test "bootstrap rejects incomplete archive payload" {
   local fixture_dir
   local archive_path
   fixture_dir="$(mktemp -d)"
   archive_path="$(mktemp /tmp/agtoosa-bootstrap-fixture-XXXXXX.tar.gz)"
-
   mkdir -p "$fixture_dir/AgToosa-fixture"
   cat > "$fixture_dir/AgToosa-fixture/agtoosa.sh" <<'EOF'
 #!/usr/bin/env bash
 echo "fixture"
 EOF
   chmod +x "$fixture_dir/AgToosa-fixture/agtoosa.sh"
-
   tar -czf "$archive_path" -C "$fixture_dir" AgToosa-fixture
   run bash "$BOOTSTRAP_SCRIPT" --archive "$archive_path"
   [ "$status" -ne 0 ]
   [[ "$output" == *"Extracted archive is incomplete"* ]]
-
   rm -rf "$fixture_dir"
   rm -f "$archive_path"
 }
-
 @test "preflight fails without template/ directory" {
   # Copy the script to /tmp where there is no sibling template/ directory
   local tmp_script
@@ -79,7 +67,6 @@ EOF
   rm -f "$tmp_script"
   [[ "$output" == *"template/"* ]]
 }
-
 # ── Dry-run tests ─────────────────────────────────────────────────────────────
 @test "--dry-run shows files without copying" {
   # Provide: project path, select cursor (1), then script exits without prompting copy
@@ -90,7 +77,6 @@ EOF
   # Nothing should have been copied
   [ ! -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
 }
-
 # ── Copy path tests ───────────────────────────────────────────────────────────
 @test "auto-copy installs core Docs files" {
   # Provide: project path, select all (8), confirm copy (Y)
@@ -102,23 +88,19 @@ EOF
   [ -f "$TEST_PROJECT/Docs/AgToosa_Review.md" ]
   [ -f "$TEST_PROJECT/Docs/AgToosa_Ship.md" ]
 }
-
 @test "auto-copy with --force overwrites existing files" {
   # Pre-create a file
   mkdir -p "$TEST_PROJECT/Docs"
   echo "old content" > "$TEST_PROJECT/Docs/AgToosa_Agent.md"
-
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT' --force"
   [ "$status" -eq 0 ]
   # File should be overwritten (not "old content")
   run grep -q "old content" "$TEST_PROJECT/Docs/AgToosa_Agent.md"
   [ "$status" -ne 0 ]
 }
-
 @test "auto-copy appends AgToosa block to existing platform files without --force" {
   mkdir -p "$TEST_PROJECT"
   echo "old content" > "$TEST_PROJECT/CLAUDE.md"
-
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [[ "$output" == *"appended"* ]]
@@ -135,7 +117,6 @@ EOF
   run grep -q "old content" "$TEST_PROJECT/Docs/AgToosa_Agent.md"
   [ "$status" -ne 0 ]
 }
-
 @test "auto-copy does not duplicate AgToosa block on re-run" {
   # First install
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
@@ -148,34 +129,29 @@ EOF
   # Block should appear exactly once
   [ "$(grep -c 'AgToosa.*START' "$TEST_PROJECT/CLAUDE.md")" -eq 1 ]
 }
-
 @test "platform selection 1 copies .cursorrules but not CLAUDE.md" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/.cursorrules" ]
   [ ! -f "$TEST_PROJECT/CLAUDE.md" ]
 }
-
 @test "platform selection 3 copies CLAUDE.md and AgToosa_Claude.md" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/CLAUDE.md" ]
   [ -f "$TEST_PROJECT/Docs/AgToosa_Claude.md" ]
 }
-
 @test "platform selection 4 copies AGENTS.md and AgToosa_Gemini.md" {
   run bash -c "printf '$TEST_PROJECT\n4\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/AGENTS.md" ]
   [ -f "$TEST_PROJECT/Docs/AgToosa_Gemini.md" ]
 }
-
 @test "platform selection 7 copies OPENCODE.md" {
   run bash -c "printf '$TEST_PROJECT\n7\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/OPENCODE.md" ]
 }
-
 # ── No-copy path tests ────────────────────────────────────────────────────────
 @test "declining copy keeps ship/ intact" {
   run bash -c "printf '$TEST_PROJECT\n1\nn\n' | bash '$SCRIPT'"
@@ -183,13 +159,11 @@ EOF
   [ -d "$BATS_TEST_DIRNAME/../ship" ]
   [ -f "$BATS_TEST_DIRNAME/../ship/Docs/AgToosa_Agent.md" ]
 }
-
 @test "ship/ is cleaned up after successful auto-copy" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ ! -d "$BATS_TEST_DIRNAME/../ship" ]
 }
-
 @test "ship/ is cleaned up after unexpected EOF (forced failure scenario)" {
   # Provide project path and platform but no answer to copy prompt.
   # The read for "Copy files now?" gets EOF and exits non-zero.
@@ -198,16 +172,13 @@ EOF
   # ship/ must be absent whether the script succeeded or failed
   [ ! -d "$BATS_TEST_DIRNAME/../ship" ]
 }
-
 # ── DEV-147: Platform coverage ────────────────────────────────
-
 @test "platform selection 2 copies .windsurfrules" {
   run bash -c "printf '$TEST_PROJECT\n2\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/.windsurfrules" ]
   [ ! -f "$TEST_PROJECT/.cursorrules" ]
 }
-
 @test "platform selection 5 copies copilot-instructions.md" {
   run bash -c "printf '$TEST_PROJECT\n5\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -219,11 +190,9 @@ EOF
   [ -f "$TEST_PROJECT/.github/instructions/agtoosa-changelog.instructions.md" ]
   [ ! -f "$TEST_PROJECT/CLAUDE.md" ]
 }
-
 @test "re-run with existing copilot-instructions.md appends AgToosa block without --force" {
   mkdir -p "$TEST_PROJECT/.github"
   echo "# My existing Copilot instructions" > "$TEST_PROJECT/.github/copilot-instructions.md"
-
   run bash -c "printf '$TEST_PROJECT\n5\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [[ "$output" == *"appended"* ]]
@@ -236,7 +205,6 @@ EOF
   run grep -q "AgToosa" "$TEST_PROJECT/.github/copilot-instructions.md"
   [ "$status" -eq 0 ]
 }
-
 @test "platform selection 6 (VS Code) installs copilot-instructions, prompts, and agent" {
   run bash -c "printf '$TEST_PROJECT\n6\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -253,7 +221,6 @@ EOF
   [ ! -f "$TEST_PROJECT/CLAUDE.md" ]
   [ ! -f "$TEST_PROJECT/.windsurfrules" ]
 }
-
 @test "platform selection 8 copies all platform files" {
   run bash -c "printf '$TEST_PROJECT\n8\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -273,7 +240,6 @@ EOF
   [ -d "$TEST_PROJECT/.github/agents" ]
   [ -d "$TEST_PROJECT/.windsurf/rules" ]
 }
-
 @test "platform selection 1 installs .cursor/rules/ MDX files" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -282,7 +248,6 @@ EOF
   [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-build.mdc" ]
   [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-revert.mdc" ]
 }
-
 @test "platform selection 2 installs .windsurf/rules/ files" {
   run bash -c "printf '$TEST_PROJECT\n2\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -290,7 +255,6 @@ EOF
   [ -f "$TEST_PROJECT/.windsurf/rules/agtoosa-spec.md" ]
   [ -f "$TEST_PROJECT/.windsurf/rules/agtoosa-revert.md" ]
 }
-
 @test "platform selection 3 installs .claude/commands/ slash commands" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -299,7 +263,6 @@ EOF
   [ -f "$TEST_PROJECT/.claude/commands/agtoosa-ship.md" ]
   [ -f "$TEST_PROJECT/.claude/commands/agtoosa-help.md" ]
 }
-
 @test "platform selection 4 installs .gemini/commands/ TOML files" {
   run bash -c "printf '$TEST_PROJECT\n4\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -307,7 +270,6 @@ EOF
   [ -f "$TEST_PROJECT/.gemini/commands/agtoosa-spec.toml" ]
   [ -f "$TEST_PROJECT/.gemini/commands/agtoosa-help.toml" ]
 }
-
 @test "platform selection 5 installs .github/prompts/ and .github/agents/" {
   run bash -c "printf '$TEST_PROJECT\n5\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -315,7 +277,6 @@ EOF
   [ -f "$TEST_PROJECT/.github/prompts/agtoosa-spec.prompt.md" ]
   [ -f "$TEST_PROJECT/.github/agents/agtoosa.agent.md" ]
 }
-
 @test "--list-template-files lists core and platform files" {
   run bash "$SCRIPT" --list-template-files
   [ "$status" -eq 0 ]
@@ -325,13 +286,11 @@ EOF
   [[ "$output" == *"CLAUDE.md"* ]]
   [[ "$output" == *"Docs/Context/workflow.md"* ]]
 }
-
 @test "auto-copy installs AgToosa_QA.md" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/Docs/AgToosa_QA.md" ]
 }
-
 @test "auto-copy creates Context/ directory with config stubs" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -341,25 +300,20 @@ EOF
   [ -f "$TEST_PROJECT/Docs/Context/product.md" ]
   [ -f "$TEST_PROJECT/Docs/Context/product-guidelines.md" ]
 }
-
 # ── DEV-150: inject_version tests ────────────────────────────
-
 @test "inject_version: platform files contain AgToosa version marker" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   run grep -q "AgToosa v" "$TEST_PROJECT/.cursorrules"
   [ "$status" -eq 0 ]
 }
-
 @test "inject_version: .md platform files use HTML comment marker" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   run grep -q "<!-- AgToosa v" "$TEST_PROJECT/CLAUDE.md"
   [ "$status" -eq 0 ]
 }
-
 # ── DEV-151: extract_version tests ───────────────────────────
-
 @test "extract_version: same-version reinstall with --force keeps customizations" {
   # Install first
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
@@ -369,37 +323,29 @@ EOF
   [ "$status" -eq 0 ]
   [[ "$output" == *"keeping your customizations"* ]]
 }
-
 # ── DEV-152: version_lt tests ────────────────────────────────
-
 @test "version_lt: older version triggers update with --force" {
   mkdir -p "$TEST_PROJECT"
   # Create a file with an older version marker (shell-style comment for .cursorrules)
   printf '# AgToosa v1.0.0\n# old content\n' > "$TEST_PROJECT/.cursorrules"
-
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT' --force"
   [ "$status" -eq 0 ]
   # Output should indicate upgrade happened
   [[ "$output" == *"v1.0.0 →"* ]]
 }
-
 # ── DEV-153: backup_file tests ───────────────────────────────
-
 @test "backup_file: creates timestamped .bak file when upgrading" {
   mkdir -p "$TEST_PROJECT"
   printf '# AgToosa v1.0.0\nold content\n' > "$TEST_PROJECT/.cursorrules"
-
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT' --force"
   [ "$status" -eq 0 ]
   # At least one .bak file should exist
   bak_count="$(find "$TEST_PROJECT" -name '.cursorrules.bak.*' 2>/dev/null | wc -l | tr -d ' ')"
   [ "$bak_count" -ge 1 ]
 }
-
 @test "backup_file: .bak file contains original content" {
   mkdir -p "$TEST_PROJECT"
   printf '# AgToosa v1.0.0\noriginal-sentinel-content\n' > "$TEST_PROJECT/.cursorrules"
-
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT' --force"
   [ "$status" -eq 0 ]
   bak_file="$(find "$TEST_PROJECT" -name '.cursorrules.bak.*' 2>/dev/null | head -1)"
@@ -407,9 +353,7 @@ EOF
   run grep -q "original-sentinel-content" "$bak_file"
   [ "$status" -eq 0 ]
 }
-
 # ── DEV-154: copy_platform_file (new file) tests ─────────────
-
 @test "copy_platform_file: new platform file is copied with version marker" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -418,19 +362,15 @@ EOF
   run grep -q "AgToosa v" "$TEST_PROJECT/.cursorrules"
   [ "$status" -eq 0 ]
 }
-
 @test "copy_platform_file: new file copy is counted in output" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [[ "$output" == *"Copied:"* ]]
 }
-
 # ── DEV-155: copy_platform_file (force + backup) tests ───────
-
 @test "copy_platform_file: --force on older version creates .bak and overwrites" {
   mkdir -p "$TEST_PROJECT"
   printf '# AgToosa v1.0.0\noriginal\n' > "$TEST_PROJECT/.cursorrules"
-
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT' --force"
   [ "$status" -eq 0 ]
   # .bak file created
@@ -440,7 +380,6 @@ EOF
   run grep -q "AgToosa v1.0.0" "$TEST_PROJECT/.cursorrules"
   [ "$status" -ne 0 ]
 }
-
 @test "copy_platform_file: --force on same version skips backup" {
   # Install first
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
@@ -451,18 +390,14 @@ EOF
   bak_count="$(find "$TEST_PROJECT" -name '.cursorrules.bak.*' 2>/dev/null | wc -l | tr -d ' ')"
   [ "$bak_count" -eq 0 ]
 }
-
 @test "gitignore warning shown when backup files are created" {
   mkdir -p "$TEST_PROJECT"
   printf '# AgToosa v1.0.0\nold\n' > "$TEST_PROJECT/.cursorrules"
-
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT' --force"
   [ "$status" -eq 0 ]
   [[ "$output" == *"Backup files created"* ]]
 }
-
 # ── Native platform command/rule tests ───────────────────────────────────────
-
 @test "Claude option installs .claude/commands/ slash commands" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -473,7 +408,6 @@ EOF
   [ -f "$TEST_PROJECT/.claude/commands/agtoosa-ship.md" ]
   [ -f "$TEST_PROJECT/.claude/commands/agtoosa-help.md" ]
 }
-
 @test "Claude option installs .claude/settings.json with hooks" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -481,13 +415,11 @@ EOF
   run python3 -c "import json; d=json.load(open('$TEST_PROJECT/.claude/settings.json')); exit(0 if 'hooks' in d else 1)"
   [ "$status" -eq 0 ]
 }
-
 @test "Claude option installs .claude/skills/agtoosa-review.md" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/.claude/skills/agtoosa-review.md" ]
 }
-
 @test "Cursor option installs .cursor/rules/ MDX files" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -497,20 +429,17 @@ EOF
   [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-review.mdc" ]
   [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-ship.mdc" ]
 }
-
 @test "non-Claude option does not install .claude/ directory" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ ! -f "$TEST_PROJECT/.claude/commands/agtoosa-init.md" ]
   [ ! -f "$TEST_PROJECT/.claude/settings.json" ]
 }
-
 @test "non-Cursor option does not install .cursor/rules/" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ ! -f "$TEST_PROJECT/.cursor/rules/agtoosa-core.mdc" ]
 }
-
 @test "settings.json hooks not duplicated on re-run" {
   # First install
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
@@ -528,14 +457,12 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
 ")"
   [ "$stop_count" -eq 1 ]
 }
-
 @test "dry-run shows .claude/commands as AgToosa-owned overwrite" {
   run bash -c "printf '$TEST_PROJECT\n3\n' | bash '$SCRIPT' --dry-run"
   [ "$status" -eq 0 ]
   [[ "$output" == *".claude/commands"* ]]
   [[ "$output" == *"AgToosa-owned"* ]]
 }
-
 @test "--list-template-files output has no duplicates" {
   run bash "$SCRIPT" --list-template-files
   [ "$status" -eq 0 ]
@@ -544,34 +471,26 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   dupes="$(echo "$output" | sort | uniq -d)"
   [ -z "$dupes" ]
 }
-
 # ── Update wiring: AgToosa_Update.md in DOCS_FILES ───────────
-
 @test "--list-template-files includes Docs/AgToosa_Update.md" {
   run bash "$SCRIPT" --list-template-files
   [ "$status" -eq 0 ]
   [[ "$output" == *"Docs/AgToosa_Update.md"* ]]
 }
-
 # ── DEV-178: unknown flag ─────────────────────────────────────
-
 @test "unknown flag exits 1 with error message" {
   run bash "$SCRIPT" --foo
   [ "$status" -eq 1 ]
   [[ "$output" == *"Unknown option"* ]]
   [[ "$output" == *"Usage:"* ]]
 }
-
 # ── DEV-179: non-existent path ────────────────────────────────
-
 @test "non-existent project path exits with error" {
   run bash -c "printf '/tmp/agtoosa-nonexistent-99999\n' | bash '$SCRIPT'"
   [ "$status" -ne 0 ]
   [[ "$output" == *"does not exist"* ]]
 }
-
 # ── DEV-177: self-targeting block ─────────────────────────────
-
 @test "self-targeting AgToosa source directory is blocked" {
   local src_dir
   src_dir="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
@@ -579,25 +498,20 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -ne 0 ]
   [[ "$output" == *"Target path cannot be the AgToosa source directory"* ]]
 }
-
 # ── DEV-175: invalid selection warning ───────────────────────
-
 @test "invalid selection number shows warning but continues" {
   # '9' is out of range → warning; then no valid platform → no-platform prompt → default N → exit 0
   run bash -c "printf '$TEST_PROJECT\n9\n\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [[ "$output" == *"Unknown selection"* ]]
 }
-
 # ── DEV-176: empty platform selection ────────────────────────
-
 @test "empty selection + default N exits with re-run suggestion" {
   run bash -c "printf '$TEST_PROJECT\n\n\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [[ "$output" == *"No AI platform selected"* ]]
   [[ "$output" == *"Re-run"* ]]
 }
-
 @test "empty selection + explicit y installs only Docs files" {
   run bash -c "printf '$TEST_PROJECT\n\ny\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -606,9 +520,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ ! -f "$TEST_PROJECT/.cursorrules" ]
   [ ! -f "$TEST_PROJECT/AGENTS.md" ]
 }
-
 # ── DEV-180: multi-platform combo ────────────────────────────
-
 @test "multi-platform combo '1 3' installs both Cursor and Claude files" {
   run bash -c "printf '$TEST_PROJECT\n1 3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -619,7 +531,6 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ ! -f "$TEST_PROJECT/.windsurfrules" ]
   [ ! -f "$TEST_PROJECT/AGENTS.md" ]
 }
-
 @test "multi-platform combo '3 4' installs both Claude and Gemini files" {
   run bash -c "printf '$TEST_PROJECT\n3 4\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -629,7 +540,6 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ -f "$TEST_PROJECT/.gemini/commands/agtoosa-init.toml" ]
   [ ! -f "$TEST_PROJECT/.cursorrules" ]
 }
-
 @test "multi-platform combo '5 6' deduplicates .github/ files (no double install)" {
   run bash -c "printf '$TEST_PROJECT\n5 6\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -639,14 +549,11 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   # Only one AgToosa START block — no duplicate from VS Code path
   [ "$(grep -c 'AgToosa.*START' "$TEST_PROJECT/.github/copilot-instructions.md")" -eq 1 ]
 }
-
 # ── DEV-172: merge_platform_file Case B (older version) ──────
-
 @test "merge_platform_file Case B: older AgToosa block upgraded in-place with .bak" {
   mkdir -p "$TEST_PROJECT"
   printf '<!-- AgToosa v1.0.0 START -->\nold block content\n<!-- AgToosa END -->\n' \
     > "$TEST_PROJECT/CLAUDE.md"
-
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   local main_output="$output"
@@ -663,14 +570,11 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$(grep -c 'AgToosa.*START' "$TEST_PROJECT/CLAUDE.md")" -eq 1 ]
   [[ "$main_output" == *"merged:"* ]]
 }
-
 # ── DEV-173: merge_platform_file Case C (old-format, no START/END) ──
-
 @test "merge_platform_file Case C: old-format AgToosa file replaced with backup" {
   mkdir -p "$TEST_PROJECT"
   printf '<!-- AgToosa v1.0.0 -->\nold format content without delimiters\n' \
     > "$TEST_PROJECT/CLAUDE.md"
-
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   # .bak file created
@@ -681,13 +585,10 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   run grep -q "AgToosa v.*START" "$TEST_PROJECT/CLAUDE.md"
   [ "$status" -eq 0 ]
 }
-
 # ── DEV-174: merge_platform_file Case D + --force ────────────
-
 @test "merge_platform_file Case D + --force: user-owned file fully replaced" {
   mkdir -p "$TEST_PROJECT"
   printf 'my-sentinel-user-content-only\n' > "$TEST_PROJECT/CLAUDE.md"
-
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT' --force"
   [ "$status" -eq 0 ]
   local main_output="$output"
@@ -705,13 +606,10 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -eq 0 ]
   [[ "$main_output" == *"vunknown →"* ]]
 }
-
 # ── DEV-181: --dry-run --force combined ──────────────────────
-
 @test "--dry-run --force shows 'Would backup + replace' for older-versioned file" {
   mkdir -p "$TEST_PROJECT"
   printf '# AgToosa v1.0.0 START\nold\n# AgToosa END\n' > "$TEST_PROJECT/.cursorrules"
-
   run bash -c "printf '$TEST_PROJECT\n1\n' | bash '$SCRIPT' --dry-run --force"
   [ "$status" -eq 0 ]
   [[ "$output" == *"Would backup + replace"* ]]
@@ -720,60 +618,47 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   run grep -q "old" "$TEST_PROJECT/.cursorrules"
   [ "$status" -eq 0 ]
 }
-
 @test "--dry-run --force shows 'Would keep' for same-version file" {
   # Install first to get a current-version file
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
-
   run bash -c "printf '$TEST_PROJECT\n1\n' | bash '$SCRIPT' --dry-run --force"
   [ "$status" -eq 0 ]
   [[ "$output" == *"Would keep"* ]]
   [[ "$output" == *"No changes made"* ]]
 }
-
 # ── DEV-182: --dry-run messages for existing platform files ──
-
 @test "--dry-run shows 'Would backup + merge' for file with older AgToosa block" {
   mkdir -p "$TEST_PROJECT"
   printf '<!-- AgToosa v1.0.0 START -->\nold block\n<!-- AgToosa END -->\n' \
     > "$TEST_PROJECT/CLAUDE.md"
-
   run bash -c "printf '$TEST_PROJECT\n3\n' | bash '$SCRIPT' --dry-run"
   [ "$status" -eq 0 ]
   [[ "$output" == *"Would backup + merge AgToosa block"* ]]
   [[ "$output" == *"No changes made"* ]]
 }
-
 @test "--dry-run shows 'Would backup + append' for user-owned file" {
   mkdir -p "$TEST_PROJECT"
   printf 'user-only content no agtoosa markers\n' > "$TEST_PROJECT/CLAUDE.md"
-
   run bash -c "printf '$TEST_PROJECT\n3\n' | bash '$SCRIPT' --dry-run"
   [ "$status" -eq 0 ]
   [[ "$output" == *"Would backup + append AgToosa block"* ]]
   [[ "$output" == *"No changes made"* ]]
 }
-
 @test "--dry-run shows 'Already up to date' for current-version file" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
-
   run bash -c "printf '$TEST_PROJECT\n3\n' | bash '$SCRIPT' --dry-run"
   [ "$status" -eq 0 ]
   [[ "$output" == *"Already up to date"* ]]
   [[ "$output" == *"No changes made"* ]]
 }
-
 # ── DEV-183: Context/ stubs preserved on re-run ──────────────
-
 @test "Context/ stubs are skipped on re-run to preserve user edits" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/Docs/Context/tech-stack.md" ]
-
   echo "my-custom-tech-stack-sentinel" >> "$TEST_PROJECT/Docs/Context/tech-stack.md"
-
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   local rerun_output="$output"
@@ -781,15 +666,12 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -eq 0 ]
   [[ "$rerun_output" == *"Skipping"* ]]
 }
-
 # ── DEV-184: .gitignore warning absent when no backups ────────
-
 @test "gitignore warning NOT shown on clean install with no backups" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [[ "$output" != *"Backup files created"* ]]
 }
-
 @test "gitignore warning NOT shown on same-version re-run" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -797,13 +679,10 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -eq 0 ]
   [[ "$output" != *"Backup files created"* ]]
 }
-
 # ── DEV-185: merge_settings_json invalid JSON fallback ───────
-
 @test "merge_settings_json: invalid JSON in existing settings.json skips gracefully" {
   mkdir -p "$TEST_PROJECT/.claude"
   printf '{ invalid json here }' > "$TEST_PROJECT/.claude/settings.json"
-
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   # Warning shown, file not silently cleared
@@ -812,9 +691,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   run grep -q "invalid json here" "$TEST_PROJECT/.claude/settings.json"
   [ "$status" -eq 0 ]
 }
-
 # ── DEV-186: manual copy instructions ────────────────────────
-
 @test "declining copy shows manual copy instructions" {
   run bash -c "printf '$TEST_PROJECT\n1\nn\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -822,21 +699,17 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [[ "$output" == *"cp -r ship/"* ]]
   [[ "$output" == *"find ship/"* ]]
 }
-
 # ── --update: flag wiring ─────────────────────────────────────
-
 @test "--update on path with no Docs/ exits with error" {
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -ne 0 ]
   [[ "$output" == *"No Docs/"* ]]
 }
-
 @test "--update on non-existent path exits with error" {
   run bash "$SCRIPT" --update "/tmp/agtoosa-nonexistent-update-99999"
   [ "$status" -ne 0 ]
   [[ "$output" == *"does not exist"* ]]
 }
-
 @test "--update on AgToosa source directory is blocked" {
   local src_dir
   src_dir="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
@@ -844,9 +717,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -ne 0 ]
   [[ "$output" == *"Target path cannot be the AgToosa source directory"* ]]
 }
-
 # ── --update: core behavior ───────────────────────────────────
-
 @test "--update overwrites workflow files" {
   run bash -c "printf '$TEST_PROJECT\n8\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -855,7 +726,6 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -eq 0 ]
   [[ "$(cat "$TEST_PROJECT/Docs/AgToosa_Agent.md")" != "STALE CONTENT" ]]
 }
-
 @test "--update preserves Docs/Context/ files" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -864,7 +734,6 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -eq 0 ]
   grep -q "my custom stack" "$TEST_PROJECT/Docs/Context/tech-stack.md"
 }
-
 @test "--update preserves Docs/Master-Plan.md" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -873,7 +742,6 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -eq 0 ]
   grep -q "My Master Plan" "$TEST_PROJECT/Docs/Master-Plan.md"
 }
-
 @test "--update preserves Docs/AgToosa_Changelog.md" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -882,7 +750,6 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -eq 0 ]
   grep -q "My Changelog" "$TEST_PROJECT/Docs/AgToosa_Changelog.md"
 }
-
 @test "--update writes Docs/.agtoosa-version" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -893,9 +760,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
   [[ "$ver" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
 }
-
 # ── --update: version display ─────────────────────────────────
-
 @test "--update shows 'unknown' when no prior version file" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -904,7 +769,6 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -eq 0 ]
   [[ "$output" == *"unknown"* ]]
 }
-
 @test "--update shows old version when prior version file exists" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -913,9 +777,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -eq 0 ]
   [[ "$output" == *"2.0.0"* ]]
 }
-
 # ── --update: platform detection ─────────────────────────────
-
 @test "--update detects installed Claude platform and merges CLAUDE.md" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -929,7 +791,6 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$bak_count" -ge 1 ]
   ! grep -q "v1.0.0 START" "$TEST_PROJECT/CLAUDE.md"
 }
-
 @test "--update does not create .cursorrules when not previously installed" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -938,9 +799,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -eq 0 ]
   [ ! -f "$TEST_PROJECT/.cursorrules" ]
 }
-
 # ── --update --dry-run / --force ─────────────────────────────
-
 @test "--update --dry-run writes no files and shows DRY RUN" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -950,7 +809,6 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [[ "$output" == *"DRY RUN"* ]]
   grep -q "STALE" "$TEST_PROJECT/Docs/AgToosa_Agent.md"
 }
-
 @test "--update --force replaces user-owned platform entry-point with backup" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -962,9 +820,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$bak_count" -ge 1 ]
   ! grep -q "my own CLAUDE content" "$TEST_PROJECT/CLAUDE.md"
 }
-
 # ── /agtoosa-update wiring ────────────────────────────────────
-
 @test "all platform entry-point templates include /agtoosa-update" {
   local files=(
     "$TEMPLATE_DIR/CLAUDE.md"
@@ -982,101 +838,76 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
     }
   done
 }
-
 @test "AgToosa_Agent.md utility table includes /agtoosa-update" {
   grep -q "agtoosa-update" "$TEMPLATE_DIR/Docs/AgToosa_Agent.md"
 }
-
 # ── mattpocock/skills integration tests ──────────────────────────────────────
-
-@test "agtoosa-diagnose workflow doc exists in template" {
-  [ -f "$TEMPLATE_DIR/Docs/AgToosa_Diagnose.md" ]
+@test "agtoosa-debug workflow doc exists in template" {
+  [ -f "$TEMPLATE_DIR/Docs/AgToosa_Debug.md" ]
 }
-
-@test "agtoosa-diagnose Claude command exists in template" {
-  [ -f "$TEMPLATE_DIR/.claude/commands/agtoosa-diagnose.md" ]
+@test "agtoosa-debug Claude command exists in template" {
+  [ -f "$TEMPLATE_DIR/.claude/commands/agtoosa-debug.md" ]
 }
-
-@test "agtoosa-diagnose Claude skill exists in template" {
-  [ -f "$TEMPLATE_DIR/.claude/skills/agtoosa-diagnose.md" ]
+@test "agtoosa-debug Claude skill exists in template" {
+  [ -f "$TEMPLATE_DIR/.claude/skills/agtoosa-debug.md" ]
 }
-
-@test "agtoosa-diagnose Cursor rule exists in template" {
-  [ -f "$TEMPLATE_DIR/.cursor/rules/agtoosa-diagnose.mdc" ]
+@test "agtoosa-debug Cursor rule exists in template" {
+  [ -f "$TEMPLATE_DIR/.cursor/rules/agtoosa-debug.mdc" ]
 }
-
-@test "agtoosa-diagnose Windsurf rule exists in template" {
-  [ -f "$TEMPLATE_DIR/.windsurf/rules/agtoosa-diagnose.md" ]
+@test "agtoosa-debug Windsurf rule exists in template" {
+  [ -f "$TEMPLATE_DIR/.windsurf/rules/agtoosa-debug.md" ]
 }
-
-@test "agtoosa-diagnose Gemini command exists in template" {
-  [ -f "$TEMPLATE_DIR/.gemini/commands/agtoosa-diagnose.toml" ]
+@test "agtoosa-debug Gemini command exists in template" {
+  [ -f "$TEMPLATE_DIR/.gemini/commands/agtoosa-debug.toml" ]
 }
-
-@test "agtoosa-diagnose Copilot prompt exists in template" {
-  [ -f "$TEMPLATE_DIR/.github/prompts/agtoosa-diagnose.prompt.md" ]
+@test "agtoosa-debug Copilot prompt exists in template" {
+  [ -f "$TEMPLATE_DIR/.github/prompts/agtoosa-debug.prompt.md" ]
 }
-
-@test "agtoosa-caveman workflow doc exists in template" {
-  [ -f "$TEMPLATE_DIR/Docs/AgToosa_Caveman.md" ]
+@test "agtoosa-concise workflow doc exists in template" {
+  [ -f "$TEMPLATE_DIR/Docs/AgToosa_Concise.md" ]
 }
-
-@test "agtoosa-caveman Claude command exists in template" {
-  [ -f "$TEMPLATE_DIR/.claude/commands/agtoosa-caveman.md" ]
+@test "agtoosa-concise Claude command exists in template" {
+  [ -f "$TEMPLATE_DIR/.claude/commands/agtoosa-concise.md" ]
 }
-
-@test "agtoosa-caveman Cursor rule exists in template" {
-  [ -f "$TEMPLATE_DIR/.cursor/rules/agtoosa-caveman.mdc" ]
+@test "agtoosa-concise Cursor rule exists in template" {
+  [ -f "$TEMPLATE_DIR/.cursor/rules/agtoosa-concise.mdc" ]
 }
-
-@test "agtoosa-caveman Windsurf rule exists in template" {
-  [ -f "$TEMPLATE_DIR/.windsurf/rules/agtoosa-caveman.md" ]
+@test "agtoosa-concise Windsurf rule exists in template" {
+  [ -f "$TEMPLATE_DIR/.windsurf/rules/agtoosa-concise.md" ]
 }
-
-@test "agtoosa-caveman Gemini command exists in template" {
-  [ -f "$TEMPLATE_DIR/.gemini/commands/agtoosa-caveman.toml" ]
+@test "agtoosa-concise Gemini command exists in template" {
+  [ -f "$TEMPLATE_DIR/.gemini/commands/agtoosa-concise.toml" ]
 }
-
-@test "agtoosa-caveman Copilot prompt exists in template" {
-  [ -f "$TEMPLATE_DIR/.github/prompts/agtoosa-caveman.prompt.md" ]
+@test "agtoosa-concise Copilot prompt exists in template" {
+  [ -f "$TEMPLATE_DIR/.github/prompts/agtoosa-concise.prompt.md" ]
 }
-
 @test "git guardrails hook script exists in template" {
   [ -f "$TEMPLATE_DIR/.claude/hooks/block-dangerous-git.sh" ]
 }
-
 @test "git guardrails hook is executable" {
   [ -x "$TEMPLATE_DIR/.claude/hooks/block-dangerous-git.sh" ]
 }
-
 @test "CONTEXT-FORMAT reference doc exists in template" {
   [ -f "$TEMPLATE_DIR/Docs/CONTEXT-FORMAT.md" ]
 }
-
 @test "ADR-FORMAT reference doc exists in template" {
   [ -f "$TEMPLATE_DIR/Docs/ADR-FORMAT.md" ]
 }
-
 @test "DEEPENING reference doc exists in template" {
   [ -f "$TEMPLATE_DIR/Docs/DEEPENING.md" ]
 }
-
 @test "LANGUAGE reference doc exists in template" {
   [ -f "$TEMPLATE_DIR/Docs/LANGUAGE.md" ]
 }
-
-@test "agtoosa-spec workflow includes grill sub-command" {
-  grep -q "grill" "$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+@test "agtoosa-spec includes domain language alignment in Part 1" {
+  grep -q "Domain Language Alignment" "$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
 }
-
 @test "agtoosa-spec workflow includes to-issues sub-command" {
   grep -q "to-issues" "$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
 }
-
 @test "agtoosa-review workflow includes DEEPENING reference" {
   grep -q "DEEPENING" "$TEMPLATE_DIR/Docs/AgToosa_Review.md"
 }
-
 @test "agtoosa-init workflow includes zoom-out sub-command" {
   grep -q "zoom-out" "$TEMPLATE_DIR/Docs/AgToosa_Init.md"
 }

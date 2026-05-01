@@ -1,12 +1,9 @@
 ---
-description: AgToosa diagnose workflow rules — activates when debugging hard bugs or performance regressions.
-globs: Docs/AgToosa_Diagnose.md
-alwaysApply: false
+trigger: user_prompt
+description: "AgToosa: disciplined 6-phase debugging loop — feedback-loop → reproduce → minimise → hypothesise → instrument → fix+regress"
 ---
 
-# AgToosa Diagnose Rules
-
-When executing `/agtoosa-diagnose` or any debugging work, follow `Docs/AgToosa_Diagnose.md` precisely.
+When executing any debugging or diagnosis work, follow `Docs/AgToosa_Debug.md` precisely.
 
 ## Key constraints
 

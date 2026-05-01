@@ -1,12 +1,9 @@
 ---
-description: AgToosa caveman mode — ultra-compressed communication to reduce token usage ~75%.
-globs: Docs/AgToosa_Caveman.md
-alwaysApply: false
+trigger: user_prompt
+description: "AgToosa: ultra-compressed communication mode — drop filler, keep precision, ~75% token reduction"
 ---
 
-# AgToosa Caveman Mode
-
-When `/agtoosa-caveman on` is active, follow `Docs/AgToosa_Caveman.md` precisely.
+When `/agtoosa-concise on` is active, follow `Docs/AgToosa_Concise.md` precisely.
 
 ## Key constraints
 

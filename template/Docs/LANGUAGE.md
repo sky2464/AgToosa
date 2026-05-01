@@ -28,7 +28,7 @@ Ubiquitous language means every part of the codebase — variable names, functio
 
 ## Integration with AgToosa
 
-- `/agtoosa-spec grill` validates terminology against `CONTEXT.md` before any spec is written.
+- `/agtoosa-spec` (Part 1) validates terminology against `CONTEXT.md` before any spec is written.
 - `/agtoosa-review arch` checks that new code uses domain language from `CONTEXT.md`.
 - `/agtoosa-build` agents read `CONTEXT.md` before writing any code.
 - When a new term is added to `CONTEXT.md` during build: update existing uses in the same PR.

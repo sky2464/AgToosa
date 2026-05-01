@@ -1,0 +1,10 @@
+description = "AgToosa: diagnose hard bugs — feedback-loop → reproduce → minimise → hypothesise → instrument → fix+regress"
+prompt = """
+Read Docs/AgToosa_Debug.md and execute the diagnosis workflow.
+
+Dispatch based on any arguments provided after the command:
+- /agtoosa-debug                → full 6-phase diagnosis loop
+- /agtoosa-debug quick          → Phases 1-3 only (feedback loop, reproduce, minimise)
+- /agtoosa-debug deep           → full loop with extended instrumentation
+- /agtoosa-debug feedback-loop  → Phase 1 only: establish fast feedback loop
+"""

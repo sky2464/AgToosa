@@ -1,13 +1,13 @@
-# AgToosa /agtoosa-diagnose Workflow
+# AgToosa /agtoosa-debug Workflow
 
 ## Sub-Commands
 
 | Sub-command | Runs |
 |-------------|------|
-| `/agtoosa-diagnose` | Full 6-phase diagnosis loop |
-| `/agtoosa-diagnose quick` | Phases 1–3 only (feedback loop + reproduce + minimise) |
-| `/agtoosa-diagnose deep` | Full loop with extended instrumentation pass |
-| `/agtoosa-diagnose feedback-loop` | Phase 1 only — establish a fast feedback loop |
+| `/agtoosa-debug` | Full 6-phase diagnosis loop |
+| `/agtoosa-debug quick` | Phases 1–3 only (feedback loop + reproduce + minimise) |
+| `/agtoosa-debug deep` | Full loop with extended instrumentation pass |
+| `/agtoosa-debug feedback-loop` | Phase 1 only — establish a fast feedback loop |
 
 ## Objective
 
@@ -17,7 +17,7 @@ Diagnose hard bugs and performance regressions through a disciplined, evidence-b
 
 ### Phase 1 — Establish a Feedback Loop
 
-The most important phase. You cannot diagnose without fast, repeatable feedback.
+The most important phase. You cannot debug without fast, repeatable feedback.
 
 1. Find the fastest deterministic way to reproduce the issue. Preference order:
    - Unit test (run with a single command, <2s)

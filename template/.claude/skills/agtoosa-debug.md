@@ -1,10 +1,10 @@
 ---
-name: agtoosa-diagnose
-description: Disciplined 6-phase debugging skill — feedback-loop, reproduce, minimise, hypothesise, instrument, fix+regress. Use when /agtoosa-diagnose is invoked or when debugging any hard bug or performance regression.
+name: agtoosa-debug
+description: Disciplined 6-phase debugging skill — feedback-loop, reproduce, minimise, hypothesise, instrument, fix+regress. Use when /agtoosa-debug is invoked or when debugging any hard bug or performance regression.
 type: rigid
 ---
 
-## AgToosa Diagnose Skill
+## AgToosa Debug Skill
 
 This is a rigid skill. Follow every phase in order. Do not skip phases.
 

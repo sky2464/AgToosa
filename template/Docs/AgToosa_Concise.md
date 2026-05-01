@@ -1,4 +1,4 @@
-# AgToosa /agtoosa-caveman Workflow
+# AgToosa /agtoosa-concise Workflow
 
 ## Objective
 
@@ -6,9 +6,9 @@ Activate ultra-compressed communication mode to reduce token usage by ~75% durin
 
 ## Activation
 
-- `/agtoosa-caveman on` — Activate caveman mode
-- `/agtoosa-caveman off` — Deactivate and return to normal mode
-- `/agtoosa-caveman` — Toggle (on if off, off if on)
+- `/agtoosa-concise on` — Activate concise mode
+- `/agtoosa-concise off` — Deactivate and return to normal mode
+- `/agtoosa-concise` — Toggle (on if off, off if on)
 
 ## Rules When ACTIVE
 
@@ -43,5 +43,5 @@ Example — caveman mode:
 - Max 3 sentences per response unless a code block is required.
 - Code blocks are always full — never truncate with "// rest of code".
 - Numbers and measurements are always exact.
-- Caveman mode persists until `/agtoosa-caveman off` or user asks for full explanation.
+- Concise mode persists until `/agtoosa-concise off` or user asks for full explanation.
 - When deactivating: return to normal AgToosa communication style immediately.

@@ -4,7 +4,7 @@ description: "AgToosa: diagnose hard bugs — feedback-loop → reproduce → mi
 tools: [codebase, terminal]
 ---
 
-Read Docs/AgToosa_Diagnose.md and execute the diagnosis workflow.
+Read Docs/AgToosa_Debug.md and execute the diagnosis workflow.
 
 Sub-command dispatch (include the sub-command after selecting this prompt):
 - No argument → full 6-phase diagnosis loop

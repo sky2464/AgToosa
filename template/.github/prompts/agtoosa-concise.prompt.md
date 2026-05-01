@@ -4,7 +4,7 @@ description: "AgToosa: ultra-compressed communication mode — drop filler, keep
 tools: [codebase]
 ---
 
-Read Docs/AgToosa_Caveman.md and toggle ultra-compressed communication mode.
+Read Docs/AgToosa_Concise.md and toggle ultra-compressed communication mode.
 
 Sub-command dispatch:
 - No argument → toggle caveman mode

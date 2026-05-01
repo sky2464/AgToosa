@@ -1,9 +1,12 @@
 ---
-trigger: user_prompt
-description: "AgToosa: disciplined 6-phase debugging loop — feedback-loop → reproduce → minimise → hypothesise → instrument → fix+regress"
+description: AgToosa debug workflow rules — activates when debugging hard bugs or performance regressions.
+globs: Docs/AgToosa_Debug.md
+alwaysApply: false
 ---
 
-When executing any debugging or diagnosis work, follow `Docs/AgToosa_Diagnose.md` precisely.
+# AgToosa Diagnose Rules
+
+When executing `/agtoosa-debug` or any debugging work, follow `Docs/AgToosa_Debug.md` precisely.
 
 ## Key constraints
 

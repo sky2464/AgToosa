@@ -1,9 +1,0 @@
-description = "AgToosa: ultra-compressed communication mode — drop filler, keep precision, ~75% token reduction"
-prompt = """
-Read Docs/AgToosa_Caveman.md and toggle ultra-compressed communication mode.
-
-Dispatch based on any arguments provided after the command:
-- /agtoosa-caveman      → toggle (activate if off, deactivate if on)
-- /agtoosa-caveman on   → activate: drop filler, keep technical precision, max 3 sentences
-- /agtoosa-caveman off  → deactivate: return to normal AgToosa communication style
-"""

@@ -11,6 +11,30 @@ _(nothing yet)_
 
 ---
 
+## [2.7.0] — 2026-05-01
+
+### Added
+- 7 mattpocock/skills integrated: `/agtoosa-diagnose` (6-phase debugging), `/agtoosa-caveman` (token-efficient mode), `grill` (domain language alignment), `to-issues` (vertical-slice issue decomposition), `zoom-out` (codebase context), git-guardrails hook, and reference docs (CONTEXT-FORMAT, ADR-FORMAT, DEEPENING, LANGUAGE)
+- All 6 platform support expanded with new command files: Claude Code, Cursor, Windsurf, Gemini CLI, GitHub Copilot, and OpenCode
+- `Docs/AgToosa_Diagnose.md`, `Docs/AgToosa_Caveman.md`, `Docs/AgToosa_Skills.md` workflow documentation
+- Reference documentation: `Docs/CONTEXT-FORMAT.md`, `Docs/ADR-FORMAT.md`, `Docs/DEEPENING.md`, `Docs/LANGUAGE.md`
+
+### Changed
+- **Breaking:** `/agtoosa-caveman` renamed to `/agtoosa-concise` for AgToosa-native branding (token-efficient communication mode)
+- **Breaking:** `/agtoosa-diagnose` renamed to `/agtoosa-debug` for AgToosa-native branding (6-phase debugging workflow)
+- **Breaking:** `grill` removed as standalone `/agtoosa-spec grill` sub-command; **domain language alignment now integrated into `/agtoosa-spec` Part 1** (Context Gathering & Domain Language Alignment). Context.md validation, terminology alignment, and ADR creation are part of the main spec research flow.
+- All platform entry-point files and documentation updated to reference renamed commands and integrated domain language alignment
+- `/agtoosa-spec` workflow enhanced with mandatory domain language checks in Part 1
+- `/agtoosa-review` architecture checks enhanced with deep module analysis and ubiquitous language validation
+- 32 new BATS tests added for new commands and platform coverage (113 total tests, all passing)
+
+### Fixed
+- Template file references corrected across all platform-specific command/rule files to match renamed documentation files
+- Platform descriptions updated to use AgToosa-native command names throughout
+- Spec command descriptions updated to reflect integrated domain language alignment (no longer mentions removed `grill` sub-command)
+
+---
+
 ## [2.6.0] — 2026-04-28
 
 ### Added

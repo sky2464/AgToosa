@@ -1,9 +1,12 @@
 ---
-trigger: user_prompt
-description: "AgToosa: ultra-compressed communication mode — drop filler, keep precision, ~75% token reduction"
+description: AgToosa concise mode — ultra-compressed communication to reduce token usage ~75%.
+globs: Docs/AgToosa_Concise.md
+alwaysApply: false
 ---
 
-When `/agtoosa-caveman on` is active, follow `Docs/AgToosa_Caveman.md` precisely.
+# AgToosa Caveman Mode
+
+When `/agtoosa-concise on` is active, follow `Docs/AgToosa_Concise.md` precisely.
 
 ## Key constraints
 

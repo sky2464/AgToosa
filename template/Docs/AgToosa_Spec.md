@@ -8,24 +8,9 @@
 | `/agtoosa-spec research` | Part 1 only — context, web research, and Q&A; outputs findings, no spec file yet |
 | `/agtoosa-spec plan` | Part 2 only — architecture blueprint + threat model against an already-written spec |
 | `/agtoosa-spec quick` | Abbreviated — 2–3 targeted questions + spec + skip full threat model (use for small bugs/chores) |
-| `/agtoosa-spec grill` | Domain language grilling session — align terminology, update CONTEXT.md, create ADRs before writing any spec |
 | `/agtoosa-spec to-issues` | Break the active spec or PRD into vertical-slice GitHub issues |
 
-## Optional Pre-Spec Sub-Commands
-
-### /agtoosa-spec grill
-
-Run a domain language grilling session before writing the spec. Use when starting work on a new feature area or when terminology alignment is uncertain.
-
-1. Read `Docs/Context/CONTEXT.md` — create it if missing using `Docs/CONTEXT-FORMAT.md` as a guide.
-2. For each key concept in the proposed feature, ask:
-   - "Is this the right term? What does the domain call this?"
-   - "Is this a new concept or an existing one we're renaming?"
-   - "Where does this term appear in the codebase today?"
-3. Update `Docs/Context/CONTEXT.md` with any new or corrected terms.
-4. Identify 2–3 architectural decisions implied by the feature; document each as a new ADR in `Docs/adr/` using `Docs/ADR-FORMAT.md`.
-5. Confirm terminology with the user before proceeding.
-6. After grilling is complete, proceed to the full spec flow (Parts 1 + 2 + 3).
+## Optional Sub-Commands
 
 ### /agtoosa-spec to-issues
 
@@ -50,9 +35,15 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 
 ### Part 1 — Research & Specification
 
-1.  **Context Gathering (Research Agent):**
+1.  **Context Gathering & Domain Language Alignment:**
     *   Read `Docs/Context/product.md`, `tech-stack.md`, and `workflow.md` to align with project goals.
     *   Scan the existing codebase to fully understand the impact surface of the proposed work.
+    *   **Domain Language Alignment:** Read `Docs/Context/CONTEXT.md` (create it if missing using `Docs/CONTEXT-FORMAT.md` as a guide). For each key concept in the proposed feature:
+        - "Is this the right term? What does the domain call this?"
+        - "Is this a new concept or an existing one we're renaming?"
+        - "Where does this term appear in the codebase today?"
+    *   Update `Docs/Context/CONTEXT.md` with any new or corrected terms.
+    *   Identify 2–3 architectural decisions implied by the feature; document each as a new ADR in `Docs/adr/` using `Docs/ADR-FORMAT.md`.
 2.  **External Research (Web Research Agent):**
     *   Query online sources for the best solutions, libraries, APIs, and design patterns relevant to the task.
     *   **CRITICAL:** Verify all dependency versions against live sources (never assume from memory).
