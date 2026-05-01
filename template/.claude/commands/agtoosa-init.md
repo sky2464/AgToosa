@@ -1,3 +1,9 @@
-Read @Docs/AgToosa_Init.md and execute the full initialization workflow now.
+Read @Docs/AgToosa_Init.md and execute the initialization workflow.
 
-This is a one-time setup command — scan the codebase, validate AI config files, establish context in Docs/Context/, and configure the AgToosa workflow for this project.
+Arguments provided: $ARGUMENTS
+
+Dispatch rules based on arguments:
+- No argument → execute the full one-time initialization workflow: scan codebase, validate AI configs, establish Docs/Context/, configure AgToosa.
+- `zoom-out` → execute zoom-out only: show call graph, module boundaries, usage sites, and impact analysis for the current focus area.
+
+If no arguments were given, run the full initialization from Docs/AgToosa_Init.md.

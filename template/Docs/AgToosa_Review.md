@@ -31,7 +31,21 @@ Ensure code quality, security, and simplicity through multi-persona review.
 
 1.  **Security Officer:** OWASP Top 10 + STRIDE audit; SAST/DAST/Secrets scanning (Semgrep, CodeQL, Gitleaks); verify threat model from Spec.
 
-2.  **Engineering Manager:** Confirm no file exceeds 500 lines; check OOP compliance, observability hooks, and test coverage thresholds.
+2.  **Engineering Manager (`/agtoosa-review arch`):** Confirm no file exceeds 500 lines; check OOP compliance, observability hooks, and test coverage thresholds. When running the `arch` sub-command, additionally:
+
+    **Deep Module Analysis** (see `Docs/DEEPENING.md`):
+    - Identify shallow modules: pass-through functions, one-line service methods, "Manager/Handler/Helper" classes with no domain meaning.
+    - For each shallow module found: flag as 🟡 Warning with specific refactor suggestion.
+    - Check that interfaces reveal WHAT the module does, not HOW it does it.
+
+    **Domain Language Alignment** (see `Docs/LANGUAGE.md` + `Docs/Context/CONTEXT.md`):
+    - Verify that variable names, function names, error messages, and API endpoints use terms from `Docs/Context/CONTEXT.md`.
+    - Flag any inconsistency (e.g., `userId` when domain says `accountId`) as 🟡 Warning.
+    - If `Docs/Context/CONTEXT.md` doesn't exist, note it as 🟡 Warning and suggest running `/agtoosa-spec grill`.
+
+    **ADR Coverage:**
+    - Identify any significant architectural decisions made in this change that lack a corresponding ADR in `Docs/adr/`.
+    - Create missing ADRs using `Docs/ADR-FORMAT.md` as a template, or flag as 🟡 Warning if creation is out of scope.
 
 3.  **CEO / Product Owner:** Verify feature completeness against the Linear charter and acceptance criteria.
 

@@ -4,6 +4,8 @@ description: "AgToosa: one-time project init — scan codebase, validate AI conf
 tools: [codebase]
 ---
 
-Read Docs/AgToosa_Init.md and execute the full initialization workflow.
+Read Docs/AgToosa_Init.md and execute the initialization workflow.
 
-This is a one-time setup command — scan the codebase, validate AI config files, establish context in Docs/Context/, and configure the AgToosa workflow for this project.
+Sub-command dispatch (include the sub-command after selecting this prompt):
+- No argument → full one-time initialization: scan codebase, validate AI configs, establish Docs/Context/, configure AgToosa
+- `zoom-out` → zoom-out: call graph, module boundaries, usage sites, and impact analysis for current focus area

@@ -986,3 +986,97 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
 @test "AgToosa_Agent.md utility table includes /agtoosa-update" {
   grep -q "agtoosa-update" "$TEMPLATE_DIR/Docs/AgToosa_Agent.md"
 }
+
+# ── mattpocock/skills integration tests ──────────────────────────────────────
+
+@test "agtoosa-diagnose workflow doc exists in template" {
+  [ -f "$TEMPLATE_DIR/Docs/AgToosa_Diagnose.md" ]
+}
+
+@test "agtoosa-diagnose Claude command exists in template" {
+  [ -f "$TEMPLATE_DIR/.claude/commands/agtoosa-diagnose.md" ]
+}
+
+@test "agtoosa-diagnose Claude skill exists in template" {
+  [ -f "$TEMPLATE_DIR/.claude/skills/agtoosa-diagnose.md" ]
+}
+
+@test "agtoosa-diagnose Cursor rule exists in template" {
+  [ -f "$TEMPLATE_DIR/.cursor/rules/agtoosa-diagnose.mdc" ]
+}
+
+@test "agtoosa-diagnose Windsurf rule exists in template" {
+  [ -f "$TEMPLATE_DIR/.windsurf/rules/agtoosa-diagnose.md" ]
+}
+
+@test "agtoosa-diagnose Gemini command exists in template" {
+  [ -f "$TEMPLATE_DIR/.gemini/commands/agtoosa-diagnose.toml" ]
+}
+
+@test "agtoosa-diagnose Copilot prompt exists in template" {
+  [ -f "$TEMPLATE_DIR/.github/prompts/agtoosa-diagnose.prompt.md" ]
+}
+
+@test "agtoosa-caveman workflow doc exists in template" {
+  [ -f "$TEMPLATE_DIR/Docs/AgToosa_Caveman.md" ]
+}
+
+@test "agtoosa-caveman Claude command exists in template" {
+  [ -f "$TEMPLATE_DIR/.claude/commands/agtoosa-caveman.md" ]
+}
+
+@test "agtoosa-caveman Cursor rule exists in template" {
+  [ -f "$TEMPLATE_DIR/.cursor/rules/agtoosa-caveman.mdc" ]
+}
+
+@test "agtoosa-caveman Windsurf rule exists in template" {
+  [ -f "$TEMPLATE_DIR/.windsurf/rules/agtoosa-caveman.md" ]
+}
+
+@test "agtoosa-caveman Gemini command exists in template" {
+  [ -f "$TEMPLATE_DIR/.gemini/commands/agtoosa-caveman.toml" ]
+}
+
+@test "agtoosa-caveman Copilot prompt exists in template" {
+  [ -f "$TEMPLATE_DIR/.github/prompts/agtoosa-caveman.prompt.md" ]
+}
+
+@test "git guardrails hook script exists in template" {
+  [ -f "$TEMPLATE_DIR/.claude/hooks/block-dangerous-git.sh" ]
+}
+
+@test "git guardrails hook is executable" {
+  [ -x "$TEMPLATE_DIR/.claude/hooks/block-dangerous-git.sh" ]
+}
+
+@test "CONTEXT-FORMAT reference doc exists in template" {
+  [ -f "$TEMPLATE_DIR/Docs/CONTEXT-FORMAT.md" ]
+}
+
+@test "ADR-FORMAT reference doc exists in template" {
+  [ -f "$TEMPLATE_DIR/Docs/ADR-FORMAT.md" ]
+}
+
+@test "DEEPENING reference doc exists in template" {
+  [ -f "$TEMPLATE_DIR/Docs/DEEPENING.md" ]
+}
+
+@test "LANGUAGE reference doc exists in template" {
+  [ -f "$TEMPLATE_DIR/Docs/LANGUAGE.md" ]
+}
+
+@test "agtoosa-spec workflow includes grill sub-command" {
+  grep -q "grill" "$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+}
+
+@test "agtoosa-spec workflow includes to-issues sub-command" {
+  grep -q "to-issues" "$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+}
+
+@test "agtoosa-review workflow includes DEEPENING reference" {
+  grep -q "DEEPENING" "$TEMPLATE_DIR/Docs/AgToosa_Review.md"
+}
+
+@test "agtoosa-init workflow includes zoom-out sub-command" {
+  grep -q "zoom-out" "$TEMPLATE_DIR/Docs/AgToosa_Init.md"
+}
