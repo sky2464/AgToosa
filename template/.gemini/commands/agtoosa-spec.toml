@@ -7,4 +7,6 @@ Dispatch based on any arguments provided after the command:
 - /agtoosa-spec research <topic>  → Part 1 only: context, research, 6 forcing questions
 - /agtoosa-spec plan              → Part 2 only: architecture blueprint + threat model
 - /agtoosa-spec quick <desc>      → abbreviated: 3 questions + spec, skip full threat model
+- /agtoosa-spec grill             → domain language grilling: align CONTEXT.md, create ADRs, then spec
+- /agtoosa-spec to-issues         → break active spec into vertical-slice GitHub issues
 """

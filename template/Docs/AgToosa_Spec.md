@@ -8,6 +8,40 @@
 | `/agtoosa-spec research` | Part 1 only — context, web research, and Q&A; outputs findings, no spec file yet |
 | `/agtoosa-spec plan` | Part 2 only — architecture blueprint + threat model against an already-written spec |
 | `/agtoosa-spec quick` | Abbreviated — 2–3 targeted questions + spec + skip full threat model (use for small bugs/chores) |
+| `/agtoosa-spec grill` | Domain language grilling session — align terminology, update CONTEXT.md, create ADRs before writing any spec |
+| `/agtoosa-spec to-issues` | Break the active spec or PRD into vertical-slice GitHub issues |
+
+## Optional Pre-Spec Sub-Commands
+
+### /agtoosa-spec grill
+
+Run a domain language grilling session before writing the spec. Use when starting work on a new feature area or when terminology alignment is uncertain.
+
+1. Read `Docs/Context/CONTEXT.md` — create it if missing using `Docs/CONTEXT-FORMAT.md` as a guide.
+2. For each key concept in the proposed feature, ask:
+   - "Is this the right term? What does the domain call this?"
+   - "Is this a new concept or an existing one we're renaming?"
+   - "Where does this term appear in the codebase today?"
+3. Update `Docs/Context/CONTEXT.md` with any new or corrected terms.
+4. Identify 2–3 architectural decisions implied by the feature; document each as a new ADR in `Docs/adr/` using `Docs/ADR-FORMAT.md`.
+5. Confirm terminology with the user before proceeding.
+6. After grilling is complete, proceed to the full spec flow (Parts 1 + 2 + 3).
+
+### /agtoosa-spec to-issues
+
+Break the active spec (or a provided PRD or plan) into independently-grabbable GitHub issues using vertical slices.
+
+**Vertical slice rule:** Each issue must deliver one complete user-facing behaviour change — never a horizontal slice ("write the tests" or "add the migration" are not valid issues on their own).
+
+1. Read the active `AgToosa_Spec-*.md` file (or the provided description if no spec file exists).
+2. Identify all user-facing behaviour changes. For each, create one GitHub issue with:
+   - **Title:** `[Area] Short description of user-facing change`
+   - **Acceptance criteria:** up to 5 AC items in checkbox format
+   - **Story points:** 1 / 2 / 3 / 5 (Fibonacci)
+   - **Labels:** feature / bug / chore / spike as appropriate
+   - **Dependencies:** list any issues that must complete first
+3. If no GitHub remote is configured, write issues to `Docs/issues/` as individual markdown files.
+4. Update `Docs/Master-Plan.md` with all issue IDs under `## Active Tasks`.
 
 ## Objective
 Transform a raw idea, feature, chore, or bug into a researched Specification with an architectural blueprint.
