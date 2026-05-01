@@ -5,6 +5,23 @@
 ## Objective
 One-time initialization: establish project context, scan the codebase, validate AI configs, and configure the AgToosa workflow.
 
+## Sub-Commands
+
+| Sub-command | Runs |
+|-------------|------|
+| `/agtoosa-init` | Full initialization workflow (run once) |
+| `/agtoosa-init zoom-out` | Codebase zoom-out: broader context when agent is zoomed in on a specific file or function |
+
+### /agtoosa-init zoom-out
+
+Use when the AI agent is focused on a specific file or function and needs broader context to make a good decision.
+
+1. **Call graph:** Show what calls this function/module and what it calls in turn.
+2. **Module boundaries:** Identify which architectural layer owns this code (UI / API / domain / data).
+3. **Usage sites:** Find all references to this symbol or module across the codebase.
+4. **Impact analysis:** Answer: "What would break if this changed?"
+5. **Context update:** Update `Docs/Master-Plan.md` with the codebase mental model if any new understanding emerged.
+
 ## Workflow
 
 ### Phase A — AI Config Validation
