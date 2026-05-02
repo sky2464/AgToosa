@@ -28,7 +28,7 @@ if [[ ! -d "${SCRIPT_DIR}/lib" ]]; then
 fi
 
 # ── Source modular libraries ──────────────────────────────────
-for _lib in config version copy generate dryrun install update; do
+for _lib in config version copy generate dryrun install update registry; do
   # shellcheck source=/dev/null
   source "${SCRIPT_DIR}/lib/${_lib}.sh"
 done
@@ -58,8 +58,12 @@ FORCE=false
 DRY_RUN=false
 UPDATE=false
 UPDATE_PATH=""
+REGISTRY=false
+REGISTRY_COMMAND=""
+REGISTRY_ARG=""
 for arg in "$@"; do
   case "$arg" in
+    --registry)            REGISTRY=true ;;
     --update)              UPDATE=true ;;
     --force)               FORCE=true ;;
     --dry-run)             DRY_RUN=true ;;
@@ -67,7 +71,11 @@ for arg in "$@"; do
     --version)             echo "AgToosa v${AGTOOSA_VERSION}"; exit 0 ;;
     --help)                print_usage; exit 0 ;;
     *)
-      if [[ "$UPDATE" == true && -z "$UPDATE_PATH" && "$arg" != --* ]]; then
+      if [[ "$REGISTRY" == true && -z "$REGISTRY_COMMAND" && "$arg" != --* ]]; then
+        REGISTRY_COMMAND="$arg"
+      elif [[ "$REGISTRY" == true && -n "$REGISTRY_COMMAND" && -z "$REGISTRY_ARG" && "$arg" != --* ]]; then
+        REGISTRY_ARG="$arg"
+      elif [[ "$UPDATE" == true && -z "$UPDATE_PATH" && "$arg" != --* ]]; then
         UPDATE_PATH="$arg"
       else
         echo -e "${RED}❌ Error: Unknown option '${arg}'.${NC}"
@@ -81,6 +89,21 @@ done
 
 # ── Source guard (allows sourcing for unit tests) ─────────────
 [[ "${BASH_SOURCE[0]}" == "${0}" ]] || return 0
+
+# ── Registry mode ──────────────────────────────────────────────
+if [[ "$REGISTRY" == true ]]; then
+  case "$REGISTRY_COMMAND" in
+    list)   registry_list; exit $? ;;
+    search) registry_search "$REGISTRY_ARG"; exit $? ;;
+    info)   registry_info "$REGISTRY_ARG"; exit $? ;;
+    install) registry_install "$REGISTRY_ARG"; exit $? ;;
+    *)
+      echo -e "${RED}❌ Error: Unknown registry command '${REGISTRY_COMMAND}'.${NC}" >&2
+      echo "Available commands: list, search, info, install" >&2
+      exit 1
+      ;;
+  esac
+fi
 
 # ── Update mode ───────────────────────────────────────────────
 if [[ "$UPDATE" == true ]]; then
