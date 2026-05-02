@@ -7,6 +7,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+_(nothing yet)_
+
+---
+
+## [3.0.0] — 2026-05-02
+
 ### Added
 - v3 Community Template Registry Phase 1 (read path):
   - `bash agtoosa.sh --registry list` — discover available community packs
@@ -31,6 +37,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 - Installation guidance in README now includes native Windows instructions (PowerShell one-liner)
 - Bootstrap script exits gracefully with clear instructions if dependencies are missing (instead of silent/cryptic failures)
 - Windows users can now choose: native PowerShell installer or WSL2 terminal
+
+### Removed
+- Stale plan files from `docs/superpowers/` directory (self-update planning artifacts)
 
 ---
 
