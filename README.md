@@ -54,11 +54,20 @@ bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstr
 bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh)
 ```
 
-**Windows (WSL2):**
+**Windows (native):**
+```powershell
+# Run in PowerShell (Admin recommended, but not required)
+powershell -ExecutionPolicy Bypass -Command "iex (New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.ps1')"
+
+# Or pin a specific release:
+powershell -ExecutionPolicy Bypass -Command "`$Ref='v2.8.0'; iex (New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.ps1')"
+```
+
+**Windows (WSL2 alternative):**
 1. [Set up WSL2 on Windows](https://docs.microsoft.com/en-us/windows/wsl/install)
 2. Open your WSL2 terminal and run the macOS/Linux command above
 
-> **Note:** Native Windows support is planned for a future release. WSL2 provides full AgToosa functionality today.
+> **Note:** Windows native installation requires Git for Windows. Both native and WSL2 paths are fully supported.
 
 **Or clone and run:**
 ```bash

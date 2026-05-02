@@ -8,14 +8,29 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 ## [Unreleased]
 
 ### Added
+- v3 Community Template Registry Phase 1 (read path):
+  - `bash agtoosa.sh --registry list` — discover available community packs
+  - `bash agtoosa.sh --registry search <keyword>` — filter packs by keyword
+  - `bash agtoosa.sh --registry info <name>` — show pack details
+  - `bash agtoosa.sh --registry install <name>` — download, verify (SHA-256), and install packs
+  - Support for local pack installation: `--registry install ./local-pack` (offline mode)
+  - Version pinning: `--registry install pack@1.2.0`
+  - Registry caching (1 hour) to reduce GitHub load
+  - Markdown-only pack constraint for security (no executable code)
+  - `Docs/AgToosa_Registry.md` — user-facing registry workflow documentation
+- Native Windows installation via PowerShell (`bootstrap.ps1`):
+  - Dependency checking for git, bash, curl, tar
+  - Automated Git for Windows discovery
+  - Direct execution from PowerShell (no bash.exe required for bootstrap)
 - Smart dependency checking in `bootstrap.sh`: detects missing bash/git/curl/tar and prints platform-specific install guidance
-- Platform detection in bootstrap (macOS, Linux distros, WSL2) with contextual error messages
+- Platform detection in bootstrap (macOS, Linux distros, WSL2, Windows) with contextual error messages
 - `System Requirements` section in README documenting required tools (bash 4+, git, curl, tar)
 - Git availability check in `agtoosa.sh` with helpful error messages if missing
 
 ### Changed
-- Installation guidance now explicit in README: Windows users directed to WSL2 for v2.8.0 (native Windows support planned for future release)
+- Installation guidance in README now includes native Windows instructions (PowerShell one-liner)
 - Bootstrap script exits gracefully with clear instructions if dependencies are missing (instead of silent/cryptic failures)
+- Windows users can now choose: native PowerShell installer or WSL2 terminal
 
 ---
 
