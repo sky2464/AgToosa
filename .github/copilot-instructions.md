@@ -35,6 +35,11 @@ docs/               — Repo-level research/draft notes (not shipped to users)
 
 `ship/` is a **temporary staging directory** created at the start of each `agtoosa.sh` run and deleted at the end. Never commit it.
 
+## Repo Maintainer Mode
+
+For changes to the AgToosa repository itself, use `.github/agents/agtoosa.agent.md` or read `docs/agtoosa-maintainer.md` directly.
+That guide is the shared source of truth for the repo-maintainer persona across Copilot, Claude, Gemini, Cursor, and Windsurf.
+
 ## Key Conventions
 
 ### Version bumps

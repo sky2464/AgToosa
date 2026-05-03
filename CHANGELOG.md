@@ -7,6 +7,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+### Added
+- Repo-native maintainer guide in `docs/agtoosa-maintainer.md` for working on the AgToosa generator itself
+- Native repo entry files for Claude (`CLAUDE.md`), AGENTS-style tools (`AGENTS.md`), Cursor (`.cursorrules`), and Windsurf (`.windsurfrules`) that all point to the shared maintainer guide
+
+### Changed
+- `GEMINI.md` now contains the same maintainer guidance instead of remaining empty
+- `.github/agents/agtoosa.agent.md` now delegates to the shared maintainer guide and is scoped more tightly to AgToosa repository work
+
 _(nothing yet)_
 
 ---

@@ -1,0 +1,5 @@
+# AgToosa Maintainer
+
+Read `docs/agtoosa-maintainer.md` before making changes.
+
+Use this repository mode for generator changes, template changes, platform wiring, version wiring, and bats updates.
