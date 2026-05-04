@@ -70,6 +70,24 @@ jobs:
           fi
           echo "✅ All template files verified."
 
+      - name: Validate Optional Template Files
+        run: |
+          set -euo pipefail
+          # Source config to get OPTIONAL_TEMPLATE_FILES array, then check each.
+          source lib/config.sh
+          MISSING=0
+          for f in "${OPTIONAL_TEMPLATE_FILES[@]}"; do
+            if [ ! -f "template/$f" ]; then
+              echo "⚠️  Missing optional: template/$f"
+              MISSING=$((MISSING + 1))
+            fi
+          done
+          if [ "$MISSING" -gt 0 ]; then
+            echo "🔥 $MISSING optional template file(s) missing — update OPTIONAL_TEMPLATE_FILES in lib/config.sh or add the files."
+            exit 1
+          fi
+          echo "✅ All optional template files verified."
+
       - name: Install BATS
         run: |
           BATS_VERSION="v1.13.0"

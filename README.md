@@ -40,8 +40,9 @@ AgToosa requires these tools (all present by default on modern macOS/Linux):
 - **git** (any recent version)
 - **curl** (any recent version)
 - **tar** (any recent version)
+- **jq** 1.6+ — strongly recommended; required for all `--registry` commands (list, search, info, install, publish)
 
-If any are missing, the bootstrap script will tell you how to install them.
+If any are missing, the bootstrap script will tell you how to install them. Install `jq` via `brew install jq` (macOS) or `sudo apt-get install jq` (Debian/Ubuntu).
 
 ### Quick Start
 
@@ -68,6 +69,16 @@ powershell -ExecutionPolicy Bypass -Command "`$Ref='v2.8.0'; iex (New-Object Sys
 2. Open your WSL2 terminal and run the macOS/Linux command above
 
 > **Note:** Windows native installation requires Git for Windows. Both native and WSL2 paths are fully supported.
+
+### Platform Notes
+
+| Platform | Generator | Registry list/search/info | Registry install | Registry publish | Smart merge |
+|----------|-----------|--------------------------|-----------------|-----------------|-------------|
+| macOS / Linux (bash) | ✅ Full | ✅ (requires `jq`) | ✅ | ✅ | ✅ |
+| Windows native (PowerShell) | ✅ Full | ✅ | ✅ | ❌ Not supported | ✅ |
+| Windows WSL2 | ✅ Full | ✅ (requires `jq`) | ✅ | ✅ | ✅ |
+
+> **Windows tip:** For full feature parity including `--registry publish`, use WSL2 or Git Bash instead of native PowerShell.
 
 **Or clone and run:**
 ```bash
