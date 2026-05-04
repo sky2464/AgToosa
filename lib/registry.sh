@@ -24,6 +24,35 @@ compute_sha256() {
   fi
 }
 
+validate_pack_files() {
+  local dir="$1"
+  local allowed_exts="md json toml mdc"
+  local file ext base
+  while IFS= read -r -d '' file; do
+    base=$(basename "$file")
+    ext="${base##*.}"
+    if [[ "$base" == "$ext" ]]; then
+      if [[ "$base" != ".pack-meta.json" ]]; then
+        echo "Error: Pack contains disallowed file type: $file (allowed: .md .json .toml .mdc)" >&2
+        return 1
+      fi
+    else
+      local ok=0
+      for a in $allowed_exts; do
+        if [[ "$ext" == "$a" ]]; then
+          ok=1
+          break
+        fi
+      done
+      if [[ $ok -eq 0 ]]; then
+        echo "Error: Pack contains disallowed file type: $file (allowed: .md .json .toml .mdc)" >&2
+        return 1
+      fi
+    fi
+  done < <(find "$dir" -type f -print0)
+  return 0
+}
+
 # Fetch registry.json from GitHub with 1-hour cache.
 fetch_registry() {
   mkdir -p "$REGISTRY_CACHE_DIR"
@@ -157,13 +186,16 @@ registry_install() {
     return 1
   fi
 
-  # Extract URL and SHA-256 from pack entry.
+  # Extract URL, SHA-256, and version from pack entry.
+  local pack_version_resolved
   if command -v jq &>/dev/null; then
     pack_url=$(echo "$pack_entry" | jq -r '.url')
     pack_sha256=$(echo "$pack_entry" | jq -r '.sha256')
+    pack_version_resolved=$(echo "$pack_entry" | jq -r '.version')
   else
     pack_url=$(echo "$pack_entry" | grep -oP '"url":\s*"\K[^"]+')
     pack_sha256=$(echo "$pack_entry" | grep -oP '"sha256":\s*"\K[^"]+')
+    pack_version_resolved=$(echo "$pack_entry" | grep -oP '"version":\s*"\K[^"]+')
   fi
 
   # Show confirmation prompt.
@@ -213,6 +245,17 @@ registry_install() {
     return 1
   }
 
+  validate_pack_files "$pack_dir" || {
+    rm -rf "$(dirname "$tmpfile")" "$pack_dir"
+    return 1
+  }
+
+  local installed_at
+  installed_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+  printf '{\n  "name": "%s",\n  "version": "%s",\n  "sha256": "%s",\n  "installed_at": "%s",\n  "source": "registry"\n}\n' \
+    "$pack_name" "$pack_version_resolved" "$pack_sha256" "$installed_at" \
+    > "${pack_dir}/.pack-meta.json"
+
   echo ""
   echo "✅ Pack staged at: $pack_dir"
   echo "Run 'bash agtoosa.sh' in your project to merge the pack files."
@@ -248,5 +291,53 @@ _install_local_pack() {
     return 1
   }
 
+  validate_pack_files "$pack_dir" || {
+    rm -rf "$pack_dir"
+    return 1
+  }
+
+  local installed_at
+  installed_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+  printf '{\n  "name": "%s",\n  "version": "local",\n  "sha256": "",\n  "installed_at": "%s",\n  "source": "local"\n}\n' \
+    "$pack_name" "$installed_at" \
+    > "${pack_dir}/.pack-meta.json"
+
   echo "✅ Local pack staged at: $pack_dir"
+}
+
+registry_publish() {
+  echo "AgToosa Registry — Publish a Pack"
+  echo ""
+  read -p "Pack directory: " pack_dir_input
+
+  if [[ ! -d "$pack_dir_input" ]]; then
+    echo "Error: Directory not found: $pack_dir_input" >&2
+    return 1
+  fi
+
+  validate_pack_files "$pack_dir_input" || return 1
+
+  local pub_name pub_desc pub_version
+  read -p "Pack name: " pub_name
+  read -p "Description: " pub_desc
+  read -p "Version: " pub_version
+
+  local tmptar
+  tmptar=$(mktemp /tmp/agtoosa-publish-XXXXXX.tar.gz)
+  tar -czf "$tmptar" -C "$(dirname "$pack_dir_input")" "$(basename "$pack_dir_input")"
+  local pub_sha256
+  pub_sha256=$(compute_sha256 "$tmptar")
+
+  local pub_author
+  pub_author=$(git config user.name 2>/dev/null || echo "unknown")
+
+  echo ""
+  echo "Add this entry to registry.json and open a PR at https://github.com/sky2464/agtoosa-registry:"
+  echo ""
+  printf '{\n  "name": "%s",\n  "description": "%s",\n  "author": "%s",\n  "version": "%s",\n  "url": "https://github.com/%s/%s/archive/refs/tags/v%s.tar.gz",\n  "sha256": "%s",\n  "verified": false\n}\n' \
+    "$pub_name" "$pub_desc" "$pub_author" "$pub_version" \
+    "$pub_author" "$pub_name" "$pub_version" \
+    "$pub_sha256"
+
+  rm -f "$tmptar"
 }

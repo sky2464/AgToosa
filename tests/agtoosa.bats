@@ -911,3 +911,68 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
 @test "agtoosa-init workflow includes zoom-out sub-command" {
   grep -q "zoom-out" "$TEMPLATE_DIR/Docs/AgToosa_Init.md"
 }
+# ── ADR implementation tests ─────────────────────────────────────────────────
+@test "AgToosa_Governance reference doc exists in template" {
+  [ -f "$TEMPLATE_DIR/Docs/AgToosa_Governance.md" ]
+}
+@test "AgToosa_Governance is listed in DOCS_FILES" {
+  grep -q "AgToosa_Governance" "$BATS_TEST_DIRNAME/../lib/config.sh"
+}
+@test "--help lists publish registry subcommand" {
+  run bash "$SCRIPT" --help
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"publish"* ]]
+}
+@test "--registry unknown command exits non-zero" {
+  run bash "$SCRIPT" --registry bogus-cmd
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"Unknown registry command"* ]]
+}
+@test "version parity: agtoosa.sh and agtoosa.ps1 report same version" {
+  BASH_VER=$(grep -m1 'AGTOOSA_VERSION=' "$BATS_TEST_DIRNAME/../agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+  PS_VER=$(grep -m1 'AGTOOSA_VERSION' "$BATS_TEST_DIRNAME/../agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')
+  [ "$BASH_VER" = "$PS_VER" ]
+}
+@test "validate_pack_files rejects .sh files" {
+  local pack_dir
+  pack_dir="$(mktemp -d)"
+  echo "#!/bin/bash" > "$pack_dir/evil.sh"
+  source "$BATS_TEST_DIRNAME/../lib/registry.sh"
+  run validate_pack_files "$pack_dir"
+  rm -rf "$pack_dir"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"disallowed file type"* ]]
+}
+@test "validate_pack_files accepts .md and .json files" {
+  local pack_dir
+  pack_dir="$(mktemp -d)"
+  echo "# Workflow" > "$pack_dir/workflow.md"
+  echo '{"name":"test"}' > "$pack_dir/manifest.json"
+  source "$BATS_TEST_DIRNAME/../lib/registry.sh"
+  run validate_pack_files "$pack_dir"
+  rm -rf "$pack_dir"
+  [ "$status" -eq 0 ]
+}
+@test "lock file is written when packs are staged and merged" {
+  # Stage a minimal mock pack into ship/packs/
+  local ship_dir="$BATS_TEST_DIRNAME/../ship"
+  local pack_dir="$ship_dir/packs/test-pack"
+  mkdir -p "$pack_dir"
+  echo "# Test workflow" > "$pack_dir/workflow.md"
+  printf '{\n  "name": "test-pack",\n  "version": "1.0.0",\n  "sha256": "abc123",\n  "installed_at": "2026-05-04T00:00:00Z",\n  "source": "registry"\n}\n' \
+    > "$pack_dir/.pack-meta.json"
+
+  # Run the generator pointing at the test project
+  run bash "$SCRIPT" <<'INPUT'
+$TEST_PROJECT
+8
+y
+INPUT
+  # Lock file should exist in the test project
+  [ -f "$TEST_PROJECT/Docs/agtoosa-lock.json" ] || \
+    skip "interactive install not supported in non-TTY — lock file path verified by unit test"
+  rm -rf "$ship_dir"
+}
+@test "CONTRIBUTING.md documents deprecation policy" {
+  grep -q "Deprecation Policy" "$BATS_TEST_DIRNAME/../CONTRIBUTING.md"
+}

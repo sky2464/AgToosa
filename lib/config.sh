@@ -20,6 +20,7 @@ DOCS_FILES=(
   "Docs/ADR-FORMAT.md"
   "Docs/DEEPENING.md"
   "Docs/LANGUAGE.md"
+  "Docs/AgToosa_Governance.md"
   "Docs/Master-Plan.md"
   "Docs/AgToosa_Changelog.md"
 )
@@ -199,6 +200,7 @@ print_usage() {
   echo "                           search <keyword>  — Search packs by keyword"
   echo "                           info <name>       — Show pack details"
   echo "                           install <name>    — Download and install a pack"
+  echo "                           publish           — Contribution wizard for pack authors"
   echo "  --update [path]        Update an existing AgToosa install (skips interactive wizard)"
   echo "  --force                Overwrite existing platform config files (creates .bak backups)"
   echo "  --dry-run              Show what would be copied without making changes"

@@ -116,6 +116,20 @@ When submitting a feature:
 - **Size**: Keep PRs focused — split large changes across multiple PRs
 - **Tests**: All tests must pass before merging
 
+## Deprecation Policy
+
+Before removing or renaming a command, workflow, or public interface:
+
+1. **Announce in a minor release**: The old name continues to work but prints a deprecation warning at runtime.
+2. **Document in CHANGELOG.md** under `### Deprecated` (not `### Breaking`) in the announcement release.
+3. **Remove in the next minor or major release**. Move the CHANGELOG entry from `### Deprecated` to `### Breaking`.
+
+**Example timeline:**
+- v3.1.0: `/agtoosa-old-cmd` prints "⚠️ Deprecated: renamed to /agtoosa-new-cmd in v3.2.0"
+- v3.2.0: `/agtoosa-old-cmd` removed; CHANGELOG lists it under `### Breaking`
+
+This gives users one release cycle to migrate. For MAJOR version bumps (breaking schema changes), a migration wizard will guide users through `--update` (v3.1+).
+
 ## Attribution
 
 Contributors are recognized in:

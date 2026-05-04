@@ -175,6 +175,15 @@ run_update() {
       "${PROJECT_PATH}/.claude/settings.json" ".claude/settings.json"
   fi
 
+  # Step 5: Update lock file agtoosa_version field if it exists.
+  local lock_file="${PROJECT_PATH}/Docs/agtoosa-lock.json"
+  if [[ -f "$lock_file" ]] && command -v jq &>/dev/null; then
+    local tmp_lock
+    tmp_lock=$(mktemp)
+    jq --arg v "$AGTOOSA_VERSION" --arg t "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+      '.agtoosa_version = $v | .generated_at = $t' "$lock_file" > "$tmp_lock" && mv "$tmp_lock" "$lock_file"
+  fi
+
   # Write version marker
   echo "$AGTOOSA_VERSION" > "${PROJECT_PATH}/Docs/.agtoosa-version"
 

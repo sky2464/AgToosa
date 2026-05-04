@@ -84,6 +84,86 @@ count_existing_files() {
   return 0
 }
 
+# Copy pack files into PROJECT_PATH, skipping disallowed file types.
+_merge_pack() {
+  local pack_dir="$1" pack_name="$2"
+  local allowed_exts="md json toml mdc"
+  local count=0
+  while IFS= read -r -d '' f; do
+    [[ "$(basename "$f")" == ".pack-meta.json" ]] && continue
+    local ext="${f##*.}"
+    local allowed=false
+    for e in $allowed_exts; do
+      [[ "$ext" == "$e" ]] && allowed=true && break
+    done
+    if [[ "$allowed" == false ]]; then
+      echo -e "  ${YELLOW}⏭${NC}  Skipping disallowed file: ${f#"$pack_dir"}" >&2
+      continue
+    fi
+    local rel="${f#"$pack_dir"}"
+    local dst="${PROJECT_PATH}/${rel}"
+    mkdir -p "$(dirname "$dst")"
+    cp "$f" "$dst"
+    count=$((count + 1))
+  done < <(find "$pack_dir" -type f -print0)
+  echo -e "  ${GREEN}✅${NC} Pack '${pack_name}': ${count} files merged"
+}
+
+# Write or update Docs/agtoosa-lock.json with installed pack entries.
+_write_lock_file() {
+  local meta_files=("$@")
+  local lock_file="${PROJECT_PATH}/Docs/agtoosa-lock.json"
+  local timestamp
+  timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+  local packs_json=""
+  local sep=""
+  for meta in "${meta_files[@]}"; do
+    [[ -f "$meta" ]] || continue
+    local entry
+    entry=$(cat "$meta")
+    packs_json+="${sep}    ${entry}"
+    sep=$',\n'
+  done
+
+  if [[ -f "$lock_file" ]] && command -v jq &>/dev/null; then
+    local existing_names=()
+    while IFS= read -r n; do existing_names+=("$n"); done \
+      < <(jq -r '.packs[]?.name' "$lock_file" 2>/dev/null)
+    local new_names=()
+    for meta in "${meta_files[@]}"; do
+      [[ -f "$meta" ]] || continue
+      local n
+      if command -v jq &>/dev/null; then
+        n=$(jq -r '.name' "$meta" 2>/dev/null)
+      else
+        n=$(grep -oP '"name":\s*"\K[^"]+' "$meta" | head -1)
+      fi
+      new_names+=("$n")
+    done
+    local kept_json=""
+    local ksep=""
+    while IFS= read -r existing_entry; do
+      local ename
+      ename=$(echo "$existing_entry" | jq -r '.name' 2>/dev/null)
+      local skip=false
+      for nn in "${new_names[@]}"; do [[ "$ename" == "$nn" ]] && skip=true && break; done
+      if [[ "$skip" == false ]]; then
+        kept_json+="${ksep}    $(echo "$existing_entry" | jq -c '.')"
+        ksep=$',\n'
+      fi
+    done < <(jq -c '.packs[]?' "$lock_file" 2>/dev/null)
+    if [[ -n "$kept_json" ]]; then
+      packs_json="${kept_json}"$',\n'"    ${packs_json#    }"
+    fi
+  fi
+
+  mkdir -p "${PROJECT_PATH}/Docs"
+  printf '{\n  "agtoosa_version": "%s",\n  "generated_at": "%s",\n  "packs": [\n%s\n  ]\n}\n' \
+    "$AGTOOSA_VERSION" "$timestamp" "$packs_json" > "$lock_file"
+  echo -e "  ${GREEN}✅${NC} Docs/agtoosa-lock.json updated"
+}
+
 # Copy all staged files from ship/ into PROJECT_PATH, then print summary + next steps.
 install_files() {
   mkdir -p "${PROJECT_PATH}/Docs/archived" "${PROJECT_PATH}/Docs/Context"
@@ -265,6 +345,26 @@ install_files() {
     [[ $wrule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .windsurf/rules/ (${wrule_count} rules)"
   fi
 
+
+  # Merge any staged packs from ${SHIP_DIR}/packs/
+  if [[ -d "${SHIP_DIR}/packs" ]]; then
+    local pack_count=0
+    local new_lock_entries=()
+    for pack_dir in "${SHIP_DIR}/packs"/*/; do
+      [[ -d "$pack_dir" ]] || continue
+      local pname
+      pname=$(basename "$pack_dir")
+      _merge_pack "$pack_dir" "$pname" || continue
+      pack_count=$((pack_count + 1))
+      if [[ -f "${pack_dir}/.pack-meta.json" ]]; then
+        new_lock_entries+=("${pack_dir}/.pack-meta.json")
+      fi
+    done
+    [[ $pack_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} Packs merged: ${pack_count}"
+    if [[ ${#new_lock_entries[@]} -gt 0 ]]; then
+      _write_lock_file "${new_lock_entries[@]}"
+    fi
+  fi
 
   # Summary
   echo ""

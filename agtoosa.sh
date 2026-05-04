@@ -97,9 +97,10 @@ if [[ "$REGISTRY" == true ]]; then
     search) registry_search "$REGISTRY_ARG"; exit $? ;;
     info)   registry_info "$REGISTRY_ARG"; exit $? ;;
     install) registry_install "$REGISTRY_ARG"; exit $? ;;
+    publish) registry_publish; exit $? ;;
     *)
       echo -e "${RED}❌ Error: Unknown registry command '${REGISTRY_COMMAND}'.${NC}" >&2
-      echo "Available commands: list, search, info, install" >&2
+      echo "Available commands: list, search, info, install, publish" >&2
       exit 1
       ;;
   esac

@@ -24,12 +24,25 @@
 .PARAMETER UpdatePath
     Path to the project to update (used with -Update).
 
+.PARAMETER Registry
+    Access the AgToosa Community Template Registry.
+
+.PARAMETER RegistryCommand
+    Registry sub-command: list, search, info, or install.
+
+.PARAMETER RegistryArg
+    Argument for the registry sub-command (keyword for search, pack name for info/install).
+
 .EXAMPLE
     .\agtoosa.ps1
     .\agtoosa.ps1 -Force
     .\agtoosa.ps1 -DryRun
     .\agtoosa.ps1 -Update -UpdatePath C:\Projects\MyApp
     .\agtoosa.ps1 -Version
+    .\agtoosa.ps1 -Registry -RegistryCommand list
+    .\agtoosa.ps1 -Registry -RegistryCommand search -RegistryArg react
+    .\agtoosa.ps1 -Registry -RegistryCommand info -RegistryArg my-pack
+    .\agtoosa.ps1 -Registry -RegistryCommand install -RegistryArg my-pack
 #>
 
 [CmdletBinding()]
@@ -39,14 +52,17 @@ param(
     [switch]$Version,
     [switch]$Help,
     [switch]$Update,
-    [string]$UpdatePath = ""
+    [string]$UpdatePath = "",
+    [switch]$Registry,
+    [string]$RegistryCommand = "",
+    [string]$RegistryArg = ""
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 # ── Version ───────────────────────────────────────────────────
-$AGTOOSA_VERSION = "2.6.0"
+$AGTOOSA_VERSION = "3.0.0"
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $TEMPLATE_DIR = Join-Path $SCRIPT_DIR "template"
 $SHIP_DIR = Join-Path $SCRIPT_DIR "ship"
@@ -77,11 +93,20 @@ ${BOLD}Options:${NC}
   -Update               Update an existing AgToosa install
   -UpdatePath <path>    Project path to update (used with -Update)
 
+${BOLD}Registry:${NC}
+  -Registry -RegistryCommand list               List available packs
+  -Registry -RegistryCommand search -RegistryArg <kw>  Search packs
+  -Registry -RegistryCommand info -RegistryArg <name>  Show pack details
+  -Registry -RegistryCommand install -RegistryArg <name>  Install a pack
+
 ${BOLD}Examples:${NC}
   .\agtoosa.ps1
   .\agtoosa.ps1 -Force
   .\agtoosa.ps1 -Update -UpdatePath C:\Projects\MyApp
   .\agtoosa.ps1 -DryRun
+  .\agtoosa.ps1 -Registry -RegistryCommand list
+  .\agtoosa.ps1 -Registry -RegistryCommand search -RegistryArg react
+  .\agtoosa.ps1 -Registry -RegistryCommand install -RegistryArg my-pack
 "@
 }
 
@@ -127,9 +152,12 @@ function Copy-FileWithGuard([string]$src, [string]$dst, [string]$label) {
 
 function Stage-Files([string[]]$platforms) {
     $docsFiles = @(
-        "Docs\AgToosa_Agent.md", "Docs\AgToosa_Spec.md", "Docs\AgToosa_Build.md",
-        "Docs\AgToosa_Review.md", "Docs\AgToosa_Ship.md", "Docs\AgToosa_Init.md",
-        "Docs\AgToosa_Changelog.md"
+        "Docs\AgToosa_Agent.md", "Docs\AgToosa_Init.md", "Docs\AgToosa_Spec.md",
+        "Docs\AgToosa_Build.md", "Docs\AgToosa_Review.md", "Docs\AgToosa_Ship.md",
+        "Docs\AgToosa_QA.md", "Docs\AgToosa_Revert.md", "Docs\AgToosa_Task.md",
+        "Docs\AgToosa_Update.md", "Docs\AgToosa_Registry.md", "Docs\AgToosa_Skills.md",
+        "Docs\CONTEXT-FORMAT.md", "Docs\ADR-FORMAT.md", "Docs\DEEPENING.md",
+        "Docs\LANGUAGE.md", "Docs\Master-Plan.md", "Docs\AgToosa_Changelog.md"
     )
 
     foreach ($f in $docsFiles) {
@@ -243,6 +271,154 @@ function Install-Files([string]$projectPath, [string[]]$platforms) {
     if (-not (Test-Path $archDir)) { New-Item -ItemType Directory -Path $archDir -Force | Out-Null }
 }
 
+# ── Registry ──────────────────────────────────────────────────
+$REGISTRY_URL = "https://raw.githubusercontent.com/sky2464/agtoosa-registry/main/registry.json"
+
+function Invoke-RegistryFetch {
+    $cacheDir  = "$env:USERPROFILE\.cache\agtoosa"
+    $cacheFile = "$cacheDir\registry.json"
+    $cacheTTL  = 3600
+
+    if (-not (Test-Path $cacheDir)) {
+        New-Item -ItemType Directory -Path $cacheDir -Force | Out-Null
+    }
+
+    if (Test-Path $cacheFile) {
+        $ageSeconds = ([DateTimeOffset]::UtcNow - (Get-Item $cacheFile).LastWriteTime).TotalSeconds
+        if ($ageSeconds -lt $cacheTTL) {
+            return (Get-Content $cacheFile -Raw)
+        }
+    }
+
+    try {
+        Invoke-WebRequest -Uri $REGISTRY_URL -OutFile $cacheFile -UseBasicParsing | Out-Null
+        return (Get-Content $cacheFile -Raw)
+    } catch {
+        if (Test-Path $cacheFile) {
+            Write-Color "${YELLOW}⚠️  Registry fetch failed; using cached copy.${NC}"
+            return (Get-Content $cacheFile -Raw)
+        }
+        Write-Color "${RED}❌ Failed to fetch registry and no cache available: $_${NC}"
+        exit 1
+    }
+}
+
+function Show-RegistryList {
+    $json  = Invoke-RegistryFetch
+    $packs = ($json | ConvertFrom-Json).packs
+    foreach ($pack in $packs) {
+        Write-Color "$($pack.name) v$($pack.version) — $($pack.description) (by $($pack.author))"
+    }
+}
+
+function Show-RegistrySearch([string]$query) {
+    $json  = Invoke-RegistryFetch
+    $packs = ($json | ConvertFrom-Json).packs
+    foreach ($pack in $packs) {
+        if ($pack.name -like "*$query*" -or $pack.description -like "*$query*") {
+            Write-Color "$($pack.name) v$($pack.version) — $($pack.description) (by $($pack.author))"
+        }
+    }
+}
+
+function Show-RegistryInfo([string]$packName) {
+    $json  = Invoke-RegistryFetch
+    $packs = ($json | ConvertFrom-Json).packs
+    $pack  = $packs | Where-Object { $_.name -eq $packName } | Select-Object -First 1
+    if (-not $pack) {
+        Write-Color "${RED}❌ Pack '$packName' not found in registry.${NC}"
+        exit 1
+    }
+    Write-Color "${BOLD}Name:${NC}        $($pack.name)"
+    Write-Color "${BOLD}Description:${NC} $($pack.description)"
+    Write-Color "${BOLD}Author:${NC}      $($pack.author)"
+    Write-Color "${BOLD}Version:${NC}     $($pack.version)"
+    Write-Color "${BOLD}URL:${NC}         $($pack.url)"
+    Write-Color "${BOLD}Verified:${NC}    $($pack.verified)"
+}
+
+function Invoke-RegistryInstall([string]$packSpec) {
+    # Parse optional name@version syntax
+    $packName    = $packSpec
+    $packVersion = ""
+    if ($packSpec -match "^(.+)@(.+)$") {
+        $packName    = $matches[1]
+        $packVersion = $matches[2]
+    }
+
+    $json  = Invoke-RegistryFetch
+    $packs = ($json | ConvertFrom-Json).packs
+    $pack  = $packs | Where-Object { $_.name -eq $packName } | Select-Object -First 1
+    if (-not $pack) {
+        Write-Color "${RED}❌ Pack '$packName' not found in registry.${NC}"
+        exit 1
+    }
+
+    if ($packVersion -ne "" -and $pack.version -ne $packVersion) {
+        Write-Color "${YELLOW}⚠️  Requested version $packVersion but registry has $($pack.version). Proceeding with registry version.${NC}"
+    }
+
+    $confirm = Read-Host "Installing: $packName — Continue? (Y/n)"
+    if ([string]::IsNullOrEmpty($confirm)) { $confirm = "Y" }
+    if ($confirm -notmatch "^[Yy]$") {
+        Write-Color "${YELLOW}Aborted.${NC}"
+        exit 0
+    }
+
+    $url     = $pack.url
+    $tmpFile = [System.IO.Path]::GetTempFileName() + ".tar.gz"
+
+    try {
+        Write-Color "${CYAN}Downloading $packName...${NC}"
+        Invoke-WebRequest -Uri $url -OutFile $tmpFile -UseBasicParsing | Out-Null
+    } catch {
+        Write-Color "${RED}❌ Failed to download pack: $_${NC}"
+        exit 1
+    }
+
+    # Verify SHA-256
+    $actualHash   = (Get-FileHash $tmpFile -Algorithm SHA256).Hash.ToLower()
+    $expectedHash = $pack.sha256.ToLower()
+    if ($actualHash -ne $expectedHash) {
+        Write-Color "${RED}❌ SHA-256 mismatch! Expected: $expectedHash  Got: $actualHash${NC}"
+        Remove-Item $tmpFile -ErrorAction SilentlyContinue
+        exit 1
+    }
+
+    # Extract
+    $packDir = Join-Path $SHIP_DIR "packs\$packName"
+    New-Item -ItemType Directory -Path $packDir -Force | Out-Null
+
+    $tarAvailable = $null -ne (Get-Command tar -ErrorAction SilentlyContinue)
+    if (-not $tarAvailable) {
+        Write-Color "${RED}❌ tar is not available on this system. Cannot extract the pack tarball.${NC}"
+        Remove-Item $tmpFile -ErrorAction SilentlyContinue
+        exit 1
+    }
+
+    $extractResult = cmd /c "tar -xzf `"$tmpFile`" -C `"$packDir`"" 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        Write-Color "${RED}❌ Extraction failed: $extractResult${NC}"
+        Remove-Item $tmpFile -ErrorAction SilentlyContinue
+        exit 1
+    }
+
+    Remove-Item $tmpFile -ErrorAction SilentlyContinue
+
+    # Write pack metadata
+    $metaFile = Join-Path $packDir ".pack-meta.json"
+    $meta = [ordered]@{
+        name         = $packName
+        version      = $pack.version
+        sha256       = $actualHash
+        installed_at = [DateTimeOffset]::UtcNow.ToString("o")
+        source       = "registry"
+    }
+    $meta | ConvertTo-Json | Out-File -FilePath $metaFile -Encoding UTF8
+
+    Write-Color "${GREEN}✅ Pack '$packName' v$($pack.version) installed to '$packDir'.${NC}"
+}
+
 # ── Cleanup on exit ───────────────────────────────────────────
 $keepShip = $false
 function Remove-ShipDir {
@@ -271,6 +447,20 @@ if ($Version) {
 if ($Help) {
     Show-Usage
     exit 0
+}
+
+# ── --registry ────────────────────────────────────────────────
+if ($Registry) {
+    switch ($RegistryCommand) {
+        "list"    { Show-RegistryList; exit 0 }
+        "search"  { Show-RegistrySearch $RegistryArg; exit 0 }
+        "info"    { Show-RegistryInfo $RegistryArg; exit 0 }
+        "install" { Invoke-RegistryInstall $RegistryArg; exit 0 }
+        default   {
+            Write-Color "${RED}❌ Unknown registry command '$RegistryCommand'. Use list, search, info, install.${NC}"
+            exit 1
+        }
+    }
 }
 
 # ── --update ──────────────────────────────────────────────────
@@ -428,6 +618,9 @@ try {
         Install-Files $projectPath $platforms.ToArray()
         Write-Color ""
         Write-Color "${GREEN}${BOLD}✅ AgToosa v${AGTOOSA_VERSION} installed in '$projectPath'!${NC}"
+        # Write version marker
+        $verFile = Join-Path $projectPath "Docs\.agtoosa-version"
+        $AGTOOSA_VERSION | Out-File -FilePath $verFile -Encoding UTF8 -NoNewline
         Write-Color ""
         Write-Color "${YELLOW}Next steps:${NC}"
         Write-Color "  1. Open your AI assistant in your project"
