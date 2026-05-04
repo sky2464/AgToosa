@@ -180,7 +180,65 @@ Gates are **soft** (enforced by AI instruction following) in v3.x. Hard programm
 1. [x] Ship sequential persona dispatch via slash commands (v3.0.0)
 2. [x] Ship parallel 4-reviewer pattern in agtoosa-review skill (v3.0.0)
 3. [x] Document the Linear phase-gate protocol formally in `Docs/AgToosa_Governance.md`
-4. [ ] Add explicit phase-order warning to workflow docs (warn if Linear status is wrong for the invoked command)
-5. [ ] Design `Master-Plan.md` compaction: archive completed cycles to keep active doc under 500 lines
-6. [ ] Evaluate parallel task distribution in Build phase for Claude Code (v3.1)
-7. [ ] Specify sub-agent dependency DAG and auto-rollback interface (v4 design doc)
+4. [x] Add explicit phase-order warning to workflow docs — `> **Prerequisites:**` blockquotes added to `Docs/AgToosa_Build.md`, `Docs/AgToosa_Review.md`, and `Docs/AgToosa_Ship.md` (v3.1.0)
+5. [x] Design `Master-Plan.md` compaction — Part 6 "Compact Master-Plan.md" step added to `Docs/AgToosa_Ship.md` with archive-to-`Docs/archived/cycle-YYYY-MM-DD.md` protocol; trigger: >200 lines or cycle close (v3.1.0)
+6. [x] Evaluate parallel task distribution in Build phase for Claude Code — "Claude Code Parallel Pattern" subsection added to `Docs/AgToosa_Build.md`; pattern is opt-in for independent Part 1 tasks (v3.1.0)
+7. [ ] [planned/v4] Specify sub-agent dependency DAG and auto-rollback interface — see `## Future: Sub-Agent Dependency DAG (v4)` section below
+
+---
+
+## Future: Sub-Agent Dependency DAG (v4)
+
+**Status:** Design stub — not yet implemented. Target: v4.0.0.
+
+### Motivation
+
+The current orchestration model is sequential within each phase and parallel only in the
+Review phase. For the Build phase, tasks are executed one-at-a-time even when they are
+independent (e.g., writing three separate modules that share no state). A dependency DAG
+would allow the orchestrator to fan out independent tasks and collect results, reducing
+wall time on large stories.
+
+Additionally, the current phase gate is soft (the AI follows workflow instructions). A
+v4 hard gate would automatically roll back if a gate condition is not met — for example,
+if smoke tests fail in `/agtoosa-ship`, the orchestrator would invoke `/agtoosa-revert`
+without requiring a manual user command.
+
+### Design Sketch
+
+**Per-task dependency declarations:**
+
+Each task in the Build phase breakdown would include an optional `deps` field:
+
+```
+Task: Write UserRepository
+  deps: [DatabaseSchema]   ← must complete before this task starts
+  
+Task: Write AuthService
+  deps: []                 ← no deps, can run in parallel with UserRepository
+```
+
+**Orchestrator DAG resolution:**
+
+The orchestrating agent (Claude Code `Task` tool) resolves the DAG topologically:
+1. Launch all tasks with no unmet dependencies in parallel
+2. As each task completes, mark its dependents as unblocked
+3. Continue until all tasks complete or a task fails
+4. On failure: propagate failure to all dependents, collect results, surface to user
+
+**Auto-rollback protocol:**
+
+On gate failure (e.g., smoke tests fail in Part 2 of `/agtoosa-ship`):
+1. The orchestrator automatically invokes `/agtoosa-revert` with the last known good commit
+2. Linear status is reset to `In Review`
+3. A failure report is appended to `Docs/Master-Plan.md` with the failing test and rollback SHA
+4. User is notified with a structured summary: what failed, what was rolled back, next steps
+
+**Platform scope:** Claude Code only (requires `Task` tool with parallel sub-agent support).
+Other platforms continue with sequential execution and manual rollback.
+
+**Implementation prerequisites:**
+- Task dependency format added to `/agtoosa-build scope` output
+- `AgToosa_Build.md` updated with DAG orchestration instructions for Claude Code
+- `AgToosa_Ship.md` Part 2 updated with auto-rollback trigger condition
+- `Docs/AgToosa_Governance.md` updated with v4 gate protocol

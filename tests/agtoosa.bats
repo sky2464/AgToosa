@@ -17,9 +17,10 @@ teardown() {
 }
 # ── Flag tests ────────────────────────────────────────────────────────────────
 @test "--version prints version string" {
+  # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == AgToosa\ v* ]]
+  [[ "$output" == "AgToosa v3.1.0" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -975,4 +976,38 @@ INPUT
 }
 @test "CONTRIBUTING.md documents deprecation policy" {
   grep -q "Deprecation Policy" "$BATS_TEST_DIRNAME/../CONTRIBUTING.md"
+}
+# ── Eng review: agtoosa-lock.json schema unit test ───────────
+@test "agtoosa-lock.json schema has required fields (name, version, sha256, installed_at)" {
+  # Unit test for _write_lock_file() — validates top-level agtoosa_version
+  # and required pack fields without a full interactive install (Eng review).
+  local lock_dir meta_file
+  lock_dir="$(mktemp -d)"
+  meta_file="$(mktemp /tmp/agtoosa-pack-meta-XXXXXX.json)"
+  printf '{"name":"test-pack","version":"1.0.0","sha256":"abc123","installed_at":"2026-05-04T00:00:00Z"}\n' \
+    > "$meta_file"
+
+  # Provide globals required by _write_lock_file (colors are cosmetic only)
+  PROJECT_PATH="$lock_dir"
+  AGTOOSA_VERSION="3.1.0"
+  GREEN="" YELLOW="" NC=""
+  source "$BATS_TEST_DIRNAME/../lib/install.sh"
+  _write_lock_file "$meta_file"
+
+  rm -f "$meta_file"
+  local lock_file="$lock_dir/Docs/agtoosa-lock.json"
+  [ -f "$lock_file" ]
+
+  run python3 - "$lock_file" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1]))
+assert 'agtoosa_version' in d, 'missing top-level field: agtoosa_version'
+packs = d.get('packs', [])
+assert len(packs) >= 1, 'packs array is empty'
+p = packs[0]
+for field in ('name', 'version', 'sha256', 'installed_at'):
+    assert field in p, f'missing required pack field: {field}'
+PY
+  rm -rf "$lock_dir"
+  [ "$status" -eq 0 ]
 }

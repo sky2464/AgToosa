@@ -127,6 +127,6 @@ The key tension in Option A is **cross-platform skill sharing**: the skills syst
 
 1. [x] Ship platform-native entry-point model (v3.0.0)
 2. [x] Define file-type allowlist enforcement in `lib/registry.sh` (reject non-markdown pack files)
-3. [ ] Document extension authoring guide: how to add a new platform template tree
-4. [ ] Evaluate manifest-driven approach (Option B) when platform count reaches 8
-5. [ ] Track Gemini CLI and Cursor hook API announcements for cross-platform hook unification
+3. [x] Document extension authoring guide: how to add a new platform template tree — see `docs/extension-authoring-guide.md` (v3.1.0)
+4. [ ] Evaluate manifest-driven approach (Option B) when platform count reaches 8 — currently 7 platforms (Claude, Cursor, Windsurf, Gemini, Copilot, OpenCode, VSCode). Trigger: platform 8 added. Evaluation criteria: if wiring a new platform requires changes to >4 files in `agtoosa.sh` alone, manifest approach pays off.
+5. [ ] Track Gemini CLI and Cursor hook API announcements for cross-platform hook unification — watching `googleapis/generative-ai-python` releases for Gemini hooks API; watching cursor.sh changelog for Cursor `Agent` tool parity. No action required until one of these ships.

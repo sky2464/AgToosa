@@ -8,33 +8,33 @@ Items deferred from active plans. Each item has a source and a target milestone.
 
 ### v3.2.0 Target
 
-- [ ] **GitHub Release body** — create a GitHub Release (not just a git tag) with release notes for v3.1.0, formatted for users browsing the releases tab. Source: CEO review finding (announcement artifact missing).
+- [x] **GitHub Release body** — GitHub Release for v3.1.0 created (already existed via tag push). Source: CEO review finding (announcement artifact missing).
 
-- [ ] **Migration wizard milestone** — commit to a v3.2.0 release date for the interactive migration wizard (ADR-004 item 5) that runs on `--update` when a MAJOR version delta is detected. Without a date, this item drifts indefinitely. Source: CEO review finding.
+- [ ] **Migration wizard milestone** — commit to a v3.2.0 release date for the interactive migration wizard (ADR-004 item 5) that runs on `--update` when a MAJOR version delta is detected. **Target: v3.2.0 / 2026-07-01.** Source: CEO review finding.
 
-- [ ] **Markdown template injection threat model** — `.json`/`.md` pack files can carry template injection payloads that land in generated CI workflows. Scope and mitigate before the registry has real community packs. Source: CEO/security review. Low urgency while pack count is near zero.
+- [x] **Markdown template injection threat model** — documented in `docs/security/template-injection-threat-model.md`. Attack surface, vectors, existing mitigations (SHA-256 + file-type allowlist), open gaps, and recommended mitigations catalogued. Priority: Low while pack count near zero; escalate before public registry launch. Source: CEO/security review.
 
 ### Future / Backlog
 
-- [ ] **Automated CHANGELOG generation** — evaluate `git-cliff` or similar conventional-commit-to-CHANGELOG tooling. Currently manual CHANGELOG entries are the primary maintenance burden for each release. Rationale for deferral: small commit volume makes manual approach acceptable through v3.x. Source: ADR-004, DX review.
+- [ ] **Automated CHANGELOG generation** — Evaluated: `git-cliff` is viable and supports conventional commits, but adds a dev dependency (Rust binary). Manual CHANGELOG entries are acceptable at current commit volume (<5 releases/year). **Defer to v4** when commit volume or contributor count justifies the tooling overhead. Source: ADR-004, DX review.
 
-- [ ] **Exact-version bats test** — add a bats test that pins the expected version string (`AgToosa v3.1.0`) rather than the loose `AgToosa v*` glob. Currently the `--version` test passes regardless of what version is installed. Source: Eng review (nitpick).
+- [x] **Exact-version bats test** — implemented: `--version prints version string` test now pins `"AgToosa v3.1.0"` (v3.1.0). Source: Eng review (nitpick).
 
-- [ ] **agtoosa-lock.json schema bats test** — add a bats test that validates the lock file schema (required fields: name, version, sha256, installed_at). Source: Eng review.
+- [x] **agtoosa-lock.json schema bats test** — implemented: `agtoosa-lock.json schema has required fields` test validates `name`, `version`, `sha256`, `installed_at` fields via python3 heredoc (v3.1.0). Source: Eng review.
 
 ---
 
 ## Open ADR Action Items (not blocking v3.1.0)
 
-- [ ] **ADR-001 item 3**: Extension authoring guide — how to add a new platform template tree
-- [ ] **ADR-001 item 4**: Evaluate manifest-driven platform approach when platform count reaches 8
-- [ ] **ADR-001 item 5**: Track Gemini CLI and Cursor hook API announcements
-- [ ] **ADR-002 item 5**: GitHub Action in `agtoosa-registry` to lint/validate pack manifests
-- [ ] **ADR-002 item 6**: GPG-signed registry index verification (v4)
-- [ ] **ADR-002 item 7**: Pagination strategy for registry.json (>200 packs)
-- [ ] **ADR-003 item 4**: Phase-order warnings in workflow docs
-- [ ] **ADR-003 item 5**: Master-Plan.md compaction strategy (archive completed cycles)
-- [ ] **ADR-003 item 6**: Parallel task distribution in Build phase for Claude Code
-- [ ] **ADR-003 item 7**: Sub-agent dependency DAG + auto-rollback (v4 design doc)
-- [ ] **ADR-004 item 5**: Interactive migration wizard for `--update` (MAJOR version delta)
-- [ ] **ADR-004 item 8**: Automated CHANGELOG generation from conventional commits
+- [x] **ADR-001 item 3**: Extension authoring guide — created `docs/extension-authoring-guide.md` with 6-step guide and OpenCode worked example (v3.1.0)
+- [ ] **ADR-001 item 4**: Evaluate manifest-driven platform approach when platform count reaches 8 — currently 7; trigger: 8th platform added
+- [ ] **ADR-001 item 5**: Track Gemini CLI and Cursor hook API announcements — monitoring; no action until API ships
+- [ ] **ADR-002 item 5**: GitHub Action in `agtoosa-registry` to lint/validate pack manifests — deferred; trigger: first community pack PR submitted
+- [ ] **ADR-002 item 6**: GPG-signed registry index verification (v4) — deferred; SHA-256 pinning sufficient for now
+- [ ] **ADR-002 item 7**: Pagination strategy for registry.json (>200 packs) — deferred; trigger: >200 packs or registry.json >200KB
+- [x] **ADR-003 item 4**: Phase-order warnings in workflow docs — `> **Prerequisites:**` blockquotes added to Build, Review, Ship docs (v3.1.0)
+- [x] **ADR-003 item 5**: Master-Plan.md compaction strategy — Part 6 "Compact Master-Plan.md" added to `AgToosa_Ship.md` with cycle-archive protocol (v3.1.0)
+- [x] **ADR-003 item 6**: Parallel task distribution in Build phase for Claude Code — "Claude Code Parallel Pattern" subsection added to `AgToosa_Build.md` (v3.1.0)
+- [x] **ADR-003 item 7**: Sub-agent dependency DAG + auto-rollback — `## Future: Sub-Agent Dependency DAG (v4)` design stub added to ADR-003 (v3.1.0)
+- [ ] **ADR-004 item 5**: Interactive migration wizard for `--update` (MAJOR version delta) — **Target: v3.2.0 / 2026-07-01**
+- [ ] **ADR-004 item 8**: Automated CHANGELOG generation from conventional commits — Evaluated; defer to v4 (see Future/Backlog above)

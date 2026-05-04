@@ -13,6 +13,8 @@
 ## Objective
 Ensure code quality, security, and simplicity through multi-persona review.
 
+> **Prerequisites:** `/agtoosa-build` must be complete. Verify that the full test suite passes and the Story status is `In Progress` in Linear (not `Todo`). If tests are failing or no build artifact exists, run `/agtoosa-build test` first.
+
 ### Part 1 — Virtual Specialist Reviews
 
 **Before starting reviews:**

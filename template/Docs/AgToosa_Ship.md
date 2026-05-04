@@ -12,6 +12,8 @@
 ## Objective
 Deploy the completed feature, clean up the workspace, archive completed work, and suggest the next logical development story.
 
+> **Prerequisites:** `/agtoosa-review` must be approved. Verify that `Docs/archived/review-[story-id].md` exists and contains no unresolved 🔴 Critical findings. If any Critical findings remain, resolve them via `/agtoosa-build` and re-run `/agtoosa-review`.
+
 ## Workflow
 
 ### Part 0 — Ship Readiness Gate (`/agtoosa-ship check` runs this exclusively)
@@ -118,6 +120,21 @@ Run this after shipping to close the feedback loop on the sprint.
     *   Append a retro entry to `Docs/AgToosa_Changelog.md` under a `## Retrospective — [date]` section.
     *   Update `Docs/Master-Plan.md` with process improvement action items from the retro.
     *   If a process change was agreed (e.g., enabling TDD, adjusting the 500-line limit), update `Docs/Context/workflow.md`.
+
+### Part 6 — Compact Master-Plan.md
+
+Run this step when `Docs/Master-Plan.md` exceeds approximately 200 lines **or** after closing an active cycle. Compaction keeps the shared context document within AI context-window limits.
+
+11. **Archive the Completed Cycle:**
+    *   Copy the full `## Active Cycle` table to a new snapshot file: `Docs/archived/cycle-[YYYY-MM-DD].md`.
+    *   In `Master-Plan.md`, replace the `## Active Cycle` table body with an empty placeholder row and a reference comment:
+
+        ```
+        <!-- Archived to Docs/archived/cycle-[YYYY-MM-DD].md -->
+        ```
+
+    *   Remove all `Done` rows from `## Active Tasks` — these are already tracked in Linear.
+    *   If `Master-Plan.md` still exceeds 200 lines after pruning, collapse `## Backlog` to titles only (drop Estimate and Epic columns) until the next `/agtoosa-init zoom-out` refresh.
 
 ## Output
 *   Confirm archiving and changelog updates are successful.

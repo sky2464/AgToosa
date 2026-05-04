@@ -7,7 +7,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
-_(nothing yet)_
+### Planned
+
+- Interactive migration wizard for `--update` (MAJOR version delta) — targeted for v3.2.0 (2026-07-01). Guides users through breaking changes when updating across a major version boundary. See ADR-004 item 5.
 
 ---
 

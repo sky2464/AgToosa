@@ -9,8 +9,21 @@
 | `/agtoosa-build tdd` | Part 2 only — TDD Red-Green-Refactor loop against an already-declared scope and task list |
 | `/agtoosa-build test` | Parts 3 + 4 — run the full testing army + security scans, then update tracking |
 
+### Claude Code Parallel Pattern
+
+On Claude Code, independent tasks within a phase can be dispatched to parallel sub-agents via the `Task` tool. Apply this when Part 1 produces tasks with no sequential dependency:
+
+- Identify tasks in the breakdown that do not share state with other tasks in the same phase.
+- Batch those tasks into parallel `Task` tool calls before starting the TDD loop (Part 2).
+- Collect results when all parallel tasks complete; merge conflicts are resolved by the orchestrating agent.
+- See `/agtoosa-review` for the reference parallel pattern (4 reviewer personas run simultaneously).
+
+> **Note:** Parallel dispatch applies to Claude Code only. On other platforms, run tasks sequentially.
+
 ## Objective
 Break down the Spec into atomic tasks, build with TDD, and rigorously test.
+
+> **Prerequisites:** `/agtoosa-spec` must be complete. Verify that `Docs/archived/` contains an approved `spec-[story-id].md`, or that the active `AgToosa_Spec-*.md` has a `## ✅ Spec Approved` section. If not, run `/agtoosa-spec` first.
 
 ## Workflow
 
