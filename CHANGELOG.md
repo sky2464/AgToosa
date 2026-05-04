@@ -7,15 +7,29 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+_(nothing yet)_
+
+---
+
+## [3.1.0] — 2026-05-04
+
 ### Added
 - Repo-native maintainer guide in `docs/agtoosa-maintainer.md` for working on the AgToosa generator itself
-- Native repo entry files for Claude (`CLAUDE.md`), AGENTS-style tools (`AGENTS.md`), Cursor (`.cursorrules`), and Windsurf (`.windsurfrules`) that all point to the shared maintainer guide
+- Native repo entry files for Claude (`CLAUDE.md`), AGENTS-style tools (`AGENTS.md`), Cursor (`.cursorrules`), and Windsurf (`.windsurfrules`) pointing to the shared maintainer guide
+- File-type allowlist enforcement in `lib/registry.sh` (`.md`, `.json`, `.toml`, `.mdc` only); rejected files print: `Rejected: <file> — only .md/.json/.toml/.mdc are permitted`
+- `agtoosa-lock.json` written on install and updated on `--update`; records pack name, version, sha256
+- `--registry publish` contribution wizard for submitting community packs
+- Pack staging merge from `ship/packs/` during install
+- `template/Docs/AgToosa_Governance.md` — phase-gate protocol and Linear comment strings
+- Formal deprecation policy in `CONTRIBUTING.md` (1-release notice before removal)
+- 9 new bats tests (122 total)
 
 ### Changed
-- `GEMINI.md` now contains the same maintainer guidance instead of remaining empty
-- `.github/agents/agtoosa.agent.md` now delegates to the shared maintainer guide and is scoped more tightly to AgToosa repository work
-
-_(nothing yet)_
+- `GEMINI.md` now contains maintainer guidance instead of remaining empty
+- `.github/agents/agtoosa.agent.md` delegates to shared maintainer guide
+- `agtoosa.ps1` brought to v3.0.0 feature parity (registry commands, DOCS_FILES expansion, version marker)
+- CI now asserts version parity between `agtoosa.sh` and `agtoosa.ps1`
+- `--update` now bumps `agtoosa_version` in existing `agtoosa-lock.json`; first run on a 3.0.0 install creates `agtoosa-lock.json` automatically in the project root
 
 ---
 

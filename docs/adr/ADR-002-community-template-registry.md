@@ -155,9 +155,9 @@ The PR-review bottleneck for index writes is acceptable at current community siz
 ## Action Items
 
 1. [x] Ship read path: list, search, info, install, offline install (v3.0.0)
-2. [ ] Implement `agtoosa-lock.json` — record installed pack name, version, sha256 (v3.1)
-3. [ ] Add file-type allowlist enforcement in staging — reject `.sh`, `.py`, etc. (v3.1)
-4. [ ] Ship `--registry publish` contribution wizard (v3.1)
+2. [x] Implement `agtoosa-lock.json` — record installed pack name, version, sha256 (v3.1)
+3. [x] Add file-type allowlist enforcement in staging — reject `.sh`, `.py`, etc. (v3.1)
+4. [x] Ship `--registry publish` contribution wizard (v3.1)
 5. [ ] Add GitHub Action in `agtoosa-registry` to lint/validate pack manifests (v3.1)
 6. [ ] Design GPG-signed index verification (v4)
 7. [ ] Define pagination strategy for registry.json when pack count approaches 200

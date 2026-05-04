@@ -126,7 +126,7 @@ The key tension in Option A is **cross-platform skill sharing**: the skills syst
 ## Action Items
 
 1. [x] Ship platform-native entry-point model (v3.0.0)
-2. [ ] Define file-type allowlist enforcement in `lib/registry.sh` (reject non-markdown pack files)
+2. [x] Define file-type allowlist enforcement in `lib/registry.sh` (reject non-markdown pack files)
 3. [ ] Document extension authoring guide: how to add a new platform template tree
 4. [ ] Evaluate manifest-driven approach (Option B) when platform count reaches 8
 5. [ ] Track Gemini CLI and Cursor hook API announcements for cross-platform hook unification

@@ -179,7 +179,7 @@ Gates are **soft** (enforced by AI instruction following) in v3.x. Hard programm
 
 1. [x] Ship sequential persona dispatch via slash commands (v3.0.0)
 2. [x] Ship parallel 4-reviewer pattern in agtoosa-review skill (v3.0.0)
-3. [ ] Document the Linear phase-gate protocol formally in `Docs/AgToosa_Governance.md`
+3. [x] Document the Linear phase-gate protocol formally in `Docs/AgToosa_Governance.md`
 4. [ ] Add explicit phase-order warning to workflow docs (warn if Linear status is wrong for the invoked command)
 5. [ ] Design `Master-Plan.md` compaction: archive completed cycles to keep active doc under 500 lines
 6. [ ] Evaluate parallel task distribution in Build phase for Claude Code (v3.1)

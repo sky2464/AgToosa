@@ -185,9 +185,9 @@ Before a breaking change ships:
 
 1. [x] Ship marker-based merge (`lib/version.sh`, `lib/copy.sh`) (v3.0.0)
 2. [x] Ship `--update` mode with deep-merge for `settings.json` (v3.0.0)
-3. [ ] **URGENT:** Bring PowerShell (`agtoosa.ps1`) to v3.0.0 parity with bash
-4. [ ] Implement `agtoosa-lock.json` — written on install/update, committed to project repo (v3.1)
+3. [x] **URGENT:** Bring PowerShell (`agtoosa.ps1`) to v3.0.0 parity with bash
+4. [x] Implement `agtoosa-lock.json` — written on install/update, committed to project repo (v3.1)
 5. [ ] Build interactive migration wizard — runs on `--update` when MAJOR version delta detected (v3.1)
-6. [ ] Formalize deprecation policy in `CONTRIBUTING.md` (1-release notice before breaking removal)
-7. [ ] Add CI check: assert `AGTOOSA_VERSION` is identical in `agtoosa.sh` and `agtoosa.ps1`
+6. [x] Formalize deprecation policy in `CONTRIBUTING.md` (1-release notice before breaking removal)
+7. [x] Add CI check: assert `AGTOOSA_VERSION` is identical in `agtoosa.sh` and `agtoosa.ps1`
 8. [ ] Investigate automated CHANGELOG generation from conventional commits
