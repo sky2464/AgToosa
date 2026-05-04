@@ -26,7 +26,7 @@ See `Docs/AgToosa_Agent.md` for the full sub-command reference.
 
 ## Key References
 
-- Linear project `AgToosa` — Source of truth for project state and backlog
+- Your Linear project — Source of truth for project state and backlog
 - `Docs/Master-Plan.md` — Workspace mirror of Linear state
 - `Docs/AgToosa_Skills.md` — Subagent skill-to-command mapping
 - `Docs/AgToosa_Changelog.md` — Project changelog

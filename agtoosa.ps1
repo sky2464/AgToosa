@@ -150,6 +150,94 @@ function Copy-FileWithGuard([string]$src, [string]$dst, [string]$label) {
     Write-Color "  ${GREEN}✅${NC} $label ${CYAN}(backup: $(Split-Path -Leaf $bak))${NC}"
 }
 
+# Extract AgToosa version from a file's START marker (shell or markdown comment).
+function Get-AgToosaFileVersion([string]$path) {
+    $content = Get-Content $path -Raw -ErrorAction SilentlyContinue
+    if ($content -match 'AgToosa v(\d+\.\d+\.\d+) START') { return $matches[1] }
+    if ($content -match 'AgToosa v(\d+\.\d+\.\d+)') { return $matches[1] }
+    return $null
+}
+
+# Returns $true if $a is less than $b (semantic version compare).
+function Compare-AgToosaVersionLt([string]$a, [string]$b) {
+    $pa = [version]::Parse($a); $pb = [version]::Parse($b)
+    return $pa -lt $pb
+}
+
+# Merge-PlatformFile: 4-case merge for AgToosa-owned platform entry-point files.
+# Case A: destination doesn't exist  → copy verbatim.
+# Case B: destination has START/END block → replace block in-place (backup if older).
+# Case C: destination has old AgToosa version marker, no block → replace file (backup).
+# Case D: destination is user-owned (no AgToosa marker) → backup + append.
+# -Force: backup + full replace, except same-or-newer version is preserved.
+function Merge-PlatformFile([string]$src, [string]$dst, [string]$label) {
+    $dir = Split-Path -Parent $dst
+    if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+
+    # Case A — new file
+    if (-not (Test-Path $dst)) {
+        Copy-Item $src $dst
+        Write-Color "  ${GREEN}✅${NC} $label"
+        return
+    }
+
+    $oldVer = Get-AgToosaFileVersion $dst
+    $ts = Get-Date -Format "yyyyMMdd-HHmm"
+
+    # --force path: backup + full replace (but preserve same-or-newer)
+    if ($Force) {
+        if ($oldVer -and -not (Compare-AgToosaVersionLt $oldVer $AGTOOSA_VERSION)) {
+            Write-Color "  ${YELLOW}⏭${NC}  $label ${CYAN}(v${AGTOOSA_VERSION} — keeping your customizations)${NC}"
+            return
+        }
+        $bak = "${dst}.bak.${ts}"
+        Copy-Item $dst $bak
+        Copy-Item $src $dst
+        Write-Color "  ${GREEN}✅${NC} $label ${CYAN}(v${oldVer} → v${AGTOOSA_VERSION}, backup: $(Split-Path -Leaf $bak))${NC}"
+        return
+    }
+
+    $content = Get-Content $dst -Raw -ErrorAction SilentlyContinue
+
+    # Case B — file has an AgToosa START/END delimited block
+    if ($content -match 'AgToosa v\d+\.\d+\.\d+ START') {
+        if ($oldVer -and -not (Compare-AgToosaVersionLt $oldVer $AGTOOSA_VERSION)) {
+            Write-Color "  ${GREEN}✅${NC} $label ${CYAN}(v${AGTOOSA_VERSION}, up to date)${NC}"
+            return
+        }
+        $bak = "${dst}.bak.${ts}"
+        Copy-Item $dst $bak
+        # Strip existing block; use regex to remove everything from START line to END line (inclusive).
+        $stripped = $content -replace '(?ms)(^|\r?\n)[^\r\n]*AgToosa v\d+\.\d+\.\d+ START.*?AgToosa END[^\r\n]*(\r?\n|$)', "`n"
+        $stripped = $stripped.TrimEnd()
+        $block = Get-Content $src -Raw
+        "$stripped`n`n$block" | Set-Content $dst -NoNewline -Encoding UTF8
+        Write-Color "  ${GREEN}✅${NC} $label ${CYAN}(merged: v${oldVer} → v${AGTOOSA_VERSION}, backup: $(Split-Path -Leaf $bak))${NC}"
+        return
+    }
+
+    # Case C — old-format AgToosa file (has version marker, no START/END)
+    if ($oldVer) {
+        if (-not (Compare-AgToosaVersionLt $oldVer $AGTOOSA_VERSION)) {
+            Write-Color "  ${GREEN}✅${NC} $label ${CYAN}(v${AGTOOSA_VERSION}, up to date)${NC}"
+            return
+        }
+        $bak = "${dst}.bak.${ts}"
+        Copy-Item $dst $bak
+        Copy-Item $src $dst
+        Write-Color "  ${GREEN}✅${NC} $label ${CYAN}(v${oldVer} → v${AGTOOSA_VERSION}, backup: $(Split-Path -Leaf $bak))${NC}"
+        return
+    }
+
+    # Case D — user-owned file: backup + append AgToosa block
+    $bak = "${dst}.bak.${ts}"
+    Copy-Item $dst $bak
+    $block = Get-Content $src -Raw
+    "$content`n`n$block" | Set-Content $dst -NoNewline -Encoding UTF8
+    Write-Color "  ${GREEN}✅${NC} $label ${CYAN}(appended to existing file, backup: $(Split-Path -Leaf $bak))${NC}"
+}
+
+
 function Stage-Files([string[]]$platforms) {
     $docsFiles = @(
         "Docs\AgToosa_Agent.md", "Docs\AgToosa_Init.md", "Docs\AgToosa_Spec.md",
@@ -237,29 +325,88 @@ function Install-Files([string]$projectPath, [string[]]$platforms) {
         switch ($p) {
             "cursor" {
                 $src = Join-Path $SHIP_DIR ".cursorrules"
-                if (Test-Path $src) { Copy-FileWithGuard $src (Join-Path $projectPath ".cursorrules") ".cursorrules" }
+                if (Test-Path $src) { Merge-PlatformFile $src (Join-Path $projectPath ".cursorrules") ".cursorrules" }
+                # Native .cursor/rules/ MDX files
+                $cursorRulesDir = Join-Path $projectPath ".cursor\rules"
+                $shipCursorRulesDir = Join-Path $SHIP_DIR ".cursor\rules"
+                if (Test-Path $shipCursorRulesDir) {
+                    New-Item -ItemType Directory -Path $cursorRulesDir -Force | Out-Null
+                    Get-ChildItem -Path $shipCursorRulesDir -File | ForEach-Object {
+                        $dst = Join-Path $cursorRulesDir $_.Name
+                        Copy-Item -Path $_.FullName -Destination $dst -Force
+                    }
+                    Write-Color "  ${GREEN}✅${NC} .cursor/rules/ (MDX rules)"
+                }
             }
             "windsurf" {
                 $src = Join-Path $SHIP_DIR ".windsurfrules"
-                if (Test-Path $src) { Copy-FileWithGuard $src (Join-Path $projectPath ".windsurfrules") ".windsurfrules" }
+                if (Test-Path $src) { Merge-PlatformFile $src (Join-Path $projectPath ".windsurfrules") ".windsurfrules" }
+                # Native .windsurf/rules/ files
+                $wsRulesDir = Join-Path $projectPath ".windsurf\rules"
+                $shipWsRulesDir = Join-Path $SHIP_DIR ".windsurf\rules"
+                if (Test-Path $shipWsRulesDir) {
+                    New-Item -ItemType Directory -Path $wsRulesDir -Force | Out-Null
+                    Get-ChildItem -Path $shipWsRulesDir -File | ForEach-Object {
+                        $dst = Join-Path $wsRulesDir $_.Name
+                        Copy-Item -Path $_.FullName -Destination $dst -Force
+                    }
+                    Write-Color "  ${GREEN}✅${NC} .windsurf/rules/ (rules)"
+                }
             }
             "claude" {
                 $src = Join-Path $SHIP_DIR "CLAUDE.md"
-                if (Test-Path $src) { Copy-FileWithGuard $src (Join-Path $projectPath "CLAUDE.md") "CLAUDE.md" }
+                if (Test-Path $src) { Merge-PlatformFile $src (Join-Path $projectPath "CLAUDE.md") "CLAUDE.md" }
+                # Native .claude/commands/ and .claude/skills/ files
+                foreach ($subdir in @("commands", "skills")) {
+                    $shipClaudeDir = Join-Path $SHIP_DIR ".claude\$subdir"
+                    if (Test-Path $shipClaudeDir) {
+                        $dstClaudeDir = Join-Path $projectPath ".claude\$subdir"
+                        New-Item -ItemType Directory -Path $dstClaudeDir -Force | Out-Null
+                        Get-ChildItem -Path $shipClaudeDir -File | ForEach-Object {
+                            $dst = Join-Path $dstClaudeDir $_.Name
+                            Copy-Item -Path $_.FullName -Destination $dst -Force
+                        }
+                        Write-Color "  ${GREEN}✅${NC} .claude/$subdir/"
+                    }
+                }
             }
             "gemini" {
                 $src = Join-Path $SHIP_DIR "AGENTS.md"
-                if (Test-Path $src) { Copy-FileWithGuard $src (Join-Path $projectPath "AGENTS.md") "AGENTS.md" }
+                if (Test-Path $src) { Merge-PlatformFile $src (Join-Path $projectPath "AGENTS.md") "AGENTS.md" }
+                # Native .gemini/commands/ TOML files
+                $geminiCmdDir = Join-Path $projectPath ".gemini\commands"
+                $shipGeminiCmdDir = Join-Path $SHIP_DIR ".gemini\commands"
+                if (Test-Path $shipGeminiCmdDir) {
+                    New-Item -ItemType Directory -Path $geminiCmdDir -Force | Out-Null
+                    Get-ChildItem -Path $shipGeminiCmdDir -File | ForEach-Object {
+                        $dst = Join-Path $geminiCmdDir $_.Name
+                        Copy-Item -Path $_.FullName -Destination $dst -Force
+                    }
+                    Write-Color "  ${GREEN}✅${NC} .gemini/commands/ (TOML commands)"
+                }
             }
             "copilot" {
                 $ghDir = Join-Path $projectPath ".github"
                 New-Item -ItemType Directory -Path $ghDir -Force | Out-Null
                 $src = Join-Path $SHIP_DIR ".github\copilot-instructions.md"
-                if (Test-Path $src) { Copy-FileWithGuard $src (Join-Path $ghDir "copilot-instructions.md") ".github\copilot-instructions.md" }
+                if (Test-Path $src) { Merge-PlatformFile $src (Join-Path $ghDir "copilot-instructions.md") ".github\copilot-instructions.md" }
+                # Native .github/prompts/, .github/agents/, .github/instructions/ files
+                foreach ($subdir in @("prompts", "agents", "instructions")) {
+                    $shipGhDir = Join-Path $SHIP_DIR ".github\$subdir"
+                    if (Test-Path $shipGhDir) {
+                        $dstGhDir = Join-Path $ghDir $subdir
+                        New-Item -ItemType Directory -Path $dstGhDir -Force | Out-Null
+                        Get-ChildItem -Path $shipGhDir -File | ForEach-Object {
+                            $dst = Join-Path $dstGhDir $_.Name
+                            Copy-Item -Path $_.FullName -Destination $dst -Force
+                        }
+                        Write-Color "  ${GREEN}✅${NC} .github/$subdir/"
+                    }
+                }
             }
             "opencode" {
                 $src = Join-Path $SHIP_DIR "OPENCODE.md"
-                if (Test-Path $src) { Copy-FileWithGuard $src (Join-Path $projectPath "OPENCODE.md") "OPENCODE.md" }
+                if (Test-Path $src) { Merge-PlatformFile $src (Join-Path $projectPath "OPENCODE.md") "OPENCODE.md" }
             }
         }
     }
@@ -269,6 +416,24 @@ function Install-Files([string]$projectPath, [string[]]$platforms) {
     if (-not (Test-Path $ctxDir)) { New-Item -ItemType Directory -Path $ctxDir -Force | Out-Null }
     $archDir = Join-Path $projectPath "Docs\archived"
     if (-not (Test-Path $archDir)) { New-Item -ItemType Directory -Path $archDir -Force | Out-Null }
+
+    # Write Docs/agtoosa-lock.json (create or update agtoosa_version + generated_at; preserve existing packs).
+    $lockFile = Join-Path $projectPath "Docs\agtoosa-lock.json"
+    $timestamp = [DateTimeOffset]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
+    $packsArray = @()
+    if (Test-Path $lockFile) {
+        try {
+            $existing = Get-Content $lockFile -Raw | ConvertFrom-Json
+            if ($existing.packs) { $packsArray = @($existing.packs) }
+        } catch { $packsArray = @() }
+    }
+    $lock = [ordered]@{
+        agtoosa_version = $AGTOOSA_VERSION
+        generated_at    = $timestamp
+        packs           = $packsArray
+    }
+    $lock | ConvertTo-Json -Depth 5 | Out-File -FilePath $lockFile -Encoding UTF8
+    Write-Color "  ${GREEN}✅${NC} Docs/agtoosa-lock.json updated"
 }
 
 # ── Registry ──────────────────────────────────────────────────
@@ -305,7 +470,7 @@ function Invoke-RegistryFetch {
 
 function Show-RegistryList {
     $json  = Invoke-RegistryFetch
-    $packs = ($json | ConvertFrom-Json).packs
+    $packs = $json | ConvertFrom-Json
     foreach ($pack in $packs) {
         Write-Color "$($pack.name) v$($pack.version) — $($pack.description) (by $($pack.author))"
     }
@@ -313,7 +478,7 @@ function Show-RegistryList {
 
 function Show-RegistrySearch([string]$query) {
     $json  = Invoke-RegistryFetch
-    $packs = ($json | ConvertFrom-Json).packs
+    $packs = $json | ConvertFrom-Json
     foreach ($pack in $packs) {
         if ($pack.name -like "*$query*" -or $pack.description -like "*$query*") {
             Write-Color "$($pack.name) v$($pack.version) — $($pack.description) (by $($pack.author))"
@@ -323,7 +488,7 @@ function Show-RegistrySearch([string]$query) {
 
 function Show-RegistryInfo([string]$packName) {
     $json  = Invoke-RegistryFetch
-    $packs = ($json | ConvertFrom-Json).packs
+    $packs = $json | ConvertFrom-Json
     $pack  = $packs | Where-Object { $_.name -eq $packName } | Select-Object -First 1
     if (-not $pack) {
         Write-Color "${RED}❌ Pack '$packName' not found in registry.${NC}"
@@ -347,7 +512,7 @@ function Invoke-RegistryInstall([string]$packSpec) {
     }
 
     $json  = Invoke-RegistryFetch
-    $packs = ($json | ConvertFrom-Json).packs
+    $packs = $json | ConvertFrom-Json
     $pack  = $packs | Where-Object { $_.name -eq $packName } | Select-Object -First 1
     if (-not $pack) {
         Write-Color "${RED}❌ Pack '$packName' not found in registry.${NC}"
@@ -396,9 +561,9 @@ function Invoke-RegistryInstall([string]$packSpec) {
         exit 1
     }
 
-    $extractResult = cmd /c "tar -xzf `"$tmpFile`" -C `"$packDir`"" 2>&1
-    if ($LASTEXITCODE -ne 0) {
-        Write-Color "${RED}❌ Extraction failed: $extractResult${NC}"
+    $proc = Start-Process -NoNewWindow -Wait -PassThru -FilePath tar -ArgumentList @('-xzf', $tmpFile, '-C', $packDir)
+    if ($proc.ExitCode -ne 0) {
+        Write-Color "${RED}❌ Extraction failed (tar exit code $($proc.ExitCode)).${NC}"
         Remove-Item $tmpFile -ErrorAction SilentlyContinue
         exit 1
     }

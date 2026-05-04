@@ -26,9 +26,17 @@ compute_sha256() {
 
 validate_pack_files() {
   local dir="$1"
+  local canonical_dir
+  canonical_dir=$(realpath "$dir" 2>/dev/null || readlink -f "$dir" 2>/dev/null || echo "$dir")
   local allowed_exts="md json toml mdc"
-  local file ext base
+  local file ext base canonical_file
   while IFS= read -r -d '' file; do
+    # Path traversal guard: resolve the canonical path and assert it stays inside the pack dir.
+    canonical_file=$(realpath "$file" 2>/dev/null || readlink -f "$file" 2>/dev/null || echo "$file")
+    if [[ "$canonical_file" != "$canonical_dir"/* ]]; then
+      echo "Error: Pack contains path traversal: $file" >&2
+      return 1
+    fi
     base=$(basename "$file")
     ext="${base##*.}"
     if [[ "$base" == "$ext" ]]; then
@@ -115,7 +123,7 @@ registry_search() {
   echo ""
 
   if command -v jq &>/dev/null; then
-    echo "$registry" | jq -r ".[] | select(.name | test(\"$query\"; \"i\") or .description | test(\"$query\"; \"i\")) | \"\(.name) v\(.version) — \(.description) (by \(.author))\""
+    echo "$registry" | jq -r --arg q "$query" '.[] | select((.name | test($q; "i")) or (.description | test($q; "i"))) | "\(.name) v\(.version) — \(.description) (by \(.author))"'
   else
     # Fallback: simple grep search.
     echo "$registry" | grep -i "$query" || echo "No packs found matching '$query'"
@@ -138,7 +146,7 @@ registry_info() {
   echo ""
 
   if command -v jq &>/dev/null; then
-    echo "$registry" | jq -r ".[] | select(.name == \"$pack_name\") | \"Name: \(.name)\nDescription: \(.description)\nAuthor: \(.author)\nVersion: \(.version)\nURL: \(.url)\nVerified: \(.verified)\""
+    echo "$registry" | jq -r --arg n "$pack_name" '.[] | select(.name == $n) | "Name: \(.name)\nDescription: \(.description)\nAuthor: \(.author)\nVersion: \(.version)\nURL: \(.url)\nVerified: \(.verified)"'
   else
     # Fallback: simple display.
     echo "Name: $pack_name"
@@ -148,6 +156,9 @@ registry_info() {
 
 # Download and install a pack.
 registry_install() {
+  # Preserve ship/ so staged pack files survive the EXIT trap.
+  KEEP_SHIP=true
+
   local pack_spec="$1"  # Can be "pack-name" or "pack-name@1.2.3" or "./local-pack"
   local pack_name pack_version
 
@@ -176,7 +187,7 @@ registry_install() {
   registry=$(fetch_registry) || return 1
 
   if command -v jq &>/dev/null; then
-    pack_entry=$(echo "$registry" | jq -r ".[] | select(.name == \"$pack_name\")")
+    pack_entry=$(echo "$registry" | jq -r --arg n "$pack_name" '.[] | select(.name == $n)')
   else
     pack_entry=$(echo "$registry" | grep "\"name\": \"$pack_name\"")
   fi
@@ -258,12 +269,15 @@ registry_install() {
 
   echo ""
   echo "✅ Pack staged at: $pack_dir"
-  echo "Run 'bash agtoosa.sh' in your project to merge the pack files."
+  echo "Files are staged in ship/packs/ — run 'bash agtoosa.sh' in your project to merge them."
   rm -rf "$(dirname "$tmpfile")"
 }
 
 # Install a local pack (offline mode).
 _install_local_pack() {
+  # Preserve ship/ so staged pack files survive the EXIT trap.
+  KEEP_SHIP=true
+
   local pack_path="$1"
 
   if [[ ! -d "$pack_path" ]]; then

@@ -1011,3 +1011,87 @@ PY
   rm -rf "$lock_dir"
   [ "$status" -eq 0 ]
 }
+
+# ── Registry: local pack install staging ─────────────────────
+@test "registry install local pack stages files and keeps ship/" {
+  local mock_pack="$BATS_TEST_DIRNAME/fixtures/mock-pack"
+
+  # Stub stdin to answer "Y" to the Continue? prompt.
+  run bash -c "echo Y | bash '$SCRIPT' --registry install '$mock_pack'"
+  # Should not error (pack exists and has only .md files).
+  [ "$status" -eq 0 ]
+
+  # ship/ must remain (KEEP_SHIP=true must have been set).
+  local ship_dir="$BATS_TEST_DIRNAME/../ship"
+  [ -d "$ship_dir/packs/mock-pack" ]
+  [ -f "$ship_dir/packs/mock-pack/workflow.md" ]
+}
+
+# ── Registry: list/search/info using local cache fixture ─────
+@test "registry list uses cached registry.json" {
+  # Pre-seed the cache file so the test never hits the network.
+  local cache_dir
+  cache_dir="$(mktemp -d)"
+  cp "$BATS_TEST_DIRNAME/fixtures/registry.json" "$cache_dir/registry.json"
+  # Touch with a recent timestamp so TTL check passes.
+  touch "$cache_dir/registry.json"
+
+  AGTOOSA_REGISTRY_CACHE_DIR="$cache_dir" run bash "$SCRIPT" --registry list
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"ml-pipeline"* ]]
+  [[ "$output" == *"react-native"* ]]
+  [[ "$output" == *"embedded"* ]]
+  rm -rf "$cache_dir"
+}
+
+@test "registry search returns matching packs from local cache" {
+  local cache_dir
+  cache_dir="$(mktemp -d)"
+  cp "$BATS_TEST_DIRNAME/fixtures/registry.json" "$cache_dir/registry.json"
+  touch "$cache_dir/registry.json"
+
+  AGTOOSA_REGISTRY_CACHE_DIR="$cache_dir" run bash "$SCRIPT" --registry search "react"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"react-native"* ]]
+  # ml-pipeline and embedded should NOT appear.
+  [[ "$output" != *"ml-pipeline"* ]]
+  rm -rf "$cache_dir"
+}
+
+@test "registry info returns pack details from local cache" {
+  local cache_dir
+  cache_dir="$(mktemp -d)"
+  cp "$BATS_TEST_DIRNAME/fixtures/registry.json" "$cache_dir/registry.json"
+  touch "$cache_dir/registry.json"
+
+  AGTOOSA_REGISTRY_CACHE_DIR="$cache_dir" run bash "$SCRIPT" --registry info "ml-pipeline"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"ml-pipeline"* ]]
+  [[ "$output" == *"sky2464"* ]]
+  rm -rf "$cache_dir"
+}
+
+# ── Registry: path traversal rejection ───────────────────────
+@test "registry validate_pack_files rejects path traversal" {
+  # Create a pack directory with a symlink pointing outside.
+  local evil_pack
+  evil_pack="$(mktemp -d)"
+  ln -s /etc/hosts "$evil_pack/escape.md" 2>/dev/null || true
+
+  # Source registry.sh and call validate_pack_files directly.
+  run bash -c "
+    SHIP_DIR=/tmp
+    source '$BATS_TEST_DIRNAME/../lib/registry.sh'
+    validate_pack_files '$evil_pack'
+  "
+  rm -rf "$evil_pack"
+  # Should fail because the resolved path escapes the pack dir.
+  [ "$status" -ne 0 ]
+}
+
+# ── Registry: publish wizard requires a valid directory ───────
+@test "registry publish fails without a valid directory argument" {
+  run bash "$SCRIPT" --registry publish
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"publish"* ]] || [[ "$output" == *"error"* ]] || [[ "$output" == *"Error"* ]] || [[ "$output" == *"usage"* ]] || [[ "$output" == *"Usage"* ]]
+}

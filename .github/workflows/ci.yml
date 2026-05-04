@@ -108,3 +108,39 @@ jobs:
             exit 1
           }
           Write-Output "✅ agtoosa.ps1 -Help passed"
+
+      - name: PS1 registry list smoke test
+        shell: pwsh
+        run: |
+          # Pre-seed cache so the test never hits the network.
+          $cacheDir = "$env:USERPROFILE\.cache\agtoosa"
+          New-Item -ItemType Directory -Path $cacheDir -Force | Out-Null
+          Copy-Item "$env:GITHUB_WORKSPACE\tests\fixtures\registry.json" "$cacheDir\registry.json"
+          # Touch the file so the cache TTL check passes.
+          (Get-Item "$cacheDir\registry.json").LastWriteTime = [DateTime]::Now
+
+          $output = & "$env:GITHUB_WORKSPACE\agtoosa.ps1" -Registry -RegistryCommand list 2>&1
+          Write-Output "Output: $output"
+          if ($output -notmatch 'ml-pipeline') {
+            Write-Error "agtoosa.ps1 -Registry list did not return expected pack names"
+            exit 1
+          }
+          Write-Output "✅ agtoosa.ps1 registry list passed"
+
+      - name: PS1 registry search smoke test
+        shell: pwsh
+        run: |
+          $cacheDir = "$env:USERPROFILE\.cache\agtoosa"
+          if (-not (Test-Path "$cacheDir\registry.json")) {
+            New-Item -ItemType Directory -Path $cacheDir -Force | Out-Null
+            Copy-Item "$env:GITHUB_WORKSPACE\tests\fixtures\registry.json" "$cacheDir\registry.json"
+          }
+          (Get-Item "$cacheDir\registry.json").LastWriteTime = [DateTime]::Now
+
+          $output = & "$env:GITHUB_WORKSPACE\agtoosa.ps1" -Registry -RegistryCommand search -RegistryArg "react" 2>&1
+          Write-Output "Output: $output"
+          if ($output -notmatch 'react-native') {
+            Write-Error "agtoosa.ps1 -Registry search did not find react-native"
+            exit 1
+          }
+          Write-Output "✅ agtoosa.ps1 registry search passed"
