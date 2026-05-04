@@ -127,5 +127,13 @@ Different AI models surface different classes of bugs — a second platform revi
 
 ## Output
 *   Save the review report to `Docs/archived/review-[story-id].md` (e.g., `Docs/archived/review-DEV-15.md`). This file is required by `/agtoosa-ship check`. The file must contain the structured findings table with all 🔴 / 🟡 / 🟢 items.
-*   If all checks pass (no unresolved 🔴 Critical findings), prompt `/agtoosa-ship`.
-*   If issues were found and fixed, confirm and re-run the review.
+*   Present the approval gate:
+
+    ```
+    ✅ Review complete — Verdict: [PASS / BLOCKED]
+    🔴 Critical: [N]  🟡 Warning: [N]  🟢 Passed: [N]
+    [One sentence summarising the biggest finding, or "No critical issues found."]
+    → Approve to proceed to /agtoosa-ship  |  Address findings and re-run review
+    ```
+
+    If any 🔴 Critical findings remain, the gate shows `BLOCKED`. Do not proceed to `/agtoosa-ship` without explicit user override. Wait for the user's response.

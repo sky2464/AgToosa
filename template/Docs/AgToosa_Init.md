@@ -40,30 +40,118 @@ Use when the AI agent is focused on a specific file or function and needs broade
 
 ### Phase B — Context Establishment
 
-3.  **Context Files:**
-    Ask the user about product, tech preferences, and workflow rules. Create these in `Docs/Context/`:
-    *   `product.md` — project context, users, goals, high-level features
-    *   `product-guidelines.md` — prose style, brand, UX standards
-    *   `tech-stack.md` — language, database, frameworks, deployment
-    *   `workflow.md` — TDD enforcement, commit strategy, branch naming, linting
+> **Follow the Smart Interview Protocol** (`Docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
+> Maximum 6 questions across all context files combined. Infer first; only ask about genuine gaps.
 
-4.  **Validation:** Verify all context files exist and are populated before proceeding.
+3.  **Populate-Check Gate:**
+
+    Before asking anything, check whether `Docs/Context/` files already exist and are populated:
+
+    - **Fully populated** (all key fields have real non-placeholder values):
+      Present a summary of each file's content and ask:
+      > "Your context files are already filled in. Review below — confirm to proceed, or call out anything to update."
+
+    - **Partially populated** (some fields are `""` or placeholder stubs):
+      Present the filled fields, skip asking about them, and run the interview only for the gaps.
+
+    - **Empty or missing** (files missing, or all fields are `""` / placeholder):
+      Run the full discovery interview below.
+
+    **Greenfield / empty-repo branch:** If no source files, no `README.md`, and no package manifest (`package.json`, `pyproject.toml`, `Cargo.toml`, etc.) are detected → skip Phase C (codebase scan) entirely. Note: "We'll profile the codebase as you build." Run the full discovery interview, then jump directly to Phase D.
+
+4.  **Discovery Interview (Smart Interview):**
+
+    Conduct the interview one question at a time. Before each question, scan the codebase and any existing context for clues — pre-populate options from what you find. Do not ask questions whose answers are already clear from codebase evidence.
+
+    **Product context** (`Docs/Context/product.md`):
+
+    ```
+    ❓ What type of app is this?
+      → A) [type inferred from codebase structure, e.g., "Web SaaS (Next.js + API)"] ← recommended
+      → B) Mobile App
+      → C) CLI Tool / API Service
+      Or describe it yourself.
+    ```
+
+    Wait for the answer, then ask (if still unclear):
+
+    ```
+    ❓ Who is the primary user and what is the single most important problem this solves?
+      Or type your own answer.
+    ```
+
+    **Tech stack** (`Docs/Context/tech-stack.md`):
+
+    ```
+    ❓ Confirm the tech stack — does this look right?
+      → [Language, framework, DB, deployment target — inferred from package manifests and config files]
+      → Correct it below if anything is wrong.
+    ```
+
+    Only ask about deployment target separately if it cannot be inferred.
+
+    **Workflow** (`Docs/Context/workflow.md`):
+
+    ```
+    ❓ Should we enforce strict TDD (Red-Green-Refactor) during /agtoosa-build?
+      → A) Yes — enforce TDD ← recommended for new features
+      → B) No — write tests but don't enforce ordering
+    ```
+
+    Only ask about commit strategy or branch naming if the project has no existing conventions detectable in git config or CI files.
+
+    **Product guidelines** (`Docs/Context/product-guidelines.md`):
+
+    Infer from any existing UI, README tone, or brand assets. Only ask if nothing is detectable:
+
+    ```
+    ❓ Any specific brand, UX, or prose style guidelines to record?
+      → A) Skip for now — fill in later
+      → B) Type them here
+    ```
+
+    After each answer, write or update the relevant context file immediately. Ask at most one follow-up per answer.
+
+5.  **Phase B → Phase C Gate:**
+
+    > **STOP — Do NOT proceed to Phase C until all Context files are confirmed by the user.**
+
+    Present the approval gate (see `## Smart Interview Protocol` → Approval Gate Format):
+
+    ```
+    ✅ Ready to proceed
+    Context established: product type, users, core problem, tech stack, and workflow preferences captured.
+    → Approve to continue to codebase scan  |  Comment or make changes below
+    ```
+
+    Wait for explicit approval before proceeding.
 
 ### Phase C — Codebase Onboarding
 
-5.  **Codebase Scan:** Scan the project for structure, stack, dependencies, and architecture.
+6.  **Codebase Scan:** Scan the project for structure, stack, dependencies, and architecture. Use findings to pre-populate Phase D Epics — do not ask about things the codebase already reveals.
 
-6.  **AI Doctor Consultation:** Ask sequential clarifying questions to understand the app's core logic and Epics. Wait for each answer before asking the next.
+7.  **AI Doctor Consultation (Smart Interview):** Ask clarifying questions to understand the app's core logic and product areas. Follow the Smart Interview Protocol:
+    - Ask **one question at a time**. Wait for each answer before asking the next.
+    - Infer Epic candidates from the codebase (e.g., Auth, Billing, API, Dashboard). Present them as options — do not ask the user to name Epics from scratch.
+    - At most one follow-up per answer. Stop when product areas are clear.
 
-7.  **Scaffolding:** Create `Docs/`, `Docs/archived/`, and `Docs/Context/` if they don't exist.
+    ```
+    ❓ These look like the main product areas from the codebase — does this list look right?
+      → A) [Inferred Epic 1]
+      → B) [Inferred Epic 2]
+      → C) [Inferred Epic 3]
+      Add, remove, or rename any below.
+    ```
 
-8.  **Dynamic Generation:** Based on the consultation, update or create:
+8.  **Scaffolding:** Create `Docs/`, `Docs/archived/`, and `Docs/Context/` if they don't exist.
+
+9.  **Dynamic Generation:** Based on the consultation, update or create:
     *   `Docs/AgToosa_Agent.md` (tailored rules and commands)
     *   `Docs/AgToosa_Claude.md` (Claude-specific, if applicable)
     *   `Docs/AgToosa_Gemini.md` (Gemini-specific, if applicable)
 
-9.  **Project Management Setup:**
-    *   For each Epic identified in Phase B, create a Linear **Epic issue**:
+10. **Project Management Setup:**
+    *   For each Epic confirmed in the consultation, create a Linear **Epic issue**:
         - Title: `Epic: [product area name]` (e.g., `Epic: Authentication`)
         - Label: Feature
         - Status: `Backlog`
@@ -74,12 +162,17 @@ Use when the AI agent is focused on a specific file or function and needs broade
 
 ### Phase D — TDD Configuration
 
-10. **TDD Preference:** Ask whether to enforce TDD. If yes, set `tdd: true` in `workflow.md` and explain Red-Green-Refactor.
+11. **Test Framework:** Auto-detect the test framework (Vitest, Jest, pytest, etc.) from package manifests and config files. Record it in `tech-stack.md`. Only ask if auto-detection is ambiguous.
 
-11. **Test Framework:** Auto-detect the test framework (Vitest, Jest, pytest, etc.) and record it in `tech-stack.md`.
+> **Note:** TDD preference was captured in Phase B (Step 4). If `tdd: true` is already set in `workflow.md`, skip this step.
 
 ## Output
-*   Confirm initialization complete; present the Linear record and `Master-Plan.md`.
-*   Confirm all AI configs are wired to AgToosa.
-*   Tell the user: "Use **4 commands**: `/agtoosa-spec`, `/agtoosa-build`, `/agtoosa-review`, `/agtoosa-ship`."
-*   Ask if they're ready to run `/agtoosa-spec`.
+
+Present the approval gate:
+
+```
+✅ Initialization complete
+[2–3 sentence summary: what was scanned, what context was set, which Epics were created.]
+AI configs confirmed. Use 4 commands: /agtoosa-spec → /agtoosa-build → /agtoosa-review → /agtoosa-ship.
+→ Approve and run /agtoosa-spec when ready  |  Comment or adjust below
+```

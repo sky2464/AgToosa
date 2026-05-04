@@ -30,7 +30,15 @@ Give QA testers a dedicated command to own the quality gate — from test planni
    *   **Smoke set** — tag at least one test per Must-priority AC with `@smoke`; these run post-deployment
    *   **Test environment requirements** — services, seed data, feature flags needed
 
-3. Present the test plan to the user for confirmation before running any tests.
+3. Present the test plan as an approval gate before running any tests:
+
+    ```
+    ✅ Test plan ready
+    [N] test IDs · [N] Must-priority ACs covered · [N] smoke-tagged tests · Coverage target: [N]%
+    → Approve to run tests  |  Update the plan below
+    ```
+
+    Wait for explicit approval before executing the test suite.
 
 ### Part 2 — Test Execution (`/agtoosa-qa run`)
 

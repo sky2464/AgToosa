@@ -162,6 +162,59 @@ Next: [what happens next in the workflow]
 
 Phase emojis: Spec ✅ · Build started 🏗️ · Task complete 🟢 · Review started 🔍 · Review passed ✅ · Review blocked 🔴 · Shipped 🚀 · Rollback 🔙 · Blocked 🚧
 
+## Smart Interview Protocol
+
+All AgToosa commands that require user input follow this shared protocol. It is designed to be efficient — never overwhelming — and always ends with an explicit approval gate.
+
+### Principles
+
+| Principle | Rule |
+|-----------|------|
+| **Infer first, ask second** | Scan the codebase and `Docs/Context/` before forming any question. If an answer is inferable with high confidence (≥80%), state it as a finding — do not ask. |
+| **Options from context** | When asking, derive 2–3 options from what was found in the codebase or research. Mark one as recommended. Always allow free-text override. |
+| **One question at a time** | Never present the next question until the previous answer is received. |
+| **Bounded question budgets** | Respect the per-command maximum listed below. Quality over quantity. |
+| **Adaptive follow-ups** | Each answer may trigger at most one follow-up question. Never branch into multiple follow-up threads. |
+| **Approval gate always** | Even if zero questions were asked, end every phase with an explicit approval gate before proceeding. |
+
+### Question Format
+
+```
+❓ [Question — one sentence]
+  → A) [Option derived from codebase or research] ← recommended
+  → B) [Alternative option]
+  → C) [Alternative option]
+  Or type your own answer.
+```
+
+- If only one option is obvious: state it as a recommendation and ask to confirm or override.
+- If no options are derivable: open-ended question only, no options block.
+- Never present more than 3 options per question.
+
+### Approval Gate Format
+
+After completing a phase (even when zero questions were asked), always present:
+
+```
+✅ Ready to proceed
+[1–3 sentence summary of what was determined or produced.]
+→ Approve to continue  |  Comment or make changes below
+```
+
+Wait for the user's explicit approval before starting the next phase or writing any output files.
+
+### Question Budgets per Command
+
+| Command | Max questions | Notes |
+|---------|--------------|-------|
+| `/agtoosa-init` | 6 | Across all Context files combined |
+| `/agtoosa-spec` | 4 | 2 of the 6 forcing questions are usually inferable |
+| `/agtoosa-build` | 2 | Scope confirm + task list confirm |
+| `/agtoosa-task` | 3 | Type + priority + context; type+priority can merge into one |
+| `/agtoosa-qa` | 0 | Execution phase — approval gate only |
+| `/agtoosa-review` | 0 | Execution phase — verdict approval gate only |
+| `/agtoosa-ship` | 0 | Execution phase — deploy approval gate only |
+
 ### Discovery Triage Protocol
 
 During `/agtoosa-build`, when the agent notices anything outside the declared scope:

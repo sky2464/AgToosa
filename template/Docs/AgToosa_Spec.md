@@ -47,9 +47,13 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 2.  **External Research (Web Research Agent):**
     *   Query online sources for the best solutions, libraries, APIs, and design patterns relevant to the task.
     *   **CRITICAL:** Verify all dependency versions against live sources (never assume from memory).
-3.  **Q&A — 6 Forcing Questions:**
+3.  **Q&A — Forcing Questions (Smart Interview):**
 
-    Ask these questions **sequentially**, building each answer on the previous one. Do not skip. For `/agtoosa-spec quick`, ask only questions 1, 2, and 6.
+    > **Follow the Smart Interview Protocol** (`Docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
+    > Maximum **4 questions** for the full flow; max **2** for `/agtoosa-spec quick`.
+    > Before each question, check whether the answer is already clear from the codebase scan or Context files. If it is, state your finding and move on — do not ask.
+
+    The six forcing questions below are the candidate pool. Ask only the ones where the answer is a genuine gap. Present options derived from codebase findings and research. One question at a time; at most one follow-up per answer.
 
     1. **Status quo** — What is the exact current behavior users depend on? What breaks if we change it?
     2. **Narrowest scope** — What is the smallest version of this feature that still delivers real value?
@@ -58,7 +62,9 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
     5. **Failure modes** — What are the three most likely ways this could break in production?
     6. **Security surface** — Does this touch auth, data storage, external APIs, or user-controlled input?
 
-    Questions 1–4 sharpen scope. Questions 5–6 feed directly into STRIDE threat modelling in Part 2.
+    Questions 1–4 sharpen scope. Questions 5–6 feed directly into STRIDE threat modelling in Part 2. Always ask question 6 if the feature touches any trust boundary — it is rarely fully inferable.
+
+    For `/agtoosa-spec quick`, ask only questions 1, 2, and 6 (abbreviated).
 4.  **Executable Spec Generation:**
     *   Synthesize all findings into a clean, comprehensive **Executable Specification**.
     *   Specs must act as direct programmatic inputs for the `/agtoosa-build` phase (e.g., BDD syntax, strict preconditions/postconditions, or explicit acceptance criteria).
@@ -117,7 +123,16 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 
 ## Output
 *   Present the generated Spec (with embedded plan) to the user.
-*   Ask the user to review. When the user approves, **append the following section verbatim** to the spec file before running `/agtoosa-build`:
+*   Present the approval gate:
+
+    ```
+    ✅ Ready to proceed
+    Spec [name] generated: [N] ACs, [N] Must-priority, threat model complete.
+    → Approve — I'll mark the spec approved and queue /agtoosa-build
+    → Comment or request changes below
+    ```
+
+*   When the user approves, **append the following section verbatim** to the spec file before running `/agtoosa-build`:
 
 ```
 ## ✅ Spec Approved

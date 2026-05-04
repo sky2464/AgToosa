@@ -31,17 +31,27 @@ Break down the Spec into atomic tasks, build with TDD, and rigorously test.
 
 1.  **Step 0 — Declare Scope Boundary (before any code is written):**
 
-    Output the following scope declaration and wait for user confirmation before proceeding:
+    > **Follow the Smart Interview Protocol** (`Docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
+    > Maximum **2 questions** for this phase: scope confirm + task list confirm.
+
+    Derive the scope boundary from the approved spec. Present it as a pre-filled approval gate — do not ask the user to define scope from scratch:
 
     ```
-    📌 Scope Boundary for this Build
+    ✅ Ready to proceed — Scope Boundary
     Files in scope      : [list specific files from the spec]
     Directories in scope: [list directories]
     Out of scope        : [list anything that must NOT be touched]
+    → Approve scope  |  Correct anything below
     ```
 
-    - Save the scope declaration under a `## Build Scope` heading at the top of the active `AgToosa_Spec-*.md`.
-    - Any edit to a file **not** in the declared scope requires stopping and asking: _"This file is outside the declared scope. Include it? (Yes / No / Update scope)"_
+    - Save the confirmed scope declaration under a `## Build Scope` heading at the top of the active `AgToosa_Spec-*.md`.
+    - Any edit to a file **not** in the declared scope requires stopping and presenting:
+      ```
+      ❓ [filename] is outside the declared scope.
+        → A) Include it in scope (I'll update the spec)
+        → B) Skip this file
+        → C) Create a separate /agtoosa-task for it
+      ```
     - The scope check runs before every file write during the TDD cycle.
     - After user confirms scope, generate **`Docs/AgToosa_TestPlan-[name].md`** containing:
       - Spec reference (link to `AgToosa_Spec-*.md`)
@@ -50,7 +60,15 @@ Break down the Spec into atomic tasks, build with TDD, and rigorously test.
       - Coverage target from `Docs/Context/workflow.md` (`coverage_threshold`), default 80%
       - At least one negative/edge scenario per Must-priority AC
       - Smoke set — at least one test per Must-priority AC tagged `@smoke`
-    - Present the test plan to the user and wait for confirmation before writing any code.
+    - Present the task list and test plan together as a second approval gate:
+
+      ```
+      ✅ Ready to build — Task Breakdown & Test Plan
+      [N] tasks derived from the spec. [N] test IDs mapped to [N] ACs.
+      → Approve to start TDD  |  Remove, add, or reorder tasks below
+      ```
+
+    Wait for explicit approval before writing any code.
 
 2.  **Dependency Validation:**
     *   **CRITICAL:** Never assume dependency versions from memory — verify via web search or terminal (`npm view`, `pip index`, `dart pub outdated`).

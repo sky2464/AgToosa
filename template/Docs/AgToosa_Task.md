@@ -14,9 +14,29 @@ Do **not** use `/agtoosa-task` for features or stories that require architecture
 
 ## Workflow
 
-### Step 1 — Classify
+> **Follow the Smart Interview Protocol** (`Docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
+> Maximum **3 questions**. Infer type and priority from the trigger context before asking. One question at a time.
 
-Ask the user: "What type of issue is this?"
+### Step 1 — Classify & Prioritize
+
+Infer the type and priority from the trigger context (e.g., invoked from a build error → Bug; invoked from a dependency scan → Chore). If inferable, state the recommendation and ask to confirm:
+
+```
+❓ Is this right?
+  → A) Bug — Priority: High ← inferred from the error context
+  → B) Different type or priority — tell me below
+```
+
+If not inferable, ask directly:
+
+```
+❓ What type of issue is this, and how urgent?
+  → A) Bug — High (blocking someone now)
+  → B) Chore — Medium (maintenance, no urgency)
+  → C) Spike — Medium (time-boxed research)
+  → D) Fix — High/Medium (targeted correction)
+  Or describe it.
+```
 
 | Type | When to use |
 |------|-------------|
@@ -25,24 +45,18 @@ Ask the user: "What type of issue is this?"
 | **Spike** | Time-boxed research or investigation |
 | **Fix** | Targeted correction for a known issue |
 
-### Step 2 — Title & Priority
+### Step 2 — Title & Context
 
-Ask: "Describe the issue in one sentence."
+Ask: "Describe the issue in one sentence." Prefix with type: `Bug: [sentence]`, etc.
 
-Prefix the answer with the type: `Bug: [sentence]`, `Chore: [sentence]`, `Spike: [sentence]`, `Fix: [sentence]`
+Then ask the one type-specific context question:
 
-Ask: "Priority — **High** (blocking someone now) / **Medium** (should be done soon) / **Low** (whenever)"
-
-### Step 3 — Context & Acceptance Criteria
-
-Ask type-specific questions:
-
-- **Bug:** "What is the current behavior?" and "What is the expected behavior?"
+- **Bug:** "Current behavior vs. expected behavior — describe both."
 - **Chore:** "What needs to change and why?"
-- **Spike:** "What question needs to be answered?" and "What is the time-box (hours/days)?"
-- **Fix:** "What is the root cause?" and "What is the fix boundary?"
+- **Spike:** "What question needs to be answered, and what is the time-box?"
+- **Fix:** "What is the root cause and the fix boundary?"
 
-Generate the Description automatically using the Linear Issue Standard (see `AgToosa_Agent.md` `## Linear Issue Standard`), including a type-appropriate **Definition of Done**:
+Generate the full Description automatically using the Linear Issue Standard (see `AgToosa_Agent.md` → `## Linear Issue Standard`), including a type-appropriate **Definition of Done**:
 
 **Bug DoD:**
 - [ ] Regression test written and named `regression_[bug-id]_[desc]`
@@ -63,21 +77,38 @@ Generate the Description automatically using the Linear Issue Standard (see `AgT
 - [ ] Existing tests pass
 - [ ] Regression test added if applicable
 
-### Step 4 — Parent Linking
+### Step 3 — Parent Linking
 
-Ask: "Does this belong under an existing Epic or Story? (Paste the issue ID, or 'None')"
+Infer the parent Epic or Story from `Docs/Master-Plan.md` context. If obvious, state it:
 
-If an ID is given, set it as the parent issue.
+```
+❓ Should this be linked to [inferred Epic/Story ID: Title]?
+  → A) Yes ← recommended
+  → B) Different parent — paste the ID
+  → C) No parent
+```
+
+### Step 4 — Approval Gate
+
+Present the draft issue before creating it:
+
+```
+✅ Ready to create issue
+Type: [Bug/Chore/Spike/Fix] · Priority: [High/Medium/Low] · Parent: [ID or none]
+Title: [type-prefixed title]
+[AC or DoD summary]
+→ Approve to create in Linear  |  Edit anything above
+```
 
 ### Step 5 — Create Issue
 
 Create the Linear issue with:
-- **Title** from Step 2
+- **Title** from Step 1–2
 - **Label** matching the type (Bug / Chore / Fix / Feature)
-- **Priority** from Step 2
+- **Priority** from Step 1
 - **Status:** `Backlog`
-- **Description** from Step 3 (following the Linear Issue Standard)
-- **Parent** from Step 4 (if provided)
+- **Description** from Step 2 (following the Linear Issue Standard)
+- **Parent** from Step 3 (if provided)
 
 Record the new issue ID and title in `Docs/Master-Plan.md` under `## Backlog`.
 

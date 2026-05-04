@@ -30,7 +30,15 @@ Before any deployment, verify all of the following. If **any** check fails, list
 | ✅ Changelog entry drafted | `Docs/AgToosa_Changelog.md` has an entry for this feature |
 | ✅ No `WIP:` commits remain | `git log` shows no commits prefixed with `WIP:` |
 
-Only proceed to Part 1 after all checks pass.
+Only proceed to Part 1 after all checks pass. Present the approval gate:
+
+```
+✅ Ready to deploy — All pre-ship checks passed
+Branch: [branch name] · Story: [ID] · Smoke tests: [N] tagged · Changelog: ✅
+→ Approve to deploy to [staging/production]  |  Cancel or investigate below
+```
+
+Wait for explicit user approval before deploying.
 
 ### Part 1 — Pre-Deploy: WIP Commit Squash
 
