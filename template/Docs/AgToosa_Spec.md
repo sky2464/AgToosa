@@ -4,10 +4,11 @@
 
 | Sub-command | Runs |
 |-------------|------|
-| `/agtoosa-spec` | Full flow: Parts 1 + 2 + 3 |
+| `/agtoosa-spec` | Full flow: Parts 1 + 2 + 3 + 4 |
 | `/agtoosa-spec research` | Part 1 only — context, web research, and Q&A; outputs findings, no spec file yet |
 | `/agtoosa-spec plan` | Part 2 only — architecture blueprint + threat model against an already-written spec |
 | `/agtoosa-spec quick` | Abbreviated — 2–3 targeted questions + spec + skip full threat model (use for small bugs/chores) |
+| `/agtoosa-spec tasks` | Part 4 only — derive atomic tasks from an already-approved spec, generate test plan skeleton, update Master-Plan.md |
 | `/agtoosa-spec to-issues` | Break the active spec or PRD into vertical-slice GitHub issues |
 
 ## Optional Sub-Commands
@@ -121,18 +122,55 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
     *   Ask: "Enroll this Story in the current active cycle/sprint? (Yes / No)"
     *   If Yes: add the Story to the active cycle in Linear and update `Docs/Master-Plan.md` under `## Active Cycle`.
 
+### Part 4 — Task Planning
+
+> **Skip this part** if running `/agtoosa-spec research` or `/agtoosa-spec plan`. Run this part standalone with `/agtoosa-spec tasks` against an already-approved spec.
+
+11. **Scope Boundary Declaration:**
+
+    Derive the scope boundary from the spec. Present it as a pre-filled summary — do not ask the user to define scope from scratch:
+
+    ```
+    ✅ Ready to proceed — Scope Boundary
+    Files in scope      : [list specific files from the spec]
+    Directories in scope: [list directories]
+    Out of scope        : [list anything that must NOT be touched]
+    ```
+
+    Save the scope declaration under a `## Build Scope` heading at the top of the active `AgToosa_Spec-*.md`.
+
+12. **Atomic Task Breakdown:**
+    *   Read the spec and translate it into atomic, clear, step-by-step actionable tasks.
+    *   Identify tasks that can run in parallel during `/agtoosa-build`.
+    *   If a critical flaw is found during task breakdown, stop and ask the user to revise the spec before continuing.
+    *   For each atomic task, add a Task entry under the active Story in `Docs/Master-Plan.md`:
+        - Title: `Task: [short description]`
+        - Type: Chore
+        - Status: `Todo`
+    *   Record all Task titles in `Docs/Master-Plan.md` under `## Active Tasks`.
+
+13. **Test Plan Skeleton:**
+    *   Generate **`Docs/AgToosa_TestPlan-[name].md`** containing:
+        - Spec reference (link to `AgToosa_Spec-*.md`)
+        - AC coverage table — each `AC-NNN` from the spec mapped to test IDs (`T-001`, `T-002`, ...)
+        - Test category per ID: Unit · Integration · E2E · Security · Performance
+        - Coverage target from `Docs/Context/workflow.md` (`coverage_threshold`), default 80%
+        - At least one negative/edge scenario per Must-priority AC
+        - Smoke set — at least one test per Must-priority AC tagged `@smoke`
+
 ## Output
-*   Present the generated Spec (with embedded plan) to the user.
+*   Present the generated Spec (with embedded plan), task list, and test plan skeleton to the user.
 *   Present the approval gate:
 
     ```
     ✅ Ready to proceed
     Spec [name] generated: [N] ACs, [N] Must-priority, threat model complete.
-    → Approve — I'll mark the spec approved and queue /agtoosa-build
+    [N] atomic tasks derived. Test plan skeleton: [N] test IDs mapped to [N] ACs.
+    → Approve — I'll mark the spec approved and the build can start
     → Comment or request changes below
     ```
 
-*   When the user approves, **append the following section verbatim** to the spec file before running `/agtoosa-build`:
+*   When the user approves, **append the following section verbatim** to the spec file:
 
 ```
 ## ✅ Spec Approved
@@ -149,8 +187,9 @@ This approval marker is required by `/agtoosa-ship check` to verify the spec was
     Date: [YYYY-MM-DD HH:MM]
 
     Spec [AgToosa_Spec-[name]-v[N].md] approved. Estimate: [XS/S/M/L/XL]. [Enrolled in cycle / Not yet enrolled].
+    [N] tasks planned. Test plan skeleton generated.
 
-    Next: /agtoosa-build to break down tasks and start TDD.
+    Next: /agtoosa-build to start TDD.
     ```
 
 *   Transition the Story issue status from `Todo` to `Todo` (no change yet — status moves to `In Progress` when `/agtoosa-build` starts the first TDD task).

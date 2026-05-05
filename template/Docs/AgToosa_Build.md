@@ -4,104 +4,33 @@
 
 | Sub-command | Runs |
 |-------------|------|
-| `/agtoosa-build` | Full flow: Parts 1 + 2 + 3 + 4 |
-| `/agtoosa-build scope` | Part 1 only — scope declaration + task breakdown; stops before any code is written |
-| `/agtoosa-build tdd` | Part 2 only — TDD Red-Green-Refactor loop against an already-declared scope and task list |
-| `/agtoosa-build test` | Parts 3 + 4 — run the full testing army + security scans, then update tracking |
+| `/agtoosa-build` | Full flow: Parts 1 + 2 + 3 |
+| `/agtoosa-build tdd` | Part 1 only — TDD Red-Green-Refactor loop against the task list from the approved spec |
+| `/agtoosa-build test` | Parts 2 + 3 — run the full testing army + security scans, then update tracking |
 
 ### Claude Code Parallel Pattern
 
-On Claude Code, independent tasks within a phase can be dispatched to parallel sub-agents via the `Task` tool. Apply this when Part 1 produces tasks with no sequential dependency:
+On Claude Code, independent tasks within a phase can be dispatched to parallel sub-agents via the `Task` tool. Apply this when the task list from the spec contains tasks with no sequential dependency:
 
-- Identify tasks in the breakdown that do not share state with other tasks in the same phase.
-- Batch those tasks into parallel `Task` tool calls before starting the TDD loop (Part 2).
+- Read the task list in `Docs/Master-Plan.md` under `## Active Tasks`.
+- Identify tasks that do not share state with other tasks.
+- Batch those tasks into parallel `Task` tool calls before starting the TDD loop (Part 1).
 - Collect results when all parallel tasks complete; merge conflicts are resolved by the orchestrating agent.
 - See `/agtoosa-review` for the reference parallel pattern (4 reviewer personas run simultaneously).
 
 > **Note:** Parallel dispatch applies to Claude Code only. On other platforms, run tasks sequentially.
 
 ## Objective
-Break down the Spec into atomic tasks, build with TDD, and rigorously test.
+Execute TDD against a planned task list and run the full test suite.
 
-> **Prerequisites:** `/agtoosa-spec` must be complete. Verify that `Docs/archived/` contains an approved `spec-[story-id].md`, or that the active `AgToosa_Spec-*.md` has a `## ✅ Spec Approved` section. If not, run `/agtoosa-spec` first.
+> **Prerequisites:** `/agtoosa-spec` must be complete with task planning done.
+> Verify:
+> 1. The active `AgToosa_Spec-*.md` has a `## ✅ Spec Approved` section. If not, run `/agtoosa-spec` first.
+> 2. `Docs/Master-Plan.md` has tasks listed under `## Active Tasks`. If not, run `/agtoosa-spec tasks` to generate them.
 
 ## Workflow
 
-### Part 1 — Task Breakdown
-
-1.  **Step 0 — Declare Scope Boundary (before any code is written):**
-
-    > **Follow the Smart Interview Protocol** (`Docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
-    > Maximum **2 questions** for this phase: scope confirm + task list confirm.
-
-    Derive the scope boundary from the approved spec. Present it as a pre-filled summary — do not ask the user to define scope from scratch:
-
-    **If invoked as `/agtoosa-build scope`** — hard approval gate (stop and wait):
-    ```
-    ✅ Ready to proceed — Scope Boundary
-    Files in scope      : [list specific files from the spec]
-    Directories in scope: [list directories]
-    Out of scope        : [list anything that must NOT be touched]
-    → Approve scope  |  Correct anything below
-    ```
-
-    **If invoked as `/agtoosa-build` (full flow)** — informational summary (auto-proceed):
-    ```
-    ℹ️ Build Scope — proceeding automatically (interrupt now to adjust, or run /agtoosa-build scope to plan only)
-    Files in scope      : [list specific files from the spec]
-    Directories in scope: [list directories]
-    Out of scope        : [list anything that must NOT be touched]
-    ```
-
-    - Save the confirmed scope declaration under a `## Build Scope` heading at the top of the active `AgToosa_Spec-*.md`.
-    - Any edit to a file **not** in the declared scope requires stopping and presenting:
-      ```
-      ❓ [filename] is outside the declared scope.
-        → A) Include it in scope (I'll update the spec)
-        → B) Skip this file
-        → C) Create a separate /agtoosa-task for it
-      ```
-    - The scope check runs before every file write during the TDD cycle.
-    - After user confirms scope, generate **`Docs/AgToosa_TestPlan-[name].md`** containing:
-      - Spec reference (link to `AgToosa_Spec-*.md`)
-      - AC coverage table — each `AC-NNN` from the spec mapped to test IDs (`T-001`, `T-002`, ...)
-      - Test category per ID: Unit · Integration · E2E · Security · Performance
-      - Coverage target from `Docs/Context/workflow.md` (`coverage_threshold`), default 80%
-      - At least one negative/edge scenario per Must-priority AC
-      - Smoke set — at least one test per Must-priority AC tagged `@smoke`
-    - Present the task list and test plan together:
-
-      **If invoked as `/agtoosa-build scope`** — hard approval gate (stop and wait):
-      ```
-      ✅ Ready to build — Task Breakdown & Test Plan
-      [N] tasks derived from the spec. [N] test IDs mapped to [N] ACs.
-      → Approve to start TDD  |  Remove, add, or reorder tasks below
-      ```
-      Wait for explicit user approval before proceeding.
-
-      **If invoked as `/agtoosa-build` (full flow)** — informational summary, then immediately begin Part 2:
-      ```
-      ℹ️ Task Breakdown & Test Plan — full flow proceeding into TDD now
-      [N] tasks. [N] test IDs mapped to [N] ACs.
-      Interrupt or reply to adjust; otherwise TDD starts below.
-      ```
-      Do NOT wait for a reply — proceed directly into Part 2 (TDD Red-Green-Refactor) in the same response.
-
-2.  **Dependency Validation:**
-    *   **CRITICAL:** Never assume dependency versions from memory — verify via web search or terminal (`npm view`, `pip index`, `dart pub outdated`).
-3.  **Atomic Task Breakdown:**
-    *   Read the active `AgToosa_Spec-*.md` and translate it into atomic, clear, step-by-step actionable tasks.
-4.  **Parallelization:** Identify tasks that can run in parallel or be handled by sub-agents.
-5.  **Error Escalation:** If a critical flaw is found during task breakdown, stop and ask the user to re-run `/agtoosa-spec`.
-6.  **Master-Plan.md Task Update:**
-    *   For each atomic task, add a Task entry under the active Story in `Docs/Master-Plan.md`:
-        - Title: `Task: [short description]`
-        - Type: Chore
-        - Status: `Todo`
-    *   Record all Task titles in `Docs/Master-Plan.md` under `## Active Tasks`.
-    *   Present the task list to the user for confirmation before proceeding.
-
-### Part 2 — TDD Build Cycle
+### Part 1 — TDD Build Cycle
 
 > **TDD Enforcement:**
 > If `Docs/Context/workflow.md` has `tdd: true`, strictly follow the Red-Green-Refactor cycle below.
@@ -120,7 +49,20 @@ Break down the Spec into atomic tasks, build with TDD, and rigorously test.
     Next: Task 1/[N] — [task title].
     ```
 
-6.  **For each atomic task, execute the TDD Cycle:**
+1.  **Scope Boundary Reminder:** Read the `## Build Scope` section in the active `AgToosa_Spec-*.md`. Any edit to a file not listed there requires stopping and presenting:
+    ```
+    ❓ [filename] is outside the declared scope.
+      → A) Include it in scope (I'll update the spec)
+      → B) Skip this file
+      → C) Create a separate /agtoosa-task for it
+    ```
+    This check runs before every file write during the TDD cycle.
+
+2.  **Dependency Validation:** Never assume dependency versions from memory — verify via web search or terminal (`npm view`, `pip index`, `dart pub outdated`).
+
+3.  **Parallelization:** Review the task list in `Docs/Master-Plan.md` under `## Active Tasks` and identify tasks that can run in parallel via the Claude Code parallel pattern above.
+
+4.  **For each atomic task, execute the TDD Cycle:**
 
     **🔴 RED — Write a Failing Test First:**
     *   Before writing ANY implementation code, write a test that describes the expected behavior.
@@ -163,7 +105,7 @@ Break down the Spec into atomic tasks, build with TDD, and rigorously test.
             Next: Task [N+1]/[M] — [next task title].
             ```
 
-7.  **Repeat** the Red-Green-Refactor cycle for every atomic task.
+5.  **Repeat** the Red-Green-Refactor cycle for every atomic task.
 
 ### Discovery Triage
 
@@ -185,18 +127,18 @@ Any bug, edge case, or out-of-scope requirement discovered during the TDD cycle 
 5. **If B** — update the Scope Boundary in the active spec, create a new Task sub-issue under the Story, continue TDD.
 6. Record the triage decision (fix now / issue created / ignored) in the build summary output.
 
-### Part 3 — Comprehensive Testing
+### Part 2 — Comprehensive Testing
 
-8.  **Unbiased Testing:**
+6.  **Unbiased Testing:**
     *   Drop prior assumptions about how the code should work; evaluate purely to find bugs and regressions.
     *   Run all unit, integration, and E2E tests; add browser QA (Playwright/Puppeteer) where applicable.
-9.  **Security Scanning:** SAST (Semgrep/CodeQL), DAST (runtime checks), Secrets scanning (Gitleaks), IaC scanning (Checkov/tfsec).
-10. **SBOM:** Generate a Software Bill of Materials; run dependency audits (`npm audit`, `pip-audit`).
-11. **Feedback Loop:** Loop back to the TDD cycle for any issues found; record fixes in `Master-Plan.md`.
+7.  **Security Scanning:** SAST (Semgrep/CodeQL), DAST (runtime checks), Secrets scanning (Gitleaks), IaC scanning (Checkov/tfsec).
+8.  **SBOM:** Generate a Software Bill of Materials; run dependency audits (`npm audit`, `pip-audit`).
+9.  **Feedback Loop:** Loop back to the TDD cycle for any issues found; record fixes in `Master-Plan.md`.
 
-### Part 4 — Tracking
+### Part 3 — Tracking
 
-12. **Master-Plan Update:** Mark all completed tasks in `Docs/Master-Plan.md`; update story status.
+10. **Master-Plan Update:** Mark all completed tasks in `Docs/Master-Plan.md`; update story status.
 
 ## Output
 *   Confirm build and test phases are complete and all tests pass.
