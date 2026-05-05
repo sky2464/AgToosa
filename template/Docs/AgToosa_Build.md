@@ -34,14 +34,23 @@ Break down the Spec into atomic tasks, build with TDD, and rigorously test.
     > **Follow the Smart Interview Protocol** (`Docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
     > Maximum **2 questions** for this phase: scope confirm + task list confirm.
 
-    Derive the scope boundary from the approved spec. Present it as a pre-filled approval gate — do not ask the user to define scope from scratch:
+    Derive the scope boundary from the approved spec. Present it as a pre-filled summary — do not ask the user to define scope from scratch:
 
+    **If invoked as `/agtoosa-build scope`** — hard approval gate (stop and wait):
     ```
     ✅ Ready to proceed — Scope Boundary
     Files in scope      : [list specific files from the spec]
     Directories in scope: [list directories]
     Out of scope        : [list anything that must NOT be touched]
     → Approve scope  |  Correct anything below
+    ```
+
+    **If invoked as `/agtoosa-build` (full flow)** — informational summary (auto-proceed):
+    ```
+    ℹ️ Build Scope — proceeding automatically (interrupt now to adjust, or run /agtoosa-build scope to plan only)
+    Files in scope      : [list specific files from the spec]
+    Directories in scope: [list directories]
+    Out of scope        : [list anything that must NOT be touched]
     ```
 
     - Save the confirmed scope declaration under a `## Build Scope` heading at the top of the active `AgToosa_Spec-*.md`.
@@ -60,15 +69,23 @@ Break down the Spec into atomic tasks, build with TDD, and rigorously test.
       - Coverage target from `Docs/Context/workflow.md` (`coverage_threshold`), default 80%
       - At least one negative/edge scenario per Must-priority AC
       - Smoke set — at least one test per Must-priority AC tagged `@smoke`
-    - Present the task list and test plan together as a second approval gate:
+    - Present the task list and test plan together:
 
+      **If invoked as `/agtoosa-build scope`** — hard approval gate (stop and wait):
       ```
       ✅ Ready to build — Task Breakdown & Test Plan
       [N] tasks derived from the spec. [N] test IDs mapped to [N] ACs.
       → Approve to start TDD  |  Remove, add, or reorder tasks below
       ```
+      Wait for explicit user approval before proceeding.
 
-    Wait for explicit approval before writing any code.
+      **If invoked as `/agtoosa-build` (full flow)** — informational summary, then immediately begin Part 2:
+      ```
+      ℹ️ Task Breakdown & Test Plan — full flow proceeding into TDD now
+      [N] tasks. [N] test IDs mapped to [N] ACs.
+      Interrupt or reply to adjust; otherwise TDD starts below.
+      ```
+      Do NOT wait for a reply — proceed directly into Part 2 (TDD Red-Green-Refactor) in the same response.
 
 2.  **Dependency Validation:**
     *   **CRITICAL:** Never assume dependency versions from memory — verify via web search or terminal (`npm view`, `pip index`, `dart pub outdated`).

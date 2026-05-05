@@ -9,6 +9,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [3.2.1] — 2026-05-04
+
+### Fixed
+
+- **`/agtoosa-build` full-flow blocked on approval gate** — The Part 1 scope and task-plan gates in `AgToosa_Build.md` were unconditional, causing the AI to pause and wait for user approval even when the user ran `/agtoosa-build` (full flow, which should auto-proceed into TDD). Both gates are now sub-command-aware: `/agtoosa-build scope` keeps a hard approval stop; `/agtoosa-build` (full flow) presents an informational summary and immediately continues into Part 2 without waiting.
+
+---
+
 ## [3.2.0] — 2026-05-04
 
 ### Fixed
