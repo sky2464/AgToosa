@@ -366,6 +366,9 @@ install_files() {
     fi
   fi
 
+  # Write version marker (enables --update to know installed version)
+  echo "$AGTOOSA_VERSION" > "${PROJECT_PATH}/Docs/.agtoosa-version"
+
   # Summary
   echo ""
   echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"

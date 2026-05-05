@@ -219,6 +219,6 @@ print_update_summary() {
   fi
 
   echo ""
-  echo -e "  Run ${BOLD}/agtoosa-update${NC} in your AI assistant to see the full changelog."
+  echo -e "  Open ${BOLD}${PROJECT_PATH}${NC} in your AI assistant and run ${BOLD}/agtoosa-update${NC} to see the full changelog."
   echo ""
 }

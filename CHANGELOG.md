@@ -7,32 +7,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
-### Security
+---
 
-- **jq injection fix** — `registry_search()`, `registry_info()`, and `registry_install()` in `lib/registry.sh` now use `--arg` / `--argjson` instead of string interpolation for all user-supplied values, preventing jq argument injection
-- **Path traversal fix** — `validate_pack_files()` in `lib/registry.sh` now resolves each file's canonical path with `realpath`/`readlink -f` and rejects any path that does not start with the pack directory's canonical root
-- **PS1 tar injection fix** — `agtoosa.ps1` `Invoke-RegistryInstall` replaced `cmd /c "tar -xzf ..."` with `Start-Process` with an explicit argument array, eliminating shell injection via archive paths
+## [3.1.1] — 2026-05-04
 
 ### Fixed
 
-- **KEEP_SHIP not set in registry install** — `registry_install()` and `_install_local_pack()` in `lib/registry.sh` now set `KEEP_SHIP=true` at the start so staged pack files in `ship/packs/` are preserved across the EXIT trap
-- **PS1 registry flat-array parse** — `Show-RegistryList`, `Show-RegistrySearch`, `Show-RegistryInfo`, and `Invoke-RegistryInstall` in `agtoosa.ps1` were incorrectly accessing `($json | ConvertFrom-Json).packs`; fixed to `$json | ConvertFrom-Json` since `registry.json` is a flat JSON array
-- **Hardcoded "Linear project AgToosa" in template files** — all 6 platform entry-point templates (`.cursorrules`, `.windsurfrules`, `CLAUDE.md`, `AGENTS.md`, `.github/copilot-instructions.md`, `OPENCODE.md`) now say "Your Linear project" instead of the repo-specific name
+- **`-h` flag rejected as unknown option** — `agtoosa.sh` flag parser now accepts `-h` as an alias for `--help`; previously emitted `❌ Error: Unknown option '-h'` and exited 1
+- **`--update` showed `vunknown` after fresh install** — `install_files()` in `lib/install.sh` now writes `Docs/.agtoosa-version` at the end of every install; previously only `run_update()` wrote this file, so the first `--update` after a fresh install always read "unknown"
+- **Misleading post-update hint** — `print_update_summary()` in `lib/update.sh` now includes the full target project path in the `/agtoosa-update` instruction; previously the generic phrasing caused a user to run `/agtoosa-update` inside the AgToosa source repo instead of their project
 
-### Added
+### Tests
 
-- **PS1 lock file write** — `Install-Files()` in `agtoosa.ps1` now writes `Docs/agtoosa-lock.json` on install, preserving existing packs and updating `agtoosa_version`
-- **PS1 native platform directories** — `Install-Files()` in `agtoosa.ps1` now copies `.cursor/rules/`, `.windsurf/rules/`, `.claude/commands/`, `.claude/skills/`, `.gemini/commands/`, `.github/prompts/`, `.github/agents/`, and `.github/instructions/` from the `ship/` stage to the project
-- **PS1 smart merge** — `Merge-PlatformFile()` added to `agtoosa.ps1` implementing the same 4-case merge logic as `merge_platform_file()` in bash (Case A: new file, Case B: START/END block update, Case C: old-format replace, Case D: user-owned append); all 6 platform entry-point copies now use it
-- **Registry bats test coverage** — 7 new bats tests added: registry install staging (`KEEP_SHIP` survives), registry list/search/info using local fixture (no network), path traversal rejection, and publish-without-args failure
-- **CI: Windows registry smoke tests** — `windows-smoke` job now verifies `agtoosa.ps1 -Registry list` and `agtoosa.ps1 -Registry search` using the local fixture
-- **CI: optional template file validation** — new `validate` step sources `lib/config.sh` and checks every entry in `OPTIONAL_TEMPLATE_FILES` exists under `template/`
-- **README: platform notes table** — new "Platform Notes" section documents Windows native PowerShell limitations (no registry publish) and recommends WSL2 for full feature parity
-- **README: jq dependency** — `jq` 1.6+ now listed as a strongly recommended system requirement for registry commands
-
-### Planned
-
-- Interactive migration wizard for `--update` (MAJOR version delta) — targeted for v3.2.0 (2026-07-01). Guides users through breaking changes when updating across a major version boundary. See ADR-004 item 5.
+- `bats`: `-h` shows usage and exits 0 (DEV-187)
+- `bats`: fresh install writes `Docs/.agtoosa-version` with correct version (DEV-187)
+- `bats`: `--update` after fresh install shows real version, not `vunknown` (DEV-187)
 
 ---
 

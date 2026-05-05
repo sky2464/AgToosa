@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v3.1.0" ]]
+  [[ "$output" == "AgToosa v3.1.1" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1094,4 +1094,33 @@ PY
   run bash "$SCRIPT" --registry publish
   [ "$status" -ne 0 ]
   [[ "$output" == *"publish"* ]] || [[ "$output" == *"error"* ]] || [[ "$output" == *"Error"* ]] || [[ "$output" == *"usage"* ]] || [[ "$output" == *"Usage"* ]]
+}
+
+# ── DEV-187: init/update test feedback fixes ──────────────────
+@test "-h flag shows usage and exits 0" {
+  run bash "$SCRIPT" -h
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Usage:"* ]]
+  [[ "$output" == *"--force"* ]]
+  [[ "$output" == *"--dry-run"* ]]
+}
+
+@test "fresh install writes Docs/.agtoosa-version" {
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
+  local ver
+  ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
+  [ "$ver" = "3.1.1" ]
+}
+
+@test "--update after fresh install shows real version not 'vunknown'" {
+  # Fresh install writes .agtoosa-version — subsequent --update must read it
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  [[ "$output" != *"vunknown"* ]]
+  [[ "$output" == *"3.1.1"* ]]
 }

@@ -10,7 +10,7 @@ set -euo pipefail
 #   bash agtoosa.sh [--force] [--dry-run] [--version] [--help]
 # ──────────────────────────────────────────────────────────────
 
-AGTOOSA_VERSION="3.1.0"
+AGTOOSA_VERSION="3.1.1"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
 SHIP_DIR="${SCRIPT_DIR}/ship"
@@ -69,7 +69,7 @@ for arg in "$@"; do
     --dry-run)             DRY_RUN=true ;;
     --list-template-files) print_template_files; exit 0 ;;
     --version)             echo "AgToosa v${AGTOOSA_VERSION}"; exit 0 ;;
-    --help)                print_usage; exit 0 ;;
+    --help|-h)             print_usage; exit 0 ;;
     *)
       if [[ "$REGISTRY" == true && -z "$REGISTRY_COMMAND" && "$arg" != --* ]]; then
         REGISTRY_COMMAND="$arg"
