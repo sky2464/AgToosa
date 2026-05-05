@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v3.1.1" ]]
+  [[ "$output" == "AgToosa v3.3.0" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help

@@ -9,6 +9,27 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [3.3.0] — 2026-05-04
+
+### Added
+
+- **Cross-platform native `/agtoosa-update` command wiring** — Added missing native command/rule/prompt files so `/agtoosa-update` is available not just in entry-point docs but in platform-native command surfaces for Claude Code, Gemini CLI, Cursor, Windsurf, and GitHub Copilot.
+
+### Changed
+
+- **Help command parity across platforms** — Updated native help references to include `/agtoosa-update` in:
+  - `template/.claude/commands/agtoosa-help.md`
+  - `template/.gemini/commands/agtoosa-help.toml`
+  - `template/.github/prompts/agtoosa-help.prompt.md`
+- **Version parity restored** — `agtoosa.ps1` now matches `agtoosa.sh` at `3.3.0`.
+
+### Tests
+
+- Added regression coverage ensuring `/agtoosa-update` exists in all platform-native templates and appears in help output where applicable.
+- Verified focused suite: `bats tests/agtoosa.bats -f "agtoosa-update"`.
+
+---
+
 ## [3.2.1] — 2026-05-04
 
 ### Fixed
