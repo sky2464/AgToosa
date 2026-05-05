@@ -1,42 +1,71 @@
 # AgToosa /agtoosa-update
 
-Check your installed AgToosa version and update workflow files to the latest release.
+Re-read all project state files and get fully up to speed on the current project context.
 
 ## When to Run
 
-- You want to check if a newer AgToosa version is available
-- You pulled a new release of AgToosa and want workflow improvements to reach this project
-- A workflow command feels outdated compared to the AgToosa docs
+- Resuming work after a break and need to catch up on what changed
+- The AI's understanding of the project feels stale or out of sync
+- Starting a new session before diving into `/agtoosa-spec` or `/agtoosa-build`
+- Something feels off — specs, Master-Plan, or context files may have been edited
+
+## What This Command Does
+
+This is a pure read command. The AI reads the project's current state and produces a concise briefing. No bash commands, no external tools.
 
 ## Workflow
 
-1. **Check installed version**
+1. **Read project context**
 
-   Read `Docs/.agtoosa-version` in this project. If the file does not exist, the install predates v2.5.0 (version is unknown).
+   Read all files in `Docs/Context/`:
+   - `product.md` — what the product is and who it's for
+   - `tech-stack.md` — languages, frameworks, and infra
+   - `workflow.md` — team process, branching, deploy flow
+   - `product-guidelines.md` — design principles and conventions
 
-2. **Tell the user their installed version** and ask them to check the AgToosa repository for the latest release tag.
+   If any file is missing or empty, note it without asking the user to fill it in now (suggest `/agtoosa-init` for that).
 
-3. **Run the update**
+2. **Read Master-Plan**
 
-   Ask the user to `git pull` in their AgToosa clone, then run from the AgToosa directory:
+   Read `Docs/Master-Plan.md`. Extract:
+   - Active cycle and its goal
+   - Stories currently In Progress
+   - Blocked items
+   - What shipped most recently
 
-   ```bash
-   bash agtoosa.sh --update /path/to/this/project
+3. **Read recent Changelog entries**
+
+   Read `Docs/AgToosa_Changelog.md`. Surface the last 1–2 releases so the current sprint is in context.
+
+4. **Scan active specs**
+
+   List any `Docs/AgToosa_Spec-*.md` files that are not in `Docs/archived/`. Read their Status field. Note which specs are Approved, In Progress, or Draft.
+
+5. **Produce a project briefing**
+
+   Output a concise summary in this structure:
+
+   ```
+   ## Project Update
+
+   **Product:** [one-line summary from product.md]
+   **Stack:** [key stack items from tech-stack.md]
+
+   **Active cycle:** [cycle name/goal from Master-Plan]
+   **In Progress:** [list of active stories/tasks]
+   **Blocked:** [anything blocked, or "none"]
+   **Recently shipped:** [last release summary from Changelog]
+
+   **Open specs:** [list of non-archived specs and their status]
+
+   **Context gaps:** [any missing/empty context files — suggest /agtoosa-init if significant]
    ```
 
-   Or from this project's root (if the AgToosa clone is a sibling or known path):
+6. **Ask what's next**
 
-   ```bash
-   bash /path/to/AgToosa/agtoosa.sh --update .
-   ```
+   End with:
 
-4. **Confirm**
-
-   After the user reports the command ran, re-read `Docs/.agtoosa-version` and confirm the version updated.
-
-5. **Surface what changed**
-
-   Read `Docs/AgToosa_Changelog.md` and show the entries between the old and new version so the user knows what new commands or workflow improvements are now available.
+   > Ready. Which command do you want to run — `/agtoosa-spec`, `/agtoosa-build`, `/agtoosa-qa`, `/agtoosa-review`, or `/agtoosa-ship`?
 
 ## What Gets Updated
 

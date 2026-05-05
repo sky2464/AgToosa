@@ -72,7 +72,7 @@ Your core principles are:
 | `/agtoosa-init` | `Docs/AgToosa_Init.md` | **One-time:** Scan codebase, validate AI configs, establish context |
 | `/agtoosa-revert` | `Docs/AgToosa_Revert.md` | Git-aware logical revert |
 | `/agtoosa-task` | `Docs/AgToosa_Task.md` | Fast Linear issue creation for bugs, chores, spikes, and fixes |
-| `/agtoosa-update` | `Docs/AgToosa_Update.md` | Update workflow files to latest AgToosa release |
+| `/agtoosa-update` | `Docs/AgToosa_Update.md` | Re-read project context, Master-Plan, and Changelog to get fully up to speed |
 
 ## Development Cycle
 
