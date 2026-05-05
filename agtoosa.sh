@@ -10,7 +10,7 @@ set -euo pipefail
 #   bash agtoosa.sh [--force] [--dry-run] [--version] [--help]
 # ──────────────────────────────────────────────────────────────
 
-AGTOOSA_VERSION="3.4.0"
+AGTOOSA_VERSION="3.4.1"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
 SHIP_DIR="${SCRIPT_DIR}/ship"
@@ -97,7 +97,7 @@ if [[ "$REGISTRY" == true ]]; then
     search) registry_search "$REGISTRY_ARG"; exit $? ;;
     info)   registry_info "$REGISTRY_ARG"; exit $? ;;
     install) registry_install "$REGISTRY_ARG"; exit $? ;;
-    publish) registry_publish; exit $? ;;
+    publish) registry_publish "$REGISTRY_ARG"; exit $? ;;
     *)
       echo -e "${RED}❌ Error: Unknown registry command '${REGISTRY_COMMAND}'.${NC}" >&2
       echo "Available commands: list, search, info, install, publish" >&2

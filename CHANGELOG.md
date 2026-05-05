@@ -9,6 +9,25 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [3.4.1] — 2026-05-05
+
+### Fixed
+
+- **Registry: local pack install staged contents in a nested directory** — `_install_local_pack()` ran `cp -r "$pack_path" "$pack_dir"` against an already-created `$pack_dir`, which placed pack files at `ship/packs/<name>/<name>/...` instead of `ship/packs/<name>/...`. Switched to `cp -R "$pack_path"/. "$pack_dir"/` so contents land at the documented path.
+- **Registry: `--registry install <relative-path>` ignored existing directories** — the local-pack branch only matched `./` or `/` prefixes, so paths like `tests/fixtures/mock-pack` fell through to the network registry and 404'd. The check now also routes any existing-directory argument to the local installer.
+- **Registry: cache directory was not overridable** — `lib/registry.sh` hard-coded `$HOME/.cache/agtoosa`, which prevented offline tests and CI from pre-seeding `registry.json`. The cache dir now respects `AGTOOSA_REGISTRY_CACHE_DIR` when set.
+- **Registry: `validate_pack_files` missed symlink-based path traversal** — `find ... -type f` skips symlinks by default, so a pack containing a symlink to `/etc/hosts` passed validation. Switched to `find -L ... -type f` so symlinks are resolved and rejected when their canonical path escapes the pack root.
+- **Registry: `--registry publish` hung or exited silently with no input** — the publish wizard always called `read` for the pack directory, which fails noisily under `set -e` in non-interactive contexts. `registry_publish` now accepts the directory as a positional argument, only prompts when stdin is a TTY, and prints a clear usage error otherwise.
+
+### Files updated
+
+- `lib/registry.sh` — local pack copy, install routing, cache dir override, symlink-aware validation, publish argument support
+- `agtoosa.sh` — pass `REGISTRY_ARG` to `registry_publish`
+- `agtoosa.sh` / `agtoosa.ps1` — version bump to 3.4.1
+- `tests/agtoosa.bats` — version-pin updates
+
+---
+
 ## [3.4.0] — 2026-05-05
 
 ### Changed

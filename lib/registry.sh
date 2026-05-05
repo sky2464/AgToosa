@@ -7,7 +7,8 @@
 # Globals modified: none directly.
 
 REGISTRY_URL="https://raw.githubusercontent.com/sky2464/agtoosa-registry/main/registry.json"
-REGISTRY_CACHE_DIR="${HOME}/.cache/agtoosa"
+# Allow tests and offline use to override the cache location.
+REGISTRY_CACHE_DIR="${AGTOOSA_REGISTRY_CACHE_DIR:-${HOME}/.cache/agtoosa}"
 REGISTRY_CACHE_FILE="${REGISTRY_CACHE_DIR}/registry.json"
 REGISTRY_CACHE_TIMEOUT=3600
 
@@ -57,7 +58,7 @@ validate_pack_files() {
         return 1
       fi
     fi
-  done < <(find "$dir" -type f -print0)
+  done < <(find -L "$dir" -type f -print0)
   return 0
 }
 
@@ -176,8 +177,8 @@ registry_install() {
     pack_version=""
   fi
 
-  # Handle local pack (offline mode).
-  if [[ "$pack_spec" == "./"* ]] || [[ "$pack_spec" == "/"* ]]; then
+  # Handle local pack (offline mode): explicit path prefix or any existing directory.
+  if [[ "$pack_spec" == "./"* ]] || [[ "$pack_spec" == "/"* ]] || [[ -d "$pack_spec" ]]; then
     _install_local_pack "$pack_spec"
     return $?
   fi
@@ -296,11 +297,12 @@ _install_local_pack() {
     return 0
   fi
 
-  # Copy pack to staging area.
+  # Copy pack contents to staging area (not the directory itself, so files
+  # land at $pack_dir/<file> rather than $pack_dir/<pack_name>/<file>).
   local pack_dir
   pack_dir="${SHIP_DIR}/packs/${pack_name}"
   mkdir -p "$pack_dir"
-  cp -r "$pack_path" "$pack_dir" || {
+  cp -R "$pack_path"/. "$pack_dir"/ || {
     echo "Error: Failed to stage local pack" >&2
     return 1
   }
@@ -320,9 +322,23 @@ _install_local_pack() {
 }
 
 registry_publish() {
+  local pack_dir_input="${1:-}"
+
   echo "AgToosa Registry — Publish a Pack"
   echo ""
-  read -p "Pack directory: " pack_dir_input
+
+  # Accept directory as a positional arg; fall back to interactive prompt only
+  # when stdin is a TTY. Without either, fail with usage so non-interactive
+  # invocations (CI, tests) get a clear error rather than hanging on read.
+  if [[ -z "$pack_dir_input" ]]; then
+    if [[ -t 0 ]]; then
+      read -p "Pack directory: " pack_dir_input
+    else
+      echo "Error: publish requires a pack directory argument." >&2
+      echo "Usage: agtoosa --registry publish <pack-directory>" >&2
+      return 1
+    fi
+  fi
 
   if [[ ! -d "$pack_dir_input" ]]; then
     echo "Error: Directory not found: $pack_dir_input" >&2
