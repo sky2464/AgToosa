@@ -11,8 +11,8 @@ Display the AgToosa command reference. Output this table directly without readin
 | Command | Purpose | Sub-commands |
 |---------|---------|--------------|
 | `/agtoosa-init` | One-time setup: scan codebase, validate configs, create Docs/Context/ | _(none)_ |
-| `/agtoosa-spec` | Research → 6 questions → Spec → STRIDE threat model | `research` · `plan` · `quick` |
-| `/agtoosa-build` | Atomic tasks → TDD Red-Green-Refactor → tests + SAST/DAST | `scope` · `tdd` · `test` |
+| `/agtoosa-spec` | Research → 6 questions → Spec → STRIDE threat model → atomic task planning | `research` · `plan` · `quick` · `tasks` · `to-issues` |
+| `/agtoosa-build` | TDD Red-Green-Refactor against the planned task list → tests + SAST/DAST | `tdd` · `test` |
 | `/agtoosa-qa` | Plan → run → report → triage all test types | `plan` · `run` · `report` · `triage` |
 | `/agtoosa-review` | 4-persona parallel review + Simplifier pass | `security` · `arch` · `debug` · `cross` |
 | `/agtoosa-ship` | Pre-flight → deploy → archive → changelog → next story | `check` · `docs` · `retro` |

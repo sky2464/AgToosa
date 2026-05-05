@@ -1,10 +1,10 @@
-description = "AgToosa: break spec into atomic tasks → TDD Red-Green-Refactor → tests + SAST/DAST"
+description = "AgToosa: TDD Red-Green-Refactor against the planned task list → tests + SAST/DAST"
 prompt = """
-Read Docs/AgToosa_Build.md and execute the build workflow.
+Read Docs/AgToosa_Build.md and execute the build workflow. Task planning is done in /agtoosa-spec — run that first if tasks are missing from Master-Plan.md.
 
 Dispatch based on any arguments provided after the command:
-- /agtoosa-build        → full TDD build workflow
-- /agtoosa-build scope  → task scoping phase only
-- /agtoosa-build tdd    → TDD Red-Green-Refactor cycle for current task
+- /agtoosa-build        → full TDD build workflow (Red-Green-Refactor + comprehensive testing + tracking)
+- /agtoosa-build scope  → task planning has moved to /agtoosa-spec; run `/agtoosa-spec tasks` instead
+- /agtoosa-build tdd    → TDD Red-Green-Refactor cycle for the current task list
 - /agtoosa-build test   → testing and quality-gate phase only
 """

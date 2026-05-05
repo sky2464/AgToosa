@@ -213,8 +213,8 @@ flowchart TD
 | Phase | Command | What It Does |
 |-------|---------|-------------|
 | **0. Setup** | `/agtoosa-init` | **One-time:** Scan codebase, validate AI configs, establish context |
-| **1. Spec & Planning** | `/agtoosa-spec` | Research, specify, architect, and STRIDE threat model |
-| **2. Build & Test** | `/agtoosa-build` | Scope → TDD Red-Green-Refactor → full test army |
+| **1. Spec & Planning** | `/agtoosa-spec` | Research, specify, architect, STRIDE threat model, and atomic task planning |
+| **2. Build & Test** | `/agtoosa-build` | TDD Red-Green-Refactor against the planned task list → full test army |
 | **3. Multi-Persona Review** | `/agtoosa-review` | Security · Architecture · Product · QA review gate |
 | **4. Ship & Cleanup** | `/agtoosa-ship` | Deploy, archive, changelog, suggest next story |
 
@@ -227,8 +227,8 @@ flowchart TD
 | Command | Description |
 |---------|-------------|
 | `/agtoosa-init` | **One-time setup.** Scan codebase, validate AI config files, generate context files, configure TDD preferences |
-| `/agtoosa-spec` | Research and create an **Executable Specification** with embedded architectural plan and STRIDE threat modeling |
-| `/agtoosa-build` | Break spec into atomic tasks, implement with **TDD Red-Green-Refactor**, run full test suite with SAST/DAST |
+| `/agtoosa-spec` | Research and create an **Executable Specification** with embedded architectural plan, STRIDE threat modeling, and atomic task breakdown |
+| `/agtoosa-build` | Implement the planned task list with **TDD Red-Green-Refactor** and run the full test suite with SAST/DAST |
 | `/agtoosa-review` | Multi-persona review (Security Officer, Eng Manager, CEO, QA Lead) + code simplification |
 | `/agtoosa-ship` | **Zero-downtime deployment**, archive specs to `Docs/archived/`, update changelog, suggest next story |
 

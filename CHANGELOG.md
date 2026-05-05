@@ -9,6 +9,35 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [3.4.0] — 2026-05-05
+
+### Changed
+
+- **Restored Spec/Build responsibility boundary** — Task planning (atomic task breakdown, scope boundary declaration, test plan skeleton) has moved from `/agtoosa-build` Part 1 into a new `/agtoosa-spec` Part 4. `/agtoosa-build` now starts directly in the TDD Red-Green-Refactor cycle without any planning gates or scope-approval prompts. The drift that caused `/agtoosa-build` to ask for task approval mid-build is fixed at the source.
+- **`/agtoosa-spec` workflow signature** — Full flow is now Parts 1 + 2 + 3 + 4 (research → spec → architecture/threat-model → task planning). The single approval gate at the end now covers spec, atomic tasks, and the test plan skeleton in one shot.
+- **`/agtoosa-build` workflow signature** — Three parts: TDD Build Cycle, Comprehensive Testing, Tracking. Prerequisites now require both spec approval AND tasks present in `Master-Plan.md` under `## Active Tasks`. If tasks are missing, the workflow redirects to `/agtoosa-spec tasks`.
+
+### Added
+
+- **`/agtoosa-spec tasks` sub-command** — Re-runs Part 4 only (scope boundary + atomic task breakdown + test plan skeleton) against an already-approved spec. Use this to regenerate the task list without re-running the full spec workflow.
+
+### Removed
+
+- **`/agtoosa-build scope` sub-command** — Repurposed as a redirect to `/agtoosa-spec tasks`. The hard scope-approval gate that had bled into the full-flow build is gone — the build no longer pauses for scope confirmation because scope is declared during `/agtoosa-spec`.
+
+### Migration notes
+
+If you have an in-flight Story where `/agtoosa-spec` was already approved but task planning was never run, run `/agtoosa-spec tasks` once to populate `## Active Tasks` in `Master-Plan.md`, then run `/agtoosa-build` as normal.
+
+### Files updated for cross-platform parity
+
+- `template/Docs/AgToosa_Spec.md` (new Part 4) · `template/Docs/AgToosa_Build.md` (Part 1 removed, parts renumbered)
+- Per-platform command surfaces: Claude (`commands/agtoosa-{spec,build,help}.md`), Gemini (`commands/agtoosa-{spec,build,help}.toml`), GitHub Copilot (`prompts/agtoosa-{spec,build,help}.prompt.md` + `copilot-instructions.md`)
+- Entry-point command tables: `template/CLAUDE.md`, `template/AGENTS.md`, `template/OPENCODE.md`, `template/.cursorrules`, `template/.windsurfrules`
+- Reference docs: `template/Docs/AgToosa_Agent.md` (sub-command reference, question budgets, Linear hierarchy), `template/Docs/Master-Plan.md` (Active Tasks creation source), `README.md` (phase descriptions)
+
+---
+
 ## [3.3.0] — 2026-05-04
 
 ### Added

@@ -23,18 +23,18 @@ Your core principles are:
 
 | Sub-command | What it does |
 |-------------|-------------|
-| `/agtoosa-spec` | **Full flow:** context research → 6 forcing questions → executable spec → architecture blueprint + threat model |
+| `/agtoosa-spec` | **Full flow:** context research → 6 forcing questions → executable spec → architecture blueprint + threat model → atomic task planning + test plan skeleton |
 | `/agtoosa-spec research` | **Part 1 only:** context gathering, web research, and clarifying Q&A — outputs raw findings, no spec yet |
 | `/agtoosa-spec plan` | **Part 2 only:** architecture blueprint + STRIDE threat model against an existing spec |
 | `/agtoosa-spec quick` | **Abbreviated:** condensed Q&A + spec for small bug fixes or chores; skips full threat modelling |
+| `/agtoosa-spec tasks` | **Part 4 only:** scope boundary + atomic task breakdown + test plan skeleton against an already-approved spec |
 
-### `/agtoosa-build` — Break down, implement with TDD, test
+### `/agtoosa-build` — Implement with TDD, test
 
 | Sub-command | What it does |
 |-------------|-------------|
-| `/agtoosa-build` | **Full flow:** scope declaration → task breakdown → TDD Red-Green-Refactor → comprehensive testing + security scan |
-| `/agtoosa-build scope` | **Scope only:** declare the build boundary (files/dirs in-scope and out-of-scope) and confirm with user |
-| `/agtoosa-build tdd` | **TDD cycle only:** Red-Green-Refactor loop against an already-declared scope and task list |
+| `/agtoosa-build` | **Full flow:** TDD Red-Green-Refactor → comprehensive testing + security scan → tracking. Requires task list from `/agtoosa-spec`. |
+| `/agtoosa-build tdd` | **TDD cycle only:** Red-Green-Refactor loop against the task list from the approved spec |
 | `/agtoosa-build test` | **Testing only:** run the full testing army (unit + integration + E2E + security scans) on existing code |
 
 ### `/agtoosa-qa` — QA test planning, execution, and defect lifecycle
@@ -136,7 +136,7 @@ Valid types: **Epic** · **Feature** · **Bug** · **Chore** · **Fix** · **Imp
 |-------|-------------|------------|--------|
 | Epic | `Epic: [product area]` | `/agtoosa-init` | — |
 | Story | `Feature/Bug/Chore: [name]` | `/agtoosa-spec` | Epic |
-| Task | `Task: [short description]` | `/agtoosa-build scope` | Story |
+| Task | `Task: [short description]` | `/agtoosa-spec` (Part 4) or `/agtoosa-spec tasks` | Story |
 
 ### Field Defaults
 
@@ -207,8 +207,8 @@ Wait for the user's explicit approval before starting the next phase or writing 
 | Command | Max questions | Notes |
 |---------|--------------|-------|
 | `/agtoosa-init` | 6 | Across all Context files combined |
-| `/agtoosa-spec` | 4 | 2 of the 6 forcing questions are usually inferable |
-| `/agtoosa-build` | 2 | Scope confirm + task list confirm |
+| `/agtoosa-spec` | 4 | 2 of the 6 forcing questions are usually inferable; Part 4 task planning is auto-derived from the approved spec |
+| `/agtoosa-build` | 0 | Execution phase — task list is already approved as part of `/agtoosa-spec`. Discovery Triage may surface mid-build questions but is not a budgeted gate. |
 | `/agtoosa-task` | 3 | Type + priority + context; type+priority can merge into one |
 | `/agtoosa-qa` | 0 | Execution phase — approval gate only |
 | `/agtoosa-review` | 0 | Execution phase — verdict approval gate only |

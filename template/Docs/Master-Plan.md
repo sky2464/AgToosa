@@ -33,13 +33,13 @@
 
 ## Active Tasks
 
-> Task sub-issues under the currently In Progress story. Created at `/agtoosa-build scope`.
+> Task sub-issues under the currently In Progress story. Created at `/agtoosa-spec` (Part 4) or regenerated with `/agtoosa-spec tasks`.
 
 | ID | Title | Estimate | Status |
 |----|-------|----------|--------|
 | [DEV-XX] | Task: [short description] | 2h | In Progress |
 
-*(Empty until `/agtoosa-build scope` breaks down the active story.)*
+*(Empty until `/agtoosa-spec` (Part 4) breaks down the active story.)*
 
 ## Backlog
 

@@ -1,11 +1,12 @@
-description = "AgToosa: research → 6 forcing questions → Executable Specification → STRIDE threat model"
+description = "AgToosa: research → 6 forcing questions → Executable Specification → STRIDE threat model → atomic task planning"
 prompt = """
 Read Docs/AgToosa_Spec.md and execute the specification workflow.
 
 Dispatch based on any arguments provided after the command:
-- /agtoosa-spec                   → full workflow (Parts 1 + 2 + 3)
+- /agtoosa-spec                   → full workflow (Parts 1 + 2 + 3 + 4: research, spec, architecture/threat-model, task planning)
 - /agtoosa-spec research <topic>  → Part 1 only: context, research, domain language alignment, 6 forcing questions
 - /agtoosa-spec plan              → Part 2 only: architecture blueprint + threat model
 - /agtoosa-spec quick <desc>      → abbreviated: 3 questions + spec, skip full threat model
+- /agtoosa-spec tasks             → Part 4 only: scope boundary + atomic task breakdown + test plan skeleton against an already-approved spec
 - /agtoosa-spec to-issues         → break active spec into vertical-slice GitHub issues
 """

@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v3.3.0" ]]
+  [[ "$output" == "AgToosa v3.4.0" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1135,7 +1135,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "3.1.1" ]
+  [ "$ver" = "3.4.0" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1146,5 +1146,5 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"3.1.1"* ]]
+  [[ "$output" == *"3.4.0"* ]]
 }

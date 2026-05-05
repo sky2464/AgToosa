@@ -7,8 +7,8 @@ Display the AgToosa command reference. Do not read any Docs file — output this
 | Command | Purpose | Sub-commands |
 |---------|---------|--------------|
 | `/agtoosa-init` | One-time setup: scan codebase, validate AI configs, create Docs/Context/ files | _(none)_ |
-| `/agtoosa-spec` | Research → 6 forcing questions → Executable Specification → STRIDE threat model | `research` · `plan` · `quick` |
-| `/agtoosa-build` | Break spec into atomic tasks → TDD Red-Green-Refactor → full test suite + SAST/DAST | `scope` · `tdd` · `test` |
+| `/agtoosa-spec` | Research → 6 forcing questions → Executable Specification → STRIDE threat model → atomic task planning | `research` · `plan` · `quick` · `tasks` · `to-issues` |
+| `/agtoosa-build` | TDD Red-Green-Refactor against the planned task list → full test suite + SAST/DAST | `tdd` · `test` |
 | `/agtoosa-qa` | Plan → run → report → triage: unit, integration, E2E, browser, a11y, performance | `plan` · `run` · `report` · `triage` |
 | `/agtoosa-review` | 4-persona parallel review (Security · Arch · Product · QA) + Simplifier pass | `security` · `arch` · `debug` · `cross` |
 | `/agtoosa-ship` | Pre-flight → deploy → archive spec → update changelog → suggest next story | `check` · `docs` · `retro` |
