@@ -1,0 +1,9 @@
+---
+description: AgToosa update workflow rules — activates when syncing project workflows to the latest baseline.
+globs: Docs/AgToosa_Update.md
+alwaysApply: false
+---
+
+# AgToosa Update Rules
+
+When executing `/agtoosa-update` or any workflow sync request, follow `Docs/AgToosa_Update.md` precisely.

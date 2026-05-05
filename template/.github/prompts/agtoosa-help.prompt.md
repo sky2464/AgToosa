@@ -18,5 +18,6 @@ Display the AgToosa command reference. Output this table directly without readin
 | `/agtoosa-ship` | Pre-flight → deploy → archive → changelog → next story | `check` · `docs` · `retro` |
 | `/agtoosa-revert` | Git-aware logical rollback by phase or commit | _(phase or commit)_ |
 | `/agtoosa-task` | Fast task capture to Master-Plan.md for bugs, chores, spikes, and fixes | _(type and description)_ |
+| `/agtoosa-update` | Re-read context + changelog and sync workflow files to latest AgToosa baseline | _(none)_ |
 
 Typical workflow: `/agtoosa-spec` → `/agtoosa-build` → `/agtoosa-qa` → `/agtoosa-review` → `/agtoosa-ship`

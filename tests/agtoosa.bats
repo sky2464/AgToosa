@@ -842,6 +842,30 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
 @test "AgToosa_Agent.md utility table includes /agtoosa-update" {
   grep -q "agtoosa-update" "$TEMPLATE_DIR/Docs/AgToosa_Agent.md"
 }
+@test "agtoosa-update Claude command exists in template" {
+  [ -f "$TEMPLATE_DIR/.claude/commands/agtoosa-update.md" ]
+}
+@test "agtoosa-help Claude command includes /agtoosa-update" {
+  grep -q "agtoosa-update" "$TEMPLATE_DIR/.claude/commands/agtoosa-help.md"
+}
+@test "agtoosa-update Gemini command exists in template" {
+  [ -f "$TEMPLATE_DIR/.gemini/commands/agtoosa-update.toml" ]
+}
+@test "agtoosa-help Gemini command includes /agtoosa-update" {
+  grep -q "agtoosa-update" "$TEMPLATE_DIR/.gemini/commands/agtoosa-help.toml"
+}
+@test "agtoosa-update Copilot prompt exists in template" {
+  [ -f "$TEMPLATE_DIR/.github/prompts/agtoosa-update.prompt.md" ]
+}
+@test "agtoosa-help Copilot prompt includes /agtoosa-update" {
+  grep -q "agtoosa-update" "$TEMPLATE_DIR/.github/prompts/agtoosa-help.prompt.md"
+}
+@test "agtoosa-update Cursor rule exists in template" {
+  [ -f "$TEMPLATE_DIR/.cursor/rules/agtoosa-update.mdc" ]
+}
+@test "agtoosa-update Windsurf rule exists in template" {
+  [ -f "$TEMPLATE_DIR/.windsurf/rules/agtoosa-update.md" ]
+}
 # ── mattpocock/skills integration tests ──────────────────────────────────────
 @test "agtoosa-debug workflow doc exists in template" {
   [ -f "$TEMPLATE_DIR/Docs/AgToosa_Debug.md" ]
