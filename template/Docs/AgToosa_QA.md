@@ -8,7 +8,7 @@
 | `/agtoosa-qa plan` | Test plan only — map spec ACs to test IDs, categories, and smoke set |
 | `/agtoosa-qa run` | Execute test suite with structured AC coverage capture |
 | `/agtoosa-qa report` | Generate `Docs/AgToosa_QAReport-[name].md` from current test results |
-| `/agtoosa-qa triage` | P0–P4 severity scoring; auto-create Linear issues for P0–P2 defects |
+| `/agtoosa-qa triage` | P0–P4 severity scoring; auto-add P0–P2 defects to `Docs/Master-Plan.md` Backlog |
 
 ## Objective
 Give QA testers a dedicated command to own the quality gate — from test planning through defect lifecycle — separate from the code review phase.
@@ -78,17 +78,17 @@ Give QA testers a dedicated command to own the quality gate — from test planni
    | P3 — Low | Minor UX issue or edge case with low user impact |
    | P4 — Cosmetic | Visual or copy issue, no functional impact |
 
-10. **Create Linear issues** for all P0–P2 defects. Each issue must include:
+10. **Add to Master-Plan.md Backlog** all P0–P2 defects. Each entry must include:
     *   Failing test ID and `AC-NNN` reference
     *   Steps to reproduce
     *   Severity (P0–P2) and priority
     *   Link to `Docs/AgToosa_QAReport-*.md`
 
-11. **P3–P4 defects** are recorded in the QA report only — do not auto-create Linear issues (user decides).
+11. **P3–P4 defects** are recorded in the QA report only — user decides whether to add them to `Docs/Master-Plan.md`.
 
 ## Output
 *   `Docs/AgToosa_TestPlan-[name].md` after Part 1
 *   `Docs/AgToosa_QAReport-[name].md` after Part 3
-*   Linear issues for every P0–P2 defect after Part 4
+*   `Docs/Master-Plan.md` Backlog entries for every P0–P2 defect after Part 4
 *   If QA cleared: prompt `/agtoosa-review`
 *   If blocked: list exactly which ACs are uncovered and which smoke tests failed

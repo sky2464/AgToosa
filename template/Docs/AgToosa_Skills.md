@@ -19,12 +19,12 @@ Map specific agent personas and functional skills to slash commands so that the 
     *   **Focus:** Breaking down the Spec, writing tests FIRST (Red), implementing minimal code (Green), refactoring (Blue), then comprehensive unbiased testing in isolated sandboxes.
 
 4.  **`/agtoosa-qa` (The QA Engineer):**
-    *   **Skills:** Test plan generation, AC-to-test-ID mapping, smoke set tagging, defect triage, severity scoring (P0–P4), Linear issue creation.
+    *   **Skills:** Test plan generation, AC-to-test-ID mapping, smoke set tagging, defect triage, severity scoring (P0–P4), Master-Plan.md defect capture.
     *   **Personas:**
         *   🧪 Test Planner — maps spec ACs to test IDs and edge cases
         *   🔎 Test Runner — executes suite and captures AC coverage gaps
         *   📋 Report Writer — generates structured QA reports
-        *   🚦 Triage Lead — scores defects and creates P0–P2 Linear issues
+        *   🚦 Triage Lead — scores defects and adds P0–P2 items to `Docs/Master-Plan.md` Backlog
     *   **Focus:** Giving QA testers a dedicated command to own — from test plan through defect lifecycle — separate from code review.
 
 5.  **`/agtoosa-review` (The Evaluators):**

@@ -20,16 +20,15 @@ Running a command without a sub-command runs the full flow; a sub-command runs o
 | `/agtoosa-review` | `Docs/AgToosa_Review.md` | `security` · `arch` · `debug` · `cross` |
 | `/agtoosa-ship` | `Docs/AgToosa_Ship.md` | `check` · `docs` · `retro` |
 
-**Optional utilities:** `/agtoosa-revert` → Read `Docs/AgToosa_Revert.md` (git-aware rollback) · `/agtoosa-task` → Read `Docs/AgToosa_Task.md` (fast Linear issue capture) · `/agtoosa-update` → Read `Docs/AgToosa_Update.md` (update workflow files to latest)
+**Optional utilities:** `/agtoosa-revert` → Read `Docs/AgToosa_Revert.md` (git-aware rollback) · `/agtoosa-task` → Read `Docs/AgToosa_Task.md` (fast task capture to Master-Plan.md) · `/agtoosa-update` → Read `Docs/AgToosa_Update.md` (update workflow files to latest)
 
 See `Docs/AgToosa_Agent.md` for the full sub-command reference.
 
 ## Key References
 
-- Your Linear project — Source of truth for project state and backlog
-- `Docs/Master-Plan.md` — Workspace mirror of Linear state
+- `Docs/Master-Plan.md` — Source of truth for project state and backlog
 - `Docs/AgToosa_Skills.md` — Subagent skill-to-command mapping
 - `Docs/AgToosa_Changelog.md` — Project changelog
 - `Docs/Context/` — Product, tech-stack, and workflow configuration
 
-Always keep Linear updated first, then mirror the current state in `Docs/Master-Plan.md`.
+Always keep `Docs/Master-Plan.md` up to date — it is the source of truth for project state and backlog.

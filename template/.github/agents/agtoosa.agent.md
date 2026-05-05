@@ -21,6 +21,6 @@ Tell me which phase you want to run:
 I will read the corresponding `Docs/AgToosa_*.md` workflow file and execute it precisely.
 
 ## Key files
-- `Docs/Master-Plan.md` — current project state (mirror of Linear)
+- `Docs/Master-Plan.md` — current project state and source of truth
 - `Docs/Context/` — product, tech-stack, and workflow configuration
 - `Docs/AgToosa_Agent.md` — full command and rule reference

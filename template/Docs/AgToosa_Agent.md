@@ -45,7 +45,7 @@ Your core principles are:
 | `/agtoosa-qa plan` | **Test plan only:** map spec ACs to test IDs, categories, and smoke set |
 | `/agtoosa-qa run` | **Execute only:** run test suite with structured AC coverage capture |
 | `/agtoosa-qa report` | **Report only:** generate `Docs/AgToosa_QAReport-[name].md` |
-| `/agtoosa-qa triage` | **Triage only:** P0–P4 severity scoring; auto-create Linear issues for P0–P2 defects |
+| `/agtoosa-qa triage` | **Triage only:** P0–P4 severity scoring; auto-add P0–P2 defects to Master-Plan.md Backlog |
 
 ### `/agtoosa-review` — Multi-persona code review
 
@@ -71,7 +71,7 @@ Your core principles are:
 |---------|--------------|-------------|
 | `/agtoosa-init` | `Docs/AgToosa_Init.md` | **One-time:** Scan codebase, validate AI configs, establish context |
 | `/agtoosa-revert` | `Docs/AgToosa_Revert.md` | Git-aware logical revert |
-| `/agtoosa-task` | `Docs/AgToosa_Task.md` | Fast Linear issue creation for bugs, chores, spikes, and fixes |
+| `/agtoosa-task` | `Docs/AgToosa_Task.md` | Fast task capture to Master-Plan.md for bugs, chores, spikes, and fixes |
 | `/agtoosa-update` | `Docs/AgToosa_Update.md` | Re-read project context, Master-Plan, and Changelog to get fully up to speed |
 
 ## Development Cycle
@@ -91,16 +91,15 @@ e.g.  /agtoosa-review debug   →  /agtoosa-build tdd   →  /agtoosa-ship check
 
 ## Key References
 
-- Linear project — Source of truth for project state and backlog
-- `Docs/Master-Plan.md` — Workspace mirror of Linear state (read before every command)
+- `Docs/Master-Plan.md` — Source of truth for project state and backlog (read before every command)
 - `Docs/AgToosa_Skills.md` — Subagent skill-to-command mapping
 - `Docs/AgToosa_Changelog.md` — Project changelog
 - `Docs/Context/` — Product, tech-stack, and workflow configuration
 - `.github/instructions/` — Scoped agent instructions for core, testing, security, and changelog rules
 
-## Linear Issue Standard
+## Issue Standard
 
-All Linear issues created by AgToosa must follow this anatomy.
+All issues created by AgToosa must follow this anatomy.
 
 ### Title Format
 
@@ -221,17 +220,17 @@ During `/agtoosa-build`, when the agent notices anything outside the declared sc
 
 1. **Classify** — Bug / Chore / Feature / Security?
 2. **Size** — Can it be fixed in < 15 min without scope creep? If yes → fix it now and note it in the build summary. If no → step 3.
-3. **Ask the user** — "I found [brief description]. Should I: (A) create a Linear issue for later, (B) add to current scope, or (C) ignore?"
-4. **If A** — create a Linear issue via `/agtoosa-task`; add `Discovered during /agtoosa-build on [Story ID] on [date]` to the description; record in `Docs/Master-Plan.md` under `## Backlog`.
+3. **Ask the user** — "I found [brief description]. Should I: (A) add to Master-Plan.md Backlog for later, (B) add to current scope, or (C) ignore?"
+4. **If A** — run `/agtoosa-task`; add `Discovered during /agtoosa-build on [Story ID] on [date]` to the description; record in `Docs/Master-Plan.md` under `## Backlog`.
 5. **If B** — update the Scope Boundary in the active spec; create a new Task sub-issue under the Story; continue TDD cycle.
 
 Never silently fix or drop an out-of-scope discovery.
 
 ## Rules
 
-1. **Always** read `Docs/Context/`, `Docs/Master-Plan.md`, and `.github/instructions/*.instructions.md` (if present) before generating code. Use `Master-Plan.md` as the cycle/backlog snapshot; do not make redundant Linear API calls for information already mirrored there.
+1. **Always** read `Docs/Context/`, `Docs/Master-Plan.md`, and `.github/instructions/*.instructions.md` (if present) before generating code. Use `Master-Plan.md` as the cycle/backlog snapshot.
 2. **Never** assume dependency versions from memory — verify via web or terminal.
-3. **Always** update Linear first, then mirror the current state in `Docs/Master-Plan.md` after every phase.
+3. **Always** keep `Docs/Master-Plan.md` up to date after every phase — it is the source of truth.
 4. **Always** follow the TDD Red-Green-Refactor cycle during `/agtoosa-build` (if enabled).
 5. **Never** let a code file exceed 500 lines.
 6. **Always** archive completed work to `Docs/archived/` during `/agtoosa-ship`.

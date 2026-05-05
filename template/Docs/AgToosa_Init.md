@@ -151,12 +151,13 @@ Use when the AI agent is focused on a specific file or function and needs broade
     *   `Docs/AgToosa_Gemini.md` (Gemini-specific, if applicable)
 
 10. **Project Management Setup:**
-    *   For each Epic confirmed in the consultation, create a Linear **Epic issue**:
-        - Title: `Epic: [product area name]` (e.g., `Epic: Authentication`)
-        - Label: Feature
-        - Status: `Backlog`
-        - Description: one-paragraph charter — goal, scope, and success criteria for this product area
-    *   Record all Epic IDs (e.g., `DEV-12`) in `Docs/Master-Plan.md` under `## Epics`.
+
+    > `Docs/Master-Plan.md` is the single source of truth for all project management — it replaces Linear, Jira, GitHub Projects, Trello, or any external tracker. Do NOT create issues in external tools unless the user explicitly asks.
+
+    *   For each Epic confirmed in the consultation, add an entry to `Docs/Master-Plan.md` under `## Epics`:
+        - **Name:** `Epic: [product area name]` (e.g., `Epic: Authentication`)
+        - **Status:** `Backlog`
+        - **Charter:** one-paragraph goal, scope, and success criteria for this product area
     *   Mirror the full current state in `Docs/Master-Plan.md` using the structured template (Charter, Epics table, empty Backlog, Update Log first entry).
     *   Initialize `Docs/AgToosa_Changelog.md`.
 

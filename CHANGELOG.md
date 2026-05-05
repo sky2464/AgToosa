@@ -9,6 +9,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [3.2.0] — 2026-05-04
+
+### Fixed
+
+- **Linear hardcoded as project management source of truth** — `Docs/Master-Plan.md` was always the intended PM source of truth (replacing Linear, Jira, GitHub Projects, Trello, etc.), but 30+ template files across all platforms contained directives to create Linear issues, sync Linear, and treat Linear as canonical. All references replaced with `Docs/Master-Plan.md`-centered language. Affected files: `AgToosa_Init.md`, `AgToosa_Spec.md`, `AgToosa_Build.md`, `AgToosa_Task.md`, `AgToosa_QA.md`, `AgToosa_Ship.md`, `AgToosa_Revert.md`, `AgToosa_Governance.md`, `AgToosa_Agent.md`, `AgToosa_Skills.md`, `AgToosa_Update.md`, `Master-Plan.md` template, all platform entry files (`CLAUDE.md`, `AGENTS.md`, `.cursorrules`, `.windsurfrules`, `OPENCODE.md`, `.github/copilot-instructions.md`), and all platform rule/skill/command files for Cursor, Windsurf, Claude, Gemini, GitHub Copilot.
+
+### Tests
+
+- All 127 existing bats tests pass (5 pre-existing registry failures unaffected)
+
+---
+
 ## [3.1.1] — 2026-05-04
 
 ### Fixed

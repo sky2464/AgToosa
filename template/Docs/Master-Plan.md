@@ -1,12 +1,11 @@
 # Master-Plan
 
-> **Source of truth:** Linear project — always update Linear first, then mirror here.
-> **Last mirrored:** [YYYY-MM-DD HH:MM]
+> **Source of truth:** `Docs/Master-Plan.md` is the project management source of truth for all tasks, stories, and epics. No external tracker required.
+> **Last updated:** [YYYY-MM-DD HH:MM]
 
 ## Project Charter
 
 - Product: [name]
-- Linear project URL: <!-- Add your Linear project URL here -->
 - GitHub repo: <!-- Add your GitHub repo URL here -->
 - Current milestone: <!-- e.g., v1.0, Sprint 3, Unreleased -->
 - Active cycle: [cycle name] ([start date] → [end date])

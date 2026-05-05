@@ -95,12 +95,12 @@ Before deploying, clean the branch history:
 
 4.  **Changelog Update:** Update `Docs/AgToosa_Changelog.md` with a summary entry: `[date] - [type] - [short description] - [spec reference]`.
 
-5.  **Master-Plan Pruning:** Update Linear first, then mirror in `Docs/Master-Plan.md` — keep only the Epic description with a reference to the archived spec; clear completed tasks.
+5.  **Master-Plan Pruning:** Update `Docs/Master-Plan.md` — keep only the Epic description with a reference to the archived spec; clear completed tasks; move the story row to `## Completed This Cycle`.
 
 ### Part 4 — Suggest Next Story
 
 6.  **Next Steps Suggestion:**
-    *   Based on the overarching project goals in Linear and the current mirrored state of `Master-Plan.md`, suggest the next logical Spec/Story for the team to tackle.
+    *   Based on the overarching project goals in `Docs/Master-Plan.md`, suggest the next logical Spec/Story for the team to tackle.
     *   Consider: open bugs, pending features, technical debt, and security improvements.
 
 ### Part 5 — Sprint Retrospective (`/agtoosa-ship retro`)

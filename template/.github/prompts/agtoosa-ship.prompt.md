@@ -9,5 +9,5 @@ Read Docs/AgToosa_Ship.md and execute the ship workflow.
 Sub-command dispatch:
 - No argument → full ship workflow
 - `check` → pre-flight checks only
-- `docs` → archive spec + update changelog + sync Linear
+- `docs` → archive spec + update changelog + update Master-Plan.md
 - `retro` → retrospective summary + suggest next story

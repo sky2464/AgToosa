@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '💡 AgToosa: Remember to update Docs/Master-Plan.md and sync Linear before ending your session.'"
+            "command": "echo '💡 AgToosa: Remember to update Docs/Master-Plan.md before ending your session.'"
           }
         ]
       }

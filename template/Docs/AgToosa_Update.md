@@ -81,7 +81,7 @@ This is a pure read command. The AI reads the project's current state and produc
 | Category | Action |
 |----------|--------|
 | `Docs/Context/` | Never touched (your product/tech/workflow config) |
-| `Docs/Master-Plan.md` | Never touched (your Linear mirror) |
+| `Docs/Master-Plan.md` | Never touched (your project management source of truth) |
 | `Docs/AgToosa_Changelog.md` | Never touched (your project changelog) |
 | `Docs/archived/` | Never touched (completed specs) |
 | User files in platform dirs | Never touched (only AgToosa-owned files overwritten) |

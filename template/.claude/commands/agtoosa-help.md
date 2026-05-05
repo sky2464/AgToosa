@@ -13,7 +13,7 @@ Display the AgToosa command reference. Do not read any Docs file — output this
 | `/agtoosa-review` | 4-persona parallel review (Security · Arch · Product · QA) + Simplifier pass | `security` · `arch` · `debug` · `cross` |
 | `/agtoosa-ship` | Pre-flight → deploy → archive spec → update changelog → suggest next story | `check` · `docs` · `retro` |
 | `/agtoosa-revert` | Git-aware logical rollback by phase or commit | _(phase or commit)_ |
-| `/agtoosa-task` | Fast Linear issue creation for bugs, chores, spikes, and fixes | _(type and description)_ |
+| `/agtoosa-task` | Fast task capture to Master-Plan.md for bugs, chores, spikes, and fixes | _(type and description)_ |
 
 ### Typical workflow
 ```
@@ -22,7 +22,7 @@ Display the AgToosa command reference. Do not read any Docs file — output this
 ```
 
 ### Key files
-- `Docs/Master-Plan.md` — workspace mirror of Linear project state
+- `Docs/Master-Plan.md` — project management source of truth
 - `Docs/Context/` — product, tech-stack, and workflow configuration
 - `Docs/archived/` — completed specs and plans
 - `Docs/AgToosa_Changelog.md` — auto-maintained changelog

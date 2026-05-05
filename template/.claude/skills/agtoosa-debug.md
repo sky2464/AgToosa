@@ -38,4 +38,4 @@ This is a rigid skill. Follow every phase in order. Do not skip phases.
 - Write regression test (must fail before fix, pass after)
 - Run full test suite
 - Remove all instrumentation
-- Update Docs/Master-Plan.md and Linear
+- Update Docs/Master-Plan.md

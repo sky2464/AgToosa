@@ -1,10 +1,10 @@
 # AgToosa /agtoosa-task Workflow
 
-> **Lightweight issue capture. Use for bugs, chores, spikes, and fixes that do not require a full spec.**
+> **Lightweight task capture. Use for bugs, chores, spikes, and fixes that do not require a full spec.**
 
 ## Objective
 
-Create a well-formed Linear issue in under 5 steps. No spec file is generated. Use this for:
+Capture a well-formed task entry in `Docs/Master-Plan.md` in under 5 steps. No spec file is generated. Use this for:
 - Bugs found during `/agtoosa-build` via the Discovery Triage Protocol
 - Small chores or dependency updates
 - Spike investigations (time-boxed research)
@@ -56,7 +56,7 @@ Then ask the one type-specific context question:
 - **Spike:** "What question needs to be answered, and what is the time-box?"
 - **Fix:** "What is the root cause and the fix boundary?"
 
-Generate the full Description automatically using the Linear Issue Standard (see `AgToosa_Agent.md` → `## Linear Issue Standard`), including a type-appropriate **Definition of Done**:
+Generate the full Description automatically using the Issue Standard (see `AgToosa_Agent.md` → `## Issue Standard`), including a type-appropriate **Definition of Done**:
 
 **Bug DoD:**
 - [ ] Regression test written and named `regression_[bug-id]_[desc]`
@@ -93,29 +93,27 @@ Infer the parent Epic or Story from `Docs/Master-Plan.md` context. If obvious, s
 Present the draft issue before creating it:
 
 ```
-✅ Ready to create issue
-Type: [Bug/Chore/Spike/Fix] · Priority: [High/Medium/Low] · Parent: [ID or none]
+✅ Ready to add entry to Master-Plan.md
+Type: [Bug/Chore/Spike/Fix] · Priority: [High/Medium/Low] · Parent: [Epic/Story or none]
 Title: [type-prefixed title]
 [AC or DoD summary]
-→ Approve to create in Linear  |  Edit anything above
+→ Approve to add  |  Edit anything above
 ```
 
-### Step 5 — Create Issue
+### Step 5 — Add to Master-Plan.md
 
-Create the Linear issue with:
+Add the new entry to `Docs/Master-Plan.md` under `## Backlog` with:
 - **Title** from Step 1–2
-- **Label** matching the type (Bug / Chore / Fix / Feature)
+- **Type** matching Bug / Chore / Fix / Feature
 - **Priority** from Step 1
 - **Status:** `Backlog`
-- **Description** from Step 2 (following the Linear Issue Standard)
+- **Description** from Step 2 (following the Issue Standard)
 - **Parent** from Step 3 (if provided)
 
-Record the new issue ID and title in `Docs/Master-Plan.md` under `## Backlog`.
-
-If the issue was created during Discovery Triage, append to the description:
+If the entry was created during Discovery Triage, append to the description:
 > *Discovered during `/agtoosa-build` on [parent Story ID] on [YYYY-MM-DD].*
 
 ## Output
 
-- Confirm the Linear issue was created; display the issue ID and URL.
+- Confirm the entry was added to `Docs/Master-Plan.md`; display the title and status.
 - Ask: "Want to continue what you were doing, or tackle this now?"

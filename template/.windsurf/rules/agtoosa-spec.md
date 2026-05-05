@@ -11,6 +11,6 @@ When executing any specification or planning work, follow `Docs/AgToosa_Spec.md`
 - Always verify dependency versions against live sources — never assume from memory.
 - STRIDE threat model is mandatory for every spec (skip only for `quick`).
 - Output: a single spec file in `Docs/` with embedded architectural blueprint and threat model.
-- Update Linear and `Docs/Master-Plan.md` after the spec is written.
+- Update `Docs/Master-Plan.md` after the spec is written.
 - Domain language alignment (read `Docs/Context/CONTEXT.md`, update terminology, create ADRs) is built into Part 1.
 - For `to-issues`: use vertical slices only — each issue must deliver one complete user-facing behaviour change.

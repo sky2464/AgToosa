@@ -76,13 +76,12 @@ Break down the Spec into atomic tasks, build with TDD, and rigorously test.
     *   Read the active `AgToosa_Spec-*.md` and translate it into atomic, clear, step-by-step actionable tasks.
 4.  **Parallelization:** Identify tasks that can run in parallel or be handled by sub-agents.
 5.  **Error Escalation:** If a critical flaw is found during task breakdown, stop and ask the user to re-run `/agtoosa-spec`.
-6.  **Linear Task Issues & Master-Plan Update:**
-    *   For each atomic task, create a Linear **Task sub-issue** under the active Story:
+6.  **Master-Plan.md Task Update:**
+    *   For each atomic task, add a Task entry under the active Story in `Docs/Master-Plan.md`:
         - Title: `Task: [short description]`
-        - Label: Chore
+        - Type: Chore
         - Status: `Todo`
-        - Parent: the Story issue ID (e.g., `DEV-15`)
-    *   Record all Task issue IDs and titles in `Docs/Master-Plan.md` under `## Active Tasks`.
+    *   Record all Task titles in `Docs/Master-Plan.md` under `## Active Tasks`.
     *   Present the task list to the user for confirmation before proceeding.
 
 ### Part 2 — TDD Build Cycle
@@ -92,9 +91,8 @@ Break down the Spec into atomic tasks, build with TDD, and rigorously test.
 > If TDD is disabled, still write tests but the strict ordering is relaxed.
 
 **Before starting the first TDD task:**
-- Transition the Story issue status to `In Progress` in Linear.
 - Update `Docs/Master-Plan.md`: move the Story row from `## Backlog` to `## Active Cycle`, set status to `In Progress`.
-- Post a Linear comment on the Story issue:
+- Add an Update Log entry to `Docs/Master-Plan.md`:
 
     ```
     Build 🏗️ Started
@@ -165,7 +163,7 @@ Any bug, edge case, or out-of-scope requirement discovered during the TDD cycle 
 **Triage steps** (non-blocking — inline, < 2 min):
 1. Classify: Bug / Chore / Feature / Security
 2. Size: can it be fixed in < 15 min without scope creep? If yes → fix it now and note it in the build summary.
-3. If not trivial — ask the user: "I found [brief description]. Should I: (A) create a Linear issue for later, (B) add to current scope, or (C) ignore?"
+3. If not trivial — ask the user: "I found [brief description]. Should I: (A) add to Master-Plan.md Backlog for later, (B) add to current scope, or (C) ignore?"
 4. **If A** — run `/agtoosa-task`, add `Discovered during /agtoosa-build on [Story ID] on [date]` to the description, record in `Docs/Master-Plan.md` under `## Backlog`.
 5. **If B** — update the Scope Boundary in the active spec, create a new Task sub-issue under the Story, continue TDD.
 6. Record the triage decision (fix now / issue created / ignored) in the build summary output.
@@ -177,11 +175,11 @@ Any bug, edge case, or out-of-scope requirement discovered during the TDD cycle 
     *   Run all unit, integration, and E2E tests; add browser QA (Playwright/Puppeteer) where applicable.
 9.  **Security Scanning:** SAST (Semgrep/CodeQL), DAST (runtime checks), Secrets scanning (Gitleaks), IaC scanning (Checkov/tfsec).
 10. **SBOM:** Generate a Software Bill of Materials; run dependency audits (`npm audit`, `pip-audit`).
-11. **Feedback Loop:** Loop back to the TDD cycle for any issues found; record fixes in Linear and `Master-Plan.md`.
+11. **Feedback Loop:** Loop back to the TDD cycle for any issues found; record fixes in `Master-Plan.md`.
 
 ### Part 4 — Tracking
 
-12. **Master-Plan Update:** Mark all completed tasks in Linear and mirror in `Docs/Master-Plan.md`.
+12. **Master-Plan Update:** Mark all completed tasks in `Docs/Master-Plan.md`; update story status.
 
 ## Output
 *   Confirm build and test phases are complete and all tests pass.

@@ -1,6 +1,6 @@
 ---
 mode: agent
-description: "AgToosa: fast Linear issue creation for bugs, chores, spikes, and fixes"
+description: "AgToosa: fast task capture to Master-Plan.md for bugs, chores, spikes, and fixes"
 tools: [codebase]
 ---
 

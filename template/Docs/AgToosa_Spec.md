@@ -103,21 +103,21 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
     *   Generate a single file named `Docs/archived/spec-[story-id].md` (e.g., `Docs/archived/spec-DEV-15.md`).
     *   This file contains the executable spec, architectural plan, AND the acceptance criteria table.
     *   The `Docs/archived/` directory is created automatically by `/agtoosa-init`. If it is missing, create it with `mkdir -p Docs/archived`.
-9.  **Linear Story Issue:**
-    *   Create a Linear **Story issue** for this spec:
+9.  **Master-Plan.md Story Entry:**
+    *   Add a Story entry to `Docs/Master-Plan.md`:
         - Title: `Feature: [spec short name]` (use `Bug:` / `Chore:` / `Fix:` as appropriate)
-        - Label: Feature (or Bug / Chore / Fix as appropriate)
+        - Type: Feature (or Bug / Chore / Fix as appropriate)
         - Status: `Todo`
         - Priority: derived from the urgency signal (Q3 answer)
-        - Parent: link to the relevant Epic issue ID from `/agtoosa-init`
-        - Description: paste the spec's Context section + ACs table + Definition of Done checklist
-    *   Record the Story issue ID (e.g., `DEV-15`) in the spec file header.
+        - Parent Epic: link to the relevant Epic from `/agtoosa-init`
+        - Summary: paste the spec's Context section + ACs table + Definition of Done checklist
+    *   Record the Story ID in the spec file header.
     *   Update `Docs/Master-Plan.md`: add the Story row to `## Backlog` (or `## Active Cycle` if enrolling now).
 
 10. **Estimation & Cycle Enrollment:**
     *   Ask the user: "How big is this Story? T-shirt size: **XS** (< 4 h) / **S** (1 d) / **M** (2–3 d) / **L** (4–5 d) / **XL** (6+ d)"
     *   If the user picks **L** or **XL**, prompt: "This is large. Should we split it into smaller Stories now, or proceed as one?"
-    *   Record the estimate on the Linear Story issue.
+    *   Record the estimate in `Docs/Master-Plan.md` on the Story row.
     *   Ask: "Enroll this Story in the current active cycle/sprint? (Yes / No)"
     *   If Yes: add the Story to the active cycle in Linear and update `Docs/Master-Plan.md` under `## Active Cycle`.
 

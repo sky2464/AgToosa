@@ -13,4 +13,4 @@ When executing `/agtoosa-revert` or any rollback work, follow `Docs/AgToosa_Reve
 - Always identify the exact phase or commit to revert to before touching any files.
 - Create a git stash or backup branch before reverting — never lose uncommitted work.
 - After revert, confirm the test suite passes at the target state.
-- Update Linear and `Docs/Master-Plan.md` to reflect the rolled-back state.
+- Update `Docs/Master-Plan.md` to reflect the rolled-back state.
