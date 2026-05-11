@@ -85,15 +85,16 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 ### Part 3 — Output
 
 7.  **Acceptance Criteria:**
-    *   Before writing the spec file, generate a `## Acceptance Criteria` table using Given/When/Then format:
+    *   Before writing the spec file, generate a `## 1.2 Acceptance Criteria (EARS)` table using EARS notation:
 
     ```
-    ## Acceptance Criteria
+    ## 1.2 Acceptance Criteria (EARS)
 
-    | ID | Scenario | Given | When | Then | Priority |
-    |----|----------|-------|------|------|----------|
-    | AC-001 | ... | ... | ... | ... | Must |
-    | AC-002 | ... | ... | ... | ... | Should |
+    | ID | EARS | Priority |
+    |----|------|----------|
+    | AC-001 | WHEN [condition] THE SYSTEM SHALL [behavior] | Must |
+    | AC-002 | WHILE [state] WHEN [event] THE SYSTEM SHALL [behavior] | Should |
+    | AC-003 | IF [optional feature] THEN WHEN [event] THE SYSTEM SHALL [behavior] | Could |
     ```
 
     *   IDs use `AC-NNN` format. Priority: **Must** / **Should** / **Could** (MoSCoW).
@@ -102,7 +103,12 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 
 8.  **File Generation:**
     *   Generate a single file named `Docs/archived/spec-[story-id].md` (e.g., `Docs/archived/spec-DEV-15.md`).
-    *   This file contains the executable spec, architectural plan, AND the acceptance criteria table.
+    *   The file must follow the section order defined in `Docs/SPEC-FORMAT.md`:
+        - `## 1. Requirements` (User Stories, EARS ACs, Out of Scope)
+        - `## 2. Design` (Architecture Blueprint, Data Flow, STRIDE Threat Model, Build Scope)
+        - `## 3. Tasks` (Task Tree, Wave Plan, Test Plan — populated in Part 4)
+        - `## ✅ Spec Approved` (appended on approval)
+    *   Refer to `Docs/SPEC-FORMAT.md` for the full format reference.
     *   The `Docs/archived/` directory is created automatically by `/agtoosa-init`. If it is missing, create it with `mkdir -p Docs/archived`.
 9.  **Master-Plan.md Story Entry:**
     *   Add a Story entry to `Docs/Master-Plan.md`:
@@ -143,11 +149,17 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
     *   Read the spec and translate it into atomic, clear, step-by-step actionable tasks.
     *   Identify tasks that can run in parallel during `/agtoosa-build`.
     *   If a critical flaw is found during task breakdown, stop and ask the user to revise the spec before continuing.
-    *   For each atomic task, add a Task entry under the active Story in `Docs/Master-Plan.md`:
-        - Title: `Task: [short description]`
-        - Type: Chore
-        - Status: `Todo`
-    *   Record all Task titles in `Docs/Master-Plan.md` under `## Active Tasks`.
+    *   Emit a **hierarchical checkbox tree** in `## Active Tasks` in `Docs/Master-Plan.md` (follow the format in `Docs/SPEC-FORMAT.md` § 3.1):
+        - Top-level items: `- [ ] **N.** [Group]: [description]`
+        - Sub-tasks: `  - [ ] N.M [description] — _Requirements: AC-NNN_`
+    *   After generating the task tree, identify groups of sub-tasks that can run in parallel (no shared state, no data dependency). Add a `### Wave Plan` subsection in the spec's `## 3. Tasks` section using:
+
+        ```
+        **Wave 1 (parallel):** [list sub-task IDs]
+        **Wave 2 (sequential after Wave 1):** [list sub-task IDs]
+        ```
+
+    *   Mirror the task tree into `Docs/Master-Plan.md` under `## Active Tasks` (replacing the flat table format).
 
 13. **Test Plan Skeleton:**
     *   Generate **`Docs/AgToosa_TestPlan-[name].md`** containing:
