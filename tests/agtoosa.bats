@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v3.4.1" ]]
+  [[ "$output" == "AgToosa v4.0.0" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -743,6 +743,16 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -eq 0 ]
   grep -q "My Master Plan" "$TEST_PROJECT/Docs/Master-Plan.md"
 }
+@test "Master-Plan.md template contains progress bar placeholder" {
+  run grep -c "▰" "$TEMPLATE_DIR/Docs/Master-Plan.md"
+  [ "$status" -eq 0 ]
+  [ "$output" -ge 1 ]
+}
+@test "Master-Plan.md template contains Active Tasks checkbox tree" {
+  run grep -c "\- \[ \]" "$TEMPLATE_DIR/Docs/Master-Plan.md"
+  [ "$status" -eq 0 ]
+  [ "$output" -ge 1 ]
+}
 @test "--update preserves Docs/AgToosa_Changelog.md" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -943,6 +953,19 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
 @test "AgToosa_Governance is listed in DOCS_FILES" {
   grep -q "AgToosa_Governance" "$BATS_TEST_DIRNAME/../lib/config.sh"
 }
+@test "SPEC-FORMAT.md exists in template" {
+  [ -f "template/Docs/SPEC-FORMAT.md" ]
+}
+@test "SPEC-FORMAT.md is listed in DOCS_FILES" {
+  run grep -c '"Docs/SPEC-FORMAT.md"' "$BATS_TEST_DIRNAME/../lib/config.sh"
+  [ "$status" -eq 0 ]
+  [ "$output" -ge 1 ]
+}
+@test "--list-template-files includes SPEC-FORMAT.md" {
+  run bash "$SCRIPT" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"SPEC-FORMAT.md"* ]]
+}
 @test "--help lists publish registry subcommand" {
   run bash "$SCRIPT" --help
   [ "$status" -eq 0 ]
@@ -1135,7 +1158,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "3.4.1" ]
+  [ "$ver" = "4.0.0" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1146,5 +1169,5 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"3.4.1"* ]]
+  [[ "$output" == *"4.0.0"* ]]
 }
