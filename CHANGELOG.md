@@ -9,6 +9,39 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [4.0.0] — 2026-05-11
+
+### Added
+
+- **Kiro-style spec format (`SPEC-FORMAT.md`)** — new reference doc defining the canonical single-file spec layout: `## 1. Requirements` (User Stories + EARS ACs + Out of Scope), `## 2. Design` (Architecture Blueprint + Data Flow + STRIDE + Build Scope), `## 3. Tasks` (hierarchical checkbox tree + Wave Plan + Test Plan reference). Sibling to `CONTEXT-FORMAT.md` and `ADR-FORMAT.md`.
+- **EARS acceptance criteria** — `/agtoosa-spec` Part 3 now generates ACs in EARS notation (`WHEN [condition] THE SYSTEM SHALL [behavior]`, `WHILE/WHEN/SHALL`, `IF/THEN/WHEN/SHALL`) instead of the Given/When/Then table.
+- **Hierarchical task tree** — `/agtoosa-spec` Part 4 now emits a numbered checkbox tree (`- [ ] **1.** Group / - [ ] 1.1 sub-task — _Requirements: AC-NNN_`) into both the spec file and `Master-Plan.md ## Active Tasks`, replacing the flat table.
+- **Wave Plan** — `/agtoosa-spec` Part 4 appends a `### Wave Plan` subsection grouping parallel-runnable sub-tasks (`**Wave 1 (parallel):** 1.1, 2.1`).
+- **Progress bar in Master-Plan.md** — `## Active Cycle` now shows a unicode progress bar (`▰▰▰▱▱▱▱▱ N/M tasks`) updated by `/agtoosa-build` after each task completes.
+- **Checkbox tick tracking** — `/agtoosa-build` now ticks `- [ ]` → `- [x]` in both the spec's `## 3. Tasks` tree and `Master-Plan.md ## Active Tasks` after each completed task.
+
+### Changed
+
+- **Master-Plan.md template** — visual refresh: Project Charter converted to a key-value table with backtick values; sections reordered to active-first (Active Cycle → Active Tasks → Blocked → Backlog → Epics → Completed → Update Log); status emojis standardised (⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blocked · 🏁 Shipped); `## Completed This Cycle` explicitly marked as pointer-rows-only with `Docs/archived/` as the authoritative store.
+- **`/agtoosa-spec` Part 3 output** — spec files now follow the SPEC-FORMAT.md section order; `Docs/SPEC-FORMAT.md` is referenced in the generation step.
+
+### Migration notes
+
+- Existing `Docs/archived/spec-*.md` files continue to work — `/agtoosa-build` and `/agtoosa-ship` do not validate the internal section structure of archived specs.
+- The new format applies to specs generated after upgrading to v4.0.0. Re-running `/agtoosa-spec` on an existing approved story will regenerate the spec in the new format.
+- Running `/agtoosa-update` ships `SPEC-FORMAT.md` and updates `AgToosa_Spec.md` / `AgToosa_Build.md`. Existing `Docs/Master-Plan.md` is smart-merged — user customisations are preserved. The new section order is a manual one-time tidy.
+
+### Files updated
+
+- `template/Docs/SPEC-FORMAT.md` — new file
+- `template/Docs/Master-Plan.md` — visual refresh
+- `template/Docs/AgToosa_Spec.md` — Part 3 (EARS ACs, section order) · Part 4 (hierarchical task tree, Wave Plan)
+- `template/Docs/AgToosa_Build.md` — tracking update per completed task (checkbox tick, progress bar)
+- `lib/config.sh` — `SPEC-FORMAT.md` added to `DOCS_FILES`
+- `agtoosa.sh` · `agtoosa.ps1` — version bump to 4.0.0
+
+---
+
 ## [3.4.1] — 2026-05-05
 
 ### Fixed
