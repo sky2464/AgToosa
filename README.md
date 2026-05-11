@@ -213,7 +213,7 @@ flowchart TD
 | Phase | Command | What It Does |
 |-------|---------|-------------|
 | **0. Setup** | `/agtoosa-init` | **One-time:** Scan codebase, validate AI configs, establish context |
-| **1. Spec & Planning** | `/agtoosa-spec` | Research, specify, architect, STRIDE threat model, and atomic task planning |
+| **1. Spec & Planning** | `/agtoosa-spec` | Research, specify, architect, STRIDE threat model, and atomic task planning. Generated spec files follow the format defined in `Docs/SPEC-FORMAT.md` (EARS acceptance criteria, hierarchical task tree, and Wave Plan). |
 | **2. Build & Test** | `/agtoosa-build` | TDD Red-Green-Refactor against the planned task list → full test army |
 | **3. Multi-Persona Review** | `/agtoosa-review` | Security · Architecture · Product · QA review gate |
 | **4. Ship & Cleanup** | `/agtoosa-ship` | Deploy, archive, changelog, suggest next story |
@@ -424,6 +424,9 @@ your-project/
     ├── AgToosa_Skills.md   # Subagent skill mapping
     ├── AgToosa_Claude.md   # Claude-specific config
     ├── AgToosa_Gemini.md   # Gemini-specific config
+    ├── CONTEXT-FORMAT.md     # Context file format reference
+    ├── ADR-FORMAT.md         # ADR format reference
+    ├── SPEC-FORMAT.md        # Single-file spec format reference (EARS ACs, task tree, Wave Plan)
     ├── Master-Plan.md        # Workspace mirror of the Linear project state
     ├── AgToosa_Changelog.md    # Auto-maintained changelog
     ├── Context/              # Project context (created by /agtoosa-init)
