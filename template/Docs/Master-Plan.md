@@ -1,73 +1,84 @@
 # Master-Plan
 
-> **Source of truth:** `Docs/Master-Plan.md` is the project management source of truth for all tasks, stories, and epics. No external tracker required.
+> **Source of truth for active work.** Completed work lives in `Docs/archived/` — see Completed This Cycle for links.
 > **Last updated:** [YYYY-MM-DD HH:MM]
 
 ## Project Charter
 
-- Product: [name]
-- GitHub repo: <!-- Add your GitHub repo URL here -->
-- Current milestone: <!-- e.g., v1.0, Sprint 3, Unreleased -->
-- Active cycle: [cycle name] ([start date] → [end date])
-- Cycle capacity: [N] story points / [N] days
-
-## Epics
-
-> Created at `/agtoosa-init`. One row per product area.
-
-| ID | Title | Stories | Status |
-|----|-------|---------|--------|
-| [DEV-XX] | Epic: [product area name] | [N open / N total] | Backlog |
-
-*(Run `/agtoosa-init` to populate this table with your project's Epics.)*
+| Field | Value |
+|-------|-------|
+| Product | `[name]` |
+| GitHub repo | `[url]` |
+| Milestone | `[e.g. v1.0, Sprint 3, Unreleased]` |
+| Active cycle | `[cycle name] ([start] → [end])` |
+| Cycle capacity | `[N] story points / [N] days` |
+| Current phase | ✏️ Spec · 🏗️ Build · 🔍 Review · 🚢 Ship ← _(update the active one)_ |
 
 ## Active Cycle
 
 > Stories committed to the current sprint/cycle.
+> **Progress:** `▰▰▰▰▱▱▱▱ 0/0 tasks` ← updated by `/agtoosa-build` after each task completes
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| [DEV-XX] | Feature: [story name] | Feature | M | In Progress | 2/5 |
+| [DEV-XX] | Feature: [story name] | Feature | M | 🟨 In Progress | 0/5 |
 
 *(Empty until `/agtoosa-spec` enrolls a story in the active cycle.)*
 
+Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blocked · 🏁 Shipped
+
 ## Active Tasks
 
-> Task sub-issues under the currently In Progress story. Created at `/agtoosa-spec` (Part 4) or regenerated with `/agtoosa-spec tasks`.
+> Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
+> Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-| ID | Title | Estimate | Status |
-|----|-------|----------|--------|
-| [DEV-XX] | Task: [short description] | 2h | In Progress |
+- [ ] **1.** [Group name]: [top-level task]
+  - [ ] 1.1 [sub-task description] — _Requirements: AC-001_
+  - [ ] 1.2 [sub-task description] — _Requirements: AC-001, AC-003_
+- [ ] **2.** [Group name]: [top-level task]
+  - [ ] 2.1 [sub-task description] — _Requirements: AC-002_
 
-*(Empty until `/agtoosa-spec` (Part 4) breaks down the active story.)*
-
-## Backlog
-
-> Priority-ordered list of upcoming stories and issues. Updated by `/agtoosa-spec` and `/agtoosa-task`.
-
-| ID | Title | Type | Estimate | Epic | Priority |
-|----|-------|------|----------|------|----------|
-| [DEV-XX] | Feature: [name] | Feature | S | [DEV-YY] | High |
-
-*(Empty until stories are created via `/agtoosa-spec` or `/agtoosa-task`.)*
+*(Empty until `/agtoosa-spec` (Part 4) populates this section. Run `/agtoosa-spec tasks` to regenerate this tree if needed.)*
 
 ## Blocked
 
-> Issues that cannot progress due to a dependency or decision.
+> **Status:** 🟢 None blocked
+> Update this section and change status pill if an issue is blocked during `/agtoosa-build`.
 
 | ID | Title | Blocked by | Since |
 |----|-------|-----------|-------|
 | [DEV-XX] | [title] | [DEV-YY / external reason] | [YYYY-MM-DD] |
 
-*(Empty — good! Update here if an issue is blocked during `/agtoosa-build`.)*
+*(Empty — good!)*
+
+## Backlog
+
+> Priority-ordered list of upcoming stories and issues. Updated by `/agtoosa-spec` and `/agtoosa-task`.
+
+| ID | Title | Type | Estimate | Epic | Priority | Status |
+|----|-------|------|----------|------|----------|--------|
+| [DEV-XX] | Feature: [name] | Feature | S | [DEV-YY] | High | ⬜ Backlog |
+
+*(Empty until stories are created via `/agtoosa-spec` or `/agtoosa-task`.)*
+
+## Epics
+
+> Created at `/agtoosa-init`. One row per product area. Changes rarely — see Active Cycle for what's in flight.
+
+| ID | Title | Stories | Status |
+|----|-------|---------|--------|
+| [DEV-XX] | Epic: [product area name] | [N open / N total] | ⬜ Backlog |
+
+*(Run `/agtoosa-init` to populate this table with your project's Epics.)*
 
 ## Completed This Cycle
 
-> Stories shipped this sprint. Updated by `/agtoosa-ship`.
+> Detail lives in `Docs/archived/`. This section shows pointer rows only — links to archived spec files.
+> Updated by `/agtoosa-ship`.
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
-| [DEV-XX] | Feature: [name] | [YYYY-MM-DD] | `Docs/archived/AgToosa_Spec-[name]-v[N].md` |
+| [DEV-XX] | Feature: [name] | [YYYY-MM-DD] | [AgToosa_Spec-[name]-v[N].md](archived/AgToosa_Spec-[name]-v[N].md) |
 
 *(Empty until `/agtoosa-ship` closes the first story.)*
 
