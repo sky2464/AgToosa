@@ -18,6 +18,7 @@ DOCS_FILES=(
   "Docs/AgToosa_Skills.md"
   "Docs/CONTEXT-FORMAT.md"
   "Docs/ADR-FORMAT.md"
+  "Docs/SPEC-FORMAT.md"
   "Docs/DEEPENING.md"
   "Docs/LANGUAGE.md"
   "Docs/AgToosa_Governance.md"
