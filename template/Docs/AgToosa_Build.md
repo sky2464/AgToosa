@@ -91,8 +91,11 @@ Execute TDD against a planned task list and run the full test suite.
     *   Ensure no file exceeds 500 lines of code.
     *   Ensure OpenTelemetry observability hooks are present (structured logging, metrics, tracing).
     *   Run the full test suite again to confirm nothing broke.
-    *   **Linear update (per task):** After the Refactor step passes:
-        - Transition the Task sub-issue status to `Done` in Linear.
+    *   **Tracking update (per completed task):** After the Refactor step passes:
+        - In the active `AgToosa_Spec-*.md`, change `- [ ] N.M [task]` → `- [x] N.M [task]` in `## 3. Tasks / ### 3.1 Task Tree`.
+        - In `Docs/Master-Plan.md` under `## Active Tasks`, change the same checkbox `- [ ] N.M` → `- [x] N.M`.
+        - In `Docs/Master-Plan.md` under `## Active Cycle`, increment the progress bar: update the ▰/▱ fill and the counter (e.g. `▰▰▰▱▱▱▱▱ 2/8 tasks` → `▰▰▰▰▱▱▱▱ 3/8 tasks`). Each ▰ represents one completed task.
+        - Transition the Task sub-issue status to `Done` in Linear (if Linear is configured).
         - Update `Docs/Master-Plan.md`: increment the Tasks Done count for the Story row.
         - Post a Linear comment on the Story issue:
 
@@ -123,7 +126,7 @@ Any bug, edge case, or out-of-scope requirement discovered during the TDD cycle 
 1. Classify: Bug / Chore / Feature / Security
 2. Size: can it be fixed in < 15 min without scope creep? If yes → fix it now and note it in the build summary.
 3. If not trivial — ask the user: "I found [brief description]. Should I: (A) add to Master-Plan.md Backlog for later, (B) add to current scope, or (C) ignore?"
-4. **If A** — run `/agtoosa-task`, add `Discovered during /agtoosa-build on [Story ID] on [date]` to the description, record in `Docs/Master-Plan.md` under `## Backlog`.
+4. **If A** — run `/agtoosa-task`, add `Discovered during /agtoosa-build on [Story ID] on [date]` to the description, record in `Docs/Master-Plan.md` under `## Backlog`. Note: Backlog items use flat table rows (ID | Title | Type | Estimate | Epic | Priority). The hierarchical task tree is only used in `## Active Tasks` for the current In Progress story.
 5. **If B** — update the Scope Boundary in the active spec, create a new Task sub-issue under the Story, continue TDD.
 6. Record the triage decision (fix now / issue created / ignored) in the build summary output.
 
