@@ -146,4 +146,5 @@ Any bug, edge case, or out-of-scope requirement discovered during the TDD cycle 
 ## Output
 *   Confirm build and test phases are complete and all tests pass.
 *   Present a summary of test results and any security findings.
+*   Print the closure line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
 *   Prompt the user to run `/agtoosa-review`.

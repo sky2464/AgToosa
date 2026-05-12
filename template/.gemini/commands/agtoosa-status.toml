@@ -1,0 +1,15 @@
+description = "AgToosa: read-only health dashboard — parse Master-Plan, cross-reference git, detect orphans"
+prompt = """
+Read Docs/AgToosa_Status.md and execute the status workflow.
+
+Dispatch based on any arguments provided after the command:
+- /agtoosa-status          → full status dashboard
+- /agtoosa-status plan     → Master-Plan.md health check only
+- /agtoosa-status git      → git cross-reference only
+- /agtoosa-status orphans  → orphan detection only
+- Any other token          → prepend exactly: Note: '<token>' is not a defined sub-command. Did you mean: plan, git, orphans? Falling back to full dashboard. Then run the full dashboard.
+
+CRITICAL: This is a READ-ONLY command. Do NOT modify any files.
+
+Generate "Recommended Next Actions" via the deterministic algorithm in Docs/AgToosa_Status.md Part 5.5 — priority-ordered, command-grouped, deduped, capped at 5, with 🎯 Quick wins call-out.
+"""

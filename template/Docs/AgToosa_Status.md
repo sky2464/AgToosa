@@ -1,0 +1,290 @@
+# AgToosa /agtoosa-status Workflow
+
+## Sub-Commands
+
+| Sub-command | Runs |
+|-------------|------|
+| `/agtoosa-status` | Full dashboard: Master-Plan parsing → git cross-reference → orphan detection → health score → dashboard |
+| `/agtoosa-status plan` | Part 1 only — Master-Plan.md health check |
+| `/agtoosa-status git` | Part 2 only — git cross-reference |
+| `/agtoosa-status orphans` | Part 3 only — orphan detection |
+
+## Objective
+
+Produce a read-only health dashboard by parsing `Docs/Master-Plan.md`, cross-referencing git history, and detecting orphaned work — then present actionable findings with a composite health score.
+
+> **Prerequisites:** None. This command can be run at any time, in any phase.
+>
+> **🔒 Read-only guarantee:** This command **never** modifies `Docs/Master-Plan.md`, git state, or any file. It only reads and reports. Every finding includes a "Fix with" suggestion pointing to the appropriate AgToosa command.
+
+## Workflow
+
+### Part 1 — Master-Plan.md Parsing (`/agtoosa-status plan` runs this exclusively)
+
+1.  **Read** `Docs/Master-Plan.md` in full.
+
+2.  **Parse Project Charter:**
+    *   Extract: Product name, Milestone, Active cycle dates, Cycle capacity, Current phase emoji.
+    *   Flag any **placeholder values** still present — patterns: `[name]`, `[url]`, `[YYYY-MM-DD]`, `[e.g.`, `[N]`, `[cycle name]`.
+    *   Record each placeholder as a finding: 🟡 Warning — *Fix with:* `/agtoosa-init`.
+
+3.  **Parse Active Cycle table:**
+    *   Extract each story row: ID, Title, Type, Estimate, Status pill, Tasks Done counter (`N/M`).
+    *   Record each story with status 🟨 In Progress for staleness check in Part 1 step 7.
+    *   If the Active Cycle table is empty (only placeholder rows or no data rows), record: 🟡 Warning — "No active stories. *Fix with:* `/agtoosa-spec`".
+
+4.  **Parse Active Tasks:**
+    *   Count total checkboxes (`- [ ]` unchecked + `- [x]` checked). Compute completion percentage.
+    *   For each story in Active Cycle, verify the Tasks Done counter (`N/M`) matches the actual checkbox counts:
+        -   `N` should equal the count of `- [x]` checkboxes.
+        -   `M` should equal the total checkbox count.
+    *   If there is a mismatch, record: 🔴 Error — "Tasks Done counter `[N/M]` does not match actual checkboxes `[actual_done/actual_total]` for `[Story ID]`. *Fix with:* `/agtoosa-build`".
+    *   If Active Tasks section is empty but Active Cycle has In Progress stories, record: 🟡 Warning — "Active Cycle has In Progress stories but Active Tasks is empty. *Fix with:* `/agtoosa-spec tasks`".
+
+5.  **Parse Blocked table:**
+    *   Extract each row: ID, Title, Blocked by, Since date.
+    *   Calculate age in days from the Since date to today.
+    *   If age > 7 days, record: 🟡 Warning — "(escalated to Warning on day 7) `[ID]` has been blocked for `[N]` days since `[date]`. *Fix with:* resolve the blocker or `/agtoosa-task` to re-scope."
+    *   If age > 30 days, escalate to: 🔴 Error — "(escalated to Error on day 30) `[ID]` has been blocked for `[N]` days — likely abandoned."
+
+6.  **Parse Backlog:**
+    *   Count items by Priority: High, Medium, Low.
+    *   Record as ℹ️ Info — "Backlog: `[H]` High, `[M]` Medium, `[L]` Low priority items."
+    *   If any High-priority items exist and Active Cycle is empty, record: 🟡 Warning — "High-priority backlog items exist but nothing is in Active Cycle. *Fix with:* `/agtoosa-spec`".
+
+7.  **Parse Update Log:**
+    *   Find the most recent entry by date.
+    *   Calculate age in days from the most recent entry to today.
+    *   If age > 7 days, record: 🟡 Warning — "(escalated to Warning on day 7) Update Log is stale — last entry `[N]` days ago (`[date]`). *Fix with:* run the next workflow phase."
+    *   If age > 30 days, escalate to: 🔴 Error — "(escalated to Error on day 30) Update Log has not been updated in `[N]` days — project may be abandoned."
+
+8.  **Cross-section consistency checks:**
+    *   **Orphaned Active Tasks:** For each top-level task group in Active Tasks, extract any referenced story ID. If that ID does not appear in the Active Cycle table, record: 🔴 Error — "Active Task group references `[ID]` which is not in Active Cycle. *Fix with:* `/agtoosa-spec tasks` or `/agtoosa-task`".
+    *   **Stuck-Done detection:** For each story in Active Cycle with status ✅ Done, check if it appears in Completed This Cycle. If not, record: 🟡 Warning — "`[ID]` is marked Done in Active Cycle but not in Completed This Cycle. *Fix with:* `/agtoosa-ship docs`".
+    *   **Dangling Blocked:** For each ID in the Blocked table, verify it appears in Active Cycle or Backlog. If not, record: 🟡 Warning — "Blocked item `[ID]` is not tracked in Active Cycle or Backlog. *Fix with:* `/agtoosa-task`".
+
+### Part 2 — Git Cross-Reference (`/agtoosa-status git` runs this exclusively)
+
+1.  **Recent activity summary:**
+    *   Run `git log --oneline -20` to get the last 20 commits.
+    *   Display as a summary table with hash, date, and message.
+
+2.  **Unreported progress detection:**
+    *   Extract story IDs from recent commit messages (pattern: `DEV-\d+` or project-specific ID prefix).
+    *   Cross-reference each extracted ID against the Active Cycle table in `Docs/Master-Plan.md`.
+    *   For any commit referencing an ID **not** found in Active Cycle or Backlog, record: 🟡 Warning — "Commit `[hash]` references `[ID]` which is not tracked in Master-Plan.md. *Fix with:* `/agtoosa-task`".
+    *   For any commit referencing an In Progress story but whose task checkboxes haven't been updated, record: ℹ️ Info — "Recent commits touch `[ID]` files but Active Tasks checkboxes may be out of date. *Fix with:* `/agtoosa-build`".
+
+3.  **WIP / fixup commit scan:**
+    *   Run `git log --oneline --all --grep="WIP\|fixup!\|squash!"` to find WIP and fixup commits across all branches.
+    *   For each WIP/fixup commit found, record: 🟡 Warning — "WIP/fixup commit found: `[hash] [message]` on branch `[branch]`. *Fix with:* `/agtoosa-ship` (squash step)".
+
+4.  **Branch divergence:**
+    *   If on a feature branch (not `main` or `master`), run `git log --oneline main..HEAD` (or `master..HEAD`) to show divergence.
+    *   Report the number of commits ahead of the base branch.
+    *   If commits ahead > 0 and no Active Cycle story is In Progress, record: 🟡 Warning — "Feature branch has `[N]` commits ahead of main but no story is In Progress. *Fix with:* `/agtoosa-spec` or `/agtoosa-ship`".
+
+### Part 3 — Orphan Detection (`/agtoosa-status orphans` runs this exclusively)
+
+1.  **Spec file inventory:**
+    *   List all spec files matching patterns: `Docs/AgToosa_Spec-*.md`, `Docs/archived/spec-*.md`.
+    *   Extract story IDs from each filename.
+
+2.  **Cross-reference spec files against Master-Plan.md:**
+    *   Collect all IDs referenced anywhere in `Docs/Master-Plan.md` (Active Cycle, Backlog, Completed This Cycle, Blocked, Epics).
+    *   Compare the two sets.
+
+3.  **Flag orphaned specs:**
+    *   Spec files on disk whose ID is **not** in any Master-Plan.md section.
+    *   Record each as: 🟡 Warning — "Spec file `[filename]` references `[ID]` which is not in Master-Plan.md. *Fix with:* `/agtoosa-task` to add it or delete the orphaned file."
+
+4.  **Flag missing specs:**
+    *   Stories in Active Cycle with status 🟨 In Progress or 🟦 Todo that have **no** matching spec file on disk.
+    *   Record each as: 🟡 Warning — "Story `[ID]` is `[status]` but has no spec file. *Fix with:* `/agtoosa-spec`".
+
+### Part 4 — Health Score Computation
+
+Compute four category scores, each starting at 100 with deductions applied. Floor each category at 0.
+
+**Plan Completeness (25%):**
+*   −5 per placeholder value still in Project Charter
+*   −10 if Update Log is stale (last entry > 7 days ago)
+*   −10 if Active Cycle is empty (no active stories)
+
+**Task Consistency (25%):**
+*   −8 per Tasks Done counter mismatch
+*   −10 per orphaned Active Task group (references nonexistent story)
+*   −10 per Stuck-Done story (Done in Active Cycle but not in Completed)
+*   −10 per Dangling Blocked item
+
+**Git Hygiene (25%):**
+*   −3 per WIP/fixup commit found
+*   −5 if feature branch is behind upstream
+*   −5 per commit referencing an untracked story ID
+
+**Freshness (25%):**
+*   −5 per 7-day period a Blocked item exceeds 7 days (e.g., 21 days blocked = −10)
+*   −15 if the active cycle end date has passed (overdue)
+*   −10 if Update Log has no entry in the last 7 days
+
+**Composite score:** `total = round(0.25 × plan + 0.25 × tasks + 0.25 × git + 0.25 × freshness)`
+
+**Grades:**
+
+| Score | Grade | Emoji |
+|-------|-------|-------|
+| 90–100 | Excellent | 🟢 |
+| 70–89 | Good | 🟡 |
+| 50–69 | Needs Attention | 🟠 |
+| 0–49 | Critical | 🔴 |
+
+### Part 5 — Dashboard Output
+
+Present the full report using this structure:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 AgToosa Status Dashboard
+Project: [name] · Cycle: [cycle] · Phase: [phase emoji]
+🔒 Read-only — no files were modified
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Health Score: [NN]/100 [grade emoji] [grade label]
+
+| Category          | Score   | Issues |
+|-------------------|---------|--------|
+| Plan Completeness | [N]/100 | [n]    |
+| Task Consistency  | [N]/100 | [n]    |
+| Git Hygiene       | [N]/100 | [n]    |
+| Freshness         | [N]/100 | [n]    |
+
+## Active Stories
+
+| ID | Title | Status | Progress |
+|----|-------|--------|----------|
+| [rows from Active Cycle] |
+
+## Findings
+
+### 🔴 Errors ([N])
+- [finding] — *Fix with:* `/agtoosa-[command]`
+
+### 🟡 Warnings ([N])
+- [finding] — *Fix with:* `/agtoosa-[command]`
+
+### ℹ️ Info ([N])
+- [finding]
+
+## Git Activity (last 20 commits)
+
+| Hash | Date | Message |
+|------|------|---------|
+| [rows from git log] |
+
+## Orphans ([N] found)
+- [orphan description] — *Fix with:* `/agtoosa-[command]`
+
+## Recommended Next Actions
+1. Run `[command]` to [verb-phrase] ([N] findings: [ID1, ID2, …])
+   Rationale: [one short line].
+2. …
+```
+
+When running a sub-command (`plan`, `git`, or `orphans`), output only the relevant sections of the dashboard. Always include the header and health score sections.
+
+### Part 5.5 — Recommended Next Actions generation
+
+The dashboard MUST emit a deterministic, ranked, deduplicated "Recommended Next Actions" section every run. Do not improvise ordering. Follow this algorithm exactly.
+
+**Step 1 — Map every finding to its fix-command** using this table:
+
+| Finding pattern | Fix command |
+|---|---|
+| Placeholder values still in Project Charter | `/agtoosa-init` |
+| Empty Active Cycle; missing spec for In Progress / Todo story; High-priority backlog with empty Active Cycle; branch ahead with no In Progress story | `/agtoosa-spec` |
+| Empty Active Tasks while Active Cycle has In Progress; Orphaned Active Task group references unknown story ID | `/agtoosa-spec tasks` |
+| Tasks Done counter mismatch; stale checkboxes referenced by recent commits | `/agtoosa-build` |
+| Blocked item > 7d (Warning) or > 30d (Error); Dangling Blocked ID not in Active Cycle/Backlog; Commit references untracked story ID; Orphaned spec file not referenced in Master-Plan | `/agtoosa-task` |
+| WIP / fixup / squash commits; Stuck-Done story (Done in Active Cycle but not in Completed) | `/agtoosa-ship` |
+
+**Step 2 — Sort findings by priority:**
+
+1. 🔴 Errors (regardless of source).
+2. 🟡 Aged Warnings, oldest `since` date first. A warning is "aged" if it has the `(escalated to Warning on day N)` prefix.
+3. 🟡 Other Warnings.
+4. Orphan findings (from Part 3).
+5. ℹ️ Info.
+
+Within each tier, preserve the order findings were discovered (Part 1 → Part 2 → Part 3).
+
+**Step 3 — Group by fix-command.** After sorting, walk the list and group consecutive findings that share the same fix-command into a single action. A later finding with the same command but separated by a different-command finding still belongs to its earlier group — coalesce all findings per command across the whole sorted list. The action's tier is the tier of the highest-priority finding in the group.
+
+**Step 4 — Emit each action** in priority order (highest-tier group first; ties broken by first-discovery order):
+
+```
+N. Run `<command>` to <verb-phrase> (<count> findings: <ID1, ID2, …>)
+   Rationale: <one short sentence>.
+```
+
+Use these verb-phrases verbatim:
+
+- `/agtoosa-init` → "clear charter placeholders"
+- `/agtoosa-spec` → "address missing or unscoped specs"
+- `/agtoosa-spec tasks` → "rebuild the Active Tasks checkbox tree"
+- `/agtoosa-build` → "reconcile task counters and stale checkboxes"
+- `/agtoosa-task` → "resolve blocked, dangling, untracked, or orphan items"
+- `/agtoosa-ship` → "clean up WIP commits and stuck-Done stories"
+
+Rationale lines:
+
+- Errors group: "errors block downstream commands and skew progress reporting."
+- Aged-Warnings group: "aged warnings risk auto-escalation to Errors at day 30."
+- Other-Warnings group: "warnings degrade Freshness and Task Consistency scores."
+- Orphan group: "orphans break the spec ↔ Master-Plan source-of-truth contract."
+- Info group: "informational — address opportunistically."
+
+**Step 5 — Cap at 5 actions.** If more groups exist, emit the top 5 and append a 6th line:
+
+```
+(<N> more findings — run `/agtoosa-status plan` for the full list)
+```
+
+**Step 6 — Quick wins call-out.** After the numbered list, emit a `🎯 Quick wins` block listing finding IDs that match this hard-coded heuristic (each takes <5 min to fix):
+
+- Project Charter placeholders.
+- Tasks Done counter mismatches.
+- Missing spec for the currently-In Progress story (single ID).
+
+Format:
+
+```
+🎯 Quick wins: <ID1>, <ID2>, … (estimated <5 min each)
+```
+
+If no findings match, omit the block entirely.
+
+**Step 7 — Empty state.** If there are zero Errors, Warnings, Orphans, and Info findings, replace the entire Next Actions section with:
+
+```
+## Recommended Next Actions
+✅ No findings. Run `/agtoosa-spec` to start the next story, or `/agtoosa-ship` if a cycle is complete.
+```
+
+### Part 5.6 — Sub-command typo helper
+
+When invoked as `/agtoosa-status <token>` and `<token>` is not in the set `{plan, git, orphans}`, prepend exactly this line to the dashboard output before any other content:
+
+```
+Note: '<token>' is not a defined sub-command. Did you mean: plan, git, orphans? Falling back to full dashboard.
+```
+
+Then run the full dashboard as usual. This replaces any generic "unknown sub-command" fallback wording.
+
+## Rules
+
+1.  **Read-only.** Never modify `Docs/Master-Plan.md`, git state, or any other file. If tempted to fix something, report it as a finding instead.
+2.  **Zero questions.** Run immediately and produce output. Do not ask the user anything.
+3.  **Actionable findings.** Every 🔴 Error and 🟡 Warning must include a "Fix with" suggestion pointing to an existing AgToosa command.
+4.  **Placeholder awareness.** Master-Plan.md ships as a template with placeholder values (`[DEV-XX]`, `[YYYY-MM-DD]`, `[name]`, etc.). Detect these and report them — do not treat them as real data.
+5.  **Graceful degradation.** If a section is empty or missing, note it and continue. Do not fail the entire dashboard because one section is unpopulated.
+6.  **Git safety.** Only run read-only git commands (`git log`, `git branch`, `git diff --stat`, `git rev-parse`). Never run `git checkout`, `git reset`, `git push`, or any command that modifies state.

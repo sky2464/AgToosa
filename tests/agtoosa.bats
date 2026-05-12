@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v4.0.0" ]]
+  [[ "$output" == "AgToosa v4.1.0" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1158,7 +1158,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "4.0.0" ]
+  [ "$ver" = "4.1.0" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1169,5 +1169,101 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"4.0.0"* ]]
+  [[ "$output" == *"4.1.0"* ]]
+}
+
+# ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
+
+@test "D1: AgToosa_Status.md Part 5.5 Next Actions algorithm is spec'd" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Status.md"
+  grep -q "Part 5.5 — Recommended Next Actions generation" "$f"
+  grep -q "Priority order" "$f" || grep -q "Sort findings by priority" "$f"
+  grep -q "Group by fix-command" "$f"
+  grep -q "Cap at 5 actions" "$f"
+  grep -q "Quick wins" "$f"
+}
+
+@test "D1: aging escalation prefix appears in Blocked + Update Log finding wording" {
+  grep -q "escalated to Warning on day 7" "$TEMPLATE_DIR/Docs/AgToosa_Status.md"
+  grep -q "escalated to Error on day 30" "$TEMPLATE_DIR/Docs/AgToosa_Status.md"
+}
+
+@test "D2: closure line appears in 5 canonical workflow docs" {
+  local needle='Run /agtoosa-status to verify findings cleared'
+  for f in AgToosa_Build AgToosa_Task AgToosa_Spec AgToosa_Ship AgToosa_Init; do
+    grep -q "$needle" "$TEMPLATE_DIR/Docs/${f}.md" || {
+      echo "MISSING closure line in canonical: ${f}.md"
+      false
+    }
+  done
+}
+
+@test "D2: closure line appears in 5 platform variants of build/task/spec/ship" {
+  local needle='Run /agtoosa-status to verify findings cleared'
+  for cmd in build task spec ship; do
+    for path in \
+      ".claude/commands/agtoosa-${cmd}.md" \
+      ".cursor/rules/agtoosa-${cmd}.mdc" \
+      ".gemini/commands/agtoosa-${cmd}.toml" \
+      ".github/prompts/agtoosa-${cmd}.prompt.md" \
+      ".windsurf/rules/agtoosa-${cmd}.md"; do
+      grep -q "$needle" "$TEMPLATE_DIR/$path" || {
+        echo "MISSING closure line in $path"
+        false
+      }
+    done
+  done
+}
+
+@test "D2: closure line appears in 3 init platform variants" {
+  local needle='Run /agtoosa-status to verify findings cleared'
+  for path in \
+    ".claude/commands/agtoosa-init.md" \
+    ".gemini/commands/agtoosa-init.toml" \
+    ".github/prompts/agtoosa-init.prompt.md"; do
+    grep -q "$needle" "$TEMPLATE_DIR/$path" || {
+      echo "MISSING closure line in $path"
+      false
+    }
+  done
+}
+
+@test "D2: closure line appears in cursor + windsurf agtoosa-core fallback rules" {
+  local needle='Run /agtoosa-status to verify findings cleared'
+  grep -q "$needle" "$TEMPLATE_DIR/.cursor/rules/agtoosa-core.mdc"
+  grep -q "$needle" "$TEMPLATE_DIR/.windsurf/rules/agtoosa-core.md"
+}
+
+@test "D2: init and help do NOT have per-command cursor/windsurf variants (parity asymmetry)" {
+  # Documented parity exception — these commands fold into agtoosa-core on cursor/windsurf.
+  [ ! -f "$TEMPLATE_DIR/.cursor/rules/agtoosa-init.mdc" ]
+  [ ! -f "$TEMPLATE_DIR/.cursor/rules/agtoosa-help.mdc" ]
+  [ ! -f "$TEMPLATE_DIR/.windsurf/rules/agtoosa-init.md" ]
+  [ ! -f "$TEMPLATE_DIR/.windsurf/rules/agtoosa-help.md" ]
+}
+
+@test "D3: typo helper string appears in canonical AgToosa_Status.md" {
+  grep -q "Did you mean: plan, git, orphans" "$TEMPLATE_DIR/Docs/AgToosa_Status.md"
+}
+
+@test "D3: typo helper appears in 5 status platform variants" {
+  local needle='Did you mean: plan, git, orphans'
+  for path in \
+    ".claude/commands/agtoosa-status.md" \
+    ".cursor/rules/agtoosa-status.mdc" \
+    ".gemini/commands/agtoosa-status.toml" \
+    ".github/prompts/agtoosa-status.prompt.md" \
+    ".windsurf/rules/agtoosa-status.md"; do
+    grep -q "$needle" "$TEMPLATE_DIR/$path" || {
+      echo "MISSING typo helper in $path"
+      false
+    }
+  done
+}
+
+@test "maintainer doc documents the parity asymmetry and user-facing strings" {
+  local f="$BATS_TEST_DIRNAME/../docs/agtoosa-maintainer.md"
+  grep -q "Per-Platform Parity" "$f"
+  grep -q "Run /agtoosa-status to verify findings cleared" "$f"
+  grep -q "Did you mean: plan, git, orphans" "$f"
 }

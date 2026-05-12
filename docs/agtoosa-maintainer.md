@@ -31,6 +31,30 @@ Do not use this mode for ordinary feature work inside a generated project that m
 5. If you change platform entry points under `template/`, keep them functionally equivalent across platforms unless the platform truly requires a different native format.
 6. Never silently rely on version drift. If release behavior changes, inspect `CHANGELOG.md` and version wiring together.
 
+## Per-Platform Parity
+
+Most slash commands ship in 5 platform variants — one each under `.claude/commands/`, `.cursor/rules/`, `.gemini/commands/`, `.github/prompts/`, `.windsurf/rules/`. **Two commands are asymmetric:** `/agtoosa-init` and `/agtoosa-help` ship in only 3 variants (`.claude/commands/`, `.gemini/commands/`, `.github/prompts/`) because Cursor and Windsurf fold their rules into the always-on `agtoosa-core.{mdc,md}` rule files. When you add behavior to `init` or `help`, mirror the rule into `template/.cursor/rules/agtoosa-core.mdc` and `template/.windsurf/rules/agtoosa-core.md` instead of creating a new per-command file. Encode this asymmetry in any parity-loop bats test rather than blindly iterating `5 × N`.
+
+## User-Facing Strings That Must Match Across Variants
+
+These strings are part of the user-facing contract and must appear verbatim in every relevant canonical doc and platform variant. Bats parity tests grep for the canonical doc; verify variant copies on every release.
+
+| String | Canonical source | Variants |
+|---|---|---|
+| `✅ Done. Run /agtoosa-status to verify findings cleared.` (closure line) | `template/Docs/AgToosa_{Build,Task,Spec,Ship,Init}.md` Output section | 5 each for build/task/spec/ship + 3 for init + cursor/windsurf `agtoosa-core` fallback |
+| `Note: '<token>' is not a defined sub-command. Did you mean: plan, git, orphans? Falling back to full dashboard.` (status typo helper) | `template/Docs/AgToosa_Status.md` Part 5.6 | 5 status platform variants |
+| `Recommended Next Actions generation` heading + the Part 5.5 algorithm | `template/Docs/AgToosa_Status.md` Part 5.5 | Referenced (not duplicated) from each status variant |
+
+Adding a new fix-command? It must emit the closure line on successful completion and be added to the table above.
+
+## Release Checklist
+
+- Bump `AGTOOSA_VERSION` in `agtoosa.sh` AND `agtoosa.ps1` to identical values (bats checks parity).
+- Update `README.md` version badge AND any pinned `--ref vX.Y.Z` install snippets — they drift silently across releases.
+- Prepend a dated `## [X.Y.Z]` block to `CHANGELOG.md`. Move anything from `## [Unreleased]` into the new block.
+- Re-grep every "user-facing string" from the parity table; ensure variants didn't drift.
+- Run `bats tests/agtoosa.bats`. Confirm the version-parity test passes.
+
 ## Working Loop
 
 1. Identify the smallest behavior-owning file.

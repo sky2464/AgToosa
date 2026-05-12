@@ -12,3 +12,4 @@ When executing `/agtoosa-spec` or any specification work, follow `Docs/AgToosa_S
 - Output: a single spec file in `Docs/` with embedded architectural blueprint and threat model.
 - Update `Docs/Master-Plan.md` after the spec is written.
 - For `to-issues`: use vertical slices only — each issue must deliver one complete user-facing behaviour change.
+- On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

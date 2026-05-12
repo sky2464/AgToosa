@@ -20,7 +20,7 @@ Running a command without a sub-command runs the full flow; a sub-command runs o
 | `/agtoosa-review` | `Docs/AgToosa_Review.md` | `security` · `arch` · `debug` · `cross` |
 | `/agtoosa-ship` | `Docs/AgToosa_Ship.md` | `check` · `docs` · `retro` |
 
-**Optional utilities:** `/agtoosa-revert` → Read `Docs/AgToosa_Revert.md` (git-aware rollback) · `/agtoosa-task` → Read `Docs/AgToosa_Task.md` (fast task capture to Master-Plan.md) · `/agtoosa-update` → Read `Docs/AgToosa_Update.md` (update workflow files to latest)
+**Optional utilities:** `/agtoosa-revert` → Read `Docs/AgToosa_Revert.md` (git-aware rollback) · `/agtoosa-task` → Read `Docs/AgToosa_Task.md` (fast task capture to Master-Plan.md) · `/agtoosa-update` → Read `Docs/AgToosa_Update.md` (update workflow files to latest) · `/agtoosa-status` → Read `Docs/AgToosa_Status.md` (read-only project health dashboard)
 
 See `Docs/AgToosa_Agent.md` for the full sub-command reference.
 

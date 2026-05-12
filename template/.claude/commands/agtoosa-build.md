@@ -9,3 +9,5 @@ Dispatch rules based on arguments:
 - `test` → execute the testing and quality-gate phase only: run all tests, check coverage thresholds, run SAST/DAST.
 
 If no arguments were given, run the full flow from Docs/AgToosa_Build.md.
+
+On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

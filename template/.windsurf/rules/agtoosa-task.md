@@ -4,3 +4,5 @@ description: "AgToosa: fast task capture to Master-Plan.md for bugs, chores, spi
 ---
 
 When executing `/agtoosa-task` or any lightweight issue capture, follow `Docs/AgToosa_Task.md` precisely.
+
+On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

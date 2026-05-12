@@ -13,3 +13,5 @@ Sub-command dispatch (include the sub-command after selecting this prompt):
 - `quick <desc>` → abbreviated: 3 questions + spec, skip full threat model
 - `tasks` → Part 4 only: scope boundary + atomic task breakdown + test plan skeleton against an already-approved spec
 - `to-issues` → break active spec into vertical-slice GitHub issues
+
+On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

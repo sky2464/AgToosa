@@ -16,6 +16,7 @@ Tell me which phase you want to run:
 - **QA** — "run agtoosa-qa"
 - **Review** — "run agtoosa-review"
 - **Ship** — "run agtoosa-ship"
+- **Status** — "run agtoosa-status" (read-only health dashboard)
 - **Init** (first time only) — "run agtoosa-init"
 
 I will read the corresponding `Docs/AgToosa_*.md` workflow file and execute it precisely.

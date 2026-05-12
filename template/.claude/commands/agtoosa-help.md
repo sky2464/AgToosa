@@ -15,6 +15,7 @@ Display the AgToosa command reference. Do not read any Docs file — output this
 | `/agtoosa-revert` | Git-aware logical rollback by phase or commit | _(phase or commit)_ |
 | `/agtoosa-task` | Fast task capture to Master-Plan.md for bugs, chores, spikes, and fixes | _(type and description)_ |
 | `/agtoosa-update` | Re-read context + changelog and sync workflow files to latest AgToosa baseline | _(none)_ |
+| `/agtoosa-status` | Read-only health dashboard: Master-Plan parsing, git cross-ref, orphan detection | `plan` · `git` · `orphans` |
 
 ### Typical workflow
 ```

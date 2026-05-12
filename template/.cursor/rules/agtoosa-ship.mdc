@@ -15,3 +15,4 @@ When executing `/agtoosa-ship` or any shipping work, follow `Docs/AgToosa_Ship.m
 - Archive the active spec to `Docs/archived/` with the completion date in the filename.
 - Update `Docs/AgToosa_Changelog.md` and `Docs/Master-Plan.md` after a successful ship.
 - Always end with a retro summary and a suggested next story.
+- On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

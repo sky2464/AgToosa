@@ -11,3 +11,5 @@ Dispatch rules based on arguments:
 - `to-issues` → break the active spec or PRD into vertical-slice GitHub issues (one issue per user-facing behaviour change).
 
 If no arguments were given, run the full flow from Docs/AgToosa_Spec.md.
+
+On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

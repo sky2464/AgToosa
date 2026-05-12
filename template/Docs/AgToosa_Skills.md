@@ -40,3 +40,11 @@ Map specific agent personas and functional skills to slash commands so that the 
 
 7.  **`/agtoosa-revert` (The Safety Net):**
     *   **Skills:** Git-aware logical rollbacks by phase/task, Context & plan synchronization.
+
+8.  **`/agtoosa-status` (The Auditor):**
+    *   **Skills:** Master-Plan.md section parsing, status pill validation, checkbox arithmetic, git log analysis, file-system inventory, cross-reference consistency checking, health score computation.
+    *   **Personas:**
+        *   📊 Dashboard Compiler — parses Master-Plan.md sections and computes health metrics
+        *   🔍 Git Archaeologist — scans commit history for unreported progress and stale branches
+        *   🗂️ Orphan Hunter — detects spec files and task IDs not tracked in Master-Plan
+    *   **Focus:** Providing a scannable, read-only health report with actionable findings. Never modifies state — only observes and recommends.

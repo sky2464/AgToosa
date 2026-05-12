@@ -7,3 +7,5 @@ Dispatch rules based on arguments:
 - `zoom-out` → execute zoom-out only: show call graph, module boundaries, usage sites, and impact analysis for the current focus area.
 
 If no arguments were given, run the full initialization from Docs/AgToosa_Init.md.
+
+On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

@@ -5,4 +5,6 @@ Read Docs/AgToosa_Init.md and execute the initialization workflow.
 Dispatch based on any arguments provided after the command:
 - /agtoosa-init           → full one-time initialization: scan codebase, validate AI configs, Docs/Context/, configure AgToosa
 - /agtoosa-init zoom-out  → zoom-out: call graph, module boundaries, usage sites, impact analysis for current focus area
+
+On successful completion, print this line verbatim: ✅ Done. Run /agtoosa-status to verify findings cleared.
 """

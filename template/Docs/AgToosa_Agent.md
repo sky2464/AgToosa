@@ -73,6 +73,7 @@ Your core principles are:
 | `/agtoosa-revert` | `Docs/AgToosa_Revert.md` | Git-aware logical revert |
 | `/agtoosa-task` | `Docs/AgToosa_Task.md` | Fast task capture to Master-Plan.md for bugs, chores, spikes, and fixes |
 | `/agtoosa-update` | `Docs/AgToosa_Update.md` | Re-read project context, Master-Plan, and Changelog to get fully up to speed |
+| `/agtoosa-status` | `Docs/AgToosa_Status.md` | Read-only project health dashboard with git cross-reference |
 
 ## Development Cycle
 
@@ -213,6 +214,7 @@ Wait for the user's explicit approval before starting the next phase or writing 
 | `/agtoosa-qa` | 0 | Execution phase — approval gate only |
 | `/agtoosa-review` | 0 | Execution phase — verdict approval gate only |
 | `/agtoosa-ship` | 0 | Execution phase — deploy approval gate only |
+| `/agtoosa-status` | 0 | Read-only — no interaction needed |
 
 ### Discovery Triage Protocol
 

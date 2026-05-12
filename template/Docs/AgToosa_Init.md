@@ -177,3 +177,5 @@ Present the approval gate:
 AI configs confirmed. Use 4 commands: /agtoosa-spec → /agtoosa-build → /agtoosa-review → /agtoosa-ship.
 → Approve and run /agtoosa-spec when ready  |  Comment or adjust below
 ```
+
+Then print the closure line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

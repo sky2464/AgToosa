@@ -147,4 +147,5 @@ Run this step when `Docs/Master-Plan.md` exceeds approximately 200 lines **or** 
 ## Output
 *   Confirm archiving and changelog updates are successful.
 *   Present the suggested next Spec to the user.
+*   Print the closure line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
 *   Ask if they want to run `/agtoosa-spec` for the next story.

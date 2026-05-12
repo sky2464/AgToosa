@@ -116,4 +116,5 @@ If the entry was created during Discovery Triage, append to the description:
 ## Output
 
 - Confirm the entry was added to `Docs/Master-Plan.md`; display the title and status.
+- Print the closure line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
 - Ask: "Want to continue what you were doing, or tackle this now?"

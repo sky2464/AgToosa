@@ -1,0 +1,16 @@
+Read @Docs/AgToosa_Status.md and execute the status workflow.
+
+Arguments provided: $ARGUMENTS
+
+Dispatch rules based on arguments:
+- No argument → full status dashboard: parse Master-Plan.md, cross-reference git, detect orphans, compute health score, present dashboard.
+- `plan` → Master-Plan.md health check only: parse all sections, check cross-section consistency, report findings.
+- `git` → git cross-reference only: scan recent commits, find WIP markers, detect unreported progress.
+- `orphans` → orphan detection only: find spec files and task IDs not tracked in Master-Plan.md.
+- Any other token → prepend exactly this line and run the full dashboard: `Note: '<token>' is not a defined sub-command. Did you mean: plan, git, orphans? Falling back to full dashboard.`
+
+CRITICAL: This is a READ-ONLY command. Do NOT modify any files.
+
+Recommended Next Actions must follow the deterministic algorithm in Docs/AgToosa_Status.md Part 5.5 — do not improvise ordering, deduplicate by fix-command, cap at 5 actions, emit the 🎯 Quick wins call-out when applicable.
+
+If no arguments were given, run the full flow from Docs/AgToosa_Status.md.

@@ -15,3 +15,4 @@ When executing `/agtoosa-build` or any implementation work, follow `Docs/AgToosa
 - **No file > 500 lines** — refactor immediately if a file approaches the limit.
 - Run SAST/DAST (Semgrep, CodeQL, Gitleaks) after each task, not just at the end.
 - Update the task list in Linear and `Docs/Master-Plan.md` as tasks complete.
+- On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

@@ -9,3 +9,5 @@ Dispatch rules based on arguments:
 - `retro` → retrospective phase only: generate a brief retro summary and suggest the next story or tech-debt task.
 
 If no arguments were given, run the full flow from Docs/AgToosa_Ship.md.
+
+On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

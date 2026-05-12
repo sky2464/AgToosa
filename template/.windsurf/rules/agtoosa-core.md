@@ -27,3 +27,7 @@ Run the full cycle for every story. Do not skip phases.
 
 - `Docs/AgToosa_Agent.md` — Full command reference and core rules
 - `Docs/Master-Plan.md` — Source of truth for project state (tasks, stories, epics)
+
+## Closure Loop
+
+On successful completion of `/agtoosa-init`, `/agtoosa-spec`, `/agtoosa-build`, `/agtoosa-task`, or `/agtoosa-ship`, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

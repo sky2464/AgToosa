@@ -172,6 +172,7 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 
 ## Output
 *   Present the generated Spec (with embedded plan), task list, and test plan skeleton to the user.
+*   Print the closure line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
 *   Present the approval gate:
 
     ```

@@ -9,6 +9,43 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [4.1.0] — 2026-05-11
+
+### Added
+
+- **Deterministic "Recommended Next Actions" algorithm** in `Docs/AgToosa_Status.md` Part 5.5. Status now generates the same ranking every run: Errors → aged Warnings (oldest first) → other Warnings → Orphans → Info, deduplicated by `Fix with` command, capped at 5 actions with overflow line, and including a 🎯 Quick wins call-out for findings that take <5 min (charter placeholders, task-counter mismatches, missing spec for the In Progress story).
+- **Aging escalation prefix** on findings promoted from Warning → Error by age. Blocked items and stale Update Log entries now carry `(escalated to Warning on day 7)` or `(escalated to Error on day 30)` so users see *why* the severity changed instead of a static label.
+- **Sub-command typo helper** for `/agtoosa-status`. Unknown sub-commands (e.g. `/agtoosa-status check`) now prepend `Note: '<token>' is not a defined sub-command. Did you mean: plan, git, orphans? Falling back to full dashboard.` before running the dashboard.
+
+### Changed
+
+- **Closure-loop directive** on every fix command. `/agtoosa-init`, `/agtoosa-spec`, `/agtoosa-build`, `/agtoosa-task`, and `/agtoosa-ship` now print `✅ Done. Run /agtoosa-status to verify findings cleared.` on successful completion, closing the status → fix → verify loop. Wired across all 5 platform variants for `build`/`task`/`spec`/`ship` and across the 3 init platform variants plus the cursor/windsurf `agtoosa-core` fallback rules (which carry the rule for `init`/`help` since those commands have no `.cursor/rules` or `.windsurf/rules` variant).
+- **README version badge + install snippet** bumped from `3.1.0` → `4.1.0`. The badge had been stale across the entire `4.0.0` release.
+
+### Fixed
+
+- Status report no longer relies on the agent improvising next-action ordering, deduplication, or priority every run. Output is now deterministic across runs and across platform variants.
+
+### Coming next (4.2.0)
+
+- AgToosa Status Guide sub-agent — read-only Auditor + Coach persona that runs `/agtoosa-status`, applies the Part 5.5 algorithm, presents the top 3 actions with rationale, and asks the user to authorize running each next command.
+- `/agtoosa-help next` — context-aware help that surfaces the next move based on a fresh status read.
+
+### Files updated
+
+- `template/Docs/AgToosa_Status.md` — Part 5.5 (Next Actions generation algorithm) and Part 5.6 (typo helper) added; aging escalation prefix wired into Part 1 step 5 (Blocked) and step 7 (Update Log).
+- `template/Docs/AgToosa_{Build,Task,Spec,Ship,Init}.md` — closure line added to each Output section (canonical source of truth).
+- `template/.{claude,cursor,gemini,github,windsurf}/...agtoosa-{build,task,spec,ship}.{md,mdc,toml,prompt.md}` — 20 platform variants updated with the closure-line directive.
+- `template/.{claude,gemini,github}/...agtoosa-init.{md,toml,prompt.md}` — 3 init platform variants updated.
+- `template/.cursor/rules/agtoosa-core.mdc`, `template/.windsurf/rules/agtoosa-core.md` — closure-loop rule added (covers init/help fallback on cursor/windsurf).
+- `template/.{claude,cursor,gemini,github,windsurf}/...agtoosa-status.{md,mdc,toml,prompt.md}` — 5 status variants updated with the typo helper and a pointer to the Part 5.5 algorithm.
+- `docs/agtoosa-maintainer.md` — closure-line and typo-helper strings added to the user-facing-strings parity list; init/help asymmetry (3 variants, not 5) documented in the parity checklist.
+- `tests/agtoosa.bats` — new parity tests for D1 (algorithm anchor), D2 (closure-line matrix), and D3 (typo-helper matrix).
+- `agtoosa.sh` · `agtoosa.ps1` — version bump to 4.1.0.
+- `README.md` — badge and install-ref bumped to 4.1.0.
+
+---
+
 ## [4.0.0] — 2026-05-11
 
 ### Added
