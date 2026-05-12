@@ -24,7 +24,7 @@ Produce a read-only health dashboard by parsing `Docs/Master-Plan.md`, cross-ref
 1.  **Read** `Docs/Master-Plan.md` in full.
 
 2.  **Parse Project Charter:**
-    *   Extract: Product name, Milestone, Active cycle dates, Cycle capacity, Current phase emoji.
+    *   Extract: Product name, Milestone, Active cycle name, Cycle capacity, Current phase emoji.
     *   Flag any **placeholder values** still present — patterns: `[name]`, `[url]`, `[YYYY-MM-DD]`, `[e.g.`, `[N]`, `[cycle name]`.
     *   Record each placeholder as a finding: 🟡 Warning — *Fix with:* `/agtoosa-init`.
 
@@ -124,7 +124,7 @@ Compute four category scores, each starting at 100 with deductions applied. Floo
 
 **Freshness (25%):**
 *   −5 per 7-day period a Blocked item exceeds 7 days (e.g., 21 days blocked = −10)
-*   −15 if the active cycle end date has passed (overdue)
+*   −10 if all Active Cycle stories are ✅ Done and Completed This Cycle does not list all of them (cycle complete but not closed — *Fix with:* `/agtoosa-ship`)
 *   −10 if Update Log has no entry in the last 7 days
 
 **Composite score:** `total = round(0.25 × plan + 0.25 × tasks + 0.25 × git + 0.25 × freshness)`

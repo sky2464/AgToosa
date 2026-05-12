@@ -10,8 +10,8 @@
 | Product | `[name]` |
 | GitHub repo | `[url]` |
 | Milestone | `[e.g. v1.0, Sprint 3, Unreleased]` |
-| Active cycle | `[cycle name] ([start] → [end])` |
-| Cycle capacity | `[N] story points / [N] days` |
+| Active cycle | `[cycle name]` |
+| Cycle capacity | `[N] story points` |
 | Current phase | ✏️ Spec · 🏗️ Build · 🔍 Review · 🚢 Ship ← _(update the active one)_ |
 
 ## Active Cycle
