@@ -64,6 +64,26 @@ Execute TDD against a planned task list and run the full test suite.
 
 4.  **For each atomic task, execute the TDD Cycle:**
 
+    **⚠️ Manual Task Detection — runs before every task:**
+    Before starting a task, check whether its line in `Docs/Master-Plan.md` or the active spec contains `[manual]` or `[manual-deferred]`.
+
+    *   If the task is tagged `[manual]`, present this prompt — do NOT proceed with TDD:
+
+        ```
+        👤 Manual task: [task title]
+        This step requires a human action outside the agent.
+        What would you like to do?
+          → A) I've completed it — mark it done and continue
+          → B) Defer it for now — continue with remaining automated tasks
+          → C) Show me what needs to be done, then defer
+        ```
+
+        - **If A:** mark the sub-task `- [x] N.M [task] \`[manual-done]\`` in both `Docs/Master-Plan.md` and the spec; count it as a completed task and continue.
+        - **If B or C:** update the annotation to `[manual-deferred: YYYY-MM-DD]` in both files; add a line to the Manual / Deferred section in `Docs/Master-Plan.md`; **skip to the next task** — do not block the build cycle.
+        - In all cases, add a note to the Update Log entry for this build session listing deferred manual tasks.
+
+    *   If the task is already tagged `[manual-deferred]`, skip it automatically and mention it in the session summary.
+
     **🔴 RED — Write a Failing Test First:**
     *   Before writing ANY implementation code, write a test that describes the expected behavior.
     *   The test MUST fail initially (confirming it tests something real).
@@ -109,6 +129,21 @@ Execute TDD against a planned task list and run the full test suite.
             ```
 
 5.  **Repeat** the Red-Green-Refactor cycle for every atomic task.
+
+6.  **After all tasks are processed**, check for deferred manual tasks:
+    *   If any tasks are `[manual-deferred]`, present a summary:
+
+        ```
+        ⏸️ Manual tasks deferred ([N] remaining):
+          - [task title] (deferred: YYYY-MM-DD)
+          - …
+
+        Run /agtoosa-status to see these listed without affecting the health score.
+        When you complete them, run /agtoosa-build and select (A) to mark them done.
+        ```
+
+    *   Update the Active Cycle Tasks Done counter in `Docs/Master-Plan.md` using the format: `[auto-done]/[auto-total] tasks ([N] manual-deferred)`.
+    *   Story status remains 🟨 In Progress only if automated tasks are still incomplete. If all automated tasks are done and only manual tasks remain deferred, transition the story status to **🔧 Awaiting Manual** — a distinct state that `/agtoosa-status` treats as non-blocking.
 
 ### Discovery Triage
 

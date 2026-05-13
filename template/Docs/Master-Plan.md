@@ -25,7 +25,7 @@
 
 *(Empty until `/agtoosa-spec` enrolls a story in the active cycle.)*
 
-Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blocked · 🏁 Shipped
+Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blocked · 🔧 Awaiting Manual · 🏁 Shipped
 
 ## Active Tasks
 
@@ -39,6 +39,17 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
   - [ ] 2.1 [sub-task description] — _Requirements: AC-002_
 
 *(Empty until `/agtoosa-spec` (Part 4) populates this section. Run `/agtoosa-spec tasks` to regenerate this tree if needed.)*
+
+## Manual / Deferred Tasks
+
+> Tasks that require a human action outside the agent. These are **not** counted against the health score.
+> When you complete a step, run `/agtoosa-build` and choose (A) to mark it done.
+
+| Story | Task # | Deferred Since | Description |
+|-------|--------|----------------|-------------|
+| [DEV-XX] | 2.3 | [YYYY-MM-DD] | [task title] |
+
+*(Empty — no manual tasks deferred.)*
 
 ## Blocked
 

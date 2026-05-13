@@ -35,11 +35,13 @@ Produce a read-only health dashboard by parsing `Docs/Master-Plan.md`, cross-ref
 
 4.  **Parse Active Tasks:**
     *   Count total checkboxes (`- [ ]` unchecked + `- [x]` checked). Compute completion percentage.
-    *   For each story in Active Cycle, verify the Tasks Done counter (`N/M`) matches the actual checkbox counts:
-        -   `N` should equal the count of `- [x]` checkboxes.
-        -   `M` should equal the total checkbox count.
-    *   If there is a mismatch, record: 🔴 Error — "Tasks Done counter `[N/M]` does not match actual checkboxes `[actual_done/actual_total]` for `[Story ID]`. *Fix with:* `/agtoosa-build`".
+    *   **Manual task exemption:** Before counting, separate out any sub-task lines containing `[manual]` or `[manual-deferred]`. These are tracked separately and do **not** participate in mismatch detection or health scoring.
+    *   For each story in Active Cycle, verify the Tasks Done counter (`N/M`) matches the actual checkbox counts for **automated tasks only**:
+        -   `N` should equal the count of `- [x]` checkboxes (excluding `[manual]` and `[manual-deferred]` lines).
+        -   `M` should equal the total checkbox count excluding `[manual]` and `[manual-deferred]` lines.
+    *   If there is a mismatch on automated tasks, record: 🔴 Error — "Tasks Done counter `[N/M]` does not match actual checkboxes `[actual_done/actual_total]` for `[Story ID]`. *Fix with:* `/agtoosa-build`".
     *   If Active Tasks section is empty but Active Cycle has In Progress stories, record: 🟡 Warning — "Active Cycle has In Progress stories but Active Tasks is empty. *Fix with:* `/agtoosa-spec tasks`".
+    *   For any `[manual-deferred]` tasks found, record as: ℹ️ Info — "`[N]` manual task(s) deferred on `[Story ID]`: `[task titles]`. Complete them and run `/agtoosa-build` to mark done."
 
 5.  **Parse Blocked table:**
     *   Extract each row: ID, Title, Blocked by, Since date.
@@ -55,12 +57,14 @@ Produce a read-only health dashboard by parsing `Docs/Master-Plan.md`, cross-ref
 7.  **Parse Update Log:**
     *   Find the most recent entry by date.
     *   Calculate age in days from the most recent entry to today.
-    *   If age > 7 days, record: 🟡 Warning — "(escalated to Warning on day 7) Update Log is stale — last entry `[N]` days ago (`[date]`). *Fix with:* run the next workflow phase."
+    *   **Manual exemption:** If the only In Progress / Awaiting-Manual stories have all automated tasks done and only `[manual-deferred]` tasks remaining, the staleness threshold is relaxed to 30 days (Warning) / 90 days (Error) — the agent cannot advance these stories until the human acts.
+    *   Otherwise, if age > 7 days, record: 🟡 Warning — "(escalated to Warning on day 7) Update Log is stale — last entry `[N]` days ago (`[date]`). *Fix with:* run the next workflow phase."
     *   If age > 30 days, escalate to: 🔴 Error — "(escalated to Error on day 30) Update Log has not been updated in `[N]` days — project may be abandoned."
 
 8.  **Cross-section consistency checks:**
     *   **Orphaned Active Tasks:** For each top-level task group in Active Tasks, extract any referenced story ID. If that ID does not appear in the Active Cycle table, record: 🔴 Error — "Active Task group references `[ID]` which is not in Active Cycle. *Fix with:* `/agtoosa-spec tasks` or `/agtoosa-task`".
     *   **Stuck-Done detection:** For each story in Active Cycle with status ✅ Done, check if it appears in Completed This Cycle. If not, record: 🟡 Warning — "`[ID]` is marked Done in Active Cycle but not in Completed This Cycle. *Fix with:* `/agtoosa-ship docs`".
+    *   **Awaiting Manual — not a stuck state:** For each story with status 🔧 Awaiting Manual, do **not** flag it as stuck or stale. Record as ℹ️ Info — "`[ID]` is awaiting `[N]` manual task(s). No action needed from the agent until the user completes those steps."
     *   **Dangling Blocked:** For each ID in the Blocked table, verify it appears in Active Cycle or Backlog. If not, record: 🟡 Warning — "Blocked item `[ID]` is not tracked in Active Cycle or Backlog. *Fix with:* `/agtoosa-task`".
 
 ### Part 2 — Git Cross-Reference (`/agtoosa-status git` runs this exclusively)
@@ -112,10 +116,11 @@ Compute four category scores, each starting at 100 with deductions applied. Floo
 *   −10 if Active Cycle is empty (no active stories)
 
 **Task Consistency (25%):**
-*   −8 per Tasks Done counter mismatch
+*   −8 per Tasks Done counter mismatch (automated tasks only; `[manual]` and `[manual-deferred]` tasks are excluded)
 *   −10 per orphaned Active Task group (references nonexistent story)
 *   −10 per Stuck-Done story (Done in Active Cycle but not in Completed)
 *   −10 per Dangling Blocked item
+*   **No deduction** for unchecked `[manual-deferred]` tasks — they are listed in the dashboard under "Manual / Deferred" and are never counted as a consistency failure.
 
 **Git Hygiene (25%):**
 *   −3 per WIP/fixup commit found
@@ -124,8 +129,8 @@ Compute four category scores, each starting at 100 with deductions applied. Floo
 
 **Freshness (25%):**
 *   −5 per 7-day period a Blocked item exceeds 7 days (e.g., 21 days blocked = −10)
-*   −10 if all Active Cycle stories are ✅ Done and Completed This Cycle does not list all of them (cycle complete but not closed — *Fix with:* `/agtoosa-ship`)
-*   −10 if Update Log has no entry in the last 7 days
+*   −10 if all Active Cycle stories are ✅ Done and Completed This Cycle does not list all of them (cycle complete but not closed — *Fix with:* `/agtoosa-ship`). Stories with status 🔧 Awaiting Manual are **excluded** from this check — the cycle is not considered closed until manual tasks resolve.
+*   −10 if Update Log has no entry in the last 7 days — **unless** all active stories are 🔧 Awaiting Manual (relaxed to 30 days in that case).
 
 **Composite score:** `total = round(0.25 × plan + 0.25 × tasks + 0.25 × git + 0.25 × freshness)`
 
@@ -183,6 +188,17 @@ Project: [name] · Cycle: [cycle] · Phase: [phase emoji]
 
 ## Orphans ([N] found)
 - [orphan description] — *Fix with:* `/agtoosa-[command]`
+
+## Manual / Deferred Tasks
+
+> These tasks require human action and are **not** counted in the health score.
+> Complete each step, then run `/agtoosa-build` and select (A) to mark it done.
+
+| Story | Task | Deferred Since | Description |
+|-------|------|----------------|-------------|
+| [DEV-XX] | 2.3 | [YYYY-MM-DD] | [task title] |
+
+*(None — all manual tasks are complete or none exist.)*
 
 ## Recommended Next Actions
 1. Run `[command]` to [verb-phrase] ([N] findings: [ID1, ID2, …])

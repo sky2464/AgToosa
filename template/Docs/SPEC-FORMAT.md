@@ -15,6 +15,7 @@ Status emojis used across `Docs/Master-Plan.md` and all spec files:
 | 🟨 | In Progress — actively being worked |
 | ✅ | Done — work complete |
 | 🚫 | Blocked — cannot proceed |
+| 🔧 | Awaiting Manual — all automated tasks done; waiting on human steps |
 | 🏁 | Shipped — deployed to production |
 
 ---
@@ -162,6 +163,29 @@ A hierarchical checkbox tree. Top-level items are groups (bold number + name). S
 ```
 
 Mark completed sub-tasks with `- [x]`. The `_Requirements: AC-XXX_` cross-reference is required on every sub-task — it links implementation work back to testable criteria.
+
+**Manual tasks** — tasks that require a human to act outside the AI agent (e.g. configure DNS, provision an account, approve in a third-party UI) must be tagged `[manual]`:
+
+```
+- [ ] 2.3 Configure DNS A record in registrar — _Requirements: AC-005_ `[manual]`
+```
+
+When the user defers a manual task to a later session, `/agtoosa-build` updates the annotation in place:
+
+```
+- [ ] 2.3 Configure DNS A record in registrar — _Requirements: AC-005_ `[manual-deferred: YYYY-MM-DD]`
+```
+
+When the user confirms the manual step is complete, `/agtoosa-build` marks it done normally:
+
+```
+- [x] 2.3 Configure DNS A record in registrar — _Requirements: AC-005_ `[manual-done]`
+```
+
+**Rules:**
+- `[manual]` and `[manual-deferred]` tasks are **never** counted as blocking by `/agtoosa-status`; they are reported in a separate "Manual / Deferred" section.
+- `[manual-deferred]` tasks do **not** deduct from the health score.
+- The Tasks Done counter in `Docs/Master-Plan.md` counts only automated tasks. Manual tasks are tracked in parentheses: e.g. `3/5 tasks (1 manual-deferred)`.
 
 ### 3.2 Wave Plan
 
