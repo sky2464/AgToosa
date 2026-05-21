@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v4.1.0" ]]
+  [[ "$output" == "AgToosa v4.2.0" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1158,7 +1158,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "4.1.0" ]
+  [ "$ver" = "4.2.0" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1169,7 +1169,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"4.1.0"* ]]
+  [[ "$output" == *"4.2.0"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -1266,4 +1266,29 @@ PY
   grep -q "Per-Platform Parity" "$f"
   grep -q "Run /agtoosa-status to verify findings cleared" "$f"
   grep -q "Did you mean: plan, git, orphans" "$f"
+}
+
+# ── 4.2.0 manual task support (M1 / M2 / M3 / M4) ────────────────────────────
+
+@test "M1: SPEC-FORMAT.md documents [manual] annotation lifecycle" {
+  local f="$TEMPLATE_DIR/Docs/SPEC-FORMAT.md"
+  grep -q '\[manual\]' "$f"
+  grep -q '\[manual-deferred' "$f"
+  grep -q 'Awaiting Manual' "$f"
+}
+
+@test "M2: AgToosa_Build.md contains Manual Task Detection gate" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Build.md"
+  grep -q 'Manual Task Detection' "$f"
+  grep -q 'mark done, defer' "$f"
+}
+
+@test "M3: AgToosa_Status.md exempts manual-deferred from health score" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Status.md"
+  grep -q 'manual-deferred' "$f"
+  grep -q 'Awaiting Manual' "$f"
+}
+
+@test "M4: Master-Plan.md template contains Manual / Deferred section" {
+  grep -q 'Manual / Deferred' "$TEMPLATE_DIR/Docs/Master-Plan.md"
 }

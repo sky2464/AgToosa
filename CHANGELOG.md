@@ -7,6 +7,11 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+### Planned
+
+- AgToosa Status Guide sub-agent — read-only Auditor + Coach persona that runs `/agtoosa-status`, applies the Part 5.5 algorithm, presents the top 3 actions with rationale, and asks the user to authorize running each next command.
+- `/agtoosa-help next` — context-aware help that surfaces the next move based on a fresh status read.
+
 ---
 
 ## [4.2.0] — 2026-05-13
@@ -50,11 +55,6 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 ### Fixed
 
 - Status report no longer relies on the agent improvising next-action ordering, deduplication, or priority every run. Output is now deterministic across runs and across platform variants.
-
-### Coming next (4.2.0)
-
-- AgToosa Status Guide sub-agent — read-only Auditor + Coach persona that runs `/agtoosa-status`, applies the Part 5.5 algorithm, presents the top 3 actions with rationale, and asks the user to authorize running each next command.
-- `/agtoosa-help next` — context-aware help that surfaces the next move based on a fresh status read.
 
 ### Files updated
 
