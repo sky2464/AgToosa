@@ -1280,7 +1280,7 @@ PY
 @test "M2: AgToosa_Build.md contains Manual Task Detection gate" {
   local f="$TEMPLATE_DIR/Docs/AgToosa_Build.md"
   grep -q 'Manual Task Detection' "$f"
-  grep -q 'mark done, defer' "$f"
+  grep -q 'manual-deferred' "$f"
 }
 
 @test "M3: AgToosa_Status.md exempts manual-deferred from health score" {
