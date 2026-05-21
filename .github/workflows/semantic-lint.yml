@@ -34,7 +34,7 @@ jobs:
             else
               echo "✅ [$HASH] $MSG"
             fi
-          done < <(git log origin/main..HEAD --pretty=format:"%h %s")
+          done < <(git log origin/main..HEAD --no-merges --pretty=format:"%h %s")
 
           if [ "$FAILED" -gt 0 ]; then
             echo ""
