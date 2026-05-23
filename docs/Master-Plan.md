@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `Docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-05-21 00:38
+> **Last updated:** 2026-05-22 15:00
 
 ## Project Charter
 
@@ -17,12 +17,12 @@
 ## Active Cycle
 
 > Stories committed to the current sprint/cycle.
-> **Progress:** `▰▰▰▰▱▱▱▱ 0/0 tasks` ← updated by `/agtoosa-build` after each task completes
+> **Progress:** `▱▱▱▱▱▱▱▱ 0/0 tasks` ← updated by `/agtoosa-build` after each task completes
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
 
-*(Empty until `/agtoosa-spec` enrolls a story in the active cycle.)*
+*(Empty — run `/agtoosa-spec` to enroll the next story.)*
 
 Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blocked · 🔧 Awaiting Manual · 🏁 Shipped
 
@@ -31,7 +31,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-*(Empty until `/agtoosa-spec` (Part 4) populates this section. Run `/agtoosa-spec tasks` to regenerate this tree if needed.)*
+*(Empty until `/agtoosa-spec` enrolls a story in the active cycle.)*
 
 ## Manual / Deferred Tasks
 
@@ -71,7 +71,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-001 | Epic: Core Generator Engine | 0 open / 0 total | ⬜ Backlog |
 | DEV-002 | Epic: Workflow Templates | 0 open / 0 total | ⬜ Backlog |
 | DEV-003 | Epic: Community Template Registry | 0 open / 0 total | ⬜ Backlog |
-| DEV-004 | Epic: Testing & QA Harness | 0 open / 0 total | ⬜ Backlog |
+| DEV-004 | Epic: Testing & QA Harness | 0 open / 1 total | ⬜ Backlog |
 
 ### Epic Charters
 
@@ -94,6 +94,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Goal:** Comprehensive end-to-end integration and version verification suites validating the robustness of the entire framework.
     *   **Scope:** `tests/agtoosa.bats` and CI regression pipelines.
     *   **Success Criteria:** 100% green coverage on 155+ platform scenarios and version checks on every release step.
+    *   **Last shipped:** DEV-005 — M1–M4 bats + CHANGELOG hygiene → `docs/archived/spec-DEV-005.md`
 
 ## Completed This Cycle
 
@@ -102,8 +103,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
-
-*(Empty until `/agtoosa-ship` closes the first story.)*
+| DEV-005 | Chore: v4.2.0 release hygiene (M1–M4 bats + CHANGELOG) | 2026-05-22 | [spec-DEV-005.md](archived/spec-DEV-005.md) · [review-DEV-005.md](archived/review-DEV-005.md) |
 
 ## Update Log
 
@@ -112,3 +112,9 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | Date | Event | By |
 |------|-------|----|
 | 2026-05-21 | 🚀 /agtoosa-init workspace initialized | AgToosa |
+| 2026-05-22 | ✏️ /agtoosa-spec DEV-005 — v4.2.0 release hygiene spec + tasks enrolled in Release 4.2 | AgToosa |
+| 2026-05-22 | 🏗️ Build started — DEV-005, 8 tasks, scope: tests/agtoosa.bats, CHANGELOG.md | AgToosa |
+| 2026-05-22 | 🏗️ Build complete — M1–M4 added, CHANGELOG backlog moved to [Unreleased], 15/15 validation tests green | AgToosa |
+| 2026-05-22 | 🔍 Review started — 4-persona review on DEV-005 | AgToosa |
+| 2026-05-22 | 🔍 Review passed — 0 Critical, 3 Warnings (accepted); report: docs/archived/review-DEV-005.md | AgToosa |
+| 2026-05-22 | 🚀 Ship complete — DEV-005 closed; smoke/validation 15/15 green; archived spec + review | AgToosa |

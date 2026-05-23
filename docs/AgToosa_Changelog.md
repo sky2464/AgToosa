@@ -7,7 +7,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
-_(nothing yet)_
+### Added
+
+- 2026-05-22 — test — M1–M4 bats parity for v4.2.0 manual-task workflow (DEV-005) — `docs/archived/spec-DEV-005.md`
+
+### Changed
+
+- 2026-05-22 — docs — CHANGELOG planned features moved to `[Unreleased]` (DEV-005)
 
 ---
 
