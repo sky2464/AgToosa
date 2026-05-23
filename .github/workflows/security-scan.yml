@@ -24,8 +24,9 @@ jobs:
           # SC2002: Useless cat, but required for pipes
           # SC2046: Word splitting in unquoted variable
           # SC2086: Unquoted variable (context-specific)
+          # SC2034: Variable appears unused (cross-file variables sourced externally)
           shellcheck -x -S warning \
-            --exclude=SC2002,SC2046,SC2086,SC1091 \
+            --exclude=SC2002,SC2046,SC2086,SC1091,SC2034 \
             agtoosa.sh lib/*.sh
 
   dependency-check:

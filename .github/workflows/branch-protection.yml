@@ -10,7 +10,7 @@ jobs:
     
     steps:
       - name: Check PR has at least one label
-        if: github.event.pull_request.labels.length == 0
+        if: length(github.event.pull_request.labels) == 0
         run: |
           echo "❌ PR must have at least one label (bug, enhancement, documentation, chore)"
           exit 1
@@ -32,8 +32,9 @@ jobs:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
       
       - name: Check PR links to issue
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          PR_BODY="${{ github.event.pull_request.body }}"
           # Check for "Closes #123", "Fixes #123", or "Resolves #123"
           if ! echo "$PR_BODY" | grep -qiE '(closes|fixes|resolves) #[0-9]+'; then
             echo "⚠️  PR should reference an issue (e.g., 'Closes #123')"
