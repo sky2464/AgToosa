@@ -1267,3 +1267,29 @@ PY
   grep -q "Run /agtoosa-status to verify findings cleared" "$f"
   grep -q "Did you mean: plan, git, orphans" "$f"
 }
+
+# ── 4.2.0 manual task support (M1 / M2 / M3 / M4) ────────────────────────────
+
+@test "M1: SPEC-FORMAT.md documents [manual] annotation lifecycle" {
+  local f="$TEMPLATE_DIR/Docs/SPEC-FORMAT.md"
+  grep -q '\[manual\]' "$f"
+  grep -q '\[manual-deferred' "$f"
+  grep -q 'Awaiting Manual' "$f"
+}
+
+@test "M2: AgToosa_Build.md contains Manual Task Detection gate" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Build.md"
+  grep -q 'Manual Task Detection' "$f"
+  grep -q 'mark it done' "$f"
+  grep -q 'Defer it for now' "$f"
+}
+
+@test "M3: AgToosa_Status.md exempts manual-deferred from health score" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Status.md"
+  grep -q 'manual-deferred' "$f"
+  grep -q 'Awaiting Manual' "$f"
+}
+
+@test "M4: Master-Plan.md template contains Manual / Deferred section" {
+  grep -q 'Manual / Deferred' "$TEMPLATE_DIR/Docs/Master-Plan.md"
+}
