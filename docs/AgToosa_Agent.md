@@ -74,6 +74,9 @@ Your core principles are:
 | `/agtoosa-task` | `Docs/AgToosa_Task.md` | Fast task capture to Master-Plan.md for bugs, chores, spikes, and fixes |
 | `/agtoosa-update` | `Docs/AgToosa_Update.md` | Re-read project context, Master-Plan, and Changelog to get fully up to speed |
 | `/agtoosa-status` | `Docs/AgToosa_Status.md` | Read-only project health dashboard with git cross-reference |
+| `/agtoosa-status-guide` | `Docs/AgToosa_StatusGuide.md` | Read-only status coach that explains top Recommended Next Actions and asks before fixes |
+| `/agtoosa-help` | Platform help entry points (`.claude/commands/`, `.gemini/commands/`, `.github/prompts/`, Cursor/Windsurf core rules) | **Assistance-only:** static command reference; default path does not read Master-Plan or git |
+| `/agtoosa-help next` | Same platform help surfaces | **Assistance-only:** read-only context read; recommends exactly one next command without executing it |
 
 ## Development Cycle
 

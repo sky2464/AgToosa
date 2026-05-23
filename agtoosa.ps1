@@ -243,7 +243,7 @@ function Stage-Files([string[]]$platforms) {
         "Docs\AgToosa_Agent.md", "Docs\AgToosa_Init.md", "Docs\AgToosa_Spec.md",
         "Docs\AgToosa_Build.md", "Docs\AgToosa_Review.md", "Docs\AgToosa_Ship.md",
         "Docs\AgToosa_QA.md", "Docs\AgToosa_Revert.md", "Docs\AgToosa_Task.md",
-        "Docs\AgToosa_Update.md", "Docs\AgToosa_Registry.md", "Docs\AgToosa_Skills.md",
+        "Docs\AgToosa_Goal.md", "Docs\AgToosa_Update.md", "Docs\AgToosa_Registry.md", "Docs\AgToosa_Skills.md",
         "Docs\CONTEXT-FORMAT.md", "Docs\ADR-FORMAT.md", "Docs\DEEPENING.md",
         "Docs\LANGUAGE.md", "Docs\Master-Plan.md", "Docs\AgToosa_Changelog.md"
     )

@@ -70,10 +70,14 @@ Your core principles are:
 | Command | Workflow File | Description |
 |---------|--------------|-------------|
 | `/agtoosa-init` | `Docs/AgToosa_Init.md` | **One-time:** Scan codebase, validate AI configs, establish context |
+| `/agtoosa-goal` | `Docs/AgToosa_Goal.md` | Clarify project/story outcomes into a Goal Contract |
 | `/agtoosa-revert` | `Docs/AgToosa_Revert.md` | Git-aware logical revert |
 | `/agtoosa-task` | `Docs/AgToosa_Task.md` | Fast task capture to Master-Plan.md for bugs, chores, spikes, and fixes |
 | `/agtoosa-update` | `Docs/AgToosa_Update.md` | Re-read project context, Master-Plan, and Changelog to get fully up to speed |
 | `/agtoosa-status` | `Docs/AgToosa_Status.md` | Read-only project health dashboard with git cross-reference |
+| `/agtoosa-status-guide` | `Docs/AgToosa_StatusGuide.md` | Read-only status coach that explains top Recommended Next Actions and asks before fixes |
+| `/agtoosa-help` | Platform help entry points (`.claude/commands/`, `.gemini/commands/`, `.github/prompts/`, Cursor/Windsurf core rules) | **Assistance-only:** static command reference; default path does not read Master-Plan or git |
+| `/agtoosa-help next` | Same platform help surfaces | **Assistance-only:** read-only context read; recommends exactly one next command without executing it |
 
 ## Development Cycle
 
@@ -90,10 +94,17 @@ Use sub-commands to re-run individual parts without repeating the full phase:
 e.g.  /agtoosa-review debug   →  /agtoosa-build tdd   →  /agtoosa-ship check  →  /agtoosa-ship
 ```
 
+## Codex / OpenCode Skills
+
+AgToosa installs `.codex/skills/agtoosa-*/SKILL.md` workflow runners for Codex and OpenCode. Each skill has valid `name` and `description` frontmatter and instructs the agent to **execute** the matching `Docs/AgToosa_*.md` workflow (including sub-command dispatch where applicable).
+
+`/agtoosa-init` may run **Project Skill Discovery** and `/agtoosa-spec` may run **Story Skill Opportunity Synthesis** to propose additional `.codex/skills/<skill-name>/SKILL.md` artifacts. Both require explicit user approval before any file write; see `Docs/AgToosa_Skills.md` for anatomy, dedupe, and secret-handling rules.
+
 ## Key References
 
 - `Docs/Master-Plan.md` — Source of truth for project state and backlog (read before every command)
-- `Docs/AgToosa_Skills.md` — Subagent skill-to-command mapping
+- `Docs/AgToosa_Goal.md` — Goal clarification utility/sub-workflow
+- `Docs/AgToosa_Skills.md` — Subagent skill-to-command mapping and Codex skill contracts
 - `Docs/AgToosa_Changelog.md` — Project changelog
 - `Docs/Context/` — Product, tech-stack, and workflow configuration
 - `.github/instructions/` — Scoped agent instructions for core, testing, security, and changelog rules
@@ -162,6 +173,41 @@ Next: [what happens next in the workflow]
 
 Phase emojis: Spec ✅ · Build started 🏗️ · Task complete 🟢 · Review started 🔍 · Review passed ✅ · Review blocked 🔴 · Shipped 🚀 · Rollback 🔙 · Blocked 🚧
 
+## Goal Clarification Protocol
+
+Use this protocol whenever project or story intent is unclear, success criteria are weak, or proof of completion is not measurable. `/agtoosa-goal` exposes the protocol directly, and `/agtoosa-init`, `/agtoosa-spec`, `/agtoosa-review`, and `/agtoosa-ship` may call it as a sub-workflow.
+
+Goal state lives in existing AgToosa records:
+
+- Project goals live in `Docs/Master-Plan.md` under `## Project Charter`.
+- Story goals live in the active spec under `### Goal Contract`.
+- `Docs/Context/` is supporting context only; it is not the goal source of truth.
+
+### Goal Contract Fields
+
+Every project or story Goal Contract must capture:
+
+| Field | Meaning |
+|-------|---------|
+| Goal | The end state the user actually wants |
+| User outcome | Who benefits and what changes for them |
+| Success condition | The measurable condition that means the goal is done |
+| Proof / evidence | Tests, review evidence, smoke result, demo, metric, or artifact used to prove completion |
+| Non-goals | Explicit exclusions that prevent scope creep |
+| Assumptions | Important assumptions the agent is relying on |
+| Risks | Delivery, quality, security, or product risks |
+| Unresolved questions | Open questions, or `None` |
+
+### Clarification Rules
+
+1. Infer first from the user's prompt, codebase, `Docs/Master-Plan.md`, active specs, and `Docs/Context/`.
+2. Ask one question at a time. Never ask the next question until the previous answer is received.
+3. Build each next question from the original request and previous answers.
+4. Ask only about fields that are missing, vague, contradictory, or risky.
+5. Stop when the Goal Contract is clear enough to generate acceptance criteria, implementation tasks, review findings, and ship evidence.
+6. If `/agtoosa-init` reaches 12 goal/context questions and clarity is still insufficient, stop and ask whether to continue the interview or proceed with documented assumptions.
+7. `/agtoosa-goal check` and `/agtoosa-update` are read-only; they may report gaps and suggest `/agtoosa-goal`, but they must not update files.
+
 ## Smart Interview Protocol
 
 All AgToosa commands that require user input follow this shared protocol. It is designed to be efficient — never overwhelming — and always ends with an explicit approval gate.
@@ -170,7 +216,7 @@ All AgToosa commands that require user input follow this shared protocol. It is 
 
 | Principle | Rule |
 |-----------|------|
-| **Infer first, ask second** | Scan the codebase and `Docs/Context/` before forming any question. If an answer is inferable with high confidence (≥80%), state it as a finding — do not ask. |
+| **Infer first, ask second** | Scan the codebase, `Docs/Master-Plan.md`, active specs, and `Docs/Context/` before forming any question. If an answer is inferable with high confidence (≥80%), state it as a finding — do not ask. |
 | **Options from context** | When asking, derive 2–3 options from what was found in the codebase or research. Mark one as recommended. Always allow free-text override. |
 | **One question at a time** | Never present the next question until the previous answer is received. |
 | **Bounded question budgets** | Respect the per-command maximum listed below. Quality over quantity. |
@@ -207,7 +253,7 @@ Wait for the user's explicit approval before starting the next phase or writing 
 
 | Command | Max questions | Notes |
 |---------|--------------|-------|
-| `/agtoosa-init` | 6 | Across all Context files combined |
+| `/agtoosa-init` | 12 before continue gate | Goal discovery plus Context setup; if clarity is still missing after 12 questions, ask whether to continue or proceed with documented assumptions |
 | `/agtoosa-spec` | 4 | 2 of the 6 forcing questions are usually inferable; Part 4 task planning is auto-derived from the approved spec |
 | `/agtoosa-build` | 0 | Execution phase — task list is already approved as part of `/agtoosa-spec`. Discovery Triage may surface mid-build questions but is not a budgeted gate. |
 | `/agtoosa-task` | 3 | Type + priority + context; type+priority can merge into one |

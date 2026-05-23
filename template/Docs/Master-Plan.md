@@ -8,6 +8,14 @@
 | Field | Value |
 |-------|-------|
 | Product | `[name]` |
+| Goal | `[project outcome]` |
+| User outcome | `[who benefits and how]` |
+| Success condition | `[measurable done state]` |
+| Proof / evidence | `[tests, shipped behavior, metric, demo, or artifact]` |
+| Non-goals | `[explicit exclusions]` |
+| Assumptions | `[important assumptions]` |
+| Risks | `[delivery, product, security, or quality risks]` |
+| Unresolved questions | `[open points or None]` |
 | GitHub repo | `[url]` |
 | Milestone | `[e.g. v1.0, Sprint 3, Unreleased]` |
 | Active cycle | `[cycle name]` |

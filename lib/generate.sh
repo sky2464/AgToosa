@@ -62,15 +62,26 @@ stage_files() {
   fi
 
   if [[ "$USE_OPENCODE" == true ]]; then
-    local opencode_count=0
+    local opencode_count=0 cskill cskill_count=0
     if [[ -f "${TEMPLATE_DIR}/OPENCODE.md" ]]; then
       inject_version "${TEMPLATE_DIR}/OPENCODE.md" "${SHIP_DIR}/OPENCODE.md"
       opencode_count=$((opencode_count + 1))
     fi
     if [[ $opencode_count -gt 0 ]]; then
-      echo -e "  ${GREEN}\u2705${NC} OPENCODE.md ${CYAN}(OpenCode)${NC}"
+      echo -e "  ${GREEN}\u2705${NC} OPENCODE.md ${CYAN}(Codex / OpenCode / Other)${NC}"
       GENERATED=$((GENERATED + opencode_count))
     fi
+
+    mkdir -p "${SHIP_DIR}/.codex/skills"
+    for cskill in "${CODEX_SKILL_FILES[@]}"; do
+      if [[ -f "${TEMPLATE_DIR}/${cskill}" ]]; then
+        mkdir -p "$(dirname "${SHIP_DIR}/${cskill}")"
+        cp "${TEMPLATE_DIR}/${cskill}" "${SHIP_DIR}/${cskill}"
+        cskill_count=$((cskill_count + 1))
+        GENERATED=$((GENERATED + 1))
+      fi
+    done
+    [[ $cskill_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .codex/skills/ ${CYAN}(${cskill_count} Codex skills — discoverable AgToosa workflows)${NC}"
   fi
 
   # Context/ stubs — staged for skip-if-exists copy
@@ -115,10 +126,10 @@ stage_files() {
     [[ $skill_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .claude/skills/ ${CYAN}(${skill_count} project skill — agtoosa-review)${NC}"
   fi
 
-  # Cursor rules — staged when Cursor selected
+  # Cursor rules and commands — staged when Cursor selected
   if [[ "$USE_CURSOR" == true ]]; then
-    mkdir -p "${SHIP_DIR}/.cursor/rules"
-    local rule rule_count=0
+    mkdir -p "${SHIP_DIR}/.cursor/rules" "${SHIP_DIR}/.cursor/commands"
+    local rule rule_count=0 ccmd ccmd_count=0
     for rule in "${CURSOR_RULE_FILES[@]}"; do
       if [[ -f "${TEMPLATE_DIR}/${rule}" ]]; then
         cp "${TEMPLATE_DIR}/${rule}" "${SHIP_DIR}/${rule}"
@@ -127,6 +138,15 @@ stage_files() {
       fi
     done
     [[ $rule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .cursor/rules/ ${CYAN}(${rule_count} MDX rules — native Cursor rule injection)${NC}"
+
+    for ccmd in "${CURSOR_COMMAND_FILES[@]}"; do
+      if [[ -f "${TEMPLATE_DIR}/${ccmd}" ]]; then
+        cp "${TEMPLATE_DIR}/${ccmd}" "${SHIP_DIR}/${ccmd}"
+        ccmd_count=$((ccmd_count + 1))
+        GENERATED=$((GENERATED + 1))
+      fi
+    done
+    [[ $ccmd_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .cursor/commands/ ${CYAN}(${ccmd_count} slash commands — native Cursor command picker)${NC}"
   fi
 
   # Gemini CLI native commands — staged when Gemini selected
@@ -201,10 +221,10 @@ stage_files() {
     echo -e "  ${GREEN}✅${NC} .github/agents/agtoosa.agent.md ${CYAN}(custom Copilot agent)${NC}"
   fi
 
-  # Windsurf rules — staged when Windsurf selected
+  # Windsurf rules and workflows — staged when Windsurf selected
   if [[ "$USE_WINDSURF" == true ]]; then
-    mkdir -p "${SHIP_DIR}/.windsurf/rules"
-    local wrule wrule_count=0
+    mkdir -p "${SHIP_DIR}/.windsurf/rules" "${SHIP_DIR}/.windsurf/workflows"
+    local wrule wrule_count=0 wflow wflow_count=0
     for wrule in "${WINDSURF_RULE_FILES[@]}"; do
       if [[ -f "${TEMPLATE_DIR}/${wrule}" ]]; then
         cp "${TEMPLATE_DIR}/${wrule}" "${SHIP_DIR}/${wrule}"
@@ -213,5 +233,14 @@ stage_files() {
       fi
     done
     [[ $wrule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .windsurf/rules/ ${CYAN}(${wrule_count} rules — native Windsurf rule injection)${NC}"
+
+    for wflow in "${WINDSURF_WORKFLOW_FILES[@]}"; do
+      if [[ -f "${TEMPLATE_DIR}/${wflow}" ]]; then
+        cp "${TEMPLATE_DIR}/${wflow}" "${SHIP_DIR}/${wflow}"
+        wflow_count=$((wflow_count + 1))
+        GENERATED=$((GENERATED + 1))
+      fi
+    done
+    [[ $wflow_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .windsurf/workflows/ ${CYAN}(${wflow_count} workflows — native Windsurf command picker)${NC}"
   fi
 }

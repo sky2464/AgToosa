@@ -30,7 +30,13 @@ count_existing_files() {
     done
   fi
 
-  [[ "$USE_OPENCODE" == true && -f "${PROJECT_PATH}/OPENCODE.md" ]]                     && EXISTING_FILES=$((EXISTING_FILES + 1))
+  if [[ "$USE_OPENCODE" == true ]]; then
+    [[ -f "${PROJECT_PATH}/OPENCODE.md" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    local codex_skill
+    for codex_skill in "${CODEX_SKILL_FILES[@]}"; do
+      [[ -f "${PROJECT_PATH}/${codex_skill}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    done
+  fi
   for cfile in "${CONTEXT_FILES[@]}"; do
     [[ -f "${PROJECT_PATH}/${cfile}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
   done
@@ -45,9 +51,12 @@ count_existing_files() {
     done
   fi
   if [[ "$USE_CURSOR" == true ]]; then
-    local crule
+    local crule ccmd
     for crule in "${CURSOR_RULE_FILES[@]}"; do
       [[ -f "${PROJECT_PATH}/${crule}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    done
+    for ccmd in "${CURSOR_COMMAND_FILES[@]}"; do
+      [[ -f "${PROJECT_PATH}/${ccmd}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
     done
   fi
   if [[ "$USE_GEMINI" == true ]]; then
@@ -76,9 +85,12 @@ count_existing_files() {
     done
   fi
   if [[ "$USE_WINDSURF" == true ]]; then
-    local wrule
+    local wrule wflow
     for wrule in "${WINDSURF_RULE_FILES[@]}"; do
       [[ -f "${PROJECT_PATH}/${wrule}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    done
+    for wflow in "${WINDSURF_WORKFLOW_FILES[@]}"; do
+      [[ -f "${PROJECT_PATH}/${wflow}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
     done
   fi
   return 0
@@ -259,10 +271,10 @@ install_files() {
     [[ $cskill_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .claude/skills/ (${cskill_count} project skill)"
   fi
 
-  # Cursor rules — always overwrite (AgToosa-owned)
+  # Cursor rules and commands — always overwrite (AgToosa-owned)
   if [[ "$USE_CURSOR" == true ]]; then
-    mkdir -p "${PROJECT_PATH}/.cursor/rules"
-    local crule crule_count=0
+    mkdir -p "${PROJECT_PATH}/.cursor/rules" "${PROJECT_PATH}/.cursor/commands"
+    local crule crule_count=0 ccmd ccmd_count=0
     for crule in "${CURSOR_RULE_FILES[@]}"; do
       if [[ -f "${SHIP_DIR}/${crule}" ]]; then
         cp "${SHIP_DIR}/${crule}" "${PROJECT_PATH}/${crule}"
@@ -271,6 +283,15 @@ install_files() {
       fi
     done
     [[ $crule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .cursor/rules/ (${crule_count} MDX rules)"
+
+    for ccmd in "${CURSOR_COMMAND_FILES[@]}"; do
+      if [[ -f "${SHIP_DIR}/${ccmd}" ]]; then
+        cp "${SHIP_DIR}/${ccmd}" "${PROJECT_PATH}/${ccmd}"
+        ccmd_count=$((ccmd_count + 1))
+        COPIED=$((COPIED + 1))
+      fi
+    done
+    [[ $ccmd_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .cursor/commands/ (${ccmd_count} slash commands)"
   fi
 
   # Gemini CLI native commands — always overwrite (AgToosa-owned)
@@ -331,10 +352,25 @@ install_files() {
     done
   fi
 
-  # Windsurf rules — always overwrite (AgToosa-owned)
+  # Codex skills — always overwrite (AgToosa-owned)
+  if [[ "$USE_OPENCODE" == true ]]; then
+    mkdir -p "${PROJECT_PATH}/.codex/skills"
+    local codex_skill codex_skill_count=0
+    for codex_skill in "${CODEX_SKILL_FILES[@]}"; do
+      if [[ -f "${SHIP_DIR}/${codex_skill}" ]]; then
+        mkdir -p "$(dirname "${PROJECT_PATH}/${codex_skill}")"
+        cp "${SHIP_DIR}/${codex_skill}" "${PROJECT_PATH}/${codex_skill}"
+        codex_skill_count=$((codex_skill_count + 1))
+        COPIED=$((COPIED + 1))
+      fi
+    done
+    [[ $codex_skill_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .codex/skills/ (${codex_skill_count} Codex skills)"
+  fi
+
+  # Windsurf rules and workflows — always overwrite (AgToosa-owned)
   if [[ "$USE_WINDSURF" == true ]]; then
-    mkdir -p "${PROJECT_PATH}/.windsurf/rules"
-    local wrule wrule_count=0
+    mkdir -p "${PROJECT_PATH}/.windsurf/rules" "${PROJECT_PATH}/.windsurf/workflows"
+    local wrule wrule_count=0 wflow wflow_count=0
     for wrule in "${WINDSURF_RULE_FILES[@]}"; do
       if [[ -f "${SHIP_DIR}/${wrule}" ]]; then
         cp "${SHIP_DIR}/${wrule}" "${PROJECT_PATH}/${wrule}"
@@ -343,6 +379,15 @@ install_files() {
       fi
     done
     [[ $wrule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .windsurf/rules/ (${wrule_count} rules)"
+
+    for wflow in "${WINDSURF_WORKFLOW_FILES[@]}"; do
+      if [[ -f "${SHIP_DIR}/${wflow}" ]]; then
+        cp "${SHIP_DIR}/${wflow}" "${PROJECT_PATH}/${wflow}"
+        wflow_count=$((wflow_count + 1))
+        COPIED=$((COPIED + 1))
+      fi
+    done
+    [[ $wflow_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .windsurf/workflows/ (${wflow_count} workflows)"
   fi
 
 

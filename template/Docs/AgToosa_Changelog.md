@@ -30,9 +30,10 @@ _(nothing yet)_
 
 ### Added
 - Platform-native command files for Claude Code: `.claude/commands/` (8 slash commands — init, spec, build, qa, review, ship, revert, help), `.claude/settings.json` (Stop / PreToolUse / PostToolUse hooks), `.claude/skills/agtoosa-review.md`
-- Platform-native rule files for Cursor: `.cursor/rules/` (7 MDX files — core, spec, build, qa, review, ship, revert)
+- Cursor context rules and native commands: `.cursor/rules/` plus `.cursor/commands/`
 - Platform-native command files for Gemini CLI: `.gemini/commands/` (8 TOML files)
-- Platform-native rule files for Windsurf: `.windsurf/rules/` (7 MD files)
+- Windsurf context rules and native workflows: `.windsurf/rules/` plus `.windsurf/workflows/`
+- Codex workflow skills: `.codex/skills/`
 - Platform-native rule files for Roo: `.roo/rules/` (7 MD files)
 - Platform-native prompt files for GitHub Copilot: `.github/prompts/` (8 prompt files) and `.github/agents/agtoosa.agent.md`
 - Generator expansion: `lib/generate.sh` stages all new platform file sets into `ship/`; `lib/install.sh` installs them into the target project

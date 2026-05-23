@@ -48,3 +48,18 @@ Map specific agent personas and functional skills to slash commands so that the 
         *   🔍 Git Archaeologist — scans commit history for unreported progress and stale branches
         *   🗂️ Orphan Hunter — detects spec files and task IDs not tracked in Master-Plan
     *   **Focus:** Providing a scannable, read-only health report with actionable findings. Never modifies state — only observes and recommends.
+
+9.  **`/agtoosa-status-guide` (The Auditor + Coach):**
+    *   **Skills:** Status dashboard interpretation, Part 5.5 Recommended Next Actions ranking, finding-to-command mapping, authorization gating.
+    *   **Personas:**
+        *   📊 Auditor — runs `/agtoosa-status` without modifying files or git state
+        *   🧭 Coach — presents the top three recommended actions with finding IDs and rationale
+    *   **Focus:** Helping the user choose the next fix command while preserving the read-only status guarantee until the user explicitly authorizes a command.
+
+## Codex Workflow Skills
+
+AgToosa installs one Codex skill per lifecycle command under `template/.codex/skills/agtoosa-*/SKILL.md`. Each file is a workflow runner with `name`/`description` frontmatter and instructions to **execute** the matching `Docs/AgToosa_*.md` workflow. Sub-command skills must **Dispatch** without duplicating the full doc inline.
+
+## Generated Project Skills
+
+`/agtoosa-init` (**Project Skill Discovery**) and `/agtoosa-spec` (**Story Skill Opportunity Synthesis**) may propose `.codex/skills/<skill-name>/SKILL.md` files after explicit user approval. Generated skills use concise bodies, optional `references/`/`scripts/`/`assets/` only when needed, dedupe against existing workflow skills, exclude secret values, and record decisions in the spec or Master-Plan Update Log. Do not generate README or other auxiliary docs by default.

@@ -48,7 +48,17 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 2.  **External Research (Web Research Agent):**
     *   Query online sources for the best solutions, libraries, APIs, and design patterns relevant to the task.
     *   **CRITICAL:** Verify all dependency versions against live sources (never assume from memory).
-3.  **Q&A — Forcing Questions (Smart Interview):**
+3.  **Story Goal Contract:**
+
+    Before asking forcing questions, verify that the story goal is clear enough to build, review, and ship against.
+
+    *   Read the project Goal Contract in `Docs/Master-Plan.md` `## Project Charter`.
+    *   Infer the story goal from the user's request, codebase scan, active specs, backlog, and `Docs/Context/`.
+    *   If the goal, user outcome, measurable success condition, proof/evidence, non-goals, assumptions, risks, or unresolved questions are unclear, call the `/agtoosa-goal story` sub-workflow.
+    *   Write the final Story Goal Contract into the spec under `## 1. Requirements` before User Stories.
+    *   Story goals must be stored in the active spec, not in `Docs/Context/`.
+
+4.  **Q&A — Forcing Questions (Smart Interview):**
 
     > **Follow the Smart Interview Protocol** (`Docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
     > Maximum **4 questions** for the full flow; max **2** for `/agtoosa-spec quick`.
@@ -66,25 +76,25 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
     Questions 1–4 sharpen scope. Questions 5–6 feed directly into STRIDE threat modelling in Part 2. Always ask question 6 if the feature touches any trust boundary — it is rarely fully inferable.
 
     For `/agtoosa-spec quick`, ask only questions 1, 2, and 6 (abbreviated).
-4.  **Executable Spec Generation:**
+5.  **Executable Spec Generation:**
     *   Synthesize all findings into a clean, comprehensive **Executable Specification**.
     *   Specs must act as direct programmatic inputs for the `/agtoosa-build` phase (e.g., BDD syntax, strict preconditions/postconditions, or explicit acceptance criteria).
 
 ### Part 2 — Architectural Planning & Threat Modeling
 
-5.  **Constraints Enforcement & Threat Modeling:**
+6.  **Constraints Enforcement & Threat Modeling:**
     *   **Proactive Threat Modeling:** Generate Data Flow Diagrams (DFDs) and apply the STRIDE methodology (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege) before any code is written.
     *   Embed "Security by Design" into the plan.
     *   Validate that the proposed plan adheres to Object-Oriented Design (OOP) principles (if applicable).
     *   Enforce the rule: No code file shall exceed 500 lines of code. Plan for modularity.
-6.  **Architecture Blueprint:**
+7.  **Architecture Blueprint:**
     *   Outline the architecture, file structure changes, and logic flow.
     *   Identify dependencies and their latest stable versions.
     *   Map out which tasks can be parallelized during `/agtoosa-build`.
 
 ### Part 3 — Output
 
-7.  **Acceptance Criteria:**
+8.  **Acceptance Criteria:**
     *   Before writing the spec file, generate a `## 1.2 Acceptance Criteria (EARS)` table using EARS notation:
 
     ```
@@ -101,27 +111,27 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
     *   Every Must-priority AC must have at least one explicit failure mode from question 5.
     *   This table is required by `/agtoosa-qa plan` and `/agtoosa-ship check`.
 
-8.  **File Generation:**
+9.  **File Generation:**
     *   Generate a single file named `Docs/archived/spec-[story-id].md` (e.g., `Docs/archived/spec-DEV-15.md`).
     *   The file must follow the section order defined in `Docs/SPEC-FORMAT.md`:
-        - `## 1. Requirements` (User Stories, EARS ACs, Out of Scope)
+        - `## 1. Requirements` (Goal Contract, User Stories, EARS ACs, Out of Scope)
         - `## 2. Design` (Architecture Blueprint, Data Flow, STRIDE Threat Model, Build Scope)
         - `## 3. Tasks` (Task Tree, Wave Plan, Test Plan — populated in Part 4)
         - `## ✅ Spec Approved` (appended on approval)
     *   Refer to `Docs/SPEC-FORMAT.md` for the full format reference.
     *   The `Docs/archived/` directory is created automatically by `/agtoosa-init`. If it is missing, create it with `mkdir -p Docs/archived`.
-9.  **Master-Plan.md Story Entry:**
+10. **Master-Plan.md Story Entry:**
     *   Add a Story entry to `Docs/Master-Plan.md`:
         - Title: `Feature: [spec short name]` (use `Bug:` / `Chore:` / `Fix:` as appropriate)
         - Type: Feature (or Bug / Chore / Fix as appropriate)
         - Status: `Todo`
         - Priority: derived from the urgency signal (Q3 answer)
         - Parent Epic: link to the relevant Epic from `/agtoosa-init`
-        - Summary: paste the spec's Context section + ACs table + Definition of Done checklist
+        - Summary: paste the spec's Goal Contract + ACs table + Definition of Done checklist
     *   Record the Story ID in the spec file header.
     *   Update `Docs/Master-Plan.md`: add the Story row to `## Backlog` (or `## Active Cycle` if enrolling now).
 
-10. **Estimation & Cycle Enrollment:**
+11. **Estimation & Cycle Enrollment:**
     *   Ask the user: "How big is this Story? T-shirt size: **XS** (< 4 h) / **S** (1 d) / **M** (2–3 d) / **L** (4–5 d) / **XL** (6+ d)"
     *   If the user picks **L** or **XL**, prompt: "This is large. Should we split it into smaller Stories now, or proceed as one?"
     *   Record the estimate in `Docs/Master-Plan.md` on the Story row.
@@ -132,7 +142,7 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 
 > **Skip this part** if running `/agtoosa-spec research` or `/agtoosa-spec plan`. Run this part standalone with `/agtoosa-spec tasks` against an already-approved spec.
 
-11. **Scope Boundary Declaration:**
+12. **Scope Boundary Declaration:**
 
     Derive the scope boundary from the spec. Present it as a pre-filled summary — do not ask the user to define scope from scratch:
 
@@ -145,7 +155,7 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 
     Save the scope declaration under a `## Build Scope` heading at the top of the active `AgToosa_Spec-*.md`.
 
-12. **Atomic Task Breakdown:**
+13. **Atomic Task Breakdown:**
     *   Read the spec and translate it into atomic, clear, step-by-step actionable tasks.
     *   Identify tasks that can run in parallel during `/agtoosa-build`.
     *   If a critical flaw is found during task breakdown, stop and ask the user to revise the spec before continuing.
@@ -161,7 +171,7 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 
     *   Mirror the task tree into `Docs/Master-Plan.md` under `## Active Tasks` (replacing the flat table format).
 
-13. **Test Plan Skeleton:**
+14. **Test Plan Skeleton:**
     *   Generate **`Docs/AgToosa_TestPlan-[name].md`** containing:
         - Spec reference (link to `AgToosa_Spec-*.md`)
         - AC coverage table — each `AC-NNN` from the spec mapped to test IDs (`T-001`, `T-002`, ...)
@@ -170,14 +180,26 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
         - At least one negative/edge scenario per Must-priority AC
         - Smoke set — at least one test per Must-priority AC tagged `@smoke`
 
+15. **Story Skill Opportunity Synthesis (Codex / OpenCode):**
+
+    After the test plan skeleton exists, derive story-specific skill candidates from the Goal Contract, acceptance criteria, architecture blueprint, and test plan.
+
+    *   Propose skills only when they clearly support repeated implementation, review, QA, or release evidence for **this story** (not one-off chat instructions).
+    *   Check for **duplicate** triggers against existing AgToosa workflow skills, platform adapters, and project skills under `.codex/skills/`. Prefer **Update existing** or **Do not generate** over creating a near-duplicate.
+    *   Reject candidates without validation (command, checklist, or artifact review).
+    *   **Secret safety:** exclude secret values from generated skills; reference file paths and process steps only. Add a safety note when credentials or tokens are relevant.
+    *   Present the same candidate table shape as `/agtoosa-init` Project Skill Discovery (Skill name, Trigger description, Purpose, Inputs, Optional resources, Validation, Decision).
+    *   Require **explicit user approval** before writing any `.codex/skills/<skill-name>/SKILL.md` file.
+    *   Record accepted and declined decisions in the active spec file or `Docs/Master-Plan.md` **Update Log**.
+
 ## Output
-*   Present the generated Spec (with embedded plan), task list, and test plan skeleton to the user.
+*   Present the generated Spec (with Goal Contract and embedded plan), task list, and test plan skeleton to the user.
 *   Print the closure line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
 *   Present the approval gate:
 
     ```
     ✅ Ready to proceed
-    Spec [name] generated: [N] ACs, [N] Must-priority, threat model complete.
+    Spec [name] generated: Goal Contract clear, [N] ACs, [N] Must-priority, threat model complete.
     [N] atomic tasks derived. Test plan skeleton: [N] test IDs mapped to [N] ACs.
     → Approve — I'll mark the spec approved and the build can start
     → Comment or request changes below

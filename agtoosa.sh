@@ -233,7 +233,7 @@ echo "  3) Claude Code"
 echo "  4) Gemini CLI / Jules"
 echo "  5) GitHub Copilot"
 echo "  6) VS Code (generic)"
-echo "  7) OpenCode / Other"
+echo "  7) Codex / OpenCode / Other"
 echo "  8) All of the above"
 echo ""
 read -rp "Your selection: " SELECTION
@@ -291,10 +291,11 @@ fi
 [[ -d "$SHIP_DIR" ]] && rm -rf "$SHIP_DIR"
 mkdir -p "$SHIP_DIR/Docs/archived" "$SHIP_DIR/Docs/Context" \
          "$SHIP_DIR/.claude/commands" "$SHIP_DIR/.claude/skills" \
-           "$SHIP_DIR/.cursor/rules" \
+           "$SHIP_DIR/.cursor/rules" "$SHIP_DIR/.cursor/commands" \
            "$SHIP_DIR/.gemini/commands" \
            "$SHIP_DIR/.github/prompts" "$SHIP_DIR/.github/agents" \
-           "$SHIP_DIR/.windsurf/rules"
+           "$SHIP_DIR/.codex/skills" \
+           "$SHIP_DIR/.windsurf/rules" "$SHIP_DIR/.windsurf/workflows"
 echo ""
 GENERATED=0
 stage_files

@@ -235,11 +235,17 @@ EOF
   [ -f "$TEST_PROJECT/OPENCODE.md" ]
   # Native platform rule/command directories
   [ -d "$TEST_PROJECT/.cursor/rules" ]
+  [ -d "$TEST_PROJECT/.cursor/commands" ]
   [ -d "$TEST_PROJECT/.claude/commands" ]
   [ -d "$TEST_PROJECT/.gemini/commands" ]
   [ -d "$TEST_PROJECT/.github/prompts" ]
   [ -d "$TEST_PROJECT/.github/agents" ]
+  [ -d "$TEST_PROJECT/.codex/skills" ]
   [ -d "$TEST_PROJECT/.windsurf/rules" ]
+  [ -d "$TEST_PROJECT/.windsurf/workflows" ]
+  [ -f "$TEST_PROJECT/.cursor/commands/agtoosa-spec.md" ]
+  [ -f "$TEST_PROJECT/.windsurf/workflows/agtoosa-spec.md" ]
+  [ -f "$TEST_PROJECT/.codex/skills/agtoosa-spec/SKILL.md" ]
 }
 @test "platform selection 1 installs .cursor/rules/ MDX files" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
@@ -247,14 +253,18 @@ EOF
   [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-core.mdc" ]
   [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-spec.mdc" ]
   [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-build.mdc" ]
+  [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-goal.mdc" ]
   [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-revert.mdc" ]
+  [ -f "$TEST_PROJECT/.cursor/commands/agtoosa-spec.md" ]
 }
 @test "platform selection 2 installs .windsurf/rules/ files" {
   run bash -c "printf '$TEST_PROJECT\n2\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/.windsurf/rules/agtoosa-core.md" ]
   [ -f "$TEST_PROJECT/.windsurf/rules/agtoosa-spec.md" ]
+  [ -f "$TEST_PROJECT/.windsurf/rules/agtoosa-goal.md" ]
   [ -f "$TEST_PROJECT/.windsurf/rules/agtoosa-revert.md" ]
+  [ -f "$TEST_PROJECT/.windsurf/workflows/agtoosa-spec.md" ]
 }
 @test "platform selection 3 installs .claude/commands/ slash commands" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
@@ -262,6 +272,7 @@ EOF
   [ -f "$TEST_PROJECT/.claude/commands/agtoosa-init.md" ]
   [ -f "$TEST_PROJECT/.claude/commands/agtoosa-spec.md"  ]
   [ -f "$TEST_PROJECT/.claude/commands/agtoosa-ship.md" ]
+  [ -f "$TEST_PROJECT/.claude/commands/agtoosa-goal.md" ]
   [ -f "$TEST_PROJECT/.claude/commands/agtoosa-help.md" ]
 }
 @test "platform selection 4 installs .gemini/commands/ TOML files" {
@@ -269,6 +280,7 @@ EOF
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/.gemini/commands/agtoosa-init.toml" ]
   [ -f "$TEST_PROJECT/.gemini/commands/agtoosa-spec.toml" ]
+  [ -f "$TEST_PROJECT/.gemini/commands/agtoosa-goal.toml" ]
   [ -f "$TEST_PROJECT/.gemini/commands/agtoosa-help.toml" ]
 }
 @test "platform selection 5 installs .github/prompts/ and .github/agents/" {
@@ -276,7 +288,16 @@ EOF
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/.github/prompts/agtoosa-init.prompt.md" ]
   [ -f "$TEST_PROJECT/.github/prompts/agtoosa-spec.prompt.md" ]
+  [ -f "$TEST_PROJECT/.github/prompts/agtoosa-goal.prompt.md" ]
   [ -f "$TEST_PROJECT/.github/agents/agtoosa.agent.md" ]
+}
+@test "platform selection 7 installs OPENCODE.md and Codex skills" {
+  run bash -c "printf '$TEST_PROJECT\n7\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/OPENCODE.md" ]
+  [ -f "$TEST_PROJECT/.codex/skills/agtoosa-spec/SKILL.md" ]
+  [ -f "$TEST_PROJECT/.codex/skills/agtoosa-build/SKILL.md" ]
+  [ ! -f "$TEST_PROJECT/.cursor/commands/agtoosa-spec.md" ]
 }
 @test "--list-template-files lists core and platform files" {
   run bash "$SCRIPT" --list-template-files
@@ -407,6 +428,7 @@ EOF
   [ -f "$TEST_PROJECT/.claude/commands/agtoosa-build.md" ]
   [ -f "$TEST_PROJECT/.claude/commands/agtoosa-review.md" ]
   [ -f "$TEST_PROJECT/.claude/commands/agtoosa-ship.md" ]
+  [ -f "$TEST_PROJECT/.claude/commands/agtoosa-goal.md" ]
   [ -f "$TEST_PROJECT/.claude/commands/agtoosa-help.md" ]
 }
 @test "Claude option installs .claude/settings.json with hooks" {
@@ -427,8 +449,11 @@ EOF
   [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-core.mdc" ]
   [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-spec.mdc" ]
   [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-build.mdc" ]
+  [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-goal.mdc" ]
   [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-review.mdc" ]
   [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-ship.mdc" ]
+  [ -f "$TEST_PROJECT/.cursor/commands/agtoosa-spec.md" ]
+  [ -f "$TEST_PROJECT/.cursor/commands/agtoosa-build.md" ]
 }
 @test "non-Claude option does not install .claude/ directory" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
@@ -440,6 +465,7 @@ EOF
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ ! -f "$TEST_PROJECT/.cursor/rules/agtoosa-core.mdc" ]
+  [ ! -f "$TEST_PROJECT/.cursor/commands/agtoosa-spec.md" ]
 }
 @test "settings.json hooks not duplicated on re-run" {
   # First install
@@ -810,6 +836,16 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -eq 0 ]
   [ ! -f "$TEST_PROJECT/.cursorrules" ]
 }
+@test "--update adds native discoverability dirs for existing platform installs" {
+  run bash -c "printf '$TEST_PROJECT\n1 2 7\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  rm -rf "$TEST_PROJECT/.cursor/commands" "$TEST_PROJECT/.windsurf/workflows" "$TEST_PROJECT/.codex/skills"
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.cursor/commands/agtoosa-spec.md" ]
+  [ -f "$TEST_PROJECT/.windsurf/workflows/agtoosa-spec.md" ]
+  [ -f "$TEST_PROJECT/.codex/skills/agtoosa-spec/SKILL.md" ]
+}
 # ── --update --dry-run / --force ─────────────────────────────
 @test "--update --dry-run writes no files and shows DRY RUN" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
@@ -858,17 +894,26 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
 @test "agtoosa-help Claude command includes /agtoosa-update" {
   grep -q "agtoosa-update" "$TEMPLATE_DIR/.claude/commands/agtoosa-help.md"
 }
+@test "agtoosa-help Claude command includes /agtoosa-goal" {
+  grep -q "agtoosa-goal" "$TEMPLATE_DIR/.claude/commands/agtoosa-help.md"
+}
 @test "agtoosa-update Gemini command exists in template" {
   [ -f "$TEMPLATE_DIR/.gemini/commands/agtoosa-update.toml" ]
 }
 @test "agtoosa-help Gemini command includes /agtoosa-update" {
   grep -q "agtoosa-update" "$TEMPLATE_DIR/.gemini/commands/agtoosa-help.toml"
 }
+@test "agtoosa-help Gemini command includes /agtoosa-goal" {
+  grep -q "agtoosa-goal" "$TEMPLATE_DIR/.gemini/commands/agtoosa-help.toml"
+}
 @test "agtoosa-update Copilot prompt exists in template" {
   [ -f "$TEMPLATE_DIR/.github/prompts/agtoosa-update.prompt.md" ]
 }
 @test "agtoosa-help Copilot prompt includes /agtoosa-update" {
   grep -q "agtoosa-update" "$TEMPLATE_DIR/.github/prompts/agtoosa-help.prompt.md"
+}
+@test "agtoosa-help Copilot prompt includes /agtoosa-goal" {
+  grep -q "agtoosa-goal" "$TEMPLATE_DIR/.github/prompts/agtoosa-help.prompt.md"
 }
 @test "agtoosa-update Cursor rule exists in template" {
   [ -f "$TEMPLATE_DIR/.cursor/rules/agtoosa-update.mdc" ]
@@ -945,6 +990,52 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
 }
 @test "agtoosa-init workflow includes zoom-out sub-command" {
   grep -q "zoom-out" "$TEMPLATE_DIR/Docs/AgToosa_Init.md"
+}
+@test "agtoosa-goal workflow doc exists in template" {
+  [ -f "$TEMPLATE_DIR/Docs/AgToosa_Goal.md" ]
+}
+@test "agtoosa-goal workflow is listed in DOCS_FILES" {
+  grep -q '"Docs/AgToosa_Goal.md"' "$BATS_TEST_DIRNAME/../lib/config.sh"
+}
+@test "--list-template-files includes agtoosa-goal workflow and native entries" {
+  run bash "$SCRIPT" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Goal.md"* ]]
+  [[ "$output" == *".claude/commands/agtoosa-goal.md"* ]]
+  [[ "$output" == *".cursor/rules/agtoosa-goal.mdc"* ]]
+  [[ "$output" == *".gemini/commands/agtoosa-goal.toml"* ]]
+  [[ "$output" == *".github/prompts/agtoosa-goal.prompt.md"* ]]
+  [[ "$output" == *".windsurf/rules/agtoosa-goal.md"* ]]
+}
+@test "agtoosa-goal native platform templates exist" {
+  [ -f "$TEMPLATE_DIR/.claude/commands/agtoosa-goal.md" ]
+  [ -f "$TEMPLATE_DIR/.cursor/rules/agtoosa-goal.mdc" ]
+  [ -f "$TEMPLATE_DIR/.gemini/commands/agtoosa-goal.toml" ]
+  [ -f "$TEMPLATE_DIR/.github/prompts/agtoosa-goal.prompt.md" ]
+  [ -f "$TEMPLATE_DIR/.windsurf/rules/agtoosa-goal.md" ]
+}
+@test "goal contract is integrated into core workflows" {
+  grep -q "Goal Clarification Protocol" "$TEMPLATE_DIR/Docs/AgToosa_Agent.md"
+  grep -q "Project Goal Contract" "$TEMPLATE_DIR/Docs/AgToosa_Init.md"
+  grep -q "Story Goal Contract" "$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  grep -q "Goal Contract alignment" "$TEMPLATE_DIR/Docs/AgToosa_Review.md"
+  grep -q "Goal Contract satisfied" "$TEMPLATE_DIR/Docs/AgToosa_Ship.md"
+}
+@test "agtoosa-update remains read-only while reporting goal gaps" {
+  grep -q "pure read command" "$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -q "This step is read-only" "$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -q "Goal clarity gaps" "$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+}
+@test "SPEC-FORMAT defines story Goal Contract" {
+  grep -q "Goal Contract" "$TEMPLATE_DIR/Docs/SPEC-FORMAT.md"
+  grep -q "Success condition" "$TEMPLATE_DIR/Docs/SPEC-FORMAT.md"
+  grep -q "Proof / evidence" "$TEMPLATE_DIR/Docs/SPEC-FORMAT.md"
+}
+@test "agtoosa-goal does not add Claude-specific Stop hook evaluator" {
+  run grep -q "agtoosa-goal" "$TEMPLATE_DIR/.claude/settings.json"
+  [ "$status" -ne 0 ]
+  run grep -q "Goal Contract" "$TEMPLATE_DIR/.claude/settings.json"
+  [ "$status" -ne 0 ]
 }
 # ── ADR implementation tests ─────────────────────────────────────────────────
 @test "AgToosa_Governance reference doc exists in template" {
@@ -1234,12 +1325,24 @@ PY
   grep -q "$needle" "$TEMPLATE_DIR/.windsurf/rules/agtoosa-core.md"
 }
 
-@test "D2: init and help do NOT have per-command cursor/windsurf variants (parity asymmetry)" {
-  # Documented parity exception — these commands fold into agtoosa-core on cursor/windsurf.
+@test "D2: init and help still do not have per-command cursor/windsurf rule variants" {
+  # Cursor/Windsurf now have native picker adapters, but context rules still fold init/help into agtoosa-core.
   [ ! -f "$TEMPLATE_DIR/.cursor/rules/agtoosa-init.mdc" ]
   [ ! -f "$TEMPLATE_DIR/.cursor/rules/agtoosa-help.mdc" ]
   [ ! -f "$TEMPLATE_DIR/.windsurf/rules/agtoosa-init.md" ]
   [ ! -f "$TEMPLATE_DIR/.windsurf/rules/agtoosa-help.md" ]
+}
+
+@test "D2: cursor/windsurf/codex native discoverability adapters exist" {
+  [ -f "$TEMPLATE_DIR/.cursor/commands/agtoosa-init.md" ]
+  [ -f "$TEMPLATE_DIR/.cursor/commands/agtoosa-help.md" ]
+  [ -f "$TEMPLATE_DIR/.cursor/commands/agtoosa-spec.md" ]
+  [ -f "$TEMPLATE_DIR/.windsurf/workflows/agtoosa-init.md" ]
+  [ -f "$TEMPLATE_DIR/.windsurf/workflows/agtoosa-help.md" ]
+  [ -f "$TEMPLATE_DIR/.windsurf/workflows/agtoosa-spec.md" ]
+  [ -f "$TEMPLATE_DIR/.codex/skills/agtoosa-init/SKILL.md" ]
+  [ -f "$TEMPLATE_DIR/.codex/skills/agtoosa-help/SKILL.md" ]
+  [ -f "$TEMPLATE_DIR/.codex/skills/agtoosa-spec/SKILL.md" ]
 }
 
 @test "D3: typo helper string appears in canonical AgToosa_Status.md" {
@@ -1261,11 +1364,86 @@ PY
   done
 }
 
-@test "maintainer doc documents the parity asymmetry and user-facing strings" {
+@test "S1: Status Guide canonical doc enforces read-only Part 5.5 coaching" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_StatusGuide.md"
+  grep -q "read-only" "$f"
+  grep -q "Part 5.5" "$f"
+  grep -q "Recommended Next Actions" "$f"
+  grep -q "Finding count and finding IDs" "$f"
+  grep -q "rationale line from Part 5.5" "$f"
+  grep -q "explicit user authorization" "$f"
+  grep -q "If the user declines" "$f"
+}
+
+@test "S2: platform selection 5 installs Status Guide agent" {
+  run bash -c "printf '$TEST_PROJECT\n5\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_StatusGuide.md" ]
+  [ -f "$TEST_PROJECT/.github/agents/agtoosa-status-guide.agent.md" ]
+  grep -q "Docs/AgToosa_StatusGuide.md" "$TEST_PROJECT/.github/agents/agtoosa-status-guide.agent.md"
+}
+
+@test "maintainer doc documents native surfaces and user-facing strings" {
   local f="$BATS_TEST_DIRNAME/../docs/agtoosa-maintainer.md"
   grep -q "Per-Platform Parity" "$f"
+  grep -q ".cursor/commands" "$f"
+  grep -q ".windsurf/workflows" "$f"
+  grep -q ".codex/skills" "$f"
   grep -q "Run /agtoosa-status to verify findings cleared" "$f"
   grep -q "Did you mean: plan, git, orphans" "$f"
+}
+
+# ── DEV-007 /agtoosa-help next (H1–H6) ───────────────────────────────────────
+
+@test "H1: plain /agtoosa-help stays static without reading Master-Plan" {
+  local claude="$TEMPLATE_DIR/.claude/commands/agtoosa-help.md"
+  local gemini="$TEMPLATE_DIR/.gemini/commands/agtoosa-help.toml"
+  local copilot="$TEMPLATE_DIR/.github/prompts/agtoosa-help.prompt.md"
+  grep -q "Do not read any Docs file" "$claude"
+  grep -q "Master-Plan.md" "$claude"
+  grep -q "without reading" "$gemini"
+  grep -q "without reading" "$copilot"
+}
+
+@test "H2: /agtoosa-help next in three native help variants" {
+  grep -q "/agtoosa-help next" "$TEMPLATE_DIR/.claude/commands/agtoosa-help.md"
+  grep -q "/agtoosa-help next" "$TEMPLATE_DIR/.gemini/commands/agtoosa-help.toml"
+  grep -q "/agtoosa-help next" "$TEMPLATE_DIR/.github/prompts/agtoosa-help.prompt.md"
+}
+
+@test "H3: /agtoosa-help next in Cursor and Windsurf core fallbacks" {
+  grep -q "/agtoosa-help next" "$TEMPLATE_DIR/.cursor/rules/agtoosa-core.mdc"
+  grep -q "/agtoosa-help next" "$TEMPLATE_DIR/.windsurf/rules/agtoosa-core.md"
+}
+
+@test "H4: help-next wording is read-only and forbids Master-Plan mutation" {
+  local needle="Never modify"
+  grep -q "$needle" "$TEMPLATE_DIR/.claude/commands/agtoosa-help.md"
+  grep -q "$needle" "$TEMPLATE_DIR/.gemini/commands/agtoosa-help.toml"
+  grep -q "$needle" "$TEMPLATE_DIR/.github/prompts/agtoosa-help.prompt.md"
+  grep -q "$needle" "$TEMPLATE_DIR/.cursor/rules/agtoosa-core.mdc"
+  grep -q "$needle" "$TEMPLATE_DIR/.windsurf/rules/agtoosa-core.md"
+}
+
+@test "H5: help-next presents mutating commands as suggestions only" {
+  local claude="$TEMPLATE_DIR/.claude/commands/agtoosa-help.md"
+  grep -q "suggestion only" "$claude"
+  grep -q "does not auto-run" "$claude"
+  grep -q "does not auto-run" "$TEMPLATE_DIR/.gemini/commands/agtoosa-help.toml"
+  grep -q "do not auto-run" "$TEMPLATE_DIR/.github/prompts/agtoosa-help.prompt.md"
+}
+
+@test "H6: help-next maps empty Active Cycle to /agtoosa-spec" {
+  grep -q "Empty Active Cycle" "$TEMPLATE_DIR/.claude/commands/agtoosa-help.md"
+  grep -q "/agtoosa-spec" "$TEMPLATE_DIR/.claude/commands/agtoosa-help.md"
+  grep -q "Empty Active Cycle" "$TEMPLATE_DIR/.cursor/rules/agtoosa-core.mdc"
+}
+
+@test "H7: AgToosa_Agent.md lists help as assistance-only outside lifecycle" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Agent.md"
+  grep -q "Assistance-only" "$f"
+  grep -q "/agtoosa-help next" "$f"
+  ! grep -q "agtoosa-help" <<< "$(sed -n '/## Development Cycle/,/## Key References/p' "$f" | grep -i help || true)"
 }
 
 # ── 4.2.0 manual task support (M1 / M2 / M3 / M4) ────────────────────────────
@@ -1292,4 +1470,86 @@ PY
 
 @test "M4: Master-Plan.md template contains Manual / Deferred section" {
   grep -q 'Manual / Deferred' "$TEMPLATE_DIR/Docs/Master-Plan.md"
+}
+
+# ── DEV-008 workflow skill synthesis (K1–K7) ─────────────────────────────────
+
+@test "K1: Codex AgToosa workflow skills have name and description frontmatter" {
+  local skill
+  for skill in "$TEMPLATE_DIR"/.codex/skills/agtoosa-*/SKILL.md; do
+    grep -q '^name:' "$skill" || {
+      echo "MISSING name frontmatter in $skill"
+      false
+    }
+    grep -q '^description:' "$skill" || {
+      echo "MISSING description frontmatter in $skill"
+      false
+    }
+  done
+}
+
+@test "K2: Codex workflow skills execute canonical Docs workflows" {
+  local skill doc
+  skill="$TEMPLATE_DIR/.codex/skills/agtoosa-build/SKILL.md"
+  grep -q 'Docs/AgToosa_Build.md' "$skill"
+  grep -qE 'execute|run' "$skill"
+  skill="$TEMPLATE_DIR/.codex/skills/agtoosa-spec/SKILL.md"
+  grep -q 'Docs/AgToosa_Spec.md' "$skill"
+  grep -qE 'execute|run' "$skill"
+  skill="$TEMPLATE_DIR/.codex/skills/agtoosa-init/SKILL.md"
+  grep -q 'Docs/AgToosa_Init.md' "$skill"
+  grep -qE 'execute|run' "$skill"
+}
+
+@test "K3: sub-command Codex skills document dispatch without duplicating full docs" {
+  local spec="$TEMPLATE_DIR/.codex/skills/agtoosa-spec/SKILL.md"
+  local status="$TEMPLATE_DIR/.codex/skills/agtoosa-status/SKILL.md"
+  local help="$TEMPLATE_DIR/.codex/skills/agtoosa-help/SKILL.md"
+  grep -q 'Dispatch' "$spec"
+  grep -q 'research' "$spec"
+  grep -q 'plan' "$status"
+  grep -q 'orphans' "$status"
+  grep -q 'next' "$help"
+  ! grep -q '## Part 1' "$spec"
+}
+
+@test "K4: AgToosa_Init.md includes Project Skill Discovery with approval gate" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Init.md"
+  grep -q 'Project Skill Discovery' "$f"
+  grep -q 'Skill name' "$f"
+  grep -q 'Trigger description' "$f"
+  grep -q 'explicit user approval' "$f"
+  grep -q 'Do not generate' "$f"
+}
+
+@test "K5: AgToosa_Spec.md includes Story Skill Opportunity Synthesis" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  grep -q 'Story Skill Opportunity Synthesis' "$f"
+  grep -q 'Goal Contract' "$f"
+  grep -q 'acceptance criteria' "$f"
+  grep -q 'duplicate' "$f"
+  grep -q 'explicit user approval' "$f"
+}
+
+@test "K6: skill synthesis guardrails exclude secrets and record decisions" {
+  local init="$TEMPLATE_DIR/Docs/AgToosa_Init.md"
+  local spec="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  local skills="$TEMPLATE_DIR/Docs/AgToosa_Skills.md"
+  grep -qE 'secret|credential|token' "$init"
+  grep -qE 'secret|credential|token' "$spec"
+  grep -q 'Update Log' "$init"
+  grep -q 'Update Log' "$spec"
+  grep -q 'Generated Project Skill' "$skills"
+  grep -q 'README' "$skills"
+}
+
+@test "K7: list-template-files and platform 7 install Codex skill inventory" {
+  run bash "$SCRIPT" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *".codex/skills/agtoosa-spec/SKILL.md"* ]]
+  [[ "$output" == *".codex/skills/agtoosa-help/SKILL.md"* ]]
+  run bash -c "printf '$TEST_PROJECT\n7\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.codex/skills/agtoosa-goal/SKILL.md" ]
+  [ -f "$TEST_PROJECT/.codex/skills/agtoosa-concise/SKILL.md" ]
 }

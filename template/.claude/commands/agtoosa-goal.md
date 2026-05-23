@@ -1,0 +1,13 @@
+Read @Docs/AgToosa_Goal.md and execute the goal clarification sub-workflow.
+
+Arguments provided: $ARGUMENTS
+
+Dispatch rules based on arguments:
+- `project <idea>` → clarify the project-level goal and update `Docs/Master-Plan.md`.
+- `story <idea>` → clarify a story or feature goal and update the active spec Goal Contract.
+- `check` → run a read-only goal clarity and satisfaction check.
+- `revise` → revise the current project or story Goal Contract after an approval gate.
+- No argument → infer whether the user means project or story goal; if unclear, ask one question.
+
+This is an optional utility/sub-workflow, not a main lifecycle command. Main workflows may call it when intent, success condition, or proof of completion is unclear.
+

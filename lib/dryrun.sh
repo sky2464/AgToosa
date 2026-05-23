@@ -12,10 +12,12 @@ print_dryrun_preview() {
   while IFS= read -r f; do
     target="${PROJECT_PATH}/${f}"
 
-    if [[ "$f" == .claude/commands/* || "$f" == .claude/skills/* || "$f" == .cursor/rules/* \
+    if [[ "$f" == .claude/commands/* || "$f" == .claude/skills/* \
+       || "$f" == .cursor/rules/* || "$f" == .cursor/commands/* \
        || "$f" == .gemini/commands/* \
        || "$f" == .github/prompts/* || "$f" == .github/agents/* || "$f" == .github/instructions/* \
-       || "$f" == .windsurf/rules/* ]]; then
+       || "$f" == .codex/skills/* \
+       || "$f" == .windsurf/rules/* || "$f" == .windsurf/workflows/* ]]; then
       echo -e "  ${GREEN}✅${NC} ${f}  → Would overwrite (AgToosa-owned, always updated)"
 
     elif [[ "$f" == .claude/settings.json ]]; then

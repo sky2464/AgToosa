@@ -22,6 +22,7 @@ Before any deployment, verify all of the following. If **any** check fails, list
 
 | Check | How to Verify |
 |-------|--------------|
+| ✅ Goal Contract satisfied | Active spec contains `### Goal Contract`; Success condition and Proof / evidence are satisfied by tests, review report, smoke result, demo, metric, or shipped artifact |
 | ✅ Spec was approved | `Docs/archived/spec-*.md` contains a `## ✅ Spec Approved` section with a timestamp |
 | ✅ Acceptance criteria exist | `Docs/archived/spec-*.md` contains `## Acceptance Criteria` with at least one Must-priority row |
 | ✅ `/agtoosa-review` completed | `Docs/archived/review-*.md` exists and contains no unresolved 🔴 Critical findings |
@@ -34,7 +35,7 @@ Only proceed to Part 1 after all checks pass. Present the approval gate:
 
 ```
 ✅ Ready to deploy — All pre-ship checks passed
-Branch: [branch name] · Story: [ID] · Smoke tests: [N] tagged · Changelog: ✅
+Branch: [branch name] · Story: [ID] · Goal: ✅ · Smoke tests: [N] tagged · Changelog: ✅
 → Approve to deploy to [staging/production]  |  Cancel or investigate below
 ```
 
@@ -60,6 +61,7 @@ Before deploying, clean the branch history:
 3.  **Post-Deploy Smoke Tests:**
     *   Run all `@smoke`-tagged tests against the deployed environment.
     *   Verify that every Must-priority AC from the spec is reachable in production.
+    *   Verify that the Goal Contract Success condition is satisfied by production behavior or the declared Proof / evidence.
     *   Verify the health endpoint returns 200 (if applicable).
     *   **If smoke tests pass:**
         - Transition the Story issue status to `Done` in Linear.

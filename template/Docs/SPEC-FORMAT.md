@@ -50,6 +50,25 @@ Keep the short name brief — it should match the story title in `Docs/Master-Pl
 
 ## Section 1 — Requirements
 
+### Goal Contract
+
+The Goal Contract is the story-level source of truth for what the user actually wants and how completion will be proven. It is created by `/agtoosa-spec` directly or by the `/agtoosa-goal story` sub-workflow before acceptance criteria and tasks are generated.
+
+```
+| Field | Value |
+|-------|-------|
+| Goal | [story outcome] |
+| User outcome | [who benefits and how] |
+| Success condition | [measurable done state] |
+| Proof / evidence | [tests, review evidence, smoke check, demo, metric, or artifact] |
+| Non-goals | [explicit exclusions] |
+| Assumptions | [important assumptions] |
+| Risks | [delivery, product, security, or quality risks] |
+| Unresolved questions | [open points or `None`] |
+```
+
+`Docs/Context/` may inform this section, but the active spec is the source of truth for the story goal.
+
 ### 1.1 User Stories
 
 One or more user stories in standard form:

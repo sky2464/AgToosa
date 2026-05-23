@@ -28,6 +28,7 @@ This is a pure read command. The AI reads the project's current state and produc
 2. **Read Master-Plan**
 
    Read `Docs/Master-Plan.md`. Extract:
+   - Project Goal Contract from `## Project Charter`
    - Active cycle and its goal
    - Stories currently In Progress
    - Blocked items
@@ -39,9 +40,18 @@ This is a pure read command. The AI reads the project's current state and produc
 
 4. **Scan active specs**
 
-   List any `Docs/AgToosa_Spec-*.md` files that are not in `Docs/archived/`. Read their Status field. Note which specs are Approved, In Progress, or Draft.
+   List any `Docs/AgToosa_Spec-*.md` files that are not in `Docs/archived/`. Read their Status field and Goal Contract. Note which specs are Approved, In Progress, or Draft.
 
-5. **Produce a project briefing**
+5. **Check goal clarity**
+
+   This step is read-only. Do not ask goal questions and do not update files.
+
+   Report:
+   - **Goal summary:** project goal, active story goal, success condition, and proof/evidence if present.
+   - **Goal clarity gaps:** missing or vague Goal Contract fields in `Docs/Master-Plan.md` or active specs.
+   - **Suggested fix:** recommend `/agtoosa-goal project`, `/agtoosa-goal story`, or `/agtoosa-spec` when goal state is missing or at risk.
+
+6. **Produce a project briefing**
 
    Output a concise summary in this structure:
 
@@ -57,11 +67,13 @@ This is a pure read command. The AI reads the project's current state and produc
    **Recently shipped:** [last release summary from Changelog]
 
    **Open specs:** [list of non-archived specs and their status]
+   **Goal summary:** [project/story goal and success condition, or "missing"]
 
    **Context gaps:** [any missing/empty context files — suggest /agtoosa-init if significant]
+   **Goal clarity gaps:** [missing/vague fields — suggest /agtoosa-goal if significant]
    ```
 
-6. **Ask what's next**
+7. **Ask what's next**
 
    End with:
 

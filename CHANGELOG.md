@@ -10,15 +10,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 ### Added
 
 - **M1–M4 bats parity tests** for v4.2.0 manual-task template semantics (`tests/agtoosa.bats`), mirroring the D1–D3 release-hygiene pattern. Ref: `docs/archived/spec-DEV-005.md`.
+- **AgToosa Status Guide sub-agent** for GitHub Copilot (`template/.github/agents/agtoosa-status-guide.agent.md`) plus canonical `Docs/AgToosa_StatusGuide.md`. It runs `/agtoosa-status` read-only, applies Part 5.5 Recommended Next Actions, presents the top three actions with rationale and finding IDs, and asks for authorization before any fix command. Ref: `docs/archived/spec-DEV-006.md`.
+- **Model-agnostic `/agtoosa-goal` sub-workflow** with portable Goal Contracts for project and story outcomes. Main workflows can invoke it during init/spec/review/ship when user intent or proof of completion is unclear.
+- **Native workflow discoverability adapters** for Cursor (`template/.cursor/commands/`), Windsurf (`template/.windsurf/workflows/`), and Codex (`template/.codex/skills/`) so AgToosa workflows can appear in host command/workflow/skill pickers where supported.
+- **`/agtoosa-help next`** — on-demand, read-only assistance sub-command across Claude, Gemini, GitHub Copilot, and Cursor/Windsurf core fallbacks. Recommends exactly one next AgToosa command from Master-Plan/git context without mutating project state or auto-running mutating commands. Ref: `docs/archived/spec-DEV-007.md`.
+- **Workflow skill synthesis (DEV-008)** — 14 Codex AgToosa workflow skills (`template/.codex/skills/agtoosa-*/SKILL.md`) with valid frontmatter and execution guidance; Project Skill Discovery in `/agtoosa-init`; Story Skill Opportunity Synthesis in `/agtoosa-spec`; generated project-skill anatomy and approval guardrails in `AgToosa_Skills.md`; bats K1–K7. Ref: `docs/archived/spec-DEV-008.md`, ADR-007.
 
 ### Changed
 
 - **CHANGELOG backlog cleanup:** moved unshipped Status Guide and `/agtoosa-help next` items from `## [4.1.0] → ### Coming next (4.2.0)` into `## [Unreleased] → ### Planned`.
+- **Platform selector option 7 clarified** from OpenCode-only to Codex / OpenCode / Other while preserving option 8 as All of the above.
 
 ### Planned
 
-- AgToosa Status Guide sub-agent — read-only Auditor + Coach persona that runs `/agtoosa-status`, applies the Part 5.5 algorithm, presents the top 3 actions with rationale, and asks the user to authorize running each next command.
-- `/agtoosa-help next` — context-aware help that surfaces the next move based on a fresh status read.
+- `/agtoosa-ship check` cleanup — separate follow-up story to decide whether readiness-gate-only sub-command references should remain or be folded into `/agtoosa-ship`.
 
 ---
 

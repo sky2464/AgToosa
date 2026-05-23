@@ -49,7 +49,14 @@ Ensure code quality, security, and simplicity through multi-persona review.
     - Identify any significant architectural decisions made in this change that lack a corresponding ADR in `Docs/adr/`.
     - Create missing ADRs using `Docs/ADR-FORMAT.md` as a template, or flag as 🟡 Warning if creation is out of scope.
 
-3.  **CEO / Product Owner:** Verify feature completeness against the Linear charter and acceptance criteria.
+3.  **CEO / Product Owner:** Verify feature completeness against the Goal Contract, Linear charter, and acceptance criteria.
+
+    **Goal Contract Alignment:**
+    - Read the active spec's `### Goal Contract`.
+    - Confirm the implemented behavior satisfies the stated Goal and User outcome.
+    - Confirm the Success condition is measurable and has Proof / evidence in tests, review artifacts, demo notes, or product behavior.
+    - Flag missing, vague, or contradicted Goal Contract fields as 🟡 Warning.
+    - Flag implementation that meets isolated ACs but fails the Goal Contract as 🔴 Critical.
 
 4.  **QA Lead:**
 
@@ -90,7 +97,7 @@ Ensure code quality, security, and simplicity through multi-persona review.
 
 ### Part 3 — Final Verdict
 
-6.  **Review Report:** Structured findings from all 4 personas — 🔴 Critical / 🟡 Warning / 🟢 Passed. Every 🔴 Critical must include the Iron Law root cause. Block `/agtoosa-ship` if any 🔴 Critical findings remain.
+6.  **Review Report:** Structured findings from all 4 personas — 🔴 Critical / 🟡 Warning / 🟢 Passed. Every 🔴 Critical must include the Iron Law root cause. Include a Goal Contract alignment row. Block `/agtoosa-ship` if any 🔴 Critical findings remain.
 
     **Linear update (after verdict):**
     - If **all clear** (no unresolved 🔴 Critical): post a comment on the Story issue:

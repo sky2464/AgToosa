@@ -236,6 +236,7 @@ flowchart TD
 
 | Command | Description |
 |---------|-------------|
+| `/agtoosa-goal` | Clarify project or story outcomes into a Goal Contract before spec/build/review/ship work depends on them |
 | `/agtoosa-revert` | **Git-aware logical rollback** by phase/task. Most modern AI tools have built-in checkpoints — use this when you need deeper rollback control. |
 
 ---
@@ -337,7 +338,7 @@ bash agtoosa.sh --help     # Show help
 4. **Run** `/agtoosa-init` to set up your project (one-time)
 5. **Run** `/agtoosa-spec Create a user authentication system` to start building!
 
-The AI will guide you through each phase — asking smart questions, researching best practices, and generating specifications before writing a single line of code.
+The AI will guide you through each phase — asking one goal-aware question at a time when intent is unclear, researching best practices, and generating specifications before writing a single line of code.
 
 ---
 
@@ -349,6 +350,7 @@ The init command is intelligent — it doesn't just scaffold files, it validates
 - **Validates** that each config is correctly wired to AgToosa's workflow
 - **Creates** any missing config files for your selected AI tool(s)
 - **Understands** that different platforms have different init mechanisms (Cursor auto-loads `.cursorrules`, Claude Code auto-loads `CLAUDE.md`, etc.)
+- **Clarifies** the project Goal Contract in `Docs/Master-Plan.md` before epics and specs depend on it
 - **Configures** TDD preferences, test framework detection, and project context
 
 ---
@@ -388,13 +390,14 @@ AgToosa embeds enterprise-grade security into every phase:
 
 AgToosa works with any AI coding assistant. The generator creates only the configs you need:
 
-| Platform | Config File | Selection |
+| Platform | Config Files | Selection |
 |----------|-------------|-----------|
-| **Cursor** | `.cursorrules` | Option 1 |
-| **Windsurf** | `.windsurfrules` | Option 2 |
+| **Cursor** | `.cursorrules`, `.cursor/rules/`, `.cursor/commands/` | Option 1 |
+| **Windsurf** | `.windsurfrules`, `.windsurf/rules/`, `.windsurf/workflows/` | Option 2 |
 | **Claude Code** | `CLAUDE.md` | Option 3 |
 | **Gemini CLI / Jules** | `AGENTS.md` | Option 4 |
 | **GitHub Copilot** | `.github/copilot-instructions.md` | Option 5 |
+| **Codex / OpenCode / Other** | `OPENCODE.md`, `.codex/skills/`, `Docs/AgToosa_Agent.md` | Option 7 |
 | **Any other AI** | `Docs/AgToosa_Agent.md` | Always included |
 
 > `/agtoosa-init` will also detect and validate any existing AI config files in your project.
@@ -408,9 +411,17 @@ After running `agtoosa.sh`, your project will have:
 ```
 your-project/
 ├── .cursorrules              # AI entry point (Cursor) — if selected
+├── .cursor/
+│   ├── commands/             # Native Cursor /agtoosa-* commands — if selected
+│   └── rules/                # Cursor context rules — if selected
 ├── .windsurfrules            # AI entry point (Windsurf) — if selected
+├── .windsurf/
+│   ├── workflows/            # Native Windsurf /agtoosa-* workflows — if selected
+│   └── rules/                # Windsurf context rules — if selected
 ├── AGENTS.md                 # AI entry point (Gemini CLI) — if selected
 ├── CLAUDE.md                 # AI entry point (Claude Code) — if selected
+├── .codex/
+│   └── skills/               # Codex AgToosa workflow skills — if option 7/all selected
 ├── .github/
 │   └── copilot-instructions.md  # AI entry point (Copilot) — if selected
 └── Docs/
@@ -420,6 +431,7 @@ your-project/
     ├── AgToosa_Build.md    # /agtoosa-build workflow (TDD + testing)
     ├── AgToosa_Review.md   # /agtoosa-review workflow
     ├── AgToosa_Ship.md     # /agtoosa-ship workflow
+    ├── AgToosa_Goal.md     # /agtoosa-goal utility/sub-workflow
     ├── AgToosa_Revert.md   # /agtoosa-revert (optional utility)
     ├── AgToosa_Skills.md   # Subagent skill mapping
     ├── AgToosa_Claude.md   # Claude-specific config

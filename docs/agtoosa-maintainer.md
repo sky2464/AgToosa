@@ -33,7 +33,16 @@ Do not use this mode for ordinary feature work inside a generated project that m
 
 ## Per-Platform Parity
 
-Most slash commands ship in 5 platform variants — one each under `.claude/commands/`, `.cursor/rules/`, `.gemini/commands/`, `.github/prompts/`, `.windsurf/rules/`. **Two commands are asymmetric:** `/agtoosa-init` and `/agtoosa-help` ship in only 3 variants (`.claude/commands/`, `.gemini/commands/`, `.github/prompts/`) because Cursor and Windsurf fold their rules into the always-on `agtoosa-core.{mdc,md}` rule files. When you add behavior to `init` or `help`, mirror the rule into `template/.cursor/rules/agtoosa-core.mdc` and `template/.windsurf/rules/agtoosa-core.md` instead of creating a new per-command file. Encode this asymmetry in any parity-loop bats test rather than blindly iterating `5 × N`.
+Slash-command behavior has two layers: context rules and discoverable native entry points. Keep both aligned when changing workflow behavior:
+
+- Claude Code: `.claude/commands/` plus `.claude/skills/` where applicable.
+- Cursor: `.cursor/rules/` for context and `.cursor/commands/` for native command picker discoverability.
+- Gemini CLI: `.gemini/commands/`.
+- GitHub Copilot: `.github/prompts/` plus `.github/agents/` where applicable.
+- Windsurf: `.windsurf/rules/` for context and `.windsurf/workflows/` for native workflow picker discoverability.
+- Codex/OpenCode/Other: `OPENCODE.md` plus `.codex/skills/` for Codex skill discoverability.
+
+If a platform truly lacks a per-command native format, document the fallback in its entry-point file rather than claiming native `/agtoosa-*` picker support.
 
 ## User-Facing Strings That Must Match Across Variants
 
@@ -41,7 +50,7 @@ These strings are part of the user-facing contract and must appear verbatim in e
 
 | String | Canonical source | Variants |
 |---|---|---|
-| `✅ Done. Run /agtoosa-status to verify findings cleared.` (closure line) | `template/Docs/AgToosa_{Build,Task,Spec,Ship,Init}.md` Output section | 5 each for build/task/spec/ship + 3 for init + cursor/windsurf `agtoosa-core` fallback |
+| `✅ Done. Run /agtoosa-status to verify findings cleared.` (closure line) | `template/Docs/AgToosa_{Build,Task,Spec,Ship,Init}.md` Output section | All relevant command, rule, prompt, workflow, and skill adapters |
 | `Note: '<token>' is not a defined sub-command. Did you mean: plan, git, orphans? Falling back to full dashboard.` (status typo helper) | `template/Docs/AgToosa_Status.md` Part 5.6 | 5 status platform variants |
 | `Recommended Next Actions generation` heading + the Part 5.5 algorithm | `template/Docs/AgToosa_Status.md` Part 5.5 | Referenced (not duplicated) from each status variant |
 
