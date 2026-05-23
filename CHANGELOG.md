@@ -7,6 +7,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+### Added
+
+- **M1–M4 bats parity tests** for v4.2.0 manual-task template semantics (`tests/agtoosa.bats`), mirroring the D1–D3 release-hygiene pattern. Ref: `docs/archived/spec-DEV-005.md`.
+
+### Changed
+
+- **CHANGELOG backlog cleanup:** moved unshipped Status Guide and `/agtoosa-help next` items from `## [4.1.0] → ### Coming next (4.2.0)` into `## [Unreleased] → ### Planned`.
+
 ### Planned
 
 - AgToosa Status Guide sub-agent — read-only Auditor + Coach persona that runs `/agtoosa-status`, applies the Part 5.5 algorithm, presents the top 3 actions with rationale, and asks the user to authorize running each next command.
