@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `Docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-05-23 20:00
+> **Last updated:** 2026-05-23 21:00
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Milestone | `v4.2.0` |
-| Active cycle | `Release 4.2` |
+| Milestone | `v4.2.0` (shipped 2026-05-23) |
+| Active cycle | _(none — Release 4.2 closed)_ |
 | Cycle capacity | `40 story points` |
-| Current phase | ✏️ Spec · 🏗️ Build · 🔍 Review · 🚢 Ship (Active) |
+| Current phase | 🚢 Ship (cycle complete) |
 
 ## Active Cycle
 
@@ -145,3 +145,4 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-05-23 | 🔍 Review started — 4-persona review on DEV-008 | AgToosa |
 | 2026-05-23 | 🔍 Review passed — 0 Critical, 3 Warnings (accepted); report: docs/archived/review-DEV-008.md | AgToosa |
 | 2026-05-23 | 🚀 Ship complete — DEV-008 closed; smoke K1–K7 7/7 green; 189/189 validation; archived spec + review | AgToosa |
+| 2026-05-23 | 🚀 Release 4.2 shipped — v4.2.0 tagged; DEV-005–DEV-008 on main; 189/189 bats green | AgToosa |

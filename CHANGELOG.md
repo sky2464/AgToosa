@@ -7,48 +7,39 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
-### Added
-
-- **M1–M4 bats parity tests** for v4.2.0 manual-task template semantics (`tests/agtoosa.bats`), mirroring the D1–D3 release-hygiene pattern. Ref: `docs/archived/spec-DEV-005.md`.
-- **AgToosa Status Guide sub-agent** for GitHub Copilot (`template/.github/agents/agtoosa-status-guide.agent.md`) plus canonical `Docs/AgToosa_StatusGuide.md`. It runs `/agtoosa-status` read-only, applies Part 5.5 Recommended Next Actions, presents the top three actions with rationale and finding IDs, and asks for authorization before any fix command. Ref: `docs/archived/spec-DEV-006.md`.
-- **Model-agnostic `/agtoosa-goal` sub-workflow** with portable Goal Contracts for project and story outcomes. Main workflows can invoke it during init/spec/review/ship when user intent or proof of completion is unclear.
-- **Native workflow discoverability adapters** for Cursor (`template/.cursor/commands/`), Windsurf (`template/.windsurf/workflows/`), and Codex (`template/.codex/skills/`) so AgToosa workflows can appear in host command/workflow/skill pickers where supported.
-- **`/agtoosa-help next`** — on-demand, read-only assistance sub-command across Claude, Gemini, GitHub Copilot, and Cursor/Windsurf core fallbacks. Recommends exactly one next AgToosa command from Master-Plan/git context without mutating project state or auto-running mutating commands. Ref: `docs/archived/spec-DEV-007.md`.
-- **Workflow skill synthesis (DEV-008)** — 14 Codex AgToosa workflow skills (`template/.codex/skills/agtoosa-*/SKILL.md`) with valid frontmatter and execution guidance; Project Skill Discovery in `/agtoosa-init`; Story Skill Opportunity Synthesis in `/agtoosa-spec`; generated project-skill anatomy and approval guardrails in `AgToosa_Skills.md`; bats K1–K7. Ref: `docs/archived/spec-DEV-008.md`, ADR-007.
-
-### Changed
-
-- **CHANGELOG backlog cleanup:** moved unshipped Status Guide and `/agtoosa-help next` items from `## [4.1.0] → ### Coming next (4.2.0)` into `## [Unreleased] → ### Planned`.
-- **Platform selector option 7 clarified** from OpenCode-only to Codex / OpenCode / Other while preserving option 8 as All of the above.
-
 ### Planned
 
 - `/agtoosa-ship check` cleanup — separate follow-up story to decide whether readiness-gate-only sub-command references should remain or be folded into `/agtoosa-ship`.
 
 ---
 
-## [4.2.0] — 2026-05-13
+## [4.2.0] — 2026-05-23
+
+Release **4.2** cycle: DEV-005 through DEV-008 (189 bats tests).
 
 ### Added
 
-- **Manual task support across the full workflow.** Tasks that require human action outside the agent (e.g. configure DNS, provision a third-party account, approve in an external UI) can now be tagged `[manual]` in the task tree. During `/agtoosa-build`, the agent detects these tags and presents a three-way prompt: mark done, defer, or show-then-defer — it never blocks the build cycle. Deferred tasks are annotated `[manual-deferred: YYYY-MM-DD]` in both `Master-Plan.md` and the spec file, and are listed in a dedicated **Manual / Deferred** section visible in both the plan and the status dashboard.
-- **`🔧 Awaiting Manual` story status.** When all automated tasks for a story are complete but one or more manual tasks are deferred, the story transitions to `🔧 Awaiting Manual` instead of staying `🟨 In Progress`. This is a non-blocking state — `/agtoosa-status` reports it as ℹ️ Info, never as a Warning or Error.
-- **Manual / Deferred Tasks section in `Master-Plan.md`.** A new table (between Active Tasks and Blocked) lists all deferred manual tasks with Story ID, task number, deferred date, and description.
-- **Manual / Deferred Tasks section in the `/agtoosa-status` dashboard.** The same table appears in the status output so users always have a clear list of outstanding human steps without noise in the health score.
+- **Manual task support across the full workflow.** Tasks that require human action outside the agent can be tagged `[manual]`; `/agtoosa-build` detects them and offers mark-done, defer, or show-then-defer without blocking the cycle. Deferred tasks use `[manual-deferred: YYYY-MM-DD]` and appear in **Manual / Deferred** in Master-Plan and `/agtoosa-status`.
+- **`🔧 Awaiting Manual` story status** — non-blocking when automated work is done but manual steps remain.
+- **M1–M4 bats parity tests** for manual-task template semantics. Ref: `docs/archived/spec-DEV-005.md`.
+- **AgToosa Status Guide sub-agent** for GitHub Copilot plus `Docs/AgToosa_StatusGuide.md` (read-only status + authorization before fix commands). Ref: `docs/archived/spec-DEV-006.md`.
+- **Model-agnostic `/agtoosa-goal` sub-workflow** with portable Goal Contracts.
+- **Native workflow discoverability adapters** for Cursor (`.cursor/commands/`), Windsurf (`.windsurf/workflows/`), and Codex (`.codex/skills/`).
+- **`/agtoosa-help next`** — on-demand read-only assistance across Claude, Gemini, Copilot, and Cursor/Windsurf fallbacks. Ref: `docs/archived/spec-DEV-007.md`.
+- **Workflow skill synthesis (DEV-008)** — 14 Codex AgToosa workflow skills with frontmatter and execution guidance; Project Skill Discovery in `/agtoosa-init`; Story Skill Opportunity Synthesis in `/agtoosa-spec`; bats K1–K7. Ref: `docs/archived/spec-DEV-008.md`, ADR-007.
 
 ### Changed
 
-- **`/agtoosa-status` health score no longer penalizes manual-deferred tasks.** `[manual]` and `[manual-deferred]` tasks are excluded from the Tasks Done counter mismatch check (Task Consistency category) and from the Freshness cycle-closed check.
-- **Update Log staleness threshold relaxed when awaiting manual steps.** If all active stories are `🔧 Awaiting Manual`, the staleness warning threshold is relaxed from 7 days → 30 days and the error threshold from 30 days → 90 days, since the agent cannot advance those stories until the human acts.
-- **Status key updated** in `Master-Plan.md` and `SPEC-FORMAT.md` to include `🔧 Awaiting Manual`.
-- **Tasks Done counter format extended** to `[auto-done]/[auto-total] tasks ([N] manual-deferred)` when deferred manual tasks exist.
+- **`/agtoosa-status` health score** no longer penalizes manual-deferred tasks; Update Log staleness relaxed when all stories are `🔧 Awaiting Manual`.
+- **Status key** in `Master-Plan.md` and `SPEC-FORMAT.md` includes `🔧 Awaiting Manual`.
+- **CHANGELOG backlog cleanup** for 4.2.0 planned items.
+- **Platform selector option 7** clarified as Codex / OpenCode / Other (option 8 remains All of the above).
 
 ### Files updated
 
-- `template/Docs/SPEC-FORMAT.md` — status key updated; manual task annotation rules and lifecycle (`[manual]` → `[manual-deferred]` → `[manual-done]`) added to Section 3.1 Task Tree.
-- `template/Docs/AgToosa_Build.md` — Manual Task Detection gate added before each TDD loop iteration; post-loop deferred-task summary and `🔧 Awaiting Manual` transition logic added.
-- `template/Docs/AgToosa_Status.md` — Part 1 step 4 updated with manual exemption; `🔧 Awaiting Manual` added to cross-section consistency checks; Update Log staleness relaxed for manual-wait states; health score Task Consistency and Freshness categories updated; Manual / Deferred Tasks table added to dashboard output template.
-- `template/Docs/Master-Plan.md` — status key updated; Manual / Deferred Tasks section added.
+- `template/Docs/SPEC-FORMAT.md`, `AgToosa_Build.md`, `AgToosa_Status.md`, `Master-Plan.md` — manual-task lifecycle and status dashboard.
+- `template/.codex/skills/agtoosa-*/`, `template/.cursor/commands/`, `template/.windsurf/workflows/` — workflow discoverability and skill synthesis (DEV-008).
+- `tests/agtoosa.bats` — M1–M4, H1–H7, K1–K7, S1–S2 parity (189 tests).
 
 ---
 
