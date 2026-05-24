@@ -82,6 +82,18 @@ stage_files() {
       fi
     done
     [[ $cskill_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .codex/skills/ ${CYAN}(${cskill_count} Codex skills — discoverable AgToosa workflows)${NC}"
+
+    mkdir -p "${SHIP_DIR}/.codex/prompts"
+    local cprompt cprompt_count=0
+    for cprompt in "${CODEX_PROMPT_FILES[@]}"; do
+      if [[ -f "${TEMPLATE_DIR}/${cprompt}" ]]; then
+        mkdir -p "$(dirname "${SHIP_DIR}/${cprompt}")"
+        cp "${TEMPLATE_DIR}/${cprompt}" "${SHIP_DIR}/${cprompt}"
+        cprompt_count=$((cprompt_count + 1))
+        GENERATED=$((GENERATED + 1))
+      fi
+    done
+    [[ $cprompt_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .codex/prompts/ ${CYAN}(${cprompt_count} Codex slash prompts — native /agtoosa-* in Codex)${NC}"
   fi
 
   # Context/ stubs — staged for skip-if-exists copy

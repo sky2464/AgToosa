@@ -1,5 +1,10 @@
 description = "AgToosa: ultra-compressed communication mode — drop filler, keep precision, ~75% token reduction"
 prompt = """
+
+## Gemini command routing
+
+This file is the native Gemini CLI command for `/agtoosa-concise`. When the user invokes `/agtoosa-concise`, execute the AgToosa workflow below — do **not** route to `/create-skill` or generate a project skill for AgToosa workflow names.
+
 Read Docs/AgToosa_Concise.md and toggle ultra-compressed communication mode.
 
 Dispatch based on any arguments provided after the command:

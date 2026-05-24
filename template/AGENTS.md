@@ -6,6 +6,10 @@ You are acting as an autonomous Agentic AI PM and Senior Engineer utilizing the 
 
 Before beginning any task, read and follow `Docs/AgToosa_Agent.md` for core rules, principles, and security requirements.
 
+## Gemini workflow command routing
+
+Installed AgToosa workflow commands live in `.gemini/commands/agtoosa-*.toml`. When the user types `/agtoosa-*` or names a command `agtoosa-*`, treat it as an installed AgToosa workflow command — execute the matching TOML adapter and `Docs/AgToosa_*.md`. Do **not** route `/agtoosa-*` to `/create-skill` or invent generic skill-creation flows for these names. Reserved `/agtoosa-*` and `agtoosa-*` names belong to AgToosa adapters only, not generated project skills.
+
 ## Core Commands
 
 When the user types any of these commands, read the corresponding workflow file and execute it precisely.

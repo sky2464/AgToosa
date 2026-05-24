@@ -13,6 +13,28 @@ _(None — pick next story via `/agtoosa-spec`.)_
 
 ---
 
+## [4.11.0] — 2026-05-24
+
+Release **4.11** cycle: DEV-017 (246 bats tests).
+
+### Fixed
+
+- **DEV-017 — Codex AgToosa slash discoverability.** Native `/agtoosa-*` routing via 14 `.codex/prompts/agtoosa-*.md` adapters; `CODEX_PROMPT_FILES` generator inventory; platform 7 install/update/dry-run wiring; `OPENCODE.md` documents prompts + skills; Init/Spec/Skills synthesis collision guardrails; CX1–CX5 bats coverage. Smoke: CX1–CX5 all green.
+
+---
+
+## [4.10.0] — 2026-05-24
+
+Release **4.10** cycle: DEV-003 + DEV-016 (241 bats tests).
+
+### Fixed
+
+- **DEV-003 — Registry prod-readiness (audit closure).** Case B `--update` merge via `inject_version` without double-wrapping pre-injected sources; registry `info` exits 1 on unknown pack; search no-results + safe jq probe handling; `registry_publish` manifest via `jq -n`; PS1 `@(ConvertFrom-Json)` on registry paths; RG1–RG8 bats coverage. Smoke: RG1–RG8 all green.
+
+- **DEV-016 — Gemini slash-command routing.** Native `/agtoosa-*` routing and no-`/create-skill` guardrails on all 14 `.gemini/commands/agtoosa-*.toml` adapters; `AGENTS.md` + `AgToosa_Gemini.md` reservation; Init/Spec/Skills synthesis collision guardrails; GM1–GM5 bats coverage. Smoke: GM1–GM5 all green.
+
+---
+
 ## [4.9.0] — 2026-05-24
 
 Release **4.9** cycle: DEV-015 (228 bats tests).

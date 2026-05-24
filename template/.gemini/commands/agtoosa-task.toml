@@ -1,5 +1,10 @@
 description = "AgToosa: fast task capture to Master-Plan.md for bugs, chores, spikes, and fixes"
 prompt = """
+
+## Gemini command routing
+
+This file is the native Gemini CLI command for `/agtoosa-task`. When the user invokes `/agtoosa-task`, execute the AgToosa workflow below — do **not** route to `/create-skill` or generate a project skill for AgToosa workflow names.
+
 Read Docs/AgToosa_Task.md and execute the lightweight issue capture workflow.
 
 Use any argument provided to pre-fill the issue type and description (e.g. "bug: null pointer in auth middleware"). If no argument is given, start from Step 1 and ask the user interactively.

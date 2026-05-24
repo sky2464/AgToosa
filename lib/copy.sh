@@ -101,7 +101,15 @@ merge_platform_file() {
     tmp_out="$(mktemp)"
     awk '/AgToosa v[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]* START/{in_block=1;next} in_block && /AgToosa END/{in_block=0;next} !in_block{print}' "$dst" > "$tmp_out"
     printf '\n' >> "$tmp_out"
-    cat "$src" >> "$tmp_out"
+    if grep -qE 'AgToosa v[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]* START' "$src" 2>/dev/null; then
+      cat "$src" >> "$tmp_out"
+    else
+      local tmp_injected
+      tmp_injected="$(mktemp)"
+      inject_version "$src" "$tmp_injected"
+      cat "$tmp_injected" >> "$tmp_out"
+      rm -f "$tmp_injected"
+    fi
     mv "$tmp_out" "$dst"
     echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(merged: v${old_ver:-unknown} → v${AGTOOSA_VERSION}, backup: $(basename "$bak"))${NC}"
     COPIED=$((COPIED + 1))

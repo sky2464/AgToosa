@@ -1,5 +1,10 @@
 description = "AgToosa: readiness gate → deploy → archive spec → update changelog → suggest next story"
 prompt = """
+
+## Gemini command routing
+
+This file is the native Gemini CLI command for `/agtoosa-ship`. When the user invokes `/agtoosa-ship`, execute the AgToosa workflow below — do **not** route to `/create-skill` or generate a project skill for AgToosa workflow names.
+
 Read Docs/AgToosa_Ship.md and execute the ship workflow.
 
 Dispatch based on any arguments provided after the command:

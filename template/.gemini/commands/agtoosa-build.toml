@@ -1,5 +1,10 @@
 description = "AgToosa: TDD Red-Green-Refactor against the planned task list → tests + SAST/DAST"
 prompt = """
+
+## Gemini command routing
+
+This file is the native Gemini CLI command for `/agtoosa-build`. When the user invokes `/agtoosa-build`, execute the AgToosa workflow below — do **not** route to `/create-skill` or generate a project skill for AgToosa workflow names.
+
 Read Docs/AgToosa_Build.md and execute the build workflow. If prerequisites fail, stop and instruct the user — do not auto-run /agtoosa-spec. Report Terminal Evidence Contract fields for every command and parallel subagent.
 
 Dispatch based on any arguments provided after the command:

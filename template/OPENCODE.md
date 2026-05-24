@@ -11,7 +11,7 @@ Before beginning any task, read and follow `Docs/AgToosa_Agent.md` for core rule
 When the user types any of these commands, read the corresponding workflow file and execute it precisely.
 Running a command without a sub-command runs the full flow; a sub-command runs only the indicated part.
 
-For Codex, AgToosa installs `.codex/skills/agtoosa-*/SKILL.md` **workflow runners** (valid `name`/`description` frontmatter plus execute instructions). Use `$agtoosa-*` skill triggers when the Codex UI exposes skills instead of repo-defined slash commands.
+For Codex, AgToosa installs `.codex/prompts/agtoosa-*.md` **slash prompts** so `/agtoosa-*` appears in Codex slash-command pickers, plus `.codex/skills/agtoosa-*/SKILL.md` **workflow runners** (valid `name`/`description` frontmatter plus execute instructions). When the user types `/agtoosa-*`, read the matching prompt and `Docs/AgToosa_*.md` workflow — do **not** route to `/create-skill` or generate a project skill for AgToosa workflow names.
 
 `/agtoosa-init` and `/agtoosa-spec` may propose additional project skills under `.codex/skills/<skill-name>/` after explicit user approval. See `Docs/AgToosa_Skills.md` for the workflow-skill contract, generated-skill anatomy, dedupe rules, and secret-handling guardrails.
 

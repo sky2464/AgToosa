@@ -1,5 +1,10 @@
 description = "AgToosa: re-read context and changelog, then sync workflows to latest baseline"
 prompt = """
+
+## Gemini command routing
+
+This file is the native Gemini CLI command for `/agtoosa-update`. When the user invokes `/agtoosa-update`, execute the AgToosa workflow below — do **not** route to `/create-skill` or generate a project skill for AgToosa workflow names.
+
 Read Docs/AgToosa_Update.md and execute the full update workflow.
 
 Use any optional argument as a focus hint for the summary (for example: \"show only breaking changes\"), but still run the complete workflow.

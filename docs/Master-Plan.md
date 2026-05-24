@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `Docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-05-24 (/agtoosa-ship DEV-015 — v4.9.0)
+> **Last updated:** 2026-05-24 (/agtoosa-ship DEV-017 — v4.11.0)
 
 ## Project Charter
 
@@ -10,7 +10,7 @@
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
 | Milestone | `v5.0.0` (planned) |
-| Active cycle | Release 4.9 |
+| Active cycle | Release 4.11 |
 | Cycle capacity | `40 story points` |
 | Current phase | 🏁 Shipped |
 
@@ -22,8 +22,6 @@
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
 
-*(Empty — pick next story via `/agtoosa-spec`.)*
-
 Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blocked · 🔧 Awaiting Manual · 🏁 Shipped
 
 ## Active Tasks
@@ -31,7 +29,34 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-*(No active tasks — last shipped: DEV-015.)*
+*(No story in progress — run `/agtoosa-spec` for the next backlog item.)*
+
+<!--
+**DEV-016 — Gemini slash command routing** (spec: `docs/archived/spec-DEV-016.md`) — shipped 2026-05-24
+
+- [x] **1.** Gemini TOML routing guardrails (14 adapters)
+- [x] **2.** AGENTS.md + AgToosa_Gemini.md
+- [x] **3.** Skill synthesis collision guardrails
+- [x] **4.** GM1–GM5 bats; full suite 246/246 green
+
+<!--
+**DEV-003 — Registry prod-readiness (audit closure)** (spec: `docs/archived/spec-DEV-003.md`) — shipped 2026-05-24
+
+- [x] **1.** Case B merge fix
+  - [x] 1.1 Update `merge_platform_file` Case B to append via `inject_version` — _AC-001_
+  - [x] 1.2 Add RG3: Case B second `--update` leaves one START block — _AC-002, AC-007_
+- [x] **2.** Registry bash UX and safety
+  - [x] 2.1 `registry_info`: exit 1 when jq returns empty — _AC-003_
+  - [x] 2.2 `registry_search`: explicit no-results message — _AC-004_
+  - [x] 2.3 `registry_publish`: emit manifest with `jq -n` — _AC-005_
+  - [x] 2.4 Add RG2, RG4, RG5, RG8 — _AC-003, AC-004, AC-005, AC-007, AC-008_
+- [x] **3.** PowerShell registry hardening
+  - [x] 3.1 Wrap all registry `ConvertFrom-Json` results with `@()` — _AC-006_
+  - [x] 3.2 Add RG6: PS1 parses single-entry fixture array — _AC-006, AC-007_
+- [x] **4.** Verification
+  - [x] 4.1 Add RG1 (jq injection), RG7 (path traversal unchanged) — _AC-007, AC-008_
+  - [x] 4.2 Run RG filter + full bats; record evidence — _AC-007_
+-->
 
 ## Manual / Deferred Tasks
 
@@ -84,8 +109,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Success Criteria:** Perfect parity of phase commands and zero-drift version badges across all platform templates.
 
     *   **Last shipped:** DEV-015 — Windsurf slash command routing → `docs/archived/spec-DEV-015.md`
-    *   **Current:** _(none — backlog empty)_
-    *   **Next:** _(pick next story via `/agtoosa-spec` — e.g. Gemini routing parity or DEV-003 registry)_
+    *   **Last shipped:** DEV-017 — Codex AgToosa slash discoverability → `docs/archived/spec-DEV-017.md`
+    *   **Current:** _(pick next story via `/agtoosa-spec`)_
 
 *   **DEV-003 - Epic: Community Template Registry**
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
@@ -116,6 +141,9 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-013 | Fix: /agtoosa-ship check cleanup | 2026-05-24 | [spec-DEV-013.md](archived/spec-DEV-013.md) · [review-DEV-013.md](archived/review-DEV-013.md) |
 | DEV-014 | Fix: Cursor slash command routing | 2026-05-24 | [spec-DEV-014.md](archived/spec-DEV-014.md) · [review-DEV-014.md](archived/review-DEV-014.md) |
 | DEV-015 | Fix: Windsurf slash command routing | 2026-05-24 | [spec-DEV-015.md](archived/spec-DEV-015.md) · [review-DEV-015.md](archived/review-DEV-015.md) |
+| DEV-003 | Fix: Registry prod-readiness (audit closure) | 2026-05-24 | [spec-DEV-003.md](archived/spec-DEV-003.md) · [review-DEV-003.md](archived/review-DEV-003.md) |
+| DEV-016 | Fix: Gemini slash command routing | 2026-05-24 | [spec-DEV-016.md](archived/spec-DEV-016.md) · [review-DEV-016.md](archived/review-DEV-016.md) |
+| DEV-017 | Fix: Codex AgToosa slash discoverability | 2026-05-24 | [spec-DEV-017.md](archived/spec-DEV-017.md) · [review-DEV-017.md](archived/review-DEV-017.md) |
 
 ## Update Log
 
@@ -206,3 +234,16 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-05-24 | Review ✅ Approved — DEV-015; 0 Critical, 5 Warnings (accepted); report: docs/archived/review-DEV-015.md | AgToosa |
 | 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-015; smoke WS1–WS5 5/5 green; full suite 228/228; v4.9.0; archived spec + review | AgToosa |
 | 2026-05-24 | 🚀 Release 4.9 shipped — v4.9.0; DEV-015 on main; version parity bash/ps1 | AgToosa |
+| 2026-05-24 | ✏️ /agtoosa-spec DEV-016 — Gemini slash command routing; estimate S; 14 tasks; test plan: docs/AgToosa_TestPlan-DEV-016.md | AgToosa |
+| 2026-05-24 | 🏗️ Build complete — DEV-003 registry prod-readiness; RG1–RG8 8/8 green; full suite 240/241 (pre-existing test 18 flake) | AgToosa |
+| 2026-05-24 | 🏗️ Build complete — DEV-016 Gemini slash routing; GM1–GM5 5/5 green; full suite 246/246 green | AgToosa |
+| 2026-05-24 | 🔍 Review 🔍 Started — DEV-003 + DEV-016 — 4-persona review (uncommitted maintainer dogfood batch) | AgToosa |
+| 2026-05-24 | Review ✅ Approved — DEV-003; 0 Critical, 4 Warnings (accepted); report: docs/archived/review-DEV-003.md | AgToosa |
+| 2026-05-24 | Review ✅ Approved — DEV-016; 0 Critical, 6 Warnings (accepted); report: docs/archived/review-DEV-016.md | AgToosa |
+| 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-003 + DEV-016; smoke RG1–RG8 + GM1–GM5 all green; full suite 241/241; v4.10.0 | AgToosa |
+| 2026-05-24 | 🚀 Release 4.10 shipped — v4.10.0; DEV-003 + DEV-016 on main; version parity bash/ps1 | AgToosa |
+| 2026-05-24 | ✏️ /agtoosa-spec DEV-017 — Codex slash discoverability; estimate S; test plan: docs/AgToosa_TestPlan-DEV-017.md | AgToosa |
+| 2026-05-24 | 🏗️ Build complete — DEV-017 Codex prompts + generator wiring; CX1–CX5 5/5 green | AgToosa |
+| 2026-05-24 | Review ✅ Approved — DEV-017; 0 Critical; report: docs/archived/review-DEV-017.md | AgToosa |
+| 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-017; smoke CX1–CX5 5/5 green; full suite 246/246; v4.11.0; archived spec + review | AgToosa |
+| 2026-05-24 | 🚀 Release 4.11 shipped — v4.11.0; DEV-017 on main; version parity bash/ps1 | AgToosa |

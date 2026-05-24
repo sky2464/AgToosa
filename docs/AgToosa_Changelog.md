@@ -9,6 +9,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ### Added
 
+- 2026-05-24 — fix — Codex slash discoverability: `.codex/prompts/agtoosa-*.md` adapters, generator install wiring, OPENCODE.md; CX1–CX5 bats (DEV-017) — `docs/archived/spec-DEV-017.md`
+- 2026-05-24 — fix — Gemini slash-command routing: native `/agtoosa-*` TOML guardrails, `AGENTS.md` reservation, synthesis collision checks; GM1–GM5 bats (DEV-016) — `docs/archived/spec-DEV-016.md`
+- 2026-05-24 — fix — Registry prod-readiness: Case B merge, registry UX, PS1 array parsing, publish `jq -n`; RG1–RG8 bats (DEV-003) — `docs/archived/spec-DEV-003.md`
+
+### Added (prior)
+
 - 2026-05-24 — fix — Windsurf slash-command routing: native `/agtoosa-*` workflow guardrails, core/status rules, synthesis collision checks; WS1–WS5 bats (DEV-015) — `docs/archived/spec-DEV-015.md`
 
 ### Added (prior)

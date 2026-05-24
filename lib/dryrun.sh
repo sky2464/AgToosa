@@ -16,7 +16,7 @@ print_dryrun_preview() {
        || "$f" == .cursor/rules/* || "$f" == .cursor/commands/* \
        || "$f" == .gemini/commands/* \
        || "$f" == .github/prompts/* || "$f" == .github/agents/* || "$f" == .github/instructions/* \
-       || "$f" == .codex/skills/* \
+       || "$f" == .codex/skills/* || "$f" == .codex/prompts/* \
        || "$f" == .windsurf/rules/* || "$f" == .windsurf/workflows/* ]]; then
       echo -e "  ${GREEN}✅${NC} ${f}  → Would overwrite (AgToosa-owned, always updated)"
 

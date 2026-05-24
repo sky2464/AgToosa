@@ -1,5 +1,10 @@
 description = "AgToosa: read-only health dashboard — parse Master-Plan, cross-reference git, detect orphans"
 prompt = """
+
+## Gemini command routing
+
+This file is the native Gemini CLI command for `/agtoosa-status`. When the user invokes `/agtoosa-status`, execute the AgToosa workflow below — do **not** route to `/create-skill` or generate a project skill for AgToosa workflow names.
+
 Read Docs/AgToosa_Status.md and execute the status workflow. Generated Project Mode — see Docs/AgToosa_Agent.md Operating Contexts (this project's Master-Plan).
 
 Dispatch based on any arguments provided after the command:

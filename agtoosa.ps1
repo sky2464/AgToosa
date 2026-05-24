@@ -62,7 +62,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 # ── Version ───────────────────────────────────────────────────
-$AGTOOSA_VERSION = "4.9.0"
+$AGTOOSA_VERSION = "4.11.0"
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $TEMPLATE_DIR = Join-Path $SCRIPT_DIR "template"
 $SHIP_DIR = Join-Path $SCRIPT_DIR "ship"
@@ -470,7 +470,7 @@ function Invoke-RegistryFetch {
 
 function Show-RegistryList {
     $json  = Invoke-RegistryFetch
-    $packs = $json | ConvertFrom-Json
+    $packs = @($json | ConvertFrom-Json)
     foreach ($pack in $packs) {
         Write-Color "$($pack.name) v$($pack.version) — $($pack.description) (by $($pack.author))"
     }
@@ -478,7 +478,7 @@ function Show-RegistryList {
 
 function Show-RegistrySearch([string]$query) {
     $json  = Invoke-RegistryFetch
-    $packs = $json | ConvertFrom-Json
+    $packs = @($json | ConvertFrom-Json)
     foreach ($pack in $packs) {
         if ($pack.name -like "*$query*" -or $pack.description -like "*$query*") {
             Write-Color "$($pack.name) v$($pack.version) — $($pack.description) (by $($pack.author))"
@@ -488,7 +488,7 @@ function Show-RegistrySearch([string]$query) {
 
 function Show-RegistryInfo([string]$packName) {
     $json  = Invoke-RegistryFetch
-    $packs = $json | ConvertFrom-Json
+    $packs = @($json | ConvertFrom-Json)
     $pack  = $packs | Where-Object { $_.name -eq $packName } | Select-Object -First 1
     if (-not $pack) {
         Write-Color "${RED}❌ Pack '$packName' not found in registry.${NC}"
@@ -512,7 +512,7 @@ function Invoke-RegistryInstall([string]$packSpec) {
     }
 
     $json  = Invoke-RegistryFetch
-    $packs = $json | ConvertFrom-Json
+    $packs = @($json | ConvertFrom-Json)
     $pack  = $packs | Where-Object { $_.name -eq $packName } | Select-Object -First 1
     if (-not $pack) {
         Write-Color "${RED}❌ Pack '$packName' not found in registry.${NC}"

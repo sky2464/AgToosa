@@ -56,9 +56,9 @@ Map specific agent personas and functional skills to slash commands so that the 
         *   🧭 Coach — presents the top three recommended actions with finding IDs and rationale
     *   **Focus:** Helping the user choose the next fix command while preserving the read-only status guarantee until the user explicitly authorizes a command.
 
-## Codex Workflow Skills
+## Codex Workflow Prompts And Skills
 
-AgToosa installs one Codex skill per lifecycle command under `template/.codex/skills/agtoosa-*/SKILL.md`. Each file is a workflow runner with `name`/`description` frontmatter and instructions to **execute** the matching `Docs/AgToosa_*.md` workflow. Sub-command skills must **Dispatch** without duplicating the full doc inline.
+AgToosa installs one Codex slash prompt per lifecycle command under `template/.codex/prompts/agtoosa-*.md` and one Codex skill under `template/.codex/skills/agtoosa-*/SKILL.md`. Prompt files make `/agtoosa-*` visible in Codex slash-command pickers; skill files execute the matching `Docs/AgToosa_*.md` workflow. Sub-command skills must **Dispatch** without duplicating the full doc inline.
 
 ## Generated Project Skills
 

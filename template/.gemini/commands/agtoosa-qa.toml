@@ -1,5 +1,10 @@
 description = "AgToosa: plan → run → report → triage: unit, integration, E2E, browser, a11y, performance"
 prompt = """
+
+## Gemini command routing
+
+This file is the native Gemini CLI command for `/agtoosa-qa`. When the user invokes `/agtoosa-qa`, execute the AgToosa workflow below — do **not** route to `/create-skill` or generate a project skill for AgToosa workflow names.
+
 Read Docs/AgToosa_QA.md and execute the QA workflow.
 
 Dispatch based on any arguments provided after the command:

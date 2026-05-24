@@ -5,6 +5,7 @@
 # Globals read: PROJECT_PATH, TEMPLATE_DIR, AGTOOSA_VERSION, FORCE,
 #               DOCS_FILES, CLAUDE_COMMAND_FILES, CURSOR_RULE_FILES,
 #               CURSOR_COMMAND_FILES, WINDSURF_WORKFLOW_FILES, CODEX_SKILL_FILES,
+#               CODEX_PROMPT_FILES,
 #               GEMINI_COMMAND_FILES, COPILOT_PROMPT_FILES, COPILOT_AGENT_FILES,
 #               WINDSURF_RULE_FILES, CLAUDE_SKILL_FILES, CONTEXT_FILES,
 #               colors (GREEN/YELLOW/CYAN/PURPLE/BOLD/NC).
@@ -116,6 +117,14 @@ update_native_dirs() {
   fi
   if [[ "$USE_OPENCODE" == true ]]; then
     for f in "${CODEX_SKILL_FILES[@]}"; do
+      src="${TEMPLATE_DIR}/${f}"; dst="${PROJECT_PATH}/${f}"
+      if [[ -f "$src" ]]; then
+        mkdir -p "$(dirname "$dst")"
+        cp "$src" "$dst"
+        count=$((count + 1))
+      fi
+    done
+    for f in "${CODEX_PROMPT_FILES[@]}"; do
       src="${TEMPLATE_DIR}/${f}"; dst="${PROJECT_PATH}/${f}"
       if [[ -f "$src" ]]; then
         mkdir -p "$(dirname "$dst")"

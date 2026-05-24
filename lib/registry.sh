@@ -124,7 +124,15 @@ registry_search() {
   echo ""
 
   if command -v jq &>/dev/null; then
-    echo "$registry" | jq -r --arg q "$query" '.[] | select((.name | test($q; "i")) or (.description | test($q; "i"))) | "\(.name) v\(.version) — \(.description) (by \(.author))"'
+    local results jq_status=0
+    results=$(echo "$registry" | jq -r --arg q "$query" \
+      '.[] | select((.name | test($q; "i")) or (.description | test($q; "i"))) | "\(.name) v\(.version) — \(.description) (by \(.author))"' \
+      2>/dev/null) || jq_status=$?
+    if [[ $jq_status -ne 0 ]] || [[ -z "$results" ]]; then
+      echo "No packs found matching '$query'"
+    else
+      echo "$results"
+    fi
   else
     # Fallback: simple grep search.
     echo "$registry" | grep -i "$query" || echo "No packs found matching '$query'"
@@ -147,7 +155,14 @@ registry_info() {
   echo ""
 
   if command -v jq &>/dev/null; then
-    echo "$registry" | jq -r --arg n "$pack_name" '.[] | select(.name == $n) | "Name: \(.name)\nDescription: \(.description)\nAuthor: \(.author)\nVersion: \(.version)\nURL: \(.url)\nVerified: \(.verified)"'
+    local info_out
+    info_out=$(echo "$registry" | jq -r --arg n "$pack_name" \
+      '.[] | select(.name == $n) | "Name: \(.name)\nDescription: \(.description)\nAuthor: \(.author)\nVersion: \(.version)\nURL: \(.url)\nVerified: \(.verified)"')
+    if [[ -z "$info_out" ]]; then
+      echo "Error: Pack '$pack_name' not found in registry." >&2
+      return 1
+    fi
+    echo "$info_out"
   else
     # Fallback: simple display.
     echo "Name: $pack_name"
@@ -364,10 +379,24 @@ registry_publish() {
   echo ""
   echo "Add this entry to registry.json and open a PR at https://github.com/sky2464/agtoosa-registry:"
   echo ""
-  printf '{\n  "name": "%s",\n  "description": "%s",\n  "author": "%s",\n  "version": "%s",\n  "url": "https://github.com/%s/%s/archive/refs/tags/v%s.tar.gz",\n  "sha256": "%s",\n  "verified": false\n}\n' \
-    "$pub_name" "$pub_desc" "$pub_author" "$pub_version" \
-    "$pub_author" "$pub_name" "$pub_version" \
-    "$pub_sha256"
+
+  if command -v jq &>/dev/null; then
+    local pub_url
+    pub_url="https://github.com/${pub_author}/${pub_name}/archive/refs/tags/v${pub_version}.tar.gz"
+    jq -n \
+      --arg name "$pub_name" \
+      --arg description "$pub_desc" \
+      --arg author "$pub_author" \
+      --arg version "$pub_version" \
+      --arg url "$pub_url" \
+      --arg sha256 "$pub_sha256" \
+      '{name: $name, description: $description, author: $author, version: $version, url: $url, sha256: $sha256, verified: false}'
+  else
+    printf '{\n  "name": "%s",\n  "description": "%s",\n  "author": "%s",\n  "version": "%s",\n  "url": "https://github.com/%s/%s/archive/refs/tags/v%s.tar.gz",\n  "sha256": "%s",\n  "verified": false\n}\n' \
+      "$pub_name" "$pub_desc" "$pub_author" "$pub_version" \
+      "$pub_author" "$pub_name" "$pub_version" \
+      "$pub_sha256"
+  fi
 
   rm -f "$tmptar"
 }

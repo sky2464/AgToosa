@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v4.9.0" ]]
+  [[ "$output" == "AgToosa v4.11.0" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -241,11 +241,13 @@ EOF
   [ -d "$TEST_PROJECT/.github/prompts" ]
   [ -d "$TEST_PROJECT/.github/agents" ]
   [ -d "$TEST_PROJECT/.codex/skills" ]
+  [ -d "$TEST_PROJECT/.codex/prompts" ]
   [ -d "$TEST_PROJECT/.windsurf/rules" ]
   [ -d "$TEST_PROJECT/.windsurf/workflows" ]
   [ -f "$TEST_PROJECT/.cursor/commands/agtoosa-spec.md" ]
   [ -f "$TEST_PROJECT/.windsurf/workflows/agtoosa-spec.md" ]
   [ -f "$TEST_PROJECT/.codex/skills/agtoosa-spec/SKILL.md" ]
+  [ -f "$TEST_PROJECT/.codex/prompts/agtoosa-spec.md" ]
 }
 @test "platform selection 1 installs .cursor/rules/ MDX files" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
@@ -291,12 +293,14 @@ EOF
   [ -f "$TEST_PROJECT/.github/prompts/agtoosa-goal.prompt.md" ]
   [ -f "$TEST_PROJECT/.github/agents/agtoosa.agent.md" ]
 }
-@test "platform selection 7 installs OPENCODE.md and Codex skills" {
+@test "platform selection 7 installs OPENCODE.md, Codex skills, and Codex prompts" {
   run bash -c "printf '$TEST_PROJECT\n7\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/OPENCODE.md" ]
   [ -f "$TEST_PROJECT/.codex/skills/agtoosa-spec/SKILL.md" ]
   [ -f "$TEST_PROJECT/.codex/skills/agtoosa-build/SKILL.md" ]
+  [ -f "$TEST_PROJECT/.codex/prompts/agtoosa-spec.md" ]
+  [ -f "$TEST_PROJECT/.codex/prompts/agtoosa-build.md" ]
   [ ! -f "$TEST_PROJECT/.cursor/commands/agtoosa-spec.md" ]
 }
 @test "--list-template-files lists core and platform files" {
@@ -839,12 +843,13 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
 @test "--update adds native discoverability dirs for existing platform installs" {
   run bash -c "printf '$TEST_PROJECT\n1 2 7\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
-  rm -rf "$TEST_PROJECT/.cursor/commands" "$TEST_PROJECT/.windsurf/workflows" "$TEST_PROJECT/.codex/skills"
+  rm -rf "$TEST_PROJECT/.cursor/commands" "$TEST_PROJECT/.windsurf/workflows" "$TEST_PROJECT/.codex/skills" "$TEST_PROJECT/.codex/prompts"
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/.cursor/commands/agtoosa-spec.md" ]
   [ -f "$TEST_PROJECT/.windsurf/workflows/agtoosa-spec.md" ]
   [ -f "$TEST_PROJECT/.codex/skills/agtoosa-spec/SKILL.md" ]
+  [ -f "$TEST_PROJECT/.codex/prompts/agtoosa-spec.md" ]
 }
 # ── --update --dry-run / --force ─────────────────────────────
 @test "--update --dry-run writes no files and shows DRY RUN" {
@@ -1234,6 +1239,108 @@ PY
   [[ "$output" == *"publish"* ]] || [[ "$output" == *"error"* ]] || [[ "$output" == *"Error"* ]] || [[ "$output" == *"usage"* ]] || [[ "$output" == *"Usage"* ]]
 }
 
+# ── DEV-003: Registry prod-readiness (RG1–RG8) ─────────────────
+@test "RG1: registry_search handles crafted jq probe safely" {
+  local cache_dir
+  cache_dir="$(mktemp -d)"
+  cp "$BATS_TEST_DIRNAME/fixtures/registry.json" "$cache_dir/registry.json"
+  touch "$cache_dir/registry.json"
+
+  AGTOOSA_REGISTRY_CACHE_DIR="$cache_dir" run bash "$SCRIPT" --registry search '") | .[] | .'
+  [ "$status" -eq 0 ]
+  [[ "$output" != *"jq: error"* ]]
+  [[ "$output" != *"parse error"* ]]
+  rm -rf "$cache_dir"
+}
+
+@test "RG2: registry info unknown pack exits non-zero" {
+  local cache_dir
+  cache_dir="$(mktemp -d)"
+  cp "$BATS_TEST_DIRNAME/fixtures/registry.json" "$cache_dir/registry.json"
+  touch "$cache_dir/registry.json"
+
+  AGTOOSA_REGISTRY_CACHE_DIR="$cache_dir" run bash "$SCRIPT" --registry info "nonexistent-pack-dev003"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"not found"* ]]
+  rm -rf "$cache_dir"
+}
+
+@test "RG3: Case B second --update leaves one AgToosa START block" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  printf '<!-- AgToosa v1.0.0 START -->\nold content\n<!-- AgToosa END -->\n' \
+    > "$TEST_PROJECT/CLAUDE.md"
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  [ "$(grep -c 'AgToosa.*START' "$TEST_PROJECT/CLAUDE.md")" -eq 1 ]
+}
+
+@test "RG4: registry search prints no-results message" {
+  local cache_dir
+  cache_dir="$(mktemp -d)"
+  cp "$BATS_TEST_DIRNAME/fixtures/registry.json" "$cache_dir/registry.json"
+  touch "$cache_dir/registry.json"
+
+  AGTOOSA_REGISTRY_CACHE_DIR="$cache_dir" run bash "$SCRIPT" --registry search "zzznomatchdev003"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"No packs found"* ]]
+  rm -rf "$cache_dir"
+}
+
+@test "RG5: registry publish manifest JSON survives quotes in pack name" {
+  run jq -n \
+    --arg name 'quote"pack' \
+    --arg description 'desc' \
+    --arg author 'tester' \
+    --arg version '1.0.0' \
+    --arg url 'http://example.com/x.tar.gz' \
+    --arg sha256 'abc' \
+    '{name: $name, description: $description, author: $author, version: $version, url: $url, sha256: $sha256, verified: false}'
+  [ "$status" -eq 0 ]
+  echo "$output" | jq -e . >/dev/null
+  [[ "$(echo "$output" | jq -r .name)" == 'quote"pack' ]]
+}
+
+@test "RG6: PS1 registry list parses single-entry flat array fixture" {
+  if ! command -v pwsh &>/dev/null; then
+    skip "pwsh not available"
+  fi
+  local fixture
+  fixture="$(mktemp)"
+  printf '%s\n' '[{"name":"solo","description":"solo pack","author":"a","version":"1.0.0","url":"http://x","sha256":"abc","verified":false}]' > "$fixture"
+  run pwsh -NoProfile -Command "
+    \$json = Get-Content -Raw '$fixture'
+    \$packs = @(\$json | ConvertFrom-Json)
+    if (-not \$packs -or \$packs.Count -lt 1) { exit 1 }
+    if (\$packs[0].name -ne 'solo') { exit 1 }
+    exit 0
+  "
+  rm -f "$fixture"
+  [ "$status" -eq 0 ]
+}
+
+@test "RG7: registry validate_pack_files rejects path traversal" {
+  local evil_pack
+  evil_pack="$(mktemp -d)"
+  ln -s /etc/hosts "$evil_pack/escape.md" 2>/dev/null || true
+
+  run bash -c "
+    SHIP_DIR=/tmp
+    source '$BATS_TEST_DIRNAME/../lib/registry.sh'
+    validate_pack_files '$evil_pack'
+  "
+  rm -rf "$evil_pack"
+  [ "$status" -ne 0 ]
+}
+
+@test "RG8: DEV-003 RG regression suite defines eight tests" {
+  local count
+  count="$(grep -cE '@test "RG[1-8]:' "$BATS_TEST_DIRNAME/agtoosa.bats" || true)"
+  [ "$count" -eq 8 ]
+}
+
 # ── DEV-187: init/update test feedback fixes ──────────────────
 @test "-h flag shows usage and exits 0" {
   run bash "$SCRIPT" -h
@@ -1249,7 +1356,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "4.9.0" ]
+  [ "$ver" = "4.11.0" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1260,7 +1367,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"4.9.0"* ]]
+  [[ "$output" == *"4.11.0"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -1549,10 +1656,14 @@ PY
   [ "$status" -eq 0 ]
   [[ "$output" == *".codex/skills/agtoosa-spec/SKILL.md"* ]]
   [[ "$output" == *".codex/skills/agtoosa-help/SKILL.md"* ]]
+  [[ "$output" == *".codex/prompts/agtoosa-spec.md"* ]]
+  [[ "$output" == *".codex/prompts/agtoosa-help.md"* ]]
   run bash -c "printf '$TEST_PROJECT\n7\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/.codex/skills/agtoosa-goal/SKILL.md" ]
   [ -f "$TEST_PROJECT/.codex/skills/agtoosa-concise/SKILL.md" ]
+  [ -f "$TEST_PROJECT/.codex/prompts/agtoosa-goal.md" ]
+  [ -f "$TEST_PROJECT/.codex/prompts/agtoosa-concise.md" ]
 }
 
 # ── DEV-009 product promise alignment (R1–R8) ────────────────────────────────
@@ -1960,6 +2071,142 @@ PY
   grep -q 'Windsurf workflow routing' "$TEST_PROJECT/.windsurf/workflows/agtoosa-status.md"
   grep -q '/create-skill' "$TEST_PROJECT/.windsurf/workflows/agtoosa-status.md"
   grep -q 'Docs/AgToosa_Status.md' "$TEST_PROJECT/.windsurf/workflows/agtoosa-status.md"
+}
+
+# ── DEV-017 Codex slash-command discoverability (CX1–CX5) ──────────────────────
+
+@test "CX1: every Codex prompt adapter includes routing and no-create-skill" {
+  local f stem
+  for f in "$TEMPLATE_DIR"/.codex/prompts/agtoosa-*.md; do
+    grep -q 'Codex prompt routing' "$f" || {
+      echo "Missing Codex prompt routing section in $f"
+      false
+    }
+    grep -q 'Codex project prompt' "$f" || {
+      echo "Missing Codex project prompt declaration in $f"
+      false
+    }
+    grep -q '/create-skill' "$f" || {
+      echo "Missing /create-skill guardrail in $f"
+      false
+    }
+    grep -qE 'do \*\*not\*\* route' "$f" || {
+      echo "Missing no-route wording in $f"
+      false
+    }
+    stem=$(basename "$f" .md)
+    grep -q "/${stem}" "$f" || {
+      echo "Missing slash command reference /${stem} in $f"
+      false
+    }
+  done
+}
+
+@test "CX2: agtoosa-status Codex prompt delegates read-only with sub-commands" {
+  local f="$TEMPLATE_DIR/.codex/prompts/agtoosa-status.md"
+  grep -q 'Docs/AgToosa_Status.md' "$f"
+  grep -qiE 'read-only|read only|READ-ONLY' "$f"
+  grep -q 'plan' "$f"
+  grep -q 'readiness' "$f"
+  grep -q 'git' "$f"
+  grep -q 'orphans' "$f"
+}
+
+@test "CX3: OPENCODE.md documents Codex prompts and skills" {
+  local opencode="$TEMPLATE_DIR/OPENCODE.md"
+  grep -q '.codex/prompts/agtoosa-' "$opencode"
+  grep -q '.codex/skills/agtoosa-' "$opencode"
+  grep -q '/create-skill' "$opencode"
+}
+
+@test "CX4: skill synthesis docs reject Codex prompt collisions" {
+  local init="$TEMPLATE_DIR/Docs/AgToosa_Init.md"
+  local spec="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  local skills="$TEMPLATE_DIR/Docs/AgToosa_Skills.md"
+  grep -q 'Reserved workflow names' "$init"
+  grep -q 'Reserved workflow names' "$spec"
+  grep -q 'Reserved workflow names' "$skills"
+  grep -q '.codex/prompts/agtoosa-' "$init"
+  grep -q '.codex/prompts/agtoosa-' "$spec"
+  grep -q '.codex/prompts/agtoosa-' "$skills"
+}
+
+@test "CX5: Codex platform install copies agtoosa-status prompt with routing guardrails" {
+  run bash -c "printf '$TEST_PROJECT\n7\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.codex/prompts/agtoosa-status.md" ]
+  grep -q 'Codex prompt routing' "$TEST_PROJECT/.codex/prompts/agtoosa-status.md"
+  grep -q '/create-skill' "$TEST_PROJECT/.codex/prompts/agtoosa-status.md"
+  grep -q 'Docs/AgToosa_Status.md' "$TEST_PROJECT/.codex/prompts/agtoosa-status.md"
+}
+
+# ── DEV-016 Gemini slash-command routing (GM1–GM5) ─────────────────────────────
+
+@test "GM1: every Gemini TOML adapter includes workflow routing and no-create-skill" {
+  local f stem
+  for f in "$TEMPLATE_DIR"/.gemini/commands/agtoosa-*.toml; do
+    grep -q 'Gemini command routing' "$f" || {
+      echo "Missing Gemini command routing section in $f"
+      false
+    }
+    grep -q 'native Gemini CLI command' "$f" || {
+      echo "Missing native command declaration in $f"
+      false
+    }
+    grep -q '/create-skill' "$f" || {
+      echo "Missing /create-skill guardrail in $f"
+      false
+    }
+    grep -qE 'do \*\*not\*\* route' "$f" || {
+      echo "Missing no-route wording in $f"
+      false
+    }
+    stem=$(basename "$f" .toml)
+    grep -q "/${stem}" "$f" || {
+      echo "Missing slash command reference /${stem} in $f"
+      false
+    }
+  done
+}
+
+@test "GM2: agtoosa-status Gemini command delegates read-only with sub-commands" {
+  local f="$TEMPLATE_DIR/.gemini/commands/agtoosa-status.toml"
+  grep -q 'Docs/AgToosa_Status.md' "$f"
+  grep -qiE 'read-only|read only|READ-ONLY' "$f"
+  grep -q 'plan' "$f"
+  grep -q 'readiness' "$f"
+  grep -q 'git' "$f"
+  grep -q 'orphans' "$f"
+}
+
+@test "GM3: AGENTS.md reserves /agtoosa-* and forbids /create-skill" {
+  local agents="$TEMPLATE_DIR/AGENTS.md"
+  grep -q '/agtoosa-\*' "$agents"
+  grep -q '.gemini/commands/agtoosa-' "$agents"
+  grep -q '/create-skill' "$agents"
+  grep -q 'agtoosa-\*' "$agents"
+  grep -q 'Gemini workflow command routing' "$agents"
+}
+
+@test "GM4: skill synthesis docs reject Gemini command collisions" {
+  local init="$TEMPLATE_DIR/Docs/AgToosa_Init.md"
+  local spec="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  local skills="$TEMPLATE_DIR/Docs/AgToosa_Skills.md"
+  grep -q 'Reserved workflow names' "$init"
+  grep -q 'Reserved workflow names' "$spec"
+  grep -q 'Reserved workflow names' "$skills"
+  grep -q '.gemini/commands/agtoosa-' "$init"
+  grep -q '.gemini/commands/agtoosa-' "$spec"
+  grep -q '.gemini/commands/agtoosa-' "$skills"
+}
+
+@test "GM5: Gemini platform install copies agtoosa-status.toml with routing guardrails" {
+  run bash -c "printf '$TEST_PROJECT\n4\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.gemini/commands/agtoosa-status.toml" ]
+  grep -q 'Gemini command routing' "$TEST_PROJECT/.gemini/commands/agtoosa-status.toml"
+  grep -q '/create-skill' "$TEST_PROJECT/.gemini/commands/agtoosa-status.toml"
+  grep -q 'Docs/AgToosa_Status.md' "$TEST_PROJECT/.gemini/commands/agtoosa-status.toml"
 }
 
 # ── DEV-013 ship-check cleanup (C1–C5) ────────────────────────────────────────

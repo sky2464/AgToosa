@@ -36,6 +36,10 @@ count_existing_files() {
     for codex_skill in "${CODEX_SKILL_FILES[@]}"; do
       [[ -f "${PROJECT_PATH}/${codex_skill}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
     done
+    local codex_prompt
+    for codex_prompt in "${CODEX_PROMPT_FILES[@]}"; do
+      [[ -f "${PROJECT_PATH}/${codex_prompt}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    done
   fi
   for cfile in "${CONTEXT_FILES[@]}"; do
     [[ -f "${PROJECT_PATH}/${cfile}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
@@ -365,6 +369,18 @@ install_files() {
       fi
     done
     [[ $codex_skill_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .codex/skills/ (${codex_skill_count} Codex skills)"
+
+    mkdir -p "${PROJECT_PATH}/.codex/prompts"
+    local codex_prompt codex_prompt_count=0
+    for codex_prompt in "${CODEX_PROMPT_FILES[@]}"; do
+      if [[ -f "${SHIP_DIR}/${codex_prompt}" ]]; then
+        mkdir -p "$(dirname "${PROJECT_PATH}/${codex_prompt}")"
+        cp "${SHIP_DIR}/${codex_prompt}" "${PROJECT_PATH}/${codex_prompt}"
+        codex_prompt_count=$((codex_prompt_count + 1))
+        COPIED=$((COPIED + 1))
+      fi
+    done
+    [[ $codex_prompt_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .codex/prompts/ (${codex_prompt_count} Codex slash prompts)"
   fi
 
   # Windsurf rules and workflows — always overwrite (AgToosa-owned)

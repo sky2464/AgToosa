@@ -60,9 +60,9 @@ Map specific agent personas and functional skills to slash commands so that the 
         *   🧭 Coach — presents the top three recommended actions with finding IDs and rationale
     *   **Focus:** Helping the user choose the next fix command while preserving the read-only status guarantee until the user explicitly authorizes a command.
 
-## Codex Workflow Skills
+## Codex Workflow Prompts And Skills
 
-AgToosa installs one Codex skill per lifecycle command under `.codex/skills/agtoosa-*/SKILL.md`. Each file is a **workflow runner**, not a thin doc pointer.
+AgToosa installs one Codex slash prompt per lifecycle command under `.codex/prompts/agtoosa-*.md` and one Codex skill under `.codex/skills/agtoosa-*/SKILL.md`. Prompt files make `/agtoosa-*` visible in Codex slash-command pickers; skill files are **workflow runners**, not thin doc pointers.
 
 ### Minimum contract (all `agtoosa-*` workflow skills)
 
@@ -97,5 +97,5 @@ Installed workflow skills: `agtoosa-init`, `agtoosa-spec`, `agtoosa-build`, `agt
 - **Do not generate** README, quick-reference, or other auxiliary markdown unless the user explicitly requests supported UI metadata files only.
 - **Approval:** never create or modify skill files without explicit user approval; record Generate / Update / Do not generate decisions in the spec or `Docs/Master-Plan.md` Update Log.
 - **Dedupe:** reuse existing `agtoosa-*` workflow skills or update an existing project skill instead of creating a duplicate trigger.
-- **Reserved workflow names:** `agtoosa-*` names and `/agtoosa-*` triggers are owned by installed AgToosa workflow adapters (`.cursor/commands/agtoosa-*.md`, `.windsurf/workflows/agtoosa-*.md`, `.codex/skills/agtoosa-*`, `.github/prompts/agtoosa-*.prompt.md`, and platform equivalents). Generated project skills must not use `agtoosa-*` names, `/agtoosa-*` triggers, or collide with `.cursor/commands/agtoosa-*.md` or `.windsurf/workflows/agtoosa-*.md` unless **Update existing** on an AgToosa adapter — otherwise choose **Do not generate**.
+- **Reserved workflow names:** `agtoosa-*` names and `/agtoosa-*` triggers are owned by installed AgToosa workflow adapters (`.cursor/commands/agtoosa-*.md`, `.windsurf/workflows/agtoosa-*.md`, `.gemini/commands/agtoosa-*.toml`, `.github/prompts/agtoosa-*.prompt.md`, `.codex/prompts/agtoosa-*.md`, `.codex/skills/agtoosa-*`, and platform equivalents). Generated project skills must not use `agtoosa-*` names, `/agtoosa-*` triggers, or collide with installed AgToosa adapter files unless **Update existing** on an AgToosa adapter — otherwise choose **Do not generate**.
 - **Secrets:** never embed credentials, private keys, tokens, or sensitive config values — reference paths and add a safety note when needed.

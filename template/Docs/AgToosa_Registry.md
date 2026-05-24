@@ -56,8 +56,8 @@ Packs are **markdown-only** for safety — no executable code is automatically r
 2. **Confirm** when prompted (packs are reviewed by maintainers before publication).
 3. **Download** the pack tarball from GitHub.
 4. **Verify** the pack's SHA-256 hash against the registry (abort on mismatch).
-5. **Stage** the pack files into your project's `ship/` directory.
-6. **Review and merge** — the files integrate alongside core AgToosa workflows.
+5. **Stage** the pack files into the AgToosa repo's `ship/packs/<pack-name>/` directory (they remain after install).
+6. **Review and merge** — run `bash agtoosa.sh` in your project to integrate staged files alongside core AgToosa workflows.
 
 ---
 

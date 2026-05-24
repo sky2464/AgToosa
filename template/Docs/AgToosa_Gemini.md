@@ -3,6 +3,17 @@
 You are acting within the **AgToosa** framework. Refer to `AgToosa_Agent.md` for core rules.
 Always verify dependencies and packages for the latest stable versions.
 
+## Gemini slash-command routing
+
+Native Gemini CLI commands are installed under `.gemini/commands/agtoosa-*.toml`. When the user invokes `/agtoosa-*`, execute the matching TOML adapter and canonical `Docs/AgToosa_*.md` workflow — do **not** route to `/create-skill` or generate a project skill for AgToosa workflow names.
+
+### `/agtoosa-status` (read-only)
+
+- Entry point: `.gemini/commands/agtoosa-status.toml`
+- Workflow: `Docs/AgToosa_Status.md`
+- Sub-commands: `plan`, `readiness`, `git`, `orphans` (full dashboard when no argument)
+- **Read-only** — do not modify files, git state, or `Docs/Master-Plan.md`
+
 ## QA and Review Behaviors (Gemini-Specific)
 
 ### `/agtoosa-review` — Batch Coverage Analysis
