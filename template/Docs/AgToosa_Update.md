@@ -22,6 +22,7 @@ This is a pure read command. The AI reads the project's current state and produc
    - `tech-stack.md` — languages, frameworks, and infra
    - `workflow.md` — team process, branching, deploy flow
    - `product-guidelines.md` — design principles and conventions
+   - `Docs/Master-Architecture.md` — high-priority architecture memory: system boundaries, diagrams, data flow, deployment, security, and observability
 
    If any file is missing or empty, note it without asking the user to fill it in now (suggest `/agtoosa-init` for that).
 
@@ -68,6 +69,7 @@ This is a pure read command. The AI reads the project's current state and produc
 
    **Open specs:** [list of non-archived specs and their status]
    **Goal summary:** [project/story goal and success condition, or "missing"]
+   **Architecture summary:** [key boundaries and risks from Master-Architecture, or "missing"]
 
    **Context gaps:** [any missing/empty context files — suggest /agtoosa-init if significant]
    **Goal clarity gaps:** [missing/vague fields — suggest /agtoosa-goal if significant]
@@ -93,6 +95,7 @@ This is a pure read command. The AI reads the project's current state and produc
 | Category | Action |
 |----------|--------|
 | `Docs/Context/` | Never touched (your product/tech/workflow config) |
+| `Docs/Master-Architecture.md` | preserve user-authored architecture; read as high-priority architecture memory |
 | `Docs/Master-Plan.md` | Never touched (your project management source of truth) |
 | `Docs/AgToosa_Changelog.md` | Never touched (your project changelog) |
 | `Docs/archived/` | Never touched (completed specs) |

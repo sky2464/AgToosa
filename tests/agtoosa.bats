@@ -791,6 +791,14 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -eq 0 ]
   grep -q "My Changelog" "$TEST_PROJECT/Docs/AgToosa_Changelog.md"
 }
+@test "MA5: --update preserves Docs/Master-Architecture.md" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  echo "# My Architecture" > "$TEST_PROJECT/Docs/Master-Architecture.md"
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  grep -q "My Architecture" "$TEST_PROJECT/Docs/Master-Architecture.md"
+}
 @test "--update writes Docs/.agtoosa-version" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -1873,6 +1881,61 @@ PY
   [[ "$output" == *"Docs/AgToosa_Init.md"* ]]
   [[ "$output" == *"Docs/AgToosa_Spec.md"* ]]
   [[ "$output" == *"Docs/AgToosa_Status.md"* ]]
+}
+
+# ── DEV-019 Master Architecture document (MA1–MA8) ────────────────────────────
+
+@test "MA1: list-template-files includes Master-Architecture once" {
+  run bash "$SCRIPT" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/Master-Architecture.md"* ]]
+  [ "$(printf '%s\n' "$output" | grep -c 'Docs/Master-Architecture.md')" -eq 1 ]
+}
+
+@test "MA2: fresh install copies Master-Architecture" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/Docs/Master-Architecture.md" ]
+}
+
+@test "MA3: init workflow creates or updates Master-Architecture" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Init.md"
+  grep -q 'Docs/Master-Architecture.md' "$f"
+  grep -q 'senior application architect' "$f"
+  grep -q 'create or update' "$f"
+}
+
+@test "MA4: update workflow reads Master-Architecture as architecture memory" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -q 'Docs/Master-Architecture.md' "$f"
+  grep -q 'high-priority architecture memory' "$f"
+  grep -q 'preserve' "$f"
+}
+
+@test "MA6: core instructions list Master-Architecture as important context" {
+  grep -q 'Docs/Master-Architecture.md' "$TEMPLATE_DIR/Docs/AgToosa_Agent.md"
+  grep -q 'Docs/Master-Architecture.md' "$TEMPLATE_DIR/AGENTS.md"
+  grep -q 'Docs/Master-Architecture.md' "$TEMPLATE_DIR/OPENCODE.md"
+}
+
+@test "MA7: Master-Architecture template includes diagrams and senior architecture sections" {
+  local f="$TEMPLATE_DIR/Docs/Master-Architecture.md"
+  [ -f "$f" ]
+  grep -q 'senior application architect' "$f"
+  grep -q 'C4-style' "$f"
+  grep -q 'System Context' "$f"
+  grep -q 'Containers' "$f"
+  grep -q 'Components' "$f"
+  grep -q 'Data Flow' "$f"
+  grep -q 'Deployment' "$f"
+  grep -q 'Security' "$f"
+  grep -q 'Observability' "$f"
+  grep -q '```mermaid' "$f"
+}
+
+@test "MA8: spec and arch review workflows consult Master-Architecture" {
+  grep -q 'Docs/Master-Architecture.md' "$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  grep -q 'Docs/Master-Architecture.md' "$TEMPLATE_DIR/Docs/AgToosa_Review.md"
 }
 
 # ── DEV-012 GitHub slash-command routing (G1–G5) ─────────────────────────────

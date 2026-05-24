@@ -172,6 +172,7 @@ Use when the AI agent is focused on a specific file or function and needs broade
     *   `Docs/AgToosa_Agent.md` (tailored rules and commands)
     *   `Docs/AgToosa_Claude.md` (Claude-specific, if applicable)
     *   `Docs/AgToosa_Gemini.md` (Gemini-specific, if applicable)
+    *   `Docs/Master-Architecture.md` — create or update this as a senior application architect after the smart interview and codebase scan. Include C4-style diagrams, module boundaries, data flow, deployment, security, observability, and ADR links.
 
 11. **Project Management Setup:**
 

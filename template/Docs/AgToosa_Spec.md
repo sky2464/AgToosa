@@ -48,6 +48,7 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 
 1.  **Context Gathering & Domain Language Alignment:**
     *   Read `Docs/Context/product.md`, `tech-stack.md`, and `workflow.md` to align with project goals.
+    *   Read `Docs/Master-Architecture.md` as the current solution architecture before proposing architecture changes. If it is missing or stale, record that as a context gap and include an update task when architecture is in scope.
     *   Scan the existing codebase to fully understand the impact surface of the proposed work.
     *   **Domain Language Alignment:** Read `Docs/Context/CONTEXT.md` (create it if missing using `Docs/CONTEXT-FORMAT.md` as a guide). For each key concept in the proposed feature:
         - "Is this the right term? What does the domain call this?"

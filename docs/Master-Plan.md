@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `Docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-05-24 (/agtoosa-ship DEV-017 — v4.11.0)
+> **Last updated:** 2026-05-24 (/agtoosa-review DEV-022)
 
 ## Project Charter
 
@@ -10,17 +10,18 @@
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
 | Milestone | `v5.0.0` (planned) |
-| Active cycle | Release 4.11 |
+| Active cycle | Release 4.13 |
 | Cycle capacity | `40 story points` |
-| Current phase | 🏁 Shipped |
+| Current phase | 🟨 Build |
 
 ## Active Cycle
 
 > Stories committed to the current sprint/cycle.
-> **Progress:** `▱▱▱▱▱▱▱▱ 0/0` ← updated by `/agtoosa-build` after each task completes
+> **Progress:** `▰▰▰▰▰▰▰▰ 11/11` ← updated by `/agtoosa-build` after each task completes
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
+| DEV-019 | Feature: Master Architecture document | Feature | M | ✅ Done | 11/11 |
 
 Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blocked · 🔧 Awaiting Manual · 🏁 Shipped
 
@@ -29,7 +30,23 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-*(No story in progress — run `/agtoosa-spec` for the next backlog item.)*
+**DEV-019 — Master Architecture document** (spec: `docs/archived/spec-DEV-019.md`) — build complete 2026-05-24
+
+- [x] **1.** Master architecture template: add the first-class architecture document.
+  - [x] 1.1 Create `template/Docs/Master-Architecture.md` with senior-architect sections and Mermaid C4-style diagrams — _Requirements: AC-005_
+  - [x] 1.2 Create maintainer mirror `docs/Master-Architecture.md` for this repository — _Requirements: AC-005_
+- [x] **2.** Generator inventory and lifecycle guidance: wire the document into setup/update/spec/review context.
+  - [x] 2.1 Add `Docs/Master-Architecture.md` to `DOCS_FILES` — _Requirements: AC-001_
+  - [x] 2.2 Update `/agtoosa-init` guidance to create/update the document after smart interview and codebase scan — _Requirements: AC-002_
+  - [x] 2.3 Update `/agtoosa-update` guidance to read it as high-priority architecture memory and preserve contents — _Requirements: AC-003_
+  - [x] 2.4 Update `AgToosa_Agent`, root platform instructions, spec, and arch review guidance to consult the document — _Requirements: AC-004, AC-006_
+- [x] **3.** Domain and ADR records: document the new architecture context contract.
+  - [x] 3.1 Add Master Architecture domain language to `Docs/Context/CONTEXT.md` — _Requirements: AC-004_
+  - [x] 3.2 Add ADR-009 for first-class master architecture context — _Requirements: AC-001, AC-003, AC-004_
+- [x] **4.** Tests and evidence: lock the behavior with focused bats coverage.
+  - [x] 4.1 Add bats coverage for `--list-template-files` and fresh install copy — _Requirements: AC-001, AC-007_
+  - [x] 4.2 Add bats coverage for update preservation and instruction references — _Requirements: AC-003, AC-004, AC-006, AC-007_
+  - [x] 4.3 Run DEV-019 filter and relevant install/update smoke tests — _Requirements: AC-007_
 
 <!--
 **DEV-016 — Gemini slash command routing** (spec: `docs/archived/spec-DEV-016.md`) — shipped 2026-05-24
@@ -84,6 +101,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Type | Estimate | Epic | Priority | Status |
 |----|-------|------|----------|------|----------|--------|
+| DEV-019 | Feature: Master Architecture document | Feature | M | DEV-002 | High | ✅ Done |
 
 ## Epics
 
@@ -246,3 +264,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-05-24 | Review ✅ Approved — DEV-017; 0 Critical; report: docs/archived/review-DEV-017.md | AgToosa |
 | 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-017; smoke CX1–CX5 5/5 green; full suite 246/246; v4.11.0; archived spec + review | AgToosa |
 | 2026-05-24 | 🚀 Release 4.11 shipped — v4.11.0; DEV-017 on main; version parity bash/ps1 | AgToosa |
+| 2026-05-24 | 🔍 Review 🔍 Started — DEV-022 — 4-persona review (PS1 publish + offline cache) | AgToosa |
+| 2026-05-24 | Review ✅ Approved — DEV-022; 0 Critical; report: docs/archived/review-DEV-022.md | AgToosa |
+| 2026-05-24 | ✅ Spec approved — DEV-019; estimate M; Release 4.13; spec: docs/archived/spec-DEV-019.md | AgToosa |
+| 2026-05-24 | 🏗️ Build started — DEV-019, 11 tasks; scope: template/Docs, root agent instructions, lib/config.sh, tests/agtoosa.bats | AgToosa |
+| 2026-05-24 | 🏗️ Build complete — DEV-019 Master Architecture document; MA1–MA8 focused coverage green; bash syntax green | AgToosa |

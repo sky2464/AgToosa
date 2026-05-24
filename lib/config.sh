@@ -28,6 +28,7 @@ DOCS_FILES=(
   "Docs/DEEPENING.md"
   "Docs/LANGUAGE.md"
   "Docs/AgToosa_Governance.md"
+  "Docs/Master-Architecture.md"
   "Docs/Master-Plan.md"
   "Docs/AgToosa_Changelog.md"
 )

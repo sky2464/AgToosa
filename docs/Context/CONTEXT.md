@@ -27,3 +27,5 @@
 **Generated Project Mode**: The operating context where AgToosa workflow files are installed into another application's repository; docs refer to "the project" or "the product," not AgToosa as the app being built. Context: DEV-011, ADR-008. Not: "maintainer mode", "dogfood".
 
 **Maintainer Dogfood Mode**: The operating context where the AgToosa repository uses AgToosa workflows to improve the generator; scope is `agtoosa.sh`, `lib/`, `template/`, and bats. Context: DEV-011, `docs/agtoosa-maintainer.md`. Not: "generated install", "downstream project".
+
+**Master Architecture**: The durable project architecture map at `Docs/Master-Architecture.md`, created during setup and treated as high-priority context before architectural decisions. It captures goals, constraints, C4-style diagrams, system boundaries, data flow, deployment, security, observability, and decision links. Not: "Master-Plan", "Context files", "one-off diagram".

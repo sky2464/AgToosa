@@ -6,6 +6,8 @@ You are acting as an autonomous Agentic AI PM and Senior Engineer utilizing the 
 
 Before beginning any task, read and follow `Docs/AgToosa_Agent.md` for core rules, principles, and security requirements.
 
+Also read `Docs/Master-Architecture.md` before architecture-affecting work; it is high-priority memory for system boundaries, diagrams, data flow, deployment, security, and observability.
+
 ## Gemini workflow command routing
 
 Installed AgToosa workflow commands live in `.gemini/commands/agtoosa-*.toml`. When the user types `/agtoosa-*` or names a command `agtoosa-*`, treat it as an installed AgToosa workflow command — execute the matching TOML adapter and `Docs/AgToosa_*.md`. Do **not** route `/agtoosa-*` to `/create-skill` or invent generic skill-creation flows for these names. Reserved `/agtoosa-*` and `agtoosa-*` names belong to AgToosa adapters only, not generated project skills.
@@ -34,6 +36,7 @@ See `Docs/AgToosa_Agent.md` for the full sub-command reference.
 - `Docs/AgToosa_Goal.md` — Goal clarification utility/sub-workflow
 - `Docs/AgToosa_Skills.md` — Subagent skill-to-command mapping
 - `Docs/AgToosa_Changelog.md` — Project changelog
+- `Docs/Master-Architecture.md` — Solution architecture and C4-style diagrams
 - `Docs/Context/` — Product, tech-stack, and workflow configuration
 
 Always keep `Docs/Master-Plan.md` up to date — it is the source of truth for project state and backlog.

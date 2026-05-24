@@ -188,6 +188,15 @@ install_files() {
   local file
   for file in "${DOCS_FILES[@]}"; do
     if [[ -f "${SHIP_DIR}/${file}" ]]; then
+      if [[ "$file" == "Docs/Master-Architecture.md" ]]; then
+        if [[ -f "${PROJECT_PATH}/${file}" ]]; then
+          echo -e "  ${YELLOW}⏭${NC}  Skipping ${file} (architecture memory exists)"
+          SKIPPED=$((SKIPPED + 1))
+          continue
+        fi
+        copy_platform_file "${SHIP_DIR}/${file}" "${PROJECT_PATH}/${file}" "${file}"
+        continue
+      fi
       cp "${SHIP_DIR}/${file}" "${PROJECT_PATH}/${file}"
       echo -e "  ${GREEN}✅${NC} ${file}"
       COPIED=$((COPIED + 1))

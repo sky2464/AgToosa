@@ -150,9 +150,9 @@ run_update() {
 
   echo -e "${YELLOW}Updating workflow files...${NC}"
 
-  # Step 1: Workflow files — plain overwrite (never touch Master-Plan or Changelog)
+  # Step 1: Workflow files — plain overwrite (never touch project-owned state)
   for f in "${DOCS_FILES[@]}"; do
-    [[ "$f" == "Docs/Master-Plan.md" || "$f" == "Docs/AgToosa_Changelog.md" ]] && continue
+    [[ "$f" == "Docs/Master-Plan.md" || "$f" == "Docs/AgToosa_Changelog.md" || "$f" == "Docs/Master-Architecture.md" ]] && continue
     src="${TEMPLATE_DIR}/${f}"; dst="${PROJECT_PATH}/${f}"
     [[ ! -f "$src" ]] && continue
     mkdir -p "$(dirname "$dst")"

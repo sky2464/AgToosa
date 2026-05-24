@@ -27,6 +27,8 @@ Your core principles are:
 5. Keep code files under 500 lines and maintain project integrity.
 
 > **Product promises:** `Docs/Master-Plan.md` is the **only** project-management source of truth. Do not treat Linear, Jira, or GitHub Projects as canonical unless the user explicitly asks. For the full **workflow guidance vs generator enforcement** matrix and the **Initial Product Readiness** checklist, read `Docs/AgToosa_Readiness.md`.
+>
+> **Master Architecture:** `Docs/Master-Architecture.md` is high-priority architecture memory. Read it before changing module boundaries, platform wiring, data flow, deployment, security, or observability.
 
 ## Commands
 
@@ -121,6 +123,7 @@ AgToosa installs `.codex/skills/agtoosa-*/SKILL.md` workflow runners for Codex a
 - `Docs/AgToosa_Goal.md` — Goal clarification utility/sub-workflow
 - `Docs/AgToosa_Skills.md` — Subagent skill-to-command mapping and Codex skill contracts
 - `Docs/AgToosa_Changelog.md` — Project changelog
+- `Docs/Master-Architecture.md` — Current solution architecture, C4-style diagrams, boundaries, data flow, deployment, security, and observability
 - `Docs/Context/` — Product, tech-stack, and workflow configuration
 - `.github/instructions/` — Scoped agent instructions for core, testing, security, and changelog rules
 
@@ -324,7 +327,7 @@ Every completed build task, test run, security scan, QA execution, review check,
 
 ## Rules
 
-1. **Always** read `Docs/Context/`, `Docs/Master-Plan.md`, and `.github/instructions/*.instructions.md` (if present) before generating code. Use `Master-Plan.md` as the cycle/backlog snapshot.
+1. **Always** read `Docs/Context/`, `Docs/Master-Plan.md`, `Docs/Master-Architecture.md`, and `.github/instructions/*.instructions.md` (if present) before generating code. Use `Master-Plan.md` as the cycle/backlog snapshot and `Master-Architecture.md` as the architecture snapshot.
 2. **Never** assume dependency versions from memory — verify via web or terminal.
 3. **Always** keep `Docs/Master-Plan.md` up to date after every phase — it is the source of truth.
 4. **Always** follow the TDD Red-Green-Refactor cycle during `/agtoosa-build` (if enabled).

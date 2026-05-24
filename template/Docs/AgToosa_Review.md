@@ -31,6 +31,8 @@ Each reviewer persona (or parallel subagent) must report command run, exit code,
 
 2.  **Engineering Manager (`/agtoosa-review arch`):** Confirm no file exceeds 500 lines; check OOP compliance, observability hooks, and test coverage thresholds. When running the `arch` sub-command, additionally:
 
+    **Master Architecture Alignment:** Read `Docs/Master-Architecture.md` and verify the change matches the documented boundaries, diagrams, data flow, deployment, security, and observability notes. Flag missing, stale, or contradicted architecture documentation as a 🟡 Warning, or 🔴 Critical if the implementation violates a documented security or boundary constraint.
+
     **Deep Module Analysis** (see `Docs/DEEPENING.md`):
     - Identify shallow modules: pass-through functions, one-line service methods, "Manager/Handler/Helper" classes with no domain meaning.
     - For each shallow module found: flag as 🟡 Warning with specific refactor suggestion.

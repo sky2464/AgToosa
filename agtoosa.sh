@@ -144,9 +144,9 @@ if [[ "$UPDATE" == true ]]; then
     [[ "$USE_COPILOT"  == true ]] && _dnames+=("copilot")
     [[ "$USE_OPENCODE" == true ]] && _dnames+=("opencode")
     echo -e "${YELLOW}[DRY RUN] Would update AgToosa in '${PROJECT_PATH}'${NC}"
-    echo -e "  Would overwrite: all Docs/AgToosa_*.md (except Master-Plan.md and AgToosa_Changelog.md)"
+    echo -e "  Would overwrite: all Docs/AgToosa_*.md (except Master-Plan.md, Master-Architecture.md, and AgToosa_Changelog.md)"
     echo -e "  Would merge platform entry-points: ${_dnames[*]:-none detected}"
-    echo -e "  Would preserve: Docs/Context/, Docs/Master-Plan.md, Docs/AgToosa_Changelog.md"
+    echo -e "  Would preserve: Docs/Context/, Docs/Master-Plan.md, Docs/Master-Architecture.md, Docs/AgToosa_Changelog.md"
     echo ""
     echo -e "${YELLOW}[DRY RUN] No changes made. Remove --dry-run to apply.${NC}"
     exit 0
