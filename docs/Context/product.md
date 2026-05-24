@@ -27,7 +27,7 @@ non_goals:
   - "A general-purpose application build tool (relies on target platforms for build steps)"
 
 ## Current Milestone
-current_milestone: "v4.9.0"
+current_milestone: "v5.0.0"
 # e.g., MVP, v1.0, v2.0 public launch
 
 ## Success Metrics

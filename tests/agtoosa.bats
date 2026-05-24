@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v4.8.0" ]]
+  [[ "$output" == "AgToosa v4.9.0" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1249,7 +1249,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "4.8.0" ]
+  [ "$ver" = "4.9.0" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1260,7 +1260,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"4.8.0"* ]]
+  [[ "$output" == *"4.9.0"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -1888,6 +1888,78 @@ PY
   grep -q 'Cursor command routing' "$TEST_PROJECT/.cursor/commands/agtoosa-status.md"
   grep -q '/create-skill' "$TEST_PROJECT/.cursor/commands/agtoosa-status.md"
   grep -q 'Docs/AgToosa_Status.md' "$TEST_PROJECT/.cursor/commands/agtoosa-status.md"
+}
+
+# ── DEV-015 Windsurf slash-command routing (WS1–WS5) ───────────────────────────
+
+@test "WS1: every Windsurf workflow adapter includes routing and no-create-skill" {
+  local f stem
+  for f in "$TEMPLATE_DIR"/.windsurf/workflows/agtoosa-*.md; do
+    grep -q 'Windsurf workflow routing' "$f" || {
+      echo "Missing Windsurf workflow routing section in $f"
+      false
+    }
+    grep -q 'native Windsurf project workflow' "$f" || {
+      echo "Missing native workflow declaration in $f"
+      false
+    }
+    grep -q '/create-skill' "$f" || {
+      echo "Missing /create-skill guardrail in $f"
+      false
+    }
+    grep -qE 'do \*\*not\*\* route' "$f" || {
+      echo "Missing no-route wording in $f"
+      false
+    }
+    stem=$(basename "$f" .md)
+    grep -q "/${stem}" "$f" || {
+      echo "Missing slash command reference /${stem} in $f"
+      false
+    }
+  done
+}
+
+@test "WS2: agtoosa-status Windsurf workflow delegates read-only with sub-commands" {
+  local f="$TEMPLATE_DIR/.windsurf/workflows/agtoosa-status.md"
+  grep -q 'Docs/AgToosa_Status.md' "$f"
+  grep -qiE 'read-only|read only' "$f"
+  grep -q 'plan' "$f"
+  grep -q 'readiness' "$f"
+  grep -q 'git' "$f"
+  grep -q 'orphans' "$f"
+}
+
+@test "WS3: Windsurf core/status rules reserve /agtoosa-* and forbid /create-skill" {
+  local core="$TEMPLATE_DIR/.windsurf/rules/agtoosa-core.md"
+  local status="$TEMPLATE_DIR/.windsurf/rules/agtoosa-status.md"
+  grep -q '/agtoosa-\*' "$core"
+  grep -q '.windsurf/workflows/agtoosa-' "$core"
+  grep -q '/create-skill' "$core"
+  grep -q 'agtoosa-\*' "$core"
+  grep -q '/agtoosa-status' "$status"
+  grep -q '/create-skill' "$status"
+  grep -q 'Docs/AgToosa_Status.md' "$status"
+}
+
+@test "WS4: skill synthesis docs reject Windsurf workflow collisions" {
+  local init="$TEMPLATE_DIR/Docs/AgToosa_Init.md"
+  local spec="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  local skills="$TEMPLATE_DIR/Docs/AgToosa_Skills.md"
+  grep -q 'Reserved workflow names' "$init"
+  grep -q 'Reserved workflow names' "$spec"
+  grep -q 'Reserved workflow names' "$skills"
+  grep -q '.windsurf/workflows/agtoosa-' "$init"
+  grep -q '.windsurf/workflows/agtoosa-' "$spec"
+  grep -q '.windsurf/workflows/agtoosa-' "$skills"
+}
+
+@test "WS5: Windsurf install copies agtoosa-status.md with routing guardrails" {
+  run bash -c "printf '$TEST_PROJECT\n2\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.windsurf/workflows/agtoosa-status.md" ]
+  grep -q 'Windsurf workflow routing' "$TEST_PROJECT/.windsurf/workflows/agtoosa-status.md"
+  grep -q '/create-skill' "$TEST_PROJECT/.windsurf/workflows/agtoosa-status.md"
+  grep -q 'Docs/AgToosa_Status.md' "$TEST_PROJECT/.windsurf/workflows/agtoosa-status.md"
 }
 
 # ── DEV-013 ship-check cleanup (C1–C5) ────────────────────────────────────────

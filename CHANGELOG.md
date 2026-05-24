@@ -13,6 +13,16 @@ _(None — pick next story via `/agtoosa-spec`.)_
 
 ---
 
+## [4.9.0] — 2026-05-24
+
+Release **4.9** cycle: DEV-015 (228 bats tests).
+
+### Fixed
+
+- **DEV-015 — Windsurf slash-command routing.** Explicit native `/agtoosa-*` workflow routing and no-`/create-skill` guardrails on all 14 `.windsurf/workflows/agtoosa-*.md` adapters; `agtoosa-core.md` and `agtoosa-status.md` rules reserve workflow command names; Init/Spec/Skills synthesis docs reject `.windsurf/workflows/agtoosa-*.md` collisions; WS1–WS5 bats coverage. Smoke: WS1–WS5 all green.
+
+---
+
 ## [4.8.0] — 2026-05-24
 
 Release **4.8** cycle: DEV-014 (223 bats tests).

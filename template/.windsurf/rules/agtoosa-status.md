@@ -9,6 +9,7 @@ When executing `/agtoosa-status` or any project health check, follow `Docs/AgToo
 
 ## Key constraints
 
+- `/agtoosa-status` is an installed Windsurf workflow (`.windsurf/workflows/agtoosa-status.md`) — delegate to `Docs/AgToosa_Status.md`. Do **not** route to `/create-skill` or generate a project skill for this name.
 - This is a **read-only** command — never modify any files, git state, or Master-Plan.md.
 - Parse all Master-Plan.md sections and check cross-section consistency.
 - Cross-reference git log for unreported progress and WIP commits.

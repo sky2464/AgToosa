@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `Docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-05-24 (/agtoosa-ship DEV-014 — v4.8.0)
+> **Last updated:** 2026-05-24 (/agtoosa-ship DEV-015 — v4.9.0)
 
 ## Project Charter
 
@@ -9,8 +9,8 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Milestone | `v4.9.0` (planned) |
-| Active cycle | Release 4.8 |
+| Milestone | `v5.0.0` (planned) |
+| Active cycle | Release 4.9 |
 | Cycle capacity | `40 story points` |
 | Current phase | 🏁 Shipped |
 
@@ -31,7 +31,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-*(No active tasks — last shipped: DEV-014.)*
+*(No active tasks — last shipped: DEV-015.)*
 
 ## Manual / Deferred Tasks
 
@@ -67,7 +67,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | ID | Title | Stories | Status |
 |----|-------|---------|--------|
 | DEV-001 | Epic: Core Generator Engine | 0 open / 0 total | ⬜ Backlog |
-| DEV-002 | Epic: Workflow Templates | 0 open / 8 total | 🟦 Todo |
+| DEV-002 | Epic: Workflow Templates | 0 open / 9 total | 🟦 Todo |
 | DEV-003 | Epic: Community Template Registry | 0 open / 0 total | ⬜ Backlog |
 | DEV-004 | Epic: Testing & QA Harness | 0 open / 1 total | ⬜ Backlog |
 
@@ -83,9 +83,9 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Scope:** Markdown specifications and rules files across Claude, Gemini, Cursor, Windsurf, Copilot, and OpenCode under `template/`.
     *   **Success Criteria:** Perfect parity of phase commands and zero-drift version badges across all platform templates.
 
-    *   **Last shipped:** DEV-014 — Cursor slash command routing → `docs/archived/spec-DEV-014.md`
+    *   **Last shipped:** DEV-015 — Windsurf slash command routing → `docs/archived/spec-DEV-015.md`
     *   **Current:** _(none — backlog empty)_
-    *   **Next:** _(pick next story via `/agtoosa-spec`)_
+    *   **Next:** _(pick next story via `/agtoosa-spec` — e.g. Gemini routing parity or DEV-003 registry)_
 
 *   **DEV-003 - Epic: Community Template Registry**
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
@@ -95,7 +95,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 *   **DEV-004 - Epic: Testing & QA Harness**
     *   **Goal:** Comprehensive end-to-end integration and version verification suites validating the robustness of the entire framework.
     *   **Scope:** `tests/agtoosa.bats` and CI regression pipelines.
-    *   **Success Criteria:** 100% green coverage on 223+ platform scenarios and version checks on every release step.
+    *   **Success Criteria:** 100% green coverage on 228+ platform scenarios and version checks on every release step.
     *   **Last shipped:** DEV-005 — M1–M4 bats + CHANGELOG hygiene → `docs/archived/spec-DEV-005.md`
 
 ## Completed This Cycle
@@ -115,6 +115,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-012 | Feature: GitHub Slash Command Routing | 2026-05-24 | [spec-DEV-012.md](archived/spec-DEV-012.md) · [review-DEV-012.md](archived/review-DEV-012.md) |
 | DEV-013 | Fix: /agtoosa-ship check cleanup | 2026-05-24 | [spec-DEV-013.md](archived/spec-DEV-013.md) · [review-DEV-013.md](archived/review-DEV-013.md) |
 | DEV-014 | Fix: Cursor slash command routing | 2026-05-24 | [spec-DEV-014.md](archived/spec-DEV-014.md) · [review-DEV-014.md](archived/review-DEV-014.md) |
+| DEV-015 | Fix: Windsurf slash command routing | 2026-05-24 | [spec-DEV-015.md](archived/spec-DEV-015.md) · [review-DEV-015.md](archived/review-DEV-015.md) |
 
 ## Update Log
 
@@ -197,3 +198,11 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-05-24 | 🚀 Release 4.7 shipped — v4.7.0; DEV-013 on main; version parity bash/ps1 | AgToosa |
 | 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-014; smoke CU1–CU5 5/5 green; full suite 223/223; v4.8.0; archived spec + review | AgToosa |
 | 2026-05-24 | 🚀 Release 4.8 shipped — v4.8.0; DEV-014 on main; version parity bash/ps1 | AgToosa |
+| 2026-05-24 | ✏️ /agtoosa-spec DEV-015 — Windsurf slash command routing; estimate S; enrolled Release 4.9; 14 tasks; test plan: docs/AgToosa_TestPlan-DEV-015.md | AgToosa |
+| 2026-05-24 | ✅ Spec approved — DEV-015; estimate S; Release 4.9; 14 tasks planned | AgToosa |
+| 2026-05-24 | 🏗️ Build 🏗️ Started — DEV-015, 14 tasks; scope: template/.windsurf/workflows, .windsurf/rules, AgToosa_Init/Spec/Skills, tests/agtoosa.bats | AgToosa |
+| 2026-05-24 | 🏗️ Build complete — DEV-015 Windsurf slash routing; WS1–WS5 5/5 green; full suite 228/228 green | AgToosa |
+| 2026-05-24 | 🔍 Review 🔍 Started — DEV-015 — 4-persona review (Security, Eng Manager, CEO, QA Lead) | AgToosa |
+| 2026-05-24 | Review ✅ Approved — DEV-015; 0 Critical, 5 Warnings (accepted); report: docs/archived/review-DEV-015.md | AgToosa |
+| 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-015; smoke WS1–WS5 5/5 green; full suite 228/228; v4.9.0; archived spec + review | AgToosa |
+| 2026-05-24 | 🚀 Release 4.9 shipped — v4.9.0; DEV-015 on main; version parity bash/ps1 | AgToosa |

@@ -31,6 +31,10 @@ Run the full cycle for every story. Do not skip phases.
 - Empty Active Cycle → recommend `/agtoosa-spec`.
 - Not part of the 4-phase lifecycle diagram above.
 
+## Windsurf workflow command routing
+
+Installed AgToosa workflow commands live in `.windsurf/workflows/agtoosa-*.md`. When the user types `/agtoosa-*` or names a command `agtoosa-*`, treat it as an installed AgToosa workflow command — execute the matching workflow file and `Docs/AgToosa_*.md`. Do **not** route `/agtoosa-*` to `/create-skill` or invent generic skill-creation flows for these names. Reserved `/agtoosa-*` and `agtoosa-*` names belong to AgToosa adapters only, not generated project skills.
+
 ## Key Files
 
 - `Docs/AgToosa_Agent.md` — Full command reference and core rules

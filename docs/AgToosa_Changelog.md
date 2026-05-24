@@ -9,6 +9,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ### Added
 
+- 2026-05-24 — fix — Windsurf slash-command routing: native `/agtoosa-*` workflow guardrails, core/status rules, synthesis collision checks; WS1–WS5 bats (DEV-015) — `docs/archived/spec-DEV-015.md`
+
+### Added (prior)
+
 - 2026-05-24 — fix — Cursor slash-command routing: native `/agtoosa-*` command guardrails, core/status rules, synthesis collision checks; CU1–CU5 bats (DEV-014) — `docs/archived/spec-DEV-014.md`
 
 ### Added (prior)
