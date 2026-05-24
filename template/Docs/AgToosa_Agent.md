@@ -39,7 +39,7 @@ Your core principles are:
 
 | Sub-command | What it does |
 |-------------|-------------|
-| `/agtoosa-spec` | **Full flow:** context research → 6 forcing questions → executable spec → architecture blueprint + threat model → atomic task planning + test plan skeleton |
+| `/agtoosa-spec` | **Full flow:** plan-mode interview (research first, up to 8 adaptive questions) → executable spec → architecture blueprint + threat model → atomic task planning + test plan skeleton |
 | `/agtoosa-spec research` | **Part 1 only:** context gathering, web research, and clarifying Q&A — outputs raw findings, no spec yet |
 | `/agtoosa-spec plan` | **Part 2 only:** architecture blueprint + STRIDE threat model against an existing spec |
 | `/agtoosa-spec quick` | **Abbreviated:** condensed Q&A + spec for small bug fixes or chores; skips full threat modelling |
@@ -89,7 +89,7 @@ Your core principles are:
 | `/agtoosa-goal` | `Docs/AgToosa_Goal.md` | Clarify project/story outcomes into a Goal Contract |
 | `/agtoosa-revert` | `Docs/AgToosa_Revert.md` | Git-aware logical revert |
 | `/agtoosa-task` | `Docs/AgToosa_Task.md` | Fast task capture to Master-Plan.md for bugs, chores, spikes, and fixes |
-| `/agtoosa-update` | `Docs/AgToosa_Update.md` | Re-read project context, Master-Plan, and Changelog to get fully up to speed |
+| `/agtoosa-update` | `Docs/AgToosa_Update.md` | Detect → Plan → Apply → Verify baseline update (`check` · `plan` · `apply` · `verify`; `check` is read-only) |
 | `/agtoosa-status` | `Docs/AgToosa_Status.md` | Read-only project health dashboard with git cross-reference (`plan` · `readiness` · `git` · `orphans`) |
 | `/agtoosa-status-guide` | `Docs/AgToosa_StatusGuide.md` | Read-only status coach that explains top Recommended Next Actions and asks before fixes |
 | `/agtoosa-help` | Platform help entry points (`.claude/commands/`, `.gemini/commands/`, `.github/prompts/`, Cursor/Windsurf core rules) | **Assistance-only:** static command reference; default path does not read Master-Plan or git |
@@ -224,7 +224,7 @@ Every project or story Goal Contract must capture:
 4. Ask only about fields that are missing, vague, contradictory, or risky.
 5. Stop when the Goal Contract is clear enough to generate acceptance criteria, implementation tasks, review findings, and ship evidence.
 6. If `/agtoosa-init` reaches 12 goal/context questions and clarity is still insufficient, stop and ask whether to continue the interview or proceed with documented assumptions.
-7. `/agtoosa-goal check` and `/agtoosa-update` are read-only; they may report gaps and suggest `/agtoosa-goal`, but they must not update files.
+7. `/agtoosa-goal check` and `/agtoosa-update check` are read-only; they may report gaps and suggest `/agtoosa-goal`, but they must not update files. Full `/agtoosa-update` requires explicit approval before Apply and uses `agtoosa.sh --update` as the mutation source of truth.
 
 ## Smart Interview Protocol
 
@@ -272,7 +272,7 @@ Wait for the user's explicit approval before starting the next phase or writing 
 | Command | Max questions | Notes |
 |---------|--------------|-------|
 | `/agtoosa-init` | 12 before continue gate | Goal discovery plus Context setup; if clarity is still missing after 12 questions, ask whether to continue or proceed with documented assumptions |
-| `/agtoosa-spec` | 4 | 2 of the 6 forcing questions are usually inferable; Part 4 task planning is auto-derived from the approved spec |
+| `/agtoosa-spec` | 8 (adaptive) | Plan-Mode Spec Interview: research first, infer before asking; if still unclear after 8 core questions, ask continue or proceed with documented assumptions; `/agtoosa-spec quick` cap **2**; Part 4 task planning is auto-derived from the approved spec |
 | `/agtoosa-build` | 0 | Execution phase — task list is already approved as part of `/agtoosa-spec`. Discovery Triage may surface mid-build questions but is not a budgeted gate. |
 | `/agtoosa-task` | 3 | Type + priority + context; type+priority can merge into one |
 | `/agtoosa-qa` | 0 | Execution phase — approval gate only |

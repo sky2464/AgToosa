@@ -12,6 +12,8 @@ Dispatch rules based on arguments:
 
 If no arguments were given, run the full flow from Docs/AgToosa_Spec.md.
 
+**Plan-Mode Spec Interview:** follow `Docs/AgToosa_Spec.md` → **Plan-Mode Spec Interview Contract** (canonical). Research before asking; interview before final spec; adaptive cap **8** (`quick` cap **2**).
+
 **Phase stop:** stop at the approval gate. Do **not** run `/agtoosa-build` automatically — the user must invoke it after approval.
 
 On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

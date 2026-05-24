@@ -9,7 +9,7 @@ When executing any specification or planning work, follow `Docs/AgToosa_Spec.md`
 
 ## Key constraints
 
-- Follow the **Smart Interview Protocol** (`Docs/AgToosa_Agent.md`): max **4** questions for full flow; max **2** for `quick`. Ask only genuine gaps from the six forcing-question pool.
+- Follow the **Plan-Mode Spec Interview Contract** in `Docs/AgToosa_Spec.md` (canonical) plus **Smart Interview Protocol** (`Docs/AgToosa_Agent.md`): research before asking; full flow adaptive cap **8**; `quick` cap **2**; infer before asking; satisfy the Decision-complete checklist or document accepted assumptions.
 - Always verify dependency versions against live sources — never assume from memory.
 - STRIDE threat model is mandatory for every spec (skip only for `quick`).
 - Output: a single spec file at `Docs/archived/spec-[story-id].md` with embedded architectural blueprint and threat model.

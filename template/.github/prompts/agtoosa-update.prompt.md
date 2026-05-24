@@ -1,10 +1,12 @@
 ---
 name: agtoosa-update
 mode: agent
-description: "AgToosa: re-read context and changelog, then sync workflows to latest baseline"
+description: "AgToosa: Detect → Plan → Apply → Verify baseline update (check is read-only)"
 tools: [codebase]
 ---
 
-Read Docs/AgToosa_Update.md and execute the full update workflow.
+Read Docs/AgToosa_Update.md and execute the `/agtoosa-update` workflow.
 
-Use any optional user argument as a focus hint for the summary (for example: "show only breaking changes"), but still run the complete workflow.
+**Contract:** Detect → Plan → Apply → Verify (default: ask-then-apply). Sub-commands: `check` (read-only), `plan`, `apply`, `verify`. Do not describe the default flow as pure read-only sync.
+
+Use optional user arguments as sub-commands or focus hints per the canonical doc.

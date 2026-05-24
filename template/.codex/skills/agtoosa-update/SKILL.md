@@ -1,14 +1,19 @@
 ---
 name: agtoosa-update
-description: Refresh AgToosa workflow files and project context to the latest template version.
+description: Agentic AgToosa baseline update — Detect, Plan, explicit approval, CLI Apply, Verify. check sub-command is read-only.
 ---
 
 # agtoosa-update
 
-Use when the user asks for `/agtoosa-update`, `$agtoosa-update`, or wants to sync workflow docs from the generator.
+Use when the user asks for `/agtoosa-update`, `$agtoosa-update`, or wants to update the installed AgToosa baseline.
+
+## Contract
+
+**Detect → Plan → Apply → Verify** (default: ask-then-apply). Sub-commands: `check` (read-only briefing), `plan`, `apply`, `verify`. Mutation source of truth: `bash agtoosa.sh --update <project>` after explicit approval — not hand-edited sync.
 
 ## Execute
 
-1. Read `Docs/AgToosa_Update.md` in full and **run** its workflow precisely.
-2. Preserve user-owned project content; follow merge/backup rules in the workflow doc.
-3. On successful completion, print verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+1. Read `Docs/AgToosa_Update.md` in full and **run** its workflow precisely (including sub-command dispatch).
+2. Run preflight and migration guidance before Apply when drift or major-version risk exists.
+3. Preserve user-owned project content per the workflow doc; verify version marker, lock metadata, platform surfaces, preserved files, and duplicate marker safety after Apply.
+4. On successful completion, print verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

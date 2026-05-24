@@ -1,4 +1,4 @@
-description = "AgToosa: research → 6 forcing questions → Executable Specification → STRIDE threat model → atomic task planning"
+description = "AgToosa: plan-mode spec interview → Executable Specification → STRIDE threat model → atomic task planning"
 prompt = """
 
 ## Gemini command routing
@@ -6,6 +6,8 @@ prompt = """
 This file is the native Gemini CLI command for `/agtoosa-spec`. When the user invokes `/agtoosa-spec`, execute the AgToosa workflow below — do **not** route to `/create-skill` or generate a project skill for AgToosa workflow names.
 
 Read Docs/AgToosa_Spec.md and execute the specification workflow. Generated Project Mode — see Docs/AgToosa_Agent.md Operating Contexts (the project/product, not AgToosa as the app).
+
+Plan-Mode Spec Interview: follow Docs/AgToosa_Spec.md Plan-Mode Spec Interview Contract (canonical). Research before asking; interview before final spec; adaptive cap 8 (quick cap 2).
 
 Dispatch based on any arguments provided after the command:
 - /agtoosa-spec                   → full workflow (Parts 1 + 2 + 3 + 4: research, spec, architecture/threat-model, task planning)

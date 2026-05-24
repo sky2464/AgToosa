@@ -11,6 +11,26 @@ _(None — pick next story via `/agtoosa-spec`.)_
 
 ---
 
+## [5.1.0] — 2026-05-24
+
+Minor release: DEV-027 (296 bats tests).
+
+### Added
+
+- **DEV-027 — Agentic `/agtoosa-update`.** Redefine generated `Docs/AgToosa_Update.md` as Detect → Plan → Apply → Verify with ask-then-apply, explicit approval before mutation, and `bash agtoosa.sh --update` as the CLI source of truth; read-only `check` sub-command retained. Platform adapters and maintainer mirrors aligned. Bats T-001–T-009 green. Smoke: T-001–T-007 all green.
+
+---
+
+## [5.0.1] — 2026-05-24
+
+Patch release: DEV-026 (287 bats tests).
+
+### Fixed
+
+- **DEV-026 — Codex agent mode spec workflow execution.** Add **Agent Mode Execution Contract** to generated `.codex/skills/agtoosa-spec/SKILL.md` and `.codex/prompts/agtoosa-spec.md` so Codex agent mode runs research, Goal Contract, Smart Interview, spec/architecture, task planning, test plan skeleton, and approval gating — without duplicating `Docs/AgToosa_Spec.md` or auto-chaining `/agtoosa-build`. Bats CS1–CS5 green; K2/K3/W1/CX1 regressions unchanged. Smoke: CS1–CS5 all green.
+
+---
+
 ## [5.0.0] — 2026-05-24
 
 Release **5.0** cycle: DEV-025 (282 bats tests).

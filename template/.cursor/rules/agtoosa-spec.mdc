@@ -7,7 +7,7 @@ alwaysApply: false
 When executing `/agtoosa-spec` or any specification work, follow `Docs/AgToosa_Spec.md` precisely.
 **Operating context:** Generated Project Mode — scope specs to **the project/product**; see `Docs/AgToosa_Agent.md` → **Operating Contexts**.
 ## Key constraints
-- Follow the **Smart Interview Protocol** (`Docs/AgToosa_Agent.md`): max **4** questions for full flow; max **2** for `quick`. Ask only genuine gaps from the six forcing-question pool — do not ask when the answer is inferable.
+- Follow the **Plan-Mode Spec Interview Contract** in `Docs/AgToosa_Spec.md` (canonical) plus **Smart Interview Protocol** (`Docs/AgToosa_Agent.md`): research before asking; full flow adaptive cap **8** core questions; `quick` cap **2**; infer before asking; one question at a time with contextual options and a recommended default.
 - Always verify dependency versions against live sources — never assume from memory.
 - STRIDE threat model is mandatory for every spec (skip only for `quick`).
 - Output: a single spec file at `Docs/archived/spec-[story-id].md` with embedded architectural blueprint and threat model.

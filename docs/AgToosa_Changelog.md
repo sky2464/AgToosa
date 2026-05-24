@@ -11,6 +11,8 @@ _(None.)_
 
 ### Added
 
+- 2026-05-24 — feature — Agentic `/agtoosa-update`: Detect → Plan → Apply → Verify, ask-then-apply, CLI-backed Apply; T-001–T-009 bats (DEV-027) — `docs/archived/spec-DEV-027.md`
+- 2026-05-24 — fix — Codex agent mode spec execution contract on skill + prompt; CS1–CS5 bats (DEV-026) — `docs/archived/spec-DEV-026.md`
 - 2026-05-24 — chore — Maintainer docs path normalization: `docs/` prefixes in workflow mirrors, Path conventions in `docs/agtoosa-maintainer.md`, PN1–PN5 bats (DEV-025) — `docs/archived/spec-DEV-025.md`
 - 2026-05-24 — fix — Maintainer status/readiness doc parity for dogfood: Part 1.5 in `docs/AgToosa_Status.md`, new `docs/AgToosa_Readiness.md`, MD1–MD5 bats (DEV-024) — `docs/archived/spec-DEV-024.md`
 

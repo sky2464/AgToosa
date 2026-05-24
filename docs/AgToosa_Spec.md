@@ -7,7 +7,7 @@
 | `/agtoosa-spec` | Full flow: Parts 1 + 2 + 3 + 4 |
 | `/agtoosa-spec research` | Part 1 only — context, web research, and Q&A; outputs findings, no spec file yet |
 | `/agtoosa-spec plan` | Part 2 only — architecture blueprint + threat model against an already-written spec |
-| `/agtoosa-spec quick` | Abbreviated — 2–3 targeted questions + spec + skip full threat model (use for small bugs/chores) |
+| `/agtoosa-spec quick` | Abbreviated — max **2** targeted questions + spec + skip full threat model (use for small bugs/chores) |
 | `/agtoosa-spec tasks` | Part 4 only — derive atomic tasks from an already-approved spec, generate test plan skeleton, update Master-Plan.md |
 | `/agtoosa-spec to-issues` | Break the active spec or PRD into vertical-slice GitHub issues |
 
@@ -32,6 +32,55 @@ Break the active spec (or a provided PRD or plan) into independently-grabbable G
 ## Objective
 Transform a raw idea, feature, chore, or bug into a researched Specification with an architectural blueprint.
 
+## Phase Stop Contract
+
+> See `docs/AgToosa_Agent.md` → **Phase Stop Contract** for the full rules.
+
+- `/agtoosa-spec` may run through Parts 1–4 (spec, architecture, tasks, test plan) but **must stop** at the approval gate below.
+- Do **not** run `/agtoosa-build` automatically after the approval gate — wait for the user to invoke `/agtoosa-build` explicitly.
+- Appending `## ✅ Spec Approved` marks readiness only; it does not start build.
+
+## Plan-Mode Spec Interview Contract
+
+> Applies to full `/agtoosa-spec` (not `research`, `plan`, or `tasks` alone). `/agtoosa-spec quick` uses the same principles with a **2-question** cap.
+
+Before writing or finalizing the spec file, run a **Plan-Mode Spec Interview**:
+
+1. **Research first** — Read `docs/Context/`, `docs/Master-Plan.md`, active `docs/archived/spec-*.md`, and scan the codebase; use external research when platform or dependency behavior matters.
+2. **Gap list** — Compare findings against the **Decision-complete checklist** below. Ask only about genuine gaps.
+3. **Infer, don't re-ask** — If an answer is inferable with high confidence (≥80%), state it as a **finding** and do not ask that question.
+4. **One question at a time** — Wait for each answer before the next question.
+5. **Contextual options** — Derive 2–3 concrete options from repo/research when possible; mark one **recommended** default; always allow free-text override (see **Question Format** in `docs/AgToosa_Agent.md` → Smart Interview Protocol).
+6. **Adaptive sequencing** — Let each answer shape the next question; use the six forcing questions (Part 1 step 3) as a **candidate pool**, not a mandatory script.
+7. **Adaptive cap** — Full flow: at most **8 core interview questions**. `/agtoosa-spec quick`: at most **2** questions.
+8. **Budget exhaustion** — If decision-complete clarity is still missing after 8 core questions, stop and ask:
+
+    ```
+    ❓ Interview budget reached (8 questions). How should we proceed?
+      → A) Continue the interview (up to 4 more questions) ← only if critical gaps remain
+      → B) Proceed with documented assumptions in the spec ← recommended when momentum matters
+      Or type your own answer.
+    ```
+
+9. **Write gate** — Do **not** generate the final spec file until the Decision-complete checklist is satisfied **or** the user explicitly accepts documented assumptions under `### 1.1 Goal Contract` → Assumptions / Unresolved questions.
+
+### Decision-complete checklist
+
+Before spec generation, confirm coverage (as findings or interview answers) for:
+
+| Area | Must capture |
+|------|----------------|
+| Goal Contract | Goal, user outcome, success condition, proof/evidence |
+| Non-goals | What is explicitly out of scope |
+| Acceptance criteria | EARS table with Must-priority ACs |
+| Scope boundary | Files/directories in and out of scope |
+| Affected surfaces | Generator, template, docs, tests, platforms, etc. |
+| Risk / failure modes | Top production failure modes for Must ACs |
+| Security / trust boundaries | Auth, data, external APIs, user input, secrets |
+| Test evidence | How ACs will be verified (bats, manual, etc.) |
+| Rollout / compatibility | Upgrade path, breaking changes, parity surfaces |
+| Unresolved assumptions | Anything still assumed; user acceptance when required |
+
 ## Workflow
 
 ### Part 1 — Research & Specification
@@ -48,13 +97,13 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 2.  **External Research (Web Research Agent):**
     *   Query online sources for the best solutions, libraries, APIs, and design patterns relevant to the task.
     *   **CRITICAL:** Verify all dependency versions against live sources (never assume from memory).
-3.  **Q&A — Forcing Questions (Smart Interview):**
+3.  **Q&A — Plan-Mode Spec Interview (Smart Interview):**
 
-    > **Follow the Smart Interview Protocol** (`docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
-    > Maximum **4 questions** for the full flow; max **2** for `/agtoosa-spec quick`.
-    > Before each question, check whether the answer is already clear from the codebase scan or Context files. If it is, state your finding and move on — do not ask.
+    > **Follow the Plan-Mode Spec Interview Contract** (above) and the **Smart Interview Protocol** (`docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
+    > Full flow: adaptive cap **8** core questions; `/agtoosa-spec quick`: cap **2**.
+    > Before each question, check whether the answer is already clear from research or Context files. If it is, state your finding and move on — do not ask.
 
-    The six forcing questions below are the candidate pool. Ask only the ones where the answer is a genuine gap. Present options derived from codebase findings and research. One question at a time; at most one follow-up per answer.
+    The six forcing questions below are the **candidate pool**. Ask only where the Decision-complete checklist still has a genuine gap. Present options derived from codebase findings and research. One question at a time; at most one follow-up per answer.
 
     1. **Status quo** — What is the exact current behavior users depend on? What breaks if we change it?
     2. **Narrowest scope** — What is the smallest version of this feature that still delivers real value?
@@ -192,6 +241,8 @@ Approved: [YYYY-MM-DD HH:MM]
 ```
 
 This approval marker is required by `/agtoosa-ship check` to verify the spec was signed off before deployment. Do not proceed to `/agtoosa-build` without appending it.
+
+*   **Stop here** after presenting the approval gate. Do not invoke `/agtoosa-build` until the user explicitly runs it.
 
 *   **Linear Comment (Spec Approved):** Immediately after appending the approval marker, post a progress comment on the Story issue:
 

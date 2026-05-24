@@ -23,7 +23,7 @@ Your core principles are:
 
 | Sub-command | What it does |
 |-------------|-------------|
-| `/agtoosa-spec` | **Full flow:** context research → 6 forcing questions → executable spec → architecture blueprint + threat model → atomic task planning + test plan skeleton |
+| `/agtoosa-spec` | **Full flow:** plan-mode interview (research first, up to 8 adaptive questions) → executable spec → architecture blueprint + threat model → atomic task planning + test plan skeleton |
 | `/agtoosa-spec research` | **Part 1 only:** context gathering, web research, and clarifying Q&A — outputs raw findings, no spec yet |
 | `/agtoosa-spec plan` | **Part 2 only:** architecture blueprint + STRIDE threat model against an existing spec |
 | `/agtoosa-spec quick` | **Abbreviated:** condensed Q&A + spec for small bug fixes or chores; skips full threat modelling |
@@ -72,7 +72,7 @@ Your core principles are:
 | `/agtoosa-init` | `docs/AgToosa_Init.md` | **One-time:** Scan codebase, validate AI configs, establish context |
 | `/agtoosa-revert` | `docs/AgToosa_Revert.md` | Git-aware logical revert |
 | `/agtoosa-task` | `docs/AgToosa_Task.md` | Fast task capture to Master-Plan.md for bugs, chores, spikes, and fixes |
-| `/agtoosa-update` | `docs/AgToosa_Update.md` | Re-read project context, Master-Plan, and Changelog to get fully up to speed |
+| `/agtoosa-update` | `docs/AgToosa_Update.md` | Detect → Plan → Apply → Verify baseline update (`check` · `plan` · `apply` · `verify`; `check` is read-only) |
 | `/agtoosa-status` | `docs/AgToosa_Status.md` | Read-only project health dashboard with git cross-reference |
 | `/agtoosa-status-guide` | `docs/AgToosa_StatusGuide.md` | Read-only status coach that explains top Recommended Next Actions and asks before fixes |
 | `/agtoosa-help` | Platform help entry points (`.claude/commands/`, `.gemini/commands/`, `.github/prompts/`, Cursor/Windsurf core rules) | **Assistance-only:** static command reference; default path does not read Master-Plan or git |
@@ -211,7 +211,7 @@ Wait for the user's explicit approval before starting the next phase or writing 
 | Command | Max questions | Notes |
 |---------|--------------|-------|
 | `/agtoosa-init` | 6 | Across all Context files combined |
-| `/agtoosa-spec` | 4 | 2 of the 6 forcing questions are usually inferable; Part 4 task planning is auto-derived from the approved spec |
+| `/agtoosa-spec` | 8 (adaptive) | Plan-Mode Spec Interview: research first, infer before asking; if still unclear after 8 core questions, ask continue or proceed with documented assumptions; `/agtoosa-spec quick` cap **2**; Part 4 task planning is auto-derived from the approved spec |
 | `/agtoosa-build` | 0 | Execution phase — task list is already approved as part of `/agtoosa-spec`. Discovery Triage may surface mid-build questions but is not a budgeted gate. |
 | `/agtoosa-task` | 3 | Type + priority + context; type+priority can merge into one |
 | `/agtoosa-qa` | 0 | Execution phase — approval gate only |

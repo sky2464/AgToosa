@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.0.0" ]]
+  [[ "$output" == "AgToosa v5.1.0" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1034,10 +1034,12 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   grep -q "Goal Contract alignment" "$TEMPLATE_DIR/Docs/AgToosa_Review.md"
   grep -q "Goal Contract satisfied" "$TEMPLATE_DIR/Docs/AgToosa_Ship.md"
 }
-@test "agtoosa-update remains read-only while reporting goal gaps" {
-  grep -q "pure read command" "$TEMPLATE_DIR/Docs/AgToosa_Update.md"
-  grep -q "This step is read-only" "$TEMPLATE_DIR/Docs/AgToosa_Update.md"
-  grep -q "Goal clarity gaps" "$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+@test "agtoosa-update check mode remains read-only while reporting goal gaps" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -q '/agtoosa-update check' "$f"
+  grep -q 'read-only' "$f"
+  grep -q 'no shell commands' "$f"
+  grep -q 'Goal clarity gaps' "$f"
 }
 @test "SPEC-FORMAT defines story Goal Contract" {
   grep -q "Goal Contract" "$TEMPLATE_DIR/Docs/SPEC-FORMAT.md"
@@ -1606,7 +1608,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.0.0" ]
+  [ "$ver" = "5.1.0" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1617,7 +1619,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.0.0"* ]]
+  [[ "$output" == *"5.1.0"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -2022,9 +2024,10 @@ PY
   grep -q 'Terminal Evidence Contract' "$f"
 }
 
-@test "W3: Cursor spec rule matches canonical question cap and archived spec path" {
+@test "W3: Cursor spec rule matches canonical plan-mode interview and archived spec path" {
   local f="$TEMPLATE_DIR/.cursor/rules/agtoosa-spec.mdc"
-  grep -q 'max \*\*4\*\* questions' "$f"
+  grep -q 'Plan-Mode Spec Interview Contract' "$f"
+  grep -q 'adaptive cap \*\*8\*\*' "$f"
   grep -q 'Docs/archived/spec-\[story-id\].md' "$f"
   ! grep -q 'Never skip the 6 forcing questions' "$f"
 }
@@ -2819,7 +2822,7 @@ PY
       echo "Missing Agent Mode Execution Contract in $f"
       false
     }
-    for term in 'Smart Interview' 'research' 'Goal Contract' 'task planning' 'test plan' 'approval gate'; do
+    for term in 'Plan-Mode Spec Interview' 'research' 'Goal Contract' 'task planning' 'test plan' 'approval gate'; do
       grep -qi "$term" "$f" || {
         echo "Missing execution contract term '$term' in $f"
         false
@@ -2878,4 +2881,193 @@ PY
     echo "Missing phase-stop build guard in $f"
     false
   }
+}
+
+# ── DEV-027 Agentic /agtoosa-update (T-001–T-009) ─────────────────────────────
+
+@test "T-001: canonical update workflow defines Detect Plan Apply Verify and ask-then-apply" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -q 'Detect' "$f"
+  grep -q 'Plan' "$f"
+  grep -q 'Apply' "$f"
+  grep -q 'Verify' "$f"
+  grep -q 'ask-then-apply' "$f"
+}
+
+@test "T-002: canonical update workflow documents CLI update and planned changes" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -q 'agtoosa.sh --update' "$f"
+  grep -q 'overwrites' "$f"
+  grep -q 'smart merge' "$f"
+  grep -q 'native dir' "$f"
+  grep -q 'preserved files' "$f"
+  grep -q 'backup' "$f"
+}
+
+@test "T-003: canonical update workflow requires explicit approval before Apply" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -qiE 'explicit approval|approval gate' "$f"
+  grep -q 'before running any mutating' "$f"
+}
+
+@test "T-004: canonical update verification covers marker lock platform preserve duplicate" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -q '.agtoosa-version' "$f"
+  grep -q 'lock' "$f"
+  grep -q 'platform' "$f"
+  grep -q 'preserved' "$f"
+  grep -q 'duplicate marker' "$f"
+}
+
+@test "T-005: agtoosa-update check sub-command is read-only briefing only" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -q '/agtoosa-update check' "$f"
+  grep -q 'read-only' "$f"
+  grep -q 'no shell commands' "$f"
+  grep -q 'no mutation' "$f"
+}
+
+@test "T-006: agtoosa-update plan apply verify sub-command stop conditions documented" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -q '/agtoosa-update plan' "$f"
+  grep -q '/agtoosa-update apply' "$f"
+  grep -q '/agtoosa-update verify' "$f"
+  grep -q 'stop condition' "$f"
+}
+
+@test "T-007: update adapters share Detect Plan Apply Verify and forbid default pure read-only" {
+  local f
+  for f in \
+    "$TEMPLATE_DIR/Docs/AgToosa_Update.md" \
+    "$TEMPLATE_DIR/.claude/commands/agtoosa-update.md" \
+    "$TEMPLATE_DIR/.cursor/commands/agtoosa-update.md" \
+    "$TEMPLATE_DIR/.cursor/rules/agtoosa-update.mdc" \
+    "$TEMPLATE_DIR/.gemini/commands/agtoosa-update.toml" \
+    "$TEMPLATE_DIR/.github/prompts/agtoosa-update.prompt.md" \
+    "$TEMPLATE_DIR/.windsurf/workflows/agtoosa-update.md" \
+    "$TEMPLATE_DIR/.windsurf/rules/agtoosa-update.md" \
+    "$TEMPLATE_DIR/.codex/prompts/agtoosa-update.md" \
+    "$TEMPLATE_DIR/.codex/skills/agtoosa-update/SKILL.md"; do
+    grep -q 'Detect' "$f" || { echo "Missing Detect in $f"; false; }
+    grep -q 'Plan' "$f" || { echo "Missing Plan in $f"; false; }
+    grep -q 'Apply' "$f" || { echo "Missing Apply in $f"; false; }
+    grep -q 'Verify' "$f" || { echo "Missing Verify in $f"; false; }
+    if grep -q 'pure read command' "$f"; then
+      echo "Forbidden pure read-only default in $f"
+      false
+    fi
+  done
+}
+
+@test "T-008: update preflight covers git markers backups Docs lock platform drift migration" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -q 'dirty git' "$f"
+  grep -q 'malformed' "$f"
+  grep -q 'backup' "$f"
+  grep -q 'missing `Docs/`' "$f"
+  grep -q 'lock-file' "$f"
+  grep -q 'platform drift' "$f"
+  grep -q 'major-version migration' "$f"
+  grep -q 'dry-run' "$f"
+}
+
+@test "T-009: update migration guidance surfaces breaking changes before Apply" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -q 'major-version' "$f"
+  grep -q 'breaking change' "$f"
+  grep -q 'changelog' "$f"
+  grep -q 'before Apply' "$f"
+}
+
+# ── DEV-028 Plan-mode spec interview (DEV-028 T-001–T-010) ───────────────────
+
+@test "DEV-028 T-001: canonical spec workflow contains Plan-Mode Spec Interview Contract" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  grep -q '## Plan-Mode Spec Interview Contract' "$f"
+  grep -q 'Plan-Mode Spec Interview' "$f"
+}
+
+@test "DEV-028 T-002: contract requires research before user questions" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  grep -q 'Research first' "$f"
+  grep -q 'Docs/Master-Plan.md' "$f"
+  grep -q 'scan the codebase' "$f"
+}
+
+@test "DEV-028 T-003: contract requires one question at a time and contextual options" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  grep -q 'One question at a time' "$f"
+  grep -q '2–3 concrete options' "$f"
+  grep -q 'recommended' "$f"
+  grep -q 'free-text override' "$f"
+}
+
+@test "DEV-028 T-004: contract requires inferable answers as findings not re-asked" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  grep -q "Infer, don't re-ask" "$f"
+  grep -q 'state it as a \*\*finding\*\*' "$f"
+}
+
+@test "DEV-028 T-005: full flow adaptive cap 8 and quick cap 2" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  grep -q 'at most \*\*8 core interview questions\*\*' "$f"
+  grep -q 'at most \*\*2\*\* questions' "$f"
+  grep -q '/agtoosa-spec quick' "$f"
+}
+
+@test "DEV-028 T-006: budget exhaustion continue or proceed with assumptions gate" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  grep -q 'Interview budget reached (8 questions)' "$f"
+  grep -q 'Continue the interview' "$f"
+  grep -q 'Proceed with documented assumptions' "$f"
+}
+
+@test "DEV-028 T-007: decision-complete checklist covers required fields" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  grep -q 'Decision-complete checklist' "$f"
+  for term in 'Goal Contract' 'Non-goals' 'Acceptance criteria' 'Scope boundary' 'Affected surfaces' 'Risk / failure modes' 'Security / trust boundaries' 'Test evidence' 'Rollout / compatibility' 'Unresolved assumptions'; do
+    grep -q "$term" "$f" || {
+      echo "Missing decision-complete field: $term"
+      false
+    }
+  done
+}
+
+@test "DEV-028 T-008: native spec adapters reference plan-mode contract without Part duplication" {
+  local f
+  for f in \
+    "$TEMPLATE_DIR/.codex/skills/agtoosa-spec/SKILL.md" \
+    "$TEMPLATE_DIR/.codex/prompts/agtoosa-spec.md" \
+    "$TEMPLATE_DIR/.cursor/rules/agtoosa-spec.mdc" \
+    "$TEMPLATE_DIR/.cursor/commands/agtoosa-spec.md" \
+    "$TEMPLATE_DIR/.windsurf/rules/agtoosa-spec.md" \
+    "$TEMPLATE_DIR/.windsurf/workflows/agtoosa-spec.md" \
+    "$TEMPLATE_DIR/.claude/commands/agtoosa-spec.md" \
+    "$TEMPLATE_DIR/.github/prompts/agtoosa-spec.prompt.md" \
+    "$TEMPLATE_DIR/.gemini/commands/agtoosa-spec.toml"
+  do
+    grep -q 'Plan-Mode Spec Interview' "$f" || {
+      echo "Missing Plan-Mode Spec Interview reference in $f"
+      false
+    }
+    grep -q 'Docs/AgToosa_Spec.md' "$f" || {
+      echo "Missing canonical Docs/AgToosa_Spec.md reference in $f"
+      false
+    }
+    if grep -q '^## Part 1' "$f" || grep -q '^## Part 2' "$f"; then
+      echo "Duplicated canonical Part 1/2 workflow section header in $f"
+      false
+    fi
+  done
+}
+
+@test "DEV-028 T-009: spec adapters preserve phase stop and forbid auto-build" {
+  run bats "$BATS_TEST_DIRNAME/agtoosa.bats" -f "W1: spec adapters forbid"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-028 T-010: maintainer spec mirror contains plan-mode contract" {
+  local f="$BATS_TEST_DIRNAME/../docs/AgToosa_Spec.md"
+  grep -q '## Plan-Mode Spec Interview Contract' "$f"
+  grep -q 'at most \*\*8 core interview questions\*\*' "$f"
 }
