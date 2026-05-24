@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v4.12.0" ]]
+  [[ "$output" == "AgToosa v4.12.1" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1501,6 +1501,48 @@ PY
   [ "$status" -eq 0 ]
   run bash -c "! grep -q 'Proceeding with registry version' '$BATS_TEST_DIRNAME/../agtoosa.ps1'"
   [ "$status" -eq 0 ]
+}
+
+@test "RV6: pinned registry install E2E stages pack with correct version" {
+  local workdir cache_dir queue_dir tarball sha url registry_json
+  workdir="$(mktemp -d)"
+  cache_dir="$(mktemp -d)"
+  queue_dir="$(mktemp -d)"
+
+  tarball="${workdir}/mock-pack-1.0.0.tar.gz"
+  tar -czf "$tarball" -C "$BATS_TEST_DIRNAME/fixtures/mock-pack" .
+
+  if command -v sha256sum &>/dev/null; then
+    sha="$(sha256sum "$tarball" | awk '{print $1}')"
+  else
+    sha="$(shasum -a 256 "$tarball" | awk '{print $1}')"
+  fi
+
+  url="file://${tarball}"
+
+  registry_json="$(jq -n \
+    --arg name "mock-pack" \
+    --arg description "E2E test pack" \
+    --arg author "agtoosa" \
+    --arg version "1.0.0" \
+    --arg url "$url" \
+    --arg sha256 "$sha" \
+    '[{name: $name, description: $description, author: $author, version: $version, url: $url, sha256: $sha256, verified: true}]')"
+
+  printf '%s\n' "$registry_json" > "$cache_dir/registry.json"
+  touch "$cache_dir/registry.json"
+
+  run env AGTOOSA_REGISTRY_CACHE_DIR="$cache_dir" AGTOOSA_PACK_QUEUE_DIR="$queue_dir" \
+    bash -c "echo Y | bash '$SCRIPT' --registry install 'mock-pack@1.0.0'"
+
+  rm -rf "$workdir" "$cache_dir"
+
+  [ "$status" -eq 0 ]
+  [ -f "$queue_dir/mock-pack/workflow.md" ]
+  [ -f "$queue_dir/mock-pack/.pack-meta.json" ]
+  cat "$queue_dir/mock-pack/.pack-meta.json" | jq -e '.name == "mock-pack" and .version == "1.0.0"' >/dev/null
+
+  rm -rf "$queue_dir"
 }
 
 # ── DEV-187: init/update test feedback fixes ──────────────────

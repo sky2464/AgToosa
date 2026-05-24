@@ -13,6 +13,16 @@ _(None — pick next story via `/agtoosa-spec`.)_
 
 ---
 
+## [4.12.1] — 2026-05-24
+
+Patch release: DEV-021 (256 bats tests).
+
+### Fixed
+
+- **DEV-021 — E2E pinned registry install test (RV6).** Network-free integration test exercises full Bash `--registry install pack@version` through `file://` download, SHA-256 verification, pack queue staging, and `.pack-meta.json` version; closes DEV-020 review gap (RV1–RV5 were resolver/CLI-only). Smoke: `bats tests/agtoosa.bats -f "RV6:"` green; RV1–RV6 slice green with clean `ship/` teardown.
+
+---
+
 ## [4.12.0] — 2026-05-24
 
 Release **4.12** cycle: DEV-018, DEV-020 (255 bats tests).
