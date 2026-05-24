@@ -170,6 +170,60 @@ registry_info() {
   fi
 }
 
+# Resolve a registry JSON entry by pack name and optional version pin.
+# Prints one compact JSON object on success; writes an error to stderr and returns 1 on failure.
+registry_resolve_pack_entry() {
+  local registry="$1"
+  local pack_name="$2"
+  local pack_version="${3:-}"
+
+  if [[ -z "$pack_name" ]]; then
+    echo "Error: resolve requires a pack name" >&2
+    return 1
+  fi
+
+  if ! command -v jq &>/dev/null; then
+    if [[ -n "$pack_version" ]]; then
+      echo "Error: --registry install with @version requires jq. Install jq and retry." >&2
+      return 1
+    fi
+    local pack_entry
+    pack_entry=$(echo "$registry" | grep "\"name\": \"$pack_name\"" || true)
+    if [[ -z "$pack_entry" ]]; then
+      echo "Error: Pack '$pack_name' not found in registry" >&2
+      return 1
+    fi
+    echo "$pack_entry"
+    return 0
+  fi
+
+  local pack_entry
+  if [[ -n "$pack_version" ]]; then
+    pack_entry=$(echo "$registry" | jq -c --arg n "$pack_name" --arg v "$pack_version" \
+      '.[] | select(.name == $n and .version == $v)' | head -n1)
+    if [[ -z "$pack_entry" ]]; then
+      local available
+      available=$(echo "$registry" | jq -r --arg n "$pack_name" \
+        '.[] | select(.name == $n) | .version' | paste -sd ', ' -)
+      if [[ -z "$available" ]]; then
+        echo "Error: Pack '$pack_name' not found in registry" >&2
+      else
+        echo "Error: Pack '$pack_name' version '$pack_version' not found in registry (available: ${available})." >&2
+      fi
+      return 1
+    fi
+  else
+    pack_entry=$(echo "$registry" | jq -c --arg n "$pack_name" \
+      '.[] | select(.name == $n)' | head -n1)
+    if [[ -z "$pack_entry" ]]; then
+      echo "Error: Pack '$pack_name' not found in registry" >&2
+      return 1
+    fi
+  fi
+
+  echo "$pack_entry"
+}
+
 # Download and install a pack.
 registry_install() {
   # Preserve ship/ so staged pack files survive the EXIT trap.
@@ -199,22 +253,12 @@ registry_install() {
   fi
 
   # Fetch registry and find pack entry.
-  local registry pack_entry pack_url pack_sha256
+  local registry pack_entry pack_url pack_sha256 pack_version_resolved
   registry=$(fetch_registry) || return 1
 
-  if command -v jq &>/dev/null; then
-    pack_entry=$(echo "$registry" | jq -r --arg n "$pack_name" '.[] | select(.name == $n)')
-  else
-    pack_entry=$(echo "$registry" | grep "\"name\": \"$pack_name\"")
-  fi
-
-  if [[ -z "$pack_entry" ]]; then
-    echo "Error: Pack '$pack_name' not found in registry" >&2
-    return 1
-  fi
+  pack_entry=$(registry_resolve_pack_entry "$registry" "$pack_name" "$pack_version") || return 1
 
   # Extract URL, SHA-256, and version from pack entry.
-  local pack_version_resolved
   if command -v jq &>/dev/null; then
     pack_url=$(echo "$pack_entry" | jq -r '.url')
     pack_sha256=$(echo "$pack_entry" | jq -r '.sha256')
@@ -225,9 +269,14 @@ registry_install() {
     pack_version_resolved=$(echo "$pack_entry" | grep -oP '"version":\s*"\K[^"]+')
   fi
 
+  if [[ -n "$pack_version" ]] && [[ "$pack_version" != "$pack_version_resolved" ]]; then
+    echo "Error: Pack '$pack_name' version '$pack_version' not found in registry (available: ${pack_version_resolved})." >&2
+    return 1
+  fi
+
   # Show confirmation prompt.
   echo ""
-  echo "Installing: $pack_name"
+  echo "Installing: $pack_name v${pack_version_resolved}"
   read -p "Continue? (Y/n) " -r
   if [[ "$REPLY" =~ ^[Nn]$ ]]; then
     echo "Cancelled."

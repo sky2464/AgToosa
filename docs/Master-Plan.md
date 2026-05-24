@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `Docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-05-24 (/agtoosa-ship DEV-017 — v4.11.0)
+> **Last updated:** 2026-05-24 (/agtoosa-spec DEV-020 — registry version pinning)
 
 ## Project Charter
 
@@ -10,9 +10,9 @@
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
 | Milestone | `v5.0.0` (planned) |
-| Active cycle | Release 4.11 |
+| Active cycle | Release 4.12 |
 | Cycle capacity | `40 story points` |
-| Current phase | 🏁 Shipped |
+| Current phase | 🟨 Build |
 
 ## Active Cycle
 
@@ -21,6 +21,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
+| DEV-020 | Fix: Registry install version pinning | Fix | S | 🟨 In Progress | 0/14 |
 
 Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blocked · 🔧 Awaiting Manual · 🏁 Shipped
 
@@ -29,7 +30,25 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-*(No story in progress — run `/agtoosa-spec` for the next backlog item.)*
+**DEV-020 — Registry install version pinning** (spec: `docs/archived/spec-DEV-020.md`)
+
+- [ ] **1.** Bash version enforcement
+  - [ ] 1.1 Unpinned install selects by name only — _AC-003_
+  - [ ] 1.2 Pinned install selects by name + version — _AC-001, AC-002_
+  - [ ] 1.3 Fail closed on mismatch with actionable error — _AC-002_
+  - [ ] 1.4 Confirmation and `.pack-meta.json` use resolved version — _AC-001_
+- [ ] **2.** PowerShell parity
+  - [ ] 2.1 Fail closed on mismatch (no warn-and-proceed) — _AC-004_
+  - [ ] 2.2 Name+version selection when version suffix set — _AC-001, AC-004_
+- [ ] **3.** Documentation
+  - [ ] 3.1 Update registry docs (maintainer + template) — _AC-002_
+- [ ] **4.** Tests
+  - [ ] 4.1 RV1 pinned match — _AC-001, AC-005_
+  - [ ] 4.2 RV2 pinned mismatch — _AC-002, AC-005_
+  - [ ] 4.3 RV3 unpinned by name — _AC-003, AC-005_
+  - [ ] 4.4 RV4 Bash enforcement guard — _AC-005_
+  - [ ] 4.5 RV5 PS1 mismatch failure — _AC-004, AC-005_
+  - [ ] 4.6 Run RV filter + full bats — _AC-005_
 
 <!--
 **DEV-016 — Gemini slash command routing** (spec: `docs/archived/spec-DEV-016.md`) — shipped 2026-05-24
@@ -116,6 +135,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
     *   **Scope:** Pack registry parsing, cached JSON validation, SHA-256 integrity rules, and command staging wrappers in `lib/registry.sh`.
     *   **Success Criteria:** Secure Offline/Online installation of approved community templates with zero path-traversal risk.
+    *   **Current:** DEV-020 — registry `@version` install enforcement → `docs/archived/spec-DEV-020.md`
 
 *   **DEV-004 - Epic: Testing & QA Harness**
     *   **Goal:** Comprehensive end-to-end integration and version verification suites validating the robustness of the entire framework.
@@ -191,6 +211,9 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-05-23 | 🚀 Ship 🚀 Deployed — DEV-009; smoke R1–R8 + D3 10/10 green; v4.3.0; archived spec + review | AgToosa |
 | 2026-05-23 | 🚀 Release 4.3 shipped — v4.3.0; DEV-009 on main; version parity bash/ps1 | AgToosa |
 | 2026-05-24 | 🏗️ Build 🏗️ Started — DEV-010, 7 tasks; scope: template/Docs, platform adapters, tests/agtoosa.bats | AgToosa |
+| 2026-05-24 | ✅ Spec approved — DEV-020; estimate S; Release 4.12; spec: docs/archived/spec-DEV-020.md | AgToosa |
+| 2026-05-24 | 🏗️ Build started — DEV-020, 14 tasks; scope: lib/registry.sh, agtoosa.ps1, registry docs, tests/agtoosa.bats | AgToosa |
+| 2026-05-24 | ✏️ /agtoosa-spec DEV-020 — registry install version pinning; estimate S; enrolled Release 4.12; 14 tasks; spec: docs/archived/spec-DEV-020.md | AgToosa |
 | 2026-05-24 | 🏗️ Build complete — DEV-010 phase gates + terminal evidence; W1–W5 bats green; full suite 202/202 green; version pins 4.3.0 | AgToosa |
 | 2026-05-24 | 🔍 Review 🔍 Started — DEV-010 — 4-persona review running | AgToosa |
 | 2026-05-24 | Review ✅ Approved — DEV-010; 0 Critical, 5 Warnings (accepted); report: docs/archived/review-DEV-010.md | AgToosa |

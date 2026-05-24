@@ -513,17 +513,26 @@ function Invoke-RegistryInstall([string]$packSpec) {
 
     $json  = Invoke-RegistryFetch
     $packs = @($json | ConvertFrom-Json)
-    $pack  = $packs | Where-Object { $_.name -eq $packName } | Select-Object -First 1
-    if (-not $pack) {
-        Write-Color "${RED}❌ Pack '$packName' not found in registry.${NC}"
-        exit 1
+    if ($packVersion -ne "") {
+        $pack = $packs | Where-Object { $_.name -eq $packName -and $_.version -eq $packVersion } | Select-Object -First 1
+        if (-not $pack) {
+            $available = ($packs | Where-Object { $_.name -eq $packName } | ForEach-Object { $_.version }) -join ', '
+            if ([string]::IsNullOrEmpty($available)) {
+                Write-Color "${RED}❌ Pack '$packName' not found in registry.${NC}"
+            } else {
+                Write-Color "${RED}❌ Pack '$packName' version '$packVersion' not found in registry (available: $available).${NC}"
+            }
+            exit 1
+        }
+    } else {
+        $pack = $packs | Where-Object { $_.name -eq $packName } | Select-Object -First 1
+        if (-not $pack) {
+            Write-Color "${RED}❌ Pack '$packName' not found in registry.${NC}"
+            exit 1
+        }
     }
 
-    if ($packVersion -ne "" -and $pack.version -ne $packVersion) {
-        Write-Color "${YELLOW}⚠️  Requested version $packVersion but registry has $($pack.version). Proceeding with registry version.${NC}"
-    }
-
-    $confirm = Read-Host "Installing: $packName — Continue? (Y/n)"
+    $confirm = Read-Host "Installing: $packName v$($pack.version) — Continue? (Y/n)"
     if ([string]::IsNullOrEmpty($confirm)) { $confirm = "Y" }
     if ($confirm -notmatch "^[Yy]$") {
         Write-Color "${YELLOW}Aborted.${NC}"

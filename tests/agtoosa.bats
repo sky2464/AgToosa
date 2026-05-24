@@ -1341,6 +1341,76 @@ PY
   [ "$count" -eq 8 ]
 }
 
+# ── DEV-020: Registry install version pinning (RV1–RV5) ────────
+@test "RV1: registry_resolve_pack_entry matches pinned version" {
+  local registry
+  registry="$(cat "$BATS_TEST_DIRNAME/fixtures/registry.json")"
+  run bash -c "
+    source '$BATS_TEST_DIRNAME/../lib/registry.sh'
+    registry_resolve_pack_entry \"\$registry\" 'ml-pipeline' '1.2.0'
+  "
+  [ "$status" -eq 0 ]
+  echo "$output" | jq -e '.name == "ml-pipeline" and .version == "1.2.0"' >/dev/null
+}
+
+@test "RV2: pinned registry install fails when version not in index" {
+  local cache_dir
+  cache_dir="$(mktemp -d)"
+  cp "$BATS_TEST_DIRNAME/fixtures/registry.json" "$cache_dir/registry.json"
+  touch "$cache_dir/registry.json"
+
+  run bash -c "echo Y | AGTOOSA_REGISTRY_CACHE_DIR='$cache_dir' bash '$SCRIPT' --registry install 'ml-pipeline@9.9.9'"
+  rm -rf "$cache_dir"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"9.9.9"* ]]
+  [[ "$output" == *"1.2.0"* ]] || [[ "$output" == *"available"* ]]
+}
+
+@test "RV3: registry_resolve_pack_entry resolves unpinned install by name" {
+  local registry
+  registry="$(cat "$BATS_TEST_DIRNAME/fixtures/registry.json")"
+  run bash -c "
+    source '$BATS_TEST_DIRNAME/../lib/registry.sh'
+    registry_resolve_pack_entry \"\$registry\" 'ml-pipeline' ''
+  "
+  [ "$status" -eq 0 ]
+  echo "$output" | jq -e '.name == "ml-pipeline" and .version == "1.2.0"' >/dev/null
+}
+
+@test "RV4: registry_install enforces pack_version via resolve helper" {
+  run grep -q 'registry_resolve_pack_entry' "$BATS_TEST_DIRNAME/../lib/registry.sh"
+  [ "$status" -eq 0 ]
+  run grep -q 'select(.name == \$n and .version == \$v)' "$BATS_TEST_DIRNAME/../lib/registry.sh"
+  [ "$status" -eq 0 ]
+  run grep -q 'pack_version' "$BATS_TEST_DIRNAME/../lib/registry.sh"
+  [ "$status" -eq 0 ]
+}
+
+@test "RV5: PS1 registry install fails closed on version mismatch" {
+  if ! command -v pwsh &>/dev/null; then
+    skip "pwsh not available"
+  fi
+  local fixture
+  fixture="$(mktemp)"
+  printf '%s\n' '[{"name":"solo","description":"solo pack","author":"a","version":"1.0.0","url":"http://x","sha256":"abc","verified":false}]' > "$fixture"
+  run pwsh -NoProfile -Command "
+    \$json = Get-Content -Raw '$fixture'
+    \$packs = @(\$json | ConvertFrom-Json)
+    \$packName = 'solo'
+    \$packVersion = '9.9.9'
+    \$pack = \$packs | Where-Object { \$_.name -eq \$packName -and \$_.version -eq \$packVersion } | Select-Object -First 1
+    if (\$pack) { exit 1 }
+    \$available = (\$packs | Where-Object { \$_.name -eq \$packName } | ForEach-Object { \$_.version }) -join ', '
+    if ([string]::IsNullOrEmpty(\$available)) { exit 1 }
+    exit 0
+  "
+  rm -f "$fixture"
+  [ "$status" -eq 0 ]
+  run grep -q "version '\$packVersion' not found" "$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  [ "$status" -eq 0 ]
+  ! run grep -q 'Proceeding with registry version' "$BATS_TEST_DIRNAME/../agtoosa.ps1"
+}
+
 # ── DEV-187: init/update test feedback fixes ──────────────────
 @test "-h flag shows usage and exits 0" {
   run bash "$SCRIPT" -h
