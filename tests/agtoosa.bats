@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v4.11.0" ]]
+  [[ "$output" == "AgToosa v4.12.0" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1181,7 +1181,7 @@ PY
 
   PACK_QUEUE_DIR="$queue_dir"
   PROJECT_PATH="$project_dir"
-  AGTOOSA_VERSION="4.11.0"
+  AGTOOSA_VERSION="4.12.0"
   GREEN="" YELLOW="" NC=""
   source "$BATS_TEST_DIRNAME/../lib/install.sh"
 
@@ -1229,7 +1229,7 @@ PY
   PACK_QUEUE_DIR="$queue_dir"
   SHIP_DIR="$ship_dir"
   PROJECT_PATH="$project_dir"
-  AGTOOSA_VERSION="4.11.0"
+  AGTOOSA_VERSION="4.12.0"
   GREEN="" YELLOW="" NC=""
   COPIED=0
   SKIPPED=0
@@ -1518,7 +1518,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "4.11.0" ]
+  [ "$ver" = "4.12.0" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1529,7 +1529,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"4.11.0"* ]]
+  [[ "$output" == *"4.12.0"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────

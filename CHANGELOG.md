@@ -13,6 +13,18 @@ _(None — pick next story via `/agtoosa-spec`.)_
 
 ---
 
+## [4.12.0] — 2026-05-24
+
+Release **4.12** cycle: DEV-018, DEV-020 (255 bats tests).
+
+### Fixed
+
+- **DEV-020 — Registry install version pinning.** `pack-name@version` is enforced in Bash via `registry_resolve_pack_entry()` (jq `name` + `version`); pinned mismatch fails before download with available version(s) listed; PowerShell fails closed on mismatch (no warn-and-proceed); registry docs updated; RV1–RV5 bats coverage. Smoke: RV1–RV5 all green.
+
+- **DEV-018 — Registry pack queue.** `--registry install` stages packs in durable `.agtoosa/pack-queue/` (outside ephemeral `ship/`); project install merges the queue and clears entries; legacy `ship/packs/` is salvaged before `ship/` rebuild; PowerShell parity for queue staging and merge; PK1–PK5 bats coverage. Smoke: PK1–PK5 all green.
+
+---
+
 ## [4.11.0] — 2026-05-24
 
 Release **4.11** cycle: DEV-003, DEV-016, DEV-017 (246 bats tests).

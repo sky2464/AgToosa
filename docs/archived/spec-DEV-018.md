@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-018
 > **Epic:** DEV-003 — Community Template Registry
-> **Status:** In progress
+> **Status:** 🏁 Shipped (v4.12.0 — 2026-05-24)
 > **Estimate:** S
 > **Spec created:** 2026-05-24
 
@@ -42,6 +42,49 @@ DEV-003 fixed **CB-1**: `KEEP_SHIP=true` so `--registry install` does not delete
 
 ## 2. Design
 
-See implementation plan: durable `PACK_QUEUE_DIR`, helpers in `lib/registry.sh` and `lib/install.sh`, salvage hook in `agtoosa.sh` / `agtoosa.ps1`.
+### 2.1 Architecture
 
-Test plan: [`docs/AgToosa_TestPlan-DEV-018.md`](AgToosa_TestPlan-DEV-018.md).
+| Layer | Files | Change |
+|-------|-------|--------|
+| Queue path | `agtoosa.sh`, `agtoosa.ps1` | `PACK_QUEUE_DIR` default `${SCRIPT_DIR}/.agtoosa/pack-queue`; override `AGTOOSA_PACK_QUEUE_DIR` |
+| Stage / salvage | `lib/registry.sh` | `registry_install` and `_install_local_pack` stage to queue; `_salvage_ship_packs_to_queue` before `ship/` wipe |
+| Merge | `lib/install.sh` | `_merge_pack_queue` + legacy `_merge_ship_staged_packs` from `install_files` |
+| Docs | `docs/AgToosa_Registry.md`, `template/Docs/AgToosa_Registry.md`, `docs/agtoosa-maintainer.md` | Two-step flow documents durable queue |
+| Tests | `tests/agtoosa.bats` | PK1–PK5 |
+
+### 2.2 Build Scope
+
+✅ Ready to proceed — Scope Boundary
+
+Files in scope: `agtoosa.sh`, `agtoosa.ps1`, `lib/registry.sh`, `lib/install.sh`, `docs/AgToosa_Registry.md`, `template/Docs/AgToosa_Registry.md`, `docs/agtoosa-maintainer.md`, `.gitignore`, `tests/agtoosa.bats`, `CHANGELOG.md`
+
+Directories in scope: `lib/`, `tests/`, `docs/`, `template/Docs/`
+
+Out of scope: `agtoosa-lock.json` auto-pinning; remote registry hosting; one-shot `--registry install --project`
+
+### 2.3 Test Plan
+
+Test plan: [`docs/AgToosa_TestPlan-DEV-018.md`](AgToosa_TestPlan-DEV-018.md)
+
+## 3. Tasks
+
+### 3.1 Task Tree
+
+- [x] **1.** Pack queue core (bash)
+  - [x] 1.1 `PACK_QUEUE_DIR` + `_ensure_pack_queue_dir` / `_pack_queue_dir_for` — _AC-001_
+  - [x] 1.2 Stage registry and local installs to queue — _AC-001_
+  - [x] 1.3 `_salvage_ship_packs_to_queue` before `rm -rf ship` — _AC-003_
+- [x] **2.** Merge on project install
+  - [x] 2.1 `_merge_packs_under_root` + `_merge_pack_queue` in `install_files` — _AC-002_
+  - [x] 2.2 Legacy `ship/packs/` merge retained — _AC-003_
+- [x] **3.** PowerShell parity
+  - [x] 3.1 Queue staging, salvage, `Install-Files` merge + lock update — _AC-005_
+- [x] **4.** Documentation
+  - [x] 4.1 Registry docs + maintainer note; `.gitignore` for `.agtoosa/` — _AC-001–AC-003_
+- [x] **5.** Tests
+  - [x] 5.1 PK1–PK5 bats — _AC-004_
+  - [x] 5.2 Run PK filter + registry smoke; record evidence — _AC-004_
+
+## ✅ Spec Approved
+
+Approved: 2026-05-24
