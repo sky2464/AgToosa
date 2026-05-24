@@ -240,8 +240,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-05-24 | 🔍 Review 🔍 Started — DEV-003 + DEV-016 — 4-persona review (uncommitted maintainer dogfood batch) | AgToosa |
 | 2026-05-24 | Review ✅ Approved — DEV-003; 0 Critical, 4 Warnings (accepted); report: docs/archived/review-DEV-003.md | AgToosa |
 | 2026-05-24 | Review ✅ Approved — DEV-016; 0 Critical, 6 Warnings (accepted); report: docs/archived/review-DEV-016.md | AgToosa |
-| 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-003 + DEV-016; smoke RG1–RG8 + GM1–GM5 all green; full suite 241/241; v4.10.0 | AgToosa |
-| 2026-05-24 | 🚀 Release 4.10 shipped — v4.10.0; DEV-003 + DEV-016 on main; version parity bash/ps1 | AgToosa |
+| 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-003 + DEV-016; smoke RG1–RG8 + GM1–GM5 all green; full suite 246/246; bundled in v4.11.0 release train | AgToosa |
 | 2026-05-24 | ✏️ /agtoosa-spec DEV-017 — Codex slash discoverability; estimate S; test plan: docs/AgToosa_TestPlan-DEV-017.md | AgToosa |
 | 2026-05-24 | 🏗️ Build complete — DEV-017 Codex prompts + generator wiring; CX1–CX5 5/5 green | AgToosa |
 | 2026-05-24 | Review ✅ Approved — DEV-017; 0 Critical; report: docs/archived/review-DEV-017.md | AgToosa |

@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-003
 > **Epic:** DEV-003 — Community Template Registry
-> **Status:** 🏁 Shipped (v4.10.0 — 2026-05-24)
+> **Status:** 🏁 Shipped (v4.11.0 — 2026-05-24)
 > **Estimate:** S
 > **Spec created:** 2026-05-24
 
