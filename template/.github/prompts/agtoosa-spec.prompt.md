@@ -14,4 +14,6 @@ Sub-command dispatch (include the sub-command after selecting this prompt):
 - `tasks` → Part 4 only: scope boundary + atomic task breakdown + test plan skeleton against an already-approved spec
 - `to-issues` → break active spec into vertical-slice GitHub issues
 
+**Phase stop:** stop at the approval gate. Do **not** run `/agtoosa-build` automatically — the user must invoke it after approval.
+
 On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

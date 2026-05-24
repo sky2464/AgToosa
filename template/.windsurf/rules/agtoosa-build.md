@@ -12,4 +12,6 @@ When executing any build or implementation work, follow `Docs/AgToosa_Build.md` 
 - Refactor only after tests pass (Refactor).
 - No file may exceed 500 lines — split before adding more code.
 - Commit after each green test cycle, not at the end.
+- Report **Terminal Evidence Contract** fields for every command and parallel subagent; unresolved exits or warnings block checkbox completion.
+- If build prerequisites fail, **stop** and instruct the user — do **not** auto-run `/agtoosa-spec`.
 - On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

@@ -1346,11 +1346,11 @@ PY
 }
 
 @test "D3: typo helper string appears in canonical AgToosa_Status.md" {
-  grep -q "Did you mean: plan, git, orphans" "$TEMPLATE_DIR/Docs/AgToosa_Status.md"
+  grep -q "Did you mean: plan, readiness, git, orphans" "$TEMPLATE_DIR/Docs/AgToosa_Status.md"
 }
 
 @test "D3: typo helper appears in 5 status platform variants" {
-  local needle='Did you mean: plan, git, orphans'
+  local needle='Did you mean: plan, readiness, git, orphans'
   for path in \
     ".claude/commands/agtoosa-status.md" \
     ".cursor/rules/agtoosa-status.mdc" \
@@ -1390,7 +1390,7 @@ PY
   grep -q ".windsurf/workflows" "$f"
   grep -q ".codex/skills" "$f"
   grep -q "Run /agtoosa-status to verify findings cleared" "$f"
-  grep -q "Did you mean: plan, git, orphans" "$f"
+  grep -q "Did you mean: plan, readiness, git, orphans" "$f"
 }
 
 # ── DEV-007 /agtoosa-help next (H1–H6) ───────────────────────────────────────
@@ -1509,6 +1509,7 @@ PY
   grep -q 'research' "$spec"
   grep -q 'plan' "$status"
   grep -q 'orphans' "$status"
+  grep -q 'readiness' "$status"
   grep -q 'next' "$help"
   ! grep -q '## Part 1' "$spec"
 }
@@ -1552,4 +1553,124 @@ PY
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/.codex/skills/agtoosa-goal/SKILL.md" ]
   [ -f "$TEST_PROJECT/.codex/skills/agtoosa-concise/SKILL.md" ]
+}
+
+# ── DEV-009 product promise alignment (R1–R8) ────────────────────────────────
+
+@test "R1: workflow docs and README do not claim Linear as PM canonical" {
+  local bad='Linear as canonical|Linear as the canonical|canonical source of truth for all project tracking|maintains project state in Linear|mirror of the Linear|synced with Linear|Linear tickets closed|reflect Linear project state'
+  local f
+  for f in "$TEMPLATE_DIR"/Docs/AgToosa_{Init,Spec,Build,Review,Ship,Task,Status,Agent,Governance,QA,Debug,Readiness}.md; do
+    if grep -qE "$bad" "$f" 2>/dev/null; then
+      echo "Stale Linear PM claim in $f"
+      grep -nE "$bad" "$f" || true
+      false
+    fi
+  done
+  ! grep -qE "$bad" README.md
+}
+
+@test "R2: README and AgToosa_Readiness separate workflow guidance from generator enforcement" {
+  grep -q 'Workflow guidance' README.md
+  grep -q 'Generator enforces' README.md
+  local r="$TEMPLATE_DIR/Docs/AgToosa_Readiness.md"
+  grep -q 'Workflow guidance vs generator enforcement' "$r"
+  grep -q 'Automatically enforced by generator' "$r"
+  grep -q 'AgToosa_Readiness.md' "$TEMPLATE_DIR/Docs/AgToosa_Agent.md"
+}
+
+@test "R3: Initial Product Readiness checklist exists in installed templates" {
+  local r="$TEMPLATE_DIR/Docs/AgToosa_Readiness.md"
+  grep -q 'Initial Product Readiness' "$r"
+  grep -q 'Context files populated' "$r"
+  grep -q 'Epics present' "$r"
+  grep -q 'approved spec' "$r"
+  grep -q 'Must ACs mapped to tests' "$r"
+  grep -q 'threat model present' "$r"
+  grep -q 'Task tree and wave plan' "$r"
+  grep -q 'Release / version parity' "$r"
+}
+
+@test "R4: AgToosa_Status defines readiness sub-command and Part 1.5 audit" {
+  local s="$TEMPLATE_DIR/Docs/AgToosa_Status.md"
+  grep -q '/agtoosa-status readiness' "$s"
+  grep -q 'Part 1.5' "$s"
+  grep -q 'AgToosa_Readiness.md' "$s"
+  grep -q 'Initial Product Readiness' "$s"
+}
+
+@test "R5: status readiness findings map to Fix with commands in Part 5.5" {
+  local s="$TEMPLATE_DIR/Docs/AgToosa_Status.md"
+  grep -q 'Failed Initial Product Readiness gate' "$s"
+  grep -q 'AgToosa_Readiness.md' "$s"
+  grep -q '/agtoosa-qa plan' "$s"
+}
+
+@test "R6: status platform variants document readiness sub-command" {
+  local needle='readiness'
+  for path in \
+    ".claude/commands/agtoosa-status.md" \
+    ".cursor/rules/agtoosa-status.mdc" \
+    ".gemini/commands/agtoosa-status.toml" \
+    ".github/prompts/agtoosa-status.prompt.md" \
+    ".windsurf/rules/agtoosa-status.md"; do
+    grep -q "$needle" "$TEMPLATE_DIR/$path" || {
+      echo "MISSING readiness sub-command in $path"
+      false
+    }
+  done
+}
+
+@test "R7: README does not overstate generator-enforced security scans" {
+  local readme='README.md'
+  ! grep -q 'Semgrep, CodeQL, Gitleaks integration' "$readme"
+  grep -q 'your AI runs the checks' "$readme"
+}
+
+@test "R8: list-template-files registers AgToosa_Readiness.md" {
+  run bash "$SCRIPT" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Readiness.md"* ]]
+}
+
+# ── Workflow reliability: phase gates and terminal evidence (W1–W4) ───────────
+
+@test "W1: spec adapters forbid auto-chaining to /agtoosa-build" {
+  local f
+  for f in \
+    "$TEMPLATE_DIR/.codex/skills/agtoosa-spec/SKILL.md" \
+    "$TEMPLATE_DIR/.cursor/rules/agtoosa-spec.mdc" \
+    "$TEMPLATE_DIR/.windsurf/rules/agtoosa-spec.md" \
+    "$TEMPLATE_DIR/.claude/commands/agtoosa-spec.md" \
+    "$TEMPLATE_DIR/.cursor/commands/agtoosa-spec.md" \
+    "$TEMPLATE_DIR/.github/prompts/agtoosa-spec.prompt.md" \
+    "$TEMPLATE_DIR/.windsurf/workflows/agtoosa-spec.md"
+  do
+    grep -qE 'do not run /agtoosa-build automatically|Do \*\*not\*\* run `/agtoosa-build` automatically|Do not run /agtoosa-build automatically' "$f" || {
+      echo "Missing phase-stop build guard in $f"
+      false
+    }
+  done
+}
+
+@test "W2: build prerequisites stop and instruct instead of auto-running spec" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Build.md"
+  grep -q 'Do \*\*not\*\* auto-run `/agtoosa-spec`' "$f"
+  grep -q 'instruct the user' "$f"
+  grep -q 'Terminal Evidence Contract' "$f"
+}
+
+@test "W3: Cursor spec rule matches canonical question cap and archived spec path" {
+  local f="$TEMPLATE_DIR/.cursor/rules/agtoosa-spec.mdc"
+  grep -q 'max \*\*4\*\* questions' "$f"
+  grep -q 'Docs/archived/spec-\[story-id\].md' "$f"
+  ! grep -q 'Never skip the 6 forcing questions' "$f"
+}
+
+@test "W4: AgToosa_Agent defines phase stop and terminal evidence contracts" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Agent.md"
+  grep -q 'Phase Stop Contract' "$f"
+  grep -q 'Terminal Evidence Contract' "$f"
+  grep -q 'Do \*\*not\*\* invoke or chain into `/agtoosa-build`' "$f"
+  grep -q 'exit code' "$f"
 }

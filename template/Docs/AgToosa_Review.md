@@ -13,23 +13,19 @@
 ## Objective
 Ensure code quality, security, and simplicity through multi-persona review.
 
-> **Prerequisites:** `/agtoosa-build` must be complete. Verify that the full test suite passes and the Story status is `In Progress` in Linear (not `Todo`). If tests are failing or no build artifact exists, run `/agtoosa-build test` first.
+> **Prerequisites:** `/agtoosa-build` must be complete. Verify that the full test suite passes and the Story status in `Docs/Master-Plan.md` is `In Progress` (not `Todo`). If tests are failing or no build artifact exists, **stop** and instruct the user to run `/agtoosa-build test`. Do **not** auto-run `/agtoosa-build`.
+
+### Terminal Evidence Contract
+
+> See `Docs/AgToosa_Agent.md` → **Terminal Evidence Contract** for the full rules.
+
+Each reviewer persona (or parallel subagent) must report command run, exit code, pass/fail, warnings, errors, changed files, and next action for every test, scan, or command executed. Nonzero exits and tool warnings block a 🟢 Passed verdict unless explicitly accepted with evidence. The orchestrator summarizes unresolved terminal output before presenting the review approval gate.
 
 ### Part 1 — Virtual Specialist Reviews
 
 **Before starting reviews:**
-- Transition the Story issue status to `In Review` in Linear.
 - Update `Docs/Master-Plan.md`: set the Story row status to `In Review`.
-- Post a Linear comment on the Story issue:
-
-    ```
-    Review 🔍 Started
-    Date: [YYYY-MM-DD HH:MM]
-
-    Code review started. Running 4-persona review (Security, Eng Manager, CEO, QA Lead).
-
-    Next: Review verdict — pass unblocks /agtoosa-ship; any 🔴 Critical blocks it.
-    ```
+- Add an **Update Log** entry: `YYYY-MM-DD HH:MM — /agtoosa-review — Review 🔍 Started — [Story ID] — 4-persona review running.`
 
 1.  **Security Officer:** OWASP Top 10 + STRIDE audit; SAST/DAST/Secrets scanning (Semgrep, CodeQL, Gitleaks); verify threat model from Spec.
 
@@ -49,7 +45,7 @@ Ensure code quality, security, and simplicity through multi-persona review.
     - Identify any significant architectural decisions made in this change that lack a corresponding ADR in `Docs/adr/`.
     - Create missing ADRs using `Docs/ADR-FORMAT.md` as a template, or flag as 🟡 Warning if creation is out of scope.
 
-3.  **CEO / Product Owner:** Verify feature completeness against the Goal Contract, Linear charter, and acceptance criteria.
+3.  **CEO / Product Owner:** Verify feature completeness against the Goal Contract, Project Charter in `Docs/Master-Plan.md`, and acceptance criteria.
 
     **Goal Contract Alignment:**
     - Read the active spec's `### Goal Contract`.
@@ -99,28 +95,10 @@ Ensure code quality, security, and simplicity through multi-persona review.
 
 6.  **Review Report:** Structured findings from all 4 personas — 🔴 Critical / 🟡 Warning / 🟢 Passed. Every 🔴 Critical must include the Iron Law root cause. Include a Goal Contract alignment row. Block `/agtoosa-ship` if any 🔴 Critical findings remain.
 
-    **Linear update (after verdict):**
-    - If **all clear** (no unresolved 🔴 Critical): post a comment on the Story issue:
+    **Master-Plan update (after verdict):**
+    - If **all clear** (no unresolved 🔴 Critical): add **Update Log** entry `Review ✅ Approved` (per `Docs/AgToosa_Governance.md`). Keep Active Cycle status `In Review` until `/agtoosa-ship` completes.
 
-        ```
-        Review ✅ Passed
-        Date: [YYYY-MM-DD HH:MM]
-
-        All 4 personas passed. No 🔴 Critical findings. [N] 🟡 Warnings (accepted / fixed — list them).
-
-        Next: /agtoosa-ship to deploy.
-        ```
-
-    - If **blocked** (unresolved 🔴 Critical): post a comment and transition the Story back to `In Progress`:
-
-        ```
-        Review 🔴 Blocked
-        Date: [YYYY-MM-DD HH:MM]
-
-        [N] 🔴 Critical finding(s) must be resolved before shipping: [brief list]. Story reset to In Progress.
-
-        Next: /agtoosa-build tdd to address findings, then re-run /agtoosa-review.
-        ```
+    - If **blocked** (unresolved 🔴 Critical): add **Update Log** entry `Review 🔴 Blocked: [brief list]`; set Active Cycle status back to `In Progress`.
 
 ### Part 4 — Cross-Platform Second Opinion (`/agtoosa-review cross`)
 

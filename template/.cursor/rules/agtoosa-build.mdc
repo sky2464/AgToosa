@@ -14,5 +14,7 @@ When executing `/agtoosa-build` or any implementation work, follow `Docs/AgToosa
 - **Atomic tasks** — break the spec into the smallest independently testable units before coding.
 - **No file > 500 lines** — refactor immediately if a file approaches the limit.
 - Run SAST/DAST (Semgrep, CodeQL, Gitleaks) after each task, not just at the end.
-- Update the task list in Linear and `Docs/Master-Plan.md` as tasks complete.
+- Report **Terminal Evidence Contract** fields for every command and parallel subagent; unresolved exits or warnings block checkbox completion.
+- If build prerequisites fail, **stop** and instruct the user — do **not** auto-run `/agtoosa-spec`.
+- Update `Docs/Master-Plan.md` Active Tasks checkboxes and Update Log as tasks complete.
 - On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
