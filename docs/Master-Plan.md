@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `Docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-05-24 (DEV-012 build)
+> **Last updated:** 2026-05-24 (DEV-012 shipped v4.6.0)
 
 ## Project Charter
 
@@ -9,19 +9,20 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Milestone | `v4.5.0` (shipped 2026-05-24) |
-| Active cycle | Release 4.6 (DEV-012) |
+| Milestone | `v4.6.0` (shipped 2026-05-24) |
+| Active cycle | _(none — Release 4.6 closed)_ |
 | Cycle capacity | `40 story points` |
-| Current phase | 🚢 Ship (review passed) |
+| Current phase | 🚢 Ship (cycle complete) |
 
 ## Active Cycle
 
 > Stories committed to the current sprint/cycle.
-> **Progress:** `▰▰▰▰▰▰▰▰ 11/11` ← updated by `/agtoosa-build` after each task completes
+> **Progress:** `▱▱▱▱▱▱▱▱ 0/0` ← updated by `/agtoosa-build` after each task completes
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-012 | Feature: GitHub Slash Command Routing | Feature | S | 🔍 In Review | 11/11 |
+
+*(Empty — run `/agtoosa-spec` to enroll the next story.)*
 
 Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blocked · 🔧 Awaiting Manual · 🏁 Shipped
 
@@ -30,23 +31,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-**DEV-012** — [spec-DEV-012.md](archived/spec-DEV-012.md)
-
-- [x] **1.** GitHub prompt metadata
-  - [x] 1.1 Add explicit `name: agtoosa-*` frontmatter to all GitHub prompt adapters
-  - [x] 1.2 Verify `agtoosa-spec.prompt.md` keeps phase-stop and approval-gate text
-- [x] **2.** GitHub routing guardrails
-  - [x] 2.1 Update Copilot instructions with `/agtoosa-*` workflow-routing rule
-  - [x] 2.2 Update AgToosa GitHub agent with no-`/create-skill` rule
-- [x] **3.** Skill synthesis dedupe
-  - [x] 3.1 Reserve `agtoosa-*` names in Init/Spec synthesis docs
-  - [x] 3.2 Update AgToosa_Skills.md and agtoosa-spec Codex skill
-- [x] **4.** Tests
-  - [x] 4.1 G1 prompt `name` metadata
-  - [x] 4.2 G2 no `/create-skill` routing
-  - [x] 4.3 G3 reserved workflow names in synthesis docs
-  - [x] 4.4 G4 agtoosa-spec prompt contract
-  - [x] 4.5 G5 suite + full bats 212/212 green
+*(Empty — DEV-012 shipped; archived at docs/archived/spec-DEV-012.md.)*
 
 ## Manual / Deferred Tasks
 
@@ -98,7 +83,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Scope:** Markdown specifications and rules files across Claude, Gemini, Cursor, Windsurf, Copilot, and OpenCode under `template/`.
     *   **Success Criteria:** Perfect parity of phase commands and zero-drift version badges across all platform templates.
 
-    *   **Last shipped:** DEV-011 — product vs dogfood boundary → `docs/archived/spec-DEV-011.md`
+    *   **Last shipped:** DEV-012 — GitHub slash-command routing → `docs/archived/spec-DEV-012.md`
 
 *   **DEV-003 - Epic: Community Template Registry**
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
@@ -108,7 +93,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 *   **DEV-004 - Epic: Testing & QA Harness**
     *   **Goal:** Comprehensive end-to-end integration and version verification suites validating the robustness of the entire framework.
     *   **Scope:** `tests/agtoosa.bats` and CI regression pipelines.
-    *   **Success Criteria:** 100% green coverage on 207+ platform scenarios and version checks on every release step.
+    *   **Success Criteria:** 100% green coverage on 212+ platform scenarios and version checks on every release step.
     *   **Last shipped:** DEV-005 — M1–M4 bats + CHANGELOG hygiene → `docs/archived/spec-DEV-005.md`
 
 ## Completed This Cycle
@@ -125,6 +110,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-009 | Feature: Initial product promise alignment and readiness gates | 2026-05-23 | [spec-DEV-009.md](archived/spec-DEV-009.md) · [review-DEV-009.md](archived/review-DEV-009.md) |
 | DEV-010 | Feature: Workflow reliability (phase gates & terminal evidence) | 2026-05-24 | [spec-DEV-010.md](archived/spec-DEV-010.md) · [review-DEV-010.md](archived/review-DEV-010.md) |
 | DEV-011 | Feature: AgToosa Product vs Dogfood Boundary | 2026-05-24 | [spec-DEV-011.md](archived/spec-DEV-011.md) · [review-DEV-011.md](archived/review-DEV-011.md) |
+| DEV-012 | Feature: GitHub Slash Command Routing | 2026-05-24 | [spec-DEV-012.md](archived/spec-DEV-012.md) · [review-DEV-012.md](archived/review-DEV-012.md) |
 
 ## Update Log
 
@@ -190,3 +176,5 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-05-24 | 🏗️ Build complete — DEV-012 GitHub slash routing; G1–G5 5/5 green; full suite 212/212 green | AgToosa |
 | 2026-05-24 | 🔍 Review 🔍 Started — DEV-012 — 4-persona review running | AgToosa |
 | 2026-05-24 | Review ✅ Approved — DEV-012; 0 Critical, 5 Warnings (1 fixed, 4 accepted); report: docs/archived/review-DEV-012.md | AgToosa |
+| 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-012; smoke G1–G5 5/5 green; full suite 212/212; v4.6.0; archived spec + review | AgToosa |
+| 2026-05-24 | 🚀 Release 4.6 shipped — v4.6.0; DEV-012 on main; version parity bash/ps1 | AgToosa |

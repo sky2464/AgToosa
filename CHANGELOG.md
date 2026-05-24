@@ -13,6 +13,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [4.6.0] — 2026-05-24
+
+Release **4.6** cycle: DEV-012 (212 bats tests).
+
+### Added
+
+- **DEV-012 — GitHub slash-command routing.** Explicit `name: agtoosa-*` frontmatter on all 14 `.github/prompts/agtoosa-*.prompt.md` adapters; Copilot instructions and AgToosa GitHub agent route `/agtoosa-*` to workflow prompts (not `/create-skill`); reserved `agtoosa-*` names in Init/Spec/Skills synthesis docs; G1–G5 bats coverage. Smoke: G1–G5 all green.
+
+---
+
 ## [4.5.0] — 2026-05-24
 
 Release **4.5** cycle: DEV-011 (207 bats tests).

@@ -9,6 +9,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ### Added
 
+- 2026-05-24 — feature — GitHub slash-command routing: prompt `name` metadata, `/agtoosa-*` Copilot routing guardrails, reserved workflow skill names; G1–G5 bats (DEV-012) — `docs/archived/spec-DEV-012.md`
+
+### Added (prior)
+
 - 2026-05-24 — feature — product vs dogfood boundary: Generated Project Mode + Maintainer Dogfood Mode; B1–B5 bats (DEV-011) — `docs/archived/spec-DEV-011.md`
 
 ### Added (prior)
