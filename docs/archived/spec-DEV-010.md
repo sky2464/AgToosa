@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-010
 > **Epic:** DEV-002 — Workflow Templates
-> **Status:** In Progress
+> **Status:** 🔍 In Review (review passed — pending ship)
 > **Estimate:** S
 > **Spec created:** 2026-05-23
 
@@ -59,3 +59,7 @@ No generator/runtime changes — markdown-only guardrails per ADR-003.
 
 **Wave 1 (parallel):** 1.1, 2.1, 2.3
 **Wave 2 (sequential):** 1.2, 2.2, 3.1
+
+## ✅ Spec Approved
+
+Approved: 2026-05-24 01:50

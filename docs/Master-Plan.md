@@ -156,3 +156,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-05-23 | Review ✅ Approved — DEV-009; 0 Critical, 4 Warnings (accepted); report: docs/archived/review-DEV-009.md | AgToosa |
 | 2026-05-23 | 🚀 Ship 🚀 Deployed — DEV-009; smoke R1–R8 + D3 10/10 green; v4.3.0; archived spec + review | AgToosa |
 | 2026-05-23 | 🚀 Release 4.3 shipped — v4.3.0; DEV-009 on main; version parity bash/ps1 | AgToosa |
+| 2026-05-24 | 🏗️ Build 🏗️ Started — DEV-010, 7 tasks; scope: template/Docs, platform adapters, tests/agtoosa.bats | AgToosa |
+| 2026-05-24 | 🏗️ Build complete — DEV-010 phase gates + terminal evidence; W1–W5 bats green; full suite 202/202 green; version pins 4.3.0 | AgToosa |
+| 2026-05-24 | 🔍 Review 🔍 Started — DEV-010 — 4-persona review running | AgToosa |
+| 2026-05-24 | Review ✅ Approved — DEV-010; 0 Critical, 5 Warnings (accepted); report: docs/archived/review-DEV-010.md | AgToosa |

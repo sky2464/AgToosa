@@ -7,6 +7,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+### Added
+
+- **DEV-010 — Workflow reliability (phase gates and terminal evidence).** Shared Phase Stop and Terminal Evidence contracts in `AgToosa_Agent.md`; wired into Spec, Build, Review, and QA workflow docs; platform adapter parity for spec and build entry points; W1–W5 bats coverage.
+
 ### Planned
 
 - `/agtoosa-ship check` cleanup — separate follow-up story to decide whether readiness-gate-only sub-command references should remain or be folded into `/agtoosa-ship`.

@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v4.2.0" ]]
+  [[ "$output" == "AgToosa v4.3.0" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1249,7 +1249,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "4.2.0" ]
+  [ "$ver" = "4.3.0" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1260,7 +1260,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"4.2.0"* ]]
+  [[ "$output" == *"4.3.0"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -1633,7 +1633,7 @@ PY
   [[ "$output" == *"Docs/AgToosa_Readiness.md"* ]]
 }
 
-# ── Workflow reliability: phase gates and terminal evidence (W1–W4) ───────────
+# ── Workflow reliability: phase gates and terminal evidence (W1–W5) ───────────
 
 @test "W1: spec adapters forbid auto-chaining to /agtoosa-build" {
   local f
@@ -1673,4 +1673,26 @@ PY
   grep -q 'Terminal Evidence Contract' "$f"
   grep -q 'Do \*\*not\*\* invoke or chain into `/agtoosa-build`' "$f"
   grep -q 'exit code' "$f"
+}
+
+@test "W5: build adapters stop on prerequisite failure and require terminal evidence" {
+  local f
+  for f in \
+    "$TEMPLATE_DIR/.codex/skills/agtoosa-build/SKILL.md" \
+    "$TEMPLATE_DIR/.cursor/rules/agtoosa-build.mdc" \
+    "$TEMPLATE_DIR/.windsurf/rules/agtoosa-build.md" \
+    "$TEMPLATE_DIR/.claude/commands/agtoosa-build.md" \
+    "$TEMPLATE_DIR/.cursor/commands/agtoosa-build.md" \
+    "$TEMPLATE_DIR/.github/prompts/agtoosa-build.prompt.md" \
+    "$TEMPLATE_DIR/.windsurf/workflows/agtoosa-build.md"
+  do
+    grep -qE 'do not auto-run `/agtoosa-spec`|do not auto-run /agtoosa-spec|do \*\*not\*\* auto-run `/agtoosa-spec`|Do \*\*not\*\* auto-run' "$f" || {
+      echo "Missing prerequisite stop guard in $f"
+      false
+    }
+    grep -q 'Terminal Evidence' "$f" || {
+      echo "Missing terminal evidence in $f"
+      false
+    }
+  done
 }
