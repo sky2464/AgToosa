@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `Docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-05-24 (/agtoosa-review DEV-022)
+> **Last updated:** 2026-05-24 (merge release/v4.11.0 → main; DEV-019 build on main)
 
 ## Project Charter
 
@@ -47,6 +47,14 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
   - [x] 4.1 Add bats coverage for `--list-template-files` and fresh install copy — _Requirements: AC-001, AC-007_
   - [x] 4.2 Add bats coverage for update preservation and instruction references — _Requirements: AC-003, AC-004, AC-006, AC-007_
   - [x] 4.3 Run DEV-019 filter and relevant install/update smoke tests — _Requirements: AC-007_
+
+<!--
+**DEV-018 — Registry pack queue** (spec: `docs/archived/spec-DEV-018.md`) — shipped 2026-05-24 v4.12.0
+
+**DEV-020 — Registry install version pinning** (spec: `docs/archived/spec-DEV-020.md`) — shipped 2026-05-24 v4.12.0
+
+**DEV-021 — E2E pinned registry install test (RV6)** (spec: `docs/archived/spec-DEV-021.md`) — shipped 2026-05-24 v4.12.1
+-->
 
 <!--
 **DEV-016 — Gemini slash command routing** (spec: `docs/archived/spec-DEV-016.md`) — shipped 2026-05-24
@@ -128,12 +136,16 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
     *   **Last shipped:** DEV-015 — Windsurf slash command routing → `docs/archived/spec-DEV-015.md`
     *   **Last shipped:** DEV-017 — Codex AgToosa slash discoverability → `docs/archived/spec-DEV-017.md`
-    *   **Current:** _(pick next story via `/agtoosa-spec`)_
+    *   **Next:** DEV-019 — Master Architecture document → `docs/archived/spec-DEV-019.md`
 
 *   **DEV-003 - Epic: Community Template Registry**
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
     *   **Scope:** Pack registry parsing, cached JSON validation, SHA-256 integrity rules, and command staging wrappers in `lib/registry.sh`.
     *   **Success Criteria:** Secure Offline/Online installation of approved community templates with zero path-traversal risk.
+    *   **Last shipped:** DEV-021 — E2E pinned install test (RV6) → `docs/archived/spec-DEV-021.md`
+    *   **Last shipped:** DEV-020 — registry `@version` install enforcement → `docs/archived/spec-DEV-020.md`
+    *   **Last shipped:** DEV-018 — durable pack queue → `docs/archived/spec-DEV-018.md`
+    *   **Current:** _(pick next story via `/agtoosa-spec`)_
 
 *   **DEV-004 - Epic: Testing & QA Harness**
     *   **Goal:** Comprehensive end-to-end integration and version verification suites validating the robustness of the entire framework.
@@ -162,6 +174,9 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-003 | Fix: Registry prod-readiness (audit closure) | 2026-05-24 | [spec-DEV-003.md](archived/spec-DEV-003.md) · [review-DEV-003.md](archived/review-DEV-003.md) |
 | DEV-016 | Fix: Gemini slash command routing | 2026-05-24 | [spec-DEV-016.md](archived/spec-DEV-016.md) · [review-DEV-016.md](archived/review-DEV-016.md) |
 | DEV-017 | Fix: Codex AgToosa slash discoverability | 2026-05-24 | [spec-DEV-017.md](archived/spec-DEV-017.md) · [review-DEV-017.md](archived/review-DEV-017.md) |
+| DEV-018 | Fix: Registry pack queue | 2026-05-24 | [spec-DEV-018.md](archived/spec-DEV-018.md) · [review-DEV-018.md](archived/review-DEV-018.md) |
+| DEV-020 | Fix: Registry install version pinning | 2026-05-24 | [spec-DEV-020.md](archived/spec-DEV-020.md) · [review-DEV-020.md](archived/review-DEV-020.md) |
+| DEV-021 | Fix: E2E pinned registry install test (RV6) | 2026-05-24 | [spec-DEV-021.md](archived/spec-DEV-021.md) · [review-DEV-021.md](archived/review-DEV-021.md) |
 
 ## Update Log
 
@@ -209,6 +224,12 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-05-23 | 🚀 Ship 🚀 Deployed — DEV-009; smoke R1–R8 + D3 10/10 green; v4.3.0; archived spec + review | AgToosa |
 | 2026-05-23 | 🚀 Release 4.3 shipped — v4.3.0; DEV-009 on main; version parity bash/ps1 | AgToosa |
 | 2026-05-24 | 🏗️ Build 🏗️ Started — DEV-010, 7 tasks; scope: template/Docs, platform adapters, tests/agtoosa.bats | AgToosa |
+| 2026-05-24 | 🔍 Review ✅ Approved — DEV-020; 0 Critical, 6 Warnings (accepted); report: docs/archived/review-DEV-020.md | AgToosa |
+| 2026-05-24 | 🔍 Review 🔍 Started — DEV-020 — 4-persona review running | AgToosa |
+| 2026-05-24 | 🏗️ Build complete — DEV-020 registry @version pinning; RV1–RV5 5/5 green | AgToosa |
+| 2026-05-24 | ✅ Spec approved — DEV-020; estimate S; Release 4.12; spec: docs/archived/spec-DEV-020.md | AgToosa |
+| 2026-05-24 | 🏗️ Build started — DEV-020, 14 tasks; scope: lib/registry.sh, agtoosa.ps1, registry docs, tests/agtoosa.bats | AgToosa |
+| 2026-05-24 | ✏️ /agtoosa-spec DEV-020 — registry install version pinning; estimate S; enrolled Release 4.12; 14 tasks; spec: docs/archived/spec-DEV-020.md | AgToosa |
 | 2026-05-24 | 🏗️ Build complete — DEV-010 phase gates + terminal evidence; W1–W5 bats green; full suite 202/202 green; version pins 4.3.0 | AgToosa |
 | 2026-05-24 | 🔍 Review 🔍 Started — DEV-010 — 4-persona review running | AgToosa |
 | 2026-05-24 | Review ✅ Approved — DEV-010; 0 Critical, 5 Warnings (accepted); report: docs/archived/review-DEV-010.md | AgToosa |
@@ -264,8 +285,22 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-05-24 | Review ✅ Approved — DEV-017; 0 Critical; report: docs/archived/review-DEV-017.md | AgToosa |
 | 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-017; smoke CX1–CX5 5/5 green; full suite 246/246; v4.11.0; archived spec + review | AgToosa |
 | 2026-05-24 | 🚀 Release 4.11 shipped — v4.11.0; DEV-017 on main; version parity bash/ps1 | AgToosa |
+| 2026-05-24 | 🏗️ Build 🏗️ Started — DEV-018, 10 tasks; scope: agtoosa.sh, agtoosa.ps1, lib/registry.sh, lib/install.sh, registry docs, tests/agtoosa.bats | AgToosa |
+| 2026-05-24 | 🏗️ Build complete — DEV-018 pack queue; PK1–PK5 5/5 green; PK+registry filter 14/14 green; implementation in b273105; full suite has pre-existing/teardown flakes (ship/ not empty) | AgToosa |
+| 2026-05-24 | 🔍 Review 🔍 Started — DEV-018 — 4-persona review (Security, Eng Manager, CEO, QA Lead) | AgToosa |
+| 2026-05-24 | Review ✅ Approved — DEV-018; 0 Critical, 5 Warnings (accepted); report: docs/archived/review-DEV-018.md | AgToosa |
+| 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-020; smoke RV1–RV5 5/5 green; registry slice 21/21; v4.12.0; archived spec + review | AgToosa |
+| 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-018; smoke PK1–PK5 5/5 green; bundled in v4.12.0 release train | AgToosa |
+| 2026-05-24 | 🚀 Release 4.12 shipped — v4.12.0; DEV-018 + DEV-020 on release/v4.11.0 branch; version parity bash/ps1 | AgToosa |
+| 2026-05-24 | ✏️ /agtoosa-spec DEV-021 — E2E pinned registry install (RV6); estimate S; spec: docs/archived/spec-DEV-021.md | AgToosa |
+| 2026-05-24 | ✅ Spec approved — DEV-021; estimate S | AgToosa |
+| 2026-05-24 | 🏗️ Build complete — DEV-021; RV6 E2E pinned install; RV1–RV6 6/6 green | AgToosa |
+| 2026-05-24 | ✅ Review passed — DEV-021; RV6 E2E; 0 Critical; review: docs/archived/review-DEV-021.md | AgToosa |
+| 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-021; smoke RV6 green; RV1–RV6 6/6; v4.12.1; archived spec + review | AgToosa |
+| 2026-05-24 | ✏️ /agtoosa-spec DEV-019 — Master Architecture document; estimate M; added to Backlog; test plan: docs/AgToosa_TestPlan-DEV-019.md | AgToosa |
 | 2026-05-24 | 🔍 Review 🔍 Started — DEV-022 — 4-persona review (PS1 publish + offline cache) | AgToosa |
 | 2026-05-24 | Review ✅ Approved — DEV-022; 0 Critical; report: docs/archived/review-DEV-022.md | AgToosa |
 | 2026-05-24 | ✅ Spec approved — DEV-019; estimate M; Release 4.13; spec: docs/archived/spec-DEV-019.md | AgToosa |
 | 2026-05-24 | 🏗️ Build started — DEV-019, 11 tasks; scope: template/Docs, root agent instructions, lib/config.sh, tests/agtoosa.bats | AgToosa |
 | 2026-05-24 | 🏗️ Build complete — DEV-019 Master Architecture document; MA1–MA8 focused coverage green; bash syntax green | AgToosa |
+| 2026-05-24 | 🔀 Merge release/v4.11.0 → main — DEV-018/020/021 release train integrated with DEV-019 build on main | AgToosa |

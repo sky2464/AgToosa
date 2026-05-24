@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v4.11.0" ]]
+  [[ "$output" == "AgToosa v4.12.1" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1163,19 +1163,110 @@ PY
   [ "$status" -eq 0 ]
 }
 
-# ── Registry: local pack install staging ─────────────────────
-@test "registry install local pack stages files and keeps ship/" {
+# ── Registry: pack queue (DEV-018) ───────────────────────────
+@test "PK1: registry install local pack stages files in pack queue" {
   local mock_pack="$BATS_TEST_DIRNAME/fixtures/mock-pack"
+  local queue_dir
+  queue_dir="$(mktemp -d)"
 
-  # Stub stdin to answer "Y" to the Continue? prompt.
-  run bash -c "echo Y | bash '$SCRIPT' --registry install '$mock_pack'"
-  # Should not error (pack exists and has only .md files).
+  run env AGTOOSA_PACK_QUEUE_DIR="$queue_dir" bash -c "echo Y | bash '$SCRIPT' --registry install '$mock_pack'"
   [ "$status" -eq 0 ]
+  [ -d "$queue_dir/mock-pack" ]
+  [ -f "$queue_dir/mock-pack/workflow.md" ]
+  [ ! -f "$BATS_TEST_DIRNAME/../ship/packs/mock-pack/workflow.md" ]
 
-  # ship/ must remain (KEEP_SHIP=true must have been set).
-  local ship_dir="$BATS_TEST_DIRNAME/../ship"
-  [ -d "$ship_dir/packs/mock-pack" ]
-  [ -f "$ship_dir/packs/mock-pack/workflow.md" ]
+  rm -rf "$queue_dir"
+}
+
+@test "PK2: _merge_pack_queue merges queued pack into project" {
+  local queue_dir project_dir
+  queue_dir="$(mktemp -d)"
+  project_dir="$(mktemp -d)"
+  mkdir -p "$queue_dir/test-pack"
+  echo "# Pack workflow" > "$queue_dir/test-pack/workflow.md"
+  printf '{"name":"test-pack","version":"1.0.0","sha256":"abc","installed_at":"2026-05-04T00:00:00Z","source":"registry"}\n' \
+    > "$queue_dir/test-pack/.pack-meta.json"
+
+  PACK_QUEUE_DIR="$queue_dir"
+  PROJECT_PATH="$project_dir"
+  AGTOOSA_VERSION="4.12.0"
+  GREEN="" YELLOW="" NC=""
+  source "$BATS_TEST_DIRNAME/../lib/install.sh"
+
+  _merge_pack_queue
+  [ -f "$project_dir/workflow.md" ]
+  [ ! -d "$queue_dir/test-pack" ]
+  if [[ ${#_PACK_LOCK_ENTRIES[@]} -gt 0 ]]; then
+    _write_lock_file "${_PACK_LOCK_ENTRIES[@]}"
+  fi
+  [ -f "$project_dir/Docs/agtoosa-lock.json" ]
+
+  rm -rf "$queue_dir" "$project_dir"
+}
+
+@test "PK3: _salvage_ship_packs_to_queue moves legacy ship/packs into queue" {
+  local queue_dir ship_dir
+  queue_dir="$(mktemp -d)"
+  ship_dir="$(mktemp -d)/ship"
+  mkdir -p "$ship_dir/packs/salvage-test"
+  echo "# Salvaged" > "$ship_dir/packs/salvage-test/workflow.md"
+
+  PACK_QUEUE_DIR="$queue_dir"
+  SHIP_DIR="$ship_dir"
+  source "$BATS_TEST_DIRNAME/../lib/registry.sh"
+
+  _salvage_ship_packs_to_queue
+  [ -d "$queue_dir/salvage-test" ]
+  [ -f "$queue_dir/salvage-test/workflow.md" ]
+  [ ! -d "$ship_dir/packs/salvage-test" ]
+
+  rm -rf "$(dirname "$ship_dir")" "$queue_dir"
+}
+
+@test "PK4: pack queue survives ship wipe and merges on install_files" {
+  local mock_pack="$BATS_TEST_DIRNAME/fixtures/mock-pack"
+  local queue_dir project_dir ship_dir
+  queue_dir="$(mktemp -d)"
+  project_dir="$(mktemp -d)"
+  ship_dir="$(mktemp -d)/ship"
+
+  run env AGTOOSA_PACK_QUEUE_DIR="$queue_dir" bash -c "echo Y | bash '$SCRIPT' --registry install '$mock_pack'"
+  [ "$status" -eq 0 ]
+  [ -f "$queue_dir/mock-pack/workflow.md" ]
+
+  PACK_QUEUE_DIR="$queue_dir"
+  SHIP_DIR="$ship_dir"
+  PROJECT_PATH="$project_dir"
+  AGTOOSA_VERSION="4.12.0"
+  GREEN="" YELLOW="" NC=""
+  COPIED=0
+  SKIPPED=0
+  USE_CURSOR=false USE_WINDSURF=false USE_CLAUDE=false USE_GEMINI=false
+  USE_COPILOT=false USE_OPENCODE=false USE_VSCODE=false
+  source "$BATS_TEST_DIRNAME/../lib/registry.sh"
+  source "$BATS_TEST_DIRNAME/../lib/install.sh"
+
+  _salvage_ship_packs_to_queue
+  rm -rf "$ship_dir"
+  mkdir -p "$ship_dir"
+  install_files
+
+  [ -f "$project_dir/workflow.md" ]
+  [ ! -d "$queue_dir/mock-pack" ]
+
+  rm -rf "$queue_dir" "$project_dir" "$(dirname "$ship_dir")"
+}
+
+@test "PK5: registry install local pack persists in durable queue" {
+  local mock_pack="$BATS_TEST_DIRNAME/fixtures/mock-pack"
+  local queue_dir
+  queue_dir="$(mktemp -d)"
+
+  run env AGTOOSA_PACK_QUEUE_DIR="$queue_dir" bash -c "echo Y | bash '$SCRIPT' --registry install '$mock_pack'"
+  [ "$status" -eq 0 ]
+  [ -f "$queue_dir/mock-pack/workflow.md" ]
+
+  rm -rf "$queue_dir"
 }
 
 # ── Registry: list/search/info using local cache fixture ─────
@@ -1349,6 +1440,119 @@ PY
   [ "$count" -eq 8 ]
 }
 
+# ── DEV-020: Registry install version pinning (RV1–RV5) ────────
+@test "RV1: registry_resolve_pack_entry matches pinned version" {
+  run bash -c "
+    SHIP_DIR=/tmp
+    source '$BATS_TEST_DIRNAME/../lib/registry.sh'
+    registry=\$(cat '$BATS_TEST_DIRNAME/fixtures/registry.json')
+    registry_resolve_pack_entry \"\$registry\" 'ml-pipeline' '1.2.0'
+  "
+  [ "$status" -eq 0 ]
+  echo "$output" | jq -e '.name == "ml-pipeline" and .version == "1.2.0"' >/dev/null
+}
+
+@test "RV2: pinned registry install fails when version not in index" {
+  local cache_dir
+  cache_dir="$(mktemp -d)"
+  cp "$BATS_TEST_DIRNAME/fixtures/registry.json" "$cache_dir/registry.json"
+  touch "$cache_dir/registry.json"
+
+  run bash -c "echo Y | AGTOOSA_REGISTRY_CACHE_DIR='$cache_dir' bash '$SCRIPT' --registry install 'ml-pipeline@9.9.9'"
+  rm -rf "$cache_dir"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"9.9.9"* ]]
+  [[ "$output" == *"1.2.0"* ]] || [[ "$output" == *"available"* ]]
+}
+
+@test "RV3: registry_resolve_pack_entry resolves unpinned install by name" {
+  run bash -c "
+    SHIP_DIR=/tmp
+    source '$BATS_TEST_DIRNAME/../lib/registry.sh'
+    registry=\$(cat '$BATS_TEST_DIRNAME/fixtures/registry.json')
+    registry_resolve_pack_entry \"\$registry\" 'ml-pipeline' ''
+  "
+  [ "$status" -eq 0 ]
+  echo "$output" | jq -e '.name == "ml-pipeline" and .version == "1.2.0"' >/dev/null
+}
+
+@test "RV4: registry_install enforces pack_version via resolve helper" {
+  run grep -q 'registry_resolve_pack_entry' "$BATS_TEST_DIRNAME/../lib/registry.sh"
+  [ "$status" -eq 0 ]
+  run grep -q 'select(.name == \$n and .version == \$v)' "$BATS_TEST_DIRNAME/../lib/registry.sh"
+  [ "$status" -eq 0 ]
+  run grep -q 'pack_version' "$BATS_TEST_DIRNAME/../lib/registry.sh"
+  [ "$status" -eq 0 ]
+}
+
+@test "RV5: PS1 registry install fails closed on version mismatch" {
+  if ! command -v pwsh &>/dev/null; then
+    skip "pwsh not available"
+  fi
+  local fixture
+  fixture="$(mktemp)"
+  printf '%s\n' '[{"name":"solo","description":"solo pack","author":"a","version":"1.0.0","url":"http://x","sha256":"abc","verified":false}]' > "$fixture"
+  run pwsh -NoProfile -Command "
+    \$json = Get-Content -Raw '$fixture'
+    \$packs = @(\$json | ConvertFrom-Json)
+    \$packName = 'solo'
+    \$packVersion = '9.9.9'
+    \$pack = \$packs | Where-Object { \$_.name -eq \$packName -and \$_.version -eq \$packVersion } | Select-Object -First 1
+    if (\$pack) { exit 1 }
+    \$available = (\$packs | Where-Object { \$_.name -eq \$packName } | ForEach-Object { \$_.version }) -join ', '
+    if ([string]::IsNullOrEmpty(\$available)) { exit 1 }
+    exit 0
+  "
+  rm -f "$fixture"
+  [ "$status" -eq 0 ]
+  run grep -q "not found in registry (available:" "$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  [ "$status" -eq 0 ]
+  run bash -c "! grep -q 'Proceeding with registry version' '$BATS_TEST_DIRNAME/../agtoosa.ps1'"
+  [ "$status" -eq 0 ]
+}
+
+@test "RV6: pinned registry install E2E stages pack with correct version" {
+  local workdir cache_dir queue_dir tarball sha url registry_json
+  workdir="$(mktemp -d)"
+  cache_dir="$(mktemp -d)"
+  queue_dir="$(mktemp -d)"
+
+  tarball="${workdir}/mock-pack-1.0.0.tar.gz"
+  tar -czf "$tarball" -C "$BATS_TEST_DIRNAME/fixtures/mock-pack" .
+
+  if command -v sha256sum &>/dev/null; then
+    sha="$(sha256sum "$tarball" | awk '{print $1}')"
+  else
+    sha="$(shasum -a 256 "$tarball" | awk '{print $1}')"
+  fi
+
+  url="file://${tarball}"
+
+  registry_json="$(jq -n \
+    --arg name "mock-pack" \
+    --arg description "E2E test pack" \
+    --arg author "agtoosa" \
+    --arg version "1.0.0" \
+    --arg url "$url" \
+    --arg sha256 "$sha" \
+    '[{name: $name, description: $description, author: $author, version: $version, url: $url, sha256: $sha256, verified: true}]')"
+
+  printf '%s\n' "$registry_json" > "$cache_dir/registry.json"
+  touch "$cache_dir/registry.json"
+
+  run env AGTOOSA_REGISTRY_CACHE_DIR="$cache_dir" AGTOOSA_PACK_QUEUE_DIR="$queue_dir" \
+    bash -c "echo Y | bash '$SCRIPT' --registry install 'mock-pack@1.0.0'"
+
+  rm -rf "$workdir" "$cache_dir"
+
+  [ "$status" -eq 0 ]
+  [ -f "$queue_dir/mock-pack/workflow.md" ]
+  [ -f "$queue_dir/mock-pack/.pack-meta.json" ]
+  cat "$queue_dir/mock-pack/.pack-meta.json" | jq -e '.name == "mock-pack" and .version == "1.0.0"' >/dev/null
+
+  rm -rf "$queue_dir"
+}
+
 # ── DEV-187: init/update test feedback fixes ──────────────────
 @test "-h flag shows usage and exits 0" {
   run bash "$SCRIPT" -h
@@ -1364,7 +1568,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "4.11.0" ]
+  [ "$ver" = "4.12.0" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1375,7 +1579,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"4.11.0"* ]]
+  [[ "$output" == *"4.12.0"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────

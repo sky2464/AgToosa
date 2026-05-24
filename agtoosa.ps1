@@ -62,10 +62,15 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 # ── Version ───────────────────────────────────────────────────
-$AGTOOSA_VERSION = "4.11.0"
+$AGTOOSA_VERSION = "4.12.1"
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $TEMPLATE_DIR = Join-Path $SCRIPT_DIR "template"
 $SHIP_DIR = Join-Path $SCRIPT_DIR "ship"
+if ($env:AGTOOSA_PACK_QUEUE_DIR) {
+    $PACK_QUEUE_DIR = $env:AGTOOSA_PACK_QUEUE_DIR
+} else {
+    $PACK_QUEUE_DIR = Join-Path $SCRIPT_DIR ".agtoosa\pack-queue"
+}
 
 # ── Colors (ANSI — requires Windows 10 v1511+ or Windows Terminal) ──
 $ESC = [char]27
@@ -311,6 +316,101 @@ function Stage-Files([string[]]$platforms) {
     }
 }
 
+function Ensure-PackQueueDir {
+    if (-not (Test-Path $PACK_QUEUE_DIR)) {
+        New-Item -ItemType Directory -Path $PACK_QUEUE_DIR -Force | Out-Null
+    }
+}
+
+function New-PackQueueDirectory([string]$packName) {
+    Ensure-PackQueueDir
+    $packDir = Join-Path $PACK_QUEUE_DIR $packName
+    if (Test-Path $packDir) { Remove-Item -Recurse -Force $packDir }
+    New-Item -ItemType Directory -Path $packDir -Force | Out-Null
+    return $packDir
+}
+
+function Salvage-ShipPacksToQueue {
+    $legacy = Join-Path $SHIP_DIR "packs"
+    if (-not (Test-Path $legacy)) { return }
+    Ensure-PackQueueDir
+    foreach ($packDir in Get-ChildItem -Path $legacy -Directory) {
+        $dest = Join-Path $PACK_QUEUE_DIR $packDir.Name
+        if (Test-Path $dest) { Remove-Item -Recurse -Force $dest }
+        Move-Item -Path $packDir.FullName -Destination $dest
+    }
+    if ((Get-ChildItem -Path $legacy -ErrorAction SilentlyContinue | Measure-Object).Count -eq 0) {
+        Remove-Item -Path $legacy -Force -ErrorAction SilentlyContinue
+    }
+}
+
+function Merge-PackFromDirectory([string]$packDir, [string]$packName, [string]$projectPath) {
+    $allowed = @('md', 'json', 'toml', 'mdc')
+    $count = 0
+    Get-ChildItem -Path $packDir -Recurse -File | ForEach-Object {
+        if ($_.Name -eq '.pack-meta.json') { return }
+        $ext = $_.Extension.TrimStart('.')
+        if ($allowed -notcontains $ext) { return }
+        $rel = $_.FullName.Substring($packDir.Length).TrimStart('\', '/')
+        $dst = Join-Path $projectPath $rel
+        $dstParent = Split-Path $dst -Parent
+        if ($dstParent -and -not (Test-Path $dstParent)) {
+            New-Item -ItemType Directory -Path $dstParent -Force | Out-Null
+        }
+        Copy-Item -Path $_.FullName -Destination $dst -Force
+        $count++
+    }
+    Write-Color "  ${GREEN}✅${NC} Pack '${packName}': ${count} files merged"
+    return $count
+}
+
+function Merge-PacksUnderRoot([string]$packsRoot, [string]$projectPath, [bool]$clearAfter) {
+    $packCount = 0
+    $metaFiles = [System.Collections.Generic.List[string]]::new()
+    if (-not (Test-Path $packsRoot)) {
+        return @{ Count = 0; MetaFiles = @() }
+    }
+    foreach ($packDir in Get-ChildItem -Path $packsRoot -Directory) {
+        $null = Merge-PackFromDirectory $packDir.FullName $packDir.Name $projectPath
+        $packCount++
+        $meta = Join-Path $packDir.FullName ".pack-meta.json"
+        if (Test-Path $meta) { $metaFiles.Add($meta) }
+        if ($clearAfter) {
+            Remove-Item -Path $packDir.FullName -Recurse -Force
+        }
+    }
+    return @{ Count = $packCount; MetaFiles = $metaFiles.ToArray() }
+}
+
+function Update-LockFileFromPackMeta([string]$projectPath, [string[]]$metaFiles) {
+    if ($metaFiles.Count -eq 0) { return }
+    $lockFile = Join-Path $projectPath "Docs\agtoosa-lock.json"
+    $timestamp = [DateTimeOffset]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
+    $existingPacks = @()
+    if (Test-Path $lockFile) {
+        try {
+            $existing = Get-Content $lockFile -Raw | ConvertFrom-Json
+            if ($existing.packs) { $existingPacks = @($existing.packs) }
+        } catch { $existingPacks = @() }
+    }
+    $newNames = @()
+    $newEntries = @()
+    foreach ($metaPath in $metaFiles) {
+        $entry = Get-Content $metaPath -Raw | ConvertFrom-Json
+        $newNames += $entry.name
+        $newEntries += $entry
+    }
+    $kept = @($existingPacks | Where-Object { $newNames -notcontains $_.name })
+    $allPacks = @($kept) + @($newEntries)
+    $lock = [ordered]@{
+        agtoosa_version = $AGTOOSA_VERSION
+        generated_at    = $timestamp
+        packs           = $allPacks
+    }
+    $lock | ConvertTo-Json -Depth 5 | Out-File -FilePath $lockFile -Encoding UTF8
+    Write-Color "  ${GREEN}✅${NC} Docs/agtoosa-lock.json updated"
+}
+
 function Install-Files([string]$projectPath, [string[]]$platforms) {
     $shipDocs = Join-Path $SHIP_DIR "Docs"
     if (Test-Path $shipDocs) {
@@ -417,23 +517,34 @@ function Install-Files([string]$projectPath, [string[]]$platforms) {
     $archDir = Join-Path $projectPath "Docs\archived"
     if (-not (Test-Path $archDir)) { New-Item -ItemType Directory -Path $archDir -Force | Out-Null }
 
-    # Write Docs/agtoosa-lock.json (create or update agtoosa_version + generated_at; preserve existing packs).
-    $lockFile = Join-Path $projectPath "Docs\agtoosa-lock.json"
-    $timestamp = [DateTimeOffset]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
-    $packsArray = @()
-    if (Test-Path $lockFile) {
-        try {
-            $existing = Get-Content $lockFile -Raw | ConvertFrom-Json
-            if ($existing.packs) { $packsArray = @($existing.packs) }
-        } catch { $packsArray = @() }
+    # Merge durable pack queue, then any same-session ship\packs staging.
+    $queueResult = Merge-PacksUnderRoot $PACK_QUEUE_DIR $projectPath $true
+    $shipResult  = Merge-PacksUnderRoot (Join-Path $SHIP_DIR "packs") $projectPath $false
+    $totalPacks  = $queueResult.Count + $shipResult.Count
+    if ($totalPacks -gt 0) {
+        Write-Color "  ${GREEN}✅${NC} Packs merged: $totalPacks"
     }
-    $lock = [ordered]@{
-        agtoosa_version = $AGTOOSA_VERSION
-        generated_at    = $timestamp
-        packs           = $packsArray
+    $allMeta = @($queueResult.MetaFiles) + @($shipResult.MetaFiles)
+    if ($allMeta.Count -gt 0) {
+        Update-LockFileFromPackMeta $projectPath $allMeta
+    } else {
+        $lockFile = Join-Path $projectPath "Docs\agtoosa-lock.json"
+        $timestamp = [DateTimeOffset]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
+        $packsArray = @()
+        if (Test-Path $lockFile) {
+            try {
+                $existing = Get-Content $lockFile -Raw | ConvertFrom-Json
+                if ($existing.packs) { $packsArray = @($existing.packs) }
+            } catch { $packsArray = @() }
+        }
+        $lock = [ordered]@{
+            agtoosa_version = $AGTOOSA_VERSION
+            generated_at    = $timestamp
+            packs           = $packsArray
+        }
+        $lock | ConvertTo-Json -Depth 5 | Out-File -FilePath $lockFile -Encoding UTF8
+        Write-Color "  ${GREEN}✅${NC} Docs/agtoosa-lock.json updated"
     }
-    $lock | ConvertTo-Json -Depth 5 | Out-File -FilePath $lockFile -Encoding UTF8
-    Write-Color "  ${GREEN}✅${NC} Docs/agtoosa-lock.json updated"
 }
 
 # ── Registry ──────────────────────────────────────────────────
@@ -513,17 +624,26 @@ function Invoke-RegistryInstall([string]$packSpec) {
 
     $json  = Invoke-RegistryFetch
     $packs = @($json | ConvertFrom-Json)
-    $pack  = $packs | Where-Object { $_.name -eq $packName } | Select-Object -First 1
-    if (-not $pack) {
-        Write-Color "${RED}❌ Pack '$packName' not found in registry.${NC}"
-        exit 1
+    if ($packVersion -ne "") {
+        $pack = $packs | Where-Object { $_.name -eq $packName -and $_.version -eq $packVersion } | Select-Object -First 1
+        if (-not $pack) {
+            $available = ($packs | Where-Object { $_.name -eq $packName } | ForEach-Object { $_.version }) -join ', '
+            if ([string]::IsNullOrEmpty($available)) {
+                Write-Color "${RED}❌ Pack '$packName' not found in registry.${NC}"
+            } else {
+                Write-Color "${RED}❌ Pack '$packName' version '$packVersion' not found in registry (available: $available).${NC}"
+            }
+            exit 1
+        }
+    } else {
+        $pack = $packs | Where-Object { $_.name -eq $packName } | Select-Object -First 1
+        if (-not $pack) {
+            Write-Color "${RED}❌ Pack '$packName' not found in registry.${NC}"
+            exit 1
+        }
     }
 
-    if ($packVersion -ne "" -and $pack.version -ne $packVersion) {
-        Write-Color "${YELLOW}⚠️  Requested version $packVersion but registry has $($pack.version). Proceeding with registry version.${NC}"
-    }
-
-    $confirm = Read-Host "Installing: $packName — Continue? (Y/n)"
+    $confirm = Read-Host "Installing: $packName v$($pack.version) — Continue? (Y/n)"
     if ([string]::IsNullOrEmpty($confirm)) { $confirm = "Y" }
     if ($confirm -notmatch "^[Yy]$") {
         Write-Color "${YELLOW}Aborted.${NC}"
@@ -550,9 +670,8 @@ function Invoke-RegistryInstall([string]$packSpec) {
         exit 1
     }
 
-    # Extract
-    $packDir = Join-Path $SHIP_DIR "packs\$packName"
-    New-Item -ItemType Directory -Path $packDir -Force | Out-Null
+    # Extract to durable pack queue (survives ship\ rebuild on next agtoosa.ps1 run).
+    $packDir = New-PackQueueDirectory $packName
 
     $tarAvailable = $null -ne (Get-Command tar -ErrorAction SilentlyContinue)
     if (-not $tarAvailable) {
@@ -581,7 +700,9 @@ function Invoke-RegistryInstall([string]$packSpec) {
     }
     $meta | ConvertTo-Json | Out-File -FilePath $metaFile -Encoding UTF8
 
-    Write-Color "${GREEN}✅ Pack '$packName' v$($pack.version) installed to '$packDir'.${NC}"
+    Write-Color "${GREEN}✅ Pack '$packName' v$($pack.version) queued at '$packDir'.${NC}"
+    Write-Color "Run '.\agtoosa.ps1' in your project to merge queued packs."
+    $script:keepShip = $true
 }
 
 # ── Cleanup on exit ───────────────────────────────────────────
@@ -660,6 +781,7 @@ if ($Update) {
     Write-Color ""
 
     try {
+        Salvage-ShipPacksToQueue
         if (Test-Path $SHIP_DIR) { Remove-Item -Recurse -Force $SHIP_DIR }
         New-Item -ItemType Directory -Path (Join-Path $SHIP_DIR "Docs\archived") -Force | Out-Null
         New-Item -ItemType Directory -Path (Join-Path $SHIP_DIR "Docs\Context") -Force | Out-Null
@@ -753,6 +875,7 @@ if ($platforms.Count -eq 0) {
 
 # ── Stage files into ship\ ────────────────────────────────────
 try {
+    Salvage-ShipPacksToQueue
     if (Test-Path $SHIP_DIR) { Remove-Item -Recurse -Force $SHIP_DIR }
     New-Item -ItemType Directory -Path (Join-Path $SHIP_DIR "Docs\archived") -Force | Out-Null
     New-Item -ItemType Directory -Path (Join-Path $SHIP_DIR "Docs\Context") -Force | Out-Null

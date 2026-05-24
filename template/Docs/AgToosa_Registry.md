@@ -56,8 +56,8 @@ Packs are **markdown-only** for safety — no executable code is automatically r
 2. **Confirm** when prompted (packs are reviewed by maintainers before publication).
 3. **Download** the pack tarball from GitHub.
 4. **Verify** the pack's SHA-256 hash against the registry (abort on mismatch).
-5. **Stage** the pack files into the AgToosa repo's `ship/packs/<pack-name>/` directory (they remain after install).
-6. **Review and merge** — run `bash agtoosa.sh` in your project to integrate staged files alongside core AgToosa workflows.
+5. **Queue** the pack files under `.agtoosa/pack-queue/<pack-name>/` in the AgToosa repo (outside ephemeral `ship/`).
+6. **Review and merge** — run `bash agtoosa.sh` in your project to integrate queued packs alongside core AgToosa workflows.
 
 ---
 
@@ -123,9 +123,15 @@ Each pack entry includes:
 - The registry is cached for 1 hour; try again later.
 - For offline installation, use `--registry install ./local-pack`.
 
-**"No version specified but multiple exist"**
-- When you run `--registry install <name>`, it installs the latest published version.
-- To pin a version: `--registry install <name>@1.2.0`
+**"Pack version not found"**
+- The `@version` you requested is not listed in `registry.json` for that pack name.
+- Run `--registry info <name>` to see the version currently in the index.
+- To install the index version, omit `@version`: `--registry install <name>`.
+- Pinned installs fail closed; AgToosa will not install a different version silently.
+
+**Version pinning**
+- `--registry install <name>` installs the pack row for that name in the registry index.
+- `--registry install <name>@1.2.0` installs only when the index lists exactly `1.2.0` for that name.
 
 ---
 
