@@ -32,7 +32,7 @@ The Community Template Registry shipped in v3.x (`lib/registry.sh`, `agtoosa.ps1
 | Proof / evidence | `bats tests/agtoosa.bats -f "RG[1-8]:"` + full `bats tests/agtoosa.bats`; manual spot-check `registry info nonexistent-pack` exits non-zero. |
 | Non-goals | PS1 full platform-dir parity (MF-1–MF-5); GPG-signed registry index (SI-5); README/CONTRIBUTING doc sweep (DG-*); DEV-016 Gemini routing. |
 | Assumptions | `tests/fixtures/registry.json` remains the flat-array schema ground truth. |
-| Risks | Case B fix must not break existing DEV-172 merge test; update path uses `TEMPLATE_DIR` sources intentionally. |
+| Risks | Case B fix must not break existing merge_platform_file Case B regression test; update path uses `TEMPLATE_DIR` sources intentionally. |
 
 ### 1.2 User Stories
 

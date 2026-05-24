@@ -212,7 +212,7 @@ if [[ ! -d "$PROJECT_PATH" ]]; then
   exit 1
 fi
 
-# DEV-137: Prevent targeting the AgToosa source directory itself
+# Prevent targeting the AgToosa source directory itself
 _rp_project="$(cd "$PROJECT_PATH" && pwd)"
 _rp_script="$(cd "$SCRIPT_DIR" && pwd)"
 if [[ "$_rp_project" == "$_rp_script" ]]; then
@@ -257,7 +257,7 @@ fi
 
 echo ""
 
-# DEV-135: Warn on invalid selection tokens
+# Warn on invalid platform selection tokens
 if [[ "$SELECTION" != *"8"* ]]; then
   while IFS= read -r token; do
     token="${token//[[:space:]]/}"
@@ -268,7 +268,7 @@ if [[ "$SELECTION" != *"8"* ]]; then
   done < <(tr ' ' '\n' <<< "$SELECTION")
 fi
 
-# DEV-136: Warn if no platform selected
+# Warn if no platform selected
 SOME_PLATFORM_SELECTED=false
 [[ "$USE_CURSOR" == true || "$USE_WINDSURF" == true || "$USE_CLAUDE" == true || \
    "$USE_GEMINI" == true || "$USE_COPILOT" == true || "$USE_OPENCODE" == true || \

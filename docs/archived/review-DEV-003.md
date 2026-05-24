@@ -33,9 +33,9 @@ No unresolved 🔴 Critical findings. DEV-003 is ready for `/agtoosa-ship` (pref
 | Severity | Persona | Finding | Disposition |
 |---|---|---|---|
 | 🟢 Passed | Security Officer | `jq --arg` preserved for search/info; publish uses `jq -n`; path traversal guard unchanged (RG7); no new secrets or network surface. | Accepted |
-| 🟢 Passed | Engineering Manager | Case B correctly branches: raw `TEMPLATE_DIR` sources get `inject_version`; pre-injected `ship/` sources append as-is. Fixes CB-4 without breaking DEV-172 Case B test. | Accepted |
+| 🟢 Passed | Engineering Manager | Case B correctly branches: raw `TEMPLATE_DIR` sources get `inject_version`; pre-injected `ship/` sources append as-is. Fixes CB-4 without breaking merge_platform_file Case B regression test. | Accepted |
 | 🟢 Passed | CEO / Product Owner | Goal Contract met: registry/update flows safe and predictable; RG1–RG8 + full suite evidence. | Accepted |
-| 🟢 Passed | QA Lead | All Must ACs covered by RG1–RG8; merge regression RG3 + existing DEV-172 Case B test both green. | Accepted |
+| 🟢 Passed | QA Lead | All Must ACs covered by RG1–RG8; merge regression RG3 + existing merge_platform_file Case B regression test both green. | Accepted |
 | 🟡 Warning | Security Officer | `registry_search` treats jq regex failures like empty results (exit 0, “No packs found…”). Safe per AC-008 but indistinguishable from a true empty search in automation. | Accepted; intentional tradeoff for probe safety |
 | 🟡 Warning | Engineering Manager | `tests/agtoosa.bats` exceeds 500-line limit (~2300+ lines). | Accepted; established harness pattern |
 | 🟡 Warning | CEO / Product Owner | No `[Unreleased]` CHANGELOG entry for DEV-003 yet. | Accepted; ship-phase hygiene |

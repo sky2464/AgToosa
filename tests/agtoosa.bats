@@ -173,7 +173,7 @@ EOF
   # ship/ must be absent whether the script succeeded or failed
   [ ! -d "$BATS_TEST_DIRNAME/../ship" ]
 }
-# ── DEV-147: Platform coverage ────────────────────────────────
+# ── Platform coverage ────────────────────────────────
 @test "platform selection 2 copies .windsurfrules" {
   run bash -c "printf '$TEST_PROJECT\n2\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -326,7 +326,7 @@ EOF
   [ -f "$TEST_PROJECT/Docs/Context/product.md" ]
   [ -f "$TEST_PROJECT/Docs/Context/product-guidelines.md" ]
 }
-# ── DEV-150: inject_version tests ────────────────────────────
+# ── Generator: inject_version ────────────────────────────
 @test "inject_version: platform files contain AgToosa version marker" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -339,7 +339,7 @@ EOF
   run grep -q "<!-- AgToosa v" "$TEST_PROJECT/CLAUDE.md"
   [ "$status" -eq 0 ]
 }
-# ── DEV-151: extract_version tests ───────────────────────────
+# ── Generator: extract_version ───────────────────────────
 @test "extract_version: same-version reinstall with --force keeps customizations" {
   # Install first
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
@@ -349,7 +349,7 @@ EOF
   [ "$status" -eq 0 ]
   [[ "$output" == *"keeping your customizations"* ]]
 }
-# ── DEV-152: version_lt tests ────────────────────────────────
+# ── Generator: version_lt ────────────────────────────────
 @test "version_lt: older version triggers update with --force" {
   mkdir -p "$TEST_PROJECT"
   # Create a file with an older version marker (shell-style comment for .cursorrules)
@@ -359,7 +359,7 @@ EOF
   # Output should indicate upgrade happened
   [[ "$output" == *"v1.0.0 →"* ]]
 }
-# ── DEV-153: backup_file tests ───────────────────────────────
+# ── Generator: backup_file ───────────────────────────────
 @test "backup_file: creates timestamped .bak file when upgrading" {
   mkdir -p "$TEST_PROJECT"
   printf '# AgToosa v1.0.0\nold content\n' > "$TEST_PROJECT/.cursorrules"
@@ -379,7 +379,7 @@ EOF
   run grep -q "original-sentinel-content" "$bak_file"
   [ "$status" -eq 0 ]
 }
-# ── DEV-154: copy_platform_file (new file) tests ─────────────
+# ── Generator: copy_platform_file (new file) ─────────────
 @test "copy_platform_file: new platform file is copied with version marker" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -393,7 +393,7 @@ EOF
   [ "$status" -eq 0 ]
   [[ "$output" == *"Copied:"* ]]
 }
-# ── DEV-155: copy_platform_file (force + backup) tests ───────
+# ── Generator: copy_platform_file (force + backup) ───────
 @test "copy_platform_file: --force on older version creates .bak and overwrites" {
   mkdir -p "$TEST_PROJECT"
   printf '# AgToosa v1.0.0\noriginal\n' > "$TEST_PROJECT/.cursorrules"
@@ -508,20 +508,20 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -eq 0 ]
   [[ "$output" == *"Docs/AgToosa_Update.md"* ]]
 }
-# ── DEV-178: unknown flag ─────────────────────────────────────
+# ── CLI validation: unknown flag ─────────────────────────────────────
 @test "unknown flag exits 1 with error message" {
   run bash "$SCRIPT" --foo
   [ "$status" -eq 1 ]
   [[ "$output" == *"Unknown option"* ]]
   [[ "$output" == *"Usage:"* ]]
 }
-# ── DEV-179: non-existent path ────────────────────────────────
+# ── CLI validation: non-existent path ────────────────────────────────
 @test "non-existent project path exits with error" {
   run bash -c "printf '/tmp/agtoosa-nonexistent-99999\n' | bash '$SCRIPT'"
   [ "$status" -ne 0 ]
   [[ "$output" == *"does not exist"* ]]
 }
-# ── DEV-177: self-targeting block ─────────────────────────────
+# ── CLI validation: self-targeting block ─────────────────────────────
 @test "self-targeting AgToosa source directory is blocked" {
   local src_dir
   src_dir="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
@@ -529,14 +529,14 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -ne 0 ]
   [[ "$output" == *"Target path cannot be the AgToosa source directory"* ]]
 }
-# ── DEV-175: invalid selection warning ───────────────────────
+# ── CLI validation: invalid selection warning ───────────────────────
 @test "invalid selection number shows warning but continues" {
   # '9' is out of range → warning; then no valid platform → no-platform prompt → default N → exit 0
   run bash -c "printf '$TEST_PROJECT\n9\n\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [[ "$output" == *"Unknown selection"* ]]
 }
-# ── DEV-176: empty platform selection ────────────────────────
+# ── CLI validation: empty platform selection ────────────────────────
 @test "empty selection + default N exits with re-run suggestion" {
   run bash -c "printf '$TEST_PROJECT\n\n\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -551,7 +551,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ ! -f "$TEST_PROJECT/.cursorrules" ]
   [ ! -f "$TEST_PROJECT/AGENTS.md" ]
 }
-# ── DEV-180: multi-platform combo ────────────────────────────
+# ── CLI validation: multi-platform combo ────────────────────────────
 @test "multi-platform combo '1 3' installs both Cursor and Claude files" {
   run bash -c "printf '$TEST_PROJECT\n1 3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -580,7 +580,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   # Only one AgToosa START block — no duplicate from VS Code path
   [ "$(grep -c 'AgToosa.*START' "$TEST_PROJECT/.github/copilot-instructions.md")" -eq 1 ]
 }
-# ── DEV-172: merge_platform_file Case B (older version) ──────
+# ── Generator: merge_platform_file Case B (older version) ──────
 @test "merge_platform_file Case B: older AgToosa block upgraded in-place with .bak" {
   mkdir -p "$TEST_PROJECT"
   printf '<!-- AgToosa v1.0.0 START -->\nold block content\n<!-- AgToosa END -->\n' \
@@ -601,7 +601,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$(grep -c 'AgToosa.*START' "$TEST_PROJECT/CLAUDE.md")" -eq 1 ]
   [[ "$main_output" == *"merged:"* ]]
 }
-# ── DEV-173: merge_platform_file Case C (old-format, no START/END) ──
+# ── Generator: merge_platform_file Case C (old-format, no START/END) ──
 @test "merge_platform_file Case C: old-format AgToosa file replaced with backup" {
   mkdir -p "$TEST_PROJECT"
   printf '<!-- AgToosa v1.0.0 -->\nold format content without delimiters\n' \
@@ -616,7 +616,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   run grep -q "AgToosa v.*START" "$TEST_PROJECT/CLAUDE.md"
   [ "$status" -eq 0 ]
 }
-# ── DEV-174: merge_platform_file Case D + --force ────────────
+# ── Generator: merge_platform_file Case D + --force ────────────
 @test "merge_platform_file Case D + --force: user-owned file fully replaced" {
   mkdir -p "$TEST_PROJECT"
   printf 'my-sentinel-user-content-only\n' > "$TEST_PROJECT/CLAUDE.md"
@@ -637,7 +637,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -eq 0 ]
   [[ "$main_output" == *"vunknown →"* ]]
 }
-# ── DEV-181: --dry-run --force combined ──────────────────────
+# ── Generator: --dry-run --force combined ──────────────────────
 @test "--dry-run --force shows 'Would backup + replace' for older-versioned file" {
   mkdir -p "$TEST_PROJECT"
   printf '# AgToosa v1.0.0 START\nold\n# AgToosa END\n' > "$TEST_PROJECT/.cursorrules"
@@ -658,7 +658,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [[ "$output" == *"Would keep"* ]]
   [[ "$output" == *"No changes made"* ]]
 }
-# ── DEV-182: --dry-run messages for existing platform files ──
+# ── Generator: --dry-run messages for existing platform files ──
 @test "--dry-run shows 'Would backup + merge' for file with older AgToosa block" {
   mkdir -p "$TEST_PROJECT"
   printf '<!-- AgToosa v1.0.0 START -->\nold block\n<!-- AgToosa END -->\n' \
@@ -684,7 +684,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [[ "$output" == *"Already up to date"* ]]
   [[ "$output" == *"No changes made"* ]]
 }
-# ── DEV-183: Context/ stubs preserved on re-run ──────────────
+# ── Generator: Context/ stubs preserved on re-run ──────────────
 @test "Context/ stubs are skipped on re-run to preserve user edits" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -697,7 +697,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -eq 0 ]
   [[ "$rerun_output" == *"Skipping"* ]]
 }
-# ── DEV-184: .gitignore warning absent when no backups ────────
+# ── Generator: .gitignore warning absent when no backups ────────
 @test "gitignore warning NOT shown on clean install with no backups" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -710,7 +710,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -eq 0 ]
   [[ "$output" != *"Backup files created"* ]]
 }
-# ── DEV-185: merge_settings_json invalid JSON fallback ───────
+# ── Generator: merge_settings_json invalid JSON fallback ───────
 @test "merge_settings_json: invalid JSON in existing settings.json skips gracefully" {
   mkdir -p "$TEST_PROJECT/.claude"
   printf '{ invalid json here }' > "$TEST_PROJECT/.claude/settings.json"
@@ -722,7 +722,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   run grep -q "invalid json here" "$TEST_PROJECT/.claude/settings.json"
   [ "$status" -eq 0 ]
 }
-# ── DEV-186: manual copy instructions ────────────────────────
+# ── Generator: manual copy instructions ────────────────────────
 @test "declining copy shows manual copy instructions" {
   run bash -c "printf '$TEST_PROJECT\n1\nn\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
@@ -1591,7 +1591,7 @@ PY
   rm -rf "$queue_dir"
 }
 
-# ── DEV-187: init/update test feedback fixes ──────────────────
+# ── Install version marker (v3.1.1 regression) ──────────────────
 @test "-h flag shows usage and exits 0" {
   run bash "$SCRIPT" -h
   [ "$status" -eq 0 ]

@@ -42,6 +42,22 @@ You are in **Maintainer Dogfood Mode** when editing this repository. AgToosa wor
 
 Generated projects must not inherit maintainer-only assumptions (treating every repo as "AgToosa the product", or editing generator surfaces). Template docs under `template/Docs/` are written for **Generated Project Mode** and ship into host repos.
 
+## Story and Test ID Conventions
+
+AgToosa uses two ID namespaces. Do not mix them when adding new work.
+
+| Namespace | Where | Meaning |
+|-----------|-------|---------|
+| `DEV-0XX` | `docs/Master-Plan.md` | Product stories (spec → build → review → ship). Increment by one for each new story (currently through DEV-023). |
+| `DEV-1XX` | Historical `CHANGELOG.md` / bats from v2.x–v3.x | Deprecated internal labels from the pre–Master-Plan era. **Do not allocate new DEV-1XX IDs.** |
+
+When adding bats coverage:
+
+- Tied to a Master-Plan story: use a story section header such as `# ── DEV-022: Registry publish PS1 + offline cache (RC1–RC3) ───`.
+- Not tied to a story: use a descriptive section name (optionally with smoke codes like `RG1–RG8`). Never introduce new `# ── DEV-1XX:` section headers.
+
+Inline comments in `lib/*.sh` and `agtoosa.sh` should describe behavior in plain English, not legacy DEV-1XX tags.
+
 ## Repository Facts
 
 - AgToosa is a framework generator, not an SDK runtime.

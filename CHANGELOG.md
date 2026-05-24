@@ -7,6 +7,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+### Changed
+
+- **Maintainer hygiene:** Document `DEV-0XX` vs legacy `DEV-1XX` ID conventions in `docs/agtoosa-maintainer.md`; rename legacy bats section headers to descriptive `Generator:` titles; replace `DEV-1XX` inline comments in `lib/*.sh` and `agtoosa.sh`; clarify archived DEV-003 references to merge Case B regression tests (no version bump).
+
 ### Planned
 
 _(None — pick next story via `/agtoosa-spec`.)_

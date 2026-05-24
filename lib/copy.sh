@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# ── AgToosa: file copy/merge helpers (DEV-128, DEV-130, DEV-139, DEV-157) ───
+# ── AgToosa: file copy/merge helpers (copy, merge, backup) ───
 # Sourced by agtoosa.sh.
 # Globals read: FORCE, AGTOOSA_VERSION, colors (GREEN/YELLOW/CYAN/NC).
 # Globals modified: COPIED, SKIPPED, BAK_FILES.

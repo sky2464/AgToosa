@@ -219,7 +219,7 @@ _write_lock_file() {
 install_files() {
   mkdir -p "${PROJECT_PATH}/Docs/archived" "${PROJECT_PATH}/Docs/Context"
 
-  # DEV-134: Docs/ workflow files always overwrite
+  # Docs/ workflow files always overwrite on install
   local file
   for file in "${DOCS_FILES[@]}"; do
     if [[ -f "${SHIP_DIR}/${file}" ]]; then
@@ -481,7 +481,7 @@ install_files() {
   echo ""
   echo -e "${GREEN}${BOLD}✅ AgToosa v${AGTOOSA_VERSION} installed to ${PROJECT_PATH}${NC}"
 
-  # DEV-131: warn about .bak files
+  # Warn about .bak files when backups were created
   if [[ ${#BAK_FILES[@]} -gt 0 ]]; then
     echo ""
     echo -e "${YELLOW}⚠️  Backup files created — add this to your .gitignore to avoid committing them:${NC}"

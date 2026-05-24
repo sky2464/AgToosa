@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# ── AgToosa: version marker helpers (DEV-129) ────────────────
+# ── AgToosa: version marker helpers (inject/extract/compare) ──
 # Sourced by agtoosa.sh. Globals: AGTOOSA_VERSION (read-only here).
 
 # Wrap a platform entry-point file in AgToosa START/END delimiters.
