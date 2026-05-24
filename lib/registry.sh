@@ -92,6 +92,10 @@ validate_pack_files() {
 }
 
 # Fetch registry.json from GitHub with 1-hour cache.
+# SECURITY NOTE: registry.json is trusted via HTTPS only (no signed manifest in v1).
+# Pack tarballs are still SHA-256 verified against each index entry on install.
+# For high-assurance or air-gapped use, set AGTOOSA_REGISTRY_CACHE_DIR to a vetted
+# copy and independently verify pack SHA-256 values before installing.
 fetch_registry() {
   mkdir -p "$REGISTRY_CACHE_DIR"
 

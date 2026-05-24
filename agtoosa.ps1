@@ -28,7 +28,7 @@
     Access the AgToosa Community Template Registry.
 
 .PARAMETER RegistryCommand
-    Registry sub-command: list, search, info, or install.
+    Registry sub-command: list, search, info, install, or publish.
 
 .PARAMETER RegistryArg
     Argument for the registry sub-command (keyword for search, pack name for info/install).
@@ -62,7 +62,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 # ── Version ───────────────────────────────────────────────────
-$AGTOOSA_VERSION = "4.12.1"
+$AGTOOSA_VERSION = "4.12.2"
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $TEMPLATE_DIR = Join-Path $SCRIPT_DIR "template"
 $SHIP_DIR = Join-Path $SCRIPT_DIR "ship"
@@ -742,8 +742,14 @@ if ($Registry) {
         "search"  { Show-RegistrySearch $RegistryArg; exit 0 }
         "info"    { Show-RegistryInfo $RegistryArg; exit 0 }
         "install" { Invoke-RegistryInstall $RegistryArg; exit 0 }
+        "publish" {
+            Write-Color "${YELLOW}ℹ️  Registry publish is not available in the PowerShell port.${NC}"
+            Write-Color "Use the Bash implementation (canonical for v1):"
+            Write-Color "  bash agtoosa.sh --registry publish [path-to-pack]"
+            exit 0
+        }
         default   {
-            Write-Color "${RED}❌ Unknown registry command '$RegistryCommand'. Use list, search, info, install.${NC}"
+            Write-Color "${RED}❌ Unknown registry command '$RegistryCommand'. Use list, search, info, install, publish.${NC}"
             exit 1
         }
     }

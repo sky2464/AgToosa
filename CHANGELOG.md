@@ -13,6 +13,16 @@ _(None — pick next story via `/agtoosa-spec`.)_
 
 ---
 
+## [4.12.2] — 2026-05-24
+
+Patch release: DEV-022 (259 bats tests).
+
+### Fixed
+
+- **DEV-022 — Registry publish PS1 + offline cache hardening.** PowerShell `--registry publish` prints a Bash redirect instead of "Unknown registry command"; maintainer and template registry docs add **Offline cache and trust** (cache paths, HTTPS trust model, high-assurance SHA-256 verification); `fetch_registry` security comment; bats RC1–RC3. Smoke: RC1–RC3 all green.
+
+---
+
 ## [4.12.1] — 2026-05-24
 
 Patch release: DEV-021 (256 bats tests).

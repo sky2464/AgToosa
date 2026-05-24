@@ -9,6 +9,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ### Added
 
+- 2026-05-24 — fix — Registry publish PS1 redirect + offline cache trust docs; RC1–RC3 bats (DEV-022) — `docs/archived/spec-DEV-022.md`
 - 2026-05-24 — fix — Registry pack queue: durable `.agtoosa/pack-queue/` staging, merge on install, legacy `ship/packs` salvage, PS1 parity; PK1–PK5 bats (DEV-018) — `docs/archived/spec-DEV-018.md`
 - 2026-05-24 — fix — Registry install version pinning: fail-closed `pack@version` in Bash and PS1; RV1–RV5 bats (DEV-020) — `docs/archived/spec-DEV-020.md`
 - 2026-05-24 — fix — Codex slash discoverability: `.codex/prompts/agtoosa-*.md` adapters, generator install wiring, OPENCODE.md; CX1–CX5 bats (DEV-017) — `docs/archived/spec-DEV-017.md`

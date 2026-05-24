@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `Docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-05-24 (merge release/v4.11.0 → main; DEV-019 build on main)
+> **Last updated:** 2026-05-24 (/agtoosa-ship DEV-022 — v4.12.2; merge release/v4.11.0 → main)
 
 ## Project Charter
 
@@ -142,6 +142,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
     *   **Scope:** Pack registry parsing, cached JSON validation, SHA-256 integrity rules, and command staging wrappers in `lib/registry.sh`.
     *   **Success Criteria:** Secure Offline/Online installation of approved community templates with zero path-traversal risk.
+    *   **Last shipped:** DEV-022 — publish PS1 + offline cache → `docs/archived/spec-DEV-022.md`
     *   **Last shipped:** DEV-021 — E2E pinned install test (RV6) → `docs/archived/spec-DEV-021.md`
     *   **Last shipped:** DEV-020 — registry `@version` install enforcement → `docs/archived/spec-DEV-020.md`
     *   **Last shipped:** DEV-018 — durable pack queue → `docs/archived/spec-DEV-018.md`
@@ -177,6 +178,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-018 | Fix: Registry pack queue | 2026-05-24 | [spec-DEV-018.md](archived/spec-DEV-018.md) · [review-DEV-018.md](archived/review-DEV-018.md) |
 | DEV-020 | Fix: Registry install version pinning | 2026-05-24 | [spec-DEV-020.md](archived/spec-DEV-020.md) · [review-DEV-020.md](archived/review-DEV-020.md) |
 | DEV-021 | Fix: E2E pinned registry install test (RV6) | 2026-05-24 | [spec-DEV-021.md](archived/spec-DEV-021.md) · [review-DEV-021.md](archived/review-DEV-021.md) |
+| DEV-022 | Fix: Registry publish PS1 + offline cache hardening | 2026-05-24 | [spec-DEV-022.md](archived/spec-DEV-022.md) · [review-DEV-022.md](archived/review-DEV-022.md) |
 
 ## Update Log
 
@@ -297,6 +299,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-05-24 | 🏗️ Build complete — DEV-021; RV6 E2E pinned install; RV1–RV6 6/6 green | AgToosa |
 | 2026-05-24 | ✅ Review passed — DEV-021; RV6 E2E; 0 Critical; review: docs/archived/review-DEV-021.md | AgToosa |
 | 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-021; smoke RV6 green; RV1–RV6 6/6; v4.12.1; archived spec + review | AgToosa |
+| 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-022; smoke RC1–RC3 3/3 green; registry slice 27/27; v4.12.2; archived spec + review | AgToosa |
+| 2026-05-24 | 🚀 Release 4.12.2 patch — v4.12.2; DEV-022; version parity bash/ps1 | AgToosa |
 | 2026-05-24 | ✏️ /agtoosa-spec DEV-019 — Master Architecture document; estimate M; added to Backlog; test plan: docs/AgToosa_TestPlan-DEV-019.md | AgToosa |
 | 2026-05-24 | 🔍 Review 🔍 Started — DEV-022 — 4-persona review (PS1 publish + offline cache) | AgToosa |
 | 2026-05-24 | Review ✅ Approved — DEV-022; 0 Critical; report: docs/archived/review-DEV-022.md | AgToosa |

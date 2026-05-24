@@ -95,6 +95,23 @@ Each pack entry includes:
 
 ---
 
+## Offline cache and trust
+
+AgToosa caches `registry.json` locally so list/search/info work when the network is slow or unavailable (default TTL: 1 hour).
+
+| Surface | Cache location |
+|---------|----------------|
+| Bash | `$AGTOOSA_REGISTRY_CACHE_DIR/registry.json` if set, else `~/.cache/agtoosa/registry.json` |
+| PowerShell | `%USERPROFILE%\.cache\agtoosa\registry.json` |
+
+**HTTPS trust model:** The registry index is downloaded over HTTPS from GitHub only. There is no GPG or signed manifest for `registry.json` in v1 — treat the index as trusted to the same degree as the HTTPS origin. If you need a fresh index, delete the cache file (or wait for TTL expiry) and run `--registry list` again when online.
+
+**High-assurance installs:** Pack tarballs are always SHA-256 checked against the hash in the index during install. For stricter environments, pre-seed `AGTOOSA_REGISTRY_CACHE_DIR` with a vetted `registry.json` and independently verify each pack's SHA-256 (e.g. `sha256sum`) against a trusted source before `bash agtoosa.sh --registry install <name>`.
+
+**Publishing packs:** Use Bash — `bash agtoosa.sh --registry publish` (the PowerShell port prints a redirect; it does not run the publish wizard).
+
+---
+
 ## Security
 
 **How your safety is protected:**

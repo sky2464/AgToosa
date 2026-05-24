@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v4.12.1" ]]
+  [[ "$output" == "AgToosa v4.12.2" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1509,6 +1509,44 @@ PY
   [ "$status" -eq 0 ]
   run bash -c "! grep -q 'Proceeding with registry version' '$BATS_TEST_DIRNAME/../agtoosa.ps1'"
   [ "$status" -eq 0 ]
+}
+
+# ── DEV-022: Registry publish PS1 + offline cache (RC1–RC3) ───
+@test "RC1: PS1 --registry publish prints Bash redirect not unknown command" {
+  if ! command -v pwsh &>/dev/null; then
+    skip "pwsh not available"
+  fi
+  run pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1" -Registry -RegistryCommand publish
+  [ "$status" -eq 0 ]
+  [[ "$output" != *"Unknown registry command"* ]]
+  [[ "$output" == *"bash agtoosa.sh --registry publish"* ]]
+}
+
+@test "RC2: registry docs document cache dir HTTPS trust and SHA-256 verification" {
+  for doc in \
+    "$BATS_TEST_DIRNAME/../docs/AgToosa_Registry.md" \
+    "$BATS_TEST_DIRNAME/../template/Docs/AgToosa_Registry.md"
+  do
+    run grep -q 'AGTOOSA_REGISTRY_CACHE_DIR' "$doc"
+    [ "$status" -eq 0 ]
+    run grep -q 'HTTPS trust model' "$doc"
+    [ "$status" -eq 0 ]
+    run grep -q 'SHA-256' "$doc"
+    [ "$status" -eq 0 ]
+  done
+}
+
+@test "RC3: AGTOOSA_REGISTRY_CACHE_DIR serves registry info without network" {
+  local cache_dir
+  cache_dir="$(mktemp -d)"
+  cp "$BATS_TEST_DIRNAME/fixtures/registry.json" "$cache_dir/registry.json"
+  touch "$cache_dir/registry.json"
+
+  AGTOOSA_REGISTRY_CACHE_DIR="$cache_dir" run bash "$SCRIPT" --registry info "ml-pipeline"
+  rm -rf "$cache_dir"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"ml-pipeline"* ]]
+  [[ "$output" == *"1.2.0"* ]]
 }
 
 @test "RV6: pinned registry install E2E stages pack with correct version" {
