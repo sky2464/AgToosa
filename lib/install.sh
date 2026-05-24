@@ -456,10 +456,14 @@ install_files() {
   local new_lock_entries=()
   _merge_pack_queue
   pack_count=$((pack_count + _PACK_MERGE_COUNT))
-  new_lock_entries+=("${_PACK_LOCK_ENTRIES[@]}")
+  if [[ ${#_PACK_LOCK_ENTRIES[@]} -gt 0 ]]; then
+    new_lock_entries+=("${_PACK_LOCK_ENTRIES[@]}")
+  fi
   _merge_ship_staged_packs
   pack_count=$((pack_count + _PACK_MERGE_COUNT))
-  new_lock_entries+=("${_PACK_LOCK_ENTRIES[@]}")
+  if [[ ${#_PACK_LOCK_ENTRIES[@]} -gt 0 ]]; then
+    new_lock_entries+=("${_PACK_LOCK_ENTRIES[@]}")
+  fi
   [[ $pack_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} Packs merged: ${pack_count}"
   if [[ ${#new_lock_entries[@]} -gt 0 ]]; then
     _write_lock_file "${new_lock_entries[@]}"

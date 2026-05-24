@@ -1606,7 +1606,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "4.12.0" ]
+  [ "$ver" = "4.12.2" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1617,7 +1617,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"4.12.0"* ]]
+  [[ "$output" == *"4.12.2"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
