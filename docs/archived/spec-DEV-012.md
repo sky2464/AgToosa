@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-012
 > **Epic:** DEV-002 — Workflow Templates
-> **Status:** ⬜ Backlog
+> **Status:** 🟨 In Progress
 > **Estimate:** S
 > **Spec created:** 2026-05-23
 
@@ -105,21 +105,21 @@ Out of scope        : `agtoosa.sh`, `agtoosa.ps1`, `lib/*.sh`, user-level GitHub
 
 ### 3.1 Task Tree
 
-- [ ] **1.** GitHub prompt metadata
-  - [ ] 1.1 Add explicit `name: agtoosa-*` frontmatter to all GitHub prompt adapters — _Requirements: AC-001, AC-004_
-  - [ ] 1.2 Verify `agtoosa-spec.prompt.md` keeps phase-stop and approval-gate text — _Requirements: AC-004_
-- [ ] **2.** GitHub routing guardrails
-  - [ ] 2.1 Update Copilot instructions with the `/agtoosa-*` workflow-routing rule — _Requirements: AC-002_
-  - [ ] 2.2 Update the AgToosa GitHub agent file with the same no-`/create-skill` rule — _Requirements: AC-002_
-- [ ] **3.** Skill synthesis dedupe
-  - [ ] 3.1 Update init/spec synthesis docs to reserve `agtoosa-*` workflow names and `/agtoosa-*` triggers — _Requirements: AC-003_
-  - [ ] 3.2 Update `AgToosa_Skills.md` and the `agtoosa-spec` Codex workflow skill with the duplicate-shadowing rule — _Requirements: AC-003_
-- [ ] **4.** Tests
-  - [ ] 4.1 Add G1: every GitHub prompt adapter has `name: agtoosa-*` matching its file stem — _Requirements: AC-001, AC-005_
-  - [ ] 4.2 Add G2: GitHub instructions forbid `/create-skill` routing for `/agtoosa-*` commands — _Requirements: AC-002, AC-005_
-  - [ ] 4.3 Add G3: skill synthesis docs reject `agtoosa-*` generated project skill duplicates — _Requirements: AC-003, AC-005_
-  - [ ] 4.4 Add G4: `agtoosa-spec` GitHub prompt still points to `Docs/AgToosa_Spec.md` and phase stop — _Requirements: AC-004, AC-005_
-  - [ ] 4.5 Run G-filter and full bats; record evidence — _Requirements: AC-005_
+- [x] **1.** GitHub prompt metadata
+  - [x] 1.1 Add explicit `name: agtoosa-*` frontmatter to all GitHub prompt adapters — _Requirements: AC-001, AC-004_
+  - [x] 1.2 Verify `agtoosa-spec.prompt.md` keeps phase-stop and approval-gate text — _Requirements: AC-004_
+- [x] **2.** GitHub routing guardrails
+  - [x] 2.1 Update Copilot instructions with the `/agtoosa-*` workflow-routing rule — _Requirements: AC-002_
+  - [x] 2.2 Update the AgToosa GitHub agent file with the same no-`/create-skill` rule — _Requirements: AC-002_
+- [x] **3.** Skill synthesis dedupe
+  - [x] 3.1 Update init/spec synthesis docs to reserve `agtoosa-*` workflow names and `/agtoosa-*` triggers — _Requirements: AC-003_
+  - [x] 3.2 Update `AgToosa_Skills.md` and the `agtoosa-spec` Codex workflow skill with the duplicate-shadowing rule — _Requirements: AC-003_
+- [x] **4.** Tests
+  - [x] 4.1 Add G1: every GitHub prompt adapter has `name: agtoosa-*` matching its file stem — _Requirements: AC-001, AC-005_
+  - [x] 4.2 Add G2: GitHub instructions forbid `/create-skill` routing for `/agtoosa-*` commands — _Requirements: AC-002, AC-005_
+  - [x] 4.3 Add G3: skill synthesis docs reject `agtoosa-*` generated project skill duplicates — _Requirements: AC-003, AC-005_
+  - [x] 4.4 Add G4: `agtoosa-spec` GitHub prompt still points to `Docs/AgToosa_Spec.md` and phase stop — _Requirements: AC-004, AC-005_
+  - [x] 4.5 Run G-filter and full bats; record evidence — _Requirements: AC-005_
 
 ### 3.2 Wave Plan
 
@@ -132,3 +132,7 @@ Out of scope        : `agtoosa.sh`, `agtoosa.ps1`, `lib/*.sh`, user-level GitHub
 Test plan: `docs/AgToosa_TestPlan-DEV-012.md`
 AC coverage: 5 ACs mapped to 5 test IDs
 Smoke set: 5 tests tagged @smoke
+
+## ✅ Spec Approved
+
+Approved: 2026-05-24

@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `Docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-05-24 03:15
+> **Last updated:** 2026-05-24 (DEV-012 build)
 
 ## Project Charter
 
@@ -10,19 +10,18 @@
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
 | Milestone | `v4.5.0` (shipped 2026-05-24) |
-| Active cycle | _(none — Release 4.5 closed)_ |
+| Active cycle | Release 4.6 (DEV-012) |
 | Cycle capacity | `40 story points` |
-| Current phase | 🚢 Ship (cycle complete) |
+| Current phase | 🔍 Review (build complete) |
 
 ## Active Cycle
 
 > Stories committed to the current sprint/cycle.
-> **Progress:** `▱▱▱▱▱▱▱▱ 0/0` ← updated by `/agtoosa-build` after each task completes
+> **Progress:** `▰▰▰▰▰▰▰▰ 11/11` ← updated by `/agtoosa-build` after each task completes
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-
-*(Empty — run `/agtoosa-spec` to enroll the next story.)*
+| DEV-012 | Feature: GitHub Slash Command Routing | Feature | S | 🟨 In Progress | 11/11 |
 
 Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blocked · 🔧 Awaiting Manual · 🏁 Shipped
 
@@ -31,7 +30,23 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-*(Empty — DEV-011 shipped; archived at docs/archived/spec-DEV-011.md.)*
+**DEV-012** — [spec-DEV-012.md](archived/spec-DEV-012.md)
+
+- [x] **1.** GitHub prompt metadata
+  - [x] 1.1 Add explicit `name: agtoosa-*` frontmatter to all GitHub prompt adapters
+  - [x] 1.2 Verify `agtoosa-spec.prompt.md` keeps phase-stop and approval-gate text
+- [x] **2.** GitHub routing guardrails
+  - [x] 2.1 Update Copilot instructions with `/agtoosa-*` workflow-routing rule
+  - [x] 2.2 Update AgToosa GitHub agent with no-`/create-skill` rule
+- [x] **3.** Skill synthesis dedupe
+  - [x] 3.1 Reserve `agtoosa-*` names in Init/Spec synthesis docs
+  - [x] 3.2 Update AgToosa_Skills.md and agtoosa-spec Codex skill
+- [x] **4.** Tests
+  - [x] 4.1 G1 prompt `name` metadata
+  - [x] 4.2 G2 no `/create-skill` routing
+  - [x] 4.3 G3 reserved workflow names in synthesis docs
+  - [x] 4.4 G4 agtoosa-spec prompt contract
+  - [x] 4.5 G5 suite + full bats 212/212 green
 
 ## Manual / Deferred Tasks
 
@@ -59,7 +74,6 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Type | Estimate | Epic | Priority | Status |
 |----|-------|------|----------|------|----------|--------|
-| DEV-012 | Feature: GitHub Slash Command Routing | Feature | S | DEV-002 | High | ⬜ Backlog |
 
 ## Epics
 
@@ -171,3 +185,6 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-05-23 | ✏️ /agtoosa-spec DEV-012 — GitHub slash command routing spec drafted; added to Backlog; test plan: docs/AgToosa_TestPlan-DEV-012.md | AgToosa |
 | 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-011; smoke B1–B5 5/5 green; full suite 207/207; v4.5.0; archived spec + review | AgToosa |
 | 2026-05-24 | 🚀 Release 4.5 shipped — v4.5.0; DEV-011 on main; version parity bash/ps1 | AgToosa |
+| 2026-05-24 | ✅ Spec approved — DEV-012; estimate S; Release 4.6; 11 tasks; test plan: docs/AgToosa_TestPlan-DEV-012.md | AgToosa |
+| 2026-05-24 | 🏗️ Build 🏗️ Started — DEV-012, 11 tasks; scope: template/.github/prompts, copilot-instructions, agtoosa.agent, AgToosa_Init/Spec/Skills, agtoosa-spec skill, tests/agtoosa.bats | AgToosa |
+| 2026-05-24 | 🏗️ Build complete — DEV-012 GitHub slash routing; G1–G5 5/5 green; full suite 212/212 green | AgToosa |
