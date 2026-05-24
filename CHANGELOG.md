@@ -11,9 +11,19 @@ _(None — pick next story via `/agtoosa-spec`.)_
 
 ---
 
+## [5.2.0] — 2026-05-24
+
+Minor release: DEV-028 (306 bats tests; DEV-028 T-001–T-010 + version pin).
+
+### Added
+
+- **DEV-028 — Plan-mode spec interview for `/agtoosa-spec`.** Add **Plan-Mode Spec Interview Contract** to generated `Docs/AgToosa_Spec.md`: research-first, infer-before-ask, one question at a time with contextual options, adaptive cap **8** (quick cap **2**), budget-exhaustion gate, and decision-complete checklist. Native spec adapters and maintainer mirrors aligned; phase-stop preserved (no auto-build). Bats DEV-028 T-001–T-010 green. Smoke: T-001–T-009 all green.
+
+---
+
 ## [5.1.0] — 2026-05-24
 
-Minor release: DEV-027 (296 bats tests).
+Minor release: DEV-027 (306 bats tests; T-001–T-009 + version pin).
 
 ### Added
 

@@ -6,4 +6,4 @@
 |----|-------|------|----------|--------|-----------|
 | DEV-027 | Feature: Agentic `/agtoosa-update` | Feature | M | 🏁 Shipped | 13/13 |
 
-Milestone: v5.1.0 · Smoke: T-001–T-007 all green · Full suite: 296/296
+Milestone: v5.1.0 · Smoke: T-001–T-007 all green · DEV-027: T-001–T-009 all green

@@ -52,3 +52,5 @@ T-001, T-002, T-003, T-004, T-005, T-006, T-007, T-008, T-009
 Regression (2026-05-24 build): `bats tests/agtoosa.bats -f "DEV-028"` → 10/10; `-f "W1:|W3:|CS1:|CS4:|G4:"` → 6/6; `-f "CS1:|CS2:|CS3:|CS4:|CS5:|CU1:|GM1:|WS1:"` → 8/8. CS1 term updated from `Smart Interview` to `Plan-Mode Spec Interview` to match DEV-028 contract.
 
 Review (2026-05-24): Re-verified DEV-028 filter 10/10; review report `docs/archived/review-DEV-028.md` — verdict PASS, 0 🔴 Critical.
+
+Ship (2026-05-24): `bats tests/agtoosa.bats` → 306/306; version **v5.2.0**; smoke T-001–T-009 9/9 green.

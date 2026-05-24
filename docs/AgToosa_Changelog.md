@@ -11,6 +11,7 @@ _(None.)_
 
 ### Added
 
+- 2026-05-24 — feature — Plan-mode spec interview for `/agtoosa-spec`: research-first, infer-before-ask, adaptive cap 8 / quick cap 2, decision-complete checklist; DEV-028 T-001–T-010 bats (DEV-028) — `docs/archived/spec-DEV-028.md`
 - 2026-05-24 — feature — Agentic `/agtoosa-update`: Detect → Plan → Apply → Verify, ask-then-apply, CLI-backed Apply; T-001–T-009 bats (DEV-027) — `docs/archived/spec-DEV-027.md`
 - 2026-05-24 — fix — Codex agent mode spec execution contract on skill + prompt; CS1–CS5 bats (DEV-026) — `docs/archived/spec-DEV-026.md`
 - 2026-05-24 — chore — Maintainer docs path normalization: `docs/` prefixes in workflow mirrors, Path conventions in `docs/agtoosa-maintainer.md`, PN1–PN5 bats (DEV-025) — `docs/archived/spec-DEV-025.md`
