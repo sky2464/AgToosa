@@ -12,4 +12,6 @@ Dispatch rules based on arguments:
 
 If no arguments were given, run the full flow from Docs/AgToosa_Spec.md.
 
+**Phase stop:** stop at the approval gate. Do **not** run `/agtoosa-build` automatically — the user must invoke it after approval.
+
 On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

@@ -15,6 +15,7 @@ DOCS_FILES=(
   "Docs/AgToosa_Task.md"
   "Docs/AgToosa_Status.md"
   "Docs/AgToosa_StatusGuide.md"
+  "Docs/AgToosa_Readiness.md"
   "Docs/AgToosa_Goal.md"
   "Docs/AgToosa_Debug.md"
   "Docs/AgToosa_Concise.md"

@@ -16,5 +16,5 @@ When executing `/agtoosa-status` or any project health check, follow `Docs/AgToo
 - Detect orphaned spec files and task IDs not tracked in Master-Plan.md.
 - Compute and present a health score with actionable findings.
 - Every finding must include a "Fix with" suggestion pointing to an existing AgToosa command.
-- Sub-commands: `plan`, `git`, `orphans`. For any other token, prepend exactly: `Note: '<token>' is not a defined sub-command. Did you mean: plan, git, orphans? Falling back to full dashboard.` then run the full dashboard.
+- Sub-commands: `plan`, `readiness`, `git`, `orphans`. For any other token, prepend exactly: `Note: '<token>' is not a defined sub-command. Did you mean: plan, readiness, git, orphans? Falling back to full dashboard.` then run the full dashboard.
 - Generate "Recommended Next Actions" via the deterministic algorithm in Docs/AgToosa_Status.md Part 5.5 — priority-ordered, command-grouped, deduped, capped at 5, with 🎯 Quick wins call-out.

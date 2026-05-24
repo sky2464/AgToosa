@@ -15,7 +15,9 @@ On Claude Code, independent tasks within a phase can be dispatched to parallel s
 - Read the task list in `Docs/Master-Plan.md` under `## Active Tasks`.
 - Identify tasks that do not share state with other tasks.
 - Batch those tasks into parallel `Task` tool calls before starting the TDD loop (Part 1).
+- Each parallel subagent must return the **Terminal Evidence Contract** block from `Docs/AgToosa_Agent.md` (command, exit code, pass/fail, warnings, errors, changed files, next action).
 - Collect results when all parallel tasks complete; merge conflicts are resolved by the orchestrating agent.
+- The orchestrator must summarize unresolved terminal output before marking any task checkbox done.
 - See `/agtoosa-review` for the reference parallel pattern (4 reviewer personas run simultaneously).
 
 > **Note:** Parallel dispatch applies to Claude Code only. On other platforms, run tasks sequentially.
@@ -25,8 +27,18 @@ Execute TDD against a planned task list and run the full test suite.
 
 > **Prerequisites:** `/agtoosa-spec` must be complete with task planning done.
 > Verify:
-> 1. The active `AgToosa_Spec-*.md` has a `## ✅ Spec Approved` section. If not, run `/agtoosa-spec` first.
-> 2. `Docs/Master-Plan.md` has tasks listed under `## Active Tasks`. If not, run `/agtoosa-spec tasks` to generate them.
+> 1. The active `AgToosa_Spec-*.md` has a `## ✅ Spec Approved` section. If not, **stop** and instruct the user to run `/agtoosa-spec` (or approve the spec). Do **not** auto-run `/agtoosa-spec`.
+> 2. `Docs/Master-Plan.md` has tasks listed under `## Active Tasks`. If not, **stop** and instruct the user to run `/agtoosa-spec tasks`. Do **not** auto-run `/agtoosa-spec tasks`.
+
+## Terminal Evidence Contract
+
+> See `Docs/AgToosa_Agent.md` → **Terminal Evidence Contract** for the full rules.
+
+After every command, test run, scan, or parallel subagent during `/agtoosa-build`:
+
+- Report command run, exit code, pass/fail, warnings, errors, changed files, and next action.
+- A nonzero exit code, lint warning, markdownlint warning, or failing test **blocks** marking the task complete unless explicitly classified as accepted/pre-existing with evidence.
+- Before checking off any task in `Docs/Master-Plan.md` or the active spec, summarize any unresolved terminal output.
 
 ## Workflow
 
@@ -115,18 +127,8 @@ Execute TDD against a planned task list and run the full test suite.
         - In the active `AgToosa_Spec-*.md`, change `- [ ] N.M [task]` → `- [x] N.M [task]` in `## 3. Tasks / ### 3.1 Task Tree`.
         - In `Docs/Master-Plan.md` under `## Active Tasks`, change the same checkbox `- [ ] N.M` → `- [x] N.M`.
         - In `Docs/Master-Plan.md` under `## Active Cycle`, increment the progress bar: update the ▰/▱ fill and the counter (e.g. `▰▰▰▱▱▱▱▱ 2/8 tasks` → `▰▰▰▰▱▱▱▱ 3/8 tasks`). Each ▰ represents one completed task.
-        - Transition the Task sub-issue status to `Done` in Linear (if Linear is configured).
         - Update `Docs/Master-Plan.md`: increment the Tasks Done count for the Story row.
-        - Post a Linear comment on the Story issue:
-
-            ```
-            Task 🟢 [N]/[M] complete
-            Date: [YYYY-MM-DD HH:MM]
-
-            Completed: Task [N] — [task title]. Tests: [X] new, all green.
-
-            Next: Task [N+1]/[M] — [next task title].
-            ```
+        - Add an **Update Log** entry: `YYYY-MM-DD HH:MM — /agtoosa-build — Task 🟢 [N]/[M] complete — [Story ID] — [task title]; tests green.`
 
 5.  **Repeat** the Red-Green-Refactor cycle for every atomic task.
 

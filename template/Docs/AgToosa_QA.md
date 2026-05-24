@@ -13,13 +13,19 @@
 ## Objective
 Give QA testers a dedicated command to own the quality gate — from test planning through defect lifecycle — separate from the code review phase.
 
+## Terminal Evidence Contract
+
+> See `Docs/AgToosa_Agent.md` → **Terminal Evidence Contract** for the full rules.
+
+During `/agtoosa-qa run`, capture command run, exit code, pass/fail, warnings, errors, changed files, and next action for every test command. Failing tests or nonzero exits block AC sign-off unless explicitly accepted with evidence. Summarize unresolved terminal output in the QA report before the approval gate.
+
 ## Workflow
 
 ### Part 1 — Test Plan Generation (`/agtoosa-qa plan`)
 
 1. **Read the active spec:**
    *   Open `Docs/AgToosa_Spec-*.md` and locate the `## Acceptance Criteria` table.
-   *   If no AC table exists, stop and tell the user to add one (run `/agtoosa-spec` or add manually).
+   *   If no AC table exists, **stop** and instruct the user to run `/agtoosa-spec` or add ACs manually. Do **not** auto-run `/agtoosa-spec`.
 
 2. **Generate `Docs/AgToosa_TestPlan-[name].md`** containing:
    *   **Spec reference** — link to the source `AgToosa_Spec-*.md`

@@ -32,6 +32,14 @@ Break the active spec (or a provided PRD or plan) into independently-grabbable G
 ## Objective
 Transform a raw idea, feature, chore, or bug into a researched Specification with an architectural blueprint.
 
+## Phase Stop Contract
+
+> See `Docs/AgToosa_Agent.md` → **Phase Stop Contract** for the full rules.
+
+- `/agtoosa-spec` may run through Parts 1–4 (spec, architecture, tasks, test plan) but **must stop** at the approval gate below.
+- Do **not** run `/agtoosa-build` automatically after the approval gate — wait for the user to invoke `/agtoosa-build` explicitly.
+- Appending `## ✅ Spec Approved` marks readiness only; it does not start build.
+
 ## Workflow
 
 ### Part 1 — Research & Specification
@@ -136,7 +144,7 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
     *   If the user picks **L** or **XL**, prompt: "This is large. Should we split it into smaller Stories now, or proceed as one?"
     *   Record the estimate in `Docs/Master-Plan.md` on the Story row.
     *   Ask: "Enroll this Story in the current active cycle/sprint? (Yes / No)"
-    *   If Yes: add the Story to the active cycle in Linear and update `Docs/Master-Plan.md` under `## Active Cycle`.
+    *   If Yes: add the Story to `Docs/Master-Plan.md` under `## Active Cycle` and record enrollment in the **Update Log**.
 
 ### Part 4 — Task Planning
 
@@ -201,9 +209,11 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
     ✅ Ready to proceed
     Spec [name] generated: Goal Contract clear, [N] ACs, [N] Must-priority, threat model complete.
     [N] atomic tasks derived. Test plan skeleton: [N] test IDs mapped to [N] ACs.
-    → Approve — I'll mark the spec approved and the build can start
+    → Approve — I'll mark the spec approved; run /agtoosa-build when you are ready
     → Comment or request changes below
     ```
+
+*   **Stop here** after presenting the approval gate. Do not invoke `/agtoosa-build` until the user explicitly runs it.
 
 *   When the user approves, **append the following section verbatim** to the spec file:
 
@@ -215,16 +225,8 @@ Approved: [YYYY-MM-DD HH:MM]
 
 This approval marker is required by `/agtoosa-ship check` to verify the spec was signed off before deployment. Do not proceed to `/agtoosa-build` without appending it.
 
-*   **Linear Comment (Spec Approved):** Immediately after appending the approval marker, post a progress comment on the Story issue:
+*   **Master-Plan Update Log:** Immediately after appending the approval marker, add a timestamped entry to `Docs/Master-Plan.md` `## Update Log`:
 
-    ```
-    Spec ✅ Approved
-    Date: [YYYY-MM-DD HH:MM]
+    `YYYY-MM-DD HH:MM — /agtoosa-spec — Spec ✅ Approved — [Story ID] — [spec filename]; estimate [XS/S/M/L/XL]; [enrolled in cycle / backlog only].`
 
-    Spec [AgToosa_Spec-[name]-v[N].md] approved. Estimate: [XS/S/M/L/XL]. [Enrolled in cycle / Not yet enrolled].
-    [N] tasks planned. Test plan skeleton generated.
-
-    Next: /agtoosa-build to start TDD.
-    ```
-
-*   Transition the Story issue status from `Todo` to `Todo` (no change yet — status moves to `In Progress` when `/agtoosa-build` starts the first TDD task).
+    Keep the Active Cycle row at `Todo` until `/agtoosa-build` starts the first TDD task (then status → `In Progress` per `Docs/AgToosa_Governance.md`).

@@ -64,31 +64,10 @@ Before deploying, clean the branch history:
     *   Verify that the Goal Contract Success condition is satisfied by production behavior or the declared Proof / evidence.
     *   Verify the health endpoint returns 200 (if applicable).
     *   **If smoke tests pass:**
-        - Transition the Story issue status to `Done` in Linear.
-        - Update `Docs/Master-Plan.md`: move the Story row from `## Active Cycle` to `## Completed This Cycle`.
-        - Post a Linear comment on the Story issue:
+        - Update `Docs/Master-Plan.md`: move the Story row from `## Active Cycle` to `## Completed This Cycle`; set status to `Done` or `🏁 Shipped`.
+        - Add an **Update Log** entry: `YYYY-MM-DD HH:MM — /agtoosa-ship — Ship 🚀 Deployed — [Story ID] — smoke PASS; spec archived.`
 
-            ```
-            Ship 🚀 Deployed
-            Date: [YYYY-MM-DD HH:MM]
-
-            Smoke tests: PASS. All Must-priority ACs verified in production. Spec archived to Docs/archived/.
-
-            Next: Story closed. See /agtoosa-ship retro to close the sprint loop.
-            ```
-
-    *   **If any smoke test fails:** halt immediately, do NOT archive specs, trigger `/agtoosa-revert`, and post:
-
-            ```
-            Rollback 🔙 Triggered
-            Date: [YYYY-MM-DD HH:MM]
-
-            Smoke test failure: [brief description of failing test]. Deployment rolled back. Story reset to In Review.
-
-            Next: /agtoosa-build tdd to fix the failure, then re-run /agtoosa-ship.
-            ```
-
-        Transition the Story status back to `In Review` in Linear and update `Docs/Master-Plan.md`.
+    *   **If any smoke test fails:** halt immediately, do NOT archive specs, trigger `/agtoosa-revert`, set the Story status back to `In Review` in `Docs/Master-Plan.md`, and add an **Update Log** entry: `YYYY-MM-DD HH:MM — /agtoosa-ship — Rollback 🔙 Triggered — [Story ID] — [brief failure]. Next: /agtoosa-build tdd.`
     *   Capture smoke test pass/fail status in the changelog entry.
 
 ### Part 3 — Workspace Cleanup & Archiving (`/agtoosa-ship docs` runs Parts 3 + 4)
@@ -143,7 +122,7 @@ Run this step when `Docs/Master-Plan.md` exceeds approximately 200 lines **or** 
         <!-- Archived to Docs/archived/cycle-[YYYY-MM-DD].md -->
         ```
 
-    *   Remove all `Done` rows from `## Active Tasks` — these are already tracked in Linear.
+    *   Remove all `Done` rows from `## Active Tasks` — completed work is tracked in `## Completed This Cycle` and `Docs/archived/`.
     *   If `Master-Plan.md` still exceeds 200 lines after pruning, collapse `## Backlog` to titles only (drop Estimate and Epic columns) until the next `/agtoosa-init zoom-out` refresh.
 
 ## Output

@@ -5,7 +5,7 @@
 **The Spec-Driven Agentic AI Framework for Software Development**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-4.2.0-green.svg)](https://github.com/sky2464/AgToosa/releases)
+[![Version](https://img.shields.io/badge/version-4.3.0-green.svg)](https://github.com/sky2464/AgToosa/releases)
 [![CI Status](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml)
 [![Security Scan](https://github.com/sky2464/AgToosa/actions/workflows/security-scan.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/security-scan.yml)
 [![Semantic Release](https://github.com/sky2464/AgToosa/actions/workflows/release.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/release.yml)
@@ -49,7 +49,7 @@ If any are missing, the bootstrap script will tell you how to install them. Inst
 **macOS & Linux:**
 ```bash
 # Using a specific release (recommended)
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v4.2.0
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v4.3.0
 
 # Or using latest main branch
 bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh)
@@ -101,12 +101,12 @@ AgToosa is a **framework of markdown instructions** that transforms any AI codin
 
 ### Key Principles
 
-- 🔒 **Security by Design** — STRIDE threat modeling, SBOM generation, PII redaction, sandboxed execution
+- 🔒 **Security by Design** — STRIDE threat modeling, SBOM/SAST/DAST guidance in build and review workflows (your AI runs the checks; AgToosa does not execute them)
 - 📋 **Spec-Driven** — Every feature starts with research, a formal specification, and an architectural plan
-- 🧪 **Test-Driven Development** — Red-Green-Refactor cycle enforced during build
-- 🧠 **Context-Aware** — The AI maintains project state in Linear, with `Docs/Master-Plan.md` as the workspace mirror
+- 🧪 **Test-Driven Development** — Red-Green-Refactor cycle instructed during `/agtoosa-build`
+- 🧠 **Context-Aware** — `Docs/Master-Plan.md` is the project-management source of truth (replaces Linear, Jira, GitHub Projects, and similar trackers)
 - 🔄 **4-Phase Lifecycle** — Spec → Build → Review → Ship (after a one-time `/agtoosa-init` setup)
-- 🛡️ **Observable** — OpenTelemetry, structured logging, and distributed tracing by default
+- 🛡️ **Observable** — OpenTelemetry-style hooks are workflow guidance when your stack supports them
 
 ---
 
@@ -371,18 +371,19 @@ TDD is configured during `/agtoosa-init` and enforced during every `/agtoosa-bui
 
 ## Security Features
 
-AgToosa embeds enterprise-grade security into every phase:
+AgToosa **instructs** your AI assistant to apply these practices. The generator does not run scans or sandboxes itself. See `template/Docs/AgToosa_Readiness.md` for the full workflow-vs-enforcement matrix.
 
-| Feature | Phase | Description |
-|---------|-------|-------------|
-| **STRIDE Threat Modeling** | `/agtoosa-spec` | DFD generation and threat analysis before code |
-| **Sandboxed Execution** | `/agtoosa-build` | Ephemeral Docker/Firecracker environments |
-| **SBOM Generation** | `/agtoosa-build` | Software Bill of Materials for supply chain security |
-| **SAST/DAST Scanning** | `/agtoosa-build` `/agtoosa-review` | Semgrep, CodeQL, Gitleaks integration |
-| **IaC Scanning** | `/agtoosa-build` | Checkov/tfsec for cloud infrastructure |
-| **PII Redaction** | Always | Scrub sensitive data before LLM context |
-| **Prompt Injection Guard** | Always | Sanitize inputs from untrusted sources |
-| **Zero-Trust Architecture** | Always | Principle of least privilege throughout |
+| Feature | Phase | Workflow guidance | Generator enforces |
+|---------|-------|-------------------|-------------------|
+| **STRIDE Threat Modeling** | `/agtoosa-spec` | DFD and threat analysis before code | No |
+| **Sandboxed Execution** | `/agtoosa-build` | Ephemeral Docker/Firecracker when applicable | No |
+| **SBOM Generation** | `/agtoosa-build` | Software Bill of Materials and dependency audit | No |
+| **SAST/DAST Scanning** | `/agtoosa-build` `/agtoosa-review` | Semgrep, CodeQL, Gitleaks when installed | No |
+| **IaC Scanning** | `/agtoosa-build` | Checkov/tfsec for cloud infrastructure | No |
+| **PII Redaction** | Always | Scrub sensitive data before LLM context | No |
+| **Prompt Injection Guard** | Always | Sanitize inputs from untrusted sources | No |
+| **Initial readiness gates** | `/agtoosa-status readiness` | Context, spec, tests, threat model, task tree | No |
+| **Template file install** | `agtoosa.sh` | Copies registered workflow docs to your project | Yes |
 
 ---
 
@@ -439,7 +440,8 @@ your-project/
     ├── CONTEXT-FORMAT.md     # Context file format reference
     ├── ADR-FORMAT.md         # ADR format reference
     ├── SPEC-FORMAT.md        # Single-file spec format reference (EARS ACs, task tree, Wave Plan)
-    ├── Master-Plan.md        # Workspace mirror of the Linear project state
+    ├── Master-Plan.md        # Source of truth for project state and backlog
+    ├── AgToosa_Readiness.md  # Initial readiness checklist and promise-to-proof matrix
     ├── AgToosa_Changelog.md    # Auto-maintained changelog
     ├── Context/              # Project context (created by /agtoosa-init)
     └── archived/             # Completed specs & plans
@@ -456,8 +458,8 @@ your-project/
 | Smart init (AI config validation) | ✅ | ❌ | ✅ | ❌ |
 | Security by design (STRIDE) | ✅ | ❌ | ❌ | ❌ |
 | Virtual specialist personas | ✅ | ❌ | ❌ | ✅ |
-| Real browser QA | ✅ | ❌ | ❌ | ✅ |
-| SBOM & supply chain | ✅ | ❌ | ❌ | ❌ |
+| Real browser QA (workflow) | ✅ | ❌ | ❌ | ✅ |
+| SBOM & supply chain (workflow) | ✅ | ❌ | ❌ | ❌ |
 | Zero dependencies | ✅ | ✅ | ❌ | ❌ |
 | Multi-platform AI support | ✅ | ❌ | ❌ | ❌ |
 | Local-first (no curl install) | ✅ | ❌ | ❌ | ❌ |
@@ -485,7 +487,7 @@ AgToosa ships with comprehensive GitHub automation to keep your project healthy 
 ### Community Features
 
 - **Discussions** — Q&A, Ideas, Show & Tell categories for community engagement
-- **GitHub Projects** — Public project board synced with Linear (AgToosa)
+- **GitHub Projects** — Optional public board; `Docs/Master-Plan.md` remains the AgToosa source of truth
 - **Issue Templates** — Structured bug/feature forms (`.github/ISSUE_TEMPLATE/`)
 - **Discussion Templates** — Q&A, Ideas, Show & Tell templates (`.github/discussion_templates/`)
 

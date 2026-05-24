@@ -7,9 +7,28 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+### Added
+
+- **DEV-010 — Workflow reliability (phase gates and terminal evidence).** Shared Phase Stop and Terminal Evidence contracts in `AgToosa_Agent.md`; wired into Spec, Build, Review, and QA workflow docs; platform adapter parity for spec and build entry points; W1–W5 bats coverage.
+
 ### Planned
 
 - `/agtoosa-ship check` cleanup — separate follow-up story to decide whether readiness-gate-only sub-command references should remain or be folded into `/agtoosa-ship`.
+
+---
+
+## [4.3.0] — 2026-05-23
+
+Release **4.3** cycle: DEV-009 (197 bats tests).
+
+### Added
+
+- **DEV-009 — Product promise alignment and initial readiness gates.** `Docs/Master-Plan.md` is consistently the PM source of truth in README and workflow docs; `Docs/AgToosa_Readiness.md` separates workflow guidance from generator enforcement; `/agtoosa-status readiness` audits seven initial gates with deterministic Fix-with commands; R1–R8 bats coverage; status typo helper now includes `readiness` sub-command.
+
+### Changed
+
+- Removed stale Linear PM language from template workflow docs (`Spec`, `Build`, `Review`, `Ship`, `Debug`, `DEEPENING`, platform rules).
+- README and `SECURITY.md` distinguish workflow guidance from generator-enforced behavior.
 
 ---
 

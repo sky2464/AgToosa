@@ -288,10 +288,10 @@ If no findings match, omit the block entirely.
 
 ### Part 5.6 — Sub-command typo helper
 
-When invoked as `/agtoosa-status <token>` and `<token>` is not in the set `{plan, git, orphans}`, prepend exactly this line to the dashboard output before any other content:
+When invoked as `/agtoosa-status <token>` and `<token>` is not in the set `{plan, readiness, git, orphans}`, prepend exactly this line to the dashboard output before any other content:
 
 ```
-Note: '<token>' is not a defined sub-command. Did you mean: plan, git, orphans? Falling back to full dashboard.
+Note: '<token>' is not a defined sub-command. Did you mean: plan, readiness, git, orphans? Falling back to full dashboard.
 ```
 
 Then run the full dashboard as usual. This replaces any generic "unknown sub-command" fallback wording.
