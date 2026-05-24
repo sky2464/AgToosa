@@ -198,6 +198,7 @@ Use when the AI agent is focused on a specific file or function and needs broade
 
     *   Read `Docs/Context/product.md`, `tech-stack.md`, `workflow.md`, and `Docs/Context/CONTEXT.md`.
     *   Prefer reusing existing AgToosa workflow skills (`.codex/skills/agtoosa-*`) and platform adapters before proposing a new project skill.
+    *   **Reserved workflow names:** `agtoosa-*` skill names and `/agtoosa-*` triggers belong to installed AgToosa workflow adapters. Reject generated project skill candidates named `agtoosa-*` or triggered by `/agtoosa-*` unless the decision is **Update existing** on an AgToosa workflow adapter (never a new duplicate).
     *   Reject one-off tasks, duplicates, and candidates without a clear validation command or checklist.
     *   **Secret safety:** never copy credentials, private keys, tokens, or sensitive config values into skill bodies. If a candidate needs secret awareness, add a safety note and reference file paths only.
     *   Present candidates in a table with: **Skill name**, **Trigger description**, **Purpose**, **Inputs**, **Optional resources**, **Validation**, **Decision** (`Generate` / `Update existing` / `Do not generate`).

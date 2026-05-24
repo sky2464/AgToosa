@@ -1,8 +1,10 @@
 ---
+name: agtoosa-spec
 mode: agent
 description: "AgToosa: research → 6 forcing questions → Executable Specification → STRIDE threat model → atomic task planning"
 tools: [codebase, githubSearch, fetch]
 ---
+name: agtoosa-spec
 
 Read Docs/AgToosa_Spec.md and execute the specification workflow. **Generated Project Mode** — see Docs/AgToosa_Agent.md → **Operating Contexts**.
 

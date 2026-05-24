@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v4.4.0" ]]
+  [[ "$output" == "AgToosa v4.5.0" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1249,7 +1249,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "4.4.0" ]
+  [ "$ver" = "4.5.0" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1260,7 +1260,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"4.4.0"* ]]
+  [[ "$output" == *"4.5.0"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -1762,4 +1762,53 @@ PY
   [[ "$output" == *"Docs/AgToosa_Init.md"* ]]
   [[ "$output" == *"Docs/AgToosa_Spec.md"* ]]
   [[ "$output" == *"Docs/AgToosa_Status.md"* ]]
+}
+
+# ── DEV-012 GitHub slash-command routing (G1–G5) ─────────────────────────────
+
+@test "G1: every GitHub prompt adapter declares name matching file stem" {
+  local f stem
+  for f in "$TEMPLATE_DIR"/.github/prompts/agtoosa-*.prompt.md; do
+    stem=$(basename "$f" .prompt.md)
+    grep -qE "^name: ${stem}$" "$f" || {
+      echo "Missing name: ${stem} in $f"
+      false
+    }
+  done
+}
+
+@test "G2: GitHub instructions forbid /create-skill routing for /agtoosa-*" {
+  local copilot="$TEMPLATE_DIR/.github/copilot-instructions.md"
+  local agent="$TEMPLATE_DIR/.github/agents/agtoosa.agent.md"
+  grep -q '/agtoosa-\*' "$copilot"
+  grep -qE '[Dd]o \*\*not\*\* (route|treat)' "$copilot"
+  grep -q '/create-skill' "$copilot"
+  grep -q '/agtoosa-\*' "$agent"
+  grep -q '/create-skill' "$agent"
+  grep -q 'agtoosa-\*' "$agent"
+}
+
+@test "G3: skill synthesis docs reject agtoosa-* duplicate workflow names" {
+  local init="$TEMPLATE_DIR/Docs/AgToosa_Init.md"
+  local spec="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  local skills="$TEMPLATE_DIR/Docs/AgToosa_Skills.md"
+  grep -q 'Reserved workflow names' "$init"
+  grep -q 'Reserved workflow names' "$spec"
+  grep -q 'Reserved workflow names' "$skills"
+  grep -q '/agtoosa-\*' "$init"
+  grep -q '/agtoosa-\*' "$spec"
+  grep -q 'Do not generate' "$skills"
+}
+
+@test "G4: agtoosa-spec GitHub prompt points to AgToosa_Spec.md and phase stop" {
+  local f="$TEMPLATE_DIR/.github/prompts/agtoosa-spec.prompt.md"
+  grep -q 'Docs/AgToosa_Spec.md' "$f"
+  grep -qE 'do not run /agtoosa-build automatically|Do \*\*not\*\* run `/agtoosa-build` automatically' "$f"
+  grep -q 'approval gate' "$f"
+}
+
+@test "G5: DEV-012 G-filter regression suite is defined" {
+  local count
+  count=$(grep -cE '^@test "G[1-5]:' "$BATS_TEST_FILENAME" || true)
+  [ "$count" -eq 5 ]
 }

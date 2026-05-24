@@ -1,8 +1,10 @@
 ---
+name: agtoosa-build
 mode: agent
 description: "AgToosa: TDD Red-Green-Refactor against the planned task list → tests + SAST/DAST"
 tools: [codebase, terminal]
 ---
+name: agtoosa-build
 
 Read Docs/AgToosa_Build.md and execute the build workflow. If prerequisites fail, **stop** and instruct the user — do **not** auto-run `/agtoosa-spec`. Report **Terminal Evidence Contract** fields for every command and parallel subagent.
 

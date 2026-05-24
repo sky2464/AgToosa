@@ -8,6 +8,10 @@ Before beginning any task, read and follow `Docs/AgToosa_Agent.md` for core rule
 
 Then load all scoped instruction files in `.github/instructions/`.
 
+## GitHub slash-command routing
+
+When the user types `/agtoosa-*` (for example `/agtoosa-spec` or `/agtoosa-init`), treat it as an AgToosa **workflow prompt** — execute the matching `.github/prompts/agtoosa-*.prompt.md` adapter and the corresponding `Docs/AgToosa_*.md` workflow. Do **not** route `/agtoosa-*` to `/create-skill` or invent a generic skill-creation flow for these names.
+
 ## Core Commands
 
 When the user types any of these commands, read the corresponding workflow file and execute it precisely.

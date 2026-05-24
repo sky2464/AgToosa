@@ -1,8 +1,10 @@
 ---
+name: agtoosa-task
 mode: agent
 description: "AgToosa: fast task capture to Master-Plan.md for bugs, chores, spikes, and fixes"
 tools: [codebase]
 ---
+name: agtoosa-task
 
 Read Docs/AgToosa_Task.md and execute the lightweight issue capture workflow.
 

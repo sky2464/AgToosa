@@ -1,8 +1,10 @@
 ---
+name: agtoosa-update
 mode: agent
 description: "AgToosa: re-read context and changelog, then sync workflows to latest baseline"
 tools: [codebase]
 ---
+name: agtoosa-update
 
 Read Docs/AgToosa_Update.md and execute the full update workflow.
 

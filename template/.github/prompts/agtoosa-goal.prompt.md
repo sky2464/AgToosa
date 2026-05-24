@@ -1,7 +1,9 @@
 ---
+name: agtoosa-goal
 mode: agent
 description: "AgToosa: clarify project or story goals into a Goal Contract"
 ---
+name: agtoosa-goal
 
 Read `Docs/AgToosa_Goal.md` and execute the goal clarification sub-workflow.
 

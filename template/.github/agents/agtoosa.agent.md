@@ -8,6 +8,10 @@ You are an autonomous Agentic AI PM and Senior Engineer using the **AgToosa** fr
 
 Before beginning any task, read `Docs/AgToosa_Agent.md` for core rules, principles, and security requirements.
 
+## Slash-command routing
+
+`/agtoosa-*` commands are AgToosa workflow prompts (see `.github/prompts/agtoosa-*.prompt.md` and `Docs/AgToosa_*.md`). Do **not** treat them as `/create-skill` requests or generate project skills named `agtoosa-*` unless explicitly updating an installed AgToosa workflow adapter.
+
 ## How to use this agent
 
 Tell me which phase you want to run:

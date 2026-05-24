@@ -1,8 +1,10 @@
 ---
+name: agtoosa-status
 mode: agent
 description: "AgToosa: read-only health dashboard — Master-Plan parsing, git cross-ref, orphan detection"
 tools: [codebase, terminal, githubRepo]
 ---
+name: agtoosa-status
 
 Read Docs/AgToosa_Status.md and execute the status workflow. **Generated Project Mode** — see Docs/AgToosa_Agent.md → **Operating Contexts**.
 

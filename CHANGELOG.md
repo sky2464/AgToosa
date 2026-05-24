@@ -13,6 +13,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [4.5.0] — 2026-05-24
+
+Release **4.5** cycle: DEV-011 (207 bats tests).
+
+### Added
+
+- **DEV-011 — Product vs dogfood operating contexts.** **Generated Project Mode** and **Maintainer Dogfood Mode** documented in `docs/agtoosa-maintainer.md`, ADR-008, `Docs/AgToosa_Agent.md`, and Init/Spec/Status workflow callouts; spec/status platform adapters aligned; B1–B5 bats coverage. Smoke: B1–B5 all green.
+
+---
+
 ## [4.4.0] — 2026-05-24
 
 Release **4.4** cycle: DEV-010 (202 bats tests).

@@ -9,6 +9,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ### Added
 
+- 2026-05-24 — feature — product vs dogfood boundary: Generated Project Mode + Maintainer Dogfood Mode; B1–B5 bats (DEV-011) — `docs/archived/spec-DEV-011.md`
+
+### Added (prior)
+
 - 2026-05-24 — feature — workflow reliability: phase gates + terminal evidence; W1–W5 bats (DEV-010) — `docs/archived/spec-DEV-010.md`
 
 ### Added (prior)
