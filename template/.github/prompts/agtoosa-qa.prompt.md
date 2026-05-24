@@ -4,7 +4,6 @@ mode: agent
 description: "AgToosa: plan → run → report → triage: unit, integration, E2E, browser, a11y, performance"
 tools: [codebase, terminal]
 ---
-name: agtoosa-qa
 
 Read Docs/AgToosa_QA.md and execute the QA workflow.
 

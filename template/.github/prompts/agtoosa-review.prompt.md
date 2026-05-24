@@ -4,7 +4,6 @@ mode: agent
 description: "AgToosa: 4-persona parallel review (Security · Arch · Product · QA) + Simplifier pass"
 tools: [codebase, terminal]
 ---
-name: agtoosa-review
 
 Read Docs/AgToosa_Review.md and execute the multi-persona review workflow.
 

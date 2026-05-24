@@ -4,7 +4,6 @@ mode: agent
 description: "AgToosa: one-time project init — scan codebase, validate AI configs, create Docs/Context/ files"
 tools: [codebase]
 ---
-name: agtoosa-init
 
 Read Docs/AgToosa_Init.md and execute the initialization workflow.
 

@@ -4,7 +4,6 @@ mode: agent
 description: "AgToosa: git-aware logical rollback by phase or commit"
 tools: [codebase, terminal]
 ---
-name: agtoosa-revert
 
 Read Docs/AgToosa_Revert.md and execute the rollback workflow.
 

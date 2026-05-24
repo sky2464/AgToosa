@@ -4,7 +4,6 @@ mode: ask
 description: "AgToosa: static command reference or read-only /agtoosa-help next assistance"
 tools: []
 ---
-name: agtoosa-help
 
 Display the AgToosa command reference.
 

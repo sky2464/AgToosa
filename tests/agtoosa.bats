@@ -1767,11 +1767,16 @@ PY
 # ── DEV-012 GitHub slash-command routing (G1–G5) ─────────────────────────────
 
 @test "G1: every GitHub prompt adapter declares name matching file stem" {
-  local f stem
+  local f stem count
   for f in "$TEMPLATE_DIR"/.github/prompts/agtoosa-*.prompt.md; do
     stem=$(basename "$f" .prompt.md)
     grep -qE "^name: ${stem}$" "$f" || {
       echo "Missing name: ${stem} in $f"
+      false
+    }
+    count=$(grep -cE '^name: agtoosa-' "$f" || true)
+    [ "$count" -eq 1 ] || {
+      echo "Expected exactly one name: line in frontmatter of $f (found $count)"
       false
     }
   done

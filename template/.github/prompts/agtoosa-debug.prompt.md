@@ -4,7 +4,6 @@ mode: agent
 description: "AgToosa: diagnose hard bugs — feedback-loop → reproduce → minimise → hypothesise → instrument → fix+regress"
 tools: [codebase, terminal]
 ---
-name: agtoosa-debug
 
 Read Docs/AgToosa_Debug.md and execute the diagnosis workflow.
 

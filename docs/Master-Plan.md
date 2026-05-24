@@ -12,7 +12,7 @@
 | Milestone | `v4.5.0` (shipped 2026-05-24) |
 | Active cycle | Release 4.6 (DEV-012) |
 | Cycle capacity | `40 story points` |
-| Current phase | 🔍 Review (build complete) |
+| Current phase | 🚢 Ship (review passed) |
 
 ## Active Cycle
 
@@ -21,7 +21,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-012 | Feature: GitHub Slash Command Routing | Feature | S | 🟨 In Progress | 11/11 |
+| DEV-012 | Feature: GitHub Slash Command Routing | Feature | S | 🔍 In Review | 11/11 |
 
 Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blocked · 🔧 Awaiting Manual · 🏁 Shipped
 
@@ -188,3 +188,5 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-05-24 | ✅ Spec approved — DEV-012; estimate S; Release 4.6; 11 tasks; test plan: docs/AgToosa_TestPlan-DEV-012.md | AgToosa |
 | 2026-05-24 | 🏗️ Build 🏗️ Started — DEV-012, 11 tasks; scope: template/.github/prompts, copilot-instructions, agtoosa.agent, AgToosa_Init/Spec/Skills, agtoosa-spec skill, tests/agtoosa.bats | AgToosa |
 | 2026-05-24 | 🏗️ Build complete — DEV-012 GitHub slash routing; G1–G5 5/5 green; full suite 212/212 green | AgToosa |
+| 2026-05-24 | 🔍 Review 🔍 Started — DEV-012 — 4-persona review running | AgToosa |
+| 2026-05-24 | Review ✅ Approved — DEV-012; 0 Critical, 5 Warnings (1 fixed, 4 accepted); report: docs/archived/review-DEV-012.md | AgToosa |

@@ -4,7 +4,6 @@ mode: agent
 description: "AgToosa: pre-flight → deploy → archive spec → update changelog → suggest next story"
 tools: [codebase, terminal, githubRepo]
 ---
-name: agtoosa-ship
 
 Read Docs/AgToosa_Ship.md and execute the ship workflow.
 
