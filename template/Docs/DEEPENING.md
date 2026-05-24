@@ -34,5 +34,5 @@ When designing or reviewing a module, ask:
 ## Application in AgToosa
 
 - `/agtoosa-review arch` uses this checklist to identify shallow modules during architecture reviews.
-- When a shallow module is found: file a refactor task in Linear, reference this document.
+- When a shallow module is found: capture a refactor task in `Docs/Master-Plan.md` **Backlog** via `/agtoosa-task`, and reference this document.
 - Reference alongside `Docs/LANGUAGE.md` — deep modules should use domain language at every level.

@@ -4,8 +4,9 @@
 
 | Sub-command | Runs |
 |-------------|------|
-| `/agtoosa-status` | Full dashboard: Master-Plan parsing → git cross-reference → orphan detection → health score → dashboard |
+| `/agtoosa-status` | Full dashboard: Master-Plan parsing → initial readiness → git cross-reference → orphan detection → health score → dashboard |
 | `/agtoosa-status plan` | Part 1 only — Master-Plan.md health check |
+| `/agtoosa-status readiness` | Part 1.5 only — initial product readiness gates (`Docs/AgToosa_Readiness.md`) |
 | `/agtoosa-status git` | Part 2 only — git cross-reference |
 | `/agtoosa-status orphans` | Part 3 only — orphan detection |
 
@@ -67,6 +68,28 @@ Produce a read-only health dashboard by parsing `Docs/Master-Plan.md`, cross-ref
     *   **Awaiting Manual — not a stuck state:** For each story with status 🔧 Awaiting Manual, do **not** flag it as stuck or stale. Record as ℹ️ Info — "`[ID]` is awaiting `[N]` manual task(s). No action needed from the agent until the user completes those steps."
     *   **Dangling Blocked:** For each ID in the Blocked table, verify it appears in Active Cycle or Backlog. If not, record: 🟡 Warning — "Blocked item `[ID]` is not tracked in Active Cycle or Backlog. *Fix with:* `/agtoosa-task`".
 
+### Part 1.5 — Initial Product Readiness (`/agtoosa-status readiness` runs this exclusively)
+
+Audit the seven gates in `Docs/AgToosa_Readiness.md`. For each failed gate, record a 🟡 Warning (or 🔴 Error if the active story is 🟨 In Progress and the gap blocks build) with the **Fix with** command from that doc.
+
+1.  **Context files populated** — Inspect `Docs/Context/product.md`, `tech-stack.md`, `workflow.md`. Flag placeholder patterns (`[name]`, `[url]`, `[e.g.`, `[N]`, `[YYYY-MM-DD]`). *Fix with:* `/agtoosa-init`.
+
+2.  **Epics present** — `## Epics` must contain at least one non-placeholder Epic. *Fix with:* `/agtoosa-init`.
+
+3.  **Active story has approved spec** — For each 🟨 In Progress or 🟦 Todo row in `## Active Cycle`, require a matching spec file with `## ✅ Spec Approved`. *Fix with:* `/agtoosa-spec`.
+
+4.  **Must ACs mapped to tests** — For the active story's spec, every **Must** `AC-NNN` must appear in `Docs/AgToosa_TestPlan-*.md`. *Fix with:* `/agtoosa-spec tasks` or `/agtoosa-qa plan`.
+
+5.  **Security / threat model present** — Active spec must include threat model content per `Docs/SPEC-FORMAT.md`. *Fix with:* `/agtoosa-spec plan`.
+
+6.  **Task tree and wave plan present** — `## Active Tasks` must have checkboxes for the In Progress story; spec `## 3. Tasks` must include `### Wave Plan`. *Fix with:* `/agtoosa-spec tasks`.
+
+7.  **Release / version parity** — When `package.json`, `pyproject.toml`, or `VERSION` declares a version, it must match `Docs/Master-Plan.md` **Milestone** and the latest `Docs/AgToosa_Changelog.md` version heading (ignore leading `v`). *Fix with:* align versions manually or `/agtoosa-ship docs`.
+
+Present a compact **Initial Product Readiness** table in the dashboard (gate name · pass/fail · Fix with). On the full dashboard, include this table after Plan Completeness findings and before Git Activity.
+
+**Plan Completeness deductions (readiness):** −5 per failed readiness gate (maximum −35).
+
 ### Part 2 — Git Cross-Reference (`/agtoosa-status git` runs this exclusively)
 
 1.  **Recent activity summary:**
@@ -114,6 +137,7 @@ Compute four category scores, each starting at 100 with deductions applied. Floo
 *   −5 per placeholder value still in Project Charter
 *   −10 if Update Log is stale (last entry > 7 days ago)
 *   −10 if Active Cycle is empty (no active stories)
+*   −5 per failed Initial Product Readiness gate (Part 1.5; maximum −35)
 
 **Task Consistency (25%):**
 *   −8 per Tasks Done counter mismatch (automated tasks only; `[manual]` and `[manual-deferred]` tasks are excluded)
@@ -206,7 +230,7 @@ Project: [name] · Cycle: [cycle] · Phase: [phase emoji]
 2. …
 ```
 
-When running a sub-command (`plan`, `git`, or `orphans`), output only the relevant sections of the dashboard. Always include the header and health score sections.
+When running a sub-command (`plan`, `readiness`, `git`, or `orphans`), output only the relevant sections of the dashboard. Always include the header and health score sections (readiness-only runs may omit git/orphan sections).
 
 ### Part 5.5 — Recommended Next Actions generation
 
@@ -222,6 +246,7 @@ The dashboard MUST emit a deterministic, ranked, deduplicated "Recommended Next 
 | Tasks Done counter mismatch; stale checkboxes referenced by recent commits | `/agtoosa-build` |
 | Blocked item > 7d (Warning) or > 30d (Error); Dangling Blocked ID not in Active Cycle/Backlog; Commit references untracked story ID; Orphaned spec file not referenced in Master-Plan | `/agtoosa-task` |
 | WIP / fixup / squash commits; Stuck-Done story (Done in Active Cycle but not in Completed) | `/agtoosa-ship` |
+| Failed Initial Product Readiness gate (context, epics, approved spec, Must AC tests, threat model, task tree/wave, version parity) | See gate row in `Docs/AgToosa_Readiness.md` — typically `/agtoosa-init`, `/agtoosa-spec`, `/agtoosa-spec tasks`, `/agtoosa-spec plan`, or `/agtoosa-qa plan` |
 
 **Step 2 — Sort findings by priority:**
 
@@ -250,6 +275,7 @@ Use these verb-phrases verbatim:
 - `/agtoosa-build` → "reconcile task counters and stale checkboxes"
 - `/agtoosa-task` → "resolve blocked, dangling, untracked, or orphan items"
 - `/agtoosa-ship` → "clean up WIP commits and stuck-Done stories"
+- `/agtoosa-qa plan` → "map Must ACs to test IDs in the test plan"
 
 Rationale lines:
 
@@ -288,10 +314,10 @@ If no findings match, omit the block entirely.
 
 ### Part 5.6 — Sub-command typo helper
 
-When invoked as `/agtoosa-status <token>` and `<token>` is not in the set `{plan, git, orphans}`, prepend exactly this line to the dashboard output before any other content:
+When invoked as `/agtoosa-status <token>` and `<token>` is not in the set `{plan, readiness, git, orphans}`, prepend exactly this line to the dashboard output before any other content:
 
 ```
-Note: '<token>' is not a defined sub-command. Did you mean: plan, git, orphans? Falling back to full dashboard.
+Note: '<token>' is not a defined sub-command. Did you mean: plan, readiness, git, orphans? Falling back to full dashboard.
 ```
 
 Then run the full dashboard as usual. This replaces any generic "unknown sub-command" fallback wording.

@@ -28,16 +28,18 @@ AgToosa is a framework of markdown instructions — it does not execute code its
 
 ### Built-In Security Features
 
-| Feature | Description |
-|---------|-------------|
-| **STRIDE Threat Modeling** | Every `/agtoosa-spec` phase requires Data Flow Diagrams and STRIDE analysis before code is written |
-| **Sandboxed Execution** | `/agtoosa-build` mandates ephemeral, isolated environments (Docker/Firecracker) |
-| **SBOM Generation** | Software Bill of Materials generated during `/agtoosa-build` for supply chain transparency |
-| **SAST/DAST Scanning** | Static and dynamic analysis (Semgrep, CodeQL, Gitleaks) integrated in `/agtoosa-build` and `/agtoosa-review` |
-| **IaC Security Scanning** | Checkov/tfsec for infrastructure-as-code compliance |
-| **PII Redaction** | Agent instructions mandate scrubbing of PII and secrets before LLM context |
-| **Prompt Injection Guard** | Input sanitization to protect against malicious prompt injection |
-| **Zero-Trust Architecture** | Principle of least privilege enforced throughout the workflow |
+AgToosa is markdown workflow guidance for AI assistants. **Workflow instructions** describe security steps; the **generator** only copies template files — it does not execute scans, sandboxes, or SBOM tools. Generated projects document the split in `Docs/AgToosa_Readiness.md`.
+
+| Feature | Workflow instructions | Generator enforces |
+|---------|----------------------|-------------------|
+| **STRIDE Threat Modeling** | Required in `/agtoosa-spec` (except `quick`) | No |
+| **Sandboxed Execution** | `/agtoosa-build` instructs isolated runs when applicable | No |
+| **SBOM Generation** | `/agtoosa-build` instructs SBOM and dependency audit | No |
+| **SAST/DAST Scanning** | `/agtoosa-build` and `/agtoosa-review security` instruct tool runs | No |
+| **IaC Security Scanning** | `/agtoosa-build` instructs Checkov/tfsec when IaC exists | No |
+| **PII Redaction** | Agent instructions mandate scrubbing before LLM context | No |
+| **Prompt Injection Guard** | Input sanitization guidance in workflow docs | No |
+| **Template integrity** | — | Yes — `agtoosa.sh` installs registered template files only |
 
 ### Scope
 

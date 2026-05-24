@@ -7,7 +7,7 @@ Dispatch rules based on arguments:
 - `plan` → Master-Plan.md health check only: parse all sections, check cross-section consistency, report findings.
 - `git` → git cross-reference only: scan recent commits, find WIP markers, detect unreported progress.
 - `orphans` → orphan detection only: find spec files and task IDs not tracked in Master-Plan.md.
-- Any other token → prepend exactly this line and run the full dashboard: `Note: '<token>' is not a defined sub-command. Did you mean: plan, git, orphans? Falling back to full dashboard.`
+- Any other token → prepend exactly this line and run the full dashboard: `Note: '<token>' is not a defined sub-command. Did you mean: plan, readiness, git, orphans? Falling back to full dashboard.`
 
 CRITICAL: This is a READ-ONLY command. Do NOT modify any files.
 

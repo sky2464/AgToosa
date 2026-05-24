@@ -10,5 +10,5 @@ Use when the user asks for `/agtoosa-status`, `$agtoosa-status`, or wants a heal
 ## Execute
 
 1. Read `Docs/AgToosa_Status.md` in full and **run** its read-only workflow precisely — never modify Master-Plan, specs, or git state.
-2. **Dispatch** `plan`, `git`, or `orphans` when provided; otherwise run the full dashboard flow.
+2. **Dispatch** `plan`, `readiness`, `git`, or `orphans` when provided; otherwise run the full dashboard flow.
 3. On successful completion, print verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

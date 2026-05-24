@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `Docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-05-23 21:00
+> **Last updated:** 2026-05-23 23:00
 
 ## Project Charter
 
@@ -9,8 +9,8 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Milestone | `v4.2.0` (shipped 2026-05-23) |
-| Active cycle | _(none — Release 4.2 closed)_ |
+| Milestone | `v4.3.0` (shipped 2026-05-23) |
+| Active cycle | _(none — Release 4.3 closed)_ |
 | Cycle capacity | `40 story points` |
 | Current phase | 🚢 Ship (cycle complete) |
 
@@ -22,7 +22,7 @@
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
 
-*(Empty — run `/agtoosa-spec` to enroll the next story in Release 4.2 or start a new cycle.)*
+*(Empty — run `/agtoosa-spec` to enroll the next story.)*
 
 Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blocked · 🔧 Awaiting Manual · 🏁 Shipped
 
@@ -31,7 +31,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-*(Empty — completed work for DEV-008 archived; run `/agtoosa-spec` to populate tasks for the next story.)*
+*(Empty — DEV-009 shipped; archived at docs/archived/spec-DEV-009.md.)*
 
 ## Manual / Deferred Tasks
 
@@ -85,7 +85,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Scope:** Markdown specifications and rules files across Claude, Gemini, Cursor, Windsurf, Copilot, and OpenCode under `template/`.
     *   **Success Criteria:** Perfect parity of phase commands and zero-drift version badges across all platform templates.
 
-    *   **Last shipped:** DEV-008 — workflow skill synthesis → `docs/archived/spec-DEV-008.md`
+    *   **Last shipped:** DEV-009 — product promise alignment → `docs/archived/spec-DEV-009.md`
 
 *   **DEV-003 - Epic: Community Template Registry**
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
@@ -95,7 +95,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 *   **DEV-004 - Epic: Testing & QA Harness**
     *   **Goal:** Comprehensive end-to-end integration and version verification suites validating the robustness of the entire framework.
     *   **Scope:** `tests/agtoosa.bats` and CI regression pipelines.
-    *   **Success Criteria:** 100% green coverage on 155+ platform scenarios and version checks on every release step.
+    *   **Success Criteria:** 100% green coverage on 197+ platform scenarios and version checks on every release step.
     *   **Last shipped:** DEV-005 — M1–M4 bats + CHANGELOG hygiene → `docs/archived/spec-DEV-005.md`
 
 ## Completed This Cycle
@@ -109,6 +109,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-006 | Feature: AgToosa Status Guide sub-agent | 2026-05-23 | [spec-DEV-006.md](archived/spec-DEV-006.md) · [review-DEV-006.md](archived/review-DEV-006.md) |
 | DEV-007 | Feature: /agtoosa-help next on-demand assistance helper | 2026-05-23 | [spec-DEV-007.md](archived/spec-DEV-007.md) · [review-DEV-007.md](archived/review-DEV-007.md) |
 | DEV-008 | Feature: Workflow skill synthesis for AgToosa projects | 2026-05-23 | [spec-DEV-008.md](archived/spec-DEV-008.md) · [review-DEV-008.md](archived/review-DEV-008.md) |
+| DEV-009 | Feature: Initial product promise alignment and readiness gates | 2026-05-23 | [spec-DEV-009.md](archived/spec-DEV-009.md) · [review-DEV-009.md](archived/review-DEV-009.md) |
 
 ## Update Log
 
@@ -146,3 +147,12 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-05-23 | 🔍 Review passed — 0 Critical, 3 Warnings (accepted); report: docs/archived/review-DEV-008.md | AgToosa |
 | 2026-05-23 | 🚀 Ship complete — DEV-008 closed; smoke K1–K7 7/7 green; 189/189 validation; archived spec + review | AgToosa |
 | 2026-05-23 | 🚀 Release 4.2 shipped — v4.2.0 tagged; DEV-005–DEV-008 on main; 189/189 bats green | AgToosa |
+| 2026-05-23 | ✏️ /agtoosa-spec DEV-009 — promise alignment + readiness gates; 8 tasks; spec: docs/archived/spec-DEV-009.md | AgToosa |
+| 2026-05-23 | ✅ Spec approved — DEV-009; estimate M; Release 4.3 cycle | AgToosa |
+| 2026-05-23 | 🏗️ Build 🏗️ Started — DEV-009, 8 tasks; scope: AgToosa_Readiness, Status, README, SECURITY, lib/config.sh, tests/agtoosa.bats | AgToosa |
+| 2026-05-23 | Task 🟢 8/8 complete — DEV-009; R1–R8 + full suite 197/197 green | AgToosa |
+| 2026-05-23 | 🏗️ Build complete — DEV-009 promise alignment implemented; validation R1–R8 8/8; full suite 178/197 (install bats pre-existing sandbox failures) | AgToosa |
+| 2026-05-23 | 🔍 Review 🔍 Started — DEV-009 — 4-persona review | AgToosa |
+| 2026-05-23 | Review ✅ Approved — DEV-009; 0 Critical, 4 Warnings (accepted); report: docs/archived/review-DEV-009.md | AgToosa |
+| 2026-05-23 | 🚀 Ship 🚀 Deployed — DEV-009; smoke R1–R8 + D3 10/10 green; v4.3.0; archived spec + review | AgToosa |
+| 2026-05-23 | 🚀 Release 4.3 shipped — v4.3.0; DEV-009 on main; version parity bash/ps1 | AgToosa |

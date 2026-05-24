@@ -13,6 +13,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [4.3.0] — 2026-05-23
+
+Release **4.3** cycle: DEV-009 (197 bats tests).
+
+### Added
+
+- **DEV-009 — Product promise alignment and initial readiness gates.** `Docs/Master-Plan.md` is consistently the PM source of truth in README and workflow docs; `Docs/AgToosa_Readiness.md` separates workflow guidance from generator enforcement; `/agtoosa-status readiness` audits seven initial gates with deterministic Fix-with commands; R1–R8 bats coverage; status typo helper now includes `readiness` sub-command.
+
+### Changed
+
+- Removed stale Linear PM language from template workflow docs (`Spec`, `Build`, `Review`, `Ship`, `Debug`, `DEEPENING`, platform rules).
+- README and `SECURITY.md` distinguish workflow guidance from generator-enforced behavior.
+
+---
+
 ## [4.2.0] — 2026-05-23
 
 Release **4.2** cycle: DEV-005 through DEV-008 (189 bats tests).

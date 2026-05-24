@@ -9,9 +9,10 @@ Read Docs/AgToosa_Status.md and execute the status workflow.
 Sub-command dispatch:
 - No argument → full status dashboard
 - `plan` → Master-Plan.md health check only
+- `readiness` → initial product readiness gates only (`Docs/AgToosa_Readiness.md`)
 - `git` → git cross-reference only
 - `orphans` → orphan detection only
-- Any other token → prepend exactly: `Note: '<token>' is not a defined sub-command. Did you mean: plan, git, orphans? Falling back to full dashboard.` then run the full dashboard.
+- Any other token → prepend exactly: `Note: '<token>' is not a defined sub-command. Did you mean: plan, readiness, git, orphans? Falling back to full dashboard.` then run the full dashboard.
 
 CRITICAL: This is a READ-ONLY command. Do NOT modify any files.
 

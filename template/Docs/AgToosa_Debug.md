@@ -83,7 +83,7 @@ Only apply a fix after a hypothesis is confirmed.
    - Add it to the test suite permanently
 4. Run the full test suite to catch regressions.
 5. Remove all instrumentation added during Phase 5.
-6. Update `Docs/Master-Plan.md` and Linear with the diagnosis summary.
+6. Update `Docs/Master-Plan.md` **Update Log** with the diagnosis summary.
 
 ## Rules
 

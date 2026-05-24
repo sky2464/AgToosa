@@ -211,6 +211,7 @@ Present the approval gate:
 ✅ Initialization complete
 [2–3 sentence summary: what project goal was captured, what context was set, which Epics were created.]
 AI configs confirmed. Use 4 commands: /agtoosa-spec → /agtoosa-build → /agtoosa-review → /agtoosa-ship.
+Run /agtoosa-status readiness to verify initial product gates (see Docs/AgToosa_Readiness.md).
 → Approve and run /agtoosa-spec when ready  |  Comment or adjust below
 ```
 
