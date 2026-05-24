@@ -8,6 +8,8 @@ alwaysApply: false
 
 When executing `/agtoosa-status` or any project health check, follow `Docs/AgToosa_Status.md` precisely.
 
+**Operating context:** Generated Project Mode — status reflects **this project's** `Docs/Master-Plan.md`; see `Docs/AgToosa_Agent.md` → **Operating Contexts**.
+
 ## Key constraints
 
 - This is a **read-only** command — never modify any files, git state, or Master-Plan.md.

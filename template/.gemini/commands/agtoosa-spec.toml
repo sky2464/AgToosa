@@ -1,6 +1,6 @@
 description = "AgToosa: research → 6 forcing questions → Executable Specification → STRIDE threat model → atomic task planning"
 prompt = """
-Read Docs/AgToosa_Spec.md and execute the specification workflow.
+Read Docs/AgToosa_Spec.md and execute the specification workflow. Generated Project Mode — see Docs/AgToosa_Agent.md Operating Contexts (the project/product, not AgToosa as the app).
 
 Dispatch based on any arguments provided after the command:
 - /agtoosa-spec                   → full workflow (Parts 1 + 2 + 3 + 4: research, spec, architecture/threat-model, task planning)

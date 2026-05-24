@@ -5,6 +5,8 @@ description: "AgToosa: read-only project health dashboard — Master-Plan parsin
 
 When executing `/agtoosa-status` or any project health check, follow `Docs/AgToosa_Status.md` precisely.
 
+**Generated Project Mode** — see `Docs/AgToosa_Agent.md` → **Operating Contexts**.
+
 ## Key constraints
 
 - This is a **read-only** command — never modify any files, git state, or Master-Plan.md.

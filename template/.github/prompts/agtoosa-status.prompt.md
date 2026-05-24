@@ -4,7 +4,7 @@ description: "AgToosa: read-only health dashboard — Master-Plan parsing, git c
 tools: [codebase, terminal, githubRepo]
 ---
 
-Read Docs/AgToosa_Status.md and execute the status workflow.
+Read Docs/AgToosa_Status.md and execute the status workflow. **Generated Project Mode** — see Docs/AgToosa_Agent.md → **Operating Contexts**.
 
 Sub-command dispatch:
 - No argument → full status dashboard

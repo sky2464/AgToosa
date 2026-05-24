@@ -5,6 +5,8 @@
 ## Objective
 One-time initialization: establish project context, scan the codebase, validate AI configs, and configure the AgToosa workflow.
 
+> **Generated Project Mode:** `/agtoosa-init` sets up **the project** or **the product** in this repository — read `Docs/AgToosa_Agent.md` → **Operating Contexts**. AgToosa is the workflow framework, not the application identity. Update **this repo's** `Docs/Master-Plan.md` charter and epics for the host product.
+
 ## Sub-Commands
 
 | Sub-command | Runs |

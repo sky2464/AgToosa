@@ -4,7 +4,7 @@ description: "AgToosa: research → 6 forcing questions → Executable Specifica
 tools: [codebase, githubSearch, fetch]
 ---
 
-Read Docs/AgToosa_Spec.md and execute the specification workflow.
+Read Docs/AgToosa_Spec.md and execute the specification workflow. **Generated Project Mode** — see Docs/AgToosa_Agent.md → **Operating Contexts**.
 
 Sub-command dispatch (include the sub-command after selecting this prompt):
 - No argument → full workflow (Parts 1 + 2 + 3 + 4: research, spec, architecture/threat-model, task planning)

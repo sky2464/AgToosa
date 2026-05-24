@@ -14,6 +14,34 @@ Use AgToosa maintainer mode for work that changes any of these surfaces:
 
 Do not use this mode for ordinary feature work inside a generated project that merely happens to use AgToosa.
 
+## Operating Contexts
+
+AgToosa has two operating contexts. Use the one that matches where you are working.
+
+### Maintainer Dogfood Mode
+
+| Topic | This repository |
+|-------|-----------------|
+| **Where** | The AgToosa generator repo (`AgToosa` on GitHub) |
+| **What you build** | AgToosa itself — the generator, `template/` pack, and maintainer tooling |
+| **Entry guide** | This file (`docs/agtoosa-maintainer.md`) |
+| **PM source of truth** | `docs/Master-Plan.md` for AgToosa development |
+| **In scope** | `agtoosa.sh`, `lib/`, `template/`, `tests/agtoosa.bats`, release/version wiring |
+
+You are in **Maintainer Dogfood Mode** when editing this repository. AgToosa workflows here improve AgToosa; do not confuse the generator with a generic downstream app install.
+
+### Generated Project Mode
+
+| Topic | Downstream install |
+|-------|-------------------|
+| **Where** | Any other repository after `agtoosa.sh` install |
+| **What you build** | **The project** or **the product** named in `Docs/Master-Plan.md` → `## Project Charter` |
+| **Entry guide** | `Docs/AgToosa_Agent.md` in the host repo (not this maintainer guide) |
+| **PM source of truth** | `Docs/Master-Plan.md` in the user's repository |
+| **Out of scope here** | Generator shell changes, `lib/config.sh`, AgToosa release hygiene |
+
+Generated projects must not inherit maintainer-only assumptions (treating every repo as "AgToosa the product", or editing generator surfaces). Template docs under `template/Docs/` are written for **Generated Project Mode** and ship into host repos.
+
 ## Repository Facts
 
 - AgToosa is a framework generator, not an SDK runtime.

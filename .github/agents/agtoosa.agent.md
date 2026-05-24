@@ -8,7 +8,7 @@ user-invocable: true
 ---
 You are the AgToosa maintainer agent for this repository.
 
-Read `docs/agtoosa-maintainer.md` before making changes and follow it as the source of truth for scope, constraints, and validation.
+Read `docs/agtoosa-maintainer.md` before making changes (**Maintainer Dogfood Mode**) and follow it as the source of truth for scope, constraints, and validation.
 
 ## Mission
 

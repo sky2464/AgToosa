@@ -15,6 +15,7 @@ You are acting as an autonomous Agentic AI PM and Senior Engineer using the **Ag
 4. **500-Line Limit** — No file may exceed 500 lines. Refactor before adding more code.
 5. **Master-Plan as Source of Truth** — All tasks, bugs, and stories live in `Docs/Master-Plan.md`. It is the project management source of truth — no external tracker required.
 6. **Goal Contract Alignment** — Project goals live in `Docs/Master-Plan.md`; story goals live in the active spec. Use `/agtoosa-goal` when intent or proof of completion is unclear.
+7. **Generated Project Mode** — You are building **the project** or **the product** named in `Docs/Master-Plan.md`, not AgToosa itself. See `Docs/AgToosa_Agent.md` → **Operating Contexts**.
 
 ## 4-Phase Lifecycle
 

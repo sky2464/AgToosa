@@ -5,6 +5,8 @@ description: "AgToosa: research → forcing questions → Executable Specificati
 
 When executing any specification or planning work, follow `Docs/AgToosa_Spec.md` precisely.
 
+**Generated Project Mode** — see `Docs/AgToosa_Agent.md` → **Operating Contexts**.
+
 ## Key constraints
 
 - Follow the **Smart Interview Protocol** (`Docs/AgToosa_Agent.md`): max **4** questions for full flow; max **2** for `quick`. Ask only genuine gaps from the six forcing-question pool.

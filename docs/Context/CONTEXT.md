@@ -23,3 +23,7 @@
 **Story Skill Opportunity Synthesis**: The `/agtoosa-spec` step that derives story-specific skill candidates from the Goal Contract, acceptance criteria, architecture, and test plan. Context: DEV-008. Not: "create a skill for every task".
 
 **Generated project skill**: A user-approved `.codex/skills/<skill-name>/SKILL.md` artifact created for a recurring project or story workflow, with optional `references/`, `scripts/`, or `assets/` only when needed. Context: DEV-008. Not: "chat-only preference", "secret store".
+
+**Generated Project Mode**: The operating context where AgToosa workflow files are installed into another application's repository; docs refer to "the project" or "the product," not AgToosa as the app being built. Context: DEV-011, ADR-008. Not: "maintainer mode", "dogfood".
+
+**Maintainer Dogfood Mode**: The operating context where the AgToosa repository uses AgToosa workflows to improve the generator; scope is `agtoosa.sh`, `lib/`, `template/`, and bats. Context: DEV-011, `docs/agtoosa-maintainer.md`. Not: "generated install", "downstream project".

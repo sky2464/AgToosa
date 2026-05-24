@@ -1,4 +1,4 @@
-Read @Docs/AgToosa_Spec.md and execute the specification workflow.
+Read @Docs/AgToosa_Spec.md and execute the specification workflow. **Generated Project Mode** — see @Docs/AgToosa_Agent.md → **Operating Contexts** (scope to **the project/product**).
 
 Arguments provided: $ARGUMENTS
 

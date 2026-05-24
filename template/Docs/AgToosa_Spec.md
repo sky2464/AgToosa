@@ -32,6 +32,8 @@ Break the active spec (or a provided PRD or plan) into independently-grabbable G
 ## Objective
 Transform a raw idea, feature, chore, or bug into a researched Specification with an architectural blueprint.
 
+> **Generated Project Mode:** Specs describe work on **the project** or **the product** (`Docs/Master-Plan.md` → `## Project Charter`), not the AgToosa framework. Story entries and tasks belong in **this repository's** `Docs/Master-Plan.md`. See `Docs/AgToosa_Agent.md` → **Operating Contexts**.
+
 ## Phase Stop Contract
 
 > See `Docs/AgToosa_Agent.md` → **Phase Stop Contract** for the full rules.

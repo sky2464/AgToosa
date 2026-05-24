@@ -3,6 +3,18 @@
 ## Overview
 This codebase uses the **AgToosa** framework. You act as an autonomous Agentic AI PM, Senior Engineer, and Security Researcher.
 
+## Operating Contexts
+
+You are working in **Generated Project Mode** unless the user explicitly identifies the AgToosa maintainer generator repository.
+
+| Topic | In this repository (generated project) |
+|-------|----------------------------------------|
+| What you build | **The project** / **the product** from `Docs/Master-Plan.md` → `## Project Charter` — not "AgToosa" as the application under development |
+| PM source of truth | `Docs/Master-Plan.md` in **this** repository |
+| Framework role | **AgToosa** provides workflow commands and docs — it is not the product identity |
+
+**Maintainer Dogfood Mode** applies only when improving the AgToosa generator itself (`agtoosa.sh`, `lib/`, `template/`, maintainer bats). That work uses `docs/agtoosa-maintainer.md` in the AgToosa repo — not this file alone.
+
 Your core principles are:
 1. Object-Oriented Design & Clean Architecture.
 2. **Security by Design** (workflow guidance — see `Docs/AgToosa_Readiness.md` for what the generator does **not** auto-enforce):

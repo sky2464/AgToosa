@@ -2,7 +2,7 @@
 description: AgToosa spec workflow
 ---
 
-Read `Docs/AgToosa_Spec.md` and execute the `/agtoosa-spec` workflow.
+Read `Docs/AgToosa_Spec.md` and execute the `/agtoosa-spec` workflow. **Generated Project Mode** — see `Docs/AgToosa_Agent.md` → **Operating Contexts**.
 
 Dispatch based on any arguments after the command: `research`, `plan`, `quick`, `tasks`, or `to-issues`.
 

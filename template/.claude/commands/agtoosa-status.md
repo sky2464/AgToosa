@@ -1,4 +1,4 @@
-Read @Docs/AgToosa_Status.md and execute the status workflow.
+Read @Docs/AgToosa_Status.md and execute the status workflow. **Generated Project Mode** — see @Docs/AgToosa_Agent.md → **Operating Contexts** (**this project's** Master-Plan).
 
 Arguments provided: $ARGUMENTS
 

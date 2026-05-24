@@ -14,6 +14,8 @@
 
 Produce a read-only health dashboard by parsing `Docs/Master-Plan.md`, cross-referencing git history, and detecting orphaned work — then present actionable findings with a composite health score.
 
+> **Generated Project Mode:** The dashboard reports health for **the project** in this repository — `Docs/Master-Plan.md` is **this product's** source of truth, not AgToosa maintainer backlog. See `Docs/AgToosa_Agent.md` → **Operating Contexts**.
+
 > **Prerequisites:** None. This command can be run at any time, in any phase.
 >
 > **🔒 Read-only guarantee:** This command **never** modifies `Docs/Master-Plan.md`, git state, or any file. It only reads and reports. Every finding includes a "Fix with" suggestion pointing to the appropriate AgToosa command.
