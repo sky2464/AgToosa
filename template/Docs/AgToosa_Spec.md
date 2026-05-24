@@ -196,7 +196,7 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 
     *   Propose skills only when they clearly support repeated implementation, review, QA, or release evidence for **this story** (not one-off chat instructions).
     *   Check for **duplicate** triggers against existing AgToosa workflow skills, platform adapters, and project skills under `.codex/skills/`. Prefer **Update existing** or **Do not generate** over creating a near-duplicate.
-    *   **Reserved workflow names:** reject candidates named `agtoosa-*` or triggered by `/agtoosa-*` unless updating an installed AgToosa workflow adapter — those names are reserved for AgToosa lifecycle commands, not generated project skills.
+    *   **Reserved workflow names:** reject candidates named `agtoosa-*`, triggered by `/agtoosa-*`, or that would shadow `.cursor/commands/agtoosa-*.md` unless updating an installed AgToosa workflow adapter — those names are reserved for AgToosa lifecycle commands, not generated project skills.
     *   Reject candidates without validation (command, checklist, or artifact review).
     *   **Secret safety:** exclude secret values from generated skills; reference file paths and process steps only. Add a safety note when credentials or tokens are relevant.
     *   Present the same candidate table shape as `/agtoosa-init` Project Skill Discovery (Skill name, Trigger description, Purpose, Inputs, Optional resources, Validation, Decision).

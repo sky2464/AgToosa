@@ -2,6 +2,10 @@
 description: AgToosa spec workflow
 ---
 
+## Cursor command routing
+
+This file is the native Cursor project command for `/agtoosa-spec`. When the user invokes `/agtoosa-spec`, execute the AgToosa workflow below — do **not** route to `/create-skill` or generate a project skill for AgToosa workflow names.
+
 Read `Docs/AgToosa_Spec.md` and execute the `/agtoosa-spec` workflow. **Generated Project Mode** — see `Docs/AgToosa_Agent.md` → **Operating Contexts**.
 
 Dispatch based on any arguments after the command: `research`, `plan`, `quick`, `tasks`, or `to-issues`.

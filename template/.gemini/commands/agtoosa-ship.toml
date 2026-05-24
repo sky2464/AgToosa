@@ -1,10 +1,10 @@
-description = "AgToosa: pre-flight → deploy → archive spec → update changelog → suggest next story"
+description = "AgToosa: readiness gate → deploy → archive spec → update changelog → suggest next story"
 prompt = """
 Read Docs/AgToosa_Ship.md and execute the ship workflow.
 
 Dispatch based on any arguments provided after the command:
-- /agtoosa-ship        → full ship workflow
-- /agtoosa-ship check  → pre-flight checks only
+- /agtoosa-ship        → full ship workflow (Part 0, then deploy approval and release steps)
+- /agtoosa-ship check  → read-only readiness audit: Docs/AgToosa_Ship.md Part 0 only (no deploy, archive, or file mutation)
 - /agtoosa-ship docs   → archive spec + update changelog + update Master-Plan.md
 - /agtoosa-ship retro  → retrospective summary + suggest next story
 

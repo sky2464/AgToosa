@@ -5,7 +5,7 @@
 | Sub-command | Runs |
 |-------------|------|
 | `/agtoosa-ship` | Full flow: readiness gate → WIP squash → deploy → archive → changelog → suggest next |
-| `/agtoosa-ship check` | Readiness gate only — verify all pre-ship conditions without deploying |
+| `/agtoosa-ship check` | Part 0 only — **read-only** readiness audit; reports pass/fail and stops (no deploy, archive, or changelog mutation) |
 | `/agtoosa-ship docs` | Docs only — archive completed specs, update changelog and Master-Plan |
 | `/agtoosa-ship retro` | Sprint retrospective — what shipped vs. planned, quality trends, keep/stop/start |
 
@@ -18,28 +18,68 @@ Deploy the completed feature, clean up the workspace, archive completed work, an
 
 ### Part 0 — Ship Readiness Gate (`/agtoosa-ship check` runs this exclusively)
 
-Before any deployment, verify all of the following. If **any** check fails, list the failures, block deployment, and tell the user which command resolves each.
+> **`/agtoosa-ship check` contract (read-only):** Execute **Part 0 only**. Read `Docs/Master-Plan.md`, archived spec/review, changelog, and git history as needed. **Do not** deploy, squash WIP commits, archive specs, bump versions, or mutate any file. **Do not** present the full-flow deployment approval gate. Stop after printing the readiness output below.
 
-| Check | How to Verify |
-|-------|--------------|
-| ✅ Goal Contract satisfied | Active spec contains `### Goal Contract`; Success condition and Proof / evidence are satisfied by tests, review report, smoke result, demo, metric, or shipped artifact |
-| ✅ Spec was approved | `Docs/archived/spec-*.md` contains a `## ✅ Spec Approved` section with a timestamp |
-| ✅ Acceptance criteria exist | `Docs/archived/spec-*.md` contains `## Acceptance Criteria` with at least one Must-priority row |
-| ✅ `/agtoosa-review` completed | `Docs/archived/review-*.md` exists and contains no unresolved 🔴 Critical findings |
-| ✅ All tests pass | Run full test suite and confirm green |
-| ✅ Smoke tests tagged | Test plan or test suite has at least one `@smoke`-tagged test per Must-priority AC |
-| ✅ Changelog entry drafted | `Docs/AgToosa_Changelog.md` has an entry for this feature |
-| ✅ No `WIP:` commits remain | `git log` shows no commits prefixed with `WIP:` |
+> **`/agtoosa-ship` full flow:** Run Part 0 first. Only after all checks pass, present the **Deploy approval gate** and wait for explicit user approval before Part 1.
 
-Only proceed to Part 1 after all checks pass. Present the approval gate:
+Before any deployment, verify all of the following. If **any** check fails, list each failure on its own line with a **Fix with:** command or **Manual action:** when no AgToosa command applies.
+
+| Check | How to Verify | Fix with (on failure) |
+|-------|--------------|----------------------|
+| ✅ Goal Contract satisfied | Active spec contains `### Goal Contract` (or `### 1.1 Goal Contract`); Success condition and Proof / evidence are satisfied by tests, review report, smoke result, demo, metric, or shipped artifact | `/agtoosa-build` or `/agtoosa-spec` |
+| ✅ Spec was approved | `Docs/archived/spec-*.md` contains a `## ✅ Spec Approved` section with a timestamp | `/agtoosa-spec` |
+| ✅ Acceptance criteria exist | `Docs/archived/spec-*.md` contains acceptance criteria with at least one Must-priority row | `/agtoosa-spec` |
+| ✅ `/agtoosa-review` completed | `Docs/archived/review-*.md` exists and contains no unresolved 🔴 Critical findings | `/agtoosa-review` |
+| ✅ All tests pass | Run full test suite and confirm green | `/agtoosa-build test` |
+| ✅ Smoke tests tagged | Test plan or test suite has at least one `@smoke`-tagged test per Must-priority AC | `/agtoosa-spec` or `/agtoosa-build` |
+| ✅ Changelog entry drafted | `Docs/AgToosa_Changelog.md` has an entry for this feature | `/agtoosa-ship docs` or manual changelog edit |
+| ✅ No `WIP:` commits remain | `git log` shows no commits whose **subject line** starts with `WIP:` | `/agtoosa-ship` (Part 1 squash) or manual squash |
+
+**Evidence rules:** Report pass/fail summaries, command names, artifact paths, and test counts. When citing deploy or test logs, **redact** secrets, tokens, API keys, and private URLs before including evidence in chat or review artifacts.
+
+#### Readiness failure output (both `check` and full flow)
+
+For each failed row, print:
 
 ```
-✅ Ready to deploy — All pre-ship checks passed
+🔴 [Check name] — [brief reason]
+   Fix with: `/agtoosa-[command]` — [one-line action]
+```
+
+or, when no command applies:
+
+```
+🔴 [Check name] — [brief reason]
+   Manual action: [what the human must do]
+```
+
+Stop after listing all failures. Do not proceed to deployment or file mutation.
+
+#### `/agtoosa-ship check` — success output (read-only stop)
+
+When all checks pass and the user invoked **`check`** only:
+
+```
+✅ Readiness audit passed — story [ID] is ready for a full ship (read-only check complete)
+Branch: [branch] · Story: [ID] · Goal: ✅ · Smoke tests: [N] tagged · Changelog: ✅
+
+This command does not deploy or mutate project state.
+Next: Run full `/agtoosa-ship` when you want deployment approval and release steps.
+```
+
+**Stop here.** Do not show the deploy approval gate.
+
+#### Full `/agtoosa-ship` — Part 0 success → Deploy approval gate
+
+When all checks pass and the user invoked the **full** ship flow (no `check` sub-command), present:
+
+```
+✅ Ready to deploy — All pre-ship checks passed (Part 0 complete)
 Branch: [branch name] · Story: [ID] · Goal: ✅ · Smoke tests: [N] tagged · Changelog: ✅
 → Approve to deploy to [staging/production]  |  Cancel or investigate below
 ```
 
-Wait for explicit user approval before deploying.
+Wait for explicit user approval before Part 1 (WIP squash, deploy, archive).
 
 ### Part 1 — Pre-Deploy: WIP Commit Squash
 

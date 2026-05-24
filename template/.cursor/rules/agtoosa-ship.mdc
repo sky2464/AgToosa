@@ -10,7 +10,8 @@ When executing `/agtoosa-ship` or any shipping work, follow `Docs/AgToosa_Ship.m
 
 ## Key constraints
 
-- All pre-flight checks must pass before deployment begins (no 🔴 Critical findings; story approved in Master-Plan and review archive).
+- `/agtoosa-ship check` is a read-only Part 0 readiness audit — no deployment, archive, or file mutation.
+- Full `/agtoosa-ship` requires Part 0 to pass before deployment begins (no 🔴 Critical findings; story approved in Master-Plan and review archive).
 - Zero-downtime deployment strategy is required — verify rollback plan exists before deploying.
 - Archive the active spec to `Docs/archived/` with the completion date in the filename.
 - Update `Docs/AgToosa_Changelog.md` and `Docs/Master-Plan.md` after a successful ship.

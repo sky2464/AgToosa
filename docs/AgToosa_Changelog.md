@@ -9,6 +9,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ### Added
 
+- 2026-05-24 — fix — Cursor slash-command routing: native `/agtoosa-*` command guardrails, core/status rules, synthesis collision checks; CU1–CU5 bats (DEV-014) — `docs/archived/spec-DEV-014.md`
+
+### Added (prior)
+
+- 2026-05-24 — fix — `/agtoosa-ship check` read-only Part 0 readiness audit; ship adapter alignment; C1–C6 bats (DEV-013) — `docs/archived/spec-DEV-013.md`
+
+### Added (prior)
+
 - 2026-05-24 — feature — GitHub slash-command routing: prompt `name` metadata, `/agtoosa-*` Copilot routing guardrails, reserved workflow skill names; G1–G5 bats (DEV-012) — `docs/archived/spec-DEV-012.md`
 
 ### Added (prior)

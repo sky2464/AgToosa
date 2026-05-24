@@ -9,7 +9,27 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ### Planned
 
-- `/agtoosa-ship check` cleanup — separate follow-up story to decide whether readiness-gate-only sub-command references should remain or be folded into `/agtoosa-ship`.
+_(None — pick next story via `/agtoosa-spec`.)_
+
+---
+
+## [4.8.0] — 2026-05-24
+
+Release **4.8** cycle: DEV-014 (223 bats tests).
+
+### Fixed
+
+- **DEV-014 — Cursor slash-command routing.** Explicit native `/agtoosa-*` workflow routing and no-`/create-skill` guardrails on all 14 `.cursor/commands/agtoosa-*.md` adapters; `agtoosa-core.mdc` and `agtoosa-status.mdc` reserve workflow command names; Init/Spec/Skills synthesis docs reject `.cursor/commands/agtoosa-*.md` collisions; CU1–CU5 bats coverage. Smoke: CU1–CU5 all green.
+
+---
+
+## [4.7.0] — 2026-05-24
+
+Release **4.7** cycle: DEV-013 (223 bats tests).
+
+### Fixed
+
+- **DEV-013 — `/agtoosa-ship check` cleanup.** Part 0 is a read-only readiness audit with separated success output from full-flow deploy approval; maintainer and template `AgToosa_Ship.md` parity (Goal Contract gate, per-check Fix with / Manual action, log redaction); eight native ship adapters delegate `check` to Part 0 with no-deploy/no-mutation wording; C1–C6 bats coverage. Smoke: C1–C6 all green.
 
 ---
 

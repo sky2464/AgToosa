@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v4.6.0" ]]
+  [[ "$output" == "AgToosa v4.8.0" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1249,7 +1249,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "4.6.0" ]
+  [ "$ver" = "4.8.0" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1260,7 +1260,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"4.6.0"* ]]
+  [[ "$output" == *"4.8.0"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -1815,5 +1815,176 @@ PY
 @test "G5: DEV-012 G-filter regression suite is defined" {
   local count
   count=$(grep -cE '^@test "G[1-5]:' "$BATS_TEST_FILENAME" || true)
+  [ "$count" -eq 5 ]
+}
+
+# ── DEV-014 Cursor slash-command routing (CU1–CU5) ─────────────────────────────
+
+@test "CU1: every Cursor command adapter includes workflow routing and no-create-skill" {
+  local f stem
+  for f in "$TEMPLATE_DIR"/.cursor/commands/agtoosa-*.md; do
+    grep -q 'Cursor command routing' "$f" || {
+      echo "Missing Cursor command routing section in $f"
+      false
+    }
+    grep -q 'native Cursor project command' "$f" || {
+      echo "Missing native command declaration in $f"
+      false
+    }
+    grep -q '/create-skill' "$f" || {
+      echo "Missing /create-skill guardrail in $f"
+      false
+    }
+    grep -qE 'do \*\*not\*\* route' "$f" || {
+      echo "Missing no-route wording in $f"
+      false
+    }
+    stem=$(basename "$f" .md)
+    grep -q "/${stem}" "$f" || {
+      echo "Missing slash command reference /${stem} in $f"
+      false
+    }
+  done
+}
+
+@test "CU2: agtoosa-status Cursor command delegates read-only with sub-commands" {
+  local f="$TEMPLATE_DIR/.cursor/commands/agtoosa-status.md"
+  grep -q 'Docs/AgToosa_Status.md' "$f"
+  grep -qiE 'read-only|read only' "$f"
+  grep -q 'plan' "$f"
+  grep -q 'readiness' "$f"
+  grep -q 'git' "$f"
+  grep -q 'orphans' "$f"
+}
+
+@test "CU3: Cursor core/status rules reserve /agtoosa-* and forbid /create-skill" {
+  local core="$TEMPLATE_DIR/.cursor/rules/agtoosa-core.mdc"
+  local status="$TEMPLATE_DIR/.cursor/rules/agtoosa-status.mdc"
+  grep -q '/agtoosa-\*' "$core"
+  grep -q '.cursor/commands/agtoosa-' "$core"
+  grep -q '/create-skill' "$core"
+  grep -q 'agtoosa-\*' "$core"
+  grep -q '/agtoosa-status' "$status"
+  grep -q '/create-skill' "$status"
+  grep -q 'Docs/AgToosa_Status.md' "$status"
+}
+
+@test "CU4: skill synthesis docs reject Cursor command collisions" {
+  local init="$TEMPLATE_DIR/Docs/AgToosa_Init.md"
+  local spec="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  local skills="$TEMPLATE_DIR/Docs/AgToosa_Skills.md"
+  grep -q 'Reserved workflow names' "$init"
+  grep -q 'Reserved workflow names' "$spec"
+  grep -q 'Reserved workflow names' "$skills"
+  grep -q '.cursor/commands/agtoosa-' "$init"
+  grep -q '.cursor/commands/agtoosa-' "$spec"
+  grep -q '.cursor/commands/agtoosa-' "$skills"
+}
+
+@test "CU5: Cursor install copies agtoosa-status.md with routing guardrails" {
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.cursor/commands/agtoosa-status.md" ]
+  grep -q 'Cursor command routing' "$TEST_PROJECT/.cursor/commands/agtoosa-status.md"
+  grep -q '/create-skill' "$TEST_PROJECT/.cursor/commands/agtoosa-status.md"
+  grep -q 'Docs/AgToosa_Status.md' "$TEST_PROJECT/.cursor/commands/agtoosa-status.md"
+}
+
+# ── DEV-013 ship-check cleanup (C1–C5) ────────────────────────────────────────
+
+@test "C1: maintainer and template ship docs define read-only check and Goal Contract gate" {
+  local maint="$BATS_TEST_DIRNAME/../docs/AgToosa_Ship.md"
+  local tmpl="$TEMPLATE_DIR/Docs/AgToosa_Ship.md"
+  for f in "$maint" "$tmpl"; do
+    grep -q 'Goal Contract satisfied' "$f"
+    grep -qi 'read-only' "$f"
+    grep -qi 'readiness audit' "$f"
+    grep -q '/agtoosa-ship check' "$f"
+    grep -q 'Stop here' "$f"
+  done
+}
+
+@test "C2: ship adapters delegate check to Part 0 with no-deploy/no-mutation wording" {
+  local f
+  for f in \
+    "$TEMPLATE_DIR/.claude/commands/agtoosa-ship.md" \
+    "$TEMPLATE_DIR/.cursor/commands/agtoosa-ship.md" \
+    "$TEMPLATE_DIR/.cursor/rules/agtoosa-ship.mdc" \
+    "$TEMPLATE_DIR/.gemini/commands/agtoosa-ship.toml" \
+    "$TEMPLATE_DIR/.github/prompts/agtoosa-ship.prompt.md" \
+    "$TEMPLATE_DIR/.codex/skills/agtoosa-ship/SKILL.md" \
+    "$TEMPLATE_DIR/.windsurf/rules/agtoosa-ship.md" \
+    "$TEMPLATE_DIR/.windsurf/workflows/agtoosa-ship.md"
+  do
+    grep -qE 'Part 0|Docs/AgToosa_Ship' "$f" || {
+      echo "Missing Part 0 / AgToosa_Ship delegation in $f"
+      false
+    }
+    grep -qiE 'read-only|read only' "$f" || {
+      echo "Missing read-only wording in $f"
+      false
+    }
+    grep -qiE 'no deploy|do not deploy|does not deploy' "$f" || {
+      echo "Missing no-deploy wording in $f"
+      false
+    }
+    grep -qiE 'no mutation|do not (archive|mutate)|file mutation|changelog mutation' "$f" || {
+      echo "Missing no-mutation wording in $f"
+      false
+    }
+  done
+}
+
+@test "C3: ship adapters omit stale pre-flight-only check wording" {
+  local f
+  for f in \
+    "$TEMPLATE_DIR/.claude/commands/agtoosa-ship.md" \
+    "$TEMPLATE_DIR/.cursor/commands/agtoosa-ship.md" \
+    "$TEMPLATE_DIR/.cursor/rules/agtoosa-ship.mdc" \
+    "$TEMPLATE_DIR/.gemini/commands/agtoosa-ship.toml" \
+    "$TEMPLATE_DIR/.github/prompts/agtoosa-ship.prompt.md" \
+    "$TEMPLATE_DIR/.codex/skills/agtoosa-ship/SKILL.md" \
+    "$TEMPLATE_DIR/.windsurf/rules/agtoosa-ship.md" \
+    "$TEMPLATE_DIR/.windsurf/workflows/agtoosa-ship.md"
+  do
+    ! grep -qi 'pre-flight checks only' "$f" || {
+      echo "Stale pre-flight checks only wording in $f"
+      false
+    }
+    ! grep -qi 'pre-flight →' "$f" || {
+      echo "Stale pre-flight description in $f"
+      false
+    }
+  done
+}
+
+@test "C4: ship docs require remediation command or manual action per failed check" {
+  local f
+  for f in \
+    "$BATS_TEST_DIRNAME/../docs/AgToosa_Ship.md" \
+    "$TEMPLATE_DIR/Docs/AgToosa_Ship.md"
+  do
+    grep -q 'Fix with' "$f"
+    grep -qiE 'Manual action' "$f"
+    grep -qi 'redact' "$f"
+    grep -q 'Fix with (on failure)' "$f"
+  done
+}
+
+@test "C5: full ship flow requires Part 0 before deploy approval gate" {
+  local f
+  for f in \
+    "$BATS_TEST_DIRNAME/../docs/AgToosa_Ship.md" \
+    "$TEMPLATE_DIR/Docs/AgToosa_Ship.md"
+  do
+    grep -q 'Deploy approval gate' "$f"
+    grep -q 'Wait for explicit user approval' "$f"
+    grep -q 'Part 0 first' "$f"
+  done
+}
+
+@test "C6: DEV-013 C-filter regression suite is defined" {
+  local count
+  count=$(grep -cE '^@test "C[1-5]:' "$BATS_TEST_FILENAME" || true)
   [ "$count" -eq 5 ]
 }
