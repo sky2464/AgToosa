@@ -24,7 +24,7 @@ Map specific agent personas and functional skills to slash commands so that the 
         *   🧪 Test Planner — maps spec ACs to test IDs and edge cases
         *   🔎 Test Runner — executes suite and captures AC coverage gaps
         *   📋 Report Writer — generates structured QA reports
-        *   🚦 Triage Lead — scores defects and adds P0–P2 items to `Docs/Master-Plan.md` Backlog
+        *   🚦 Triage Lead — scores defects and adds P0–P2 items to `docs/Master-Plan.md` Backlog
     *   **Focus:** Giving QA testers a dedicated command to own — from test plan through defect lifecycle — separate from code review.
 
 5.  **`/agtoosa-review` (The Evaluators):**
@@ -58,7 +58,7 @@ Map specific agent personas and functional skills to slash commands so that the 
 
 ## Codex Workflow Prompts And Skills
 
-AgToosa installs one Codex slash prompt per lifecycle command under `template/.codex/prompts/agtoosa-*.md` and one Codex skill under `template/.codex/skills/agtoosa-*/SKILL.md`. Prompt files make `/agtoosa-*` visible in Codex slash-command pickers; skill files execute the matching `Docs/AgToosa_*.md` workflow. Sub-command skills must **Dispatch** without duplicating the full doc inline.
+AgToosa installs one Codex slash prompt per lifecycle command under `template/.codex/prompts/agtoosa-*.md` and one Codex skill under `template/.codex/skills/agtoosa-*/SKILL.md`. Prompt files make `/agtoosa-*` visible in Codex slash-command pickers; skill files execute the matching workflow in `template/Docs/AgToosa_*.md` (installed as `Docs/` in host repos). In **Maintainer Dogfood Mode**, use `docs/AgToosa_*.md` mirrors. Sub-command skills must **Dispatch** without duplicating the full doc inline.
 
 ## Generated Project Skills
 

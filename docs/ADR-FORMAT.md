@@ -1,6 +1,8 @@
 # Architecture Decision Record (ADR) Format
 
-Architecture Decision Records capture significant architectural decisions made during the project lifecycle. They live in `Docs/adr/` and are numbered sequentially.
+Architecture Decision Records capture significant architectural decisions made during the project lifecycle. They live in `docs/adr/` and are numbered sequentially.
+
+> **Path note:** `docs/adr/` applies in **Maintainer Dogfood Mode**. Generated projects use `Docs/adr/` — see `docs/agtoosa-maintainer.md` → Path conventions.
 
 ## When to Write an ADR
 
@@ -18,10 +20,10 @@ Do NOT write an ADR for:
 ## File Naming
 
 ```
-Docs/adr/NNNN-kebab-case-title.md
+docs/adr/NNNN-kebab-case-title.md
 ```
 
-Example: `Docs/adr/0001-use-postgres-over-mysql.md`
+Example: `docs/adr/0001-use-postgres-over-mysql.md`
 
 ## Template
 

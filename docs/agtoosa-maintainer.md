@@ -30,6 +30,18 @@ AgToosa has two operating contexts. Use the one that matches where you are worki
 
 You are in **Maintainer Dogfood Mode** when editing this repository. AgToosa workflows here improve AgToosa; do not confuse the generator with a generic downstream app install.
 
+#### Path conventions
+
+Workflow paths differ by operating context. Use the prefix that matches the repository you are in:
+
+| Context | PM / workflow prefix | Example |
+|---------|----------------------|---------|
+| **Maintainer Dogfood Mode** (this repo) | `docs/` (lowercase, on-disk) | `docs/Master-Plan.md`, `docs/archived/spec-DEV-025.md` |
+| **Generated Project Mode** (downstream install) | `Docs/` (capital D, installed by generator) | `Docs/Master-Plan.md`, `Docs/archived/spec-DEV-42.md` |
+| **Template pack** (source, not host layout) | `template/Docs/` | `template/Docs/AgToosa_Status.md` |
+
+When syncing maintainer mirrors from `template/Docs/`, rewrite repo-local path references to `docs/`. Leave `template/Docs/` citations unchanged. Do not create a top-level `Docs/` directory in this repository.
+
 ### Generated Project Mode
 
 | Topic | Downstream install |
@@ -48,7 +60,7 @@ AgToosa uses two ID namespaces. Do not mix them when adding new work.
 
 | Namespace | Where | Meaning |
 |-----------|-------|---------|
-| `DEV-0XX` | `docs/Master-Plan.md` | Product stories (spec → build → review → ship). Increment by one for each new story (currently through DEV-023). |
+| `DEV-0XX` | `docs/Master-Plan.md` | Product stories (spec → build → review → ship). Increment by one for each new story (currently through DEV-025). |
 | `DEV-1XX` | Historical `CHANGELOG.md` / bats from v2.x–v3.x | Deprecated internal labels from the pre–Master-Plan era. **Do not allocate new DEV-1XX IDs.** |
 
 When adding bats coverage:

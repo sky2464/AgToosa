@@ -12,13 +12,13 @@
 ## Objective
 Deploy the completed feature, clean up the workspace, archive completed work, and suggest the next logical development story.
 
-> **Prerequisites:** `/agtoosa-review` must be approved. Verify that `Docs/archived/review-[story-id].md` exists and contains no unresolved 🔴 Critical findings. If any Critical findings remain, resolve them via `/agtoosa-build` and re-run `/agtoosa-review`.
+> **Prerequisites:** `/agtoosa-review` must be approved. Verify that `docs/archived/review-[story-id].md` exists and contains no unresolved 🔴 Critical findings. If any Critical findings remain, resolve them via `/agtoosa-build` and re-run `/agtoosa-review`.
 
 ## Workflow
 
 ### Part 0 — Ship Readiness Gate (`/agtoosa-ship check` runs this exclusively)
 
-> **`/agtoosa-ship check` contract (read-only):** Execute **Part 0 only**. Read `Docs/Master-Plan.md`, archived spec/review, changelog, and git history as needed. **Do not** deploy, squash WIP commits, archive specs, bump versions, or mutate any file. **Do not** present the full-flow deployment approval gate. Stop after printing the readiness output below.
+> **`/agtoosa-ship check` contract (read-only):** Execute **Part 0 only**. Read `docs/Master-Plan.md`, archived spec/review, changelog, and git history as needed. **Do not** deploy, squash WIP commits, archive specs, bump versions, or mutate any file. **Do not** present the full-flow deployment approval gate. Stop after printing the readiness output below.
 
 > **`/agtoosa-ship` full flow:** Run Part 0 first. Only after all checks pass, present the **Deploy approval gate** and wait for explicit user approval before Part 1.
 
@@ -27,12 +27,12 @@ Before any deployment, verify all of the following. If **any** check fails, list
 | Check | How to Verify | Fix with (on failure) |
 |-------|--------------|----------------------|
 | ✅ Goal Contract satisfied | Active spec contains `### Goal Contract` (or `### 1.1 Goal Contract`); Success condition and Proof / evidence are satisfied by tests, review report, smoke result, demo, metric, or shipped artifact | `/agtoosa-build` or `/agtoosa-spec` |
-| ✅ Spec was approved | `Docs/archived/spec-*.md` contains a `## ✅ Spec Approved` section with a timestamp | `/agtoosa-spec` |
-| ✅ Acceptance criteria exist | `Docs/archived/spec-*.md` contains acceptance criteria with at least one Must-priority row | `/agtoosa-spec` |
-| ✅ `/agtoosa-review` completed | `Docs/archived/review-*.md` exists and contains no unresolved 🔴 Critical findings | `/agtoosa-review` |
+| ✅ Spec was approved | `docs/archived/spec-*.md` contains a `## ✅ Spec Approved` section with a timestamp | `/agtoosa-spec` |
+| ✅ Acceptance criteria exist | `docs/archived/spec-*.md` contains acceptance criteria with at least one Must-priority row | `/agtoosa-spec` |
+| ✅ `/agtoosa-review` completed | `docs/archived/review-*.md` exists and contains no unresolved 🔴 Critical findings | `/agtoosa-review` |
 | ✅ All tests pass | Run full test suite and confirm green | `/agtoosa-build test` |
 | ✅ Smoke tests tagged | Test plan or test suite has at least one `@smoke`-tagged test per Must-priority AC | `/agtoosa-spec` or `/agtoosa-build` |
-| ✅ Changelog entry drafted | `Docs/AgToosa_Changelog.md` has an entry for this feature | `/agtoosa-ship docs` or manual changelog edit |
+| ✅ Changelog entry drafted | `docs/AgToosa_Changelog.md` has an entry for this feature | `/agtoosa-ship docs` or manual changelog edit |
 | ✅ No `WIP:` commits remain | `git log` shows no commits whose **subject line** starts with `WIP:` | `/agtoosa-ship` (Part 1 squash) or manual squash |
 
 **Evidence rules:** Report pass/fail summaries, command names, artifact paths, and test counts. When citing deploy or test logs, **redact** secrets, tokens, API keys, and private URLs before including evidence in chat or review artifacts.
@@ -104,14 +104,14 @@ Before deploying, clean the branch history:
     *   Verify the health endpoint returns 200 (if applicable).
     *   **If smoke tests pass:**
         - Transition the Story issue status to `Done` in Linear.
-        - Update `Docs/Master-Plan.md`: move the Story row from `## Active Cycle` to `## Completed This Cycle`.
+        - Update `docs/Master-Plan.md`: move the Story row from `## Active Cycle` to `## Completed This Cycle`.
         - Post a Linear comment on the Story issue:
 
             ```
             Ship 🚀 Deployed
             Date: [YYYY-MM-DD HH:MM]
 
-            Smoke tests: PASS. All Must-priority ACs verified in production. Spec archived to Docs/archived/.
+            Smoke tests: PASS. All Must-priority ACs verified in production. Spec archived to docs/archived/.
 
             Next: Story closed. See /agtoosa-ship retro to close the sprint loop.
             ```
@@ -127,21 +127,21 @@ Before deploying, clean the branch history:
             Next: /agtoosa-build tdd to fix the failure, then re-run /agtoosa-ship.
             ```
 
-        Transition the Story status back to `In Review` in Linear and update `Docs/Master-Plan.md`.
+        Transition the Story status back to `In Review` in Linear and update `docs/Master-Plan.md`.
     *   Capture smoke test pass/fail status in the changelog entry.
 
 ### Part 3 — Workspace Cleanup & Archiving (`/agtoosa-ship docs` runs Parts 3 + 4)
 
-3.  **Archive Completed Work:** Spec and review artifacts are already saved to `Docs/archived/` (as `spec-[story-id].md` and `review-[story-id].md`). Verify both files exist there before proceeding.
+3.  **Archive Completed Work:** Spec and review artifacts are already saved to `docs/archived/` (as `spec-[story-id].md` and `review-[story-id].md`). Verify both files exist there before proceeding.
 
-4.  **Changelog Update:** Update `Docs/AgToosa_Changelog.md` with a summary entry: `[date] - [type] - [short description] - [spec reference]`.
+4.  **Changelog Update:** Update `docs/AgToosa_Changelog.md` with a summary entry: `[date] - [type] - [short description] - [spec reference]`.
 
-5.  **Master-Plan Pruning:** Update `Docs/Master-Plan.md` — keep only the Epic description with a reference to the archived spec; clear completed tasks; move the story row to `## Completed This Cycle`.
+5.  **Master-Plan Pruning:** Update `docs/Master-Plan.md` — keep only the Epic description with a reference to the archived spec; clear completed tasks; move the story row to `## Completed This Cycle`.
 
 ### Part 4 — Suggest Next Story
 
 6.  **Next Steps Suggestion:**
-    *   Based on the overarching project goals in `Docs/Master-Plan.md`, suggest the next logical Spec/Story for the team to tackle.
+    *   Based on the overarching project goals in `docs/Master-Plan.md`, suggest the next logical Spec/Story for the team to tackle.
     *   Consider: open bugs, pending features, technical debt, and security improvements.
 
 ### Part 5 — Sprint Retrospective (`/agtoosa-ship retro`)
@@ -149,9 +149,9 @@ Before deploying, clean the branch history:
 Run this after shipping to close the feedback loop on the sprint.
 
 7.  **Sprint Review:**
-    *   Read `Docs/AgToosa_Changelog.md` and compare entries against the original spec acceptance criteria.
+    *   Read `docs/AgToosa_Changelog.md` and compare entries against the original spec acceptance criteria.
     *   List: what was planned, what shipped, what was deferred — and why.
-    *   Scan `Docs/archived/` for all specs closed this sprint.
+    *   Scan `docs/archived/` for all specs closed this sprint.
 
 8.  **Quality & Process Health:**
     *   Did test coverage improve or regress vs. prior sprint?
@@ -166,20 +166,20 @@ Run this after shipping to close the feedback loop on the sprint.
     3. What should we **start** trying next sprint?
 
 10. **Retro Output:**
-    *   Append a retro entry to `Docs/AgToosa_Changelog.md` under a `## Retrospective — [date]` section.
-    *   Update `Docs/Master-Plan.md` with process improvement action items from the retro.
-    *   If a process change was agreed (e.g., enabling TDD, adjusting the 500-line limit), update `Docs/Context/workflow.md`.
+    *   Append a retro entry to `docs/AgToosa_Changelog.md` under a `## Retrospective — [date]` section.
+    *   Update `docs/Master-Plan.md` with process improvement action items from the retro.
+    *   If a process change was agreed (e.g., enabling TDD, adjusting the 500-line limit), update `docs/Context/workflow.md`.
 
 ### Part 6 — Compact Master-Plan.md
 
-Run this step when `Docs/Master-Plan.md` exceeds approximately 200 lines **or** after closing an active cycle. Compaction keeps the shared context document within AI context-window limits.
+Run this step when `docs/Master-Plan.md` exceeds approximately 200 lines **or** after closing an active cycle. Compaction keeps the shared context document within AI context-window limits.
 
 11. **Archive the Completed Cycle:**
-    *   Copy the full `## Active Cycle` table to a new snapshot file: `Docs/archived/cycle-[YYYY-MM-DD].md`.
+    *   Copy the full `## Active Cycle` table to a new snapshot file: `docs/archived/cycle-[YYYY-MM-DD].md`.
     *   In `Master-Plan.md`, replace the `## Active Cycle` table body with an empty placeholder row and a reference comment:
 
         ```
-        <!-- Archived to Docs/archived/cycle-[YYYY-MM-DD].md -->
+        <!-- Archived to docs/archived/cycle-[YYYY-MM-DD].md -->
         ```
 
     *   Remove all `Done` rows from `## Active Tasks` — these are already tracked in Linear.

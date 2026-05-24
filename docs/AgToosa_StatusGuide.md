@@ -11,12 +11,12 @@ Status Guide combines two personas:
 
 ## Read-Only Guarantee
 
-The audit phase is read-only. Do not modify files, update `Docs/Master-Plan.md`, stage changes, commit, push, delete branches, or run any AgToosa fix command while collecting status.
+The audit phase is read-only. Do not modify files, update `docs/Master-Plan.md`, stage changes, commit, push, delete branches, or run any AgToosa fix command while collecting status.
 
 Allowed during the audit phase:
 
-- Read `Docs/AgToosa_Status.md`, `Docs/Master-Plan.md`, specs, context files, and git history.
-- Run read-only status checks required by `Docs/AgToosa_Status.md`.
+- Read `docs/AgToosa_Status.md`, `docs/Master-Plan.md`, specs, context files, and git history.
+- Run read-only status checks required by `docs/AgToosa_Status.md`.
 - Compile the dashboard, health score, findings, and Recommended Next Actions.
 
 Forbidden during the audit phase:
@@ -27,7 +27,7 @@ Forbidden during the audit phase:
 
 ## Workflow
 
-1. Read `Docs/AgToosa_Status.md`.
+1. Read `docs/AgToosa_Status.md`.
 2. Run `/agtoosa-status` full dashboard exactly as specified.
 3. Apply `AgToosa_Status.md` Part 5.5 — Recommended Next Actions generation without changing its priority order, grouping, cap, verb phrases, or rationale lines.
 4. Present up to the top three actions from the generated Recommended Next Actions section.

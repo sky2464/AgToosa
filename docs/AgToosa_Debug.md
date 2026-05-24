@@ -30,12 +30,12 @@ The most important phase. You cannot debug without fast, repeatable feedback.
    - Reproduce the exact symptom (not a related symptom)
    - Be deterministic — same command, same result every time
 3. If you cannot create a sub-5-second feedback loop, document why and use the next fastest option.
-4. Write the feedback loop command in `Docs/Master-Plan.md` under `## Active Diagnosis`.
+4. Write the feedback loop command in `docs/Master-Plan.md` under `## Active Diagnosis`.
 
 ### Phase 2 — Reproduce
 
 1. Run the feedback loop and confirm the bug appears.
-2. Document exact reproduction steps in `Docs/Master-Plan.md`:
+2. Document exact reproduction steps in `docs/Master-Plan.md`:
    - Environment (OS, runtime version, dependencies)
    - Input state (data, config, flags)
    - Expected vs actual behaviour
@@ -48,7 +48,7 @@ Reduce to the smallest possible reproduction case.
 1. Remove all code/config not required to trigger the bug.
 2. Strip to one file, one function, one input if possible.
 3. Confirm the minimised case still triggers the bug via the feedback loop.
-4. Update `Docs/Master-Plan.md` with the minimal reproduction.
+4. Update `docs/Master-Plan.md` with the minimal reproduction.
 
 ### Phase 4 — Hypothesise
 
@@ -57,7 +57,7 @@ Reduce to the smallest possible reproduction case.
    - What would the code look like if this were true?
    - What evidence (log line, stack frame, assertion failure) would confirm or deny it?
 3. Do not fix anything yet. Do not touch production code.
-4. Add hypotheses to `Docs/Master-Plan.md` under `## Hypotheses`.
+4. Add hypotheses to `docs/Master-Plan.md` under `## Hypotheses`.
 
 ### Phase 5 — Instrument
 
@@ -69,7 +69,7 @@ Test hypotheses one at a time, most likely first.
    - Confirmed: note which hypothesis is true, remove instrumentation.
    - Denied: move to next hypothesis.
 4. Never leave instrumentation in the code after a hypothesis is resolved.
-5. Update `Docs/Master-Plan.md` with instrumentation findings.
+5. Update `docs/Master-Plan.md` with instrumentation findings.
 
 ### Phase 6 — Fix + Regression Test
 
@@ -83,7 +83,7 @@ Only apply a fix after a hypothesis is confirmed.
    - Add it to the test suite permanently
 4. Run the full test suite to catch regressions.
 5. Remove all instrumentation added during Phase 5.
-6. Update `Docs/Master-Plan.md` and Linear with the diagnosis summary.
+6. Update `docs/Master-Plan.md` and Linear with the diagnosis summary.
 
 ## Rules
 

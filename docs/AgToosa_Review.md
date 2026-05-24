@@ -19,7 +19,7 @@ Ensure code quality, security, and simplicity through multi-persona review.
 
 **Before starting reviews:**
 - Transition the Story issue status to `In Review` in Linear.
-- Update `Docs/Master-Plan.md`: set the Story row status to `In Review`.
+- Update `docs/Master-Plan.md`: set the Story row status to `In Review`.
 - Post a Linear comment on the Story issue:
 
     ```
@@ -35,19 +35,19 @@ Ensure code quality, security, and simplicity through multi-persona review.
 
 2.  **Engineering Manager (`/agtoosa-review arch`):** Confirm no file exceeds 500 lines; check OOP compliance, observability hooks, and test coverage thresholds. When running the `arch` sub-command, additionally:
 
-    **Deep Module Analysis** (see `Docs/DEEPENING.md`):
+    **Deep Module Analysis** (see `docs/DEEPENING.md`):
     - Identify shallow modules: pass-through functions, one-line service methods, "Manager/Handler/Helper" classes with no domain meaning.
     - For each shallow module found: flag as 🟡 Warning with specific refactor suggestion.
     - Check that interfaces reveal WHAT the module does, not HOW it does it.
 
-    **Domain Language Alignment** (see `Docs/LANGUAGE.md` + `Docs/Context/CONTEXT.md`):
-    - Verify that variable names, function names, error messages, and API endpoints use terms from `Docs/Context/CONTEXT.md`.
+    **Domain Language Alignment** (see `docs/LANGUAGE.md` + `docs/Context/CONTEXT.md`):
+    - Verify that variable names, function names, error messages, and API endpoints use terms from `docs/Context/CONTEXT.md`.
     - Flag any inconsistency (e.g., `userId` when domain says `accountId`) as 🟡 Warning.
-    - If `Docs/Context/CONTEXT.md` doesn't exist, note it as 🟡 Warning and suggest running `/agtoosa-spec` to establish domain language alignment.
+    - If `docs/Context/CONTEXT.md` doesn't exist, note it as 🟡 Warning and suggest running `/agtoosa-spec` to establish domain language alignment.
 
     **ADR Coverage:**
-    - Identify any significant architectural decisions made in this change that lack a corresponding ADR in `Docs/adr/`.
-    - Create missing ADRs using `Docs/ADR-FORMAT.md` as a template, or flag as 🟡 Warning if creation is out of scope.
+    - Identify any significant architectural decisions made in this change that lack a corresponding ADR in `docs/adr/`.
+    - Create missing ADRs using `docs/ADR-FORMAT.md` as a template, or flag as 🟡 Warning if creation is out of scope.
 
 3.  **CEO / Product Owner:** Verify feature completeness against the Linear charter and acceptance criteria.
 
@@ -55,7 +55,7 @@ Ensure code quality, security, and simplicity through multi-persona review.
 
     a. **Test suite** — Confirm all unit, integration, E2E, and browser QA tests pass; verify TDD cycle was followed if enabled.
 
-    b. **Coverage gate** — Read `coverage_threshold` from `Docs/Context/workflow.md`; flag below-threshold as 🔴 Critical.
+    b. **Coverage gate** — Read `coverage_threshold` from `docs/Context/workflow.md`; flag below-threshold as 🔴 Critical.
 
     c. **AC coverage** — Verify every `AC-NNN` (Must-priority) in the active spec has at least one passing test in the test plan. Any uncovered AC is 🔴 Critical.
 
@@ -65,7 +65,7 @@ Ensure code quality, security, and simplicity through multi-persona review.
 
     f. **Performance baseline** — For web: verify Core Web Vitals are not regressed vs. prior run; flag regressions as 🟡 Warning.
 
-    g. **Browser/device matrix** — Check the `browser_matrix` list in `Docs/Context/tech-stack.md`; flag untested combinations as 🟡 Warning.
+    g. **Browser/device matrix** — Check the `browser_matrix` list in `docs/Context/tech-stack.md`; flag untested combinations as 🟡 Warning.
 
     h. **Flaky test detection** — Run test suite 3× and flag any test that passes/fails non-deterministically as 🟡 Warning.
 
@@ -126,7 +126,7 @@ Different AI models surface different classes of bugs — a second platform revi
     *   Merge findings from both reports before running `/agtoosa-ship`. Cross-platform review is **strongly recommended** for security-sensitive changes.
 
 ## Output
-*   Save the review report to `Docs/archived/review-[story-id].md` (e.g., `Docs/archived/review-DEV-15.md`). This file is required by `/agtoosa-ship check`. The file must contain the structured findings table with all 🔴 / 🟡 / 🟢 items.
+*   Save the review report to `docs/archived/review-[story-id].md` (e.g., `docs/archived/review-DEV-15.md`). This file is required by `/agtoosa-ship check`. The file must contain the structured findings table with all 🔴 / 🟡 / 🟢 items.
 *   Present the approval gate:
 
     ```

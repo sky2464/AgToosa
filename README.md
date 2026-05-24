@@ -5,7 +5,7 @@
 **The Spec-Driven Agentic AI Framework for Software Development**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-4.14.0-green.svg)](https://github.com/sky2464/AgToosa/releases)
+[![Version](https://img.shields.io/badge/version-5.0.0-green.svg)](https://github.com/sky2464/AgToosa/releases)
 [![CI Status](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml)
 [![Security Scan](https://github.com/sky2464/AgToosa/actions/workflows/security-scan.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/security-scan.yml)
 [![Semantic Release](https://github.com/sky2464/AgToosa/actions/workflows/release.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/release.yml)
@@ -49,7 +49,7 @@ If any are missing, the bootstrap script will tell you how to install them. Inst
 **macOS & Linux:**
 ```bash
 # Using a specific release (recommended)
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v4.14.0
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.0.0
 
 # Or using latest main branch
 bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh)

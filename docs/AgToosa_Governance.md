@@ -1,6 +1,6 @@
 # AgToosa Governance: Phase-Gate Protocol & Master-Plan.md Workflow
 
-> **Reference doc.** Read this to understand how AgToosa enforces phase order, what gets written to `Docs/Master-Plan.md`, and the exact Update Log strings to write at each phase event.
+> **Reference doc.** Read this to understand how AgToosa enforces phase order, what gets written to `docs/Master-Plan.md`, and the exact Update Log strings to write at each phase event.
 
 ## Phase-Gate Overview
 
@@ -27,7 +27,7 @@ Invoke commands in the order above. Out-of-order invocations warn and abort:
 
 ## Master-Plan.md Update Log Protocol
 
-Write these exact strings as timestamped entries in `Docs/Master-Plan.md` `## Update Log` at the corresponding phase events:
+Write these exact strings as timestamped entries in `docs/Master-Plan.md` `## Update Log` at the corresponding phase events:
 
 | Event | Update Log entry |
 |-------|-----------------|

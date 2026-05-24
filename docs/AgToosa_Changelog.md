@@ -7,7 +7,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+_(None.)_
+
 ### Added
+
+- 2026-05-24 — chore — Maintainer docs path normalization: `docs/` prefixes in workflow mirrors, Path conventions in `docs/agtoosa-maintainer.md`, PN1–PN5 bats (DEV-025) — `docs/archived/spec-DEV-025.md`
+- 2026-05-24 — fix — Maintainer status/readiness doc parity for dogfood: Part 1.5 in `docs/AgToosa_Status.md`, new `docs/AgToosa_Readiness.md`, MD1–MD5 bats (DEV-024) — `docs/archived/spec-DEV-024.md`
+
+### Added (prior)
 
 - 2026-05-24 — fix — Registry publish PS1 redirect + offline cache trust docs; RC1–RC3 bats (DEV-022) — `docs/archived/spec-DEV-022.md`
 - 2026-05-24 — fix — Registry pack queue: durable `.agtoosa/pack-queue/` staging, merge on install, legacy `ship/packs` salvage, PS1 parity; PK1–PK5 bats (DEV-018) — `docs/archived/spec-DEV-018.md`
@@ -56,15 +63,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 ## [2.4.0] — 2026-05-14
 
 ### Added
-- `/agtoosa-task` command (`Docs/AgToosa_Task.md`): lightweight Linear issue capture for bugs, chores, spikes, and fixes without a full spec cycle; includes type-specific DoD checklists and Discovery Triage origin tracking
-- Linear Issue Standard anatomy: canonical title format `[Type]: [description]`, required description sections (Context, Scope, ACs, DoD, Related), Epic→Story→Task hierarchy, Phase Comment Protocol, and Discovery Triage Protocol — all documented in `Docs/AgToosa_Agent.md`
-- Epic creation in `/agtoosa-init`: agent creates Linear Epic issues with correct labels/status and records IDs in `Docs/Master-Plan.md`
+- `/agtoosa-task` command (`docs/AgToosa_Task.md`): lightweight Linear issue capture for bugs, chores, spikes, and fixes without a full spec cycle; includes type-specific DoD checklists and Discovery Triage origin tracking
+- Linear Issue Standard anatomy: canonical title format `[Type]: [description]`, required description sections (Context, Scope, ACs, DoD, Related), Epic→Story→Task hierarchy, Phase Comment Protocol, and Discovery Triage Protocol — all documented in `docs/AgToosa_Agent.md`
+- Epic creation in `/agtoosa-init`: agent creates Linear Epic issues with correct labels/status and records IDs in `docs/Master-Plan.md`
 - Story creation with T-shirt sizing and cycle enrollment in `/agtoosa-spec`: agent creates a Linear Story issue (parent: Epic), records estimate, and enrolls in the active cycle
 - Task sub-issue creation in `/agtoosa-build`: agent creates Linear Task issues per build task; transitions Story to `In Progress`; posts "Build 🏗️ Started" phase comment
 - Discovery Triage Protocol in `/agtoosa-build`: classify out-of-scope findings, size them, and route to create-issue / expand-scope / ignore
 - Status transition protocol: Story moves `Todo → In Progress → In Review → Done` at Build/Review/Ship boundaries; rollback resets to `In Review`
 - Phase progress comments on Linear Story issues at every transition: Spec ✅ Approved, Build 🏗️ Started, Task 🟢 N/M, Review 🔍 Started/verdict, Ship 🚀/Rollback 🔙
-- Rich `Docs/Master-Plan.md` template: 8-section structured document (Project Charter, Epics, Active Cycle, Active Tasks, Backlog, Blocked, Completed This Cycle, Update Log)
+- Rich `docs/Master-Plan.md` template: 8-section structured document (Project Charter, Epics, Active Cycle, Active Tasks, Backlog, Blocked, Completed This Cycle, Update Log)
 
 ---
 

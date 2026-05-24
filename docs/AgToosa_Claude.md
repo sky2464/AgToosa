@@ -13,7 +13,7 @@ When writing files, adhere strictly to the naming convention: `AgToosa_[keyword]
 
 ### `/agtoosa-review` — Parallel Persona Reviews
 - Spawn sub-agents for each persona (Security Officer, Engineering Manager, CEO, QA Lead) to run concurrently.
-- Merge findings into a single report before saving `Docs/AgToosa_Review-*.md`.
+- Merge findings into a single report before saving `docs/AgToosa_Review-*.md`.
 - Issues flagged by multiple personas are elevated to 🔴 Critical automatically.
 
 ### `/agtoosa-qa run` — Coverage Analysis

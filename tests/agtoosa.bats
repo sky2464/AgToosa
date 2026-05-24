@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v4.14.0" ]]
+  [[ "$output" == "AgToosa v5.0.0" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1606,7 +1606,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "4.14.0" ]
+  [ "$ver" = "5.0.0" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1617,7 +1617,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"4.14.0"* ]]
+  [[ "$output" == *"5.0.0"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -2708,4 +2708,174 @@ PY
   grep -q '/agtoosa-\*' "$f"
   grep -q '/create-skill' "$f"
   grep -q 'do \*\*not\*\* route' "$f"
+}
+
+# ── DEV-024 maintainer status/readiness doc parity (MD1–MD5) ───────────────────
+
+@test "MD1: maintainer AgToosa_Status defines readiness sub-command and Part 1.5" {
+  local s="$BATS_TEST_DIRNAME/../docs/AgToosa_Status.md"
+  grep -q '/agtoosa-status readiness' "$s"
+  grep -q 'Part 1.5' "$s"
+  grep -q 'docs/AgToosa_Readiness.md' "$s"
+  grep -q 'Initial Product Readiness' "$s"
+  grep -q 'initial readiness' "$s"
+}
+
+@test "MD2: maintainer AgToosa_Readiness exists with seven gates and generator version parity" {
+  local r="$BATS_TEST_DIRNAME/../docs/AgToosa_Readiness.md"
+  [ -f "$r" ]
+  grep -q 'Initial Product Readiness' "$r"
+  grep -q 'Context files populated' "$r"
+  grep -q 'AGTOOSA_VERSION' "$r"
+  grep -q 'CHANGELOG.md' "$r"
+  grep -q 'Maintainer Dogfood' "$r"
+}
+
+@test "MD3: maintainer status doc uses Maintainer Dogfood Mode not Generated Project Mode only" {
+  local s="$BATS_TEST_DIRNAME/../docs/AgToosa_Status.md"
+  grep -q 'Maintainer Dogfood Mode' "$s"
+  grep -q 'agtoosa-maintainer.md' "$s"
+  ! grep -q 'Generated Project Mode' "$s" || {
+    echo "docs/AgToosa_Status.md must not use Generated Project Mode-only callout"
+    false
+  }
+}
+
+@test "MD4: maintainer status Part 5.5 maps readiness failures and matches template gates" {
+  local maint="$BATS_TEST_DIRNAME/../docs/AgToosa_Status.md"
+  local tmpl="$TEMPLATE_DIR/Docs/AgToosa_Status.md"
+  grep -q 'Failed Initial Product Readiness gate' "$maint"
+  grep -q '/agtoosa-qa plan' "$maint"
+  grep -q 'Did you mean: plan, readiness, git, orphans' "$maint"
+  grep -q '−5 per failed Initial Product Readiness gate' "$maint"
+  grep -q 'Context files populated' "$maint"
+  grep -q 'Context files populated' "$tmpl"
+}
+
+@test "MD5: maintainer readiness gate 7 references generator version sources" {
+  local r="$BATS_TEST_DIRNAME/../docs/AgToosa_Readiness.md"
+  grep -q 'agtoosa.sh' "$r"
+  grep -q 'agtoosa.ps1' "$r"
+  grep -q 'AGTOOSA_VERSION' "$r"
+}
+
+# ── DEV-025 maintainer docs path normalization (PN1–PN5) ───────────────────────
+
+@test "PN1: maintainer guide documents Generated Docs vs Maintainer docs path conventions" {
+  local f="$BATS_TEST_DIRNAME/../docs/agtoosa-maintainer.md"
+  grep -q 'Path conventions' "$f"
+  grep -q 'Maintainer Dogfood Mode' "$f"
+  grep -q '`docs/`' "$f"
+  grep -q '`Docs/`' "$f"
+  grep -q 'template/Docs/' "$f"
+}
+
+@test "PN2: maintainer core workflow mirrors use docs/ not Docs/ for Master-Plan" {
+  local files=(
+    "$BATS_TEST_DIRNAME/../docs/AgToosa_Agent.md"
+    "$BATS_TEST_DIRNAME/../docs/AgToosa_Build.md"
+    "$BATS_TEST_DIRNAME/../docs/AgToosa_Init.md"
+    "$BATS_TEST_DIRNAME/../docs/AgToosa_Spec.md"
+    "$BATS_TEST_DIRNAME/../docs/AgToosa_Ship.md"
+    "$BATS_TEST_DIRNAME/../docs/AgToosa_Status.md"
+  )
+  local f
+  for f in "${files[@]}"; do
+    ! grep -q 'Docs/Master-Plan.md' "$f"
+    grep -q 'docs/Master-Plan.md' "$f"
+  done
+}
+
+@test "PN3: maintainer AgToosa_Status uses docs/ paths throughout" {
+  local s="$BATS_TEST_DIRNAME/../docs/AgToosa_Status.md"
+  ! grep -q 'Docs/' "$s"
+  grep -q 'docs/Master-Plan.md' "$s"
+  grep -q 'docs/archived/spec-' "$s"
+}
+
+@test "PN4: maintainer AgToosa_Skills cites template/Docs for generated Codex workflows" {
+  local sk="$BATS_TEST_DIRNAME/../docs/AgToosa_Skills.md"
+  grep -q 'template/Docs/AgToosa_' "$sk"
+  grep -q 'Maintainer Dogfood Mode' "$sk"
+  ! grep -q 'Docs/Master-Plan.md' "$sk"
+}
+
+@test "PN5: template pack still uses Docs/ canonical paths (regression)" {
+  local t="$TEMPLATE_DIR/Docs/AgToosa_Status.md"
+  [ -f "$t" ]
+  grep -q 'Docs/Master-Plan.md' "$t"
+  # Canonical template path must remain capital-D Docs (not rewritten to docs/)
+  [[ "$t" == *'/Docs/'* ]]
+}
+
+# ── DEV-026 Codex agent mode spec execution (CS1–CS5) ─────────────────────────
+
+@test "CS1: Codex spec skill and prompt require agent-mode execution contract terms" {
+  local skill="$TEMPLATE_DIR/.codex/skills/agtoosa-spec/SKILL.md"
+  local prompt="$TEMPLATE_DIR/.codex/prompts/agtoosa-spec.md"
+  local f term
+  for f in "$skill" "$prompt"; do
+    grep -q 'Agent Mode Execution Contract' "$f" || {
+      echo "Missing Agent Mode Execution Contract in $f"
+      false
+    }
+    for term in 'Smart Interview' 'research' 'Goal Contract' 'task planning' 'test plan' 'approval gate'; do
+      grep -qi "$term" "$f" || {
+        echo "Missing execution contract term '$term' in $f"
+        false
+      }
+    done
+    grep -qiE 'do not skip|Do \*\*not\*\* skip|forbidden' "$f" || {
+      echo "Missing forbidden-skip guard in $f"
+      false
+    }
+  done
+}
+
+@test "CS2: Codex spec skill and prompt preserve sub-command dispatch" {
+  local skill="$TEMPLATE_DIR/.codex/skills/agtoosa-spec/SKILL.md"
+  local prompt="$TEMPLATE_DIR/.codex/prompts/agtoosa-spec.md"
+  local f sub
+  for f in "$skill" "$prompt"; do
+    for sub in research plan quick tasks to-issues; do
+      grep -q "$sub" "$f" || {
+        echo "Missing sub-command dispatch for '$sub' in $f"
+        false
+      }
+    done
+  done
+}
+
+@test "CS3: Codex spec adapter keeps Docs/AgToosa_Spec.md canonical without Part duplication" {
+  local skill="$TEMPLATE_DIR/.codex/skills/agtoosa-spec/SKILL.md"
+  local prompt="$TEMPLATE_DIR/.codex/prompts/agtoosa-spec.md"
+  local f
+  for f in "$skill" "$prompt"; do
+    grep -q 'Docs/AgToosa_Spec.md' "$f" || {
+      echo "Missing canonical Docs/AgToosa_Spec.md reference in $f"
+      false
+    }
+    if grep -q '^## Part 1' "$f" || grep -q '^## Part 2' "$f"; then
+      echo "Duplicated canonical Part 1/2 workflow section header in $f"
+      false
+    fi
+  done
+}
+
+@test "CS4: DEV-026 contract forbids shallow dispatcher skips for full flow" {
+  local skill="$TEMPLATE_DIR/.codex/skills/agtoosa-spec/SKILL.md"
+  grep -qiE 'routing summary|shallow dispatcher|not a routing' "$skill" || {
+    echo "Missing shallow-dispatcher guard in skill"
+    false
+  }
+  grep -q 'Parts 1' "$skill"
+  grep -qi 'STRIDE\|threat model\|architecture' "$skill"
+}
+
+@test "CS5: Codex spec prompt included in W1 phase-stop build guard" {
+  local f="$TEMPLATE_DIR/.codex/prompts/agtoosa-spec.md"
+  grep -qE 'do not run /agtoosa-build automatically|Do \*\*not\*\* run `/agtoosa-build` automatically|Do not run /agtoosa-build automatically' "$f" || {
+    echo "Missing phase-stop build guard in $f"
+    false
+  }
 }

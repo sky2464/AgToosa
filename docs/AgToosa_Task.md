@@ -4,7 +4,7 @@
 
 ## Objective
 
-Capture a well-formed task entry in `Docs/Master-Plan.md` in under 5 steps. No spec file is generated. Use this for:
+Capture a well-formed task entry in `docs/Master-Plan.md` in under 5 steps. No spec file is generated. Use this for:
 - Bugs found during `/agtoosa-build` via the Discovery Triage Protocol
 - Small chores or dependency updates
 - Spike investigations (time-boxed research)
@@ -14,7 +14,7 @@ Do **not** use `/agtoosa-task` for features or stories that require architecture
 
 ## Workflow
 
-> **Follow the Smart Interview Protocol** (`Docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
+> **Follow the Smart Interview Protocol** (`docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
 > Maximum **3 questions**. Infer type and priority from the trigger context before asking. One question at a time.
 
 ### Step 1 — Classify & Prioritize
@@ -68,7 +68,7 @@ Generate the full Description automatically using the Issue Standard (see `AgToo
 - [ ] No regressions in dependent modules
 
 **Spike DoD:**
-- [ ] Research summary written to `Docs/Context/`
+- [ ] Research summary written to `docs/Context/`
 - [ ] Time-box respected
 - [ ] Decision or recommendation documented
 
@@ -79,7 +79,7 @@ Generate the full Description automatically using the Issue Standard (see `AgToo
 
 ### Step 3 — Parent Linking
 
-Infer the parent Epic or Story from `Docs/Master-Plan.md` context. If obvious, state it:
+Infer the parent Epic or Story from `docs/Master-Plan.md` context. If obvious, state it:
 
 ```
 ❓ Should this be linked to [inferred Epic/Story ID: Title]?
@@ -102,7 +102,7 @@ Title: [type-prefixed title]
 
 ### Step 5 — Add to Master-Plan.md
 
-Add the new entry to `Docs/Master-Plan.md` under `## Backlog` with:
+Add the new entry to `docs/Master-Plan.md` under `## Backlog` with:
 - **Title** from Step 1–2
 - **Type** matching Bug / Chore / Fix / Feature
 - **Priority** from Step 1
@@ -115,6 +115,6 @@ If the entry was created during Discovery Triage, append to the description:
 
 ## Output
 
-- Confirm the entry was added to `Docs/Master-Plan.md`; display the title and status.
+- Confirm the entry was added to `docs/Master-Plan.md`; display the title and status.
 - Print the closure line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
 - Ask: "Want to continue what you were doing, or tackle this now?"

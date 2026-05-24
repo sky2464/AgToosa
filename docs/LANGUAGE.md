@@ -1,10 +1,12 @@
 # Ubiquitous Language Guide
 
-Ubiquitous language means every part of the codebase — variable names, function names, error messages, comments, API endpoints, database columns, and PR descriptions — uses the same terms as the domain model defined in `Docs/Context/CONTEXT.md`.
+> **Path note:** Examples use `docs/` for **Maintainer Dogfood Mode**; generated projects use `Docs/` — see `docs/agtoosa-maintainer.md` → Path conventions.
+
+Ubiquitous language means every part of the codebase — variable names, function names, error messages, comments, API endpoints, database columns, and PR descriptions — uses the same terms as the domain model defined in `docs/Context/CONTEXT.md`.
 
 ## Source of Truth
 
-`Docs/Context/CONTEXT.md` — always read it before writing code.
+`docs/Context/CONTEXT.md` — always read it before writing code.
 
 ## Rules
 

@@ -26,8 +26,8 @@ Break the active spec (or a provided PRD or plan) into independently-grabbable G
    - **Story points:** 1 / 2 / 3 / 5 (Fibonacci)
    - **Labels:** feature / bug / chore / spike as appropriate
    - **Dependencies:** list any issues that must complete first
-3. If no GitHub remote is configured, write issues to `Docs/issues/` as individual markdown files.
-4. Update `Docs/Master-Plan.md` with all issue IDs under `## Active Tasks`.
+3. If no GitHub remote is configured, write issues to `docs/issues/` as individual markdown files.
+4. Update `docs/Master-Plan.md` with all issue IDs under `## Active Tasks`.
 
 ## Objective
 Transform a raw idea, feature, chore, or bug into a researched Specification with an architectural blueprint.
@@ -37,20 +37,20 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 ### Part 1 — Research & Specification
 
 1.  **Context Gathering & Domain Language Alignment:**
-    *   Read `Docs/Context/product.md`, `tech-stack.md`, and `workflow.md` to align with project goals.
+    *   Read `docs/Context/product.md`, `tech-stack.md`, and `workflow.md` to align with project goals.
     *   Scan the existing codebase to fully understand the impact surface of the proposed work.
-    *   **Domain Language Alignment:** Read `Docs/Context/CONTEXT.md` (create it if missing using `Docs/CONTEXT-FORMAT.md` as a guide). For each key concept in the proposed feature:
+    *   **Domain Language Alignment:** Read `docs/Context/CONTEXT.md` (create it if missing using `docs/CONTEXT-FORMAT.md` as a guide). For each key concept in the proposed feature:
         - "Is this the right term? What does the domain call this?"
         - "Is this a new concept or an existing one we're renaming?"
         - "Where does this term appear in the codebase today?"
-    *   Update `Docs/Context/CONTEXT.md` with any new or corrected terms.
-    *   Identify 2–3 architectural decisions implied by the feature; document each as a new ADR in `Docs/adr/` using `Docs/ADR-FORMAT.md`.
+    *   Update `docs/Context/CONTEXT.md` with any new or corrected terms.
+    *   Identify 2–3 architectural decisions implied by the feature; document each as a new ADR in `docs/adr/` using `docs/ADR-FORMAT.md`.
 2.  **External Research (Web Research Agent):**
     *   Query online sources for the best solutions, libraries, APIs, and design patterns relevant to the task.
     *   **CRITICAL:** Verify all dependency versions against live sources (never assume from memory).
 3.  **Q&A — Forcing Questions (Smart Interview):**
 
-    > **Follow the Smart Interview Protocol** (`Docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
+    > **Follow the Smart Interview Protocol** (`docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
     > Maximum **4 questions** for the full flow; max **2** for `/agtoosa-spec quick`.
     > Before each question, check whether the answer is already clear from the codebase scan or Context files. If it is, state your finding and move on — do not ask.
 
@@ -102,16 +102,16 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
     *   This table is required by `/agtoosa-qa plan` and `/agtoosa-ship check`.
 
 8.  **File Generation:**
-    *   Generate a single file named `Docs/archived/spec-[story-id].md` (e.g., `Docs/archived/spec-DEV-15.md`).
-    *   The file must follow the section order defined in `Docs/SPEC-FORMAT.md`:
+    *   Generate a single file named `docs/archived/spec-[story-id].md` (e.g., `docs/archived/spec-DEV-15.md`).
+    *   The file must follow the section order defined in `docs/SPEC-FORMAT.md`:
         - `## 1. Requirements` (User Stories, EARS ACs, Out of Scope)
         - `## 2. Design` (Architecture Blueprint, Data Flow, STRIDE Threat Model, Build Scope)
         - `## 3. Tasks` (Task Tree, Wave Plan, Test Plan — populated in Part 4)
         - `## ✅ Spec Approved` (appended on approval)
-    *   Refer to `Docs/SPEC-FORMAT.md` for the full format reference.
-    *   The `Docs/archived/` directory is created automatically by `/agtoosa-init`. If it is missing, create it with `mkdir -p Docs/archived`.
+    *   Refer to `docs/SPEC-FORMAT.md` for the full format reference.
+    *   The `docs/archived/` directory is created automatically by `/agtoosa-init`. If it is missing, create it with `mkdir -p docs/archived`.
 9.  **Master-Plan.md Story Entry:**
-    *   Add a Story entry to `Docs/Master-Plan.md`:
+    *   Add a Story entry to `docs/Master-Plan.md`:
         - Title: `Feature: [spec short name]` (use `Bug:` / `Chore:` / `Fix:` as appropriate)
         - Type: Feature (or Bug / Chore / Fix as appropriate)
         - Status: `Todo`
@@ -119,14 +119,14 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
         - Parent Epic: link to the relevant Epic from `/agtoosa-init`
         - Summary: paste the spec's Context section + ACs table + Definition of Done checklist
     *   Record the Story ID in the spec file header.
-    *   Update `Docs/Master-Plan.md`: add the Story row to `## Backlog` (or `## Active Cycle` if enrolling now).
+    *   Update `docs/Master-Plan.md`: add the Story row to `## Backlog` (or `## Active Cycle` if enrolling now).
 
 10. **Estimation & Cycle Enrollment:**
     *   Ask the user: "How big is this Story? T-shirt size: **XS** (< 4 h) / **S** (1 d) / **M** (2–3 d) / **L** (4–5 d) / **XL** (6+ d)"
     *   If the user picks **L** or **XL**, prompt: "This is large. Should we split it into smaller Stories now, or proceed as one?"
-    *   Record the estimate in `Docs/Master-Plan.md` on the Story row.
+    *   Record the estimate in `docs/Master-Plan.md` on the Story row.
     *   Ask: "Enroll this Story in the current active cycle/sprint? (Yes / No)"
-    *   If Yes: add the Story to the active cycle in Linear and update `Docs/Master-Plan.md` under `## Active Cycle`.
+    *   If Yes: add the Story to the active cycle in Linear and update `docs/Master-Plan.md` under `## Active Cycle`.
 
 ### Part 4 — Task Planning
 
@@ -149,7 +149,7 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
     *   Read the spec and translate it into atomic, clear, step-by-step actionable tasks.
     *   Identify tasks that can run in parallel during `/agtoosa-build`.
     *   If a critical flaw is found during task breakdown, stop and ask the user to revise the spec before continuing.
-    *   Emit a **hierarchical checkbox tree** in `## Active Tasks` in `Docs/Master-Plan.md` (follow the format in `Docs/SPEC-FORMAT.md` § 3.1):
+    *   Emit a **hierarchical checkbox tree** in `## Active Tasks` in `docs/Master-Plan.md` (follow the format in `docs/SPEC-FORMAT.md` § 3.1):
         - Top-level items: `- [ ] **N.** [Group]: [description]`
         - Sub-tasks: `  - [ ] N.M [description] — _Requirements: AC-NNN_`
     *   After generating the task tree, identify groups of sub-tasks that can run in parallel (no shared state, no data dependency). Add a `### Wave Plan` subsection in the spec's `## 3. Tasks` section using:
@@ -159,14 +159,14 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
         **Wave 2 (sequential after Wave 1):** [list sub-task IDs]
         ```
 
-    *   Mirror the task tree into `Docs/Master-Plan.md` under `## Active Tasks` (replacing the flat table format).
+    *   Mirror the task tree into `docs/Master-Plan.md` under `## Active Tasks` (replacing the flat table format).
 
 13. **Test Plan Skeleton:**
-    *   Generate **`Docs/AgToosa_TestPlan-[name].md`** containing:
+    *   Generate **`docs/AgToosa_TestPlan-[name].md`** containing:
         - Spec reference (link to `AgToosa_Spec-*.md`)
         - AC coverage table — each `AC-NNN` from the spec mapped to test IDs (`T-001`, `T-002`, ...)
         - Test category per ID: Unit · Integration · E2E · Security · Performance
-        - Coverage target from `Docs/Context/workflow.md` (`coverage_threshold`), default 80%
+        - Coverage target from `docs/Context/workflow.md` (`coverage_threshold`), default 80%
         - At least one negative/edge scenario per Must-priority AC
         - Smoke set — at least one test per Must-priority AC tagged `@smoke`
 

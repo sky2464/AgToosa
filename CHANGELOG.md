@@ -7,9 +7,27 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
-### Planned
-
 _(None — pick next story via `/agtoosa-spec`.)_
+
+---
+
+## [5.0.0] — 2026-05-24
+
+Release **5.0** cycle: DEV-025 (282 bats tests).
+
+### Changed
+
+- **DEV-025 — Maintainer docs path normalization.** Normalize `Docs/` → `docs/` in maintainer `docs/AgToosa_*.md` workflow mirrors and format guides; **Path conventions** in `docs/agtoosa-maintainer.md`; `template/Docs/` citations preserved in Skills; bats PN1–PN5 green. Regression: MD1–MD5, B1, R4 unchanged. Smoke: PN1–PN5 all green.
+
+---
+
+## [4.14.1] — 2026-05-24
+
+Release **4.15** cycle: DEV-024 (277 bats tests).
+
+### Fixed
+
+- **DEV-024 — Maintainer status readiness doc parity.** Sync `docs/AgToosa_Status.md` Part 1.5 readiness + `docs/AgToosa_Readiness.md` for maintainer dogfood; Maintainer Dogfood Mode callout; gate 7 uses `AGTOOSA_VERSION` / `CHANGELOG.md`. Bats MD1–MD5 green; R4 template regression unchanged. Smoke: MD1–MD5 all green.
 
 ---
 

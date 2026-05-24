@@ -20,7 +20,7 @@ Use when the AI agent is focused on a specific file or function and needs broade
 2. **Module boundaries:** Identify which architectural layer owns this code (UI / API / domain / data).
 3. **Usage sites:** Find all references to this symbol or module across the codebase.
 4. **Impact analysis:** Answer: "What would break if this changed?"
-5. **Context update:** Update `Docs/Master-Plan.md` with the codebase mental model if any new understanding emerged.
+5. **Context update:** Update `docs/Master-Plan.md` with the codebase mental model if any new understanding emerged.
 
 ## Workflow
 
@@ -29,7 +29,7 @@ Use when the AI agent is focused on a specific file or function and needs broade
 1.  **Detect AI Configs:**
     *   Scan the project root for AI config files: `.cursorrules`, `.windsurfrules`, `CLAUDE.md`, `AGENTS.md`, `.github/copilot-instructions.md`, `OPENCODE.md`, and any other rules/memory files.
     *   Scan `.github/instructions/` for `*.instructions.md` scoped instruction files.
-    *   Check each config correctly references `Docs/AgToosa_Agent.md` and the `/agtoosa-*` commands.
+    *   Check each config correctly references `docs/AgToosa_Agent.md` and the `/agtoosa-*` commands.
     *   If a config exists but is NOT wired to AgToosa, ask the user whether to update it.
     *   If a config for the selected AI tool is missing, create it with proper AgToosa references.
     *   If `.github/instructions/` is missing, create it and scaffold baseline files: `agtoosa-core.instructions.md`, `agtoosa-testing.instructions.md`, `agtoosa-security.instructions.md`, and `agtoosa-changelog.instructions.md`.
@@ -40,12 +40,12 @@ Use when the AI agent is focused on a specific file or function and needs broade
 
 ### Phase B — Context Establishment
 
-> **Follow the Smart Interview Protocol** (`Docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
+> **Follow the Smart Interview Protocol** (`docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
 > Maximum 6 questions across all context files combined. Infer first; only ask about genuine gaps.
 
 3.  **Populate-Check Gate:**
 
-    Before asking anything, check whether `Docs/Context/` files already exist and are populated:
+    Before asking anything, check whether `docs/Context/` files already exist and are populated:
 
     - **Fully populated** (all key fields have real non-placeholder values):
       Present a summary of each file's content and ask:
@@ -63,7 +63,7 @@ Use when the AI agent is focused on a specific file or function and needs broade
 
     Conduct the interview one question at a time. Before each question, scan the codebase and any existing context for clues — pre-populate options from what you find. Do not ask questions whose answers are already clear from codebase evidence.
 
-    **Product context** (`Docs/Context/product.md`):
+    **Product context** (`docs/Context/product.md`):
 
     ```
     ❓ What type of app is this?
@@ -80,7 +80,7 @@ Use when the AI agent is focused on a specific file or function and needs broade
       Or type your own answer.
     ```
 
-    **Tech stack** (`Docs/Context/tech-stack.md`):
+    **Tech stack** (`docs/Context/tech-stack.md`):
 
     ```
     ❓ Confirm the tech stack — does this look right?
@@ -90,7 +90,7 @@ Use when the AI agent is focused on a specific file or function and needs broade
 
     Only ask about deployment target separately if it cannot be inferred.
 
-    **Workflow** (`Docs/Context/workflow.md`):
+    **Workflow** (`docs/Context/workflow.md`):
 
     ```
     ❓ Should we enforce strict TDD (Red-Green-Refactor) during /agtoosa-build?
@@ -100,7 +100,7 @@ Use when the AI agent is focused on a specific file or function and needs broade
 
     Only ask about commit strategy or branch naming if the project has no existing conventions detectable in git config or CI files.
 
-    **Product guidelines** (`Docs/Context/product-guidelines.md`):
+    **Product guidelines** (`docs/Context/product-guidelines.md`):
 
     Infer from any existing UI, README tone, or brand assets. Only ask if nothing is detectable:
 
@@ -143,23 +143,23 @@ Use when the AI agent is focused on a specific file or function and needs broade
       Add, remove, or rename any below.
     ```
 
-8.  **Scaffolding:** Create `Docs/`, `Docs/archived/`, and `Docs/Context/` if they don't exist.
+8.  **Scaffolding:** Create `docs/`, `docs/archived/`, and `docs/Context/` if they don't exist.
 
 9.  **Dynamic Generation:** Based on the consultation, update or create:
-    *   `Docs/AgToosa_Agent.md` (tailored rules and commands)
-    *   `Docs/AgToosa_Claude.md` (Claude-specific, if applicable)
-    *   `Docs/AgToosa_Gemini.md` (Gemini-specific, if applicable)
+    *   `docs/AgToosa_Agent.md` (tailored rules and commands)
+    *   `docs/AgToosa_Claude.md` (Claude-specific, if applicable)
+    *   `docs/AgToosa_Gemini.md` (Gemini-specific, if applicable)
 
 10. **Project Management Setup:**
 
-    > `Docs/Master-Plan.md` is the single source of truth for all project management — it replaces Linear, Jira, GitHub Projects, Trello, or any external tracker. Do NOT create issues in external tools unless the user explicitly asks.
+    > `docs/Master-Plan.md` is the single source of truth for all project management — it replaces Linear, Jira, GitHub Projects, Trello, or any external tracker. Do NOT create issues in external tools unless the user explicitly asks.
 
-    *   For each Epic confirmed in the consultation, add an entry to `Docs/Master-Plan.md` under `## Epics`:
+    *   For each Epic confirmed in the consultation, add an entry to `docs/Master-Plan.md` under `## Epics`:
         - **Name:** `Epic: [product area name]` (e.g., `Epic: Authentication`)
         - **Status:** `Backlog`
         - **Charter:** one-paragraph goal, scope, and success criteria for this product area
-    *   Mirror the full current state in `Docs/Master-Plan.md` using the structured template (Charter, Epics table, empty Backlog, Update Log first entry).
-    *   Initialize `Docs/AgToosa_Changelog.md`.
+    *   Mirror the full current state in `docs/Master-Plan.md` using the structured template (Charter, Epics table, empty Backlog, Update Log first entry).
+    *   Initialize `docs/AgToosa_Changelog.md`.
 
 ### Phase D — TDD Configuration
 

@@ -1,10 +1,12 @@
 # CONTEXT.md Format Guide
 
-`Docs/Context/CONTEXT.md` is the domain language dictionary for this project. Every AI agent reads it before spec and build tasks to use correct terminology and avoid naming inconsistencies.
+`docs/Context/CONTEXT.md` is the domain language dictionary for this project. Every AI agent reads it before spec and build tasks to use correct terminology and avoid naming inconsistencies.
+
+> **Path note:** `docs/` paths apply in **Maintainer Dogfood Mode**. Generated projects use `Docs/Context/CONTEXT.md` — see `docs/agtoosa-maintainer.md` → Path conventions.
 
 ## When to Create
 
-Create or update `Docs/Context/CONTEXT.md` when:
+Create or update `docs/Context/CONTEXT.md` when:
 - Starting a new project (`/agtoosa-init`)
 - Running `/agtoosa-spec` (Part 1) to align terminology before writing a spec
 - A new domain concept emerges during build that needs a canonical name
@@ -41,7 +43,7 @@ Optionally add a `Not:` suffix to document rejected synonyms:
 
 ## Usage
 
-- AI agents: read `Docs/Context/CONTEXT.md` at the start of every spec and build task.
+- AI agents: read `docs/Context/CONTEXT.md` at the start of every spec and build task.
 - When the agent uses a wrong term, correct it and update CONTEXT.md immediately.
 - New terms discovered during build: add to CONTEXT.md before writing code that uses them.
 - Run `/agtoosa-spec` (Part 1) to validate terminology alignment before any new spec.

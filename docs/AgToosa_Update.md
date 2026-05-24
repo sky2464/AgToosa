@@ -17,7 +17,7 @@ This is a pure read command. The AI reads the project's current state and produc
 
 1. **Read project context**
 
-   Read all files in `Docs/Context/`:
+   Read all files in `docs/Context/`:
    - `product.md` — what the product is and who it's for
    - `tech-stack.md` — languages, frameworks, and infra
    - `workflow.md` — team process, branching, deploy flow
@@ -27,7 +27,7 @@ This is a pure read command. The AI reads the project's current state and produc
 
 2. **Read Master-Plan**
 
-   Read `Docs/Master-Plan.md`. Extract:
+   Read `docs/Master-Plan.md`. Extract:
    - Active cycle and its goal
    - Stories currently In Progress
    - Blocked items
@@ -35,11 +35,11 @@ This is a pure read command. The AI reads the project's current state and produc
 
 3. **Read recent Changelog entries**
 
-   Read `Docs/AgToosa_Changelog.md`. Surface the last 1–2 releases so the current sprint is in context.
+   Read `docs/AgToosa_Changelog.md`. Surface the last 1–2 releases so the current sprint is in context.
 
 4. **Scan active specs**
 
-   List any `Docs/AgToosa_Spec-*.md` files that are not in `Docs/archived/`. Read their Status field. Note which specs are Approved, In Progress, or Draft.
+   List any `docs/AgToosa_Spec-*.md` files that are not in `docs/archived/`. Read their Status field. Note which specs are Approved, In Progress, or Draft.
 
 5. **Produce a project briefing**
 
@@ -71,7 +71,7 @@ This is a pure read command. The AI reads the project's current state and produc
 
 | Category | Action |
 |----------|--------|
-| `Docs/AgToosa_*.md` workflow files | Overwritten with latest version |
+| `docs/AgToosa_*.md` workflow files | Overwritten with latest version |
 | Platform entry-points (`CLAUDE.md`, `.cursorrules`, etc.) | Smart merge — only if already installed |
 | Platform native dirs (`.claude/commands/`, `.cursor/rules/`, etc.) | Overwritten — only AgToosa-owned files |
 | `.claude/settings.json` hooks | Deep-merged, deduplicated |
@@ -80,8 +80,8 @@ This is a pure read command. The AI reads the project's current state and produc
 
 | Category | Action |
 |----------|--------|
-| `Docs/Context/` | Never touched (your product/tech/workflow config) |
-| `Docs/Master-Plan.md` | Never touched (your project management source of truth) |
-| `Docs/AgToosa_Changelog.md` | Never touched (your project changelog) |
-| `Docs/archived/` | Never touched (completed specs) |
+| `docs/Context/` | Never touched (your product/tech/workflow config) |
+| `docs/Master-Plan.md` | Never touched (your project management source of truth) |
+| `docs/AgToosa_Changelog.md` | Never touched (your project changelog) |
+| `docs/archived/` | Never touched (completed specs) |
 | User files in platform dirs | Never touched (only AgToosa-owned files overwritten) |

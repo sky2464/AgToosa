@@ -1,7 +1,7 @@
 # Master-Plan
 
-> **Source of truth for active work.** Completed work lives in `Docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-05-24 (/agtoosa-ship DEV-023 — v4.14.0)
+> **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
+> **Last updated:** 2026-05-24 (/agtoosa-ship DEV-025 — v5.0.0)
 
 ## Project Charter
 
@@ -9,19 +9,21 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Milestone | `v5.0.0` (planned) |
-| Active cycle | _(next via `/agtoosa-spec`)_ |
+| Milestone | `v5.0.0` |
+| Active cycle | DEV-026 — Codex agent mode spec workflow execution |
 | Cycle capacity | `40 story points` |
-| Current phase | 🏁 Shipped (Release 4.14 — v4.14.0) |
+| Current phase | 🔍 Review passed (DEV-026 — ready for ship) |
 
 ## Active Cycle
 
 > Stories committed to the current sprint/cycle.
-> **Progress:** `▱▱▱▱▱▱▱▱ 0/0` ← updated by `/agtoosa-build` after each task completes
+> **Progress:** `▰▰▰▰▰▰▰▰ 8/8` ← updated by `/agtoosa-build` after each task completes
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| _(empty — enroll next story via `/agtoosa-spec`)_ | | | | | |
+| DEV-026 | Fix: Codex agent mode spec workflow execution | Fix | S | 🔍 Review passed | 8/8 |
+
+<!-- Archived to docs/archived/cycle-2026-05-24-release-5.0.md -->
 
 Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blocked · 🔧 Awaiting Manual · 🏁 Shipped
 
@@ -29,6 +31,26 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
+
+**DEV-026 — Codex agent mode spec workflow execution** (spec: `docs/archived/spec-DEV-026.md`)
+
+- [x] **1.** Codex adapter execution contract
+  - [x] 1.1 Add **Agent Mode Execution Contract** to `template/.codex/skills/agtoosa-spec/SKILL.md`
+  - [x] 1.2 Mirror the contract in `template/.codex/prompts/agtoosa-spec.md`
+- [x] **2.** Regression coverage
+  - [x] 2.1 Add bats assertions for required phase terms in skill and prompt
+  - [x] 2.2 Preserve non-duplication checks (no full `## Part 1` / `## Part 2` bodies)
+  - [x] 2.3 Confirm W1 phase-stop coverage for Codex spec surfaces
+- [x] **3.** Verification and bookkeeping
+  - [x] 3.1 Run focused DEV-026 bats filter and existing Codex workflow-skill tests
+  - [x] 3.2 Update DEV-026 test plan evidence if test IDs differ
+  - [x] 3.3 Update `docs/Master-Plan.md` enrollment and build tracking
+
+<!--
+**DEV-025 — Maintainer docs path normalization** (spec: `docs/archived/spec-DEV-025.md`) — shipped 2026-05-24 v5.0.0
+
+<!--
+**DEV-024 — Maintainer status readiness doc parity** (spec: `docs/archived/spec-DEV-024.md`) — shipped 2026-05-24 v4.14.1
 
 <!--
 **DEV-019 — Master Architecture document** (spec: `docs/archived/spec-DEV-019.md`) — shipped 2026-05-24 v4.13.0
@@ -94,6 +116,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Type | Estimate | Epic | Priority | Status |
 |----|-------|------|----------|------|----------|--------|
+| _(empty — DEV-026 enrolled in Active Cycle)_ | | | | | | |
 
 ## Epics
 
@@ -118,9 +141,10 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Scope:** Markdown specifications and rules files across Claude, Gemini, Cursor, Windsurf, Copilot, and OpenCode under `template/`.
     *   **Success Criteria:** Perfect parity of phase commands and zero-drift version badges across all platform templates.
 
+    *   **Last shipped:** DEV-025 — Maintainer docs path normalization → `docs/archived/spec-DEV-025.md`
+    *   **Last shipped:** DEV-024 — Maintainer status readiness doc parity → `docs/archived/spec-DEV-024.md`
     *   **Last shipped:** DEV-023 — Workflow Template Native Slash Parity Audit → `docs/archived/spec-DEV-023.md`
-    *   **Last shipped:** DEV-019 — Master Architecture document → `docs/archived/spec-DEV-019.md`
-    *   **Current:** _(pick next story via `/agtoosa-spec`)_
+    *   **Current:** DEV-026 — Codex agent mode spec workflow execution (review passed; ready for `/agtoosa-ship`)
 
 *   **DEV-003 - Epic: Community Template Registry**
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
@@ -140,7 +164,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 ## Completed This Cycle
 
-> Detail lives in `Docs/archived/`. This section shows pointer rows only — links to archived spec files.
+> Detail lives in `docs/archived/`. This section shows pointer rows only — links to archived spec files.
 > Updated by `/agtoosa-ship`.
 
 | ID | Title | Shipped | Archived Spec |
@@ -165,6 +189,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-022 | Fix: Registry publish PS1 + offline cache hardening | 2026-05-24 | [spec-DEV-022.md](archived/spec-DEV-022.md) · [review-DEV-022.md](archived/review-DEV-022.md) |
 | DEV-019 | Feature: Master Architecture document | 2026-05-24 | [spec-DEV-019.md](archived/spec-DEV-019.md) · [review-DEV-019.md](archived/review-DEV-019.md) |
 | DEV-023 | Fix: Workflow Template Native Slash Parity Audit | 2026-05-24 | [spec-DEV-023.md](archived/spec-DEV-023.md) · [review-DEV-023.md](archived/review-DEV-023.md) |
+| DEV-024 | Fix: Maintainer status readiness doc parity | 2026-05-24 | [spec-DEV-024.md](archived/spec-DEV-024.md) · [review-DEV-024.md](archived/review-DEV-024.md) |
+| DEV-025 | Chore: Maintainer docs path normalization | 2026-05-24 | [spec-DEV-025.md](archived/spec-DEV-025.md) · [review-DEV-025.md](archived/review-DEV-025.md) |
 
 ## Update Log
 
@@ -301,3 +327,25 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-05-24 | 🔍 Review ✅ Approved — DEV-023; 0 Critical; report: docs/archived/review-DEV-023.md | AgToosa |
 | 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-023; smoke WP1–WP5 5/5 green; v4.14.0; archived spec + review | AgToosa |
 | 2026-05-24 | 🚀 Release 4.14 shipped — v4.14.0; DEV-023 on main; version parity bash/ps1 | AgToosa |
+| 2026-05-24 | ✏️ /agtoosa-spec DEV-024 — maintainer status/readiness doc parity; estimate S; enrolled Release 4.15; 7 tasks; spec: docs/archived/spec-DEV-024.md | AgToosa |
+| 2026-05-24 | ✅ Spec approved — DEV-024; estimate S; Release 4.15 | AgToosa |
+| 2026-05-24 | 🏗️ Build started — DEV-024, 7 tasks; scope: docs/AgToosa_Status.md, docs/AgToosa_Readiness.md, tests/agtoosa.bats | AgToosa |
+| 2026-05-24 | 🏗️ Build complete — DEV-024; MD1–MD5 5/5 green; maintainer status/readiness parity | AgToosa |
+| 2026-05-24 | 🔍 Review 🔍 Started — DEV-024 — 4-persona review | AgToosa |
+| 2026-05-24 | 🔍 Review ✅ Approved — DEV-024; 0 Critical, 3 Warnings (accepted); report: docs/archived/review-DEV-024.md | AgToosa |
+| 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-024; smoke MD1–MD5 5/5 green; v4.14.1; archived spec + review | AgToosa |
+| 2026-05-24 | 🚀 Release 4.15 shipped — v4.14.1; DEV-024 on main; version parity bash/ps1 | AgToosa |
+| 2026-05-24 | ✏️ /agtoosa-spec DEV-025 — maintainer `docs/` path normalization; estimate S; v5.0.0 cycle; 10 tasks; spec: docs/archived/spec-DEV-025.md | AgToosa |
+| 2026-05-24 | ✅ Spec approved — DEV-025; estimate S; Release 5.0 / v5.0.0; test plan: docs/AgToosa_TestPlan-DEV-025.md | AgToosa |
+| 2026-05-24 | 🏗️ Build started — DEV-025, 10 tasks; scope: docs/AgToosa_*.md, format guides, agtoosa-maintainer.md, tests/agtoosa.bats | AgToosa |
+| 2026-05-24 | 🏗️ Build complete — DEV-025; PN1–PN5 5/5 green; MD1–MD5 + B1 regression unchanged | AgToosa |
+| 2026-05-24 | 🔍 Review 🔍 Started — DEV-025 — 4-persona review | AgToosa |
+| 2026-05-24 | 🔍 Review ✅ Approved — DEV-025; 0 Critical, 4 Warnings (accepted); report: docs/archived/review-DEV-025.md | AgToosa |
+| 2026-05-24 | ✏️ /agtoosa-spec DEV-026 — Codex agent mode spec workflow execution; estimate S; added to Backlog; test plan: docs/AgToosa_TestPlan-DEV-026.md | AgToosa |
+| 2026-05-24 | ✅ Spec approved — DEV-026; estimate S; remains Backlog/Todo until explicitly enrolled after DEV-025 | AgToosa |
+| 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-025; smoke PN1–PN5 5/5 green; full suite 282/282; v5.0.0; archived spec + review | AgToosa |
+| 2026-05-24 | 🚀 Release 5.0 shipped — v5.0.0; DEV-025 on main; version parity bash/ps1 | AgToosa |
+| 2026-05-24 | 🏗️ Build started — DEV-026, 8 tasks; scope: template/.codex/skills/agtoosa-spec, template/.codex/prompts/agtoosa-spec.md, tests/agtoosa.bats | AgToosa |
+| 2026-05-24 | 🏗️ Build complete — DEV-026; CS1–CS5 + K2/K3/W1/CX1 focused 11/11 green; full suite 287/287 | AgToosa |
+| 2026-05-24 | 🔍 Review started — DEV-026; 4-persona review (Security, Eng Manager, CEO, QA Lead) | AgToosa |
+| 2026-05-24 | 🔍 Review ✅ Approved — DEV-026; 0 Critical, 4 Warnings (accepted); report: docs/archived/review-DEV-026.md | AgToosa |

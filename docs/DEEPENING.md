@@ -1,5 +1,7 @@
 # Deep Modules — Design Reference
 
+> **Path note:** Examples use `docs/` for **Maintainer Dogfood Mode**; generated projects use `Docs/` — see `docs/agtoosa-maintainer.md` → Path conventions.
+
 A deep module provides a simple, narrow interface that hides a rich, complex implementation. A shallow module has a complex interface relative to the functionality it provides. Prefer deep modules.
 
 ## Signs of Shallow Modules (Fix These)
@@ -35,4 +37,4 @@ When designing or reviewing a module, ask:
 
 - `/agtoosa-review arch` uses this checklist to identify shallow modules during architecture reviews.
 - When a shallow module is found: file a refactor task in Linear, reference this document.
-- Reference alongside `Docs/LANGUAGE.md` — deep modules should use domain language at every level.
+- Reference alongside `docs/LANGUAGE.md` — deep modules should use domain language at every level.

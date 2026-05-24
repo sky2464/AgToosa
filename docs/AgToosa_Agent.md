@@ -44,7 +44,7 @@ Your core principles are:
 | `/agtoosa-qa` | **Full flow:** test plan → test execution → QA report → defect triage |
 | `/agtoosa-qa plan` | **Test plan only:** map spec ACs to test IDs, categories, and smoke set |
 | `/agtoosa-qa run` | **Execute only:** run test suite with structured AC coverage capture |
-| `/agtoosa-qa report` | **Report only:** generate `Docs/AgToosa_QAReport-[name].md` |
+| `/agtoosa-qa report` | **Report only:** generate `docs/AgToosa_QAReport-[name].md` |
 | `/agtoosa-qa triage` | **Triage only:** P0–P4 severity scoring; auto-add P0–P2 defects to Master-Plan.md Backlog |
 
 ### `/agtoosa-review` — Multi-persona code review
@@ -69,12 +69,12 @@ Your core principles are:
 ### Utility Commands
 | Command | Workflow File | Description |
 |---------|--------------|-------------|
-| `/agtoosa-init` | `Docs/AgToosa_Init.md` | **One-time:** Scan codebase, validate AI configs, establish context |
-| `/agtoosa-revert` | `Docs/AgToosa_Revert.md` | Git-aware logical revert |
-| `/agtoosa-task` | `Docs/AgToosa_Task.md` | Fast task capture to Master-Plan.md for bugs, chores, spikes, and fixes |
-| `/agtoosa-update` | `Docs/AgToosa_Update.md` | Re-read project context, Master-Plan, and Changelog to get fully up to speed |
-| `/agtoosa-status` | `Docs/AgToosa_Status.md` | Read-only project health dashboard with git cross-reference |
-| `/agtoosa-status-guide` | `Docs/AgToosa_StatusGuide.md` | Read-only status coach that explains top Recommended Next Actions and asks before fixes |
+| `/agtoosa-init` | `docs/AgToosa_Init.md` | **One-time:** Scan codebase, validate AI configs, establish context |
+| `/agtoosa-revert` | `docs/AgToosa_Revert.md` | Git-aware logical revert |
+| `/agtoosa-task` | `docs/AgToosa_Task.md` | Fast task capture to Master-Plan.md for bugs, chores, spikes, and fixes |
+| `/agtoosa-update` | `docs/AgToosa_Update.md` | Re-read project context, Master-Plan, and Changelog to get fully up to speed |
+| `/agtoosa-status` | `docs/AgToosa_Status.md` | Read-only project health dashboard with git cross-reference |
+| `/agtoosa-status-guide` | `docs/AgToosa_StatusGuide.md` | Read-only status coach that explains top Recommended Next Actions and asks before fixes |
 | `/agtoosa-help` | Platform help entry points (`.claude/commands/`, `.gemini/commands/`, `.github/prompts/`, Cursor/Windsurf core rules) | **Assistance-only:** static command reference; default path does not read Master-Plan or git |
 | `/agtoosa-help next` | Same platform help surfaces | **Assistance-only:** read-only context read; recommends exactly one next command without executing it |
 
@@ -95,10 +95,10 @@ e.g.  /agtoosa-review debug   →  /agtoosa-build tdd   →  /agtoosa-ship check
 
 ## Key References
 
-- `Docs/Master-Plan.md` — Source of truth for project state and backlog (read before every command)
-- `Docs/AgToosa_Skills.md` — Subagent skill-to-command mapping
-- `Docs/AgToosa_Changelog.md` — Project changelog
-- `Docs/Context/` — Product, tech-stack, and workflow configuration
+- `docs/Master-Plan.md` — Source of truth for project state and backlog (read before every command)
+- `docs/AgToosa_Skills.md` — Subagent skill-to-command mapping
+- `docs/AgToosa_Changelog.md` — Project changelog
+- `docs/Context/` — Product, tech-stack, and workflow configuration
 - `.github/instructions/` — Scoped agent instructions for core, testing, security, and changelog rules
 
 ## Issue Standard
@@ -173,7 +173,7 @@ All AgToosa commands that require user input follow this shared protocol. It is 
 
 | Principle | Rule |
 |-----------|------|
-| **Infer first, ask second** | Scan the codebase and `Docs/Context/` before forming any question. If an answer is inferable with high confidence (≥80%), state it as a finding — do not ask. |
+| **Infer first, ask second** | Scan the codebase and `docs/Context/` before forming any question. If an answer is inferable with high confidence (≥80%), state it as a finding — do not ask. |
 | **Options from context** | When asking, derive 2–3 options from what was found in the codebase or research. Mark one as recommended. Always allow free-text override. |
 | **One question at a time** | Never present the next question until the previous answer is received. |
 | **Bounded question budgets** | Respect the per-command maximum listed below. Quality over quantity. |
@@ -226,18 +226,18 @@ During `/agtoosa-build`, when the agent notices anything outside the declared sc
 1. **Classify** — Bug / Chore / Feature / Security?
 2. **Size** — Can it be fixed in < 15 min without scope creep? If yes → fix it now and note it in the build summary. If no → step 3.
 3. **Ask the user** — "I found [brief description]. Should I: (A) add to Master-Plan.md Backlog for later, (B) add to current scope, or (C) ignore?"
-4. **If A** — run `/agtoosa-task`; add `Discovered during /agtoosa-build on [Story ID] on [date]` to the description; record in `Docs/Master-Plan.md` under `## Backlog`.
+4. **If A** — run `/agtoosa-task`; add `Discovered during /agtoosa-build on [Story ID] on [date]` to the description; record in `docs/Master-Plan.md` under `## Backlog`.
 5. **If B** — update the Scope Boundary in the active spec; create a new Task sub-issue under the Story; continue TDD cycle.
 
 Never silently fix or drop an out-of-scope discovery.
 
 ## Rules
 
-1. **Always** read `Docs/Context/`, `Docs/Master-Plan.md`, and `.github/instructions/*.instructions.md` (if present) before generating code. Use `Master-Plan.md` as the cycle/backlog snapshot.
+1. **Always** read `docs/Context/`, `docs/Master-Plan.md`, and `.github/instructions/*.instructions.md` (if present) before generating code. Use `Master-Plan.md` as the cycle/backlog snapshot.
 2. **Never** assume dependency versions from memory — verify via web or terminal.
-3. **Always** keep `Docs/Master-Plan.md` up to date after every phase — it is the source of truth.
+3. **Always** keep `docs/Master-Plan.md` up to date after every phase — it is the source of truth.
 4. **Always** follow the TDD Red-Green-Refactor cycle during `/agtoosa-build` (if enabled).
 5. **Never** let a code file exceed 500 lines.
-6. **Always** archive completed work to `Docs/archived/` during `/agtoosa-ship`.
+6. **Always** archive completed work to `docs/archived/` during `/agtoosa-ship`.
 7. **Always** post a progress comment on the active Story issue at each phase transition using the Phase Comment Protocol above.
 8. **Always** triage any out-of-scope discovery during `/agtoosa-build` using the Discovery Triage Protocol above. Never silently fix or drop an out-of-scope finding.

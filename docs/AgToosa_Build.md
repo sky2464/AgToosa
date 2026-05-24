@@ -12,7 +12,7 @@
 
 On Claude Code, independent tasks within a phase can be dispatched to parallel sub-agents via the `Task` tool. Apply this when the task list from the spec contains tasks with no sequential dependency:
 
-- Read the task list in `Docs/Master-Plan.md` under `## Active Tasks`.
+- Read the task list in `docs/Master-Plan.md` under `## Active Tasks`.
 - Identify tasks that do not share state with other tasks.
 - Batch those tasks into parallel `Task` tool calls before starting the TDD loop (Part 1).
 - Collect results when all parallel tasks complete; merge conflicts are resolved by the orchestrating agent.
@@ -26,19 +26,19 @@ Execute TDD against a planned task list and run the full test suite.
 > **Prerequisites:** `/agtoosa-spec` must be complete with task planning done.
 > Verify:
 > 1. The active `AgToosa_Spec-*.md` has a `## ✅ Spec Approved` section. If not, run `/agtoosa-spec` first.
-> 2. `Docs/Master-Plan.md` has tasks listed under `## Active Tasks`. If not, run `/agtoosa-spec tasks` to generate them.
+> 2. `docs/Master-Plan.md` has tasks listed under `## Active Tasks`. If not, run `/agtoosa-spec tasks` to generate them.
 
 ## Workflow
 
 ### Part 1 — TDD Build Cycle
 
 > **TDD Enforcement:**
-> If `Docs/Context/workflow.md` has `tdd: true`, strictly follow the Red-Green-Refactor cycle below.
+> If `docs/Context/workflow.md` has `tdd: true`, strictly follow the Red-Green-Refactor cycle below.
 > If TDD is disabled, still write tests but the strict ordering is relaxed.
 
 **Before starting the first TDD task:**
-- Update `Docs/Master-Plan.md`: move the Story row from `## Backlog` to `## Active Cycle`, set status to `In Progress`.
-- Add an Update Log entry to `Docs/Master-Plan.md`:
+- Update `docs/Master-Plan.md`: move the Story row from `## Backlog` to `## Active Cycle`, set status to `In Progress`.
+- Add an Update Log entry to `docs/Master-Plan.md`:
 
     ```
     Build 🏗️ Started
@@ -60,12 +60,12 @@ Execute TDD against a planned task list and run the full test suite.
 
 2.  **Dependency Validation:** Never assume dependency versions from memory — verify via web search or terminal (`npm view`, `pip index`, `dart pub outdated`).
 
-3.  **Parallelization:** Review the task list in `Docs/Master-Plan.md` under `## Active Tasks` and identify tasks that can run in parallel via the Claude Code parallel pattern above.
+3.  **Parallelization:** Review the task list in `docs/Master-Plan.md` under `## Active Tasks` and identify tasks that can run in parallel via the Claude Code parallel pattern above.
 
 4.  **For each atomic task, execute the TDD Cycle:**
 
     **⚠️ Manual Task Detection — runs before every task:**
-    Before starting a task, check whether its line in `Docs/Master-Plan.md` or the active spec contains `[manual]` or `[manual-deferred]`.
+    Before starting a task, check whether its line in `docs/Master-Plan.md` or the active spec contains `[manual]` or `[manual-deferred]`.
 
     *   If the task is tagged `[manual]`, present this prompt — do NOT proceed with TDD:
 
@@ -78,8 +78,8 @@ Execute TDD against a planned task list and run the full test suite.
           → C) Show me what needs to be done, then defer
         ```
 
-        - **If A:** mark the sub-task `- [x] N.M [task] \`[manual-done]\`` in both `Docs/Master-Plan.md` and the spec; count it as a completed task and continue.
-        - **If B or C:** update the annotation to `[manual-deferred: YYYY-MM-DD]` in both files; add a line to the Manual / Deferred section in `Docs/Master-Plan.md`; **skip to the next task** — do not block the build cycle.
+        - **If A:** mark the sub-task `- [x] N.M [task] \`[manual-done]\`` in both `docs/Master-Plan.md` and the spec; count it as a completed task and continue.
+        - **If B or C:** update the annotation to `[manual-deferred: YYYY-MM-DD]` in both files; add a line to the Manual / Deferred section in `docs/Master-Plan.md`; **skip to the next task** — do not block the build cycle.
         - In all cases, add a note to the Update Log entry for this build session listing deferred manual tasks.
 
     *   If the task is already tagged `[manual-deferred]`, skip it automatically and mention it in the session summary.
@@ -113,10 +113,10 @@ Execute TDD against a planned task list and run the full test suite.
     *   Run the full test suite again to confirm nothing broke.
     *   **Tracking update (per completed task):** After the Refactor step passes:
         - In the active `AgToosa_Spec-*.md`, change `- [ ] N.M [task]` → `- [x] N.M [task]` in `## 3. Tasks / ### 3.1 Task Tree`.
-        - In `Docs/Master-Plan.md` under `## Active Tasks`, change the same checkbox `- [ ] N.M` → `- [x] N.M`.
-        - In `Docs/Master-Plan.md` under `## Active Cycle`, increment the progress bar: update the ▰/▱ fill and the counter (e.g. `▰▰▰▱▱▱▱▱ 2/8 tasks` → `▰▰▰▰▱▱▱▱ 3/8 tasks`). Each ▰ represents one completed task.
+        - In `docs/Master-Plan.md` under `## Active Tasks`, change the same checkbox `- [ ] N.M` → `- [x] N.M`.
+        - In `docs/Master-Plan.md` under `## Active Cycle`, increment the progress bar: update the ▰/▱ fill and the counter (e.g. `▰▰▰▱▱▱▱▱ 2/8 tasks` → `▰▰▰▰▱▱▱▱ 3/8 tasks`). Each ▰ represents one completed task.
         - Transition the Task sub-issue status to `Done` in Linear (if Linear is configured).
-        - Update `Docs/Master-Plan.md`: increment the Tasks Done count for the Story row.
+        - Update `docs/Master-Plan.md`: increment the Tasks Done count for the Story row.
         - Post a Linear comment on the Story issue:
 
             ```
@@ -142,7 +142,7 @@ Execute TDD against a planned task list and run the full test suite.
         When you complete them, run /agtoosa-build and select (A) to mark them done.
         ```
 
-    *   Update the Active Cycle Tasks Done counter in `Docs/Master-Plan.md` using the format: `[auto-done]/[auto-total] tasks ([N] manual-deferred)`.
+    *   Update the Active Cycle Tasks Done counter in `docs/Master-Plan.md` using the format: `[auto-done]/[auto-total] tasks ([N] manual-deferred)`.
     *   Story status remains 🟨 In Progress only if automated tasks are still incomplete. If all automated tasks are done and only manual tasks remain deferred, transition the story status to **🔧 Awaiting Manual** — a distinct state that `/agtoosa-status` treats as non-blocking.
 
 ### Discovery Triage
@@ -161,7 +161,7 @@ Any bug, edge case, or out-of-scope requirement discovered during the TDD cycle 
 1. Classify: Bug / Chore / Feature / Security
 2. Size: can it be fixed in < 15 min without scope creep? If yes → fix it now and note it in the build summary.
 3. If not trivial — ask the user: "I found [brief description]. Should I: (A) add to Master-Plan.md Backlog for later, (B) add to current scope, or (C) ignore?"
-4. **If A** — run `/agtoosa-task`, add `Discovered during /agtoosa-build on [Story ID] on [date]` to the description, record in `Docs/Master-Plan.md` under `## Backlog`. Note: Backlog items use flat table rows (ID | Title | Type | Estimate | Epic | Priority). The hierarchical task tree is only used in `## Active Tasks` for the current In Progress story.
+4. **If A** — run `/agtoosa-task`, add `Discovered during /agtoosa-build on [Story ID] on [date]` to the description, record in `docs/Master-Plan.md` under `## Backlog`. Note: Backlog items use flat table rows (ID | Title | Type | Estimate | Epic | Priority). The hierarchical task tree is only used in `## Active Tasks` for the current In Progress story.
 5. **If B** — update the Scope Boundary in the active spec, create a new Task sub-issue under the Story, continue TDD.
 6. Record the triage decision (fix now / issue created / ignored) in the build summary output.
 
@@ -176,7 +176,7 @@ Any bug, edge case, or out-of-scope requirement discovered during the TDD cycle 
 
 ### Part 3 — Tracking
 
-10. **Master-Plan Update:** Mark all completed tasks in `Docs/Master-Plan.md`; update story status.
+10. **Master-Plan Update:** Mark all completed tasks in `docs/Master-Plan.md`; update story status.
 
 ## Output
 *   Confirm build and test phases are complete and all tests pass.
