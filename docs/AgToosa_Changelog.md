@@ -9,6 +9,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ### Added
 
+- 2026-05-24 — feature — workflow reliability: phase gates + terminal evidence; W1–W5 bats (DEV-010) — `docs/archived/spec-DEV-010.md`
+
+### Added (prior)
+
 - 2026-05-22 — test — M1–M4 bats parity for v4.2.0 manual-task workflow (DEV-005) — `docs/archived/spec-DEV-005.md`
 - 2026-05-23 — feature — AgToosa Status Guide sub-agent for read-only status coaching with authorization gates (DEV-006) — `docs/archived/spec-DEV-006.md`
 - 2026-05-23 — feature — `/agtoosa-help next` on-demand read-only assistance helper across platform help surfaces (DEV-007) — `docs/archived/spec-DEV-007.md`

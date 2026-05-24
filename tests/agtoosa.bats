@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v4.3.0" ]]
+  [[ "$output" == "AgToosa v4.4.0" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1249,7 +1249,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "4.3.0" ]
+  [ "$ver" = "4.4.0" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1260,7 +1260,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"4.3.0"* ]]
+  [[ "$output" == *"4.4.0"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -1644,7 +1644,8 @@ PY
     "$TEMPLATE_DIR/.claude/commands/agtoosa-spec.md" \
     "$TEMPLATE_DIR/.cursor/commands/agtoosa-spec.md" \
     "$TEMPLATE_DIR/.github/prompts/agtoosa-spec.prompt.md" \
-    "$TEMPLATE_DIR/.windsurf/workflows/agtoosa-spec.md"
+    "$TEMPLATE_DIR/.windsurf/workflows/agtoosa-spec.md" \
+    "$TEMPLATE_DIR/.gemini/commands/agtoosa-spec.toml"
   do
     grep -qE 'do not run /agtoosa-build automatically|Do \*\*not\*\* run `/agtoosa-build` automatically|Do not run /agtoosa-build automatically' "$f" || {
       echo "Missing phase-stop build guard in $f"
@@ -1684,7 +1685,8 @@ PY
     "$TEMPLATE_DIR/.claude/commands/agtoosa-build.md" \
     "$TEMPLATE_DIR/.cursor/commands/agtoosa-build.md" \
     "$TEMPLATE_DIR/.github/prompts/agtoosa-build.prompt.md" \
-    "$TEMPLATE_DIR/.windsurf/workflows/agtoosa-build.md"
+    "$TEMPLATE_DIR/.windsurf/workflows/agtoosa-build.md" \
+    "$TEMPLATE_DIR/.gemini/commands/agtoosa-build.toml"
   do
     grep -qE 'do not auto-run `/agtoosa-spec`|do not auto-run /agtoosa-spec|do \*\*not\*\* auto-run `/agtoosa-spec`|Do \*\*not\*\* auto-run' "$f" || {
       echo "Missing prerequisite stop guard in $f"
@@ -1695,4 +1697,69 @@ PY
       false
     }
   done
+}
+
+# ── DEV-011 product vs dogfood boundary (B1–B5) ────────────────────────────────
+
+@test "B1: maintainer guide defines Generated Project Mode and Maintainer Dogfood Mode" {
+  local f="$BATS_TEST_DIRNAME/../docs/agtoosa-maintainer.md"
+  grep -q 'Generated Project Mode' "$f"
+  grep -q 'Maintainer Dogfood Mode' "$f"
+  grep -q 'docs/Master-Plan.md' "$f"
+  grep -q 'Docs/AgToosa_Agent.md' "$f"
+}
+
+@test "B2: AgToosa_Agent documents Generated Project Mode without maintainer product identity" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Agent.md"
+  grep -q '## Operating Contexts' "$f"
+  grep -q 'Generated Project Mode' "$f"
+  grep -qE 'the project|the product' "$f"
+  ! grep -q 'AgToosa is the product under development' "$f"
+}
+
+@test "B3: Init Spec Status canonical docs use Generated Project Mode project-scoped language" {
+  local init="$TEMPLATE_DIR/Docs/AgToosa_Init.md"
+  local spec="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  local status="$TEMPLATE_DIR/Docs/AgToosa_Status.md"
+  grep -q 'Generated Project Mode' "$init"
+  grep -q 'Generated Project Mode' "$spec"
+  grep -q 'Generated Project Mode' "$status"
+  grep -qE 'the project|the product' "$spec"
+  grep -q "this repository's" "$spec"
+  grep -q "this product's" "$status"
+}
+
+@test "B4: spec and status adapters reference Generated Project Mode or Operating Contexts" {
+  local f
+  for f in \
+    "$TEMPLATE_DIR/.codex/skills/agtoosa-spec/SKILL.md" \
+    "$TEMPLATE_DIR/.codex/skills/agtoosa-status/SKILL.md" \
+    "$TEMPLATE_DIR/.cursor/rules/agtoosa-core.mdc" \
+    "$TEMPLATE_DIR/.cursor/rules/agtoosa-spec.mdc" \
+    "$TEMPLATE_DIR/.cursor/rules/agtoosa-status.mdc" \
+    "$TEMPLATE_DIR/.claude/commands/agtoosa-spec.md" \
+    "$TEMPLATE_DIR/.claude/commands/agtoosa-status.md" \
+    "$TEMPLATE_DIR/.cursor/commands/agtoosa-spec.md" \
+    "$TEMPLATE_DIR/.cursor/commands/agtoosa-status.md" \
+    "$TEMPLATE_DIR/.github/prompts/agtoosa-spec.prompt.md" \
+    "$TEMPLATE_DIR/.github/prompts/agtoosa-status.prompt.md" \
+    "$TEMPLATE_DIR/.gemini/commands/agtoosa-spec.toml" \
+    "$TEMPLATE_DIR/.gemini/commands/agtoosa-status.toml" \
+    "$TEMPLATE_DIR/.windsurf/rules/agtoosa-spec.md" \
+    "$TEMPLATE_DIR/.windsurf/rules/agtoosa-status.md"
+  do
+    grep -qE 'Generated Project Mode|Operating Contexts' "$f" || {
+      echo "Missing operating-context pointer in $f"
+      false
+    }
+  done
+}
+
+@test "B5: list-template-files includes DEV-011 touched workflow docs" {
+  run bash "$SCRIPT" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Agent.md"* ]]
+  [[ "$output" == *"Docs/AgToosa_Init.md"* ]]
+  [[ "$output" == *"Docs/AgToosa_Spec.md"* ]]
+  [[ "$output" == *"Docs/AgToosa_Status.md"* ]]
 }
