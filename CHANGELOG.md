@@ -13,6 +13,16 @@ _(None — pick next story via `/agtoosa-spec`.)_
 
 ---
 
+## [4.14.0] — 2026-05-24
+
+Release **4.14** cycle: DEV-023 (272 bats tests).
+
+### Fixed
+
+- **DEV-023 — Workflow template native slash parity audit.** Matrix bats WP1–WP5 verify 14 commands × six native surfaces (Claude, Cursor, Gemini, GitHub, Windsurf, Codex) against `lib/config.sh` inventory; ship `check` Part 0 delegation on all ship adapters; six-surface collision guardrails in Init/Spec/Skills; OPENCODE Codex prompt reservation. Template: add `.claude/commands` to reserved-name lists; Codex ship prompt Part 0 wording. Smoke: WP1–WP5 all green.
+
+---
+
 ## [4.13.0] — 2026-05-24
 
 Release **4.13** cycle: DEV-019 (267 bats tests).

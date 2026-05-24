@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v4.13.0" ]]
+  [[ "$output" == "AgToosa v4.14.0" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1606,7 +1606,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "4.13.0" ]
+  [ "$ver" = "4.14.0" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1617,7 +1617,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"4.13.0"* ]]
+  [[ "$output" == *"4.14.0"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -2611,4 +2611,101 @@ PY
   local count
   count=$(grep -cE '^@test "C[1-5]:' "$BATS_TEST_FILENAME" || true)
   [ "$count" -eq 5 ]
+}
+
+# ── DEV-023: Workflow Template Native Slash Parity Audit (WP1–WP5) ─────────────
+
+@test "WP1: config inventory paths exist on disk for all six native surfaces" {
+  # shellcheck source=/dev/null
+  source "$BATS_TEST_DIRNAME/../lib/config.sh"
+  local rel
+  for rel in "${CLAUDE_COMMAND_FILES[@]}" \
+    "${CURSOR_COMMAND_FILES[@]}" \
+    "${GEMINI_COMMAND_FILES[@]}" \
+    "${COPILOT_PROMPT_FILES[@]}" \
+    "${WINDSURF_WORKFLOW_FILES[@]}" \
+    "${CODEX_PROMPT_FILES[@]}"; do
+    [ -f "$TEMPLATE_DIR/$rel" ] || {
+      echo "Missing template file for inventory path: $rel"
+      false
+    }
+  done
+  run bash "$SCRIPT" --list-template-files
+  [ "$status" -eq 0 ]
+  for rel in "${CLAUDE_COMMAND_FILES[@]}" \
+    "${CURSOR_COMMAND_FILES[@]}" \
+    "${GEMINI_COMMAND_FILES[@]}" \
+    "${COPILOT_PROMPT_FILES[@]}" \
+    "${WINDSURF_WORKFLOW_FILES[@]}" \
+    "${CODEX_PROMPT_FILES[@]}"; do
+    [[ "$output" == *"$rel"* ]] || {
+      echo "list-template-files missing: $rel"
+      false
+    }
+  done
+}
+
+@test "WP2: each native surface has exactly 14 agtoosa workflow adapters" {
+  [ "$(find "$TEMPLATE_DIR/.claude/commands" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 14 ]
+  [ "$(find "$TEMPLATE_DIR/.cursor/commands" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 14 ]
+  [ "$(find "$TEMPLATE_DIR/.gemini/commands" -maxdepth 1 -name 'agtoosa-*.toml' 2>/dev/null | wc -l | tr -d ' ')" -eq 14 ]
+  [ "$(find "$TEMPLATE_DIR/.github/prompts" -maxdepth 1 -name 'agtoosa-*.prompt.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 14 ]
+  [ "$(find "$TEMPLATE_DIR/.windsurf/workflows" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 14 ]
+  [ "$(find "$TEMPLATE_DIR/.codex/prompts" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 14 ]
+}
+
+@test "WP3: ship adapters on all six surfaces delegate check to Part 0 read-only audit" {
+  local f
+  for f in \
+    "$TEMPLATE_DIR/.claude/commands/agtoosa-ship.md" \
+    "$TEMPLATE_DIR/.cursor/commands/agtoosa-ship.md" \
+    "$TEMPLATE_DIR/.gemini/commands/agtoosa-ship.toml" \
+    "$TEMPLATE_DIR/.github/prompts/agtoosa-ship.prompt.md" \
+    "$TEMPLATE_DIR/.windsurf/workflows/agtoosa-ship.md" \
+    "$TEMPLATE_DIR/.codex/prompts/agtoosa-ship.md"
+  do
+    grep -qE 'Part 0|Docs/AgToosa_Ship' "$f" || {
+      echo "Missing Part 0 / AgToosa_Ship delegation in $f"
+      false
+    }
+    grep -qiE 'read-only|read only' "$f" || {
+      echo "Missing read-only wording in $f"
+      false
+    }
+    grep -qiE 'no deploy|do not deploy|does not deploy' "$f" || {
+      echo "Missing no-deploy wording in $f"
+      false
+    }
+    grep -qiE 'no mutation|do not (archive|mutate)|file mutation|changelog mutation' "$f" || {
+      echo "Missing no-mutation wording in $f"
+      false
+    }
+  done
+}
+
+@test "WP4: skill synthesis docs list collision guardrails for all six native surfaces" {
+  local doc
+  for doc in \
+    "$TEMPLATE_DIR/Docs/AgToosa_Init.md" \
+    "$TEMPLATE_DIR/Docs/AgToosa_Spec.md" \
+    "$TEMPLATE_DIR/Docs/AgToosa_Skills.md"
+  do
+    grep -q 'Reserved workflow names' "$doc"
+    grep -q '.claude/commands/agtoosa-' "$doc"
+    grep -q '.cursor/commands/agtoosa-' "$doc"
+    grep -q '.gemini/commands/agtoosa-' "$doc"
+    grep -q '.github/prompts/agtoosa-' "$doc"
+    grep -q '.windsurf/workflows/agtoosa-' "$doc"
+    grep -q '.codex/prompts/agtoosa-' "$doc"
+    grep -q '/create-skill' "$doc" || grep -q 'agtoosa-\*' "$doc"
+  done
+}
+
+@test "WP5: OPENCODE.md documents Codex prompts and reserves /agtoosa-* from /create-skill" {
+  local f="$TEMPLATE_DIR/OPENCODE.md"
+  grep -q '.codex/prompts/agtoosa-' "$f"
+  grep -q '.codex/skills/agtoosa-' "$f"
+  grep -q '/agtoosa-\*' "$f"
+  grep -q '/create-skill' "$f"
+  grep -q 'do \*\*not\*\* route' "$f"
 }

@@ -6,6 +6,6 @@ Read `Docs/AgToosa_Ship.md` and execute the `/agtoosa-ship` workflow.
 
 Dispatch based on any arguments after the command: `check`, `docs`, or `retro`.
 
-If the argument is `check`, run the read-only readiness audit only. Do not deploy, mutate files, or change git state.
+If the argument is `check`, run the read-only readiness audit (`Docs/AgToosa_Ship.md` Part 0 only). Do not deploy, archive specs, mutate changelog, or perform file mutation.
 
 On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-023
 > **Epic:** DEV-002 — Workflow Templates
-> **Status:** ✅ Spec approved (pending build)
+> **Status:** 🏁 Shipped (v4.14.0 — 2026-05-24)
 > **Estimate:** M
 > **Spec created:** 2026-05-24
 
@@ -69,14 +69,14 @@ Out of scope: `agtoosa.sh` runtime, `docs/archived/spec-DEV-019.md` implementati
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Audit matrix
-  - [ ] 1.1 Script or bats helper: expected 14 commands × 6 surfaces — _AC-001_
-  - [ ] 1.2 Document gaps in spec or review note — _AC-005_
-- [ ] **2.** Fix drift (if any)
-  - [ ] 2.1 Add missing adapters / ship-check wording — _AC-002, AC-003, AC-005_
-- [ ] **3.** Bats WP1–WP5 + test plan
-  - [ ] 3.1 Implement WP suite — _AC-004_
-  - [ ] 3.2 `docs/AgToosa_TestPlan-DEV-023.md` — _AC-004_
+- [x] **1.** Audit matrix
+  - [x] 1.1 Script or bats helper: expected 14 commands × 6 surfaces — _AC-001_
+  - [x] 1.2 Document gaps in spec or review note — _AC-005_
+- [x] **2.** Fix drift (if any)
+  - [x] 2.1 Add missing adapters / ship-check wording — _AC-002, AC-003, AC-005_
+- [x] **3.** Bats WP1–WP5 + test plan
+  - [x] 3.1 Implement WP suite — _AC-004_
+  - [x] 3.2 `docs/AgToosa_TestPlan-DEV-023.md` — _AC-004_
 
 ### 3.2 Wave Plan
 
