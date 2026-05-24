@@ -7,13 +7,19 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
-### Changed
-
-- **Maintainer hygiene:** Document `DEV-0XX` vs legacy `DEV-1XX` ID conventions in `docs/agtoosa-maintainer.md`; rename legacy bats section headers to descriptive `Generator:` titles; replace `DEV-1XX` inline comments in `lib/*.sh` and `agtoosa.sh`; clarify archived DEV-003 references to merge Case B regression tests (no version bump).
-
 ### Planned
 
 _(None — pick next story via `/agtoosa-spec`.)_
+
+---
+
+## [4.13.0] — 2026-05-24
+
+Release **4.13** cycle: DEV-019 (267 bats tests).
+
+### Added
+
+- **DEV-019 — Master Architecture document.** `Docs/Master-Architecture.md` is a first-class template and install artifact with C4-style Mermaid sections; `/agtoosa-init` and `/agtoosa-update` guidance; `AgToosa_Agent`, spec, and arch-review references; ADR-009 and domain language in `Docs/Context/CONTEXT.md`; update preserves existing architecture memory. Smoke: MA1–MA8 all green.
 
 ---
 

@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `Docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-05-24 (/agtoosa-ship DEV-022 — v4.12.2; merge release/v4.11.0 → main)
+> **Last updated:** 2026-05-24 (/agtoosa-ship DEV-019 — v4.13.0)
 
 ## Project Charter
 
@@ -10,18 +10,18 @@
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
 | Milestone | `v5.0.0` (planned) |
-| Active cycle | Release 4.13 |
+| Active cycle | _(next via `/agtoosa-spec`)_ |
 | Cycle capacity | `40 story points` |
-| Current phase | 🟨 Build |
+| Current phase | 🏁 Shipped (Release 4.13 — v4.13.0) |
 
 ## Active Cycle
 
 > Stories committed to the current sprint/cycle.
-> **Progress:** `▰▰▰▰▰▰▰▰ 11/11` ← updated by `/agtoosa-build` after each task completes
+> **Progress:** `▱▱▱▱▱▱▱▱ 0/0` ← updated by `/agtoosa-build` after each task completes
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-019 | Feature: Master Architecture document | Feature | M | ✅ Done | 11/11 |
+| _(empty — enroll next story via `/agtoosa-spec`)_ | | | | | |
 
 Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blocked · 🔧 Awaiting Manual · 🏁 Shipped
 
@@ -30,23 +30,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-**DEV-019 — Master Architecture document** (spec: `docs/archived/spec-DEV-019.md`) — build complete 2026-05-24
-
-- [x] **1.** Master architecture template: add the first-class architecture document.
-  - [x] 1.1 Create `template/Docs/Master-Architecture.md` with senior-architect sections and Mermaid C4-style diagrams — _Requirements: AC-005_
-  - [x] 1.2 Create maintainer mirror `docs/Master-Architecture.md` for this repository — _Requirements: AC-005_
-- [x] **2.** Generator inventory and lifecycle guidance: wire the document into setup/update/spec/review context.
-  - [x] 2.1 Add `Docs/Master-Architecture.md` to `DOCS_FILES` — _Requirements: AC-001_
-  - [x] 2.2 Update `/agtoosa-init` guidance to create/update the document after smart interview and codebase scan — _Requirements: AC-002_
-  - [x] 2.3 Update `/agtoosa-update` guidance to read it as high-priority architecture memory and preserve contents — _Requirements: AC-003_
-  - [x] 2.4 Update `AgToosa_Agent`, root platform instructions, spec, and arch review guidance to consult the document — _Requirements: AC-004, AC-006_
-- [x] **3.** Domain and ADR records: document the new architecture context contract.
-  - [x] 3.1 Add Master Architecture domain language to `Docs/Context/CONTEXT.md` — _Requirements: AC-004_
-  - [x] 3.2 Add ADR-009 for first-class master architecture context — _Requirements: AC-001, AC-003, AC-004_
-- [x] **4.** Tests and evidence: lock the behavior with focused bats coverage.
-  - [x] 4.1 Add bats coverage for `--list-template-files` and fresh install copy — _Requirements: AC-001, AC-007_
-  - [x] 4.2 Add bats coverage for update preservation and instruction references — _Requirements: AC-003, AC-004, AC-006, AC-007_
-  - [x] 4.3 Run DEV-019 filter and relevant install/update smoke tests — _Requirements: AC-007_
+<!--
+**DEV-019 — Master Architecture document** (spec: `docs/archived/spec-DEV-019.md`) — shipped 2026-05-24 v4.13.0
 
 <!--
 **DEV-018 — Registry pack queue** (spec: `docs/archived/spec-DEV-018.md`) — shipped 2026-05-24 v4.12.0
@@ -109,7 +94,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Type | Estimate | Epic | Priority | Status |
 |----|-------|------|----------|------|----------|--------|
-| DEV-019 | Feature: Master Architecture document | Feature | M | DEV-002 | High | ✅ Done |
+| DEV-023 | Fix: Workflow Template Native Slash Parity Audit | Fix | M | DEV-002 | High | 🟦 Todo |
 
 ## Epics
 
@@ -118,7 +103,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | ID | Title | Stories | Status |
 |----|-------|---------|--------|
 | DEV-001 | Epic: Core Generator Engine | 0 open / 0 total | ⬜ Backlog |
-| DEV-002 | Epic: Workflow Templates | 0 open / 9 total | 🟦 Todo |
+| DEV-002 | Epic: Workflow Templates | 1 open / 10 total | 🟦 Todo |
 | DEV-003 | Epic: Community Template Registry | 0 open / 0 total | ⬜ Backlog |
 | DEV-004 | Epic: Testing & QA Harness | 0 open / 1 total | ⬜ Backlog |
 
@@ -134,9 +119,9 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Scope:** Markdown specifications and rules files across Claude, Gemini, Cursor, Windsurf, Copilot, and OpenCode under `template/`.
     *   **Success Criteria:** Perfect parity of phase commands and zero-drift version badges across all platform templates.
 
-    *   **Last shipped:** DEV-015 — Windsurf slash command routing → `docs/archived/spec-DEV-015.md`
+    *   **Last shipped:** DEV-019 — Master Architecture document → `docs/archived/spec-DEV-019.md`
     *   **Last shipped:** DEV-017 — Codex AgToosa slash discoverability → `docs/archived/spec-DEV-017.md`
-    *   **Next:** DEV-019 — Master Architecture document → `docs/archived/spec-DEV-019.md`
+    *   **Next:** DEV-023 — Workflow Template Native Slash Parity Audit → `docs/archived/spec-DEV-023.md`
 
 *   **DEV-003 - Epic: Community Template Registry**
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
@@ -179,6 +164,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-020 | Fix: Registry install version pinning | 2026-05-24 | [spec-DEV-020.md](archived/spec-DEV-020.md) · [review-DEV-020.md](archived/review-DEV-020.md) |
 | DEV-021 | Fix: E2E pinned registry install test (RV6) | 2026-05-24 | [spec-DEV-021.md](archived/spec-DEV-021.md) · [review-DEV-021.md](archived/review-DEV-021.md) |
 | DEV-022 | Fix: Registry publish PS1 + offline cache hardening | 2026-05-24 | [spec-DEV-022.md](archived/spec-DEV-022.md) · [review-DEV-022.md](archived/review-DEV-022.md) |
+| DEV-019 | Feature: Master Architecture document | 2026-05-24 | [spec-DEV-019.md](archived/spec-DEV-019.md) · [review-DEV-019.md](archived/review-DEV-019.md) |
 
 ## Update Log
 
@@ -308,3 +294,6 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-05-24 | 🏗️ Build started — DEV-019, 11 tasks; scope: template/Docs, root agent instructions, lib/config.sh, tests/agtoosa.bats | AgToosa |
 | 2026-05-24 | 🏗️ Build complete — DEV-019 Master Architecture document; MA1–MA8 focused coverage green; bash syntax green | AgToosa |
 | 2026-05-24 | 🔀 Merge release/v4.11.0 → main — DEV-018/020/021 release train integrated with DEV-019 build on main | AgToosa |
+| 2026-05-24 | 🔍 Review ✅ Approved — DEV-019; 0 Critical; report: docs/archived/review-DEV-019.md | AgToosa |
+| 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-019; smoke MA1–MA8 8/8 green; v4.13.0; archived spec + review | AgToosa |
+| 2026-05-24 | 🚀 Release 4.13 shipped — v4.13.0; DEV-019 on main; version parity bash/ps1 | AgToosa |

@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-019
 > **Epic:** DEV-002 — Workflow Templates
-> **Status:** ✅ Done
+> **Status:** 🏁 Shipped (v4.13.0 — 2026-05-24)
 > **Estimate:** M
 > **Spec created:** 2026-05-24
 
