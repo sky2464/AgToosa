@@ -1155,19 +1155,110 @@ PY
   [ "$status" -eq 0 ]
 }
 
-# ── Registry: local pack install staging ─────────────────────
-@test "registry install local pack stages files and keeps ship/" {
+# ── Registry: pack queue (DEV-018) ───────────────────────────
+@test "PK1: registry install local pack stages files in pack queue" {
   local mock_pack="$BATS_TEST_DIRNAME/fixtures/mock-pack"
+  local queue_dir
+  queue_dir="$(mktemp -d)"
 
-  # Stub stdin to answer "Y" to the Continue? prompt.
-  run bash -c "echo Y | bash '$SCRIPT' --registry install '$mock_pack'"
-  # Should not error (pack exists and has only .md files).
+  run env AGTOOSA_PACK_QUEUE_DIR="$queue_dir" bash -c "echo Y | bash '$SCRIPT' --registry install '$mock_pack'"
   [ "$status" -eq 0 ]
+  [ -d "$queue_dir/mock-pack" ]
+  [ -f "$queue_dir/mock-pack/workflow.md" ]
+  [ ! -f "$BATS_TEST_DIRNAME/../ship/packs/mock-pack/workflow.md" ]
 
-  # ship/ must remain (KEEP_SHIP=true must have been set).
-  local ship_dir="$BATS_TEST_DIRNAME/../ship"
-  [ -d "$ship_dir/packs/mock-pack" ]
-  [ -f "$ship_dir/packs/mock-pack/workflow.md" ]
+  rm -rf "$queue_dir"
+}
+
+@test "PK2: _merge_pack_queue merges queued pack into project" {
+  local queue_dir project_dir
+  queue_dir="$(mktemp -d)"
+  project_dir="$(mktemp -d)"
+  mkdir -p "$queue_dir/test-pack"
+  echo "# Pack workflow" > "$queue_dir/test-pack/workflow.md"
+  printf '{"name":"test-pack","version":"1.0.0","sha256":"abc","installed_at":"2026-05-04T00:00:00Z","source":"registry"}\n' \
+    > "$queue_dir/test-pack/.pack-meta.json"
+
+  PACK_QUEUE_DIR="$queue_dir"
+  PROJECT_PATH="$project_dir"
+  AGTOOSA_VERSION="4.11.0"
+  GREEN="" YELLOW="" NC=""
+  source "$BATS_TEST_DIRNAME/../lib/install.sh"
+
+  _merge_pack_queue
+  [ -f "$project_dir/workflow.md" ]
+  [ ! -d "$queue_dir/test-pack" ]
+  if [[ ${#_PACK_LOCK_ENTRIES[@]} -gt 0 ]]; then
+    _write_lock_file "${_PACK_LOCK_ENTRIES[@]}"
+  fi
+  [ -f "$project_dir/Docs/agtoosa-lock.json" ]
+
+  rm -rf "$queue_dir" "$project_dir"
+}
+
+@test "PK3: _salvage_ship_packs_to_queue moves legacy ship/packs into queue" {
+  local queue_dir ship_dir
+  queue_dir="$(mktemp -d)"
+  ship_dir="$(mktemp -d)/ship"
+  mkdir -p "$ship_dir/packs/salvage-test"
+  echo "# Salvaged" > "$ship_dir/packs/salvage-test/workflow.md"
+
+  PACK_QUEUE_DIR="$queue_dir"
+  SHIP_DIR="$ship_dir"
+  source "$BATS_TEST_DIRNAME/../lib/registry.sh"
+
+  _salvage_ship_packs_to_queue
+  [ -d "$queue_dir/salvage-test" ]
+  [ -f "$queue_dir/salvage-test/workflow.md" ]
+  [ ! -d "$ship_dir/packs/salvage-test" ]
+
+  rm -rf "$(dirname "$ship_dir")" "$queue_dir"
+}
+
+@test "PK4: pack queue survives ship wipe and merges on install_files" {
+  local mock_pack="$BATS_TEST_DIRNAME/fixtures/mock-pack"
+  local queue_dir project_dir ship_dir
+  queue_dir="$(mktemp -d)"
+  project_dir="$(mktemp -d)"
+  ship_dir="$(mktemp -d)/ship"
+
+  run env AGTOOSA_PACK_QUEUE_DIR="$queue_dir" bash -c "echo Y | bash '$SCRIPT' --registry install '$mock_pack'"
+  [ "$status" -eq 0 ]
+  [ -f "$queue_dir/mock-pack/workflow.md" ]
+
+  PACK_QUEUE_DIR="$queue_dir"
+  SHIP_DIR="$ship_dir"
+  PROJECT_PATH="$project_dir"
+  AGTOOSA_VERSION="4.11.0"
+  GREEN="" YELLOW="" NC=""
+  COPIED=0
+  SKIPPED=0
+  USE_CURSOR=false USE_WINDSURF=false USE_CLAUDE=false USE_GEMINI=false
+  USE_COPILOT=false USE_OPENCODE=false USE_VSCODE=false
+  source "$BATS_TEST_DIRNAME/../lib/registry.sh"
+  source "$BATS_TEST_DIRNAME/../lib/install.sh"
+
+  _salvage_ship_packs_to_queue
+  rm -rf "$ship_dir"
+  mkdir -p "$ship_dir"
+  install_files
+
+  [ -f "$project_dir/workflow.md" ]
+  [ ! -d "$queue_dir/mock-pack" ]
+
+  rm -rf "$queue_dir" "$project_dir" "$(dirname "$ship_dir")"
+}
+
+@test "PK5: registry install local pack persists in durable queue" {
+  local mock_pack="$BATS_TEST_DIRNAME/fixtures/mock-pack"
+  local queue_dir
+  queue_dir="$(mktemp -d)"
+
+  run env AGTOOSA_PACK_QUEUE_DIR="$queue_dir" bash -c "echo Y | bash '$SCRIPT' --registry install '$mock_pack'"
+  [ "$status" -eq 0 ]
+  [ -f "$queue_dir/mock-pack/workflow.md" ]
+
+  rm -rf "$queue_dir"
 }
 
 # ── Registry: list/search/info using local cache fixture ─────
@@ -1343,10 +1434,10 @@ PY
 
 # ── DEV-020: Registry install version pinning (RV1–RV5) ────────
 @test "RV1: registry_resolve_pack_entry matches pinned version" {
-  local registry
-  registry="$(cat "$BATS_TEST_DIRNAME/fixtures/registry.json")"
   run bash -c "
+    SHIP_DIR=/tmp
     source '$BATS_TEST_DIRNAME/../lib/registry.sh'
+    registry=\$(cat '$BATS_TEST_DIRNAME/fixtures/registry.json')
     registry_resolve_pack_entry \"\$registry\" 'ml-pipeline' '1.2.0'
   "
   [ "$status" -eq 0 ]
@@ -1367,10 +1458,10 @@ PY
 }
 
 @test "RV3: registry_resolve_pack_entry resolves unpinned install by name" {
-  local registry
-  registry="$(cat "$BATS_TEST_DIRNAME/fixtures/registry.json")"
   run bash -c "
+    SHIP_DIR=/tmp
     source '$BATS_TEST_DIRNAME/../lib/registry.sh'
+    registry=\$(cat '$BATS_TEST_DIRNAME/fixtures/registry.json')
     registry_resolve_pack_entry \"\$registry\" 'ml-pipeline' ''
   "
   [ "$status" -eq 0 ]
@@ -1406,9 +1497,10 @@ PY
   "
   rm -f "$fixture"
   [ "$status" -eq 0 ]
-  run grep -q "version '\$packVersion' not found" "$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  run grep -q "not found in registry (available:" "$BATS_TEST_DIRNAME/../agtoosa.ps1"
   [ "$status" -eq 0 ]
-  ! run grep -q 'Proceeding with registry version' "$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  run bash -c "! grep -q 'Proceeding with registry version' '$BATS_TEST_DIRNAME/../agtoosa.ps1'"
+  [ "$status" -eq 0 ]
 }
 
 # ── DEV-187: init/update test feedback fixes ──────────────────

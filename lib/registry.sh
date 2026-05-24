@@ -3,8 +3,37 @@
 # ── AgToosa: registry helpers ──────────────────────────────────
 # Sourced by agtoosa.sh for --registry mode.
 # Implements pack discovery, download, verification, and staging.
-# Globals read: SCRIPT_DIR, SHIP_DIR, colors.
+# Globals read: SCRIPT_DIR, SHIP_DIR, PACK_QUEUE_DIR, colors.
 # Globals modified: none directly.
+
+_ensure_pack_queue_dir() {
+  mkdir -p "$PACK_QUEUE_DIR"
+}
+
+# Move legacy ship/packs/* into the durable queue before ship/ is wiped.
+_salvage_ship_packs_to_queue() {
+  local legacy="${SHIP_DIR}/packs"
+  [[ -d "$legacy" ]] || return 0
+  _ensure_pack_queue_dir
+  local pack_dir pname dest
+  for pack_dir in "${legacy}"/*/; do
+    [[ -d "$pack_dir" ]] || continue
+    pname=$(basename "$pack_dir")
+    dest="${PACK_QUEUE_DIR}/${pname}"
+    rm -rf "$dest"
+    mv "$pack_dir" "$dest"
+  done
+  rmdir "$legacy" 2>/dev/null || true
+}
+
+_pack_queue_dir_for() {
+  local pack_name="$1"
+  _ensure_pack_queue_dir
+  local pack_dir="${PACK_QUEUE_DIR}/${pack_name}"
+  rm -rf "$pack_dir"
+  mkdir -p "$pack_dir"
+  printf '%s' "$pack_dir"
+}
 
 REGISTRY_URL="https://raw.githubusercontent.com/sky2464/agtoosa-registry/main/registry.json"
 # Allow tests and offline use to override the cache location.
@@ -311,10 +340,9 @@ registry_install() {
     return 1
   fi
 
-  # Extract to staging area.
+  # Extract to durable pack queue (survives ship/ rebuild on next agtoosa.sh run).
   echo "Staging pack..."
-  pack_dir="${SHIP_DIR}/packs/${pack_name}"
-  mkdir -p "$pack_dir"
+  pack_dir=$(_pack_queue_dir_for "$pack_name")
   tar -xzf "$tmpfile" -C "$pack_dir" || {
     echo "Error: Failed to extract pack" >&2
     rm -rf "$(dirname "$tmpfile")" "$pack_dir"
@@ -333,8 +361,8 @@ registry_install() {
     > "${pack_dir}/.pack-meta.json"
 
   echo ""
-  echo "✅ Pack staged at: $pack_dir"
-  echo "Files are staged in ship/packs/ — run 'bash agtoosa.sh' in your project to merge them."
+  echo "✅ Pack queued at: $pack_dir"
+  echo "Run 'bash agtoosa.sh' in your project to merge queued packs."
   rm -rf "$(dirname "$tmpfile")"
 }
 
@@ -361,11 +389,9 @@ _install_local_pack() {
     return 0
   fi
 
-  # Copy pack contents to staging area (not the directory itself, so files
-  # land at $pack_dir/<file> rather than $pack_dir/<pack_name>/<file>).
+  # Copy pack contents to queue (not the directory itself).
   local pack_dir
-  pack_dir="${SHIP_DIR}/packs/${pack_name}"
-  mkdir -p "$pack_dir"
+  pack_dir=$(_pack_queue_dir_for "$pack_name")
   cp -R "$pack_path"/. "$pack_dir"/ || {
     echo "Error: Failed to stage local pack" >&2
     return 1
@@ -382,7 +408,8 @@ _install_local_pack() {
     "$pack_name" "$installed_at" \
     > "${pack_dir}/.pack-meta.json"
 
-  echo "✅ Local pack staged at: $pack_dir"
+  echo "✅ Local pack queued at: $pack_dir"
+  echo "Run 'bash agtoosa.sh' in your project to merge queued packs."
 }
 
 registry_publish() {

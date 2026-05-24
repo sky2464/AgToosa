@@ -48,6 +48,7 @@ Generated projects must not inherit maintainer-only assumptions (treating every 
 - `agtoosa.sh` is the only supported entrypoint.
 - `install.sh` is deprecated and should not be modified.
 - `ship/` is temporary staging output and must never be treated as durable project state.
+- `.agtoosa/pack-queue/` is the durable staging area for `--registry install` packs until the next project install merges them.
 - The canonical version lives in `AGTOOSA_VERSION` at the top of `agtoosa.sh`.
 
 ## Operating Rules

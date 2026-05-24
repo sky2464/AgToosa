@@ -49,4 +49,5 @@ build/
 
 # ── AgToosa Generated Output ────────────────────────────────
 ship/
+.agtoosa/
 .worktrees/

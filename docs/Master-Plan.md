@@ -21,7 +21,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-020 | Fix: Registry install version pinning | Fix | S | 🟨 In Progress | 0/14 |
+| DEV-020 | Fix: Registry install version pinning | Fix | S | ✅ Done | 14/14 |
 
 Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blocked · 🔧 Awaiting Manual · 🏁 Shipped
 
@@ -30,25 +30,25 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-**DEV-020 — Registry install version pinning** (spec: `docs/archived/spec-DEV-020.md`)
+**DEV-020 — Registry install version pinning** (spec: `docs/archived/spec-DEV-020.md`) — build complete 2026-05-24
 
-- [ ] **1.** Bash version enforcement
-  - [ ] 1.1 Unpinned install selects by name only — _AC-003_
-  - [ ] 1.2 Pinned install selects by name + version — _AC-001, AC-002_
-  - [ ] 1.3 Fail closed on mismatch with actionable error — _AC-002_
-  - [ ] 1.4 Confirmation and `.pack-meta.json` use resolved version — _AC-001_
-- [ ] **2.** PowerShell parity
-  - [ ] 2.1 Fail closed on mismatch (no warn-and-proceed) — _AC-004_
-  - [ ] 2.2 Name+version selection when version suffix set — _AC-001, AC-004_
-- [ ] **3.** Documentation
-  - [ ] 3.1 Update registry docs (maintainer + template) — _AC-002_
-- [ ] **4.** Tests
-  - [ ] 4.1 RV1 pinned match — _AC-001, AC-005_
-  - [ ] 4.2 RV2 pinned mismatch — _AC-002, AC-005_
-  - [ ] 4.3 RV3 unpinned by name — _AC-003, AC-005_
-  - [ ] 4.4 RV4 Bash enforcement guard — _AC-005_
-  - [ ] 4.5 RV5 PS1 mismatch failure — _AC-004, AC-005_
-  - [ ] 4.6 Run RV filter + full bats — _AC-005_
+- [x] **1.** Bash version enforcement
+  - [x] 1.1 Unpinned install selects by name only — _AC-003_
+  - [x] 1.2 Pinned install selects by name + version — _AC-001, AC-002_
+  - [x] 1.3 Fail closed on mismatch with actionable error — _AC-002_
+  - [x] 1.4 Confirmation and `.pack-meta.json` use resolved version — _AC-001_
+- [x] **2.** PowerShell parity
+  - [x] 2.1 Fail closed on mismatch (no warn-and-proceed) — _AC-004_
+  - [x] 2.2 Name+version selection when version suffix set — _AC-001, AC-004_
+- [x] **3.** Documentation
+  - [x] 3.1 Update registry docs (maintainer + template) — _AC-002_
+- [x] **4.** Tests
+  - [x] 4.1 RV1 pinned match — _AC-001, AC-005_
+  - [x] 4.2 RV2 pinned mismatch — _AC-002, AC-005_
+  - [x] 4.3 RV3 unpinned by name — _AC-003, AC-005_
+  - [x] 4.4 RV4 Bash enforcement guard — _AC-005_
+  - [x] 4.5 RV5 PS1 mismatch failure — _AC-004, AC-005_
+  - [x] 4.6 Run RV filter + full bats — _AC-005_
 
 <!--
 **DEV-016 — Gemini slash command routing** (spec: `docs/archived/spec-DEV-016.md`) — shipped 2026-05-24
@@ -211,6 +211,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-05-23 | 🚀 Ship 🚀 Deployed — DEV-009; smoke R1–R8 + D3 10/10 green; v4.3.0; archived spec + review | AgToosa |
 | 2026-05-23 | 🚀 Release 4.3 shipped — v4.3.0; DEV-009 on main; version parity bash/ps1 | AgToosa |
 | 2026-05-24 | 🏗️ Build 🏗️ Started — DEV-010, 7 tasks; scope: template/Docs, platform adapters, tests/agtoosa.bats | AgToosa |
+| 2026-05-24 | 🏗️ Build complete — DEV-020 registry @version pinning; RV1–RV5 5/5 green | AgToosa |
 | 2026-05-24 | ✅ Spec approved — DEV-020; estimate S; Release 4.12; spec: docs/archived/spec-DEV-020.md | AgToosa |
 | 2026-05-24 | 🏗️ Build started — DEV-020, 14 tasks; scope: lib/registry.sh, agtoosa.ps1, registry docs, tests/agtoosa.bats | AgToosa |
 | 2026-05-24 | ✏️ /agtoosa-spec DEV-020 — registry install version pinning; estimate S; enrolled Release 4.12; 14 tasks; spec: docs/archived/spec-DEV-020.md | AgToosa |

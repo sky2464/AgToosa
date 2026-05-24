@@ -2,7 +2,7 @@
 
 # ── AgToosa: install helpers ──────────────────────────────────
 # Sourced by agtoosa.sh.
-# Globals read: PROJECT_PATH, SHIP_DIR, FORCE, USE_*, DOCS_FILES, CONTEXT_FILES,
+# Globals read: PROJECT_PATH, SHIP_DIR, PACK_QUEUE_DIR, FORCE, USE_*, DOCS_FILES, CONTEXT_FILES,
 #               AGTOOSA_VERSION, BAK_FILES, colors.
 # Globals modified: COPIED, SKIPPED, EXISTING_FILES, KEEP_SHIP.
 
@@ -123,6 +123,41 @@ _merge_pack() {
     count=$((count + 1))
   done < <(find "$pack_dir" -type f -print0)
   echo -e "  ${GREEN}✅${NC} Pack '${pack_name}': ${count} files merged"
+}
+
+# Merge all pack subdirectories under packs_root. When clear_after is true, remove each
+# pack dir after a successful merge (used for the durable pack queue).
+# Sets _PACK_MERGE_COUNT and appends lock meta paths to _PACK_LOCK_ENTRIES.
+_merge_packs_under_root() {
+  local packs_root="$1"
+  local clear_after="${2:-false}"
+  _PACK_MERGE_COUNT=0
+  _PACK_LOCK_ENTRIES=()
+
+  [[ -d "$packs_root" ]] || return 0
+
+  local pack_dir pname
+  for pack_dir in "${packs_root}"/*/; do
+    [[ -d "$pack_dir" ]] || continue
+    pname=$(basename "$pack_dir")
+    if _merge_pack "$pack_dir" "$pname"; then
+      _PACK_MERGE_COUNT=$((_PACK_MERGE_COUNT + 1))
+      if [[ -f "${pack_dir}/.pack-meta.json" ]]; then
+        _PACK_LOCK_ENTRIES+=("${pack_dir}/.pack-meta.json")
+      fi
+      if [[ "$clear_after" == true ]]; then
+        rm -rf "$pack_dir"
+      fi
+    fi
+  done
+}
+
+_merge_pack_queue() {
+  _merge_packs_under_root "$PACK_QUEUE_DIR" true
+}
+
+_merge_ship_staged_packs() {
+  _merge_packs_under_root "${SHIP_DIR}/packs" false
 }
 
 # Write or update Docs/agtoosa-lock.json with installed pack entries.
@@ -407,24 +442,18 @@ install_files() {
   fi
 
 
-  # Merge any staged packs from ${SHIP_DIR}/packs/
-  if [[ -d "${SHIP_DIR}/packs" ]]; then
-    local pack_count=0
-    local new_lock_entries=()
-    for pack_dir in "${SHIP_DIR}/packs"/*/; do
-      [[ -d "$pack_dir" ]] || continue
-      local pname
-      pname=$(basename "$pack_dir")
-      _merge_pack "$pack_dir" "$pname" || continue
-      pack_count=$((pack_count + 1))
-      if [[ -f "${pack_dir}/.pack-meta.json" ]]; then
-        new_lock_entries+=("${pack_dir}/.pack-meta.json")
-      fi
-    done
-    [[ $pack_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} Packs merged: ${pack_count}"
-    if [[ ${#new_lock_entries[@]} -gt 0 ]]; then
-      _write_lock_file "${new_lock_entries[@]}"
-    fi
+  # Merge durable pack queue, then any same-session ship/packs/ staging.
+  local pack_count=0
+  local new_lock_entries=()
+  _merge_pack_queue
+  pack_count=$((pack_count + _PACK_MERGE_COUNT))
+  new_lock_entries+=("${_PACK_LOCK_ENTRIES[@]}")
+  _merge_ship_staged_packs
+  pack_count=$((pack_count + _PACK_MERGE_COUNT))
+  new_lock_entries+=("${_PACK_LOCK_ENTRIES[@]}")
+  [[ $pack_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} Packs merged: ${pack_count}"
+  if [[ ${#new_lock_entries[@]} -gt 0 ]]; then
+    _write_lock_file "${new_lock_entries[@]}"
   fi
 
   # Write version marker (enables --update to know installed version)

@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-020
 > **Epic:** DEV-003 — Community Template Registry
-> **Status:** 🟦 Todo
+> **Status:** ✅ Done
 > **Estimate:** S
 > **Spec created:** 2026-05-24
 
@@ -109,23 +109,23 @@ Out of scope        : `agtoosa-lock.json` implementation; remote `sky2464/agtoos
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Bash version enforcement
-  - [ ] 1.1 Resolve registry entry by `name` only when `pack_version` is empty — _Requirements: AC-003_
-  - [ ] 1.2 Resolve registry entry by `name` and `version` when `pack_version` is set — _Requirements: AC-001, AC-002_
-  - [ ] 1.3 Exit non-zero with actionable message on mismatch or missing version; do not download — _Requirements: AC-002_
-  - [ ] 1.4 Include resolved version in install confirmation and `.pack-meta.json` — _Requirements: AC-001_
-- [ ] **2.** PowerShell parity
-  - [ ] 2.1 Fail closed on version mismatch (remove warn-and-proceed) — _Requirements: AC-004_
-  - [ ] 2.2 Use name+version selection when `$packVersion` is set — _Requirements: AC-001, AC-004_
-- [ ] **3.** Documentation
-  - [ ] 3.1 Update maintainer and template registry docs for fail-closed `@version` behavior — _Requirements: AC-002_
-- [ ] **4.** Tests
-  - [ ] 4.1 Add RV1: pinned install succeeds when fixture version matches (mock download path or dry helper) — _Requirements: AC-001, AC-005_
-  - [ ] 4.2 Add RV2: pinned install fails when requested version ≠ fixture version — _Requirements: AC-002, AC-005_
-  - [ ] 4.3 Add RV3: unpinned install still selects by name — _Requirements: AC-003, AC-005_
-  - [ ] 4.4 Add RV4: Bash source enforces `pack_version` (grep/static guard) — _Requirements: AC-005_
-  - [ ] 4.5 Add RV5: PS1 install rejects version mismatch (script block test) — _Requirements: AC-004, AC-005_
-  - [ ] 4.6 Run RV filter + full bats; record evidence — _Requirements: AC-005_
+- [x] **1.** Bash version enforcement
+  - [x] 1.1 Resolve registry entry by `name` only when `pack_version` is empty — _Requirements: AC-003_
+  - [x] 1.2 Resolve registry entry by `name` and `version` when `pack_version` is set — _Requirements: AC-001, AC-002_
+  - [x] 1.3 Exit non-zero with actionable message on mismatch or missing version; do not download — _Requirements: AC-002_
+  - [x] 1.4 Include resolved version in install confirmation and `.pack-meta.json` — _Requirements: AC-001_
+- [x] **2.** PowerShell parity
+  - [x] 2.1 Fail closed on version mismatch (remove warn-and-proceed) — _Requirements: AC-004_
+  - [x] 2.2 Use name+version selection when `$packVersion` is set — _Requirements: AC-001, AC-004_
+- [x] **3.** Documentation
+  - [x] 3.1 Update maintainer and template registry docs for fail-closed `@version` behavior — _Requirements: AC-002_
+- [x] **4.** Tests
+  - [x] 4.1 Add RV1: pinned install succeeds when fixture version matches (mock download path or dry helper) — _Requirements: AC-001, AC-005_
+  - [x] 4.2 Add RV2: pinned install fails when requested version ≠ fixture version — _Requirements: AC-002, AC-005_
+  - [x] 4.3 Add RV3: unpinned install still selects by name — _Requirements: AC-003, AC-005_
+  - [x] 4.4 Add RV4: Bash source enforces `pack_version` (grep/static guard) — _Requirements: AC-005_
+  - [x] 4.5 Add RV5: PS1 install rejects version mismatch (script block test) — _Requirements: AC-004, AC-005_
+  - [x] 4.6 Run RV filter + full bats; record evidence — _Requirements: AC-005_
 
 ### 3.2 Wave Plan
 

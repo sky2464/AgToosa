@@ -14,6 +14,7 @@ AGTOOSA_VERSION="4.11.0"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
 SHIP_DIR="${SCRIPT_DIR}/ship"
+PACK_QUEUE_DIR="${AGTOOSA_PACK_QUEUE_DIR:-${SCRIPT_DIR}/.agtoosa/pack-queue}"
 
 # ── Early preflight (no colors yet) ──────────────────────────
 # Check template/ first — the bats preflight test copies only agtoosa.sh to /tmp
@@ -288,6 +289,7 @@ if [[ "$SOME_PLATFORM_SELECTED" == false ]]; then
 fi
 
 # ── Stage files into ship/ ────────────────────────────────────
+_salvage_ship_packs_to_queue
 [[ -d "$SHIP_DIR" ]] && rm -rf "$SHIP_DIR"
 mkdir -p "$SHIP_DIR/Docs/archived" "$SHIP_DIR/Docs/Context" \
          "$SHIP_DIR/.claude/commands" "$SHIP_DIR/.claude/skills" \
