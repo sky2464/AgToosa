@@ -1,13 +1,25 @@
-name: Branch Protection Rules
+name: PR Hygiene Checks
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
+  push:
+    branches: [main]
 
 jobs:
-  require-labels:
+  push-main-ok:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
-    
+    steps:
+      - name: Acknowledge push to main
+        run: |
+          echo "✅ Push to main acknowledged."
+          echo "PR label, description, and issue-link checks run only on pull_request."
+
+  require-labels:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
     steps:
       - name: Check PR has at least one label
         if: length(github.event.pull_request.labels) == 0
@@ -16,8 +28,9 @@ jobs:
           exit 1
 
   require-description:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Check PR has description
         if: github.event.pull_request.body == '' || github.event.pull_request.body == null
@@ -26,11 +39,12 @@ jobs:
           exit 1
 
   link-issue:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
-      
+
       - name: Check PR links to issue
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
@@ -42,9 +56,10 @@ jobs:
           fi
 
   all-checks-pass:
-    needs: [ require-labels, require-description, link-issue ]
+    if: github.event_name == 'pull_request'
+    needs: [require-labels, require-description, link-issue]
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: All branch protection checks passed
         run: echo "✅ PR meets all requirements"

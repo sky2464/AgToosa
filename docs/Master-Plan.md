@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-05-24 (/agtoosa-ship DEV-028 — v5.2.0)
+> **Last updated:** 2026-05-25 (/agtoosa-spec DEV-030 plan)
 
 ## Project Charter
 
@@ -12,16 +12,16 @@
 | Milestone | `v5.3.0` (next) |
 | Active cycle | DEV-029 — branch-protection push-safe workflow |
 | Cycle capacity | `40 story points` |
-| Current phase | 🟨 DEV-029 in progress |
+| Current phase | 🔧 DEV-029 awaiting manual post-merge checks |
 
 ## Active Cycle
 
 > Stories committed to the current sprint/cycle.
-> **Progress:** DEV-029 workflow fix (1/3 tasks)
+> **Progress:** ▰▰▱▱ 2/2 automated tasks (2 manual-deferred)
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-029 | Chore: Stop branch-protection workflow failure emails | Chore | S | 🟨 In Progress | 1/3 |
+| DEV-029 | Chore: Stop branch-protection workflow failure emails | Chore | S | 🔧 Awaiting Manual | 2/2 (2 manual-deferred) |
 
 <!-- Archived to docs/archived/cycle-2026-05-24-release-5.2.0.md -->
 <!-- Prior: docs/archived/cycle-2026-05-24-release-5.1.0.md (DEV-027) -->
@@ -34,7 +34,20 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-_(No active story — tasks archived with DEV-028 ship.)_
+**DEV-029 — Stop branch-protection workflow failure emails** (spec: `docs/archived/spec-DEV-029.md`)
+
+- [x] **1.** Workflow push-safe + PR guards
+  - [x] 1.1 Add `push` trigger and `push-main-ok` no-op job — _AC-001, AC-003_
+  - [x] 1.2 Guard PR jobs with `if: github.event_name == 'pull_request'` — _AC-002, AC-003_
+  - [x] 1.3 Rename workflow display name to PR Hygiene Checks — _AC-004_
+- [x] **2.** Regression coverage
+  - [x] 2.1 DEV-029 bats T-001–T-005 — _AC-001–AC-004, AC-010_
+  - [x] 2.2 `docs/AgToosa_TestPlan-DEV-029.md` — _AC-010_
+- [ ] **3.** Post-merge verification `[manual-deferred: 2026-05-24]`
+  - [ ] 3.1 Push to `main` yields successful run (no “No jobs were run”) — _AC-001_
+  - [ ] 3.2 `gh run list --workflow branch-protection.yml --limit 5` shows success — _AC-001_
+- [ ] **4.** PR path regression `[manual-deferred: 2026-05-24]`
+  - [ ] 4.1 PR to `main` still runs label/description/issue checks — _AC-002_
 
 <!--
 **DEV-028 — Plan-mode spec interview** (spec: `docs/archived/spec-DEV-028.md`) — shipped 2026-05-24 v5.2.0
@@ -96,8 +109,7 @@ _(No active story — tasks archived with DEV-028 ship.)_
 
 | Story | Task # | Deferred Since | Description |
 |-------|--------|----------------|-------------|
-
-*(Empty — no manual tasks deferred.)*
+| DEV-029 | 3–4 | 2026-05-24 | After merge/push: confirm push run succeeds and PR hygiene jobs still run on `pull_request` |
 
 ## Blocked
 
@@ -115,6 +127,7 @@ _(No active story — tasks archived with DEV-028 ship.)_
 
 | ID | Title | Type | Estimate | Epic | Priority | Status |
 |----|-------|------|----------|------|----------|--------|
+| DEV-030 | Fix: `/agtoosa-update` self-target uncertainty | Fix | S | DEV-002 | High | 🟦 Todo |
 
 ## Epics
 
@@ -368,3 +381,7 @@ _(No active story — tasks archived with DEV-028 ship.)_
 | 2026-05-24 | 🔍 Review ✅ Passed — DEV-028; 0 🔴 Critical, 4 🟡 Warnings (accepted); report: docs/archived/review-DEV-028.md | AgToosa |
 | 2026-05-24 | 🚀 Ship 🚀 Deployed — DEV-028; smoke T-001–T-009 9/9 green; DEV-028 bats T-001–T-010 10/10; full suite 306/306; v5.2.0; archived spec + review | AgToosa |
 | 2026-05-24 | 🚀 Release 5.2.0 shipped — v5.2.0; DEV-028; version parity bash/ps1 | AgToosa |
+| 2026-05-24 | ✏️ /agtoosa-spec DEV-029 — branch-protection push-safe workflow; test plan: docs/AgToosa_TestPlan-DEV-029.md | AgToosa |
+| 2026-05-24 | 🏗️ Build started — DEV-029, 4 tasks; scope: .github/workflows/branch-protection.yml, tests/agtoosa.bats | AgToosa |
+| 2026-05-24 | 🏗️ Build complete — DEV-029; DEV-029 T-001–T-005 5/5 green; full suite 311/311; tasks 3–4 manual-deferred (post-merge GitHub verification) | AgToosa |
+| 2026-05-25 | ✏️ /agtoosa-spec DEV-030 plan — operating-context branch for `/agtoosa-update`; spec: docs/archived/spec-DEV-030.md; estimate S (proposed) | AgToosa |

@@ -3071,3 +3071,45 @@ PY
   grep -q '## Plan-Mode Spec Interview Contract' "$f"
   grep -q 'at most \*\*8 core interview questions\*\*' "$f"
 }
+
+# ── DEV-029 branch-protection push-safe workflow (DEV-029 T-001–T-005) ────────
+
+@test "DEV-029 T-001: branch-protection workflow display name is PR Hygiene Checks" {
+  local f="$BATS_TEST_DIRNAME/../.github/workflows/branch-protection.yml"
+  grep -q '^name: PR Hygiene Checks' "$f"
+}
+
+@test "DEV-029 T-002: branch-protection triggers pull_request and push on main" {
+  local f="$BATS_TEST_DIRNAME/../.github/workflows/branch-protection.yml"
+  grep -q 'pull_request:' "$f"
+  grep -q 'push:' "$f"
+  grep -q 'branches: \[main\]' "$f"
+}
+
+@test "DEV-029 T-003: push-main-ok runs only on push events" {
+  local f="$BATS_TEST_DIRNAME/../.github/workflows/branch-protection.yml"
+  grep -q 'push-main-ok:' "$f"
+  awk '/^  push-main-ok:/{found=1} found && /^  [a-z]/ && !/^  push-main-ok:/{exit} found && /if: github.event_name == .push./{ok=1; exit} END{exit !ok}' "$f"
+}
+
+@test "DEV-029 T-004: PR hygiene jobs run only on pull_request events" {
+  local f="$BATS_TEST_DIRNAME/../.github/workflows/branch-protection.yml"
+  for job in require-labels require-description link-issue all-checks-pass; do
+    awk -v job="$job" '
+      $0 ~ "^  " job ":" { found=1 }
+      found && /^  [a-zA-Z0-9_-]+:/ && $0 !~ "^  " job ":" { exit }
+      found && /if: github.event_name == .pull_request./ { ok=1; exit }
+      END { exit !ok }
+    ' "$f" || {
+      echo "Missing pull_request guard on job: $job"
+      false
+    }
+  done
+}
+
+@test "DEV-029 T-005: require-labels still fails when PR has no labels" {
+  local f="$BATS_TEST_DIRNAME/../.github/workflows/branch-protection.yml"
+  grep -q 'Check PR has at least one label' "$f"
+  grep -q 'length(github.event.pull_request.labels) == 0' "$f"
+  grep -q 'PR must have at least one label' "$f"
+}
