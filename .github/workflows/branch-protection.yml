@@ -22,10 +22,12 @@ jobs:
 
     steps:
       - name: Check PR has at least one label
-        if: github.event_name == 'pull_request' && length(github.event.pull_request.labels) == 0
         run: |
-          echo "❌ PR must have at least one label (bug, enhancement, documentation, chore)"
-          exit 1
+          label_count=$(jq -r 'length' <<< '${{ toJson(github.event.pull_request.labels) }}')
+          if [ "$label_count" -eq 0 ]; then
+            echo "❌ PR must have at least one label (bug, enhancement, documentation, chore)"
+            exit 1
+          fi
 
   require-description:
     if: github.event_name == 'pull_request'
@@ -33,10 +35,13 @@ jobs:
 
     steps:
       - name: Check PR has description
-        if: github.event_name == 'pull_request' && (github.event.pull_request.body == '' || github.event.pull_request.body == null)
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          echo "❌ PR must include a description"
-          exit 1
+          if [ -z "${PR_BODY}" ] || [ "${PR_BODY}" = "null" ]; then
+            echo "❌ PR must include a description"
+            exit 1
+          fi
 
   link-issue:
     if: github.event_name == 'pull_request'

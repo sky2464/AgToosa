@@ -529,6 +529,16 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   [ "$status" -ne 0 ]
   [[ "$output" == *"Target path cannot be the AgToosa source directory"* ]]
 }
+
+@test "self-targeting interactive install includes maintainer guidance" {
+  local src_dir
+  src_dir="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  run bash -c "printf '$src_dir\n' | bash '$SCRIPT'"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"agtoosa-maintainer.md"* ]]
+  [[ "$output" == *"downstream"* ]]
+  [[ "$output" == *"Do not create Docs/"* ]]
+}
 # ── CLI validation: invalid selection warning ───────────────────────
 @test "invalid selection number shows warning but continues" {
   # '9' is out of range → warning; then no valid platform → no-platform prompt → default N → exit 0
@@ -747,6 +757,16 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   run bash "$SCRIPT" --update "$src_dir"
   [ "$status" -ne 0 ]
   [[ "$output" == *"Target path cannot be the AgToosa source directory"* ]]
+}
+
+@test "--update on AgToosa source directory includes maintainer guidance" {
+  local src_dir
+  src_dir="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  run bash "$SCRIPT" --update "$src_dir"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"agtoosa-maintainer.md"* ]]
+  [[ "$output" == *"downstream"* ]]
+  [[ "$output" == *"Do not create Docs/"* ]]
 }
 # ── --update: core behavior ───────────────────────────────────
 @test "--update overwrites workflow files" {
@@ -2979,6 +2999,90 @@ PY
   grep -q 'before Apply' "$f"
 }
 
+# ── DEV-030 /agtoosa-update self-target uncertainty (T-001–T-011) ─────────────
+
+@test "DEV-030 T-001: canonical update requires operating context before drift Apply" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -q 'Stage 1a' "$f"
+  grep -q 'Operating context' "$f"
+  grep -q 'before' "$f"
+  grep -q 'Apply' "$f"
+}
+
+@test "DEV-030 T-002: canonical update classifies Maintainer Dogfood via maintainer guide and generator surfaces" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -q 'Maintainer Dogfood' "$f"
+  grep -q 'agtoosa-maintainer.md' "$f"
+  grep -q 'agtoosa.sh' "$f"
+  grep -q 'template/' "$f"
+}
+
+@test "DEV-030 T-003: Maintainer Dogfood stops before Apply and forbids downstream path prompt" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -q 'Stop before Apply' "$f"
+  grep -q 'downstream project path' "$f"
+}
+
+@test "DEV-030 T-004: Maintainer report states CLI update unavailable and lists next actions" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -q 'CLI baseline update' "$f"
+  grep -q 'Not available' "$f"
+  grep -q '/agtoosa-status' "$f"
+  grep -q '/agtoosa-spec' "$f"
+}
+
+@test "DEV-030 T-005: Generated Project retains DEV-027 Detect Plan Apply Verify flow" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -q 'Generated Project' "$f"
+  grep -q 'Stage 1b' "$f"
+  grep -q 'Detect' "$f"
+  grep -q 'ask-then-apply' "$f"
+}
+
+@test "DEV-030 T-006: maintainer mirror documents operating context with docs paths" {
+  local f="$BATS_TEST_DIRNAME/../docs/AgToosa_Update.md"
+  grep -q 'Stage 1a' "$f"
+  grep -q 'docs/agtoosa-maintainer.md' "$f"
+  grep -q 'Maintainer Dogfood' "$f"
+}
+
+@test "DEV-030 T-007: PowerShell self-target messages include maintainer guidance" {
+  local f="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  grep -q 'Write-SelfTargetGuidance' "$f"
+  grep -q 'agtoosa-maintainer.md' "$f"
+  grep -q 'Do not create Docs/' "$f"
+}
+
+@test "DEV-030 T-008: update adapters route to canonical AgToosa_Update without overriding dogfood stop" {
+  local f
+  for f in \
+    "$TEMPLATE_DIR/.claude/commands/agtoosa-update.md" \
+    "$TEMPLATE_DIR/.cursor/commands/agtoosa-update.md" \
+    "$TEMPLATE_DIR/.codex/skills/agtoosa-update/SKILL.md"; do
+    grep -q 'AgToosa_Update.md' "$f" || { echo "Missing AgToosa_Update.md route in $f"; false; }
+    if grep -q 'hand-edit workflow files' "$f"; then
+      echo "Forbidden hand-edit override in $f"
+      false
+    fi
+  done
+}
+
+@test "DEV-030 T-009: maintainer AgToosa_Update.md mirrors operating-context stop" {
+  local f="$BATS_TEST_DIRNAME/../docs/AgToosa_Update.md"
+  grep -q 'Stop before Apply' "$f"
+  grep -q 'docs/Master-Plan.md' "$f"
+}
+
+@test "DEV-030 T-010: bash self-target helper documents maintainer guidance strings" {
+  local f="$BATS_TEST_DIRNAME/../agtoosa.sh"
+  grep -q '_print_self_target_guidance' "$f"
+  grep -q 'agtoosa-maintainer.md' "$f"
+}
+
+@test "DEV-030 T-011: DEV-030 section registered in bats file" {
+  grep -q 'DEV-030' "$BATS_TEST_DIRNAME/agtoosa.bats"
+}
+
 # ── DEV-028 Plan-mode spec interview (DEV-028 T-001–T-010) ───────────────────
 
 @test "DEV-028 T-001: canonical spec workflow contains Plan-Mode Spec Interview Contract" {
@@ -3110,6 +3214,173 @@ PY
 @test "DEV-029 T-005: require-labels still fails when PR has no labels" {
   local f="$BATS_TEST_DIRNAME/../.github/workflows/branch-protection.yml"
   grep -q 'Check PR has at least one label' "$f"
-  grep -q 'length(github.event.pull_request.labels) == 0' "$f"
+  grep -q 'pull_request.labels' "$f"
+  grep -q 'label_count' "$f"
   grep -q 'PR must have at least one label' "$f"
+}
+
+# ── DEV-031 project-specific specialist subagents (T-001–T-015) ─────────────
+
+@test "DEV-031 T-001: AgToosa_Specialists.md in DOCS_FILES and template" {
+  grep -q 'Docs/AgToosa_Specialists.md' "$BATS_TEST_DIRNAME/../lib/config.sh"
+  [ -f "$TEMPLATE_DIR/Docs/AgToosa_Specialists.md" ]
+  run bash "$SCRIPT" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Specialists.md"* ]]
+}
+
+@test "DEV-031 T-002: canonical specialists doc defines contract fields" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Specialists.md"
+  grep -q 'phase_hooks' "$f"
+  grep -q 'tools/MCP' "$f"
+  grep -q 'custom_mode' "$f"
+  grep -q 'safety_notes' "$f"
+  grep -q 'Structured Evidence Block' "$f"
+  grep -q '.github/agents/' "$f"
+  grep -q '.claude/skills/' "$f"
+  grep -q 'sequential' "$f"
+}
+
+@test "DEV-031 T-003: AgToosa_Init.md includes Project Specialist Discovery with approval" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Init.md"
+  grep -q 'Project Specialist Discovery' "$f"
+  grep -q 'AgToosa_Specialists.md' "$f"
+  grep -q 'specialists.md' "$f"
+  grep -q 'explicit user approval' "$f"
+  grep -q 'platform_targets' "$f"
+}
+
+@test "DEV-031 T-004: specialist guardrails reject agtoosa-* and secrets" {
+  local init="$TEMPLATE_DIR/Docs/AgToosa_Init.md"
+  local spec="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  local specialists="$TEMPLATE_DIR/Docs/AgToosa_Specialists.md"
+  grep -qE 'agtoosa-\*|/agtoosa-\*' "$specialists"
+  grep -qE 'secret|credential|token' "$specialists"
+  grep -q 'agtoosa-\*' "$init"
+  grep -qE 'secret|credential|token' "$init"
+  grep -q 'Spec Specialist Orchestration' "$spec"
+}
+
+@test "DEV-031 T-005: specialists doc lists platform native targets" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Specialists.md"
+  grep -q '.codex/skills/' "$f"
+  grep -q '.cursor/rules/' "$f"
+  grep -q '.windsurf/workflows/' "$f"
+  grep -q '.gemini/commands/' "$f"
+}
+
+@test "DEV-031 T-006: DOCS_FILES does not ship project specialists roster" {
+  local cfg="$BATS_TEST_DIRNAME/../lib/config.sh"
+  grep -q 'Docs/AgToosa_Specialists.md' "$cfg"
+  ! grep -q 'Context/specialists.md' "$cfg"
+  ! grep -qE 'specialist.*SKILL' "$cfg"
+}
+
+@test "DEV-031 T-007: AgToosa_Update.md post-Verify specialist proposal separate from CLI" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -q 'Specialist Compatibility Check' "$f"
+  grep -q 'Stage 4b' "$f"
+  grep -q 'separate' "$f"
+  grep -q 'Never touched' "$f"
+  grep -q 'specialists.md' "$f"
+}
+
+@test "DEV-031 T-008: AgToosa_Update check and plan include read-only specialist check" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Update.md"
+  grep -q 'Specialist Compatibility Check' "$f"
+  grep -q '`check`' "$f"
+  grep -q '`plan`' "$f"
+  grep -q 'read-only' "$f"
+}
+
+@test "DEV-031 T-009: AgToosa_Spec.md orchestrates spec-phase specialists" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  grep -q 'Spec Specialist Orchestration' "$f"
+  grep -q 'specialists.md' "$f"
+  grep -q 'phase_hooks' "$f"
+  grep -q 'trigger' "$f"
+}
+
+@test "DEV-031 T-010: AgToosa_Spec.md requires structured evidence block" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  grep -q 'Findings:' "$f"
+  grep -q 'Files read:' "$f"
+  grep -q 'Spec sections affected' "$f"
+}
+
+@test "DEV-031 T-011: AgToosa_Spec.md documents parallel and sequential fallback" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  grep -q 'parallel' "$f"
+  grep -q 'Sequential fallback' "$f"
+}
+
+@test "DEV-031 T-012: AgToosa_Spec.md merges specialist evidence into spec sections" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  grep -q 'Goal Contract' "$f"
+  grep -q 'STRIDE' "$f"
+  grep -q 'test plan skeleton' "$f"
+}
+
+@test "DEV-031 T-013: template does not ship default specialists roster" {
+  [ ! -f "$TEMPLATE_DIR/Docs/Context/specialists.md" ]
+  ! find "$TEMPLATE_DIR" -path '*/.github/agents/*-specialist*.agent.md' 2>/dev/null | grep -q .
+  ! find "$TEMPLATE_DIR/.codex/skills" -mindepth 1 -maxdepth 1 -type d ! -name 'agtoosa-*' 2>/dev/null | grep -q .
+}
+
+@test "DEV-031 T-014: workflow adapters route to canonical specialists doc" {
+  local init_skill="$TEMPLATE_DIR/.codex/skills/agtoosa-init/SKILL.md"
+  local update_skill="$TEMPLATE_DIR/.codex/skills/agtoosa-update/SKILL.md"
+  local spec_skill="$TEMPLATE_DIR/.codex/skills/agtoosa-spec/SKILL.md"
+  grep -q 'AgToosa_Init.md' "$init_skill"
+  grep -q 'AgToosa_Specialists.md' "$init_skill"
+  grep -q 'AgToosa_Update.md' "$update_skill"
+  grep -q 'Specialist Compatibility' "$update_skill"
+  grep -q 'AgToosa_Spec.md' "$spec_skill"
+  grep -q 'AgToosa_Specialists.md' "$spec_skill"
+  grep -q '/agtoosa-spec' "$TEMPLATE_DIR/.codex/prompts/agtoosa-spec.md"
+  ! grep -q '## Part 1' "$spec_skill"
+}
+
+@test "DEV-031 T-015: AgToosa_Agent and AgToosa_Skills document specialist lifecycle" {
+  local agent="$TEMPLATE_DIR/Docs/AgToosa_Agent.md"
+  local skills="$TEMPLATE_DIR/Docs/AgToosa_Skills.md"
+  grep -q 'AgToosa_Specialists.md' "$agent"
+  grep -q 'structured evidence block' "$agent"
+  grep -q 'Project Specialists' "$skills"
+  grep -q 'never overwrites' "$skills"
+}
+
+# ── DEV-032 Patch-first release versioning (DEV-032 VP-001–VP-005) ───────────
+
+@test "DEV-032 VP-001: maintainer release checklist patch-first default" {
+  local f="$BATS_TEST_DIRNAME/../docs/agtoosa-maintainer.md"
+  grep -q 'Bump decision tree (patch-first' "$f"
+  grep -q 'PATCH\*\* (default)' "$f"
+  grep -q 'ADR-005-release-cadence' "$f"
+}
+
+@test "DEV-032 VP-002: template ship workflow version bump section" {
+  local f="$BATS_TEST_DIRNAME/../template/Docs/AgToosa_Ship.md"
+  grep -q 'Version bump (maintainer dogfood)' "$f"
+  grep -q 'patch-first' "$f"
+  grep -q 'PATCH+1' "$f"
+}
+
+@test "DEV-032 VP-003: maintainer ship mirror version bump section" {
+  local f="$BATS_TEST_DIRNAME/../docs/AgToosa_Ship.md"
+  grep -q 'Version bump (maintainer dogfood)' "$f"
+  grep -q 'ADR-005-release-cadence' "$f"
+}
+
+@test "DEV-032 VP-004: review workflow PATCH-first ship suggestion" {
+  local f="$BATS_TEST_DIRNAME/../template/Docs/AgToosa_Review.md"
+  grep -q 'Ship version suggestion' "$f"
+  grep -q 'PATCH+1' "$f"
+}
+
+@test "DEV-032 VP-005: ADR-005 patch-first release cadence" {
+  local f="$BATS_TEST_DIRNAME/../docs/adr/ADR-005-release-cadence.md"
+  grep -q 'patch-first' "$f"
+  grep -q 'Default to PATCH' "$f"
+  grep -q 'ADR-004' "$f"
 }
