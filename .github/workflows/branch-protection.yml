@@ -22,7 +22,7 @@ jobs:
 
     steps:
       - name: Check PR has at least one label
-        if: length(github.event.pull_request.labels) == 0
+        if: github.event_name == 'pull_request' && length(github.event.pull_request.labels) == 0
         run: |
           echo "❌ PR must have at least one label (bug, enhancement, documentation, chore)"
           exit 1
@@ -33,7 +33,7 @@ jobs:
 
     steps:
       - name: Check PR has description
-        if: github.event.pull_request.body == '' || github.event.pull_request.body == null
+        if: github.event_name == 'pull_request' && (github.event.pull_request.body == '' || github.event.pull_request.body == null)
         run: |
           echo "❌ PR must include a description"
           exit 1

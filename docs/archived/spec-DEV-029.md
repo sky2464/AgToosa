@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-029
 > **Epic:** DEV-004 — Maintainer CI / Release Hygiene
-> **Status:** 🔧 Awaiting Manual (automated build complete)
+> **Status:** 🏁 Shipped (v5.2.1 — 2026-05-25; manual tasks 3–4 still deferred)
 > **Estimate:** S
 > **Spec created:** 2026-05-24
 
@@ -43,6 +43,16 @@ The repository is private and ruleset/branch-protection APIs return 403 (“Upgr
 - Guard `require-labels`, `require-description`, `link-issue`, and `all-checks-pass` with `if: github.event_name == 'pull_request'`.
 - Rename workflow `name` to `PR Hygiene Checks`.
 
+### 2.2 Threat Model (STRIDE)
+
+| Threat | Category | Mitigation |
+|--------|----------|------------|
+| Push events run zero jobs and emit failure emails | Denial of Service | AC-001, AC-003 — `push-main-ok` job on `push` only |
+| PR hygiene checks accidentally skipped on `pull_request` | Tampering | AC-002 — PR jobs guarded with `if: github.event_name == 'pull_request'` |
+| Maintainer mistakes push-safe workflow for disabled branch protection | Spoofing | Workflow name `PR Hygiene Checks`; docs note ruleset APIs unavailable on private repo |
+| Workflow YAML drift reintroduces empty push runs | Repudiation | DEV-029 bats T-001–T-005 lock triggers, guards, and display name |
+| False confidence from green push job without PR checks | Elevation of Privilege | Manual tasks 3–4 verify live GitHub behavior post-merge |
+
 ## Build Scope
 
 | File / area | Change |
@@ -68,6 +78,11 @@ The repository is private and ruleset/branch-protection APIs return 403 (“Upgr
   - [ ] 3.2 `gh run list --workflow branch-protection.yml --limit 5` shows success — _AC-001_
 - [ ] **4.** PR path regression `[manual-deferred: 2026-05-24]`
   - [ ] 4.1 PR to `main` still runs label/description/issue checks — _AC-002_
+
+### Wave Plan
+
+**Wave 1 (parallel):** 1.1, 1.2, 1.3, 2.1, 2.2
+**Wave 2 (manual-deferred):** 3.1, 3.2, 4.1
 
 ### 3.2 Test Plan
 

@@ -11,6 +11,16 @@ _(None — pick next story via `/agtoosa-spec`.)_
 
 ---
 
+## [5.2.1] — 2026-05-25
+
+Patch release: DEV-029 (329 bats tests; DEV-029 T-001–T-005).
+
+### Fixed
+
+- **DEV-029 — Branch-protection push-safe workflow.** Add `push` trigger and `push-main-ok` job on `.github/workflows/branch-protection.yml` so pushes to `main` no longer produce empty failed runs; guard PR hygiene jobs to `pull_request` only; rename workflow display name to **PR Hygiene Checks**. Guard PR-only step `if` expressions with `github.event_name == 'pull_request'` so push events pass workflow validation. Bats DEV-029 T-001–T-005 green. Manual post-merge verification (M-001/M-002) remains in Master-Plan.
+
+---
+
 ## [5.2.0] — 2026-05-24
 
 Minor release: DEV-028 (306 bats tests; DEV-028 T-001–T-010 + version pin).
