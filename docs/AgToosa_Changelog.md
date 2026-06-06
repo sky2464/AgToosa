@@ -7,9 +7,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+---
+
+## [5.2.5] — 2026-06-05
+
 ### Changed
 
-- 2026-06-05 — chore — Maintainer release-state reconciliation: DEV-034 LR bats + cycle compaction after v5.2.4 ship — `docs/archived/spec-DEV-034.md`
+- 2026-06-05 — chore — **DEV-034 — Maintainer release-state reconciliation.** LR bats + cycle compaction; Master-Plan ledger reconciled after v5.2.4 ship — `docs/archived/spec-DEV-034.md`
 
 ---
 

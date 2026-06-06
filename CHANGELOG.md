@@ -7,9 +7,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+---
+
+## [5.2.5] — 2026-06-05
+
+Patch release: DEV-034 (358 bats tests; DEV-034 LR-001–LR-006).
+
 ### Changed
 
-- **DEV-034 — Maintainer release-state reconciliation.** Add focused ledger/version bats (LR-001–LR-006) and complete cycle compaction after v5.2.4 ship.
+- **DEV-034 — Maintainer release-state reconciliation.** Reconcile `docs/Master-Plan.md` active cycle, backlog, and completed-cycle pointers after the `5.2.4` ship; preserve DEV-029 manual-deferred PR-path row; add focused ledger/version bats (LR-001–LR-006).
 
 ---
 

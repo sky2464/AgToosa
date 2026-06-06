@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.2.4" ]]
+  [[ "$output" == "AgToosa v5.2.5" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1628,7 +1628,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.2.4" ]
+  [ "$ver" = "5.2.5" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1639,7 +1639,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.2.4"* ]]
+  [[ "$output" == *"5.2.5"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -3480,7 +3480,7 @@ PY
   local active
   active="$(awk '/^## Active Cycle/{flag=1; next} /^## Active Tasks/{flag=0} flag' "$mp")"
 
-  echo "$active" | grep -q 'DEV-034.*Maintainer release-state reconciliation.*✅ Done'
+  ! echo "$active" | grep -q 'DEV-034'
   ! echo "$active" | grep -q 'DEV-030'
   ! echo "$active" | grep -q 'DEV-033'
   ! echo "$active" | grep -q 'DEV-031'
@@ -3516,18 +3516,21 @@ PY
 @test "DEV-034 LR-004: changelog release block and Unreleased match ship state" {
   local changelog="$BATS_TEST_DIRNAME/../CHANGELOG.md"
   local mirror="$BATS_TEST_DIRNAME/../docs/AgToosa_Changelog.md"
+  grep -q '## \[5.2.5\]' "$changelog"
+  grep -q 'DEV-034.*Maintainer release-state reconciliation' "$changelog"
   grep -q '## \[5.2.4\]' "$changelog"
   grep -q 'DEV-030.*self-target uncertainty' "$changelog"
   grep -q 'DEV-033.*approved PowerShell verbs' "$changelog"
-  grep -q 'DEV-034.*Maintainer release-state reconciliation' "$changelog"
+  grep -q '## \[5.2.5\]' "$mirror"
+  grep -q 'DEV-034.*Maintainer release-state reconciliation' "$mirror"
   grep -q '## \[5.2.4\]' "$mirror"
-  grep -q 'DEV-033.*agtoosa.ps1 approved PowerShell verbs' "$mirror"
-  grep -q 'release-state reconciliation.*DEV-034' "$mirror"
+  ! awk '/^## \[Unreleased\]/{u=1; next} /^## \[/ && u{exit} u' "$changelog" | grep -q 'DEV-034'
 }
 
-@test "DEV-034 LR-005: DEV-029 manual-deferred PR verification remains tracked" {
+@test "DEV-034 LR-005: DEV-029 PR-path manual verification completion recorded" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'DEV-029 | 4 | 2026-05-25 | Open a PR to `main`' "$mp"
+  grep -q '27050231744' "$mp"
+  ! grep -q 'DEV-029 | 4 |' "$mp"
 }
 
 @test "DEV-034 LR-006: DEV-034 test plan maps all LR checks" {
