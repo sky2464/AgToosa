@@ -92,6 +92,8 @@ Ensure code quality, security, and simplicity through multi-persona review.
 
 6.  **Review Report:** Structured findings from all 4 personas — 🔴 Critical / 🟡 Warning / 🟢 Passed. Every 🔴 Critical must include the Iron Law root cause. Block `/agtoosa-ship` if any 🔴 Critical findings remain.
 
+    **Ship version suggestion (maintainer dogfood):** In the review report footer, default the suggested release to **PATCH+1** on the current MINOR (e.g. `5.2.0` → `5.2.1` for Fix/Chore/S stories). Use **MINOR** only for a new MINOR train, multi-story batched release, or deliberate cycle boundary; use **MAJOR** only for breaking changes per ADR-004. See `docs/adr/ADR-005-release-cadence.md` and `docs/agtoosa-maintainer.md` → Release Checklist.
+
     **Linear update (after verdict):**
     - If **all clear** (no unresolved 🔴 Critical): post a comment on the Story issue:
 

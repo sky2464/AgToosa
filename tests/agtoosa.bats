@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.2.1" ]]
+  [[ "$output" == "AgToosa v5.2.4" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1628,7 +1628,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.2.1" ]
+  [ "$ver" = "5.2.4" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1639,7 +1639,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.2.1"* ]]
+  [[ "$output" == *"5.2.4"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -3383,4 +3383,159 @@ PY
   grep -q 'patch-first' "$f"
   grep -q 'Default to PATCH' "$f"
   grep -q 'ADR-004' "$f"
+}
+
+# ── DEV-033 PowerShell approved verbs (DEV-033 PV-001–PV-003) ────────────────
+
+@test "DEV-033 PV-001: agtoosa.ps1 defines approved-verb helper names" {
+  local f="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  grep -q '^function Copy-StageFiles' "$f"
+  grep -q '^function Initialize-PackQueueDir' "$f"
+  grep -q '^function Move-ShipPacksToQueue' "$f"
+}
+
+@test "DEV-033 PV-002: agtoosa.ps1 no longer references legacy helper names" {
+  local f="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  ! grep -Eq '\b(Stage-Files|Ensure-PackQueueDir|Salvage-ShipPacksToQueue)\b' "$f"
+}
+
+@test "DEV-033 PV-003: PowerShell install smoke exercises renamed staging helpers" {
+  command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
+
+  rm -rf "$BATS_TEST_DIRNAME/../ship"
+  run bash -c "printf '$TEST_PROJECT\n\nY\nY\n' | pwsh -NoProfile -File '$BATS_TEST_DIRNAME/../agtoosa.ps1'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
+}
+
+# ── Maintainer review fixes: install parity + release workflow drift ─────────
+
+@test "MR1: Bash Claude install copies configured hook script" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.claude/settings.json" ]
+  [ -f "$TEST_PROJECT/.claude/hooks/block-dangerous-git.sh" ]
+  [ -x "$TEST_PROJECT/.claude/hooks/block-dangerous-git.sh" ]
+  grep -q 'block-dangerous-git.sh' "$TEST_PROJECT/.claude/settings.json"
+}
+
+@test "MR2: PowerShell all-platform install mirrors native Bash inventory" {
+  command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
+
+  run bash -c "printf '$TEST_PROJECT\n8\nY\n' | pwsh -NoProfile -File '$BATS_TEST_DIRNAME/../agtoosa.ps1'"
+  [ "$status" -eq 0 ]
+
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Status.md" ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_StatusGuide.md" ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Readiness.md" ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Debug.md" ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Concise.md" ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Specialists.md" ]
+  [ -f "$TEST_PROJECT/Docs/SPEC-FORMAT.md" ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Governance.md" ]
+  [ -f "$TEST_PROJECT/Docs/Context/tech-stack.md" ]
+
+  [ -f "$TEST_PROJECT/.claude/settings.json" ]
+  [ -f "$TEST_PROJECT/.claude/hooks/block-dangerous-git.sh" ]
+  [ -f "$TEST_PROJECT/.claude/commands/agtoosa-status.md" ]
+  [ -f "$TEST_PROJECT/.cursor/commands/agtoosa-status.md" ]
+  [ -f "$TEST_PROJECT/.windsurf/workflows/agtoosa-status.md" ]
+  [ -f "$TEST_PROJECT/.gemini/commands/agtoosa-status.toml" ]
+  [ -f "$TEST_PROJECT/.github/prompts/agtoosa-status.prompt.md" ]
+  [ -f "$TEST_PROJECT/.github/agents/agtoosa-status-guide.agent.md" ]
+  [ -f "$TEST_PROJECT/.codex/skills/agtoosa-status/SKILL.md" ]
+  [ -f "$TEST_PROJECT/.codex/prompts/agtoosa-status.md" ]
+}
+
+@test "MR3: PowerShell fresh install does not write lock file without packs" {
+  command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
+
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | AGTOOSA_PACK_QUEUE_DIR='$TEST_PROJECT/empty-pack-queue' pwsh -NoProfile -File '$BATS_TEST_DIRNAME/../agtoosa.ps1'"
+  [ "$status" -eq 0 ]
+  [ ! -f "$TEST_PROJECT/Docs/agtoosa-lock.json" ]
+}
+
+@test "MR4: advanced release accepts README pinned snippets and creates next patch milestone" {
+  local f="$BATS_TEST_DIRNAME/../.github/workflows/release-advanced.yml"
+  ! grep -q 'README contains a hardcoded bootstrap tag' "$f"
+  grep -q 'patch + 1' "$f"
+  ! grep -q 'i === 1 ? parseInt(v) + 1' "$f"
+}
+
+@test "MR5: Homebrew formula version tracks AGTOOSA_VERSION without placeholder sha" {
+  local formula="$BATS_TEST_DIRNAME/../Formula/agtoosa.rb"
+  local bash_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$SCRIPT" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 '^  version ' "$formula" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+
+  [ "$formula_ver" = "$bash_ver" ]
+  ! grep -q 'PLACEHOLDER_SHA256' "$formula"
+  grep -Eq 'sha256 "[0-9a-f]{64}"|url "https://github.com/sky2464/AgToosa.git", branch: "main"' "$formula"
+}
+
+# ── DEV-034 Maintainer release-state reconciliation (LR-001–LR-006) ─────────
+
+@test "DEV-034 LR-001: Master-Plan active cycle excludes shipped stories" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  local active
+  active="$(awk '/^## Active Cycle/{flag=1; next} /^## Active Tasks/{flag=0} flag' "$mp")"
+
+  echo "$active" | grep -q 'DEV-034.*Maintainer release-state reconciliation.*✅ Done'
+  ! echo "$active" | grep -q 'DEV-030'
+  ! echo "$active" | grep -q 'DEV-033'
+  ! echo "$active" | grep -q 'DEV-031'
+  ! echo "$active" | grep -q 'DEV-032'
+}
+
+@test "DEV-034 LR-002: DEV-033 shipped disposition is explicit" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  grep -q 'DEV-033.*🏁 Shipped' "$mp"
+  grep -q 'DEV-033.*agtoosa.ps1 PSScriptAnalyzer approved verbs.*2026-06-05' "$mp"
+  [ -f "$BATS_TEST_DIRNAME/../docs/archived/spec-DEV-033.md" ]
+  [ -f "$BATS_TEST_DIRNAME/../docs/archived/review-DEV-033.md" ]
+  [ -f "$BATS_TEST_DIRNAME/../docs/AgToosa_TestPlan-DEV-033.md" ]
+}
+
+@test "DEV-034 LR-003: release version pins remain aligned" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver readme_badge readme_ref formula_ver bats_pin
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  readme_badge="$(grep -m1 'badge/version-' "$root/README.md" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  readme_ref="$(grep -m1 -E -- '--ref v[0-9]' "$root/README.md" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 '^  version ' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  bats_pin="$(grep -m1 'AgToosa v' "$root/tests/agtoosa.bats" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+
+  [ "$ps_ver" = "$bash_ver" ]
+  [ "$readme_badge" = "$bash_ver" ]
+  [ "$readme_ref" = "$bash_ver" ]
+  [ "$formula_ver" = "$bash_ver" ]
+  [ "$bats_pin" = "$bash_ver" ]
+}
+
+@test "DEV-034 LR-004: changelog release block and Unreleased match ship state" {
+  local changelog="$BATS_TEST_DIRNAME/../CHANGELOG.md"
+  local mirror="$BATS_TEST_DIRNAME/../docs/AgToosa_Changelog.md"
+  grep -q '## \[5.2.4\]' "$changelog"
+  grep -q 'DEV-030.*self-target uncertainty' "$changelog"
+  grep -q 'DEV-033.*approved PowerShell verbs' "$changelog"
+  grep -q 'DEV-034.*Maintainer release-state reconciliation' "$changelog"
+  grep -q '## \[5.2.4\]' "$mirror"
+  grep -q 'DEV-033.*agtoosa.ps1 approved PowerShell verbs' "$mirror"
+  grep -q 'release-state reconciliation.*DEV-034' "$mirror"
+}
+
+@test "DEV-034 LR-005: DEV-029 manual-deferred PR verification remains tracked" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  grep -q 'DEV-029 | 4 | 2026-05-25 | Open a PR to `main`' "$mp"
+}
+
+@test "DEV-034 LR-006: DEV-034 test plan maps all LR checks" {
+  local tp="$BATS_TEST_DIRNAME/../docs/AgToosa_TestPlan-DEV-034.md"
+  grep -q 'LR-001' "$tp"
+  grep -q 'LR-002' "$tp"
+  grep -q 'LR-003' "$tp"
+  grep -q 'LR-004' "$tp"
+  grep -q 'LR-005' "$tp"
+  grep -q 'LR-006' "$tp"
 }

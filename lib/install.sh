@@ -45,13 +45,16 @@ count_existing_files() {
     [[ -f "${PROJECT_PATH}/${cfile}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
   done
   if [[ "$USE_CLAUDE" == true ]]; then
-    local ccmd cskill
+    local ccmd cskill chook
     for ccmd in "${CLAUDE_COMMAND_FILES[@]}"; do
       [[ -f "${PROJECT_PATH}/${ccmd}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
     done
     [[ -f "${PROJECT_PATH}/.claude/settings.json" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
     for cskill in "${CLAUDE_SKILL_FILES[@]}"; do
       [[ -f "${PROJECT_PATH}/${cskill}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
+    done
+    for chook in "${CLAUDE_HOOK_FILES[@]}"; do
+      [[ -f "${PROJECT_PATH}/${chook}" ]] && EXISTING_FILES=$((EXISTING_FILES + 1))
     done
   fi
   if [[ "$USE_CURSOR" == true ]]; then
@@ -293,8 +296,8 @@ install_files() {
 
   # Claude Code commands, hooks, and skills — always overwrite (AgToosa-owned)
   if [[ "$USE_CLAUDE" == true ]]; then
-    mkdir -p "${PROJECT_PATH}/.claude/commands" "${PROJECT_PATH}/.claude/skills"
-    local ccmd ccmd_count=0 cskill cskill_count=0
+    mkdir -p "${PROJECT_PATH}/.claude/commands" "${PROJECT_PATH}/.claude/skills" "${PROJECT_PATH}/.claude/hooks"
+    local ccmd ccmd_count=0 cskill cskill_count=0 chook chook_count=0
     for ccmd in "${CLAUDE_COMMAND_FILES[@]}"; do
       if [[ -f "${SHIP_DIR}/${ccmd}" ]]; then
         cp "${SHIP_DIR}/${ccmd}" "${PROJECT_PATH}/${ccmd}"
@@ -317,6 +320,16 @@ install_files() {
       fi
     done
     [[ $cskill_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .claude/skills/ (${cskill_count} project skill)"
+
+    for chook in "${CLAUDE_HOOK_FILES[@]}"; do
+      if [[ -f "${SHIP_DIR}/${chook}" ]]; then
+        cp "${SHIP_DIR}/${chook}" "${PROJECT_PATH}/${chook}"
+        chmod +x "${PROJECT_PATH}/${chook}" 2>/dev/null || true
+        chook_count=$((chook_count + 1))
+        COPIED=$((COPIED + 1))
+      fi
+    done
+    [[ $chook_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .claude/hooks/ (${chook_count} hook script)"
   fi
 
   # Cursor rules and commands — always overwrite (AgToosa-owned)

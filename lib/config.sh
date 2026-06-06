@@ -22,6 +22,7 @@ DOCS_FILES=(
   "Docs/AgToosa_Update.md"
   "Docs/AgToosa_Registry.md"
   "Docs/AgToosa_Skills.md"
+  "Docs/AgToosa_Specialists.md"
   "Docs/CONTEXT-FORMAT.md"
   "Docs/ADR-FORMAT.md"
   "Docs/SPEC-FORMAT.md"
@@ -205,6 +206,10 @@ CLAUDE_COMMAND_FILES=(
 CLAUDE_SKILL_FILES=(
   ".claude/skills/agtoosa-review.md"
   ".claude/skills/agtoosa-debug.md"
+)
+
+CLAUDE_HOOK_FILES=(
+  ".claude/hooks/block-dangerous-git.sh"
 )
 
 CURSOR_RULE_FILES=(

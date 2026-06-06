@@ -114,6 +114,21 @@ Before deploying, clean the branch history:
 
 3.  **Archive Completed Work:** Spec and review artifacts are already saved to `Docs/archived/` (as `spec-[story-id].md` and `review-[story-id].md`). Verify both files exist there before proceeding.
 
+#### Version bump (maintainer dogfood)
+
+Before changing version pins or CHANGELOG release headings, apply the **patch-first** bump decision tree (`Docs/adr/ADR-005-release-cadence.md` in the AgToosa generator repo; generated projects follow the same semver rules in `Docs/AgToosa_Governance.md` + ADR-004):
+
+| Story profile | Bump | Example (from 5.2.0) |
+|---------------|------|----------------------|
+| Fix, Chore, docs-only, estimate **S** | **PATCH** (default) | 5.2.1 |
+| Feature **S**, same MINOR train, non-breaking | **PATCH** | 5.2.1 |
+| New MINOR train, multi-story batched release | **MINOR** (Z=0) | 5.3.0 |
+| Breaking per ADR-004 | **MAJOR** | 6.0.0 |
+
+- Default to **PATCH+1** on the current MINOR — do not bump MINOR for every small story.
+- Sync `AGTOOSA_VERSION` (bash + PowerShell), README badge, install `--ref` pins, bats `--version` expectation, and `## [X.Y.Z]` in `Docs/AgToosa_Changelog.md`.
+- Set `Docs/Master-Plan.md` **Milestone** to the **next PATCH** on the active MINOR (e.g. `v5.2.1 (next)` after shipping `5.2.0`).
+
 4.  **Changelog Update:** Update `Docs/AgToosa_Changelog.md` with a summary entry: `[date] - [type] - [short description] - [spec reference]`.
 
 5.  **Master-Plan Pruning:** Update `Docs/Master-Plan.md` — keep only the Epic description with a reference to the archived spec; clear completed tasks; move the story row to `## Completed This Cycle`.

@@ -7,7 +7,7 @@
 #               CURSOR_COMMAND_FILES, WINDSURF_WORKFLOW_FILES, CODEX_SKILL_FILES,
 #               CODEX_PROMPT_FILES,
 #               GEMINI_COMMAND_FILES, COPILOT_PROMPT_FILES, COPILOT_AGENT_FILES,
-#               WINDSURF_RULE_FILES, CLAUDE_SKILL_FILES, CONTEXT_FILES,
+#               WINDSURF_RULE_FILES, CLAUDE_SKILL_FILES, CLAUDE_HOOK_FILES, CONTEXT_FILES,
 #               colors (GREEN/YELLOW/CYAN/PURPLE/BOLD/NC).
 # Globals modified: COPIED, SKIPPED, BAK_FILES, USE_*.
 
@@ -58,6 +58,15 @@ update_native_dirs() {
         [[ -f "$src" ]] && { cp "$src" "$dst"; count=$((count + 1)); }
       done
     fi
+    for f in "${CLAUDE_HOOK_FILES[@]}"; do
+      src="${TEMPLATE_DIR}/${f}"; dst="${PROJECT_PATH}/${f}"
+      if [[ -f "$src" ]]; then
+        mkdir -p "$(dirname "$dst")"
+        cp "$src" "$dst"
+        chmod +x "$dst" 2>/dev/null || true
+        count=$((count + 1))
+      fi
+    done
   fi
 
   if [[ "$USE_CURSOR" == true && -d "${PROJECT_PATH}/.cursor/rules" ]]; then

@@ -62,7 +62,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 # ── Version ───────────────────────────────────────────────────
-$AGTOOSA_VERSION = "5.2.1"
+$AGTOOSA_VERSION = "5.2.4"
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $TEMPLATE_DIR = Join-Path $SCRIPT_DIR "template"
 $SHIP_DIR = Join-Path $SCRIPT_DIR "ship"
@@ -84,6 +84,12 @@ $NC     = "${ESC}[0m"
 
 # ── Helpers ───────────────────────────────────────────────────
 function Write-Color([string]$msg) { Write-Host $msg }
+
+function Write-SelfTargetGuidance {
+    Write-Color "${YELLOW}   --update is for downstream installed projects only.${NC}"
+    Write-Color "${YELLOW}   In the AgToosa generator repo, follow docs/agtoosa-maintainer.md.${NC}"
+    Write-Color "${YELLOW}   Do not create Docs/ or Docs/.agtoosa-version here.${NC}"
+}
 
 function Show-Usage {
     Write-Color @"
@@ -153,6 +159,62 @@ function Copy-FileWithGuard([string]$src, [string]$dst, [string]$label) {
     Copy-Item $dst $bak
     Copy-Item $src $dst
     Write-Color "  ${GREEN}✅${NC} $label ${CYAN}(backup: $(Split-Path -Leaf $bak))${NC}"
+}
+
+function Join-TemplatePath([string]$base, [string]$relativePath) {
+    $normalized = $relativePath -replace '/', [System.IO.Path]::DirectorySeparatorChar
+    return Join-Path $base $normalized
+}
+
+function Copy-TemplateFile([string]$relativePath) {
+    $src = Join-TemplatePath $TEMPLATE_DIR $relativePath
+    $dst = Join-TemplatePath $SHIP_DIR $relativePath
+    if (-not (Test-Path $src)) { return $false }
+    $dir = Split-Path -Parent $dst
+    if ($dir -and -not (Test-Path $dir)) {
+        New-Item -ItemType Directory -Path $dir -Force | Out-Null
+    }
+    Copy-Item $src $dst
+    return $true
+}
+
+function Copy-TemplateDirectory([string]$relativePath) {
+    $srcDir = Join-TemplatePath $TEMPLATE_DIR $relativePath
+    if (-not (Test-Path $srcDir)) { return 0 }
+
+    $count = 0
+    foreach ($item in Get-ChildItem -Path $srcDir -Recurse -File) {
+        $rel = $item.FullName.Substring($srcDir.Length).TrimStart('\', '/')
+        $dst = Join-Path (Join-TemplatePath $SHIP_DIR $relativePath) $rel
+        $dir = Split-Path -Parent $dst
+        if ($dir -and -not (Test-Path $dir)) {
+            New-Item -ItemType Directory -Path $dir -Force | Out-Null
+        }
+        Copy-Item $item.FullName $dst
+        $count++
+    }
+    return $count
+}
+
+function Copy-StagedDirectory([string]$relativePath, [string]$projectPath, [string]$label) {
+    $srcDir = Join-TemplatePath $SHIP_DIR $relativePath
+    if (-not (Test-Path $srcDir)) { return 0 }
+
+    $count = 0
+    Get-ChildItem -Path $srcDir -Recurse -File | ForEach-Object {
+        $rel = $_.FullName.Substring($srcDir.Length).TrimStart('\', '/')
+        $dst = Join-Path (Join-TemplatePath $projectPath $relativePath) $rel
+        $dir = Split-Path -Parent $dst
+        if ($dir -and -not (Test-Path $dir)) {
+            New-Item -ItemType Directory -Path $dir -Force | Out-Null
+        }
+        Copy-Item -Path $_.FullName -Destination $dst -Force
+        $count++
+    }
+    if ($count -gt 0) {
+        Write-Color "  ${GREEN}✅${NC} $label ($count files)"
+    }
+    return $count
 }
 
 # Extract AgToosa version from a file's START marker (shell or markdown comment).
@@ -243,97 +305,88 @@ function Merge-PlatformFile([string]$src, [string]$dst, [string]$label) {
 }
 
 
-function Stage-Files([string[]]$platforms) {
-    $docsFiles = @(
-        "Docs\AgToosa_Agent.md", "Docs\AgToosa_Init.md", "Docs\AgToosa_Spec.md",
-        "Docs\AgToosa_Build.md", "Docs\AgToosa_Review.md", "Docs\AgToosa_Ship.md",
-        "Docs\AgToosa_QA.md", "Docs\AgToosa_Revert.md", "Docs\AgToosa_Task.md",
-        "Docs\AgToosa_Goal.md", "Docs\AgToosa_Update.md", "Docs\AgToosa_Registry.md", "Docs\AgToosa_Skills.md",
-        "Docs\CONTEXT-FORMAT.md", "Docs\ADR-FORMAT.md", "Docs\DEEPENING.md",
-        "Docs\LANGUAGE.md", "Docs\Master-Architecture.md", "Docs\Master-Plan.md", "Docs\AgToosa_Changelog.md"
-    )
-
-    foreach ($f in $docsFiles) {
-        $src = Join-Path $TEMPLATE_DIR $f
-        $dst = Join-Path $SHIP_DIR $f
-        if (Test-Path $src) {
-            $dir = Split-Path -Parent $dst
-            if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
-            Copy-Item $src $dst
-            Write-Color "  ${GREEN}✅${NC} $f"
-        }
+function Copy-StageFiles([string[]]$platforms) {
+    $docsCount = Copy-TemplateDirectory "Docs"
+    if ($docsCount -gt 0) {
+        Write-Color "  ${GREEN}✅${NC} Docs\ ${CYAN}($docsCount workflow and context files)${NC}"
     }
 
     foreach ($p in $platforms) {
         switch ($p) {
             "cursor" {
-                $src = Join-Path $TEMPLATE_DIR ".cursorrules"
-                $dst = Join-Path $SHIP_DIR ".cursorrules"
-                Copy-Item $src $dst
+                Copy-TemplateFile ".cursorrules" | Out-Null
+                $ruleCount = Copy-TemplateDirectory ".cursor/rules"
+                $commandCount = Copy-TemplateDirectory ".cursor/commands"
                 Write-Color "  ${GREEN}✅${NC} .cursorrules ${CYAN}(Cursor)${NC}"
+                if ($ruleCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .cursor/rules/ ${CYAN}($ruleCount rules)${NC}" }
+                if ($commandCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .cursor/commands/ ${CYAN}($commandCount commands)${NC}" }
             }
             "windsurf" {
-                $src = Join-Path $TEMPLATE_DIR ".windsurfrules"
-                $dst = Join-Path $SHIP_DIR ".windsurfrules"
-                Copy-Item $src $dst
+                Copy-TemplateFile ".windsurfrules" | Out-Null
+                $ruleCount = Copy-TemplateDirectory ".windsurf/rules"
+                $workflowCount = Copy-TemplateDirectory ".windsurf/workflows"
                 Write-Color "  ${GREEN}✅${NC} .windsurfrules ${CYAN}(Windsurf)${NC}"
+                if ($ruleCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .windsurf/rules/ ${CYAN}($ruleCount rules)${NC}" }
+                if ($workflowCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .windsurf/workflows/ ${CYAN}($workflowCount workflows)${NC}" }
             }
             "claude" {
-                $src = Join-Path $TEMPLATE_DIR "CLAUDE.md"
-                $dst = Join-Path $SHIP_DIR "CLAUDE.md"
-                Copy-Item $src $dst
-                $srcExtra = Join-Path $TEMPLATE_DIR "Docs\AgToosa_Claude.md"
-                $dstExtra = Join-Path $SHIP_DIR "Docs\AgToosa_Claude.md"
-                if (Test-Path $srcExtra) { Copy-Item $srcExtra $dstExtra }
+                Copy-TemplateFile "CLAUDE.md" | Out-Null
+                $commandCount = Copy-TemplateDirectory ".claude/commands"
+                $skillCount = Copy-TemplateDirectory ".claude/skills"
+                $hookCount = Copy-TemplateDirectory ".claude/hooks"
+                Copy-TemplateFile ".claude/settings.json" | Out-Null
                 Write-Color "  ${GREEN}✅${NC} CLAUDE.md + Docs\AgToosa_Claude.md ${CYAN}(Claude Code)${NC}"
+                if ($commandCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .claude/commands/ ${CYAN}($commandCount commands)${NC}" }
+                if ($skillCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .claude/skills/ ${CYAN}($skillCount skills)${NC}" }
+                if ($hookCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .claude/hooks/ ${CYAN}($hookCount hooks)${NC}" }
             }
             "gemini" {
-                $src = Join-Path $TEMPLATE_DIR "AGENTS.md"
-                $dst = Join-Path $SHIP_DIR "AGENTS.md"
-                Copy-Item $src $dst
-                $srcExtra = Join-Path $TEMPLATE_DIR "Docs\AgToosa_Gemini.md"
-                $dstExtra = Join-Path $SHIP_DIR "Docs\AgToosa_Gemini.md"
-                if (Test-Path $srcExtra) { Copy-Item $srcExtra $dstExtra }
+                Copy-TemplateFile "AGENTS.md" | Out-Null
+                $commandCount = Copy-TemplateDirectory ".gemini/commands"
                 Write-Color "  ${GREEN}✅${NC} AGENTS.md + Docs\AgToosa_Gemini.md ${CYAN}(Gemini CLI / Jules)${NC}"
+                if ($commandCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .gemini/commands/ ${CYAN}($commandCount commands)${NC}" }
             }
             "copilot" {
-                $ghDir = Join-Path $SHIP_DIR ".github\instructions"
-                New-Item -ItemType Directory -Path $ghDir -Force | Out-Null
-                $src = Join-Path $TEMPLATE_DIR ".github\copilot-instructions.md"
-                $dst = Join-Path $SHIP_DIR ".github\copilot-instructions.md"
-                Copy-Item $src $dst
+                Copy-TemplateFile ".github/copilot-instructions.md" | Out-Null
+                $instructionCount = Copy-TemplateDirectory ".github/instructions"
+                $promptCount = Copy-TemplateDirectory ".github/prompts"
+                $agentCount = Copy-TemplateDirectory ".github/agents"
                 Write-Color "  ${GREEN}✅${NC} .github\copilot-instructions.md ${CYAN}(GitHub Copilot)${NC}"
+                if ($instructionCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .github/instructions/ ${CYAN}($instructionCount instructions)${NC}" }
+                if ($promptCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .github/prompts/ ${CYAN}($promptCount prompts)${NC}" }
+                if ($agentCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .github/agents/ ${CYAN}($agentCount agents)${NC}" }
             }
             "opencode" {
-                $src = Join-Path $TEMPLATE_DIR "OPENCODE.md"
-                $dst = Join-Path $SHIP_DIR "OPENCODE.md"
-                if (Test-Path $src) {
-                    Copy-Item $src $dst
+                if (Copy-TemplateFile "OPENCODE.md") {
+                    $skillCount = Copy-TemplateDirectory ".codex/skills"
+                    $promptCount = Copy-TemplateDirectory ".codex/prompts"
                     Write-Color "  ${GREEN}✅${NC} OPENCODE.md ${CYAN}(OpenCode)${NC}"
+                    if ($skillCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .codex/skills/ ${CYAN}($skillCount skills)${NC}" }
+                    if ($promptCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .codex/prompts/ ${CYAN}($promptCount prompts)${NC}" }
                 }
             }
         }
     }
 }
 
-function Ensure-PackQueueDir {
+function Initialize-PackQueueDir {
     if (-not (Test-Path $PACK_QUEUE_DIR)) {
         New-Item -ItemType Directory -Path $PACK_QUEUE_DIR -Force | Out-Null
     }
 }
 
 function New-PackQueueDirectory([string]$packName) {
-    Ensure-PackQueueDir
+    Initialize-PackQueueDir
     $packDir = Join-Path $PACK_QUEUE_DIR $packName
     if (Test-Path $packDir) { Remove-Item -Recurse -Force $packDir }
     New-Item -ItemType Directory -Path $packDir -Force | Out-Null
     return $packDir
 }
 
-function Salvage-ShipPacksToQueue {
+function Move-ShipPacksToQueue {
     $legacy = Join-Path $SHIP_DIR "packs"
     if (-not (Test-Path $legacy)) { return }
-    Ensure-PackQueueDir
+    Initialize-PackQueueDir
     foreach ($packDir in Get-ChildItem -Path $legacy -Directory) {
         $dest = Join-Path $PACK_QUEUE_DIR $packDir.Name
         if (Test-Path $dest) { Remove-Item -Recurse -Force $dest }
@@ -416,8 +469,9 @@ function Install-Files([string]$projectPath, [string[]]$platforms) {
     if (Test-Path $shipDocs) {
         $dstDocs = Join-Path $projectPath "Docs"
         New-Item -ItemType Directory -Path $dstDocs -Force | Out-Null
-        Get-ChildItem -Path $shipDocs -File | ForEach-Object {
-            Copy-FileWithGuard $_.FullName (Join-Path $dstDocs $_.Name) "Docs\$($_.Name)"
+        Get-ChildItem -Path $shipDocs -Recurse -File | ForEach-Object {
+            $rel = $_.FullName.Substring($shipDocs.Length).TrimStart('\', '/')
+            Copy-FileWithGuard $_.FullName (Join-Path $dstDocs $rel) "Docs\$rel"
         }
     }
 
@@ -426,87 +480,45 @@ function Install-Files([string]$projectPath, [string[]]$platforms) {
             "cursor" {
                 $src = Join-Path $SHIP_DIR ".cursorrules"
                 if (Test-Path $src) { Merge-PlatformFile $src (Join-Path $projectPath ".cursorrules") ".cursorrules" }
-                # Native .cursor/rules/ MDX files
-                $cursorRulesDir = Join-Path $projectPath ".cursor\rules"
-                $shipCursorRulesDir = Join-Path $SHIP_DIR ".cursor\rules"
-                if (Test-Path $shipCursorRulesDir) {
-                    New-Item -ItemType Directory -Path $cursorRulesDir -Force | Out-Null
-                    Get-ChildItem -Path $shipCursorRulesDir -File | ForEach-Object {
-                        $dst = Join-Path $cursorRulesDir $_.Name
-                        Copy-Item -Path $_.FullName -Destination $dst -Force
-                    }
-                    Write-Color "  ${GREEN}✅${NC} .cursor/rules/ (MDX rules)"
-                }
+                Copy-StagedDirectory ".cursor/rules" $projectPath ".cursor/rules/" | Out-Null
+                Copy-StagedDirectory ".cursor/commands" $projectPath ".cursor/commands/" | Out-Null
             }
             "windsurf" {
                 $src = Join-Path $SHIP_DIR ".windsurfrules"
                 if (Test-Path $src) { Merge-PlatformFile $src (Join-Path $projectPath ".windsurfrules") ".windsurfrules" }
-                # Native .windsurf/rules/ files
-                $wsRulesDir = Join-Path $projectPath ".windsurf\rules"
-                $shipWsRulesDir = Join-Path $SHIP_DIR ".windsurf\rules"
-                if (Test-Path $shipWsRulesDir) {
-                    New-Item -ItemType Directory -Path $wsRulesDir -Force | Out-Null
-                    Get-ChildItem -Path $shipWsRulesDir -File | ForEach-Object {
-                        $dst = Join-Path $wsRulesDir $_.Name
-                        Copy-Item -Path $_.FullName -Destination $dst -Force
-                    }
-                    Write-Color "  ${GREEN}✅${NC} .windsurf/rules/ (rules)"
-                }
+                Copy-StagedDirectory ".windsurf/rules" $projectPath ".windsurf/rules/" | Out-Null
+                Copy-StagedDirectory ".windsurf/workflows" $projectPath ".windsurf/workflows/" | Out-Null
             }
             "claude" {
                 $src = Join-Path $SHIP_DIR "CLAUDE.md"
                 if (Test-Path $src) { Merge-PlatformFile $src (Join-Path $projectPath "CLAUDE.md") "CLAUDE.md" }
-                # Native .claude/commands/ and .claude/skills/ files
-                foreach ($subdir in @("commands", "skills")) {
-                    $shipClaudeDir = Join-Path $SHIP_DIR ".claude\$subdir"
-                    if (Test-Path $shipClaudeDir) {
-                        $dstClaudeDir = Join-Path $projectPath ".claude\$subdir"
-                        New-Item -ItemType Directory -Path $dstClaudeDir -Force | Out-Null
-                        Get-ChildItem -Path $shipClaudeDir -File | ForEach-Object {
-                            $dst = Join-Path $dstClaudeDir $_.Name
-                            Copy-Item -Path $_.FullName -Destination $dst -Force
-                        }
-                        Write-Color "  ${GREEN}✅${NC} .claude/$subdir/"
-                    }
+                Copy-StagedDirectory ".claude/commands" $projectPath ".claude/commands/" | Out-Null
+                Copy-StagedDirectory ".claude/skills" $projectPath ".claude/skills/" | Out-Null
+                Copy-StagedDirectory ".claude/hooks" $projectPath ".claude/hooks/" | Out-Null
+                $settingsSrc = Join-Path $SHIP_DIR ".claude/settings.json"
+                if (Test-Path $settingsSrc) {
+                    Copy-FileWithGuard $settingsSrc (Join-Path $projectPath ".claude/settings.json") ".claude/settings.json"
                 }
             }
             "gemini" {
                 $src = Join-Path $SHIP_DIR "AGENTS.md"
                 if (Test-Path $src) { Merge-PlatformFile $src (Join-Path $projectPath "AGENTS.md") "AGENTS.md" }
-                # Native .gemini/commands/ TOML files
-                $geminiCmdDir = Join-Path $projectPath ".gemini\commands"
-                $shipGeminiCmdDir = Join-Path $SHIP_DIR ".gemini\commands"
-                if (Test-Path $shipGeminiCmdDir) {
-                    New-Item -ItemType Directory -Path $geminiCmdDir -Force | Out-Null
-                    Get-ChildItem -Path $shipGeminiCmdDir -File | ForEach-Object {
-                        $dst = Join-Path $geminiCmdDir $_.Name
-                        Copy-Item -Path $_.FullName -Destination $dst -Force
-                    }
-                    Write-Color "  ${GREEN}✅${NC} .gemini/commands/ (TOML commands)"
-                }
+                Copy-StagedDirectory ".gemini/commands" $projectPath ".gemini/commands/" | Out-Null
             }
             "copilot" {
                 $ghDir = Join-Path $projectPath ".github"
                 New-Item -ItemType Directory -Path $ghDir -Force | Out-Null
                 $src = Join-Path $SHIP_DIR ".github\copilot-instructions.md"
                 if (Test-Path $src) { Merge-PlatformFile $src (Join-Path $ghDir "copilot-instructions.md") ".github\copilot-instructions.md" }
-                # Native .github/prompts/, .github/agents/, .github/instructions/ files
-                foreach ($subdir in @("prompts", "agents", "instructions")) {
-                    $shipGhDir = Join-Path $SHIP_DIR ".github\$subdir"
-                    if (Test-Path $shipGhDir) {
-                        $dstGhDir = Join-Path $ghDir $subdir
-                        New-Item -ItemType Directory -Path $dstGhDir -Force | Out-Null
-                        Get-ChildItem -Path $shipGhDir -File | ForEach-Object {
-                            $dst = Join-Path $dstGhDir $_.Name
-                            Copy-Item -Path $_.FullName -Destination $dst -Force
-                        }
-                        Write-Color "  ${GREEN}✅${NC} .github/$subdir/"
-                    }
-                }
+                Copy-StagedDirectory ".github/prompts" $projectPath ".github/prompts/" | Out-Null
+                Copy-StagedDirectory ".github/agents" $projectPath ".github/agents/" | Out-Null
+                Copy-StagedDirectory ".github/instructions" $projectPath ".github/instructions/" | Out-Null
             }
             "opencode" {
                 $src = Join-Path $SHIP_DIR "OPENCODE.md"
                 if (Test-Path $src) { Merge-PlatformFile $src (Join-Path $projectPath "OPENCODE.md") "OPENCODE.md" }
+                Copy-StagedDirectory ".codex/skills" $projectPath ".codex/skills/" | Out-Null
+                Copy-StagedDirectory ".codex/prompts" $projectPath ".codex/prompts/" | Out-Null
             }
         }
     }
@@ -520,30 +532,13 @@ function Install-Files([string]$projectPath, [string[]]$platforms) {
     # Merge durable pack queue, then any same-session ship\packs staging.
     $queueResult = Merge-PacksUnderRoot $PACK_QUEUE_DIR $projectPath $true
     $shipResult  = Merge-PacksUnderRoot (Join-Path $SHIP_DIR "packs") $projectPath $false
-    $totalPacks  = $queueResult.Count + $shipResult.Count
+    $totalPacks  = [int]$queueResult["Count"] + [int]$shipResult["Count"]
     if ($totalPacks -gt 0) {
         Write-Color "  ${GREEN}✅${NC} Packs merged: $totalPacks"
     }
     $allMeta = @($queueResult.MetaFiles) + @($shipResult.MetaFiles)
     if ($allMeta.Count -gt 0) {
         Update-LockFileFromPackMeta $projectPath $allMeta
-    } else {
-        $lockFile = Join-Path $projectPath "Docs\agtoosa-lock.json"
-        $timestamp = [DateTimeOffset]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ")
-        $packsArray = @()
-        if (Test-Path $lockFile) {
-            try {
-                $existing = Get-Content $lockFile -Raw | ConvertFrom-Json
-                if ($existing.packs) { $packsArray = @($existing.packs) }
-            } catch { $packsArray = @() }
-        }
-        $lock = [ordered]@{
-            agtoosa_version = $AGTOOSA_VERSION
-            generated_at    = $timestamp
-            packs           = $packsArray
-        }
-        $lock | ConvertTo-Json -Depth 5 | Out-File -FilePath $lockFile -Encoding UTF8
-        Write-Color "  ${GREEN}✅${NC} Docs/agtoosa-lock.json updated"
     }
 }
 
@@ -771,6 +766,7 @@ if ($Update) {
     $resolvedScript  = Resolve-Path $SCRIPT_DIR
     if ($resolvedProject.Path -eq $resolvedScript.Path) {
         Write-Color "${RED}❌ Error: Target path cannot be the AgToosa source directory itself.${NC}"
+        Write-SelfTargetGuidance
         exit 1
     }
 
@@ -787,11 +783,11 @@ if ($Update) {
     Write-Color ""
 
     try {
-        Salvage-ShipPacksToQueue
+        Move-ShipPacksToQueue
         if (Test-Path $SHIP_DIR) { Remove-Item -Recurse -Force $SHIP_DIR }
         New-Item -ItemType Directory -Path (Join-Path $SHIP_DIR "Docs\archived") -Force | Out-Null
         New-Item -ItemType Directory -Path (Join-Path $SHIP_DIR "Docs\Context") -Force | Out-Null
-        Stage-Files @()
+        Copy-StageFiles @()
         Install-Files $UpdatePath @()
         Write-Color ""
         Write-Color "${GREEN}${BOLD}✅ AgToosa updated to v${AGTOOSA_VERSION} in '${UpdatePath}'${NC}"
@@ -835,6 +831,7 @@ $resolvedProject = Resolve-Path $projectPath
 $resolvedScript  = Resolve-Path $SCRIPT_DIR
 if ($resolvedProject.Path -eq $resolvedScript.Path) {
     Write-Color "${RED}❌ Error: Target path cannot be the AgToosa source directory itself.${NC}"
+    Write-SelfTargetGuidance
     exit 1
 }
 
@@ -881,14 +878,14 @@ if ($platforms.Count -eq 0) {
 
 # ── Stage files into ship\ ────────────────────────────────────
 try {
-    Salvage-ShipPacksToQueue
+    Move-ShipPacksToQueue
     if (Test-Path $SHIP_DIR) { Remove-Item -Recurse -Force $SHIP_DIR }
     New-Item -ItemType Directory -Path (Join-Path $SHIP_DIR "Docs\archived") -Force | Out-Null
     New-Item -ItemType Directory -Path (Join-Path $SHIP_DIR "Docs\Context") -Force | Out-Null
     New-Item -ItemType Directory -Path (Join-Path $SHIP_DIR ".github\instructions") -Force | Out-Null
 
     Write-Color ""
-    Stage-Files $platforms.ToArray()
+    Copy-StageFiles $platforms.ToArray()
 
     Write-Color ""
     Write-Color "${GREEN}${BOLD}Generated files staged.${NC}"

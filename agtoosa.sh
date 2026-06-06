@@ -10,7 +10,7 @@ set -euo pipefail
 #   bash agtoosa.sh [--force] [--dry-run] [--version] [--help]
 # ──────────────────────────────────────────────────────────────
 
-AGTOOSA_VERSION="5.2.1"
+AGTOOSA_VERSION="5.2.4"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
 SHIP_DIR="${SCRIPT_DIR}/ship"
@@ -53,6 +53,12 @@ PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
 BOLD='\033[1m'
 NC='\033[0m'
+
+_print_self_target_guidance() {
+  echo -e "${YELLOW}   --update is for downstream installed projects only.${NC}"
+  echo -e "${YELLOW}   In the AgToosa generator repo, follow docs/agtoosa-maintainer.md.${NC}"
+  echo -e "${YELLOW}   Do not create Docs/ or Docs/.agtoosa-version here.${NC}"
+}
 
 # ── Flags ─────────────────────────────────────────────────────
 FORCE=false
@@ -126,6 +132,7 @@ if [[ "$UPDATE" == true ]]; then
   _rp_script="$(cd "$SCRIPT_DIR" && pwd)"
   if [[ "$_rp_project" == "$_rp_script" ]]; then
     echo -e "${RED}❌ Error: Target path cannot be the AgToosa source directory itself.${NC}"
+    _print_self_target_guidance
     exit 1
   fi
 
@@ -217,6 +224,7 @@ _rp_project="$(cd "$PROJECT_PATH" && pwd)"
 _rp_script="$(cd "$SCRIPT_DIR" && pwd)"
 if [[ "$_rp_project" == "$_rp_script" ]]; then
   echo -e "${RED}❌ Error: Target path cannot be the AgToosa source directory itself.${NC}"
+  _print_self_target_guidance
   exit 1
 fi
 

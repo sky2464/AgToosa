@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-05-25 (/agtoosa-ship DEV-029 v5.2.1; /agtoosa-build DEV-029 manual bookkeeping)
+> **Last updated:** 2026-06-06 (/agtoosa-build DEV-034 complete)
 
 ## Project Charter
 
@@ -9,19 +9,19 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Milestone | `v5.2.2` (next) — patch-first per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | DEV-030 — `/agtoosa-update` self-target uncertainty |
+| Milestone | `v5.2.5` (next) — patch-first per `docs/adr/ADR-005-release-cadence.md` |
+| Active cycle | DEV-034 — Maintainer release-state reconciliation |
 | Cycle capacity | `40 story points` |
-| Current phase | 🟨 DEV-030 build complete — ship when ready |
+| Current phase | ✅ DEV-034 build complete — ready for `/agtoosa-review` (v5.2.4 shipped) |
 
 ## Active Cycle
 
 > Stories committed to the current sprint/cycle.
-> **Progress:** ▰▰▰▰ 5/5 tasks (DEV-030 automated build complete)
+> **Progress:** ▰▰▰▰ 5/5 DEV-034 task groups (DEV-030 + DEV-033 shipped v5.2.4)
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-030 | Fix: `/agtoosa-update` self-target uncertainty | Fix | S | 🟨 In Progress | 5/5 |
+| DEV-034 | Chore: Maintainer release-state reconciliation | Chore | S | ✅ Done (ready for review) | 5/5 |
 
 <!-- Archived to docs/archived/cycle-2026-05-24-release-5.2.0.md -->
 <!-- Prior: docs/archived/cycle-2026-05-24-release-5.1.0.md (DEV-027) -->
@@ -39,16 +39,48 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 - [x] **1.** Workflow push-safe + PR guards
 - [x] **2.** Regression coverage (DEV-029 T-001–T-005)
-- [ ] **3–4.** Manual post-merge GitHub verification — deferred; re-check after workflow `if:` fix on `main`
+- [x] **3.** Post-merge verification — run `26419089522` success on push (`PR Hygiene Checks`, 7s)
+  - [x] 3.1 Push to `main` yields successful run — _AC-001_
+  - [x] 3.2 `gh run list --workflow branch-protection.yml` shows success — _AC-001_
+- [ ] **4.** PR path regression `[manual-deferred: 2026-05-25]`
+  - [ ] 4.1 PR to `main` still runs label/description/issue checks — _AC-002_
 -->
 
-**DEV-032 — Patch-first release versioning** (spec: `docs/archived/spec-DEV-032.md`) — ✅ Done
+<!--
+**DEV-032 — Patch-first release versioning** (spec: `docs/archived/spec-DEV-032.md`) — shipped 2026-05-25 v5.2.2
 
 - [x] **1.** Policy ADR and maintainer checklist — _AC-002, AC-006_
-- [x] **2.** Template + maintainer ship/review/readiness mirrors — _AC-003, AC-004, AC-005_
-- [x] **3.** Milestone + bats VP-001–VP-005 — _AC-005, AC-007_
+  - [x] 1.1 Add `docs/adr/ADR-005-release-cadence.md` — _AC-006_
+  - [x] 1.2 Cross-link ADR-004 → ADR-005 — _AC-006_
+  - [x] 1.3 Extend `docs/agtoosa-maintainer.md` Release Checklist — _AC-002_
+- [x] **2.** Template + maintainer workflow mirrors — _AC-003, AC-004, AC-005_
+  - [x] 2.1 `template/Docs/AgToosa_Ship.md` version bump section — _AC-003_
+  - [x] 2.2 `docs/AgToosa_Ship.md` mirror — _AC-003_
+  - [x] 2.3 `template/Docs/AgToosa_Review.md` PATCH-first ship suggestion — _AC-004_
+  - [x] 2.4 `docs/AgToosa_Review.md` mirror — _AC-004_
+  - [x] 2.5 Readiness gate 7 wording (template + docs) — _AC-005_
+- [x] **3.** Master-Plan and regression tests — _AC-005, AC-007_
+  - [x] 3.1 Milestone + DEV-032 row — _AC-005_
+  - [x] 3.2 DEV-032 bats VP-001–VP-005 — _AC-007_
+-->
 
-**DEV-030 — Fix `/agtoosa-update` self-target uncertainty** (spec: `docs/archived/spec-DEV-030.md`)
+<!--
+**DEV-033 — agtoosa.ps1 PSScriptAnalyzer approved verbs** (spec: `docs/archived/spec-DEV-033.md`) — shipped 2026-06-05 v5.2.4
+
+- [x] **1.** Rename helpers in `agtoosa.ps1`
+  - [x] 1.1 `Stage-Files` → `Copy-StageFiles` — _AC-001, AC-003_
+  - [x] 1.2 `Ensure-PackQueueDir` → `Initialize-PackQueueDir` — _AC-001, AC-003_
+  - [x] 1.3 `Salvage-ShipPacksToQueue` → `Move-ShipPacksToQueue` — _AC-001, AC-003_
+- [x] **2.** Docs + tests
+  - [x] 2.1 Update audit doc reference — _AC-005_
+  - [x] 2.2 DEV-033 bats PV-001–PV-003 — _AC-004_
+- [x] **3.** Verify PSScriptAnalyzer + PK smoke — _AC-001, AC-002_
+  - [x] 3.1 Run `bats tests/agtoosa.bats -f "DEV-033"` and focused registry/install smoke — _AC-002, AC-004_
+  - [x] 3.2 Confirm PSScriptAnalyzer clean on `agtoosa.ps1` — _AC-001_
+-->
+
+<!--
+**DEV-030 — Fix `/agtoosa-update` self-target uncertainty** (spec: `docs/archived/spec-DEV-030.md`) — shipped 2026-06-05 v5.2.4
 
 - [x] **1.** Canonical update workflow — operating context
   - [x] 1.1 Add Stage 1a operating-context detection in `template/Docs/AgToosa_Update.md` — _AC-001, AC-002_
@@ -68,32 +100,38 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
   - [x] 5.1 Full bats when focused green — _AC-008_
   - [x] 5.2 `docs/AgToosa_TestPlan-DEV-030.md` evidence — _AC-008_
   - [x] 5.3 Master-Plan task progress — _AC-001_
+-->
 
-**DEV-031 — Project-specific specialist subagents** (spec: `docs/archived/spec-DEV-031.md`)
+**DEV-034 — Maintainer release-state reconciliation** (spec: `docs/archived/spec-DEV-034.md`)
 
-- [ ] **1.** Canonical specialist contract
-  - [ ] 1.1 Author `template/Docs/AgToosa_Specialists.md` — _AC-002, AC-010, AC-011_
-  - [ ] 1.2 Add doc to `lib/config.sh` `DOCS_FILES` — _AC-001, AC-006_
-  - [ ] 1.3 Mark ADR-010 Accepted when shipped — _AC-002_
-- [ ] **2.** Init — Project Specialist Discovery
-  - [ ] 2.1 Update `template/Docs/AgToosa_Init.md` Phase E — _AC-003, AC-004, AC-005_
-  - [ ] 2.2 Cross-reference DEV-008 skill synthesis — _AC-004_
-- [ ] **3.** Update — Specialist Compatibility Check
-  - [ ] 3.1 Read-only check/plan in `template/Docs/AgToosa_Update.md` — _AC-008_
-  - [ ] 3.2 Post-Verify materialization + CLI non-overwrite — _AC-006, AC-007_
-- [ ] **4.** Spec — Specialist orchestration
-  - [ ] 4.1 `template/Docs/AgToosa_Spec.md` orchestration section — _AC-009–AC-012_
-  - [ ] 4.2 `agtoosa-spec` skill execution contract — _AC-014_
-- [ ] **5.** Agent + Skills docs
-  - [ ] 5.1 Update `AgToosa_Agent.md` and `AgToosa_Skills.md` — _AC-002, AC-014_
-- [ ] **6.** Adapter parity (conditional)
-  - [ ] 6.1 Thin pointers if parity grep fails — _AC-014_
-- [ ] **7.** Maintainer mirrors
-  - [ ] 7.1 Mirror workflow docs to `docs/` — _AC-001, AC-014_
-- [ ] **8.** Regression coverage
-  - [ ] 8.1 DEV-031 bats section — _AC-013, AC-015_
-  - [ ] 8.2 Focused filter + full bats — _AC-015_
-  - [ ] 8.3 Test plan evidence — _AC-015_
+- [x] **1.** Audit current release ledger
+  - [x] 1.1 Capture current `git status --short`, version pins, changelog top block, and Master-Plan active/backlog/completed rows — _Requirements: AC-001, AC-002, AC-004, AC-005_
+  - [x] 1.2 Ship DEV-030 + DEV-033 together as `5.2.4` (PATCH bundle on active MINOR) — _Requirements: AC-002, AC-003, AC-008_
+- [x] **2.** Reconcile Master-Plan and changelog state
+  - [x] 2.1 Update Active Cycle, Active Tasks, Backlog, Completed This Cycle, and Update Log to one coherent story state — _Requirements: AC-001, AC-002, AC-005_
+  - [x] 2.2 Preserve DEV-029 manual-deferred PR-path row unless completion evidence exists — _Requirements: AC-006_
+  - [x] 2.3 Update `CHANGELOG.md` and `docs/AgToosa_Changelog.md` `[Unreleased]` or release block to match the selected ship path — _Requirements: AC-004_
+- [x] **3.** Align version and release pins if shipping
+  - [x] 3.1 Update `agtoosa.sh`, `agtoosa.ps1`, `README.md`, `Formula/agtoosa.rb`, and bats version pins to `5.2.4` — _Requirements: AC-003_
+  - [x] 3.2 Confirm no release pin advances without a matching changelog block and Master-Plan update — _Requirements: AC-003, AC-004_
+- [x] **4.** Add regression coverage
+  - [x] 4.1 Add DEV-034 bats assertions for active/backlog/completed-cycle consistency — _Requirements: AC-001, AC-002, AC-005, AC-007_
+  - [x] 4.2 Add DEV-034 bats assertions for changelog/version parity surfaces not already covered — _Requirements: AC-003, AC-004, AC-007_
+  - [x] 4.3 Record focused validation evidence in `docs/AgToosa_TestPlan-DEV-034.md` — _Requirements: AC-007, AC-008_
+- [x] **5.** Review and handoff
+  - [x] 5.1 Create `docs/archived/review-DEV-033.md` for DEV-033 ship closure — _Requirements: AC-002, AC-008_
+  - [x] 5.2 Next action: `/agtoosa-review` DEV-034, then `/agtoosa-ship` DEV-034 as v5.2.5 — _Requirements: AC-008_
+
+<!--
+**DEV-031 — Project-specific specialist subagents** (spec: `docs/archived/spec-DEV-031.md`) — shipped 2026-05-25 v5.2.3
+
+- [x] **1.** Canonical specialist contract — _AC-001–AC-002_
+- [x] **2.** Init Phase E specialist discovery — _AC-003–AC-005_
+- [x] **3.** Update Specialist Compatibility Check — _AC-007–AC-008_
+- [x] **4.** Spec orchestration step 1a — _AC-009–AC-012_
+- [x] **5.** Agent + Skills + Codex adapters — _AC-014_
+- [x] **6.** Maintainer mirrors + DEV-031 bats T-001–T-015 — _AC-013, AC-015_
+-->
 
 <!--
 **DEV-028 — Plan-mode spec interview** (spec: `docs/archived/spec-DEV-028.md`) — shipped 2026-05-24 v5.2.0
@@ -155,7 +193,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | Story | Task # | Deferred Since | Description |
 |-------|--------|----------------|-------------|
-| DEV-029 | 3–4 | 2026-05-25 | After v5.2.1 push: `gh run list --repo sky2464/AgToosa --workflow branch-protection.yml --limit 5` — expect success on push; open PR to confirm label/description checks |
+| DEV-029 | 4 | 2026-05-25 | Open a PR to `main` and confirm label/description/link-issue jobs run (push verified: run 26419089522) |
 
 ## Blocked
 
@@ -173,9 +211,11 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Type | Estimate | Epic | Priority | Status |
 |----|-------|------|----------|------|----------|--------|
-| DEV-030 | Fix: `/agtoosa-update` self-target uncertainty | Fix | S | DEV-002 | High | 🟨 In Progress (build complete) |
-| DEV-031 | Feature: Project-specific specialist subagents | Feature | M | DEV-002 | High | 🟦 Todo |
-| DEV-032 | Chore: Patch-first release versioning (5.x line) | Chore | S | DEV-001 | High | ✅ Done |
+| DEV-031 | Feature: Project-specific specialist subagents | Feature | M | DEV-002 | High | 🏁 Shipped |
+| DEV-032 | Chore: Patch-first release versioning (5.x line) | Chore | S | DEV-001 | High | 🏁 Shipped |
+| DEV-030 | Fix: `/agtoosa-update` self-target uncertainty | Fix | S | DEV-002 | High | 🏁 Shipped |
+| DEV-033 | Fix: agtoosa.ps1 PSScriptAnalyzer approved verbs | Fix | XS | DEV-001 | Medium | 🏁 Shipped |
+| DEV-034 | Chore: Maintainer release-state reconciliation | Chore | S | DEV-004 | High | ✅ Done (ready for review) |
 
 ## Epics
 
@@ -219,7 +259,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 *   **DEV-004 - Epic: Testing & QA Harness**
     *   **Goal:** Comprehensive end-to-end integration and version verification suites validating the robustness of the entire framework.
     *   **Scope:** `tests/agtoosa.bats` and CI regression pipelines.
-    *   **Success Criteria:** 100% green coverage on 228+ platform scenarios and version checks on every release step.
+    *   **Success Criteria:** 100% green coverage on 340+ bats scenarios and version checks on every release step.
     *   **Last shipped:** DEV-005 — M1–M4 bats + CHANGELOG hygiene → `docs/archived/spec-DEV-005.md`
 
 ## Completed This Cycle
@@ -255,6 +295,10 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-027 | Feature: Agentic `/agtoosa-update` | 2026-05-24 | [spec-DEV-027.md](archived/spec-DEV-027.md) · [review-DEV-027.md](archived/review-DEV-027.md) |
 | DEV-028 | Feature: Plan-mode spec interview for `/agtoosa-spec` | 2026-05-24 | [spec-DEV-028.md](archived/spec-DEV-028.md) · [review-DEV-028.md](archived/review-DEV-028.md) |
 | DEV-029 | Chore: Stop branch-protection workflow failure emails | 2026-05-25 | [spec-DEV-029.md](archived/spec-DEV-029.md) · [review-DEV-029.md](archived/review-DEV-029.md) |
+| DEV-032 | Chore: Patch-first release versioning (5.x line) | 2026-05-25 | [spec-DEV-032.md](archived/spec-DEV-032.md) · [review-DEV-032.md](archived/review-DEV-032.md) |
+| DEV-031 | Feature: Project-specific specialist subagents | 2026-05-25 | [spec-DEV-031.md](archived/spec-DEV-031.md) · [review-DEV-031.md](archived/review-DEV-031.md) |
+| DEV-030 | Fix: `/agtoosa-update` self-target uncertainty | 2026-06-05 | [spec-DEV-030.md](archived/spec-DEV-030.md) · [review-DEV-030.md](archived/review-DEV-030.md) |
+| DEV-033 | Fix: agtoosa.ps1 PSScriptAnalyzer approved verbs | 2026-06-05 | [spec-DEV-033.md](archived/spec-DEV-033.md) · [review-DEV-033.md](archived/review-DEV-033.md) |
 
 ## Update Log
 
@@ -440,8 +484,22 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-05-25 | 🏗️ Build complete — DEV-030; focused 17/17 + DEV-027 T-001–T-009 9/9 + full suite 324/324 green; ready for `/agtoosa-review` | AgToosa |
 | 2026-05-25 | 📋 /agtoosa-spec DEV-031 — Project-specific specialist subagents; 15 Must ACs; M estimate; backlog only; prior DEV-031 chore → DEV-032 | AgToosa |
 | 2026-05-25 15:31 | ✅ /agtoosa-spec — Spec Approved — DEV-031 — docs/archived/spec-DEV-031.md; estimate M; backlog only | AgToosa |
+| 2026-05-25 | 🏗️ /agtoosa-build — DEV-031 complete — canonical Specialists doc, init/update/spec orchestration, 15 DEV-031 bats green | AgToosa |
+| 2026-05-25 | 🔍 /agtoosa-review — DEV-031 PASS — 0 Critical, 3 Warning (adapter parity optional, DEV-030 test, commit hygiene); review-DEV-031.md | AgToosa |
+| 2026-05-25 | 🚀 Ship complete — DEV-031 v5.2.3; CHANGELOG + version pins; DEV-031 T-001–T-015 15/15; smoke pass; Milestone v5.2.4 (next) | AgToosa |
 | 2026-05-25 | 📋 /agtoosa-task DEV-032 — review/ship closure for DEV-029 after status findings; spec-DEV-029 threat model + wave plan updated | AgToosa |
 | 2026-05-25 | 🏗️ Build complete — DEV-032 patch-first versioning; ADR-005 + ship/review/maintainer docs; Milestone v5.2.1 (next); VP-001–VP-005 5/5 green | AgToosa |
 | 2026-05-25 | 🔍 Review passed — DEV-029; 0 Critical; report: docs/archived/review-DEV-029.md; workflow step `if:` push guard fix | AgToosa |
-| 2026-05-25 | 🏗️ /agtoosa-build DEV-029 — task counters reconciled (2/2 automated shipped; tasks 3–4 remain `[ ]` manual-deferred; not marked (A) until GitHub run success) | AgToosa |
+| 2026-05-25 | 🏗️ /agtoosa-build DEV-029 — tasks 3.1–3.2 marked done (A); push run 26419089522 success; task 4.1 PR regression still open | AgToosa |
+| 2026-05-25 | 🔧 Fix pushed — workflow step `if` → shell checks (d58bedb); stops 0s parse failures on push | AgToosa |
 | 2026-05-25 | 🚀 Ship complete — DEV-029 v5.2.1; CHANGELOG + version pins; full suite 329/329; manual 3–4 still in Manual / Deferred | AgToosa |
+| 2026-05-25 | 🔍 Review ✅ Approved — DEV-032; 0 🔴 Critical, 4 🟡 Warnings (accepted); report: docs/archived/review-DEV-032.md | AgToosa |
+| 2026-05-25 | 🚀 Ship complete — DEV-032 v5.2.2; CHANGELOG + version pins; DEV-032 VP-001–VP-005 5/5; Milestone v5.2.3 (next) | AgToosa |
+| 2026-05-25 | 🔍 Review started — DEV-030; 4-persona review (Security, Eng Manager, CEO, QA Lead) | AgToosa |
+| 2026-05-25 | 🔍 Review ✅ Passed — DEV-030; 1 🔴 Critical found+fixed (interactive install self-target guidance); full suite 344/344; report: docs/archived/review-DEV-030.md | AgToosa |
+| 2026-05-26 | 🚀 /agtoosa-init re-validation — Maintainer Dogfood; Phases C–F; epics confirmed; DEV-004 success criteria refreshed; specialist/skill proposals deferred (no roster writes) | AgToosa |
+| 2026-06-05 | ✏️ /agtoosa-spec tasks — archived DEV-032 + DEV-033 Active Tasks (orphaned vs Active Cycle); DEV-030 sole live task tree | AgToosa |
+| 2026-06-06 | ✏️ /agtoosa-spec DEV-034 — Maintainer release-state reconciliation; spec + test plan created; next action: reconcile DEV-033/active-cycle/changelog/version ledger before new feature work | AgToosa |
+| 2026-06-05 | 🚀 Ship complete — DEV-030 + DEV-033 v5.2.4; CHANGELOG + version pins; DEV-030 T-001–T-011 + DEV-033 PV-001–PV-003; full suite 358/358; Milestone v5.2.5 (next); review-DEV-033.md | AgToosa |
+| 2026-06-05 | 🚀 Release 5.2.4 shipped — v5.2.4; DEV-030 + DEV-033 on main; version parity bash/ps1; stuck-Done backlog cleared | AgToosa |
+| 2026-06-06 | 🏗️ /agtoosa-build DEV-034 complete — active-cycle/changelog ledger reconciled after v5.2.4 ship; no `5.2.5` bump yet; DEV-034 LR-001–LR-006 6/6 green; version/DEV-033 slice 6/6 green | AgToosa |

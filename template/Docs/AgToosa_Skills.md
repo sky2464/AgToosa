@@ -76,9 +76,24 @@ AgToosa installs one Codex slash prompt per lifecycle command under `.codex/prom
 
 Installed workflow skills: `agtoosa-init`, `agtoosa-spec`, `agtoosa-build`, `agtoosa-qa`, `agtoosa-review`, `agtoosa-ship`, `agtoosa-revert`, `agtoosa-task`, `agtoosa-update`, `agtoosa-status`, `agtoosa-goal`, `agtoosa-help`, `agtoosa-debug`, `agtoosa-concise`.
 
+## Project Specialists (cross-platform v1)
+
+`/agtoosa-init` runs **Project Specialist Discovery**; `/agtoosa-update` runs a read-only **Specialist Compatibility Check** and may propose post-Verify materialization; `/agtoosa-spec` runs **Spec Specialist Orchestration** when `Docs/Context/specialists.md` exists.
+
+| Topic | Rule |
+|-------|------|
+| Canonical doc | `Docs/AgToosa_Specialists.md` |
+| Roster | `Docs/Context/specialists.md` — created only after approval; **not** in template pack |
+| Reserved names | No `agtoosa-*` specialist ids or `/agtoosa-*` triggers |
+| Evidence | Structured block required in terminal output (see Specialists doc) |
+| Parallel | Claude Code native; other platforms sequential with explicit fallback note |
+| CLI update | `agtoosa.sh --update` never overwrites project specialist files |
+
+Do not duplicate discovery tables in platform adapters — route to `Docs/AgToosa_Specialists.md`.
+
 ## Generated Project Skills
 
-`/agtoosa-init` (**Project Skill Discovery**) and `/agtoosa-spec` (**Story Skill Opportunity Synthesis**) may propose additional skills under `.codex/skills/<skill-name>/SKILL.md`.
+`/agtoosa-init` (**Project Skill Discovery**, Phase F) and `/agtoosa-spec` (**Story Skill Opportunity Synthesis**) may propose additional skills under `.codex/skills/<skill-name>/SKILL.md`.
 
 ### Anatomy
 

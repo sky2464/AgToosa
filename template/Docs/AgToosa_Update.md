@@ -27,7 +27,46 @@ The default `/agtoosa-update` flow is **Detect → Plan → Apply → Verify** w
 
 ### Stage 1 — Detect
 
-Gather installed project state without mutating files (read-only file reads and inspection only in this stage):
+Stage 1 runs in two passes: **operating context first**, then **installed state** only for downstream (Generated Project) repos.
+
+#### Stage 1a — Operating context (always first)
+
+Classify the repo **before** version drift or Apply planning:
+
+| Signal | Maintainer Dogfood | Generated Project |
+|--------|-------------------|-------------------|
+| Maintainer guide at repo root | `docs/agtoosa-maintainer.md` present (generator repo) | Absent |
+| Generator surfaces | `agtoosa.sh`, `lib/`, `template/` at repo root | Absent |
+| Install version marker | Do **not** treat `Docs/.agtoosa-version` here as a downstream install | `Docs/.agtoosa-version` expected when installed |
+
+When **Maintainer Dogfood Mode** is detected:
+
+- **Stop before Apply.** Do not ask for a downstream project path defaulting to `.` or the current repo.
+- **Do not run** `bash agtoosa.sh --update` against this tree (the CLI blocks self-target; the workflow must not plan Apply anyway).
+- Print the **Maintainer Dogfood report** (below) and **stop** for full flow, `plan`, and `apply`.
+- For **`check`**, you may include dogfood context in the briefing, then **stop** (still read-only).
+
+**Maintainer Dogfood report (required when 1a matches):**
+
+```
+## AgToosa Update — Maintainer Dogfood Mode
+
+**Operating context:** Maintainer Dogfood Mode (AgToosa generator repo)
+**CLI baseline update:** Not available for this source tree (`agtoosa.sh --update` targets downstream installs only).
+
+Do not create `Docs/` or `Docs/.agtoosa-version` in the generator repo.
+
+**Next actions:**
+- `/agtoosa-status` — project health for AgToosa development
+- `/agtoosa-spec` or `/agtoosa-build` — maintainer stories in `docs/Master-Plan.md`
+- Re-run `/agtoosa-update` only against an explicit downstream project path (not the generator repo)
+```
+
+When **Generated Project Mode** is detected, continue to Stage 1b.
+
+#### Stage 1b — Installed state (Generated Project only)
+
+Gather installed project state without mutating files (read-only file reads and inspection only):
 
 1. **Installed version** — read `Docs/.agtoosa-version` if present; note `unknown` when missing.
 2. **Lock metadata** — read `.agtoosa-lock.json` when present (generator version, platforms, template hash).
@@ -36,14 +75,16 @@ Gather installed project state without mutating files (read-only file reads and 
 5. **Architecture memory** — read `Docs/Master-Architecture.md` as high-priority architecture memory: system boundaries, diagrams, data flow, deployment, security, and observability. Note whether it exists and is non-empty; preserve user-authored content on update.
 6. **Master-Plan** — read `Docs/Master-Plan.md` (Project Charter, active cycle, In Progress stories, blocked items, recent ships).
 7. **Changelog** — read `Docs/AgToosa_Changelog.md` (last 1–2 releases).
-8. **Active specs** — list non-archived `Docs/AgToosa_Spec-*.md` files; note status and Goal Contract.
+8. **Active specs** — list non-archived specs under `Docs/archived/`; note status and Goal Contract.
 9. **Drift** — compare installed version to the target baseline the user intends (from generator checkout, lock file, or stated version). If already current, skip Apply.
 
-For **`/agtoosa-update check`**, continue to the briefing in Stage 1 (check output) and **stop**. Do not run shell commands or mutate files.
+For **`/agtoosa-update check`** in Generated Project Mode, continue to the briefing below and **stop**. Do not run shell commands or mutate files.
 
 ### Stage 2 — Plan
 
-When drift exists or the user invoked `plan` or `apply`, produce an **update plan** that lists planned **overwrites**, **smart merge** targets, **native dir** refreshes, **preserved files**, and expected **backup** files:
+> **Maintainer Dogfood:** Skip Stage 2–4 unless the user provided an explicit downstream project path outside the generator repo. Default dogfood flow stops after Stage 1a.
+
+When drift exists or the user invoked `plan` or `apply` in **Generated Project Mode**, produce an **update plan** that lists planned **overwrites**, **smart merge** targets, **native dir** refreshes, **preserved files**, and expected **backup** files:
 
 
 | Planned action | Detail |
@@ -102,6 +143,31 @@ Report filenames and pass/fail status only — do not dump secrets, tokens, or f
 
 If verification fails, list failures with **Fix with:** `bash agtoosa.sh --update <project>` or manual review; do not claim success.
 
+### Stage 4b — Specialist materialization (optional, separate approval)
+
+After Stage 4 Verify succeeds on the **full** or **`apply`** flow (Generated Project Mode only):
+
+1. Run **Specialist Compatibility Check** (read-only) against `Docs/Context/specialists.md` and installed native specialist files — see below.
+2. If gaps exist (roster entry without native file, stale platform target, missing `Docs/AgToosa_Specialists.md`), propose materialization or refresh in a **separate** approval gate.
+3. **Forbidden:** Applying specialist writes during baseline `agtoosa.sh --update` or without explicit user approval after Verify.
+4. Record Approve / Decline in `Docs/Master-Plan.md` **Update Log**.
+
+Maintainer Dogfood Mode: skip specialist materialization; CLI update is unavailable for the generator repo anyway.
+
+## Specialist Compatibility Check (read-only)
+
+Run during **`check`**, **`plan`**, and Stage 4 Verify summary. Follow `Docs/AgToosa_Specialists.md`.
+
+| Check | Pass criteria |
+|-------|----------------|
+| Canonical doc | `Docs/AgToosa_Specialists.md` present at expected version |
+| Roster | `Docs/Context/specialists.md` entries match approved ids (if file exists) |
+| Native files | Each approved id has files on installed platforms per platform_targets |
+| Stale support | No `agtoosa-*` specialist ids; no orphaned specialist files without roster entry |
+| CLI safety | `agtoosa.sh --update` inventory does not list project specialist paths |
+
+Report **missing**, **stale**, or **ok** per specialist id — do not mutate files in `check` or `plan`.
+
 ## `/agtoosa-update check` — Project Briefing (read-only)
 
 After Detect, produce a concise briefing (no shell commands, no mutation):
@@ -150,6 +216,8 @@ End with:
 | `Docs/Master-Plan.md` | Never touched |
 | `Docs/AgToosa_Changelog.md` | Never touched |
 | `Docs/archived/` | Never touched |
+| `Docs/Context/specialists.md` | Never touched — project-approved roster |
+| Project specialist native files | Never touched — `.codex/skills/<project-id>/`, `.claude/skills/<project-id>.md`, `.github/agents/<project-id>.agent.md`, platform specialist fallbacks |
 | User files in platform dirs | Never touched |
 
 ## Output

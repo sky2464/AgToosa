@@ -5,6 +5,8 @@
 ## Objective
 One-time initialization: establish project context, scan the codebase, validate AI configs, and configure the AgToosa workflow.
 
+> **Generated Project Mode:** `/agtoosa-init` sets up **the project** or **the product** in this repository — read `docs/AgToosa_Agent.md` → **Operating Contexts**. AgToosa is the workflow framework, not the application identity. Update **this repo's** `docs/Master-Plan.md` charter and epics for the host product.
+
 ## Sub-Commands
 
 | Sub-command | Runs |
@@ -41,9 +43,30 @@ Use when the AI agent is focused on a specific file or function and needs broade
 ### Phase B — Context Establishment
 
 > **Follow the Smart Interview Protocol** (`docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
-> Maximum 6 questions across all context files combined. Infer first; only ask about genuine gaps.
+> Start with the Goal Clarification Protocol (`docs/AgToosa_Agent.md` → `## Goal Clarification Protocol`).
+> Ask one question at a time. If goal/context clarity is still insufficient after 12 questions, stop and ask whether to continue the interview or proceed with documented assumptions.
 
-3.  **Populate-Check Gate:**
+3.  **Project Goal Contract:**
+
+    Before filling context files, clarify the project-level goal. Read `docs/Master-Plan.md` if it exists, then infer from the codebase, README, package manifests, and `docs/Context/`.
+
+    If the project goal is missing, vague, or contradictory, call the `/agtoosa-goal project` sub-workflow:
+    - Ask only about missing Goal Contract fields.
+    - Build each question from previous answers.
+    - Write the final project Goal Contract into `docs/Master-Plan.md` `## Project Charter`.
+    - Do not store the goal source of truth in `docs/Context/`.
+
+    The Project Charter must include or preserve these fields:
+    - Goal
+    - User outcome
+    - Success condition
+    - Proof / evidence
+    - Non-goals
+    - Assumptions
+    - Risks
+    - Unresolved questions
+
+4.  **Populate-Check Gate:**
 
     Before asking anything, check whether `docs/Context/` files already exist and are populated:
 
@@ -59,7 +82,7 @@ Use when the AI agent is focused on a specific file or function and needs broade
 
     **Greenfield / empty-repo branch:** If no source files, no `README.md`, and no package manifest (`package.json`, `pyproject.toml`, `Cargo.toml`, etc.) are detected → skip Phase C (codebase scan) entirely. Note: "We'll profile the codebase as you build." Run the full discovery interview, then jump directly to Phase D.
 
-4.  **Discovery Interview (Smart Interview):**
+5.  **Discovery Interview (Smart Interview):**
 
     Conduct the interview one question at a time. Before each question, scan the codebase and any existing context for clues — pre-populate options from what you find. Do not ask questions whose answers are already clear from codebase evidence.
 
@@ -112,7 +135,7 @@ Use when the AI agent is focused on a specific file or function and needs broade
 
     After each answer, write or update the relevant context file immediately. Ask at most one follow-up per answer.
 
-5.  **Phase B → Phase C Gate:**
+6.  **Phase B → Phase C Gate:**
 
     > **STOP — Do NOT proceed to Phase C until all Context files are confirmed by the user.**
 
@@ -128,9 +151,9 @@ Use when the AI agent is focused on a specific file or function and needs broade
 
 ### Phase C — Codebase Onboarding
 
-6.  **Codebase Scan:** Scan the project for structure, stack, dependencies, and architecture. Use findings to pre-populate Phase D Epics — do not ask about things the codebase already reveals.
+7.  **Codebase Scan:** Scan the project for structure, stack, dependencies, and architecture. Use findings to pre-populate Phase D Epics — do not ask about things the codebase already reveals.
 
-7.  **AI Doctor Consultation (Smart Interview):** Ask clarifying questions to understand the app's core logic and product areas. Follow the Smart Interview Protocol:
+8.  **AI Doctor Consultation (Smart Interview):** Ask clarifying questions to understand the app's core logic and product areas. Follow the Smart Interview Protocol:
     - Ask **one question at a time**. Wait for each answer before asking the next.
     - Infer Epic candidates from the codebase (e.g., Auth, Billing, API, Dashboard). Present them as options — do not ask the user to name Epics from scratch.
     - At most one follow-up per answer. Stop when product areas are clear.
@@ -143,14 +166,15 @@ Use when the AI agent is focused on a specific file or function and needs broade
       Add, remove, or rename any below.
     ```
 
-8.  **Scaffolding:** Create `docs/`, `docs/archived/`, and `docs/Context/` if they don't exist.
+9.  **Scaffolding:** Create `docs/`, `docs/archived/`, and `docs/Context/` if they don't exist.
 
-9.  **Dynamic Generation:** Based on the consultation, update or create:
+10. **Dynamic Generation:** Based on the consultation, update or create:
     *   `docs/AgToosa_Agent.md` (tailored rules and commands)
     *   `docs/AgToosa_Claude.md` (Claude-specific, if applicable)
     *   `docs/AgToosa_Gemini.md` (Gemini-specific, if applicable)
+    *   `docs/Master-Architecture.md` — create or update this as a senior application architect after the smart interview and codebase scan. Include C4-style diagrams, module boundaries, data flow, deployment, security, observability, and ADR links.
 
-10. **Project Management Setup:**
+11. **Project Management Setup:**
 
     > `docs/Master-Plan.md` is the single source of truth for all project management — it replaces Linear, Jira, GitHub Projects, Trello, or any external tracker. Do NOT create issues in external tools unless the user explicitly asks.
 
@@ -158,14 +182,46 @@ Use when the AI agent is focused on a specific file or function and needs broade
         - **Name:** `Epic: [product area name]` (e.g., `Epic: Authentication`)
         - **Status:** `Backlog`
         - **Charter:** one-paragraph goal, scope, and success criteria for this product area
-    *   Mirror the full current state in `docs/Master-Plan.md` using the structured template (Charter, Epics table, empty Backlog, Update Log first entry).
+    *   Mirror the full current state in `docs/Master-Plan.md` using the structured template (Project Charter with Goal Contract fields, Epics table, empty Backlog, Update Log first entry).
     *   Initialize `docs/AgToosa_Changelog.md`.
 
 ### Phase D — TDD Configuration
 
-11. **Test Framework:** Auto-detect the test framework (Vitest, Jest, pytest, etc.) from package manifests and config files. Record it in `tech-stack.md`. Only ask if auto-detection is ambiguous.
+12. **Test Framework:** Auto-detect the test framework (Vitest, Jest, pytest, etc.) from package manifests and config files. Record it in `tech-stack.md`. Only ask if auto-detection is ambiguous.
 
 > **Note:** TDD preference was captured in Phase B (Step 4). If `tdd: true` is already set in `workflow.md`, skip this step.
+
+### Phase E — Project Specialist Discovery
+
+13. **Project Specialist Discovery (cross-platform):**
+
+    After context files and Epics are established, identify **reusable project-specific specialist subagents** — not a default generic roster. Follow `docs/AgToosa_Specialists.md` for the full contract.
+
+    *   Read `docs/Context/product.md`, `tech-stack.md`, `workflow.md`, `docs/Context/CONTEXT.md`, and `docs/Master-Architecture.md` when present.
+    *   **Detect installed platforms** from `docs/.agtoosa-version`, `.agtoosa-lock.json`, and sentinels (`.codex/`, `.claude/`, `.cursor/`, `.windsurf/`, `.gemini/`, `.github/agents/`, entry points).
+    *   Prefer reusing existing AgToosa workflow adapters (`.codex/skills/agtoosa-*`, platform commands) and any approved entries in `docs/Context/specialists.md` before proposing new specialists.
+    *   **Reserved names:** reject specialist ids `agtoosa-*` and triggers `/agtoosa-*`; reject one-off story tasks, duplicates, and candidates without validation.
+    *   **Secret safety:** never copy credentials, private keys, tokens, or sensitive config values into specialist bodies or `specialists.md`. Reference paths only; use **safety_notes** and **tools/MCP needs** fields per `docs/AgToosa_Specialists.md`.
+    *   Present candidates in a table with: **id**, **trigger**, **purpose**, **phase_hooks**, **inputs**, **tools/MCP needs**, **outputs**, **validation**, **safety_notes**, **platform_targets**, **Decision** (`Approve` / `Decline` / `Defer`).
+    *   Require **explicit user approval** before creating `docs/Context/specialists.md` or any native specialist file (`.codex/skills/<id>/`, `.claude/skills/<id>.md`, `.github/agents/<id>.agent.md`, Cursor/Windsurf/Gemini fallbacks per matrix). Do not materialize silently.
+    *   On approval, materialize only the platforms installed in this project.
+    *   Record accepted and declined decisions in `docs/Master-Plan.md` **Update Log** (include specialist id and decision).
+
+### Phase F — Project Skill Discovery
+
+14. **Project Skill Discovery (Codex / OpenCode):**
+
+    After specialist discovery (or when the user skips it), identify recurring project workflows that would benefit from a durable Codex skill — domain-language review, API contract checks, migration validation, release evidence collection, or similar. See `docs/AgToosa_Specialists.md` glossary — **skills** are command helpers; **specialists** are delegated subagent lanes.
+
+    *   Read `docs/Context/product.md`, `tech-stack.md`, `workflow.md`, and `docs/Context/CONTEXT.md`.
+    *   Prefer reusing existing AgToosa workflow skills (`.codex/skills/agtoosa-*`) and platform adapters before proposing a new project skill.
+    *   **Reserved workflow names:** `agtoosa-*` skill names and `/agtoosa-*` triggers belong to installed AgToosa workflow adapters (including `.claude/commands/agtoosa-*.md`, `.cursor/commands/agtoosa-*.md`, `.windsurf/workflows/agtoosa-*.md`, `.gemini/commands/agtoosa-*.toml`, `.github/prompts/agtoosa-*.prompt.md`, `.codex/prompts/agtoosa-*.md`, and `.codex/skills/agtoosa-*`). Reject generated project skill candidates named `agtoosa-*`, triggered by `/agtoosa-*`, or that would shadow an installed AgToosa adapter file unless the decision is **Update existing** on that adapter (never a new duplicate).
+    *   Reject one-off tasks, duplicates, and candidates without a clear validation command or checklist.
+    *   **Secret safety:** never copy credentials, private keys, tokens, or sensitive config values into skill bodies. If a candidate needs secret awareness, add a safety note and reference file paths only.
+    *   Present candidates in a table with: **Skill name**, **Trigger description**, **Purpose**, **Inputs**, **Optional resources**, **Validation**, **Decision** (`Generate` / `Update existing` / `Do not generate`).
+    *   Require **explicit user approval** before creating or modifying any `.codex/skills/<skill-name>/SKILL.md` file. Do not generate skills silently.
+    *   On approval, create only valid Codex skill anatomy: `SKILL.md` with `name` and `description` frontmatter, concise body, and optional `references/`, `scripts/`, or `assets/` folders when justified. Do not add README, quick-reference, or other auxiliary docs unless the user explicitly requests supported UI metadata (see `docs/AgToosa_Skills.md`).
+    *   Record accepted and declined decisions in `docs/Master-Plan.md` **Update Log** (include skill name and decision).
 
 ## Output
 
@@ -173,8 +229,9 @@ Present the approval gate:
 
 ```
 ✅ Initialization complete
-[2–3 sentence summary: what was scanned, what context was set, which Epics were created.]
+[2–3 sentence summary: what project goal was captured, what context was set, which Epics were created.]
 AI configs confirmed. Use 4 commands: /agtoosa-spec → /agtoosa-build → /agtoosa-review → /agtoosa-ship.
+Run /agtoosa-status readiness to verify initial product gates (see docs/AgToosa_Readiness.md).
 → Approve and run /agtoosa-spec when ready  |  Comment or adjust below
 ```
 

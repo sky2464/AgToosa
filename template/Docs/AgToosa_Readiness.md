@@ -12,7 +12,7 @@
 | 4 | **Must ACs mapped to tests** | `Docs/AgToosa_TestPlan-*.md` for the active story exists; every **Must**-priority `AC-NNN` in the spec appears in the test plan AC coverage table | `/agtoosa-spec tasks` or `/agtoosa-qa plan` |
 | 5 | **Security / threat model present** | Active spec includes a threat model section (`## Threat Model`, `STRIDE`, or equivalent per `Docs/SPEC-FORMAT.md`) | `/agtoosa-spec plan` |
 | 6 | **Task tree and wave plan present** | `Docs/Master-Plan.md` `## Active Tasks` has a checkbox tree for the In Progress story; active spec `## 3. Tasks` includes `### Wave Plan` | `/agtoosa-spec tasks` |
-| 7 | **Release / version parity** | When the repo declares a version (`package.json`, `pyproject.toml`, `VERSION`, etc.), it matches `Docs/Master-Plan.md` **Milestone** and the latest entry heading in `Docs/AgToosa_Changelog.md` (same semver string, ignoring leading `v`) | Align manually or `/agtoosa-ship docs` after correcting versions |
+| 7 | **Release / version parity** | Shipped version matches latest `## [X.Y.Z]` in `Docs/AgToosa_Changelog.md` (ignore leading `v`); **Milestone** may be the **next PATCH** on the active MINOR (e.g. `v5.2.1 (next)` while shipped is `5.2.0`) per ADR-005 patch-first cadence | Align manually or `/agtoosa-ship docs` after correcting versions |
 
 ## Workflow guidance vs generator enforcement
 

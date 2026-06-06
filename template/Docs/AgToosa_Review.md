@@ -97,6 +97,8 @@ Each reviewer persona (or parallel subagent) must report command run, exit code,
 
 6.  **Review Report:** Structured findings from all 4 personas — 🔴 Critical / 🟡 Warning / 🟢 Passed. Every 🔴 Critical must include the Iron Law root cause. Include a Goal Contract alignment row. Block `/agtoosa-ship` if any 🔴 Critical findings remain.
 
+    **Ship version suggestion (maintainer / semver repos):** In the review report footer, default the suggested release to **PATCH+1** on the current MINOR (e.g. `5.2.0` → `5.2.1` for Fix/Chore/S stories). Use **MINOR** only for a new MINOR train, multi-story batched release, or deliberate cycle boundary; use **MAJOR** only for breaking changes per ADR-004. See `Docs/adr/ADR-005-release-cadence.md` (generator) or project ADRs. Do not suggest skipping to the next MINOR for routine small stories.
+
     **Master-Plan update (after verdict):**
     - If **all clear** (no unresolved 🔴 Critical): add **Update Log** entry `Review ✅ Approved` (per `Docs/AgToosa_Governance.md`). Keep Active Cycle status `In Review` until `/agtoosa-ship` completes.
 

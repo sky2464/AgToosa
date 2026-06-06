@@ -7,7 +7,41 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
-_(None — pick next story via `/agtoosa-spec`.)_
+### Changed
+
+- **DEV-034 — Maintainer release-state reconciliation.** Add focused ledger/version bats (LR-001–LR-006) and complete cycle compaction after v5.2.4 ship.
+
+---
+
+## [5.2.4] — 2026-06-05
+
+Patch release: DEV-030 + DEV-033 (352 bats tests; DEV-030 T-001–T-011; DEV-033 PV-001–PV-003).
+
+### Fixed
+
+- **DEV-030 — `/agtoosa-update` self-target uncertainty.** Stage 1a operating-context detection in canonical `AgToosa_Update.md` (template + maintainer mirror); Maintainer Dogfood stop-before-Apply; extended Bash/PowerShell self-target guidance including interactive install path. Bats DEV-030 T-001–T-011 green; DEV-027 T-001–T-009 regression green.
+
+- **DEV-033 — agtoosa.ps1 approved PowerShell verbs.** Rename script-private helpers to `Copy-StageFiles`, `Initialize-PackQueueDir`, and `Move-ShipPacksToQueue`; update audit doc reference; DEV-033 PV-001–PV-003 bats green.
+
+---
+
+## [5.2.3] — 2026-05-25
+
+Patch release: DEV-031 (344 bats tests; DEV-031 T-001–T-015).
+
+### Added
+
+- **DEV-031 — Project-specific specialist subagents.** Canonical `Docs/AgToosa_Specialists.md`; init Phase E specialist discovery + Phase F skill discovery; update Specialist Compatibility Check; spec step 1a orchestration; Codex init/update/spec skill routing; ADR-010 Accepted. Bats DEV-031 T-001–T-015 green; K4 regression pass.
+
+---
+
+## [5.2.2] — 2026-05-25
+
+Patch release: DEV-032 (patch-first release cadence; DEV-032 VP-001–VP-005).
+
+### Added
+
+- **DEV-032 — Patch-first release versioning (5.x line).** ADR-005 default PATCH bumps on the active MINOR train; bump decision tree in `docs/agtoosa-maintainer.md`, `docs/AgToosa_Ship.md`, `docs/AgToosa_Review.md`, and template mirrors; Master-Plan Milestone tracks next PATCH. Bats DEV-032 VP-001–VP-005 green.
 
 ---
 

@@ -191,11 +191,27 @@ Use when the AI agent is focused on a specific file or function and needs broade
 
 > **Note:** TDD preference was captured in Phase B (Step 4). If `tdd: true` is already set in `workflow.md`, skip this step.
 
-### Phase E — Project Skill Discovery
+### Phase E — Project Specialist Discovery
 
-13. **Project Skill Discovery (Codex / OpenCode):**
+13. **Project Specialist Discovery (cross-platform):**
 
-    After context files and Epics are established, identify recurring project workflows that would benefit from a durable Codex skill — domain-language review, API contract checks, migration validation, release evidence collection, or similar.
+    After context files and Epics are established, identify **reusable project-specific specialist subagents** — not a default generic roster. Follow `Docs/AgToosa_Specialists.md` for the full contract.
+
+    *   Read `Docs/Context/product.md`, `tech-stack.md`, `workflow.md`, `Docs/Context/CONTEXT.md`, and `Docs/Master-Architecture.md` when present.
+    *   **Detect installed platforms** from `Docs/.agtoosa-version`, `.agtoosa-lock.json`, and sentinels (`.codex/`, `.claude/`, `.cursor/`, `.windsurf/`, `.gemini/`, `.github/agents/`, entry points).
+    *   Prefer reusing existing AgToosa workflow adapters (`.codex/skills/agtoosa-*`, platform commands) and any approved entries in `Docs/Context/specialists.md` before proposing new specialists.
+    *   **Reserved names:** reject specialist ids `agtoosa-*` and triggers `/agtoosa-*`; reject one-off story tasks, duplicates, and candidates without validation.
+    *   **Secret safety:** never copy credentials, private keys, tokens, or sensitive config values into specialist bodies or `specialists.md`. Reference paths only; use **safety_notes** and **tools/MCP needs** fields per `Docs/AgToosa_Specialists.md`.
+    *   Present candidates in a table with: **id**, **trigger**, **purpose**, **phase_hooks**, **inputs**, **tools/MCP needs**, **outputs**, **validation**, **safety_notes**, **platform_targets**, **Decision** (`Approve` / `Decline` / `Defer`).
+    *   Require **explicit user approval** before creating `Docs/Context/specialists.md` or any native specialist file (`.codex/skills/<id>/`, `.claude/skills/<id>.md`, `.github/agents/<id>.agent.md`, Cursor/Windsurf/Gemini fallbacks per matrix). Do not materialize silently.
+    *   On approval, materialize only the platforms installed in this project.
+    *   Record accepted and declined decisions in `Docs/Master-Plan.md` **Update Log** (include specialist id and decision).
+
+### Phase F — Project Skill Discovery
+
+14. **Project Skill Discovery (Codex / OpenCode):**
+
+    After specialist discovery (or when the user skips it), identify recurring project workflows that would benefit from a durable Codex skill — domain-language review, API contract checks, migration validation, release evidence collection, or similar. See `Docs/AgToosa_Specialists.md` glossary — **skills** are command helpers; **specialists** are delegated subagent lanes.
 
     *   Read `Docs/Context/product.md`, `tech-stack.md`, `workflow.md`, and `Docs/Context/CONTEXT.md`.
     *   Prefer reusing existing AgToosa workflow skills (`.codex/skills/agtoosa-*`) and platform adapters before proposing a new project skill.

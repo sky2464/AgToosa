@@ -15,5 +15,6 @@ Use when the user asks for `/agtoosa-update`, `$agtoosa-update`, or wants to upd
 
 1. Read `Docs/AgToosa_Update.md` in full and **run** its workflow precisely (including sub-command dispatch).
 2. Run preflight and migration guidance before Apply when drift or major-version risk exists.
-3. Preserve user-owned project content per the workflow doc; verify version marker, lock metadata, platform surfaces, preserved files, and duplicate marker safety after Apply.
-4. On successful completion, print verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+3. Preserve user-owned project content per the workflow doc (including `Docs/Context/specialists.md` and project specialist native files); run **Specialist Compatibility Check** on `check`/`plan`; optional post-Verify materialization per `Docs/AgToosa_Specialists.md` with separate approval.
+4. Verify version marker, lock metadata, platform surfaces, preserved files, and duplicate marker safety after Apply.
+5. On successful completion, print verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

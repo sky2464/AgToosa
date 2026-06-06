@@ -111,8 +111,8 @@ stage_files() {
 
   # Claude Code native commands, hooks, and skills — staged when Claude selected
   if [[ "$USE_CLAUDE" == true ]]; then
-    mkdir -p "${SHIP_DIR}/.claude/commands" "${SHIP_DIR}/.claude/skills"
-    local cmd cmd_count=0 skill skill_count=0
+    mkdir -p "${SHIP_DIR}/.claude/commands" "${SHIP_DIR}/.claude/skills" "${SHIP_DIR}/.claude/hooks"
+    local cmd cmd_count=0 skill skill_count=0 hook hook_count=0
     for cmd in "${CLAUDE_COMMAND_FILES[@]}"; do
       if [[ -f "${TEMPLATE_DIR}/${cmd}" ]]; then
         cp "${TEMPLATE_DIR}/${cmd}" "${SHIP_DIR}/${cmd}"
@@ -136,6 +136,15 @@ stage_files() {
       fi
     done
     [[ $skill_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .claude/skills/ ${CYAN}(${skill_count} project skill — agtoosa-review)${NC}"
+
+    for hook in "${CLAUDE_HOOK_FILES[@]}"; do
+      if [[ -f "${TEMPLATE_DIR}/${hook}" ]]; then
+        cp "${TEMPLATE_DIR}/${hook}" "${SHIP_DIR}/${hook}"
+        hook_count=$((hook_count + 1))
+        GENERATED=$((GENERATED + 1))
+      fi
+    done
+    [[ $hook_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .claude/hooks/ ${CYAN}(${hook_count} hook script)${NC}"
   fi
 
   # Cursor rules and commands — staged when Cursor selected

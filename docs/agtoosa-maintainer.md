@@ -115,6 +115,17 @@ Adding a new fix-command? It must emit the closure line on successful completion
 
 ## Release Checklist
 
+**Bump decision tree (patch-first — see `docs/adr/ADR-005-release-cadence.md`):**
+
+| Story profile | Bump | Example (from 5.2.0) |
+|---------------|------|----------------------|
+| Fix, Chore, docs-only, estimate **S** | **PATCH** (default) | 5.2.1 |
+| Feature **S**, same MINOR train, non-breaking | **PATCH** | 5.2.1 |
+| New MINOR train, multi-story batched release | **MINOR** (Z=0) | 5.3.0 |
+| Breaking per ADR-004 | **MAJOR** | 6.0.0 |
+
+Do **not** advance MINOR for every small story. Update Project Charter **Milestone** to the **next PATCH** on the active MINOR (e.g. `v5.2.1 (next)` while shipped is `5.2.0`).
+
 - Bump `AGTOOSA_VERSION` in `agtoosa.sh` AND `agtoosa.ps1` to identical values (bats checks parity).
 - Update `README.md` version badge AND any pinned `--ref vX.Y.Z` install snippets — they drift silently across releases.
 - Prepend a dated `## [X.Y.Z]` block to `CHANGELOG.md`. Move anything from `## [Unreleased]` into the new block.

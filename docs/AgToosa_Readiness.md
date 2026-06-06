@@ -12,7 +12,7 @@
 | 4 | **Must ACs mapped to tests** | `docs/AgToosa_TestPlan-*.md` for the active story exists; every **Must**-priority `AC-NNN` in the spec appears in the test plan AC coverage table | `/agtoosa-spec tasks` or `/agtoosa-qa plan` |
 | 5 | **Security / threat model present** | Active spec includes a threat model section (`Threat Model`, `STRIDE`, or equivalent per `docs/SPEC-FORMAT.md`) | `/agtoosa-spec plan` |
 | 6 | **Task tree and wave plan present** | `docs/Master-Plan.md` `## Active Tasks` has a checkbox tree for the In Progress story; active spec `## 3. Tasks` includes `### Wave Plan` | `/agtoosa-spec tasks` |
-| 7 | **Release / version parity** | `AGTOOSA_VERSION` in `agtoosa.sh` and `agtoosa.ps1` matches the latest **released** version heading in root `CHANGELOG.md` (ignore leading `v`); planned milestones in `docs/Master-Plan.md` may differ if labeled planned | Align manually or `/agtoosa-ship docs` |
+| 7 | **Release / version parity** | `AGTOOSA_VERSION` in `agtoosa.sh` and `agtoosa.ps1` matches the latest **released** `## [X.Y.Z]` in root `CHANGELOG.md` (ignore leading `v`); **Milestone** may be the **next PATCH** on the active MINOR (e.g. `v5.2.1 (next)` while shipped is `5.2.0`) per `docs/adr/ADR-005-release-cadence.md` | Align manually or `/agtoosa-ship docs` |
 
 ## Workflow guidance vs generator enforcement
 

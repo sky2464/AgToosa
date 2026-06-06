@@ -114,7 +114,9 @@ e.g.  /agtoosa-review debug   →  /agtoosa-build tdd   →  /agtoosa-ship check
 
 AgToosa installs `.codex/skills/agtoosa-*/SKILL.md` workflow runners for Codex and OpenCode. Each skill has valid `name` and `description` frontmatter and instructs the agent to **execute** the matching `Docs/AgToosa_*.md` workflow (including sub-command dispatch where applicable).
 
-`/agtoosa-init` may run **Project Skill Discovery** and `/agtoosa-spec` may run **Story Skill Opportunity Synthesis** to propose additional `.codex/skills/<skill-name>/SKILL.md` artifacts. Both require explicit user approval before any file write; see `Docs/AgToosa_Skills.md` for anatomy, dedupe, and secret-handling rules.
+`/agtoosa-init` may run **Project Specialist Discovery** (cross-platform, approval-gated) per `Docs/AgToosa_Specialists.md`, then **Project Skill Discovery** (Codex/OpenCode). `/agtoosa-spec` may run **Spec Specialist Orchestration** when `Docs/Context/specialists.md` exists, and **Story Skill Opportunity Synthesis** for story-scoped Codex skills. All materialization requires explicit user approval before any file write; see `Docs/AgToosa_Skills.md` and `Docs/AgToosa_Specialists.md` for anatomy, dedupe, MCP declaration, and secret-handling rules.
+
+Specialist lanes must emit the **structured evidence block** defined in `Docs/AgToosa_Specialists.md` in terminal output. `agtoosa.sh --update` never overwrites project specialist files.
 
 ## Key References
 
@@ -122,6 +124,7 @@ AgToosa installs `.codex/skills/agtoosa-*/SKILL.md` workflow runners for Codex a
 - `Docs/AgToosa_Readiness.md` — Initial readiness checklist and promise-to-proof matrix
 - `Docs/AgToosa_Goal.md` — Goal clarification utility/sub-workflow
 - `Docs/AgToosa_Skills.md` — Subagent skill-to-command mapping and Codex skill contracts
+- `Docs/AgToosa_Specialists.md` — Project-specific specialist subagent contract and orchestration
 - `Docs/AgToosa_Changelog.md` — Project changelog
 - `Docs/Master-Architecture.md` — Current solution architecture, C4-style diagrams, boundaries, data flow, deployment, security, and observability
 - `Docs/Context/` — Product, tech-stack, and workflow configuration

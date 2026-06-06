@@ -184,7 +184,7 @@ if (Test-Path $contextSrc) {
 
 ### MF-3 — PowerShell: no `inject_version` equivalent
 
-**File:** `agtoosa.ps1` (function `Stage-Files`)
+**File:** `agtoosa.ps1` (function `Copy-StageFiles`)
 
 **Problem:**  
 All platform entry-point files are copied with a plain `Copy-Item $src $dst`. No version-delimiting markers (`<!-- AgToosa v3.1.0 START -->` / `<!-- AgToosa END -->`) are injected. On re-install from PS1:
@@ -203,7 +203,7 @@ function Invoke-InjectVersion([string]$srcPath, [string]$dstPath) {
     Set-Content -Path $dstPath -Value $wrapped -Encoding UTF8 -NoNewline
 }
 ```
-Call it wherever `Stage-Files` currently does `Copy-Item $src $dst` for platform entry-points.
+Call it wherever `Copy-StageFiles` currently does `Copy-Item $src $dst` for platform entry-points.
 
 ---
 

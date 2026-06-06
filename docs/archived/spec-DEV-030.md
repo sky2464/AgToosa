@@ -2,8 +2,8 @@
 
 > **Story ID:** DEV-030
 > **Epic:** DEV-002 — Workflow Templates
-> **Status:** 🟦 Todo (plan complete — awaiting approval)
-> **Estimate:** S _(proposed; confirm at approval)_
+> **Status:** 🟨 In Progress (build complete — ready for `/agtoosa-review`)
+> **Estimate:** S
 > **Spec created:** 2026-05-25
 
 ## Context
@@ -145,27 +145,63 @@ flowchart TD
 | Downstream update flow regresses to read-only-only | Denial of Service | AC-005 parity with DEV-027; T-001–T-009 remain valid |
 | Self-target error leaks paths from another machine | Information Disclosure | Guidance uses stable doc paths only; no env dumps |
 
-### 2.4 Build Scope
+## Build Scope
 
-**In scope:** `template/Docs/AgToosa_Update.md`, `docs/AgToosa_Update.md`, `agtoosa.sh`, `agtoosa.ps1`, `tests/agtoosa.bats`, optional adapter one-liners under `template/.claude/`, `.cursor/`, `.gemini/`, `.github/`, `.windsurf/`, `.codex/` for `agtoosa-update` only if grep parity requires it.
+```
+✅ Ready to proceed — Scope Boundary
+Files in scope      : template/Docs/AgToosa_Update.md, docs/AgToosa_Update.md, agtoosa.sh, agtoosa.ps1, tests/agtoosa.bats
+Directories in scope: template/.claude/commands/, template/.cursor/, template/.gemini/, template/.github/, template/.windsurf/, template/.codex/ (agtoosa-update adapters only if parity fails)
+Out of scope        : lib/update.sh, VERSION/CHANGELOG bump, .github/workflows/branch-protection.yml, maintainer docs mirror automation, registry, weakening self-target CLI block
+```
 
-**Out of scope:** `lib/update.sh` logic changes, VERSION bump, registry, branch-protection workflow, DEV-029 files except avoiding conflicting edits in shared `tests/agtoosa.bats` hunks.
-
-**Parallelization during `/agtoosa-build`:**
-
-| Wave | Tasks |
-|------|-------|
-| 1 | Canonical doc updates (template + `docs/` mirror) |
-| 2 | CLI/PS1 message strings (independent of docs) |
-| 3 | Bats DEV-030 + extend self-target tests |
-| 4 | Adapter spot-check only if T-007-style parity fails |
+| File / area | Change |
+|-------------|--------|
+| `template/Docs/AgToosa_Update.md` | Stage 1a operating context + Maintainer Dogfood stop |
+| `docs/AgToosa_Update.md` | Maintainer mirror (`docs/` paths) |
+| `agtoosa.sh` / `agtoosa.ps1` | Actionable self-target guidance only |
+| `tests/agtoosa.bats` | DEV-030 section + extended self-target tests |
+| `docs/AgToosa_TestPlan-DEV-030.md` | AC → test mapping |
+| `docs/Master-Plan.md` | Active tasks |
 
 ## 3. Tasks
 
-> **Plan phase only.** Run `/agtoosa-spec tasks` to derive the task tree, `docs/Master-Plan.md` → `## Active Tasks`, and `docs/AgToosa_TestPlan-DEV-030.md`.
+### 3.1 Task Tree
 
-_Placeholder — not approved for build._
+- [x] **1.** Canonical update workflow — operating context
+  - [x] 1.1 Add Stage 1a operating-context detection before installed-state drift in `template/Docs/AgToosa_Update.md` — _Requirements: AC-001, AC-002_
+  - [x] 1.2 Document Maintainer Dogfood stop (before Apply, no downstream path prompt, maintainer report + next actions) — _Requirements: AC-003, AC-004_
+  - [x] 1.3 Keep Stage 1b and DEV-027 Detect → Plan → Apply → Verify for Generated Project Mode — _Requirements: AC-005_
+  - [x] 1.4 Mirror workflow to `docs/AgToosa_Update.md` with `docs/agtoosa-maintainer.md` and `docs/` path conventions — _Requirements: AC-001, AC-004, AC-005_
+- [x] **2.** CLI and PowerShell self-target guidance
+  - [x] 2.1 Extend `agtoosa.sh` self-target errors (interactive install + `--update`) with maintainer guidance; preserve nonzero exit — _Requirements: AC-006, AC-009_
+  - [x] 2.2 Extend `agtoosa.ps1` self-target errors with matching guidance — _Requirements: AC-006, AC-010_
+- [x] **3.** Adapter spot-check (conditional)
+  - [x] 3.1 T-008 passed — no adapter edits required — _Requirements: AC-007_
+- [x] **4.** Regression coverage
+  - [x] 4.1 Add DEV-030 bats: operating-context wording and maintainer stop-before-Apply in canonical docs — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-008_
+  - [x] 4.2 Extend self-target bats (install + `--update` + PS1 grep) for actionable maintainer guidance — _Requirements: AC-006, AC-009, AC-010_
+  - [x] 4.3 Run focused filter plus DEV-027 T-001–T-009 regression — _Requirements: AC-005, AC-007_
+- [x] **5.** Validation and bookkeeping
+  - [x] 5.1 Run full `tests/agtoosa.bats` when focused filter is green — _Requirements: AC-008_
+  - [x] 5.2 Record evidence in `docs/AgToosa_TestPlan-DEV-030.md` — _Requirements: AC-008_
+  - [x] 5.3 Update `docs/Master-Plan.md` task progress during build — _Requirements: AC-001_
+
+### 3.2 Wave Plan
+
+**Wave 1 (parallel):** 1.1, 1.2, 2.1, 2.2  
+**Wave 2 (sequential after Wave 1):** 1.3, 1.4  
+**Wave 3 (sequential after Wave 2):** 4.1, 4.2  
+**Wave 4 (conditional after Wave 3):** 3.1  
+**Wave 5 (sequential after Wave 3/4):** 4.3, 5.1, 5.2, 5.3
+
+### 3.3 Test Plan
+
+Test plan: `docs/AgToosa_TestPlan-DEV-030.md`
+
+AC coverage: 10 ACs mapped to 12 test IDs
+
+Smoke set: 8 tests tagged `@smoke` (all Must-priority ACs)
 
 ## ✅ Spec Approved
 
-<!-- Append date and approver when user confirms spec approval -->
+Approved: 2026-05-25

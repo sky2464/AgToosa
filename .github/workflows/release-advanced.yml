@@ -70,12 +70,13 @@ jobs:
             exit 1
           fi
 
-          if grep -Eq "bootstrap\.sh\) --ref v[0-9]+\.[0-9]+\.[0-9]+" README.md; then
-            echo "❌ README contains a hardcoded bootstrap tag; use vX.Y.Z placeholder instead"
+          VERSION="${{ steps.tag.outputs.version }}"
+          if ! grep -q "bootstrap.sh) --ref v${VERSION}" README.md; then
+            echo "❌ README must include a pinned install snippet for v${VERSION}"
             exit 1
           fi
 
-          echo "✅ README install placeholders validated"
+          echo "✅ README install placeholder and pinned snippet validated"
 
   create-milestone:
     name: Create GitHub Milestone
@@ -89,9 +90,9 @@ jobs:
           script: |
             try {
               const currentVersion = "${{ needs.version-validation.outputs.version }}";
-              const nextVersion = currentVersion.split('.')
-                .map((v, i) => i === 1 ? parseInt(v) + 1 : v)
-                .join('.');
+              const parts = currentVersion.split('.').map(Number);
+              parts[2] = parts[2] + 1; // patch + 1 per ADR-005 patch-first cadence
+              const nextVersion = parts.join('.');
               
               const milestones = await github.rest.issues.listMilestones({
                 owner: context.repo.owner,

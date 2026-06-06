@@ -39,6 +39,8 @@ Version markers (`<!-- AgToosa vX.Y.Z START/END -->`) delineate AgToosa-owned co
 
 **Backward compatibility guarantee:** A `--update` from any patch or minor version to the next should be non-destructive for user-edited content outside markers. MAJOR version bumps may require manual migration steps, which are documented in `CHANGELOG.md` under `### Breaking`.
 
+**Release cadence (maintainer):** How often to bump PATCH vs MINOR during `/agtoosa-ship` is defined in [ADR-005](ADR-005-release-cadence.md) (patch-first on the active MINOR train).
+
 ---
 
 ## Options Considered

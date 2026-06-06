@@ -97,6 +97,17 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
         - "Where does this term appear in the codebase today?"
     *   Update `Docs/Context/CONTEXT.md` with any new or corrected terms.
     *   Identify 2–3 architectural decisions implied by the feature; document each as a new ADR in `Docs/adr/` using `Docs/ADR-FORMAT.md`.
+1a. **Spec Specialist Orchestration:**
+
+    > Canonical contract: `Docs/AgToosa_Specialists.md`. Run after context scan, before external research when a roster exists or specialists were approved during init.
+
+    *   If `Docs/Context/specialists.md` is missing, skip this step (record "no approved specialists").
+    *   Load the roster; select specialists where `phase_hooks` includes **`spec`** and **trigger** matches the active story (title, paths, epic, or user-stated scope).
+    *   For each selected specialist, run a lane that reads declared **inputs** and returns the **structured evidence block** from `Docs/AgToosa_Specialists.md` (`Findings:`, `Files read:`, `Commands:`, `Warnings/errors:`, `Recommendations:`, `Spec sections affected:`).
+    *   **Parallel:** when the host supports native subagent delegation (e.g. Claude Code Agent tool), run matching lanes in parallel.
+    *   **Sequential fallback:** otherwise run the same lanes one at a time and print an explicit note: `Specialist lanes ran sequentially (platform does not support parallel subagents).`
+    *   **Merge** evidence into draft Goal Contract, ACs, architecture notes, STRIDE inputs, task tree hints, and test plan skeleton **before** finalizing Part 1 executable spec and Part 2 threat model.
+    *   Do not run specialists that fail trigger match or lack approval in the roster.
 2.  **External Research (Web Research Agent):**
     *   Query online sources for the best solutions, libraries, APIs, and design patterns relevant to the task.
     *   **CRITICAL:** Verify all dependency versions against live sources (never assume from memory).

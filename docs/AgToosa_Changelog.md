@@ -7,7 +7,38 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
-_(None.)_
+### Changed
+
+- 2026-06-05 — chore — Maintainer release-state reconciliation: DEV-034 LR bats + cycle compaction after v5.2.4 ship — `docs/archived/spec-DEV-034.md`
+
+---
+
+## [5.2.4] — 2026-06-05
+
+### Fixed
+
+- 2026-06-05 — fix — `/agtoosa-update` self-target uncertainty: operating-context detection, dogfood stop-before-Apply, CLI guidance; DEV-030 T-001–T-011 bats — `docs/archived/spec-DEV-030.md`
+- 2026-06-05 — fix — DEV-033 agtoosa.ps1 approved PowerShell verbs: `Copy-StageFiles`, `Initialize-PackQueueDir`, `Move-ShipPacksToQueue`; DEV-033 PV-001–PV-003 bats — `docs/archived/spec-DEV-033.md`
+
+---
+
+## [5.2.3] — 2026-05-25
+
+### Added
+
+- 2026-05-25 — feature — Project-specific specialist subagents: `AgToosa_Specialists.md`, init/update/spec orchestration, approval-gated roster; DEV-031 T-001–T-015 bats — `docs/archived/spec-DEV-031.md`
+
+---
+
+## [5.2.2] — 2026-05-25
+
+### Added
+
+- 2026-05-25 — chore — Patch-first release cadence (ADR-005): default PATCH bumps on 5.x MINOR train; ship/review/maintainer docs; DEV-032 VP-001–VP-005 bats — `docs/archived/spec-DEV-032.md`
+
+---
+
+## [5.2.1] — 2026-05-25
 
 ### Added
 

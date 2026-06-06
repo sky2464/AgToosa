@@ -11,7 +11,7 @@ Use when the user asks for `/agtoosa-spec`, `$agtoosa-spec`, or wants a new or u
 
 **Generated Project Mode:** See `Docs/AgToosa_Agent.md` → **Operating Contexts** — specs are for **the project/product**, not the AgToosa framework.
 
-1. Read `Docs/AgToosa_Spec.md` in full and **run** its workflow precisely — preserve the **Plan-Mode Spec Interview Contract**, threat modeling, approval gates, and cycle enrollment steps unless `quick` applies.
+1. Read `Docs/AgToosa_Spec.md` in full and **run** its workflow precisely — preserve **Spec Specialist Orchestration** (`Docs/AgToosa_Specialists.md`), the **Plan-Mode Spec Interview Contract**, threat modeling, approval gates, and cycle enrollment steps unless `quick` applies.
 2. **Dispatch** the first matching sub-command from user arguments: `research`, `plan`, `quick`, `tasks`, or `to-issues`. With no argument, run Parts 1–4.
 3. **Phase stop:** stop at the approval gate. Do **not** run `/agtoosa-build` automatically. Approval marks readiness only — the user must invoke `/agtoosa-build` explicitly.
 4. Run Story Skill Opportunity Synthesis when applicable; require **explicit user approval** before writing project skill files. Do not propose project skills named `agtoosa-*` or triggered by `/agtoosa-*` — those names are reserved for AgToosa workflow adapters.
@@ -25,6 +25,7 @@ Use when the user asks for `/agtoosa-spec`, `$agtoosa-spec`, or wants a new or u
 
 **Full flow (no sub-command):** execute Parts 1–4 and produce visible evidence for each obligation below. Do **not** skip:
 
+- **Spec Specialist Orchestration** — when `Docs/Context/specialists.md` exists, run matching `spec`-phase specialists per `Docs/AgToosa_Specialists.md`; parallel or sequential with evidence blocks merged before Goal Contract
 - **Research** — context gathering and external research before user questions; verify dependencies and platform behavior from live sources when the workflow requires it
 - **Goal Contract** — Story Goal Contract synthesis per the canonical spec workflow
 - **Plan-Mode Spec Interview** — follow `Docs/AgToosa_Spec.md` → **Plan-Mode Spec Interview Contract**; adaptive cap **8** (`quick` cap **2**); infer before asking; one question at a time with contextual options; satisfy Decision-complete checklist or document accepted assumptions
