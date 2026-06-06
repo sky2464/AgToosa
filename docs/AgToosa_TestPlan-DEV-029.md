@@ -18,7 +18,7 @@
 | ID | Scenario | Command / evidence |
 |----|----------|-------------------|
 | M-001 | Push to `main` succeeds (no “No jobs were run”) | GitHub Actions UI or `gh run list --repo sky2464/AgToosa --workflow branch-protection.yml --limit 5` |
-| M-002 | PR to `main` runs all four PR jobs | Open/update PR; confirm `require-labels`, `require-description`, `link-issue`, `all-checks-pass` |
+| M-002 | PR to `main` runs all four PR jobs | ✅ PR #29 → run `27050231744` (`pull_request`): `require-labels`, `require-description`, `link-issue`, `all-checks-pass` success; `push-main-ok` skipped |
 
 ## Commands
 

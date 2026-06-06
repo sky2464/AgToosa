@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-029
 > **Epic:** DEV-004 — Maintainer CI / Release Hygiene
-> **Status:** 🏁 Shipped (v5.2.1 — 2026-05-25; manual tasks 3–4 still deferred)
+> **Status:** 🏁 Shipped (v5.2.1 — 2026-05-25; manual tasks 3–4 complete 2026-06-06)
 > **Estimate:** S
 > **Spec created:** 2026-05-24
 
@@ -73,11 +73,11 @@ The repository is private and ruleset/branch-protection APIs return 403 (“Upgr
 - [x] **2.** Regression coverage
   - [x] 2.1 Add DEV-029 bats T-001–T-005 — _AC-001–AC-004, AC-010_
   - [x] 2.2 Add `docs/AgToosa_TestPlan-DEV-029.md` — _AC-010_
-- [ ] **3.** Post-merge verification `[manual-deferred: 2026-05-24]`
-  - [ ] 3.1 Push to `main` yields successful run — _AC-001_
-  - [ ] 3.2 `gh run list --workflow branch-protection.yml --limit 5` shows success — _AC-001_
-- [ ] **4.** PR path regression `[manual-deferred: 2026-05-24]`
-  - [ ] 4.1 PR to `main` still runs label/description/issue checks — _AC-002_
+- [x] **3.** Post-merge verification — push run `26419089522` success
+  - [x] 3.1 Push to `main` yields successful run — _AC-001_
+  - [x] 3.2 `gh run list --workflow branch-protection.yml --limit 5` shows success — _AC-001_
+- [x] **4.** PR path regression — PR #29 / run `27050231744` success
+  - [x] 4.1 PR to `main` still runs label/description/issue checks — _AC-002_
 
 ### Wave Plan
 
