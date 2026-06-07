@@ -3419,6 +3419,21 @@ PY
   grep -q 'block-dangerous-git.sh' "$TEST_PROJECT/.claude/settings.json"
 }
 
+@test "MR1b: PowerShell Claude install merges hooks into existing settings.json" {
+  command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
+  command -v python3 >/dev/null 2>&1 || skip "python3 not installed"
+
+  mkdir -p "$TEST_PROJECT/Docs" "$TEST_PROJECT/.claude"
+  printf '%s\n' '{"hooks":{"Stop":[{"hooks":[{"type":"command","command":"echo user-hook"}]}]},"custom":"keep-me"}' \
+    > "$TEST_PROJECT/.claude/settings.json"
+
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | pwsh -NoProfile -File '$BATS_TEST_DIRNAME/../agtoosa.ps1'"
+  [ "$status" -eq 0 ]
+  grep -q 'block-dangerous-git.sh' "$TEST_PROJECT/.claude/settings.json"
+  grep -q 'user-hook' "$TEST_PROJECT/.claude/settings.json"
+  grep -q 'keep-me' "$TEST_PROJECT/.claude/settings.json"
+}
+
 @test "MR2: PowerShell all-platform install mirrors native Bash inventory" {
   command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
 
