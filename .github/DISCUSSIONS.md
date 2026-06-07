@@ -1,5 +1,7 @@
 # AgToosa Community & Support
 
+> **Private staging:** Discussions are the intended public community surface after launch. While the repository is private, use maintainer access or direct owner communication for support.
+
 ## GitHub Discussions
 
 AgToosa uses **GitHub Discussions** as the primary community space for support, ideas, and collaboration.

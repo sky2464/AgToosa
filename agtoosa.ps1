@@ -28,7 +28,7 @@
     Access the AgToosa Community Template Registry.
 
 .PARAMETER RegistryCommand
-    Registry sub-command: list, search, info, install, or publish.
+    Registry sub-command: list, search, info, or install. Native PowerShell publish prints a Bash/WSL/Git Bash redirect.
 
 .PARAMETER RegistryArg
     Argument for the registry sub-command (keyword for search, pack name for info/install).
@@ -109,6 +109,7 @@ ${BOLD}Registry:${NC}
   -Registry -RegistryCommand search -RegistryArg <kw>  Search packs
   -Registry -RegistryCommand info -RegistryArg <name>  Show pack details
   -Registry -RegistryCommand install -RegistryArg <name>  Install a pack
+  -Registry -RegistryCommand publish            Print Bash/WSL/Git Bash publish guidance
 
 ${BOLD}Examples:${NC}
   .\agtoosa.ps1
@@ -369,6 +370,19 @@ function Copy-StageFiles([string[]]$platforms) {
     }
 }
 
+function Get-InstalledPlatforms([string]$projectPath) {
+    $platforms = [System.Collections.Generic.List[string]]::new()
+    if (Test-Path (Join-Path $projectPath ".cursorrules")) { $platforms.Add("cursor") }
+    if ((Test-Path (Join-Path $projectPath ".cursor\rules")) -or (Test-Path (Join-Path $projectPath ".cursor\commands"))) { if (-not $platforms.Contains("cursor")) { $platforms.Add("cursor") } }
+    if (Test-Path (Join-Path $projectPath ".windsurfrules")) { $platforms.Add("windsurf") }
+    if ((Test-Path (Join-Path $projectPath ".windsurf\rules")) -or (Test-Path (Join-Path $projectPath ".windsurf\workflows"))) { if (-not $platforms.Contains("windsurf")) { $platforms.Add("windsurf") } }
+    if ((Test-Path (Join-Path $projectPath "CLAUDE.md")) -or (Test-Path (Join-Path $projectPath ".claude"))) { $platforms.Add("claude") }
+    if ((Test-Path (Join-Path $projectPath "AGENTS.md")) -or (Test-Path (Join-Path $projectPath ".gemini"))) { $platforms.Add("gemini") }
+    if ((Test-Path (Join-Path $projectPath ".github\copilot-instructions.md")) -or (Test-Path (Join-Path $projectPath ".github\prompts")) -or (Test-Path (Join-Path $projectPath ".github\agents"))) { $platforms.Add("copilot") }
+    if ((Test-Path (Join-Path $projectPath "OPENCODE.md")) -or (Test-Path (Join-Path $projectPath ".codex"))) { $platforms.Add("opencode") }
+    return $platforms.ToArray()
+}
+
 function Initialize-PackQueueDir {
     if (-not (Test-Path $PACK_QUEUE_DIR)) {
         New-Item -ItemType Directory -Path $PACK_QUEUE_DIR -Force | Out-Null
@@ -381,6 +395,19 @@ function New-PackQueueDirectory([string]$packName) {
     if (Test-Path $packDir) { Remove-Item -Recurse -Force $packDir }
     New-Item -ItemType Directory -Path $packDir -Force | Out-Null
     return $packDir
+}
+
+function ConvertTo-PackDirectoryLayout([string]$packDir, [string]$packName) {
+    $nested = Join-Path $packDir $packName
+    if (-not (Test-Path $nested -PathType Container)) { return }
+
+    $topLevelItems = @(Get-ChildItem -Path $packDir -Force | Where-Object { $_.Name -ne $packName -and $_.Name -ne ".pack-meta.json" })
+    if ($topLevelItems.Count -gt 0) { return }
+
+    foreach ($item in Get-ChildItem -Path $nested -Force) {
+        Move-Item -Path $item.FullName -Destination (Join-Path $packDir $item.Name) -Force
+    }
+    Remove-Item -Path $nested -Recurse -Force
 }
 
 function Move-ShipPacksToQueue {
@@ -543,10 +570,15 @@ function Install-Files([string]$projectPath, [string[]]$platforms) {
 }
 
 # ── Registry ──────────────────────────────────────────────────
-$REGISTRY_URL = "https://raw.githubusercontent.com/sky2464/agtoosa-registry/main/registry.json"
+if ($env:AGTOOSA_REGISTRY_URL) {
+    $REGISTRY_URL = $env:AGTOOSA_REGISTRY_URL
+} else {
+    $REGISTRY_URL = "https://raw.githubusercontent.com/sky2464/agtoosa-registry/main/registry.json"
+}
 
 function Invoke-RegistryFetch {
-    $cacheDir  = "$env:USERPROFILE\.cache\agtoosa"
+    $homeDir = if ($env:USERPROFILE) { $env:USERPROFILE } elseif ($env:HOME) { $env:HOME } else { [System.IO.Path]::GetTempPath() }
+    $cacheDir  = Join-Path $homeDir ".cache\agtoosa"
     $cacheFile = "$cacheDir\registry.json"
     $cacheTTL  = 3600
 
@@ -562,7 +594,12 @@ function Invoke-RegistryFetch {
     }
 
     try {
-        Invoke-WebRequest -Uri $REGISTRY_URL -OutFile $cacheFile -UseBasicParsing | Out-Null
+        if ($REGISTRY_URL -like "file://*") {
+            $localPath = $REGISTRY_URL.Substring(7)
+            Copy-Item -Path $localPath -Destination $cacheFile -Force
+        } else {
+            Invoke-WebRequest -Uri $REGISTRY_URL -OutFile $cacheFile -UseBasicParsing | Out-Null
+        }
         return (Get-Content $cacheFile -Raw)
     } catch {
         if (Test-Path $cacheFile) {
@@ -650,7 +687,12 @@ function Invoke-RegistryInstall([string]$packSpec) {
 
     try {
         Write-Color "${CYAN}Downloading $packName...${NC}"
-        Invoke-WebRequest -Uri $url -OutFile $tmpFile -UseBasicParsing | Out-Null
+        if ($url -like "file://*") {
+            $localPath = $url.Substring(7)
+            Copy-Item -Path $localPath -Destination $tmpFile -Force
+        } else {
+            Invoke-WebRequest -Uri $url -OutFile $tmpFile -UseBasicParsing | Out-Null
+        }
     } catch {
         Write-Color "${RED}❌ Failed to download pack: $_${NC}"
         exit 1
@@ -681,6 +723,8 @@ function Invoke-RegistryInstall([string]$packSpec) {
         Remove-Item $tmpFile -ErrorAction SilentlyContinue
         exit 1
     }
+
+    ConvertTo-PackDirectoryLayout $packDir $packName
 
     Remove-Item $tmpFile -ErrorAction SilentlyContinue
 
@@ -744,7 +788,7 @@ if ($Registry) {
             exit 0
         }
         default   {
-            Write-Color "${RED}❌ Unknown registry command '$RegistryCommand'. Use list, search, info, install, publish.${NC}"
+            Write-Color "${RED}❌ Unknown registry command '$RegistryCommand'. Use list, search, info, install.${NC}"
             exit 1
         }
     }
@@ -787,8 +831,11 @@ if ($Update) {
         if (Test-Path $SHIP_DIR) { Remove-Item -Recurse -Force $SHIP_DIR }
         New-Item -ItemType Directory -Path (Join-Path $SHIP_DIR "Docs\archived") -Force | Out-Null
         New-Item -ItemType Directory -Path (Join-Path $SHIP_DIR "Docs\Context") -Force | Out-Null
-        Copy-StageFiles @()
-        Install-Files $UpdatePath @()
+        $platforms = Get-InstalledPlatforms $UpdatePath
+        Copy-StageFiles $platforms
+        Install-Files $UpdatePath $platforms
+        $verFile = Join-Path $UpdatePath "Docs\.agtoosa-version"
+        Set-Content -Path $verFile -Value $AGTOOSA_VERSION -Encoding UTF8
         Write-Color ""
         Write-Color "${GREEN}${BOLD}✅ AgToosa updated to v${AGTOOSA_VERSION} in '${UpdatePath}'${NC}"
     } finally {

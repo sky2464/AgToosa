@@ -35,7 +35,28 @@ _pack_queue_dir_for() {
   printf '%s' "$pack_dir"
 }
 
-REGISTRY_URL="https://raw.githubusercontent.com/sky2464/agtoosa-registry/main/registry.json"
+_normalize_pack_dir() {
+  local pack_dir="$1"
+  local pack_name="$2"
+  local nested="${pack_dir}/${pack_name}"
+  [[ -d "$nested" ]] || return 0
+
+  # Normalize tarballs produced with a single top-level pack directory.
+  # Leave mixed layouts untouched so validation can reject or accept them as-is.
+  if find "$pack_dir" -mindepth 1 -maxdepth 1 ! -name "$pack_name" ! -name ".pack-meta.json" | grep -q .; then
+    return 0
+  fi
+
+  shopt -s dotglob nullglob
+  local item
+  for item in "$nested"/*; do
+    mv "$item" "$pack_dir/"
+  done
+  shopt -u dotglob nullglob
+  rmdir "$nested"
+}
+
+REGISTRY_URL="${AGTOOSA_REGISTRY_URL:-https://raw.githubusercontent.com/sky2464/agtoosa-registry/main/registry.json}"
 # Allow tests and offline use to override the cache location.
 REGISTRY_CACHE_DIR="${AGTOOSA_REGISTRY_CACHE_DIR:-${HOME}/.cache/agtoosa}"
 REGISTRY_CACHE_FILE="${REGISTRY_CACHE_DIR}/registry.json"
@@ -352,6 +373,7 @@ registry_install() {
     rm -rf "$(dirname "$tmpfile")" "$pack_dir"
     return 1
   }
+  _normalize_pack_dir "$pack_dir" "$pack_name"
 
   validate_pack_files "$pack_dir" || {
     rm -rf "$(dirname "$tmpfile")" "$pack_dir"

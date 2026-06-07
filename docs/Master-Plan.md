@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-06-06 (/agtoosa-ship DEV-035 v5.2.6)
+> **Last updated:** 2026-06-07 (/agtoosa-spec DEV-041 public launch proof)
 
 ## Project Charter
 
@@ -10,9 +10,9 @@
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
 | Milestone | `v5.2.7` (next) — patch-first per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | _(none — pick next story via `/agtoosa-spec`)_ |
-| Cycle capacity | `40 story points` |
-| Current phase | 🚀 DEV-035 shipped v5.2.6 — ready for next spec |
+| Active cycle | DEV-041 public launch publication proof |
+| Cycle capacity | `8 story points` |
+| Current phase | 📋 DEV-041 spec approved — waiting for public publication gates |
 
 ## Active Cycle
 
@@ -20,10 +20,10 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| _(empty — enroll via `/agtoosa-spec`)_ | | | | | |
+| DEV-041 | Public launch publication proof | Chore | M | 🟦 Todo | 0/7 |
 
-<!-- Archived to docs/archived/cycle-2026-06-06-release-5.2.6.md -->
-<!-- Prior: docs/archived/cycle-2026-06-05-release-5.2.5.md -->
+<!-- Archived to docs/archived/cycle-2026-06-07-release-5.2.6.md -->
+<!-- Archived to docs/archived/cycle-2026-06-05-release-5.2.5.md -->
 <!-- Prior: docs/archived/cycle-2026-05-24-release-5.2.0.md -->
 <!-- Prior: docs/archived/cycle-2026-05-24-release-5.1.0.md (DEV-027) -->
 <!-- Prior: docs/archived/cycle-2026-05-24-release-5.0.1.md (DEV-026) -->
@@ -35,13 +35,15 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-<!--
-**DEV-035 — PSScriptAnalyzer CI gate for agtoosa.ps1** (spec: `docs/archived/spec-DEV-035.md`) — shipped 2026-06-06 v5.2.6
+**DEV-041 — Public launch publication proof** (spec: `docs/archived/spec-DEV-041.md`)
 
-- [x] **1.** CI workflow — PSScriptAnalyzer step
-- [x] **2.** Regression coverage (DEV-035 PA-001–PA-003)
-- [x] **3.** Validation — full suite 361/361
--->
+- [ ] **1.** Publish/confirm anonymous repo and release surfaces — _AC-001, AC-002, AC-003, AC-006_
+- [ ] **2.** Run public-mode launch readiness and capture output — _AC-001, AC-006_
+- [ ] **3.** Verify registry and Homebrew distribution status — _AC-004, AC-005_
+- [ ] **4.** Create or link public first-15-minute proof project — _AC-007_
+- [ ] **5.** Update README launch wording only after public checks pass — _AC-002, AC-005, AC-008_
+- [ ] **6.** Add or update focused tests if checker/docs behavior changes — _AC-001-AC-008_
+- [ ] **7.** Record validation evidence in the DEV-041 test plan — _AC-001-AC-008_
 
 <!--
 **DEV-029 — Stop branch-protection workflow failure emails** (spec: `docs/archived/spec-DEV-029.md`) — shipped 2026-05-25 v5.2.1
@@ -210,7 +212,12 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Type | Estimate | Epic | Priority | Status |
 |----|-------|------|----------|------|----------|--------|
-| DEV-035 | Chore: PSScriptAnalyzer CI gate for agtoosa.ps1 | Chore | XS | DEV-004 | High | 🏁 Shipped |
+| DEV-035 | Chore: Launch P0 publication and quickstart gate | Chore | M | DEV-004 | P0 | ✅ Done |
+| DEV-036 | Fix: Windows and registry parity | Fix | M | DEV-001 / DEV-003 | P1 | ✅ Done |
+| DEV-037 | Chore: Truthful launch documentation and positioning | Chore | M | DEV-002 | P1 | ✅ Done |
+| DEV-038 | Chore: Distribution hardening and release readiness gate | Chore | M | DEV-004 | P1 | ✅ Done |
+| DEV-039 | Docs: First 15 minutes proof and growth positioning | Docs | S | DEV-002 | P2 | ✅ Done |
+| DEV-040 | Docs: Team trust roadmap | Docs | S | DEV-003 / DEV-004 | P2 | ✅ Done |
 | DEV-031 | Feature: Project-specific specialist subagents | Feature | M | DEV-002 | High | 🏁 Shipped |
 | DEV-032 | Chore: Patch-first release versioning (5.x line) | Chore | S | DEV-001 | High | 🏁 Shipped |
 | DEV-030 | Fix: `/agtoosa-update` self-target uncertainty | Fix | S | DEV-002 | High | 🏁 Shipped |
@@ -226,7 +233,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-001 | Epic: Core Generator Engine | 0 open / 0 total | ⬜ Backlog |
 | DEV-002 | Epic: Workflow Templates | 0 open / 10 total | 🟦 Todo |
 | DEV-003 | Epic: Community Template Registry | 0 open / 0 total | ⬜ Backlog |
-| DEV-004 | Epic: Testing & QA Harness | 0 open / 2 total | ⬜ Backlog |
+| DEV-004 | Epic: Testing & QA Harness | 0 open / 1 total | ⬜ Backlog |
 
 ### Epic Charters
 
@@ -260,8 +267,6 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Goal:** Comprehensive end-to-end integration and version verification suites validating the robustness of the entire framework.
     *   **Scope:** `tests/agtoosa.bats` and CI regression pipelines.
     *   **Success Criteria:** 100% green coverage on 340+ bats scenarios and version checks on every release step.
-    *   **Last shipped:** DEV-035 — PSScriptAnalyzer CI gate → `docs/archived/spec-DEV-035.md`
-    *   **Last shipped:** DEV-034 — release ledger reconciliation → `docs/archived/spec-DEV-034.md`
     *   **Last shipped:** DEV-005 — M1–M4 bats + CHANGELOG hygiene → `docs/archived/spec-DEV-005.md`
 
 ## Completed This Cycle
@@ -302,7 +307,6 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-030 | Fix: `/agtoosa-update` self-target uncertainty | 2026-06-05 | [spec-DEV-030.md](archived/spec-DEV-030.md) · [review-DEV-030.md](archived/review-DEV-030.md) |
 | DEV-033 | Fix: agtoosa.ps1 PSScriptAnalyzer approved verbs | 2026-06-05 | [spec-DEV-033.md](archived/spec-DEV-033.md) · [review-DEV-033.md](archived/review-DEV-033.md) |
 | DEV-034 | Chore: Maintainer release-state reconciliation | 2026-06-05 | [spec-DEV-034.md](archived/spec-DEV-034.md) · [review-DEV-034.md](archived/review-DEV-034.md) |
-| DEV-035 | Chore: PSScriptAnalyzer CI gate for agtoosa.ps1 | 2026-06-06 | [spec-DEV-035.md](archived/spec-DEV-035.md) · [review-DEV-035.md](archived/review-DEV-035.md) |
 
 ## Update Log
 
@@ -511,11 +515,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-06-05 | 🚀 Ship complete — DEV-034 v5.2.5; CHANGELOG + version pins; DEV-034 LR-001–LR-006 6/6; full suite 358/358; Milestone v5.2.6 (next) | AgToosa |
 | 2026-06-05 | 🚀 Release 5.2.5 shipped — v5.2.5; DEV-034 on main; version parity bash/ps1; active cycle archived | AgToosa |
 | 2026-06-06 | 🔧 Manual complete — DEV-029 task 4.1; PR #29 → run `27050231744` success; all four PR hygiene jobs ran; Manual / Deferred cleared | AgToosa |
-| 2026-06-05 | ✏️ /agtoosa-spec DEV-035 — PSScriptAnalyzer CI gate; XS estimate; enrolled Release 5.2.6; 8 tasks; spec: docs/archived/spec-DEV-035.md | AgToosa |
-| 2026-06-06 | ✅ Spec approved — DEV-035; estimate XS; Release 5.2.6; test plan: docs/AgToosa_TestPlan-DEV-035.md | AgToosa |
-| 2026-06-06 | 🏗️ Build 🏗️ Started — DEV-035, 8 tasks; scope: .github/workflows/ci.yml, tests/agtoosa.bats | AgToosa |
-| 2026-06-06 | 🏗️ Build complete — DEV-035 PSScriptAnalyzer CI gate; PA-001–PA-003 3/3; version/DEV-033/MR5 slice 6/6; full suite 361/361; local analyzer clean + negative probe | AgToosa |
-| 2026-06-06 | 🔍 Review 🔍 Started — DEV-035 — 4-persona review | AgToosa |
-| 2026-06-06 | 🔍 Review ✅ Passed — DEV-035; 0 🔴 Critical, 1 🟡 Warning (accepted); report: docs/archived/review-DEV-035.md | AgToosa |
-| 2026-06-06 | 🚀 Ship complete — DEV-035 v5.2.6; CHANGELOG + version pins; DEV-035 PA-001–PA-003 3/3; full suite 361/361; Milestone v5.2.7 (next) | AgToosa |
-| 2026-06-06 | 🚀 Release 5.2.6 shipped — v5.2.6; DEV-035 on main; version parity bash/ps1; active cycle archived | AgToosa |
+| 2026-06-07 | 🔍 Review ✅ Passed — DEV-035-DEV-040; 0 🔴 Critical, 1 🟡 Warning accepted; report: `docs/archived/review-DEV-035-040.md` | AgToosa |
+| 2026-06-07 | 🚀 Ship complete — DEV-035-DEV-040 v5.2.6; CHANGELOG + version pins; private launch gate; full suite 387/387; Milestone v5.2.7 (next) | AgToosa |
+| 2026-06-07 | 🚀 Release 5.2.6 shipped — v5.2.6; launch-readiness sequence on main; version parity bash/ps1; active cycle archived | AgToosa |
+| 2026-06-07 | ✏️ /agtoosa-spec DEV-041 — Public launch publication proof; estimate M; active Todo; test plan: `docs/AgToosa_TestPlan-DEV-041.md` | AgToosa |

@@ -9,6 +9,23 @@ body:
       value: |
         Have an idea to improve AgToosa? We'd love to hear it!
 
+  - type: dropdown
+    id: affected_surface
+    attributes:
+      label: Affected surface
+      description: Which AgToosa area should this change?
+      options:
+        - "Generator: agtoosa.sh / lib"
+        - "PowerShell: agtoosa.ps1"
+        - "Bootstrap / distribution"
+        - "Workflow templates"
+        - "Platform adapter"
+        - "Registry"
+        - "Documentation"
+        - "Release / CI"
+    validations:
+      required: true
+
   - type: textarea
     id: problem
     attributes:

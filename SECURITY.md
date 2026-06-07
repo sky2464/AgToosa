@@ -4,8 +4,8 @@
 
 | Version | Supported          |
 |---------|--------------------|
-| 2.x     | ✅ Active support  |
-| < 2.0   | ❌ No support      |
+| 5.2.x   | Active support     |
+| < 5.2   | No support unless a maintainer explicitly backports a fix |
 
 ## Reporting a Vulnerability
 
@@ -45,7 +45,7 @@ AgToosa is markdown workflow guidance for AI assistants. **Workflow instructions
 
 **In scope:**
 - Vulnerabilities in the AgToosa template instructions that could lead to insecure code generation
-- Issues with the `install.sh` script (e.g., download integrity, path traversal)
+- Issues with `agtoosa.sh`, `agtoosa.ps1`, `bootstrap.sh`, `bootstrap.ps1`, `lib/registry.sh`, release assets, or template installation behavior
 - Missing security controls in the workflow documentation
 
 **Out of scope:**

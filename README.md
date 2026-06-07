@@ -14,18 +14,24 @@
 
 *Turn your AI coding assistant into an autonomous, security-first development team.*
 
-**One-time usage (pinned release):**
+**Private staging status:** AgToosa is still staged in a private repository. Public launch commands below are the launch target and require the repo, release tag, raw bootstrap files, registry, and support links to be public before announcement.
+
+**Public launch target: pinned release**
 
 ```bash
-# Replace vX.Y.Z with the latest release tag
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref vX.Y.Z
+# Replace v5.2.6 with the latest public release tag after publication
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.2.6
 ```
 
-**Or clone and run:**
+**Private collaborator path: clone and run**
 
 ```bash
 git clone https://github.com/sky2464/AgToosa.git && cd AgToosa && bash agtoosa.sh
 ```
+
+See the [first 15 minutes proof](docs/examples/first-15-minutes.md) for a clean-repo walkthrough that shows generated workflow files and expected spec/test-plan/review/ship-check artifacts.
+
+For teams evaluating assurance boundaries, see the [team trust roadmap](docs/AgToosa_Team_Trust_Roadmap.md).
 
 </div>
 
@@ -47,21 +53,32 @@ If any are missing, the bootstrap script will tell you how to install them. Inst
 ### Quick Start
 
 **macOS & Linux:**
+
 ```bash
-# Using a specific release (recommended)
+# Public launch target: pinned release. Requires the repo and tag to be public.
 bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.2.6
 
-# Or using latest main branch
+# Private staging or manual verification path for collaborators with repo access:
+git clone https://github.com/sky2464/AgToosa.git
+cd AgToosa
+bash agtoosa.sh --version
+
+# development-only main branch command; may include unreleased changes
 bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh)
 ```
 
 **Windows (native):**
-```powershell
-# Run in PowerShell (Admin recommended, but not required)
-powershell -ExecutionPolicy Bypass -Command "iex (New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.ps1')"
 
-# Or pin a specific release:
-powershell -ExecutionPolicy Bypass -Command "`$Ref='v2.8.0'; iex (New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.ps1')"
+```powershell
+# Public launch target: pinned release after publication
+$Ref = "v5.2.6"
+iwr -UseBasicParsing https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.ps1 | iex
+.\agtoosa.ps1 -Version
+
+# Private staging path for collaborators with repo access
+git clone https://github.com/sky2464/AgToosa.git
+cd AgToosa
+.\agtoosa.ps1 -Version
 ```
 
 **Windows (WSL2 alternative):**
@@ -79,6 +96,7 @@ powershell -ExecutionPolicy Bypass -Command "`$Ref='v2.8.0'; iex (New-Object Sys
 | Windows WSL2 | ✅ Full | ✅ (requires `jq`) | ✅ | ✅ | ✅ |
 
 > **Windows tip:** For full feature parity including `--registry publish`, use WSL2 or Git Bash instead of native PowerShell.
+> Windows tip: For full feature parity including registry publish, use WSL2 or Git Bash instead of native PowerShell.
 
 **Or clone and run:**
 ```bash
@@ -97,7 +115,7 @@ For more help, open a [discussion](https://github.com/sky2464/AgToosa/discussion
 
 AgToosa is a **framework of markdown instructions** that transforms any AI coding assistant into a structured, spec-driven development team. Run the local generator, tell it your project path, and your AI assistant gains a complete Software Development Lifecycle — from research and planning to building, testing, reviewing, and shipping.
 
-**No SDK. No runtime. No dependencies. Just markdown.**
+**No target-app runtime. No SDK to link.** AgToosa installs markdown workflows and platform adapters into your repo. **Generator prerequisites:** the installer uses standard CLI tools such as Bash or PowerShell, Git, curl/web requests, tar, and jq for registry commands.
 
 ### Key Principles
 
@@ -245,6 +263,8 @@ flowchart TD
 
 ### Option 1: Persistent Installation (Recommended)
 
+> **Homebrew private staging:** The `sky2464/homebrew-agtoosa` tap is a public-launch target. While the repo/tap are private, use Option 2 or Option 3.
+
 Install once and use everywhere:
 
 ```bash
@@ -273,14 +293,14 @@ brew upgrade agtoosa
 
 ### Option 2: One-time Usage (No Installation)
 
-Run directly without installing. Recommended approach is to pin a release tag:
+Run directly without installing. Recommended approach is to pin a release tag once the release is public:
 
 ```bash
-# Replace vX.Y.Z with the latest release tag
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref vX.Y.Z
+# Public launch target: pinned release
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.2.6
 ```
 
-Or use the latest from `main` (may include unreleased changes):
+Or use the development-only main branch command (may include unreleased changes):
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh)
@@ -451,19 +471,24 @@ your-project/
 
 ## How It Differs
 
-| Feature | AgToosa v2 | Spec-Kit | Conductor | GStack |
-|---------|-------------|----------|-----------|--------|
-| Spec-driven workflow | ✅ | ✅ | ❌ | ❌ |
-| TDD enforcement | ✅ | ❌ | ❌ | ❌ |
-| Smart init (AI config validation) | ✅ | ❌ | ✅ | ❌ |
-| Security by design (STRIDE) | ✅ | ❌ | ❌ | ❌ |
-| Virtual specialist personas | ✅ | ❌ | ❌ | ✅ |
-| Real browser QA (workflow) | ✅ | ❌ | ❌ | ✅ |
-| SBOM & supply chain (workflow) | ✅ | ❌ | ❌ | ❌ |
-| Zero dependencies | ✅ | ✅ | ❌ | ❌ |
-| Multi-platform AI support | ✅ | ❌ | ❌ | ❌ |
-| Local-first (no curl install) | ✅ | ❌ | ❌ | ❌ |
-| One-click project copy | ✅ | ❌ | ❌ | ❌ |
+Comparison last reviewed: 2026-06-07.
+
+### Use AgToosa when
+
+- You are a solo or indie developer using multiple AI coding assistants and want one repo-native SDLC workflow contract.
+- You want specs, test-plan mapping, review, and ship discipline without adding a target-app SDK or hosted service.
+- You prefer markdown workflows and platform adapters over a heavier runtime, MCP server, task database, or IDE-specific system.
+
+### Use another tool when
+
+- Use **GitHub Spec Kit** when you want the largest ecosystem, organizational catalogs, presets, and first-party GitHub-scale integrations.
+- Use **OpenSpec** when brownfield current-state specs and change-delta modeling are the primary need.
+- Use **BMAD-METHOD** when you want a mature role/agent ecosystem with many specialized workflows.
+- Use **Task Master** when active task execution, task dependencies, and MCP/editor task management are more important than repo-local workflow files.
+- Use **Spec Kitty** when worktree orchestration, missions, and agent work packages are the main value.
+- Use **metaswarm** when you want deeper multi-agent orchestration and are comfortable adopting a more opinionated system.
+
+AgToosa's wedge is narrower: lightweight, repo-native, multi-assistant workflow installation for developers who want stronger launch discipline than ad-hoc prompts.
 
 ---
 

@@ -1,5 +1,7 @@
 # Support
 
+> **Private staging:** Until the repository is public, GitHub Discussions, Issues, release links, and raw bootstrap URLs are launch gates rather than public support channels. Public launch requires these links to resolve anonymously. This private staging note should be removed or replaced when the public support surfaces are live.
+
 ## How to get help
 
 **GitHub Discussions** is the primary support channel for AgToosa:

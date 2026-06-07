@@ -1,0 +1,80 @@
+# AgToosa First 15 Minutes
+
+This walkthrough shows the smallest credible AgToosa proof path in a clean repo. It is intentionally text-first so it can be verified before launch without a hosted demo.
+
+## 1. Start From A Clean Repo
+
+```bash
+tmpdir="$(mktemp -d)"
+mkdir "$tmpdir/agtoosa-proof"
+cd "$tmpdir/agtoosa-proof"
+git init
+printf '# Proof App\n' > README.md
+git add README.md
+git commit -m "chore: start proof app"
+```
+
+Use the private collaborator path while AgToosa is private:
+
+```bash
+git clone https://github.com/sky2464/AgToosa.git "$tmpdir/AgToosa"
+bash "$tmpdir/AgToosa/agtoosa.sh"
+```
+
+When the public repo is launched, use the pinned public release command from the README instead.
+
+## 2. Generator Created
+
+After the generator runs, the repo should contain workflow files such as:
+
+```text
+Docs/AgToosa_Agent.md
+Docs/AgToosa_Init.md
+Docs/AgToosa_Spec.md
+Docs/AgToosa_Build.md
+Docs/AgToosa_Review.md
+Docs/AgToosa_Ship.md
+Docs/Master-Plan.md
+```
+
+Generator created these files. It did not implement product code, run security scans, or create a release by itself.
+
+## 3. Agent Instructed
+
+Open your AI coding assistant and run the workflow commands against the installed docs:
+
+```text
+/agtoosa-init
+/agtoosa-spec quick
+/agtoosa-build
+/agtoosa-review
+/agtoosa-ship check
+```
+
+Agent instructed work should produce durable artifacts such as:
+
+```text
+Docs/archived/spec-PROOF-001.md
+Docs/AgToosa_TestPlan-PROOF-001.md
+Docs/archived/review-PROOF-001.md
+Docs/archived/ship-check-PROOF-001.md
+```
+
+The exact story ID can differ. The proof is that the repo now has a spec, a test-plan mapping, a review artifact, and a ship-check artifact that survive chat context loss.
+
+## 4. What This Proves
+
+AgToosa's value is repo-native workflow continuity:
+
+- The generator installs the workflow contract.
+- The agent follows the contract.
+- The developer can inspect and version the resulting artifacts.
+- The workflow can be repeated by another assistant later.
+
+## Cleanup
+
+Remove the proof repo when done:
+
+```bash
+rm -rf "$tmpdir"
+```

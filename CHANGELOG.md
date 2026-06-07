@@ -7,6 +7,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+### Added
+
+- **DEV-041 — Public launch publication proof.** Add the next launch spec and test plan for anonymous install, release tag, registry, Homebrew tap, support links, and public demo proof after repository publication.
+
+---
+
+## [5.2.6] — 2026-06-07
+
+Patch release: DEV-035 through DEV-040 (387 bats tests; DEV-035–DEV-040 focused slices).
+
+- **DEV-035-DEV-040 — Launch readiness buildout.** Add private/public launch readiness gating, PowerShell update parity, registry archive normalization, truthful launch docs and security policy refresh, distribution hardening, first-15-minutes proof walkthrough, and team trust roadmap. Focused launch spec bats DEV-035-DEV-040 pass.
+
 ---
 
 ## [5.2.6] — 2026-06-06

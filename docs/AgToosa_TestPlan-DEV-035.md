@@ -1,35 +1,40 @@
-# Test Plan: DEV-035 — PSScriptAnalyzer CI gate for agtoosa.ps1
+# Test Plan: DEV-035 - Launch P0 publication and quickstart gate
 
 > **Spec:** `docs/archived/spec-DEV-035.md`
-> **Story ID:** DEV-035
-> **Coverage target:** 80% (workflow + bats structural)
+> **Coverage target:** private/public launch mode, quickstart truthfulness, support intake readiness
+> **Smoke filter:** `bats tests/agtoosa.bats -f "DEV-035"`
 
 ## AC Coverage
 
-| AC ID | Test ID | Category | Description | @smoke |
-|-------|---------|----------|-------------|--------|
-| AC-001 | PA-001 | Integration | `ci.yml` `windows-smoke` job contains PSScriptAnalyzer / `Invoke-ScriptAnalyzer` step for `agtoosa.ps1` | yes |
-| AC-002 | PA-002 | Integration | Analyzer step is blocking (no `continue-on-error: true` on that step) | yes |
-| AC-003 | PA-003 | Unit | `agtoosa.ps1` retains DEV-033 approved names (`Copy-StageFiles`, `Initialize-PackQueueDir`, `Move-ShipPacksToQueue`) and excludes legacy names | yes |
-| AC-004 | PA-001, PA-002 | Integration | DEV-035 bats PA-001–PA-003 exist and pass | yes |
-| AC-005 | — | Manual | This test plan maps all Must ACs to test IDs | no |
-| AC-006 | PA-001 | Integration | Workflow step references formatted failure output (`Format-Table` or explicit `exit 1` on findings) | no |
+| AC | Test ID | Category | Description | @smoke |
+|----|---------|----------|-------------|--------|
+| AC-001, AC-004 | LG-001 | Docs | README states private staging, labels public commands as launch-target, and places pinned release before `main` | yes |
+| AC-002, AC-003 | LG-002 | Integration | Launch checker supports private and public modes and defaults to private mode | yes |
+| AC-002 | LG-003 | Integration | Private mode validates local docs without requiring public URLs to return 2xx | yes |
+| AC-003 | LG-004 | Static | Public mode URL list includes repo, releases, raw bootstrap, registry, issues, discussions, support, and Homebrew-if-advertised surfaces | no |
+| AC-005 | LG-005 | Docs | Support templates request OS, shell, install command, AgToosa version, target project context, and affected surface | no |
+| AC-006 | LG-006 | Integration | Focused DEV-035 Bats filter covers launch-gate regression checks | no |
 
-## Negative / Edge Scenarios
+## Commands
 
-| Scenario | Test ID | Expected |
-|----------|---------|----------|
-| Reintroduce `Stage-Files` in `agtoosa.ps1` | Manual / CI | `windows-smoke` analyzer step fails |
-| Remove analyzer step from workflow | PA-001 | bats fails — workflow drift caught |
+```bash
+bats tests/agtoosa.bats -f "DEV-035"
+bash scripts/check-launch-readiness.sh --mode private
+git diff --check
+```
 
-## Evidence Log
+Public launch verification after repo publication:
 
-| Date | Command | Result |
-|------|---------|--------|
-| 2026-06-06 | `bats tests/agtoosa.bats -f "DEV-035"` | ✅ 3/3 pass — PA-001, PA-002, PA-003 |
-| 2026-06-06 | `bats tests/agtoosa.bats -f "^version parity:\|DEV-033\|MR5:"` | ✅ 6/6 pass — version parity, DEV-033, MR5, and matched DEV-034 shipped-disposition check |
-| 2026-06-06 | `bats tests/agtoosa.bats` | ✅ 361/361 pass |
-| 2026-06-06 | `pwsh -NoProfile -Command '$findings = Invoke-ScriptAnalyzer -Path ./agtoosa.ps1 -IncludeRule PSUseApprovedVerbs -Severity Error, Warning; ...'` | ✅ `agtoosa.ps1` clean |
-| 2026-06-06 | Temporary `.ps1` with `function Ensure-PackQueueDir { }` + `Invoke-ScriptAnalyzer -IncludeRule PSUseApprovedVerbs` | ✅ Intentional violation detected as `PSUseApprovedVerbs` warning |
-| 2026-06-06 | `bats tests/agtoosa.bats` post-ship | ✅ 361/361 pass |
-| _(pending merge)_ | GitHub Actions `windows-smoke` | — |
+```bash
+AGTOOSA_LAUNCH_MODE=public bash scripts/check-launch-readiness.sh
+```
+
+## Validation Evidence
+
+```text
+bats tests/agtoosa.bats -f "DEV-035"
+=> 6/6 passing
+
+bash scripts/check-launch-readiness.sh --mode private
+=> exit 0; local docs checked; public URL checks skipped
+```

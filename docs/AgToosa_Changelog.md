@@ -7,6 +7,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+### Added
+
+- 2026-06-07 — chore — DEV-041 public launch publication proof spec and test plan for anonymous install, registry, tap, support, and demo project gates — `docs/archived/spec-DEV-041.md`
+
+---
+
+## [5.2.6] — 2026-06-07
+
+### Added
+
+- 2026-06-07 — chore — DEV-035-DEV-040 launch readiness buildout: public/private launch gate, Windows/registry parity, truthful launch docs, distribution hardening, first-15-minutes proof, and team trust roadmap — `docs/AgToosa_Launch_Readiness_Spec_Bundle.md`
+
 ---
 
 ## [5.2.6] — 2026-06-06

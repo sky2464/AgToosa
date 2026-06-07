@@ -3,6 +3,7 @@
 # the sky2464/homebrew-agtoosa tap. Release automation should replace
 # the branch source with a tagged tarball and concrete sha256 when the
 # release artifact is publicly available.
+# Current private-staging source: branch "main" until the public tap is published.
 
 class Agtoosa < Formula
   desc "Spec-driven agentic AI framework generator for software development"

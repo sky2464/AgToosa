@@ -72,7 +72,10 @@ print_install_guide() {
       echo "Missing: $missing"
       echo "To install on macOS, run:"
       echo "  brew install $missing"
-      echo "Or use: macOS 26+ ships with bash 5.2+, git, curl, tar by default."
+      echo "If Git or compilers are missing, install Apple Command Line Tools:"
+      echo "  xcode-select --install"
+      echo "If your default Bash is too old, install a newer Bash:"
+      echo "  brew install bash"
       ;;
     linux-ubuntu)
       echo "Missing: $missing"

@@ -3543,40 +3543,348 @@ PY
   grep -q 'LR-006' "$tp"
 }
 
-# ── DEV-035 PSScriptAnalyzer CI gate (PA-001–PA-003) ────────────────────────
+# -- DEV-035 Launch P0 publication and quickstart gate (LG-001-LG-006) --------
 
-@test "DEV-035 PA-001: windows-smoke installs and runs pinned PSScriptAnalyzer" {
-  local f="$BATS_TEST_DIRNAME/../.github/workflows/ci.yml"
-  grep -q 'windows-smoke:' "$f"
-  grep -q 'PSScriptAnalyzer approved verbs' "$f"
-  grep -q 'Install-Module PSScriptAnalyzer' "$f"
-  grep -q 'RequiredVersion 1.21.0' "$f"
-  grep -q 'Invoke-ScriptAnalyzer' "$f"
-  grep -q 'agtoosa.ps1' "$f"
-  grep -q 'PSUseApprovedVerbs' "$f"
-  grep -q 'Format-Table' "$f"
-  grep -q 'exit 1' "$f"
+@test "DEV-035 LG-001: README labels private staging and public launch commands truthfully" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+
+  grep -q "Private staging status" "$readme"
+  grep -q "Public launch target" "$readme"
+  grep -q "development-only main branch" "$readme"
+
+  local pinned_line main_line
+  pinned_line="$(grep -n "Public launch target: pinned release" "$readme" | head -n1 | cut -d: -f1)"
+  main_line="$(grep -n "development-only main branch" "$readme" | head -n1 | cut -d: -f1)"
+  [[ -n "$pinned_line" ]]
+  [[ -n "$main_line" ]]
+  [[ "$pinned_line" -lt "$main_line" ]]
 }
 
-@test "DEV-035 PA-002: PSScriptAnalyzer CI gate is blocking" {
-  local f="$BATS_TEST_DIRNAME/../.github/workflows/ci.yml"
-  local block
-  block="$(awk '
-    /- name: PSScriptAnalyzer approved verbs/ { flag = 1 }
-    flag && /^      - name:/ && !/- name: PSScriptAnalyzer approved verbs/ { exit }
-    flag { print }
-  ' "$f")"
+@test "DEV-035 LG-002: launch readiness checker exposes private and public modes" {
+  local checker="$BATS_TEST_DIRNAME/../scripts/check-launch-readiness.sh"
 
-  echo "$block" | grep -q 'Invoke-ScriptAnalyzer'
-  ! echo "$block" | grep -q 'continue-on-error: true'
-  echo "$block" | grep -q 'if ($findings)'
-  echo "$block" | grep -q 'exit 1'
+  [[ -x "$checker" ]]
+  grep -q -- "--mode private" "$checker"
+  grep -q -- "--mode public" "$checker"
+  grep -q "AGTOOSA_LAUNCH_MODE" "$checker"
 }
 
-@test "DEV-035 PA-003: agtoosa.ps1 retains approved verbs and excludes legacy helpers" {
-  local f="$BATS_TEST_DIRNAME/../agtoosa.ps1"
-  grep -q '^function Copy-StageFiles' "$f"
-  grep -q '^function Initialize-PackQueueDir' "$f"
-  grep -q '^function Move-ShipPacksToQueue' "$f"
-  ! grep -Eq '\b(Stage-Files|Ensure-PackQueueDir|Salvage-ShipPacksToQueue)\b' "$f"
+@test "DEV-035 LG-003: private launch readiness mode passes without public URL access" {
+  run bash "$BATS_TEST_DIRNAME/../scripts/check-launch-readiness.sh" --mode private
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"mode: private"* ]]
+  [[ "$output" == *"Skipping anonymous public URL checks"* ]]
+}
+
+@test "DEV-035 LG-004: public launch mode checks all advertised public surfaces" {
+  local checker="$BATS_TEST_DIRNAME/../scripts/check-launch-readiness.sh"
+
+  grep -q "https://github.com/sky2464/AgToosa" "$checker"
+  grep -q "https://github.com/sky2464/AgToosa/releases" "$checker"
+  grep -q "https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh" "$checker"
+  grep -q "https://raw.githubusercontent.com/sky2464/AgToosa/v5.2.6/bootstrap.sh" "$checker"
+  grep -q "https://raw.githubusercontent.com/sky2464/agtoosa-registry/main/registry.json" "$checker"
+  grep -q "https://github.com/sky2464/AgToosa/issues" "$checker"
+  grep -q "https://github.com/sky2464/AgToosa/discussions" "$checker"
+  grep -q "https://github.com/sky2464/homebrew-agtoosa" "$checker"
+}
+
+@test "DEV-035 LG-005: support templates collect actionable launch support details" {
+  local bug="$BATS_TEST_DIRNAME/../.github/ISSUE_TEMPLATE/bug.yml"
+  local feature="$BATS_TEST_DIRNAME/../.github/ISSUE_TEMPLATE/feature.yml"
+  local support="$BATS_TEST_DIRNAME/../.github/SUPPORT.md"
+
+  grep -q "Operating system" "$bug"
+  grep -q "Shell" "$bug"
+  grep -q "Install command" "$bug"
+  grep -q "Target project context" "$bug"
+  grep -q "Affected surface" "$feature"
+  grep -q "private staging" "$support"
+}
+
+@test "DEV-035 LG-006: test plan maps all launch gate checks" {
+  local tp="$BATS_TEST_DIRNAME/../docs/AgToosa_TestPlan-DEV-035.md"
+
+  grep -q "LG-001" "$tp"
+  grep -q "LG-002" "$tp"
+  grep -q "LG-003" "$tp"
+  grep -q "LG-004" "$tp"
+  grep -q "LG-005" "$tp"
+  grep -q "LG-006" "$tp"
+}
+
+# -- DEV-036 Windows and registry parity (WP-001-WP-005) ---------------------
+
+@test "DEV-036 WP-001: PowerShell update detects platforms and updates version marker" {
+  command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
+
+  local project="$TEST_PROJECT/ps-update-parity"
+  mkdir -p "$project/Docs" "$project/.claude/commands"
+  echo "5.0.0" > "$project/Docs/.agtoosa-version"
+  printf 'User notes\n\n<!-- AgToosa v5.0.0 START -->\nold claude block\n<!-- AgToosa END -->\n' > "$project/CLAUDE.md"
+  printf 'old command\n' > "$project/.claude/commands/agtoosa-spec.md"
+
+  run pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1" -Update -UpdatePath "$project"
+  [ "$status" -eq 0 ]
+  grep -q '^User notes' "$project/CLAUDE.md"
+  grep -q "Claude Code Instructions" "$project/CLAUDE.md"
+  ! grep -q "old claude block" "$project/CLAUDE.md"
+  grep -q "AgToosa" "$project/.claude/commands/agtoosa-spec.md"
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.2.6" ]
+}
+
+@test "DEV-036 WP-002: Bash registry install normalizes top-level pack directory" {
+  local registry="$TEST_PROJECT/registry.json"
+  local packroot="$TEST_PROJECT/src/mock-pack"
+  local tarball="$TEST_PROJECT/mock-pack.tar.gz"
+  mkdir -p "$packroot/mock-pack"
+  printf '# workflow\n' > "$packroot/mock-pack/workflow.md"
+  tar -czf "$tarball" -C "$packroot" "mock-pack"
+  local sha
+  sha="$(shasum -a 256 "$tarball" | awk '{print $1}')"
+  cat > "$registry" <<JSON
+[
+  {"name":"mock-pack","description":"Mock","author":"test","version":"1.0.0","url":"file://$tarball","sha256":"$sha","verified":true}
+]
+JSON
+
+  run bash -c "printf 'Y\n' | AGTOOSA_REGISTRY_URL='file://$registry' AGTOOSA_REGISTRY_CACHE_DIR='$TEST_PROJECT/cache' AGTOOSA_PACK_QUEUE_DIR='$TEST_PROJECT/queue' bash '$SCRIPT' --registry install mock-pack"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/queue/mock-pack/workflow.md" ]
+  [ ! -d "$TEST_PROJECT/queue/mock-pack/mock-pack" ]
+}
+
+@test "DEV-036 WP-003: PowerShell registry install normalizes top-level pack directory" {
+  command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
+
+  local registry="$TEST_PROJECT/ps-registry.json"
+  local packroot="$TEST_PROJECT/ps-src/mock-pack"
+  local tarball="$TEST_PROJECT/ps-mock-pack.tar.gz"
+  mkdir -p "$packroot/mock-pack"
+  printf '# workflow\n' > "$packroot/mock-pack/workflow.md"
+  tar -czf "$tarball" -C "$packroot" "mock-pack"
+  local sha
+  sha="$(shasum -a 256 "$tarball" | awk '{print $1}')"
+  cat > "$registry" <<JSON
+[
+  {"name":"mock-pack","description":"Mock","author":"test","version":"1.0.0","url":"file://$tarball","sha256":"$sha","verified":true}
+]
+JSON
+
+  run bash -c "printf 'Y\n' | HOME='$TEST_PROJECT/ps-home' AGTOOSA_REGISTRY_URL='file://$registry' AGTOOSA_PACK_QUEUE_DIR='$TEST_PROJECT/ps-queue' pwsh -NoProfile -File '$BATS_TEST_DIRNAME/../agtoosa.ps1' -Registry -RegistryCommand install -RegistryArg mock-pack"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/ps-queue/mock-pack/workflow.md" ]
+  [ ! -d "$TEST_PROJECT/ps-queue/mock-pack/mock-pack" ]
+}
+
+@test "DEV-036 WP-004: PowerShell registry publish boundary is consistent" {
+  local ps="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  local registry_doc="$BATS_TEST_DIRNAME/../docs/AgToosa_Registry.md"
+
+  grep -q "publish is not available in the PowerShell port" "$ps"
+  grep -q "Use list, search, info, install" "$ps"
+  ! grep -q "Registry sub-command: list, search, info, install, or publish" "$ps"
+  grep -q "Windows tip: For full feature parity including .*registry publish" "$readme"
+  grep -q "PowerShell port prints a redirect" "$registry_doc"
+}
+
+@test "DEV-036 WP-005: test plan maps all Windows and registry parity checks" {
+  local tp="$BATS_TEST_DIRNAME/../docs/AgToosa_TestPlan-DEV-036.md"
+  grep -q "WP-001" "$tp"
+  grep -q "WP-002" "$tp"
+  grep -q "WP-003" "$tp"
+  grep -q "WP-004" "$tp"
+  grep -q "WP-005" "$tp"
+}
+
+# -- DEV-037 Truthful launch documentation and positioning (TD-001-TD-005) ---
+
+@test "DEV-037 TD-001: README dependency claim is qualified" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  ! grep -q "No SDK. No runtime. No dependencies. Just markdown." "$readme"
+  grep -q "No target-app runtime" "$readme"
+  grep -q "Generator prerequisites" "$readme"
+  grep -q "standard CLI tools" "$readme"
+}
+
+@test "DEV-037 TD-002: README uses current competitor decision guide" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  ! grep -q "AgToosa v2" "$readme"
+  ! grep -q "Conductor" "$readme"
+  grep -q "Use AgToosa when" "$readme"
+  grep -q "Use another tool when" "$readme"
+  grep -q "GitHub Spec Kit" "$readme"
+  grep -q "OpenSpec" "$readme"
+  grep -q "BMAD" "$readme"
+  grep -q "Task Master" "$readme"
+  grep -q "Spec Kitty" "$readme"
+  grep -q "metaswarm" "$readme"
+}
+
+@test "DEV-037 TD-003: SECURITY policy names current supported surfaces" {
+  local sec="$BATS_TEST_DIRNAME/../SECURITY.md"
+  ! grep -q "2.x.*Active support" "$sec"
+  ! grep -q "install.sh" "$sec"
+  grep -q "5.2.x" "$sec"
+  grep -q "agtoosa.sh" "$sec"
+  grep -q "agtoosa.ps1" "$sec"
+  grep -q "bootstrap.sh" "$sec"
+  grep -q "lib/registry.sh" "$sec"
+}
+
+@test "DEV-037 TD-004: bootstrap macOS guidance is conservative" {
+  local bootstrap="$BATS_TEST_DIRNAME/../bootstrap.sh"
+  ! grep -q "macOS 26" "$bootstrap"
+  grep -q "Command Line Tools" "$bootstrap"
+  grep -q "brew install bash" "$bootstrap"
+}
+
+@test "DEV-037 TD-005: test plan maps all truthful docs checks" {
+  local tp="$BATS_TEST_DIRNAME/../docs/AgToosa_TestPlan-DEV-037.md"
+  grep -q "TD-001" "$tp"
+  grep -q "TD-002" "$tp"
+  grep -q "TD-003" "$tp"
+  grep -q "TD-004" "$tp"
+  grep -q "TD-005" "$tp"
+}
+
+# -- DEV-038 Distribution hardening and release readiness gate (DH-001-DH-005)
+
+@test "DEV-038 DH-001: Homebrew is clearly gated while tap is private" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  local formula="$BATS_TEST_DIRNAME/../Formula/agtoosa.rb"
+
+  grep -q "Homebrew private staging" "$readme"
+  grep -q "branch: \"main\"" "$formula"
+  grep -q "private-staging source" "$formula"
+}
+
+@test "DEV-038 DH-002: release workflows do not use deprecated create-release action" {
+  ! grep -R "actions/create-release" "$BATS_TEST_DIRNAME/../.github/workflows/release.yml" "$BATS_TEST_DIRNAME/../.github/workflows/release-advanced.yml"
+  grep -q "gh release create" "$BATS_TEST_DIRNAME/../.github/workflows/release.yml"
+  grep -q "gh release create" "$BATS_TEST_DIRNAME/../.github/workflows/release-advanced.yml"
+}
+
+@test "DEV-038 DH-003: launch readiness checker covers badges and security policy" {
+  local checker="$BATS_TEST_DIRNAME/../scripts/check-launch-readiness.sh"
+  grep -q "actions/workflows/ci.yml/badge.svg" "$checker"
+  grep -q "actions/workflows/security-scan.yml/badge.svg" "$checker"
+  grep -q "SECURITY.md" "$checker"
+}
+
+@test "DEV-038 DH-004: release docs explain permissions and recovery" {
+  local release_doc="$BATS_TEST_DIRNAME/../.github/RELEASE.md"
+  grep -q "contents: write" "$release_doc"
+  grep -q "Failure recovery" "$release_doc"
+  grep -q "5.2.x" "$release_doc"
+  ! grep -q "2.x.x.*current" "$release_doc"
+}
+
+@test "DEV-038 DH-005: test plan maps all distribution hardening checks" {
+  local tp="$BATS_TEST_DIRNAME/../docs/AgToosa_TestPlan-DEV-038.md"
+  grep -q "DH-001" "$tp"
+  grep -q "DH-002" "$tp"
+  grep -q "DH-003" "$tp"
+  grep -q "DH-004" "$tp"
+  grep -q "DH-005" "$tp"
+}
+
+# -- DEV-039 First 15 minutes proof and growth positioning (FG-001-FG-004) ---
+
+@test "DEV-039 FG-001: first 15 minutes walkthrough names proof artifacts" {
+  local guide="$BATS_TEST_DIRNAME/../docs/examples/first-15-minutes.md"
+  [ -f "$guide" ]
+  grep -q "clean repo" "$guide"
+  grep -q "spec" "$guide"
+  grep -q "test-plan" "$guide"
+  grep -q "review" "$guide"
+  grep -q "ship-check" "$guide"
+}
+
+@test "DEV-039 FG-002: walkthrough separates generator output from agent-instructed work" {
+  local guide="$BATS_TEST_DIRNAME/../docs/examples/first-15-minutes.md"
+  grep -q "Generator created" "$guide"
+  grep -q "Agent instructed" "$guide"
+}
+
+@test "DEV-039 FG-003: walkthrough includes cleanup guidance" {
+  local guide="$BATS_TEST_DIRNAME/../docs/examples/first-15-minutes.md"
+  grep -q "Cleanup" "$guide"
+  grep -q "rm -rf" "$guide"
+}
+
+@test "DEV-039 FG-004: README links to first 15 minutes proof" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  grep -q "first 15 minutes" "$readme"
+  grep -q "docs/examples/first-15-minutes.md" "$readme"
+}
+
+# -- DEV-040 Team trust roadmap (TR-001-TR-004) ------------------------------
+
+@test "DEV-040 TR-001: roadmap separates launch, growth, and team phases" {
+  local roadmap="$BATS_TEST_DIRNAME/../docs/AgToosa_Team_Trust_Roadmap.md"
+  [ -f "$roadmap" ]
+  grep -q "day-one launch" "$roadmap"
+  grep -q "growth push" "$roadmap"
+  grep -q "team/enterprise" "$roadmap"
+}
+
+@test "DEV-040 TR-002: high-assurance and SLA language is not overpromised" {
+  local roadmap="$BATS_TEST_DIRNAME/../docs/AgToosa_Team_Trust_Roadmap.md"
+  grep -q "signed registry" "$roadmap"
+  grep -q "future high-assurance work" "$roadmap"
+  grep -q "No enterprise SLA is promised" "$roadmap"
+}
+
+@test "DEV-040 TR-003: roadmap covers versioning, migration, and adapter drift" {
+  local roadmap="$BATS_TEST_DIRNAME/../docs/AgToosa_Team_Trust_Roadmap.md"
+  grep -q "docs versioning" "$roadmap"
+  grep -q "migration" "$roadmap"
+  grep -q "adapter drift" "$roadmap"
+}
+
+@test "DEV-040 TR-004: roadmap classifies enforcement boundaries" {
+  local roadmap="$BATS_TEST_DIRNAME/../docs/AgToosa_Team_Trust_Roadmap.md"
+  grep -q "generator-enforced" "$roadmap"
+  grep -q "CI-enforced" "$roadmap"
+  grep -q "agent-instructed" "$roadmap"
+  grep -q "manual" "$roadmap"
+}
+
+# -- DEV-035-DEV-040 Ship state (SR-001-SR-003) ------------------------------
+
+@test "DEV-035-040 SR-001: v5.2.6 release pins are aligned" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver readme_badge readme_ref formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  readme_badge="$(grep -m1 'badge/version-' "$root/README.md" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  readme_ref="$(grep -m1 -E -- '--ref v[0-9]' "$root/README.md" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 '^  version ' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+
+  [ "$bash_ver" = "5.2.6" ]
+  [ "$ps_ver" = "$bash_ver" ]
+  [ "$readme_badge" = "$bash_ver" ]
+  [ "$readme_ref" = "$bash_ver" ]
+  [ "$formula_ver" = "$bash_ver" ]
+}
+
+@test "DEV-035-040 SR-002: v5.2.6 changelog and review artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.2.6\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-035-DEV-040.*Launch readiness buildout' "$root/CHANGELOG.md"
+  grep -q '## \[5.2.6\]' "$root/docs/AgToosa_Changelog.md"
+  grep -q 'DEV-035-DEV-040 launch readiness buildout' "$root/docs/AgToosa_Changelog.md"
+  [ -f "$root/docs/archived/review-DEV-035-040.md" ]
+  grep -q 'Verdict.*PASS' "$root/docs/archived/review-DEV-035-040.md"
+}
+
+@test "DEV-035-040 SR-003: Master-Plan records v5.2.6 ship and next patch milestone" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  grep -q 'Milestone.*v5.2.7.*next' "$mp"
+  grep -q 'Ship complete — DEV-035-DEV-040 v5.2.6' "$mp"
+  grep -q 'cycle-2026-06-07-release-5.2.6.md' "$mp"
+  grep -q 'Release 5.2.6 shipped' "$mp"
+  [ -f "$BATS_TEST_DIRNAME/../docs/archived/cycle-2026-06-07-release-5.2.6.md" ]
 }

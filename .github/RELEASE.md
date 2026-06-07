@@ -31,6 +31,9 @@ Before tagging a release, the maintainer must confirm all of the following:
 - [ ] Template completeness check passes: `bash agtoosa.sh --list-template-files`
 - [ ] At least one platform entry-point file manually verified end-to-end
 - [ ] Milestone for the current version is ≥ 90% closed
+- [ ] Release workflow has `contents: write` permission for `gh release create`
+- [ ] Private staging mode passes: `bash scripts/check-launch-readiness.sh --mode private`
+- [ ] Public launch mode passes after publication: `AGTOOSA_LAUNCH_MODE=public bash scripts/check-launch-readiness.sh`
 
 ## How to Cut a Release
 
@@ -56,12 +59,22 @@ The `release-advanced.yml` workflow then:
 4. Publishes the GitHub Release
 5. Creates the next-version milestone automatically
 
+## Failure recovery
+
+If release publication fails after a tag is pushed:
+
+1. Do not force-push or delete the tag until the failure mode is understood.
+2. Check workflow permissions include `contents: write` for GitHub release creation.
+3. Re-run the workflow after fixing permissions or release-note extraction.
+4. If a partial GitHub Release exists, update it with `gh release edit` instead of creating a duplicate.
+5. Re-run `bash scripts/check-launch-readiness.sh --mode private` before attempting public-mode checks.
+
 ## Supported Versions
 
 | Version | Status | End of Support |
 |---------|--------|---------------|
-| `2.x.x` (current) | ✅ Active | TBD |
-| `1.x.x` | ❌ EOL | 2026-01-01 |
+| `5.2.x` (current) | Active | TBD |
+| `< 5.2` | EOL unless explicitly backported | 2026-01-01 |
 
 Only the latest minor release receives patch backports. Older minors are EOL.
 

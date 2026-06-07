@@ -18,6 +18,42 @@ body:
     validations:
       required: true
 
+  - type: input
+    id: operating_system
+    attributes:
+      label: Operating system
+      description: "macOS, Linux distribution, Windows version, WSL2, or Git Bash"
+      placeholder: "macOS 15.5, Ubuntu 24.04, Windows 11 PowerShell"
+    validations:
+      required: true
+
+  - type: input
+    id: shell
+    attributes:
+      label: Shell
+      description: "Shell used to run AgToosa"
+      placeholder: "bash 5.2, zsh launching bash, PowerShell 7.5"
+    validations:
+      required: true
+
+  - type: textarea
+    id: install_command
+    attributes:
+      label: Install command
+      description: "Exact command used to install or run AgToosa"
+      render: bash
+    validations:
+      required: true
+
+  - type: textarea
+    id: target_project_context
+    attributes:
+      label: Target project context
+      description: "New repo or existing repo, selected platforms, and whether this was install, update, registry, or bootstrap"
+      placeholder: "Existing repo; selected Docs + Claude + Codex; ran --update"
+    validations:
+      required: true
+
   - type: textarea
     id: description
     attributes:

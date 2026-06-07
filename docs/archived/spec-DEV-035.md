@@ -1,142 +1,62 @@
-# Spec: DEV-035 — PSScriptAnalyzer CI gate for agtoosa.ps1
+# Spec: DEV-035 - Launch P0 publication and quickstart gate
 
 > **Story ID:** DEV-035
-> **Epic:** DEV-004 — Testing & QA Harness
-> **Status:** 🏁 Shipped (v5.2.6 — 2026-06-06)
-> **Estimate:** XS
-> **Spec created:** 2026-06-05
+> **Epic:** DEV-004 - Testing & QA Harness
+> **Status:** 🏁 Shipped (v5.2.6 — 2026-06-07)
+> **Estimate:** M
+> **Spec created:** 2026-06-07
+> **Launch specs:** LRS-001, LRS-002, LRS-012 public-link subset, LRS-013 public/private gate subset
 
 ## Context
 
-DEV-033 renamed three `agtoosa.ps1` helpers to approved PowerShell verbs and verified PSScriptAnalyzer locally, but explicitly deferred **CI integration** (see `docs/archived/spec-DEV-033.md` § 1.4 Out of Scope). Review DEV-033 accepted this gap with a 🟡 Warning: PSScriptAnalyzer is manual/IDE-only (AC-001 not automated in CI).
+The strategic launch review found that public GitHub, raw bootstrap, registry, Homebrew, and support URLs returned 404 from this environment. The owner clarified this is expected because the repository is intentionally private during staging. That state is acceptable before launch, but the README currently reads as if anonymous public install and support links are ready.
 
-After DEV-034 shipped v5.2.5, the maintainer Active Cycle is empty — `/agtoosa-status` deducts Plan Completeness (−10) and recommends `/agtoosa-spec`. This story closes the DEV-033 verification gap with a minimal Windows CI step so verb regressions fail PRs before merge.
+DEV-035 makes the repo launch-aware. It adds a private-staging/public-launch readiness command, updates quickstart and support docs to avoid accidental public claims, and adds regression coverage so private-staging 404s are not confused with public-launch readiness.
 
-## 1. Requirements
-
-### 1.1 Goal Contract
+## Goal Contract
 
 | Field | Value |
 |-------|-------|
-| Goal | Automate PSScriptAnalyzer verification for `agtoosa.ps1` in CI so approved-verb compliance is enforced on every PR. |
-| User outcome | Maintainers and contributors cannot merge PS1 verb regressions; DEV-033 AC-001 evidence is reproducible without a local IDE. |
-| Success condition | `windows-smoke` (or equivalent Windows job) runs `Invoke-ScriptAnalyzer` on `agtoosa.ps1`; CI fails on `PSUseApprovedVerbs` violations for the DEV-033 rename set; bats PA-001–PA-003 green. |
-| Proof / evidence | GitHub Actions Windows job log shows analyzer pass; `bats tests/agtoosa.bats -f "DEV-035"` green; focused full-suite regression green. |
-| Non-goals | Analyzing `lib/*.sh` or bash entrypoints; enforcing all PSScriptAnalyzer rules at Error severity; refactoring PS1 beyond analyzer config; MINOR version bump |
-| Assumptions | **XS** chore; **PATCH** bump on ship (`v5.2.6` per current Milestone). Analyzer runs on `windows-latest` where `agtoosa.ps1` is already smoke-tested. Only `PSUseApprovedVerbs` (or equivalent approved-verb grep) is gated — other informational rules may remain advisory. |
-| Risks | PSScriptAnalyzer module install flakiness — pin module version in workflow. False positives from unrelated rules — scope analyzer to approved verbs or explicit exclude list. |
+| Goal | Make publication status, quickstart install claims, and support links explicitly gated for private staging versus public launch. |
+| User outcome | Maintainers can run a local readiness gate before public launch and know exactly which public surfaces still require manual publication. |
+| Success condition | README/support docs are truthful in private staging, a launch checker exists, Bats covers private/public mode behavior, and Master-Plan records DEV-035 as the first launch-readiness story. |
+| Proof / evidence | `bats tests/agtoosa.bats -f "DEV-035"`, `bash scripts/check-launch-readiness.sh --mode private`, and `git diff --check` pass. |
+| Non-goals | Publishing external repos, fixing PowerShell update parity, fixing registry archive shape, Homebrew release hardening, or rewriting competitive positioning. |
+| Assumptions | Public launch means anonymous developer access. Private staging remains allowed until launch mode is explicitly enabled. |
+| Risks | Docs can drift into looking public-ready before publication. Mitigate with explicit private-staging wording and public-mode URL checks. |
 
-### 1.2 User Stories
+## Requirements
 
-**As an** AgToosa maintainer, **I want** PSScriptAnalyzer to run in CI on `agtoosa.ps1` **so that** approved-verb compliance from DEV-033 cannot regress silently.
+| ID | Requirement |
+|----|-------------|
+| AC-001 | WHEN the repo is private THE SYSTEM SHALL state that public install/support URLs are private-staging gates rather than public-ready commands. |
+| AC-002 | WHEN a maintainer runs the readiness checker in private mode THE SYSTEM SHALL validate local launch docs and skip anonymous public URL checks. |
+| AC-003 | WHEN a maintainer runs the readiness checker in public mode THE SYSTEM SHALL check repo, release, raw bootstrap, registry, support, issues, discussions, and Homebrew URLs if advertised. |
+| AC-004 | WHEN README quickstart is read THE SYSTEM SHALL place pinned release guidance before `main` guidance and label `main` as development-only. |
+| AC-005 | WHEN support and issue templates are read THE SYSTEM SHALL ask for OS, shell, install command, AgToosa version, target project context, and affected surface. |
+| AC-006 | WHEN focused DEV-035 tests run THE SYSTEM SHALL prevent regression to unqualified public-ready wording while the project is private. |
 
-**As a** contributor opening a PR, **I want** a clear CI failure when `agtoosa.ps1` uses non-approved verbs **so that** I fix naming before review.
+## Design
 
-### 1.3 Acceptance Criteria (EARS)
+Add `scripts/check-launch-readiness.sh` with `--mode private` and `--mode public`. Private mode checks local files and docs language only. Public mode performs the same checks plus anonymous URL checks with `curl`.
 
-| ID | EARS | Priority |
-|----|------|----------|
-| AC-001 | WHEN CI runs on a pull request or push to `main` THE SYSTEM SHALL execute PSScriptAnalyzer (or equivalent approved-verb check) against `agtoosa.ps1` on a Windows runner | Must |
-| AC-002 | WHEN `agtoosa.ps1` contains a `PSUseApprovedVerbs` violation for script-private functions THE SYSTEM SHALL fail the CI job with a non-zero exit code | Must |
-| AC-003 | WHEN `agtoosa.ps1` matches the DEV-033 approved rename map THE SYSTEM SHALL pass the analyzer CI step | Must |
-| AC-004 | WHEN `tests/agtoosa.bats` runs DEV-035 coverage THE SYSTEM SHALL assert the CI workflow contains the analyzer step and documents the pinned module or invocation pattern | Must |
-| AC-005 | WHEN maintainer test-plan docs are read THE SYSTEM SHALL map each Must AC to at least one test ID in `docs/AgToosa_TestPlan-DEV-035.md` | Must |
-| AC-006 | WHEN the analyzer step fails THE SYSTEM SHALL print which rule and symbol violated **so that** contributors can fix without local IDE setup | Should |
+Update README to say the project is in private staging until publication. Keep the public commands, but label them as launch-target commands that require the repo/release URLs to be public. Keep clone/manual install for private collaborators.
 
-### 1.4 Out of Scope
+Update GitHub support docs and issue templates so they collect actionable launch-support data.
 
-- ShellCheck or bash analyzer changes (already in `ci.yml` validate job)
-- PSScriptAnalyzer on template or generated project files
-- Renaming additional PS1 functions beyond DEV-033 scope
-- Adding PSScriptAnalyzer to pre-commit hooks
+## Build Scope
 
-## 2. Design
+Ready to proceed. Files in scope: `scripts/check-launch-readiness.sh`, `README.md`, `.github/SUPPORT.md`, `.github/DISCUSSIONS.md`, `.github/ISSUE_TEMPLATE/bug.yml`, `.github/ISSUE_TEMPLATE/feature.yml`, `tests/agtoosa.bats`, `docs/Master-Plan.md`, and `docs/AgToosa_TestPlan-DEV-035.md`.
 
-### 2.1 Architecture Blueprint
+## Task Tree
 
-| File / area | Change |
-|-------------|--------|
-| `.github/workflows/ci.yml` | Add PSScriptAnalyzer step to `windows-smoke` job (after checkout, before or after existing PS1 smokes) — _AC-001, AC-002, AC-006_ |
-| `tests/agtoosa.bats` | DEV-035 PA-001–PA-003 workflow grep / structure tests — _AC-004_ |
-| `docs/AgToosa_TestPlan-DEV-035.md` | AC → test mapping — _AC-005_ |
-| `docs/Master-Plan.md` | Active Cycle enrollment, Active Tasks, Update Log — bookkeeping |
+- [ ] **1.** Add failing DEV-035 Bats checks - _AC-001-AC-006_
+- [ ] **2.** Implement launch-readiness checker - _AC-002, AC-003, AC-006_
+- [ ] **3.** Update README quickstart publication wording - _AC-001, AC-004_
+- [ ] **4.** Update support/community docs and issue templates - _AC-005_
+- [ ] **5.** Record test-plan evidence - _AC-006_
+- [ ] **6.** Run focused and broader validation - _AC-002, AC-006_
 
-**Proposed CI step (illustrative):**
-
-```powershell
-Install-Module PSScriptAnalyzer -RequiredVersion 1.21.0 -Force -Scope CurrentUser
-$findings = Invoke-ScriptAnalyzer -Path agtoosa.ps1 -IncludeRule PSUseApprovedVerbs -Severity Error, Warning
-if ($findings) { $findings | Format-Table; exit 1 }
-```
-
-Alternative: grep-based bats-only gate without live analyzer in CI — rejected; AC-001 requires runtime analyzer on Windows runner.
-
-### 2.2 Data Flow
-
-1. PR or push triggers `ci.yml` → `windows-smoke` job.
-2. Checkout repo; install pinned `PSScriptAnalyzer` module.
-3. `Invoke-ScriptAnalyzer` scans `agtoosa.ps1` with `PSUseApprovedVerbs` rule.
-4. Non-empty findings → `exit 1` with formatted output (AC-006).
-5. Empty findings → job continues to existing PS1 smoke steps (version, help, registry).
-
-### 2.3 STRIDE Threat Model
-
-| Threat | Category | Mitigation |
-|--------|----------|------------|
-| Contributor merges non-approved verbs that break PS conventions | Tampering | AC-001, AC-002 — CI gate on every merge |
-| CI step silently skipped (workflow drift) | Repudiation | AC-004 — bats grep locks workflow step |
-| Analyzer module supply-chain compromise | Spoofing | Pin `PSScriptAnalyzer` version in workflow; use `Install-Module -RequiredVersion` |
-| False CI failures from unrelated analyzer rules | Denial of Service | Scope to `PSUseApprovedVerbs` only (AC-002) |
-| Maintainer bypasses gate via `continue-on-error` | Elevation of Privilege | AC-004 bats assert step is blocking (no `continue-on-error: true`) |
-
-### 2.4 Build Scope
-
-```
-Files in scope      : .github/workflows/ci.yml, tests/agtoosa.bats, docs/AgToosa_TestPlan-DEV-035.md
-Directories in scope: .github/workflows/
-Out of scope        : agtoosa.ps1 renames (already shipped DEV-033), agtoosa.sh, lib/*.sh, template/, version wiring until ship
-```
-
-## 3. Tasks
-
-### 3.1 Task Tree
-
-- [x] **1.** CI workflow — PSScriptAnalyzer step
-  - [x] 1.1 Add pinned `PSScriptAnalyzer` install + `Invoke-ScriptAnalyzer` step to `windows-smoke` — _AC-001, AC-002, AC-006_
-  - [x] 1.2 Scope analyzer to `PSUseApprovedVerbs` (or approved-verb-only severity) — _AC-002_
-  - [x] 1.3 Verify step fails on intentional violation (local or dry-run) — _AC-002_
-- [x] **2.** Regression coverage
-  - [x] 2.1 Add DEV-035 bats PA-001–PA-003 — _AC-003, AC-004_
-  - [x] 2.2 Finalize `docs/AgToosa_TestPlan-DEV-035.md` evidence table — _AC-005_
-- [x] **3.** Validation
-  - [x] 3.1 Run `bats tests/agtoosa.bats -f "DEV-035"` — _AC-004_
-  - [x] 3.2 Confirm `windows-smoke` job structure locally (workflow YAML review) — _AC-001_
-
-### 3.2 Wave Plan
-
-**Wave 1 (sequential):** 1.1, 1.2
-**Wave 2 (parallel):** 1.3, 2.1, 2.2
-**Wave 3 (sequential):** 3.1, 3.2
-
-### 3.3 Test Plan
+## Test Plan
 
 Test plan: `docs/AgToosa_TestPlan-DEV-035.md`
-
-## 4. Story skills
-
-| Skill | Decision |
-|-------|----------|
-| _(none)_ | **Do not generate** — CI wiring is one-off maintainer chore. |
-
-## 5. Build Evidence
-
-| Date | Evidence |
-|------|----------|
-| 2026-06-06 | `bats tests/agtoosa.bats -f "DEV-035"` — 3/3 pass |
-| 2026-06-06 | `bats tests/agtoosa.bats -f "^version parity:\|DEV-033\|MR5:"` — 6/6 pass |
-| 2026-06-06 | `bats tests/agtoosa.bats` — 361/361 pass |
-| 2026-06-06 | Local PSScriptAnalyzer `PSUseApprovedVerbs` check clean on `agtoosa.ps1`; temporary `.ps1` with `Ensure-PackQueueDir` reported the expected warning |
-
-## ✅ Spec Approved
-
-Approved: 2026-06-06 (implicit via `/agtoosa-build`)

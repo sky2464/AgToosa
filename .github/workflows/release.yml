@@ -46,15 +46,13 @@ jobs:
           echo "content=$CHANGELOG" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
-        uses: actions/create-release@0cb9c9b65d5d1901c1f53e5e66eaf4afd303e70e # v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.version.outputs.tag_name }}
-          release_name: AgToosa ${{ steps.version.outputs.version }}
-          body: ${{ steps.changelog.outputs.content }}
-          draft: false
-          prerelease: false
+        run: |
+          printf '%b\n' "${{ steps.changelog.outputs.content }}" > /tmp/release-notes.md
+          gh release create "${{ steps.version.outputs.tag_name }}" \
+            --title "AgToosa ${{ steps.version.outputs.version }}" \
+            --notes-file /tmp/release-notes.md
 
       - name: Update project status
         run: |
