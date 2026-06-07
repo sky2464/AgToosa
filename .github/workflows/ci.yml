@@ -105,6 +105,17 @@ jobs:
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
 
+      - name: PSScriptAnalyzer approved verbs
+        shell: pwsh
+        run: |
+          Install-Module PSScriptAnalyzer -RequiredVersion 1.21.0 -Force -Scope CurrentUser
+          $findings = Invoke-ScriptAnalyzer -Path "$env:GITHUB_WORKSPACE\agtoosa.ps1" -IncludeRule PSUseApprovedVerbs -Severity Error, Warning
+          if ($findings) {
+            $findings | Format-Table -AutoSize
+            exit 1
+          }
+          Write-Output "✅ PSScriptAnalyzer PSUseApprovedVerbs passed"
+
       - name: Verify agtoosa.ps1 exists and reports version
         shell: pwsh
         run: |

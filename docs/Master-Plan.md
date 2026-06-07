@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-06-05 (/agtoosa-ship DEV-034 v5.2.5)
+> **Last updated:** 2026-06-06 (/agtoosa-build DEV-035)
 
 ## Project Charter
 
@@ -10,9 +10,9 @@
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
 | Milestone | `v5.2.6` (next) — patch-first per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | _(none — pick next story via `/agtoosa-spec`)_ |
+| Active cycle | Release 5.2.6 — PSScriptAnalyzer CI gate |
 | Cycle capacity | `40 story points` |
-| Current phase | 🚀 DEV-034 shipped v5.2.5 — ledger reconciled; ready for next spec |
+| Current phase | ✅ DEV-035 build complete — PSScriptAnalyzer CI gate ready for review |
 
 ## Active Cycle
 
@@ -20,7 +20,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| _(empty — enroll via `/agtoosa-spec`)_ | | | | | |
+| DEV-035 | Chore: PSScriptAnalyzer CI gate for agtoosa.ps1 | Chore | XS | ✅ Done | 8/8 |
 
 <!-- Archived to docs/archived/cycle-2026-06-05-release-5.2.5.md -->
 <!-- Prior: docs/archived/cycle-2026-05-24-release-5.2.0.md -->
@@ -33,6 +33,19 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
+
+**DEV-035 — PSScriptAnalyzer CI gate for agtoosa.ps1** (spec: `docs/archived/spec-DEV-035.md`)
+
+- [x] **1.** CI workflow — PSScriptAnalyzer step
+  - [x] 1.1 Add pinned `PSScriptAnalyzer` install + `Invoke-ScriptAnalyzer` step to `windows-smoke` — _AC-001, AC-002, AC-006_
+  - [x] 1.2 Scope analyzer to `PSUseApprovedVerbs` — _AC-002_
+  - [x] 1.3 Verify step fails on intentional violation — _AC-002_
+- [x] **2.** Regression coverage
+  - [x] 2.1 Add DEV-035 bats PA-001–PA-003 — _AC-003, AC-004_
+  - [x] 2.2 Finalize `docs/AgToosa_TestPlan-DEV-035.md` evidence table — _AC-005_
+- [x] **3.** Validation
+  - [x] 3.1 Run `bats tests/agtoosa.bats -f "DEV-035"` — _AC-004_
+  - [x] 3.2 Confirm `windows-smoke` job structure (workflow YAML review) — _AC-001_
 
 <!--
 **DEV-029 — Stop branch-protection workflow failure emails** (spec: `docs/archived/spec-DEV-029.md`) — shipped 2026-05-25 v5.2.1
@@ -201,6 +214,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Type | Estimate | Epic | Priority | Status |
 |----|-------|------|----------|------|----------|--------|
+| DEV-035 | Chore: PSScriptAnalyzer CI gate for agtoosa.ps1 | Chore | XS | DEV-004 | High | ✅ Done |
 | DEV-031 | Feature: Project-specific specialist subagents | Feature | M | DEV-002 | High | 🏁 Shipped |
 | DEV-032 | Chore: Patch-first release versioning (5.x line) | Chore | S | DEV-001 | High | 🏁 Shipped |
 | DEV-030 | Fix: `/agtoosa-update` self-target uncertainty | Fix | S | DEV-002 | High | 🏁 Shipped |
@@ -216,7 +230,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-001 | Epic: Core Generator Engine | 0 open / 0 total | ⬜ Backlog |
 | DEV-002 | Epic: Workflow Templates | 0 open / 10 total | 🟦 Todo |
 | DEV-003 | Epic: Community Template Registry | 0 open / 0 total | ⬜ Backlog |
-| DEV-004 | Epic: Testing & QA Harness | 0 open / 1 total | ⬜ Backlog |
+| DEV-004 | Epic: Testing & QA Harness | 1 open / 2 total | 🟦 Todo |
 
 ### Epic Charters
 
@@ -250,6 +264,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Goal:** Comprehensive end-to-end integration and version verification suites validating the robustness of the entire framework.
     *   **Scope:** `tests/agtoosa.bats` and CI regression pipelines.
     *   **Success Criteria:** 100% green coverage on 340+ bats scenarios and version checks on every release step.
+    *   **Current:** DEV-035 — PSScriptAnalyzer CI gate → `docs/archived/spec-DEV-035.md`
+    *   **Last shipped:** DEV-034 — release ledger reconciliation → `docs/archived/spec-DEV-034.md`
     *   **Last shipped:** DEV-005 — M1–M4 bats + CHANGELOG hygiene → `docs/archived/spec-DEV-005.md`
 
 ## Completed This Cycle
@@ -498,3 +514,5 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-06-05 | 🚀 Ship complete — DEV-034 v5.2.5; CHANGELOG + version pins; DEV-034 LR-001–LR-006 6/6; full suite 358/358; Milestone v5.2.6 (next) | AgToosa |
 | 2026-06-05 | 🚀 Release 5.2.5 shipped — v5.2.5; DEV-034 on main; version parity bash/ps1; active cycle archived | AgToosa |
 | 2026-06-06 | 🔧 Manual complete — DEV-029 task 4.1; PR #29 → run `27050231744` success; all four PR hygiene jobs ran; Manual / Deferred cleared | AgToosa |
+| 2026-06-05 | ✏️ /agtoosa-spec DEV-035 — PSScriptAnalyzer CI gate; XS estimate; enrolled Release 5.2.6; 8 tasks; spec: docs/archived/spec-DEV-035.md | AgToosa |
+| 2026-06-06 | 🏗️ /agtoosa-build DEV-035 complete — PSScriptAnalyzer CI gate added to `windows-smoke`; PA-001–PA-003 3/3; version/DEV-033/MR5 slice 6/6; full suite 361/361; local analyzer clean + negative probe detected violation | AgToosa |

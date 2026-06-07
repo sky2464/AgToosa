@@ -3542,3 +3542,41 @@ PY
   grep -q 'LR-005' "$tp"
   grep -q 'LR-006' "$tp"
 }
+
+# ── DEV-035 PSScriptAnalyzer CI gate (PA-001–PA-003) ────────────────────────
+
+@test "DEV-035 PA-001: windows-smoke installs and runs pinned PSScriptAnalyzer" {
+  local f="$BATS_TEST_DIRNAME/../.github/workflows/ci.yml"
+  grep -q 'windows-smoke:' "$f"
+  grep -q 'PSScriptAnalyzer approved verbs' "$f"
+  grep -q 'Install-Module PSScriptAnalyzer' "$f"
+  grep -q 'RequiredVersion 1.21.0' "$f"
+  grep -q 'Invoke-ScriptAnalyzer' "$f"
+  grep -q 'agtoosa.ps1' "$f"
+  grep -q 'PSUseApprovedVerbs' "$f"
+  grep -q 'Format-Table' "$f"
+  grep -q 'exit 1' "$f"
+}
+
+@test "DEV-035 PA-002: PSScriptAnalyzer CI gate is blocking" {
+  local f="$BATS_TEST_DIRNAME/../.github/workflows/ci.yml"
+  local block
+  block="$(awk '
+    /- name: PSScriptAnalyzer approved verbs/ { flag = 1 }
+    flag && /^      - name:/ && !/- name: PSScriptAnalyzer approved verbs/ { exit }
+    flag { print }
+  ' "$f")"
+
+  echo "$block" | grep -q 'Invoke-ScriptAnalyzer'
+  ! echo "$block" | grep -q 'continue-on-error: true'
+  echo "$block" | grep -q 'if ($findings)'
+  echo "$block" | grep -q 'exit 1'
+}
+
+@test "DEV-035 PA-003: agtoosa.ps1 retains approved verbs and excludes legacy helpers" {
+  local f="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  grep -q '^function Copy-StageFiles' "$f"
+  grep -q '^function Initialize-PackQueueDir' "$f"
+  grep -q '^function Move-ShipPacksToQueue' "$f"
+  ! grep -Eq '\b(Stage-Files|Ensure-PackQueueDir|Salvage-ShipPacksToQueue)\b' "$f"
+}
