@@ -237,6 +237,87 @@ function Compare-AgToosaVersionLt([string]$a, [string]$b) {
 # Case C: destination has old AgToosa version marker, no block → replace file (backup).
 # Case D: destination is user-owned (no AgToosa marker) → backup + append.
 # -Force: backup + full replace, except same-or-newer version is preserved.
+$SCRIPT:UPDATE_PRESERVED_DOCS = @(
+    'Master-Plan.md',
+    'Master-Architecture.md',
+    'AgToosa_Changelog.md'
+)
+
+function Test-UpdatePreservedDoc([string]$relativePath, [bool]$updateMode) {
+    if (-not $updateMode) { return $false }
+    $normalized = $relativePath -replace '\\', '/'
+    if ($normalized -like 'Context/*') { return $true }
+    $leaf = Split-Path -Leaf $relativePath
+    return $SCRIPT:UPDATE_PRESERVED_DOCS -contains $leaf
+}
+
+function Get-InstalledPlatforms([string]$projectPath) {
+    $platforms = [System.Collections.Generic.List[string]]::new()
+    if (Test-Path (Join-Path $projectPath '.cursorrules')) { $platforms.Add('cursor') }
+    if (Test-Path (Join-Path $projectPath '.windsurfrules')) { $platforms.Add('windsurf') }
+    if (Test-Path (Join-Path $projectPath 'CLAUDE.md')) { $platforms.Add('claude') }
+    if (Test-Path (Join-Path $projectPath 'AGENTS.md')) { $platforms.Add('gemini') }
+    if (Test-Path (Join-Path $projectPath '.github/copilot-instructions.md')) { $platforms.Add('copilot') }
+    if (Test-Path (Join-Path $projectPath 'OPENCODE.md')) { $platforms.Add('opencode') }
+    return $platforms.ToArray()
+}
+
+function Write-AgToosaVersionMarker([string]$projectPath) {
+    $verFile = Join-Path $projectPath 'Docs\.agtoosa-version'
+    $docsDir = Split-Path -Parent $verFile
+    if (-not (Test-Path $docsDir)) {
+        New-Item -ItemType Directory -Path $docsDir -Force | Out-Null
+    }
+    $AGTOOSA_VERSION | Out-File -FilePath $verFile -Encoding UTF8 -NoNewline
+}
+
+# Deep-merge AgToosa hooks into an existing .claude/settings.json without touching user settings.
+function Merge-SettingsJson([string]$src, [string]$dst, [string]$label) {
+    $dir = Split-Path -Parent $dst
+    if ($dir -and -not (Test-Path $dir)) {
+        New-Item -ItemType Directory -Path $dir -Force | Out-Null
+    }
+
+    if (-not (Test-Path $dst)) {
+        Copy-Item $src $dst
+        Write-Color "  ${GREEN}✅${NC} $label"
+        return
+    }
+
+    $tmp = [System.IO.Path]::GetTempFileName()
+    try {
+        $py = @'
+import json, sys
+src_path, dst_path, out_path = sys.argv[1], sys.argv[2], sys.argv[3]
+with open(src_path) as f:
+    new_cfg = json.load(f)
+with open(dst_path) as f:
+    existing = json.load(f)
+for event, handlers in new_cfg.get('hooks', {}).items():
+    existing.setdefault('hooks', {}).setdefault(event, [])
+    existing_cmds = {
+        h.get('command', '')
+        for entry in existing['hooks'][event]
+        for h in entry.get('hooks', [])
+    }
+    for handler in handlers:
+        new_cmds = {h.get('command', '') for h in handler.get('hooks', [])}
+        if not new_cmds.issubset(existing_cmds):
+            existing['hooks'][event].append(handler)
+with open(out_path, 'w') as f:
+    json.dump(existing, f, indent=2)
+    f.write('\n')
+'@
+        & python3 -c $py $src $dst $tmp
+        if ($LASTEXITCODE -ne 0) { throw 'merge failed' }
+        Move-Item -Path $tmp -Destination $dst -Force
+        Write-Color "  ${GREEN}✅${NC} $label ${CYAN}(hooks merged)${NC}"
+    } catch {
+        if (Test-Path $tmp) { Remove-Item $tmp -Force }
+        Write-Color "  ${YELLOW}⚠️${NC}  $label — Python3 unavailable or JSON parse error, skipped"
+    }
+}
+
 function Merge-PlatformFile([string]$src, [string]$dst, [string]$label) {
     $dir = Split-Path -Parent $dst
     if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
@@ -464,14 +545,25 @@ function Update-LockFileFromPackMeta([string]$projectPath, [string[]]$metaFiles)
     Write-Color "  ${GREEN}✅${NC} Docs/agtoosa-lock.json updated"
 }
 
-function Install-Files([string]$projectPath, [string[]]$platforms) {
+function Install-Files([string]$projectPath, [string[]]$platforms, [switch]$UpdateMode) {
     $shipDocs = Join-Path $SHIP_DIR "Docs"
     if (Test-Path $shipDocs) {
         $dstDocs = Join-Path $projectPath "Docs"
         New-Item -ItemType Directory -Path $dstDocs -Force | Out-Null
         Get-ChildItem -Path $shipDocs -Recurse -File | ForEach-Object {
             $rel = $_.FullName.Substring($shipDocs.Length).TrimStart('\', '/')
-            Copy-FileWithGuard $_.FullName (Join-Path $dstDocs $rel) "Docs\$rel"
+            if (Test-UpdatePreservedDoc $rel $UpdateMode.IsPresent) { return }
+            $dst = Join-Path $dstDocs $rel
+            if ($UpdateMode.IsPresent) {
+                $dir = Split-Path -Parent $dst
+                if ($dir -and -not (Test-Path $dir)) {
+                    New-Item -ItemType Directory -Path $dir -Force | Out-Null
+                }
+                Copy-Item -Path $_.FullName -Destination $dst -Force
+                Write-Color "  ${GREEN}✅${NC} Docs\$rel"
+            } else {
+                Copy-FileWithGuard $_.FullName $dst "Docs\$rel"
+            }
         }
     }
 
@@ -497,7 +589,7 @@ function Install-Files([string]$projectPath, [string[]]$platforms) {
                 Copy-StagedDirectory ".claude/hooks" $projectPath ".claude/hooks/" | Out-Null
                 $settingsSrc = Join-Path $SHIP_DIR ".claude/settings.json"
                 if (Test-Path $settingsSrc) {
-                    Copy-FileWithGuard $settingsSrc (Join-Path $projectPath ".claude/settings.json") ".claude/settings.json"
+                    Merge-SettingsJson $settingsSrc (Join-Path $projectPath ".claude/settings.json") ".claude/settings.json"
                 }
             }
             "gemini" {
@@ -787,8 +879,10 @@ if ($Update) {
         if (Test-Path $SHIP_DIR) { Remove-Item -Recurse -Force $SHIP_DIR }
         New-Item -ItemType Directory -Path (Join-Path $SHIP_DIR "Docs\archived") -Force | Out-Null
         New-Item -ItemType Directory -Path (Join-Path $SHIP_DIR "Docs\Context") -Force | Out-Null
-        Copy-StageFiles @()
-        Install-Files $UpdatePath @()
+        $detectedPlatforms = Get-InstalledPlatforms $UpdatePath
+        Copy-StageFiles $detectedPlatforms
+        Install-Files $UpdatePath $detectedPlatforms -UpdateMode
+        Write-AgToosaVersionMarker $UpdatePath
         Write-Color ""
         Write-Color "${GREEN}${BOLD}✅ AgToosa updated to v${AGTOOSA_VERSION} in '${UpdatePath}'${NC}"
     } finally {
@@ -907,11 +1001,9 @@ try {
 
     if ($confirm -match "^[Yy]$") {
         Install-Files $projectPath $platforms.ToArray()
+        Write-AgToosaVersionMarker $projectPath
         Write-Color ""
         Write-Color "${GREEN}${BOLD}✅ AgToosa v${AGTOOSA_VERSION} installed in '$projectPath'!${NC}"
-        # Write version marker
-        $verFile = Join-Path $projectPath "Docs\.agtoosa-version"
-        $AGTOOSA_VERSION | Out-File -FilePath $verFile -Encoding UTF8 -NoNewline
         Write-Color ""
         Write-Color "${YELLOW}Next steps:${NC}"
         Write-Color "  1. Open your AI assistant in your project"

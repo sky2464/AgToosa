@@ -3455,6 +3455,33 @@ PY
   [ ! -f "$TEST_PROJECT/Docs/agtoosa-lock.json" ]
 }
 
+@test "MR6: PowerShell settings.json uses hook merge helper not blind overwrite" {
+  local f="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  grep -q 'function Merge-SettingsJson' "$f"
+  grep -q 'Merge-SettingsJson \$settingsSrc' "$f"
+  ! grep -q 'Copy-FileWithGuard \$settingsSrc' "$f"
+}
+
+@test "MR7: PowerShell update writes Docs/.agtoosa-version marker" {
+  local f="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  grep -q 'function Write-AgToosaVersionMarker' "$f"
+  grep -q 'Write-AgToosaVersionMarker \$UpdatePath' "$f"
+}
+
+@test "MR8: PowerShell update preserves project-owned Docs paths" {
+  local f="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  grep -q 'function Test-UpdatePreservedDoc' "$f"
+  grep -q "Master-Plan.md" "$f"
+  grep -q "Context/*" "$f"
+  grep -q '\-UpdateMode' "$f"
+}
+
+@test "MR9: PowerShell update detects installed platforms before staging" {
+  local f="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  grep -q 'function Get-InstalledPlatforms' "$f"
+  grep -q 'Get-InstalledPlatforms \$UpdatePath' "$f"
+}
+
 @test "MR4: advanced release accepts README pinned snippets and creates next patch milestone" {
   local f="$BATS_TEST_DIRNAME/../.github/workflows/release-advanced.yml"
   ! grep -q 'README contains a hardcoded bootstrap tag' "$f"
