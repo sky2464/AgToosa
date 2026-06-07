@@ -31,4 +31,5 @@
 | 2026-06-06 | `bats tests/agtoosa.bats` | ✅ 361/361 pass |
 | 2026-06-06 | `pwsh -NoProfile -Command '$findings = Invoke-ScriptAnalyzer -Path ./agtoosa.ps1 -IncludeRule PSUseApprovedVerbs -Severity Error, Warning; ...'` | ✅ `agtoosa.ps1` clean |
 | 2026-06-06 | Temporary `.ps1` with `function Ensure-PackQueueDir { }` + `Invoke-ScriptAnalyzer -IncludeRule PSUseApprovedVerbs` | ✅ Intentional violation detected as `PSUseApprovedVerbs` warning |
+| 2026-06-06 | `bats tests/agtoosa.bats` post-ship | ✅ 361/361 pass |
 | _(pending merge)_ | GitHub Actions `windows-smoke` | — |

@@ -9,7 +9,7 @@ class Agtoosa < Formula
   homepage "https://github.com/sky2464/AgToosa"
   url "https://github.com/sky2464/AgToosa.git", branch: "main"
   license "MIT"
-  version "5.2.5"
+  version "5.2.6"
 
   def install
     bin.install "agtoosa.sh" => "agtoosa"

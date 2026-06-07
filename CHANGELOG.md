@@ -9,6 +9,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.2.6] — 2026-06-06
+
+Patch release: DEV-035 (361 bats tests; DEV-035 PA-001–PA-003).
+
+### Added
+
+- **DEV-035 — PSScriptAnalyzer CI gate for agtoosa.ps1.** Add blocking `PSUseApprovedVerbs` check to `windows-smoke` with pinned PSScriptAnalyzer 1.21.0; DEV-035 PA-001–PA-003 bats green. Closes DEV-033 manual-only analyzer verification gap.
+
+---
+
 ## [5.2.5] — 2026-06-05
 
 Patch release: DEV-034 (358 bats tests; DEV-034 LR-001–LR-006).

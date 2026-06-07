@@ -9,6 +9,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.2.6] — 2026-06-06
+
+### Added
+
+- 2026-06-06 — chore — **DEV-035 — PSScriptAnalyzer CI gate for agtoosa.ps1.** `windows-smoke` runs pinned PSScriptAnalyzer `PSUseApprovedVerbs` on `agtoosa.ps1`; PA-001–PA-003 bats — `docs/archived/spec-DEV-035.md`
+
+---
+
 ## [5.2.5] — 2026-06-05
 
 ### Changed

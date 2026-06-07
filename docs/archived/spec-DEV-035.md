@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-035
 > **Epic:** DEV-004 — Testing & QA Harness
-> **Status:** ✅ Done (ready for review)
+> **Status:** 🏁 Shipped (v5.2.6 — 2026-06-06)
 > **Estimate:** XS
 > **Spec created:** 2026-06-05
 
@@ -136,3 +136,7 @@ Test plan: `docs/AgToosa_TestPlan-DEV-035.md`
 | 2026-06-06 | `bats tests/agtoosa.bats -f "^version parity:\|DEV-033\|MR5:"` — 6/6 pass |
 | 2026-06-06 | `bats tests/agtoosa.bats` — 361/361 pass |
 | 2026-06-06 | Local PSScriptAnalyzer `PSUseApprovedVerbs` check clean on `agtoosa.ps1`; temporary `.ps1` with `Ensure-PackQueueDir` reported the expected warning |
+
+## ✅ Spec Approved
+
+Approved: 2026-06-06 (implicit via `/agtoosa-build`)
