@@ -3959,6 +3959,8 @@ JSON
   local workflow="$BATS_TEST_DIRNAME/../.github/workflows/ci.yml"
 
   grep -A8 "name: Markdown Lint" "$workflow" | grep -q "timeout-minutes"
+  grep -A8 "name: Markdown Lint" "$workflow" | grep -q "timeout 180s npx --yes markdownlint-cli2"
+  ! grep -q "markdownlint-cli2-action" "$workflow"
   grep -A12 "name: PSScriptAnalyzer approved verbs" "$workflow" | grep -q "timeout-minutes"
   grep -q "Set-PSRepository -Name PSGallery -InstallationPolicy Trusted" "$workflow"
   ! grep -q "Install-PackageProvider -Name NuGet" "$workflow"
