@@ -19,6 +19,7 @@ DEV-041 publishes and verifies the launch surfaces that were intentionally block
 | Version parity | PASS: Bash, PowerShell, README, Formula, and bats expect `5.2.7` |
 | Release CI | PASS: release workflows are idempotent when a release already exists |
 | Security CI | PASS: Dependency-Check no longer receives invalid folded `others` input |
+| CI reliability | PASS: Markdown Lint and PSScriptAnalyzer setup steps have explicit timeouts; PSScriptAnalyzer install is non-interactive |
 
 ## Findings
 

@@ -18,6 +18,7 @@
 | AC-008 | PL-008 | Docs truthfulness | Launch docs preserve enforcement boundary language and avoid overclaiming | no |
 | AC-001 | PL-006 | Release CI | Release workflows update existing releases instead of failing on duplicate release creation | yes |
 | AC-001 | PL-007 | Security CI | Dependency-Check workflow avoids invalid folded `others` arguments | yes |
+| AC-001 | PL-008 | CI reliability | Markdown lint and PSScriptAnalyzer setup steps are bounded and non-interactive | yes |
 
 ## Commands
 
@@ -43,4 +44,5 @@ git diff --check
 - `https://github.com/sky2464/agtoosa-first-15-proof` is public and contains generated-style workflow files plus spec, test-plan, review, and ship-check evidence.
 - Release workflows use `gh release view` before create/edit so repeated tag automation does not fail when a release already exists.
 - Security workflow no longer passes the invalid folded Dependency-Check `others` argument.
+- CI bounds Markdown Lint and PSScriptAnalyzer setup with explicit timeouts, and PSScriptAnalyzer install uses trusted PSGallery plus `-Confirm:$false`.
 ```
