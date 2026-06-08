@@ -9,7 +9,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ### Added
 
-- **DEV-041 — Public launch publication proof.** Add the next launch spec and test plan for anonymous install, release tag, registry, Homebrew tap, support links, and public demo proof after repository publication.
+---
+
+## [5.2.7] — 2026-06-08
+
+Patch release: DEV-041 public launch publication proof.
+
+### Added
+
+- **DEV-041 — Public launch publication proof.** Publish and verify anonymous access to the public repo, `v5.2.7` release, raw bootstrap files, registry index, Homebrew tap, support/community surfaces, and first-15-minute proof repository.
 
 ---
 

@@ -9,7 +9,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ### Added
 
-- 2026-06-07 — chore — DEV-041 public launch publication proof spec and test plan for anonymous install, registry, tap, support, and demo project gates — `docs/archived/spec-DEV-041.md`
+---
+
+## [5.2.7] — 2026-06-08
+
+### Added
+
+- 2026-06-08 — chore — DEV-041 public launch publication proof: public repo, release, raw bootstraps, registry, Homebrew tap, support/community surfaces, and proof repo — `docs/archived/spec-DEV-041.md`
 
 ---
 

@@ -5,7 +5,7 @@
 **The Spec-Driven Agentic AI Framework for Software Development**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-5.2.6-green.svg)](https://github.com/sky2464/AgToosa/releases)
+[![Version](https://img.shields.io/badge/version-5.2.7-green.svg)](https://github.com/sky2464/AgToosa/releases)
 [![CI Status](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml)
 [![Security Scan](https://github.com/sky2464/AgToosa/actions/workflows/security-scan.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/security-scan.yml)
 [![Semantic Release](https://github.com/sky2464/AgToosa/actions/workflows/release.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/release.yml)
@@ -14,13 +14,12 @@
 
 *Turn your AI coding assistant into an autonomous, security-first development team.*
 
-**Private staging status:** AgToosa is still staged in a private repository. Public launch commands below are the launch target and require the repo, release tag, raw bootstrap files, registry, and support links to be public before announcement.
+**Public launch status:** AgToosa is public. The repository, release tag, raw bootstrap files, registry index, Homebrew tap, support links, and proof project are anonymously accessible.
 
-**Public launch target: pinned release**
+**Public launch: pinned release**
 
 ```bash
-# Replace v5.2.6 with the latest public release tag after publication
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.2.6
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.2.7
 ```
 
 **Private collaborator path: clone and run**
@@ -29,9 +28,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstr
 git clone https://github.com/sky2464/AgToosa.git && cd AgToosa && bash agtoosa.sh
 ```
 
-See the [first 15 minutes proof](docs/examples/first-15-minutes.md) for a clean-repo walkthrough that shows generated workflow files and expected spec/test-plan/review/ship-check artifacts.
+See the [first 15 minutes proof](docs/examples/first-15-minutes.md) for a clean-repo walkthrough that shows generated workflow files and expected spec/test-plan/review/ship-check artifacts. The public proof repository is [sky2464/agtoosa-first-15-proof](https://github.com/sky2464/agtoosa-first-15-proof).
 
-Before public announcement, run the [public launch proof checklist](docs/examples/public-launch-proof.md) and keep private-staging wording until every public surface passes.
+Before public announcement or a future release, run the [public launch proof checklist](docs/examples/public-launch-proof.md) and keep public-facing claims tied to passing checks.
 
 For teams evaluating assurance boundaries, see the [team trust roadmap](docs/AgToosa_Team_Trust_Roadmap.md).
 
@@ -57,10 +56,10 @@ If any are missing, the bootstrap script will tell you how to install them. Inst
 **macOS & Linux:**
 
 ```bash
-# Public launch target: pinned release. Requires the repo and tag to be public.
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.2.6
+# Public launch: pinned release.
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.2.7
 
-# Private staging or manual verification path for collaborators with repo access:
+# Manual verification path for local source checkouts:
 git clone https://github.com/sky2464/AgToosa.git
 cd AgToosa
 bash agtoosa.sh --version
@@ -72,12 +71,12 @@ bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstr
 **Windows (native):**
 
 ```powershell
-# Public launch target: pinned release after publication
-$Ref = "v5.2.6"
+# Public launch: pinned release.
+$Ref = "v5.2.7"
 iwr -UseBasicParsing https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.ps1 | iex
 .\agtoosa.ps1 -Version
 
-# Private staging path for collaborators with repo access
+# Manual verification path for local source checkouts
 git clone https://github.com/sky2464/AgToosa.git
 cd AgToosa
 .\agtoosa.ps1 -Version
@@ -265,8 +264,6 @@ flowchart TD
 
 ### Option 1: Persistent Installation (Recommended)
 
-> **Homebrew private staging:** The `sky2464/homebrew-agtoosa` tap is a public-launch target. While the repo/tap are private, use Option 2 or Option 3.
-
 Install once and use everywhere:
 
 ```bash
@@ -291,15 +288,13 @@ Upgrade later:
 brew upgrade agtoosa
 ```
 
-> **Note:** If the Homebrew tap (`sky2464/agtoosa`) is not available in your environment yet, use Option 2.
-
 ### Option 2: One-time Usage (No Installation)
 
-Run directly without installing. Recommended approach is to pin a release tag once the release is public:
+Run directly without installing. Recommended approach is to pin a release tag:
 
 ```bash
-# Public launch target: pinned release
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.2.6
+# Public launch: pinned release
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.2.7
 ```
 
 Or use the development-only main branch command (may include unreleased changes):

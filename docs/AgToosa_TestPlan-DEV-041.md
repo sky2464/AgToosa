@@ -23,17 +23,20 @@
 bash scripts/check-launch-readiness.sh --mode public
 curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh >/tmp/agtoosa-bootstrap.sh
 curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.ps1 >/tmp/agtoosa-bootstrap.ps1
-curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/v5.2.6/bootstrap.sh >/tmp/agtoosa-bootstrap-v5.2.6.sh
+curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/v5.2.7/bootstrap.sh >/tmp/agtoosa-bootstrap-v5.2.7.sh
 curl -fsSL https://raw.githubusercontent.com/sky2464/agtoosa-registry/main/registry.json | jq .
 git ls-remote https://github.com/sky2464/homebrew-agtoosa.git
+git ls-remote https://github.com/sky2464/agtoosa-first-15-proof.git
 git diff --check
 ```
 
 ## Validation Evidence
 
 ```text
-2026-06-07 local build evidence:
-- `bash scripts/check-launch-readiness.sh --mode public` currently exits 1 because 12 public GitHub surfaces return HTTP 404 while the repo/registry/tap remain private or unpublished.
-- `curl` spot checks returned 404 for repository, releases, raw bootstrap files, registry JSON, and Homebrew tap.
-- Local DEV-041 docs/checker coverage is implemented; public integration evidence remains pending owner-controlled publication.
+2026-06-08 public publication evidence:
+- `bash scripts/check-launch-readiness.sh --mode public` public mode passes after publication.
+- `https://github.com/sky2464/AgToosa` is public, and release `v5.2.7` is the pinned public release target.
+- `https://raw.githubusercontent.com/sky2464/agtoosa-registry/main/registry.json` returns valid JSON; the launch index is intentionally empty until public packs are published.
+- `https://github.com/sky2464/homebrew-agtoosa` is public and contains `Formula/agtoosa.rb`.
+- `https://github.com/sky2464/agtoosa-first-15-proof` is public and contains generated-style workflow files plus spec, test-plan, review, and ship-check evidence.
 ```

@@ -1,6 +1,6 @@
 # Support
 
-> **Private staging:** Until the repository is public, GitHub Discussions, Issues, release links, and raw bootstrap URLs are launch gates rather than public support channels. Public launch requires these links to resolve anonymously. This private staging note should be removed or replaced when the public support surfaces are live.
+> **public support channel:** GitHub Discussions, Issues, release links, raw bootstrap URLs, and the security policy are public launch surfaces. Keep them anonymously accessible before announcements and after every release.
 
 ## How to get help
 

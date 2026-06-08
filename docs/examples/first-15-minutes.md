@@ -14,14 +14,13 @@ git add README.md
 git commit -m "chore: start proof app"
 ```
 
-Use the private collaborator path while AgToosa is private:
+Use the pinned public release path:
 
 ```bash
-git clone https://github.com/sky2464/AgToosa.git "$tmpdir/AgToosa"
-bash "$tmpdir/AgToosa/agtoosa.sh"
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.2.7
 ```
 
-When the public repo is launched, use the pinned public release command from the README instead.
+The public proof repository for this walkthrough is [sky2464/agtoosa-first-15-proof](https://github.com/sky2464/agtoosa-first-15-proof).
 
 For publication readiness, pair this walkthrough with the [public launch proof checklist](public-launch-proof.md).
 

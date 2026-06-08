@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.2.6" ]]
+  [[ "$output" == "AgToosa v5.2.7" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1628,7 +1628,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.2.6" ]
+  [ "$ver" = "5.2.7" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1639,7 +1639,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.2.6"* ]]
+  [[ "$output" == *"5.2.7"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -3545,15 +3545,15 @@ PY
 
 # -- DEV-035 Launch P0 publication and quickstart gate (LG-001-LG-006) --------
 
-@test "DEV-035 LG-001: README labels private staging and public launch commands truthfully" {
+@test "DEV-035 LG-001: README labels public launch commands truthfully" {
   local readme="$BATS_TEST_DIRNAME/../README.md"
 
-  grep -q "Private staging status" "$readme"
-  grep -q "Public launch target" "$readme"
+  ! grep -q "Private staging status" "$readme"
+  grep -q "Public launch: pinned release" "$readme"
   grep -q "development-only main branch" "$readme"
 
   local pinned_line main_line
-  pinned_line="$(grep -n "Public launch target: pinned release" "$readme" | head -n1 | cut -d: -f1)"
+  pinned_line="$(grep -n "Public launch: pinned release" "$readme" | head -n1 | cut -d: -f1)"
   main_line="$(grep -n "development-only main branch" "$readme" | head -n1 | cut -d: -f1)"
   [[ -n "$pinned_line" ]]
   [[ -n "$main_line" ]]
@@ -3582,11 +3582,12 @@ PY
   grep -q "https://github.com/sky2464/AgToosa" "$checker"
   grep -q "https://github.com/sky2464/AgToosa/releases" "$checker"
   grep -q "https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh" "$checker"
-  grep -q "https://raw.githubusercontent.com/sky2464/AgToosa/v5.2.6/bootstrap.sh" "$checker"
+  grep -q "https://raw.githubusercontent.com/sky2464/AgToosa/v5.2.7/bootstrap.sh" "$checker"
   grep -q "https://raw.githubusercontent.com/sky2464/agtoosa-registry/main/registry.json" "$checker"
   grep -q "https://github.com/sky2464/AgToosa/issues" "$checker"
   grep -q "https://github.com/sky2464/AgToosa/discussions" "$checker"
   grep -q "https://github.com/sky2464/homebrew-agtoosa" "$checker"
+  grep -q "https://github.com/sky2464/agtoosa-first-15-proof" "$checker"
 }
 
 @test "DEV-035 LG-005: support templates collect actionable launch support details" {
@@ -3599,7 +3600,7 @@ PY
   grep -q "Install command" "$bug"
   grep -q "Target project context" "$bug"
   grep -q "Affected surface" "$feature"
-  grep -q "private staging" "$support"
+  grep -q "public support channel" "$support"
 }
 
 @test "DEV-035 LG-006: test plan maps all launch gate checks" {
@@ -3630,7 +3631,7 @@ PY
   grep -q "Claude Code Instructions" "$project/CLAUDE.md"
   ! grep -q "old claude block" "$project/CLAUDE.md"
   grep -q "AgToosa" "$project/.claude/commands/agtoosa-spec.md"
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.2.6" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.2.7" ]
 }
 
 @test "DEV-036 WP-002: Bash registry install normalizes top-level pack directory" {
@@ -3751,13 +3752,14 @@ JSON
 
 # -- DEV-038 Distribution hardening and release readiness gate (DH-001-DH-005)
 
-@test "DEV-038 DH-001: Homebrew is clearly gated while tap is private" {
+@test "DEV-038 DH-001: Homebrew tap is public and formula stays version-aligned" {
   local readme="$BATS_TEST_DIRNAME/../README.md"
   local formula="$BATS_TEST_DIRNAME/../Formula/agtoosa.rb"
 
-  grep -q "Homebrew private staging" "$readme"
+  ! grep -q "Homebrew private staging" "$readme"
+  grep -q "brew install sky2464/agtoosa/agtoosa" "$readme"
   grep -q "branch: \"main\"" "$formula"
-  grep -q "private-staging source" "$formula"
+  grep -q 'version "5.2.7"' "$formula"
 }
 
 @test "DEV-038 DH-002: release workflows do not use deprecated create-release action" {
@@ -3854,7 +3856,7 @@ JSON
 
 # -- DEV-035-DEV-040 Ship state (SR-001-SR-003) ------------------------------
 
-@test "DEV-035-040 SR-001: v5.2.6 release pins are aligned" {
+@test "DEV-041 SR-001: v5.2.7 release pins are aligned" {
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver readme_badge readme_ref formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -3863,30 +3865,30 @@ JSON
   readme_ref="$(grep -m1 -E -- '--ref v[0-9]' "$root/README.md" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 '^  version ' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
 
-  [ "$bash_ver" = "5.2.6" ]
+  [ "$bash_ver" = "5.2.7" ]
   [ "$ps_ver" = "$bash_ver" ]
   [ "$readme_badge" = "$bash_ver" ]
   [ "$readme_ref" = "$bash_ver" ]
   [ "$formula_ver" = "$bash_ver" ]
 }
 
-@test "DEV-035-040 SR-002: v5.2.6 changelog and review artifacts exist" {
+@test "DEV-041 SR-002: v5.2.7 changelog and review artifacts exist" {
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[5.2.6\]' "$root/CHANGELOG.md"
-  grep -q 'DEV-035-DEV-040.*Launch readiness buildout' "$root/CHANGELOG.md"
-  grep -q '## \[5.2.6\]' "$root/docs/AgToosa_Changelog.md"
-  grep -q 'DEV-035-DEV-040 launch readiness buildout' "$root/docs/AgToosa_Changelog.md"
-  [ -f "$root/docs/archived/review-DEV-035-040.md" ]
-  grep -q 'Verdict.*PASS' "$root/docs/archived/review-DEV-035-040.md"
+  grep -q '## \[5.2.7\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-041.*Public launch publication proof' "$root/CHANGELOG.md"
+  grep -q '## \[5.2.7\]' "$root/docs/AgToosa_Changelog.md"
+  grep -q 'DEV-041 public launch publication proof' "$root/docs/AgToosa_Changelog.md"
+  [ -f "$root/docs/archived/review-DEV-041.md" ]
+  grep -q 'Verdict.*PASS' "$root/docs/archived/review-DEV-041.md"
 }
 
-@test "DEV-035-040 SR-003: Master-Plan records v5.2.6 ship and next patch milestone" {
+@test "DEV-041 SR-003: Master-Plan records v5.2.7 ship and next patch milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Milestone.*v5.2.7.*next' "$mp"
-  grep -q 'Ship complete — DEV-035-DEV-040 v5.2.6' "$mp"
-  grep -q 'cycle-2026-06-07-release-5.2.6.md' "$mp"
-  grep -q 'Release 5.2.6 shipped' "$mp"
-  [ -f "$BATS_TEST_DIRNAME/../docs/archived/cycle-2026-06-07-release-5.2.6.md" ]
+  grep -q 'Milestone.*v5.2.8.*next' "$mp"
+  grep -q 'Ship complete — DEV-041 v5.2.7' "$mp"
+  grep -q 'cycle-2026-06-07-release-5.2.7.md' "$mp"
+  grep -q 'Release 5.2.7 shipped' "$mp"
+  [ -f "$BATS_TEST_DIRNAME/../docs/archived/cycle-2026-06-07-release-5.2.7.md" ]
 }
 
 # -- DEV-041 Public launch publication proof (PL-001-PL-008) -----------------
@@ -3912,24 +3914,26 @@ JSON
   grep -q "Demo project" "$proof"
 }
 
-@test "DEV-041 PL-003: README links public launch proof without removing private staging gate" {
+@test "DEV-041 PL-003: README links public launch proof and proof repo" {
   local readme="$BATS_TEST_DIRNAME/../README.md"
   grep -q "docs/examples/public-launch-proof.md" "$readme"
-  grep -q "Private staging status" "$readme"
-  grep -q "Public launch target: pinned release" "$readme"
+  grep -q "https://github.com/sky2464/agtoosa-first-15-proof" "$readme"
+  ! grep -q "Private staging status" "$readme"
+  grep -q "Public launch: pinned release" "$readme"
 }
 
-@test "DEV-041 PL-004: test plan records current public 404 blocker" {
+@test "DEV-041 PL-004: test plan records public publication evidence" {
   local tp="$BATS_TEST_DIRNAME/../docs/AgToosa_TestPlan-DEV-041.md"
   grep -q "PL-001" "$tp"
   grep -q "PL-008" "$tp"
-  grep -q "HTTP 404" "$tp"
-  grep -q "owner-controlled publication" "$tp"
+  grep -q "public mode passes" "$tp"
+  grep -q "agtoosa-first-15-proof" "$tp"
+  ! grep -q "HTTP 404" "$tp"
 }
 
-@test "DEV-041 PL-005: Master-Plan marks DEV-041 blocked on publication surfaces" {
+@test "DEV-041 PL-005: Master-Plan marks DEV-041 shipped" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q "DEV-041.*Blocked" "$mp"
-  grep -q "blocked on public GitHub/registry/tap/demo publication" "$mp"
-  grep -q "manual/publication blocked" "$mp"
+  grep -q "DEV-041.*Shipped" "$mp"
+  grep -q "public launch publication proof complete" "$mp"
+  ! grep -q "manual/publication blocked" "$mp"
 }

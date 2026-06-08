@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-06-07 (/agtoosa-build DEV-041 public launch proof)
+> **Last updated:** 2026-06-08 (/agtoosa-ship DEV-041 public launch proof)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Milestone | `v5.2.7` (next) — patch-first per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | DEV-041 public launch publication proof |
+| Milestone | `v5.2.8` (next) — patch-first per `docs/adr/ADR-005-release-cadence.md` |
+| Active cycle | _(none)_ |
 | Cycle capacity | `8 story points` |
-| Current phase | 🚫 DEV-041 local proof gate built — blocked on public GitHub/registry/tap/demo publication |
+| Current phase | 🏁 DEV-041 public launch publication proof complete |
 
 ## Active Cycle
 
@@ -20,8 +20,9 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-041 | Public launch publication proof | Chore | M | 🚫 Blocked | 4/7 |
+| *(Empty — ready for next `/agtoosa-spec`)* | | | | | |
 
+<!-- Archived to docs/archived/cycle-2026-06-07-release-5.2.7.md -->
 <!-- Archived to docs/archived/cycle-2026-06-07-release-5.2.6.md -->
 <!-- Archived to docs/archived/cycle-2026-06-05-release-5.2.5.md -->
 <!-- Prior: docs/archived/cycle-2026-05-24-release-5.2.0.md -->
@@ -35,15 +36,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-**DEV-041 — Public launch publication proof** (spec: `docs/archived/spec-DEV-041.md`)
-
-- [ ] **1.** Publish/confirm anonymous repo and release surfaces — _AC-001, AC-002, AC-003, AC-006_ `[manual/publication blocked]`
-- [x] **2.** Run public-mode launch readiness and capture output — _AC-001, AC-006_
-- [x] **3.** Verify registry and Homebrew distribution status — _AC-004, AC-005_
-- [ ] **4.** Create or link public first-15-minute proof project — _AC-007_ `[manual/publication blocked]`
-- [ ] **5.** Update README launch wording only after public checks pass — _AC-002, AC-005, AC-008_ `[manual/publication blocked]`
-- [x] **6.** Add or update focused tests if checker/docs behavior changes — _AC-001-AC-008_
-- [x] **7.** Record validation evidence in the DEV-041 test plan — _AC-001-AC-008_
+*(Empty — DEV-041 tasks archived to `docs/archived/cycle-2026-06-07-release-5.2.7.md`.)*
 
 <!--
 **DEV-029 — Stop branch-protection workflow failure emails** (spec: `docs/archived/spec-DEV-029.md`) — shipped 2026-05-25 v5.2.1
@@ -307,6 +300,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-030 | Fix: `/agtoosa-update` self-target uncertainty | 2026-06-05 | [spec-DEV-030.md](archived/spec-DEV-030.md) · [review-DEV-030.md](archived/review-DEV-030.md) |
 | DEV-033 | Fix: agtoosa.ps1 PSScriptAnalyzer approved verbs | 2026-06-05 | [spec-DEV-033.md](archived/spec-DEV-033.md) · [review-DEV-033.md](archived/review-DEV-033.md) |
 | DEV-034 | Chore: Maintainer release-state reconciliation | 2026-06-05 | [spec-DEV-034.md](archived/spec-DEV-034.md) · [review-DEV-034.md](archived/review-DEV-034.md) |
+| DEV-041 | Chore: Public launch publication proof | 2026-06-08 | [spec-DEV-041.md](archived/spec-DEV-041.md) · [review-DEV-041.md](archived/review-DEV-041.md) |
 
 ## Update Log
 
@@ -520,3 +514,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-06-07 | 🚀 Release 5.2.6 shipped — v5.2.6; launch-readiness sequence on main; version parity bash/ps1; active cycle archived | AgToosa |
 | 2026-06-07 | ✏️ /agtoosa-spec DEV-041 — Public launch publication proof; estimate M; active Todo; test plan: `docs/AgToosa_TestPlan-DEV-041.md` | AgToosa |
 | 2026-06-07 | 🏗️ /agtoosa-build DEV-041 local gate — public checker now aggregates all URL failures; public mode currently reports 12 unavailable surfaces (repo, releases, badges, bootstraps, registry, issues, discussions, security policy, Homebrew); blocked on publication | AgToosa |
+| 2026-06-08 | 🏗️ /agtoosa-build DEV-041 public proof complete — repo, release, raw bootstraps, registry, Homebrew tap, support surfaces, and proof repo public; public launch publication proof complete | AgToosa |
+| 2026-06-08 | 🔍 Review ✅ Passed — DEV-041; 0 🔴 Critical, 1 🟡 Warning accepted; report: `docs/archived/review-DEV-041.md` | AgToosa |
+| 2026-06-08 | 🚀 Ship complete — DEV-041 v5.2.7 Shipped; CHANGELOG + version pins; public launch gate; full suite pending current ship verification; Milestone v5.2.8 (next) | AgToosa |
+| 2026-06-08 | 🚀 Release 5.2.7 shipped — v5.2.7; public launch publication proof on main; version parity bash/ps1; active cycle archived | AgToosa |
