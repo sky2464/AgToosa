@@ -15,7 +15,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ### Added
 
-- 2026-06-08 — chore — DEV-041 public launch publication proof: public repo, release, raw bootstraps, registry, Homebrew tap, support/community surfaces, and proof repo — `docs/archived/spec-DEV-041.md`
+- 2026-06-08 — chore — DEV-041 public launch publication proof: public repo, release, raw bootstraps, registry, Homebrew tap, support/community surfaces, proof repo, idempotent release workflows, and Dependency-Check workflow fix — `docs/archived/spec-DEV-041.md`
 
 ---
 

@@ -3937,3 +3937,20 @@ JSON
   grep -q "public launch publication proof complete" "$mp"
   ! grep -q "manual/publication blocked" "$mp"
 }
+
+@test "DEV-041 PL-006: release workflows are idempotent when release already exists" {
+  local basic="$BATS_TEST_DIRNAME/../.github/workflows/release.yml"
+  local advanced="$BATS_TEST_DIRNAME/../.github/workflows/release-advanced.yml"
+
+  grep -q "gh release view" "$basic"
+  grep -q "gh release view" "$advanced"
+  grep -q "gh release edit" "$basic"
+  grep -q "gh release edit" "$advanced"
+}
+
+@test "DEV-041 PL-007: dependency check workflow avoids invalid folded others argument" {
+  local workflow="$BATS_TEST_DIRNAME/../.github/workflows/security-scan.yml"
+
+  ! grep -q "others:" "$workflow"
+  ! grep -q -- "--exclude node_modules,tests,.git,.github,.wiki,template" "$workflow"
+}

@@ -16,6 +16,8 @@
 | AC-006 | PL-006 | Community/support | issues, discussions, release page, security policy, and badges resolve anonymously | yes |
 | AC-007 | PL-007 | Proof project | Public demo project shows generated files plus spec/test-plan/review/ship evidence | yes |
 | AC-008 | PL-008 | Docs truthfulness | Launch docs preserve enforcement boundary language and avoid overclaiming | no |
+| AC-001 | PL-006 | Release CI | Release workflows update existing releases instead of failing on duplicate release creation | yes |
+| AC-001 | PL-007 | Security CI | Dependency-Check workflow avoids invalid folded `others` arguments | yes |
 
 ## Commands
 
@@ -39,4 +41,6 @@ git diff --check
 - `https://raw.githubusercontent.com/sky2464/agtoosa-registry/main/registry.json` returns valid JSON; the launch index is intentionally empty until public packs are published.
 - `https://github.com/sky2464/homebrew-agtoosa` is public and contains `Formula/agtoosa.rb`.
 - `https://github.com/sky2464/agtoosa-first-15-proof` is public and contains generated-style workflow files plus spec, test-plan, review, and ship-check evidence.
+- Release workflows use `gh release view` before create/edit so repeated tag automation does not fail when a release already exists.
+- Security workflow no longer passes the invalid folded Dependency-Check `others` argument.
 ```

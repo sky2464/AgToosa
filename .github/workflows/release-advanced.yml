@@ -152,6 +152,8 @@ jobs:
   publish-release:
     name: Publish GitHub Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     needs: [version-validation, extract-changelog]
     if: success()
     steps:
@@ -167,10 +169,17 @@ jobs:
           if [[ "${{ github.event.inputs.prerelease || false }}" == "true" ]]; then
             args+=(--prerelease)
           fi
-          gh release create "${{ needs.version-validation.outputs.tag }}" \
-            --title "Release ${{ needs.version-validation.outputs.tag }}" \
-            --notes-file /tmp/release-notes.md \
-            "${args[@]}"
+          if gh release view "${{ needs.version-validation.outputs.tag }}" >/dev/null 2>&1; then
+            gh release edit "${{ needs.version-validation.outputs.tag }}" \
+              --title "Release ${{ needs.version-validation.outputs.tag }}" \
+              --notes-file /tmp/release-notes.md \
+              "${args[@]}"
+          else
+            gh release create "${{ needs.version-validation.outputs.tag }}" \
+              --title "Release ${{ needs.version-validation.outputs.tag }}" \
+              --notes-file /tmp/release-notes.md \
+              "${args[@]}"
+          fi
 
   bump-homebrew-formula:
     name: Bump Homebrew Formula

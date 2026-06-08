@@ -17,6 +17,8 @@ DEV-041 publishes and verifies the launch surfaces that were intentionally block
 | Homebrew tap | PASS: `sky2464/homebrew-agtoosa` resolves publicly |
 | Proof project | PASS: `sky2464/agtoosa-first-15-proof` resolves publicly |
 | Version parity | PASS: Bash, PowerShell, README, Formula, and bats expect `5.2.7` |
+| Release CI | PASS: release workflows are idempotent when a release already exists |
+| Security CI | PASS: Dependency-Check no longer receives invalid folded `others` input |
 
 ## Findings
 

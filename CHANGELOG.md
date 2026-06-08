@@ -17,7 +17,7 @@ Patch release: DEV-041 public launch publication proof.
 
 ### Added
 
-- **DEV-041 — Public launch publication proof.** Publish and verify anonymous access to the public repo, `v5.2.7` release, raw bootstrap files, registry index, Homebrew tap, support/community surfaces, and first-15-minute proof repository.
+- **DEV-041 — Public launch publication proof.** Publish and verify anonymous access to the public repo, `v5.2.7` release, raw bootstrap files, registry index, Homebrew tap, support/community surfaces, and first-15-minute proof repository; harden release workflows to update existing releases and remove the invalid Dependency-Check folded `others` argument.
 
 ---
 

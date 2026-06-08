@@ -50,9 +50,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           printf '%b\n' "${{ steps.changelog.outputs.content }}" > /tmp/release-notes.md
-          gh release create "${{ steps.version.outputs.tag_name }}" \
-            --title "AgToosa ${{ steps.version.outputs.version }}" \
-            --notes-file /tmp/release-notes.md
+          if gh release view "${{ steps.version.outputs.tag_name }}" >/dev/null 2>&1; then
+            gh release edit "${{ steps.version.outputs.tag_name }}" \
+              --title "AgToosa ${{ steps.version.outputs.version }}" \
+              --notes-file /tmp/release-notes.md
+          else
+            gh release create "${{ steps.version.outputs.tag_name }}" \
+              --title "AgToosa ${{ steps.version.outputs.version }}" \
+              --notes-file /tmp/release-notes.md
+          fi
 
       - name: Update project status
         run: |
