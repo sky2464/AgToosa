@@ -422,6 +422,7 @@ _install_local_pack() {
     echo "Error: Failed to stage local pack" >&2
     return 1
   }
+  _normalize_pack_dir "$pack_dir" "$pack_name"
 
   validate_pack_files "$pack_dir" || {
     rm -rf "$pack_dir"

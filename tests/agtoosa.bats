@@ -3699,6 +3699,61 @@ JSON
   grep -q "WP-005" "$tp"
 }
 
+@test "DEV-036 WP-006: PowerShell update merges settings.json hooks without data loss" {
+  command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
+
+  local project="$TEST_PROJECT/ps-settings-merge"
+  mkdir -p "$project/Docs" "$project/.claude/commands"
+  echo "5.0.0" > "$project/Docs/.agtoosa-version"
+  printf 'User notes\n\n<!-- AgToosa v5.0.0 START -->\nold claude block\n<!-- AgToosa END -->\n' > "$project/CLAUDE.md"
+  cat > "$project/.claude/settings.json" <<'JSON'
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo user-custom-stop-hook-sentinel"
+          }
+        ]
+      }
+    ]
+  }
+}
+JSON
+
+  run pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1" -Update -UpdatePath "$project"
+  [ "$status" -eq 0 ]
+
+  run python3 -c "
+import json
+d = json.load(open('$project/.claude/settings.json'))
+cmds = [
+    h.get('command', '')
+    for handlers in d.get('hooks', {}).values()
+    for entry in handlers
+    for h in entry.get('hooks', [])
+]
+assert any('user-custom-stop-hook-sentinel' in c for c in cmds), 'custom hook lost'
+assert any('block-dangerous-git.sh' in c for c in cmds), 'guardrail hook missing'
+"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-036 WP-007: Bash --update creates settings.json when missing" {
+  local project="$TEST_PROJECT/bash-settings-create"
+  mkdir -p "$project/Docs" "$project/.claude/commands"
+  echo "5.0.0" > "$project/Docs/.agtoosa-version"
+  printf 'User notes\n\n<!-- AgToosa v5.0.0 START -->\nold claude block\n<!-- AgToosa END -->\n' > "$project/CLAUDE.md"
+  [ ! -f "$project/.claude/settings.json" ]
+
+  run bash "$SCRIPT" --update "$project"
+  [ "$status" -eq 0 ]
+  [ -f "$project/.claude/settings.json" ]
+  grep -q 'block-dangerous-git.sh' "$project/.claude/settings.json"
+}
+
 # -- DEV-037 Truthful launch documentation and positioning (TD-001-TD-005) ---
 
 @test "DEV-037 TD-001: README dependency claim is qualified" {

@@ -218,8 +218,8 @@ run_update() {
   # Step 3: Native dirs — overwrite known AgToosa files only
   dirs_updated="$(update_native_dirs)"
 
-  # Step 4: .claude/settings.json — deep-merge hooks
-  if [[ "$USE_CLAUDE" == true && -f "${PROJECT_PATH}/.claude/settings.json" ]]; then
+  # Step 4: .claude/settings.json — deep-merge hooks (or create when missing)
+  if [[ "$USE_CLAUDE" == true ]]; then
     merge_settings_json "${TEMPLATE_DIR}/.claude/settings.json" \
       "${PROJECT_PATH}/.claude/settings.json" ".claude/settings.json"
   fi
