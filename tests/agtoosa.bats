@@ -3888,3 +3888,48 @@ JSON
   grep -q 'Release 5.2.6 shipped' "$mp"
   [ -f "$BATS_TEST_DIRNAME/../docs/archived/cycle-2026-06-07-release-5.2.6.md" ]
 }
+
+# -- DEV-041 Public launch publication proof (PL-001-PL-008) -----------------
+
+@test "DEV-041 PL-001: public checker accumulates URL failures" {
+  local checker="$BATS_TEST_DIRNAME/../scripts/check-launch-readiness.sh"
+  grep -q "FAILURES=0" "$checker"
+  grep -q "record_fail" "$checker"
+  grep -q "Launch readiness failed" "$checker"
+  grep -q "public surface(s) unavailable" "$checker"
+}
+
+@test "DEV-041 PL-002: public proof checklist covers required launch surfaces" {
+  local proof="$BATS_TEST_DIRNAME/../docs/examples/public-launch-proof.md"
+  [ -f "$proof" ]
+  grep -q "Repository" "$proof"
+  grep -q "Release" "$proof"
+  grep -q "Bash bootstrap" "$proof"
+  grep -q "PowerShell bootstrap" "$proof"
+  grep -q "Registry" "$proof"
+  grep -q "Homebrew" "$proof"
+  grep -q "Support" "$proof"
+  grep -q "Demo project" "$proof"
+}
+
+@test "DEV-041 PL-003: README links public launch proof without removing private staging gate" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  grep -q "docs/examples/public-launch-proof.md" "$readme"
+  grep -q "Private staging status" "$readme"
+  grep -q "Public launch target: pinned release" "$readme"
+}
+
+@test "DEV-041 PL-004: test plan records current public 404 blocker" {
+  local tp="$BATS_TEST_DIRNAME/../docs/AgToosa_TestPlan-DEV-041.md"
+  grep -q "PL-001" "$tp"
+  grep -q "PL-008" "$tp"
+  grep -q "HTTP 404" "$tp"
+  grep -q "owner-controlled publication" "$tp"
+}
+
+@test "DEV-041 PL-005: Master-Plan marks DEV-041 blocked on publication surfaces" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  grep -q "DEV-041.*Blocked" "$mp"
+  grep -q "blocked on public GitHub/registry/tap/demo publication" "$mp"
+  grep -q "manual/publication blocked" "$mp"
+}

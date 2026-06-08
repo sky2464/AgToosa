@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-06-07 (/agtoosa-spec DEV-041 public launch proof)
+> **Last updated:** 2026-06-07 (/agtoosa-build DEV-041 public launch proof)
 
 ## Project Charter
 
@@ -12,7 +12,7 @@
 | Milestone | `v5.2.7` (next) — patch-first per `docs/adr/ADR-005-release-cadence.md` |
 | Active cycle | DEV-041 public launch publication proof |
 | Cycle capacity | `8 story points` |
-| Current phase | 📋 DEV-041 spec approved — waiting for public publication gates |
+| Current phase | 🚫 DEV-041 local proof gate built — blocked on public GitHub/registry/tap/demo publication |
 
 ## Active Cycle
 
@@ -20,7 +20,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-041 | Public launch publication proof | Chore | M | 🟦 Todo | 0/7 |
+| DEV-041 | Public launch publication proof | Chore | M | 🚫 Blocked | 4/7 |
 
 <!-- Archived to docs/archived/cycle-2026-06-07-release-5.2.6.md -->
 <!-- Archived to docs/archived/cycle-2026-06-05-release-5.2.5.md -->
@@ -37,13 +37,13 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 **DEV-041 — Public launch publication proof** (spec: `docs/archived/spec-DEV-041.md`)
 
-- [ ] **1.** Publish/confirm anonymous repo and release surfaces — _AC-001, AC-002, AC-003, AC-006_
-- [ ] **2.** Run public-mode launch readiness and capture output — _AC-001, AC-006_
-- [ ] **3.** Verify registry and Homebrew distribution status — _AC-004, AC-005_
-- [ ] **4.** Create or link public first-15-minute proof project — _AC-007_
-- [ ] **5.** Update README launch wording only after public checks pass — _AC-002, AC-005, AC-008_
-- [ ] **6.** Add or update focused tests if checker/docs behavior changes — _AC-001-AC-008_
-- [ ] **7.** Record validation evidence in the DEV-041 test plan — _AC-001-AC-008_
+- [ ] **1.** Publish/confirm anonymous repo and release surfaces — _AC-001, AC-002, AC-003, AC-006_ `[manual/publication blocked]`
+- [x] **2.** Run public-mode launch readiness and capture output — _AC-001, AC-006_
+- [x] **3.** Verify registry and Homebrew distribution status — _AC-004, AC-005_
+- [ ] **4.** Create or link public first-15-minute proof project — _AC-007_ `[manual/publication blocked]`
+- [ ] **5.** Update README launch wording only after public checks pass — _AC-002, AC-005, AC-008_ `[manual/publication blocked]`
+- [x] **6.** Add or update focused tests if checker/docs behavior changes — _AC-001-AC-008_
+- [x] **7.** Record validation evidence in the DEV-041 test plan — _AC-001-AC-008_
 
 <!--
 **DEV-029 — Stop branch-protection workflow failure emails** (spec: `docs/archived/spec-DEV-029.md`) — shipped 2026-05-25 v5.2.1
@@ -519,3 +519,4 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-06-07 | 🚀 Ship complete — DEV-035-DEV-040 v5.2.6; CHANGELOG + version pins; private launch gate; full suite 387/387; Milestone v5.2.7 (next) | AgToosa |
 | 2026-06-07 | 🚀 Release 5.2.6 shipped — v5.2.6; launch-readiness sequence on main; version parity bash/ps1; active cycle archived | AgToosa |
 | 2026-06-07 | ✏️ /agtoosa-spec DEV-041 — Public launch publication proof; estimate M; active Todo; test plan: `docs/AgToosa_TestPlan-DEV-041.md` | AgToosa |
+| 2026-06-07 | 🏗️ /agtoosa-build DEV-041 local gate — public checker now aggregates all URL failures; public mode currently reports 12 unavailable surfaces (repo, releases, badges, bootstraps, registry, issues, discussions, security policy, Homebrew); blocked on publication | AgToosa |

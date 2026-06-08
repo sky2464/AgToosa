@@ -23,6 +23,8 @@ bash "$tmpdir/AgToosa/agtoosa.sh"
 
 When the public repo is launched, use the pinned public release command from the README instead.
 
+For publication readiness, pair this walkthrough with the [public launch proof checklist](public-launch-proof.md).
+
 ## 2. Generator Created
 
 After the generator runs, the repo should contain workflow files such as:

@@ -2,7 +2,7 @@
 
 > **Spec:** `docs/archived/spec-DEV-041.md`
 > **Coverage target:** public launch URLs, pinned install proof, registry/tap availability, demo proof project
-> **Smoke filter:** `bats tests/agtoosa.bats -f "DEV-041"` if checker/docs tests are added during build
+> **Smoke filter:** `bats tests/agtoosa.bats -f "DEV-041"`
 
 ## AC Coverage
 
@@ -32,5 +32,8 @@ git diff --check
 ## Validation Evidence
 
 ```text
-Pending: public-mode checks require `sky2464/AgToosa` and related distribution surfaces to be anonymous-accessible.
+2026-06-07 local build evidence:
+- `bash scripts/check-launch-readiness.sh --mode public` currently exits 1 because 12 public GitHub surfaces return HTTP 404 while the repo/registry/tap remain private or unpublished.
+- `curl` spot checks returned 404 for repository, releases, raw bootstrap files, registry JSON, and Homebrew tap.
+- Local DEV-041 docs/checker coverage is implemented; public integration evidence remains pending owner-controlled publication.
 ```

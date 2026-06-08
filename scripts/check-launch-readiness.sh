@@ -53,9 +53,16 @@ pass() {
   printf 'ok - %s\n' "$1"
 }
 
+FAILURES=0
+
 fail() {
   printf 'not ok - %s\n' "$1" >&2
   exit 1
+}
+
+record_fail() {
+  printf 'not ok - %s\n' "$1" >&2
+  FAILURES=$((FAILURES + 1))
 }
 
 require_file() {
@@ -82,7 +89,7 @@ check_url() {
       pass "$label ($code)"
       ;;
     *)
-      fail "$label returned HTTP $code: $url"
+      record_fail "$label returned HTTP $code: $url"
       ;;
   esac
 }
@@ -122,3 +129,8 @@ check_url "https://github.com/sky2464/AgToosa/issues" "GitHub issues"
 check_url "https://github.com/sky2464/AgToosa/discussions" "GitHub discussions"
 check_url "https://github.com/sky2464/AgToosa/security/policy" "SECURITY.md public policy"
 check_url "https://github.com/sky2464/homebrew-agtoosa" "Homebrew tap"
+
+if [[ "$FAILURES" -gt 0 ]]; then
+  printf 'Launch readiness failed: %s public surface(s) unavailable.\n' "$FAILURES" >&2
+  exit 1
+fi

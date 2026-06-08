@@ -31,6 +31,8 @@ git clone https://github.com/sky2464/AgToosa.git && cd AgToosa && bash agtoosa.s
 
 See the [first 15 minutes proof](docs/examples/first-15-minutes.md) for a clean-repo walkthrough that shows generated workflow files and expected spec/test-plan/review/ship-check artifacts.
 
+Before public announcement, run the [public launch proof checklist](docs/examples/public-launch-proof.md) and keep private-staging wording until every public surface passes.
+
 For teams evaluating assurance boundaries, see the [team trust roadmap](docs/AgToosa_Team_Trust_Roadmap.md).
 
 </div>
