@@ -110,7 +110,6 @@ jobs:
         shell: pwsh
         timeout-minutes: 5
         run: |
-          Install-PackageProvider -Name NuGet -Force -Scope CurrentUser
           Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
           Install-Module PSScriptAnalyzer -RequiredVersion 1.21.0 -Force -AllowClobber -Scope CurrentUser -Repository PSGallery -Confirm:$false
           $findings = Invoke-ScriptAnalyzer -Path "$env:GITHUB_WORKSPACE\agtoosa.ps1" -IncludeRule PSUseApprovedVerbs -Severity Error, Warning
