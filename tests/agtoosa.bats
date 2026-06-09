@@ -3699,6 +3699,35 @@ JSON
   grep -q "WP-005" "$tp"
 }
 
+@test "DEV-036 WP-006: PowerShell settings.json merge preserves user hooks on reinstall" {
+  command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
+
+  local project="$TEST_PROJECT/ps-settings-merge"
+  mkdir -p "$project"
+
+  run bash -c "printf '$project\n3\nY\n' | AGTOOSA_PACK_QUEUE_DIR='$project/queue' pwsh -NoProfile -File '$BATS_TEST_DIRNAME/../agtoosa.ps1'"
+  [ "$status" -eq 0 ]
+  [ -f "$project/.claude/settings.json" ]
+
+  python3 -c "
+import json
+path = '$project/.claude/settings.json'
+with open(path) as f:
+    data = json.load(f)
+data.setdefault('hooks', {}).setdefault('Stop', []).append({
+    'hooks': [{'type': 'command', 'command': 'echo user-stop-hook'}]
+})
+with open(path, 'w') as f:
+    json.dump(data, f, indent=2)
+    f.write('\n')
+"
+
+  run bash -c "printf '$project\n3\nY\n' | AGTOOSA_PACK_QUEUE_DIR='$project/queue' pwsh -NoProfile -File '$BATS_TEST_DIRNAME/../agtoosa.ps1' -Force"
+  [ "$status" -eq 0 ]
+  grep -q 'user-stop-hook' "$project/.claude/settings.json"
+  grep -q 'block-dangerous-git.sh' "$project/.claude/settings.json"
+}
+
 # -- DEV-037 Truthful launch documentation and positioning (TD-001-TD-005) ---
 
 @test "DEV-037 TD-001: README dependency claim is qualified" {
