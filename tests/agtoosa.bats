@@ -3447,6 +3447,20 @@ PY
   [ -f "$TEST_PROJECT/.codex/prompts/agtoosa-status.md" ]
 }
 
+@test "MR4: PowerShell re-install merges Claude hooks into existing settings.json" {
+  command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
+
+  mkdir -p "$TEST_PROJECT/.claude"
+  printf '{ "hooks": { "Stop": [ { "hooks": [ { "type": "command", "command": "echo user-stop-hook" } ] } ] } }\n' \
+    > "$TEST_PROJECT/.claude/settings.json"
+
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | pwsh -NoProfile -File '$BATS_TEST_DIRNAME/../agtoosa.ps1'"
+  [ "$status" -eq 0 ]
+  grep -q 'user-stop-hook' "$TEST_PROJECT/.claude/settings.json"
+  grep -q 'block-dangerous-git.sh' "$TEST_PROJECT/.claude/settings.json"
+  [ -f "$TEST_PROJECT/.claude/hooks/block-dangerous-git.sh" ]
+}
+
 @test "MR3: PowerShell fresh install does not write lock file without packs" {
   command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
 

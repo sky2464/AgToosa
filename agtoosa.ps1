@@ -305,6 +305,55 @@ function Merge-PlatformFile([string]$src, [string]$dst, [string]$label) {
     Write-Color "  ${GREEN}✅${NC} $label ${CYAN}(appended to existing file, backup: $(Split-Path -Leaf $bak))${NC}"
 }
 
+# Deep-merge AgToosa hooks into an existing .claude/settings.json without touching user settings.
+function Merge-SettingsJson([string]$src, [string]$dst, [string]$label) {
+    $dir = Split-Path -Parent $dst
+    if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+
+    if (-not (Test-Path $dst)) {
+        Copy-Item $src $dst
+        Write-Color "  ${GREEN}✅${NC} $label"
+        return
+    }
+
+    $tmp = [System.IO.Path]::GetTempFileName()
+    $py = @'
+import json, sys
+
+src_path, dst_path, out_path = sys.argv[1], sys.argv[2], sys.argv[3]
+
+with open(src_path) as f:
+    new_cfg = json.load(f)
+with open(dst_path) as f:
+    existing = json.load(f)
+
+for event, handlers in new_cfg.get('hooks', {}).items():
+    existing.setdefault('hooks', {}).setdefault(event, [])
+    existing_cmds = {
+        h.get('command', '')
+        for entry in existing['hooks'][event]
+        for h in entry.get('hooks', [])
+    }
+    for handler in handlers:
+        new_cmds = {h.get('command', '') for h in handler.get('hooks', [])}
+        if not new_cmds.issubset(existing_cmds):
+            existing['hooks'][event].append(handler)
+
+with open(out_path, 'w') as f:
+    json.dump(existing, f, indent=2)
+    f.write('\n')
+'@
+
+    try {
+        $py | & python3 - $src $dst $tmp
+        if ($LASTEXITCODE -ne 0) { throw "python3 merge failed" }
+        Move-Item -Path $tmp -Destination $dst -Force
+        Write-Color "  ${GREEN}✅${NC} $label ${CYAN}(hooks merged)${NC}"
+    } catch {
+        Remove-Item $tmp -ErrorAction SilentlyContinue
+        Write-Color "  ${YELLOW}⚠️${NC}  $label — Python3 unavailable or JSON parse error, skipped"
+    }
+}
 
 function Copy-StageFiles([string[]]$platforms) {
     $docsCount = Copy-TemplateDirectory "Docs"
@@ -524,7 +573,7 @@ function Install-Files([string]$projectPath, [string[]]$platforms) {
                 Copy-StagedDirectory ".claude/hooks" $projectPath ".claude/hooks/" | Out-Null
                 $settingsSrc = Join-Path $SHIP_DIR ".claude/settings.json"
                 if (Test-Path $settingsSrc) {
-                    Copy-FileWithGuard $settingsSrc (Join-Path $projectPath ".claude/settings.json") ".claude/settings.json"
+                    Merge-SettingsJson $settingsSrc (Join-Path $projectPath ".claude/settings.json") ".claude/settings.json"
                 }
             }
             "gemini" {
