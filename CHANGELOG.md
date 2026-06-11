@@ -7,6 +7,11 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+### Fixed
+
+- **Pack lock provenance.** Merging queued registry packs no longer writes an empty `packs` array to `Docs/agtoosa-lock.json` — metadata is snapshotted before the queue directory is removed (bash + PowerShell).
+- **PowerShell merge containment.** `Merge-PackFromDirectory` now uses separator-aware canonical-path checks so sibling-directory prefix traps (e.g. `evil-pack` vs `evil-pack-stuff`) cannot bypass merge-time containment.
+
 ---
 
 ## [5.3.0] — 2026-06-10
