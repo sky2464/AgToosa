@@ -6,7 +6,7 @@ Read `Docs/AgToosa_Spec.md` and execute the `/agtoosa-spec` workflow. **Generate
 
 **Plan-Mode Spec Interview:** follow `Docs/AgToosa_Spec.md` → **Plan-Mode Spec Interview Contract** (canonical). Research before asking; adaptive cap **8** (`quick` cap **2**).
 
-Dispatch based on any arguments after the command: `research`, `plan`, `quick`, `tasks`, or `to-issues`. With no argument, run Parts 1–4.
+Dispatch based on any arguments after the command: `research`, `plan`, `quick`, `tasks`, `amend`, or `to-issues`. With no argument, run Parts 1–4.
 
 ## Agent Mode Execution Contract
 
@@ -26,7 +26,7 @@ Dispatch based on any arguments after the command: `research`, `plan`, `quick`, 
 
 **Forbidden for the full flow:** skipping Plan-Mode Spec Interview or research, Goal Contract, task planning, or the test plan skeleton; copying divergent Part 1 / Part 2 workflow section bodies from `Docs/AgToosa_Spec.md` into this prompt.
 
-**Sub-commands:** `research`, `plan`, `quick`, `tasks`, and `to-issues` each run their canonical slice with the same stop conditions from `Docs/AgToosa_Spec.md`.
+**Sub-commands:** `research`, `plan`, `quick`, `tasks`, `amend`, and `to-issues` each run their canonical slice with the same stop conditions from `Docs/AgToosa_Spec.md`.
 
 **Phase stop:** stop at the approval gate. Do **not** run `/agtoosa-build` automatically — the user must invoke it after approval.
 

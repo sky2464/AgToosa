@@ -44,6 +44,7 @@ Your core principles are:
 | `/agtoosa-spec plan` | **Part 2 only:** architecture blueprint + STRIDE threat model against an existing spec |
 | `/agtoosa-spec quick` | **Abbreviated:** condensed Q&A + spec for small bug fixes or chores; skips full threat modelling |
 | `/agtoosa-spec tasks` | **Part 4 only:** scope boundary + atomic task breakdown + test plan skeleton against an already-approved spec |
+| `/agtoosa-spec amend` | **Change control:** revise an already-approved spec with a revision-log entry; Must-AC changes require re-approval |
 
 ### `/agtoosa-build` — Implement with TDD, test
 
@@ -120,7 +121,10 @@ Specialist lanes must emit the **structured evidence block** defined in `docs/Ag
 
 ## Key References
 
+- `docs/AgToosa_Quickref.md` — One-page command + rules quickref (cheapest context entry point)
 - `docs/Master-Plan.md` — Source of truth for project state and backlog (read before every command)
+- `docs/agtoosa-verify.sh` — Deterministic lifecycle verifier (`bash docs/agtoosa-verify.sh [--strict|stats]`); CI gate template in `docs/agtoosa-gate.yml.example`
+- `docs/agtoosa-events.jsonl` — Append-only phase-event log written at every phase transition
 - `docs/AgToosa_Readiness.md` — Initial readiness checklist and promise-to-proof matrix
 - `docs/AgToosa_Goal.md` — Goal clarification utility/sub-workflow
 - `docs/AgToosa_Skills.md` — Subagent skill-to-command mapping and Codex skill contracts
@@ -181,7 +185,10 @@ Valid types: **Epic** · **Feature** · **Bug** · **Chore** · **Fix** · **Imp
 
 ### Phase Comment Protocol
 
-Post a comment on the active Story issue at each phase transition:
+Record a phase-transition note at each phase boundary. Where it goes depends on how the project tracks issues:
+
+- **Master-Plan-only mode (default):** append the note as an `## Update Log` row in `docs/Master-Plan.md` **and** one phase-event line in `docs/agtoosa-events.jsonl`. Do **not** create or comment on external issues.
+- **External issues exist** (the user ran `/agtoosa-spec to-issues` or explicitly tracks GitHub issues): additionally post the note as a comment on the active Story issue.
 
 ```
 [Phase] [emoji] [brief summary]
@@ -336,5 +343,6 @@ Every completed build task, test run, security scan, QA execution, review check,
 4. **Always** follow the TDD Red-Green-Refactor cycle during `/agtoosa-build` (if enabled).
 5. **Never** let a code file exceed 500 lines.
 6. **Always** archive completed work to `docs/archived/` during `/agtoosa-ship`.
-7. **Always** post a progress comment on the active Story issue at each phase transition using the Phase Comment Protocol above.
+7. **Always** record a phase-transition note at each phase boundary using the Phase Comment Protocol above (Master-Plan Update Log + `docs/agtoosa-events.jsonl` by default; issue comments only when external issues exist).
 8. **Always** triage any out-of-scope discovery during `/agtoosa-build` using the Discovery Triage Protocol above. Never silently fix or drop an out-of-scope finding.
+9. **Verify before claiming.** `bash docs/agtoosa-verify.sh` is the deterministic lifecycle gate — run it before declaring a build complete or a story ship-ready, and fix FAIL findings first.

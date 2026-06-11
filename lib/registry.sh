@@ -62,6 +62,89 @@ REGISTRY_CACHE_DIR="${AGTOOSA_REGISTRY_CACHE_DIR:-${HOME}/.cache/agtoosa}"
 REGISTRY_CACHE_FILE="${REGISTRY_CACHE_DIR}/registry.json"
 REGISTRY_CACHE_TIMEOUT=3600
 
+# Destinations a pack must never write to: executable-hook and CI surfaces.
+# Canonical definition lives in lib/install.sh; this guarded copy keeps
+# registry.sh self-contained when sourced standalone (tests, tooling).
+if ! declare -f pack_path_denied >/dev/null 2>&1; then
+  PACK_DENYLIST_PATTERNS=(
+    ".claude/settings.json"
+    ".claude/hooks/"
+    ".github/workflows/"
+  )
+
+  pack_path_denied() {
+    local rel="${1#/}"
+    local pat
+    for pat in "${PACK_DENYLIST_PATTERNS[@]}"; do
+      if [[ "$pat" == */ ]]; then
+        [[ "$rel" == "$pat"* ]] && return 0
+      else
+        [[ "$rel" == "$pat" ]] && return 0
+      fi
+    done
+    return 1
+  }
+fi
+
+# Reject tarballs whose member list contains absolute paths or '..' segments.
+# Must run BEFORE extraction — post-extract validation cannot undo a tar slip.
+assert_safe_tarball() {
+  local tarball="$1"
+  local entries
+  if ! entries=$(tar -tzf "$tarball" 2>/dev/null); then
+    echo "Error: Unable to read archive member list (corrupt archive?): $tarball" >&2
+    return 1
+  fi
+  local entry
+  while IFS= read -r entry; do
+    [[ -z "$entry" ]] && continue
+    if [[ "$entry" == /* ]]; then
+      echo "Error: Archive contains absolute path member: $entry" >&2
+      return 1
+    fi
+    case "/$entry/" in
+      */../*)
+        echo "Error: Archive contains path traversal member: $entry" >&2
+        return 1
+        ;;
+    esac
+  done <<< "$entries"
+  return 0
+}
+
+# Print the file tree of a staged pack with warnings for AI-instruction and
+# denied destinations, so the user confirms with full knowledge of contents.
+_print_pack_preview() {
+  local dir="$1"
+  local rel ai_count=0 denied_count=0
+  echo ""
+  echo "Pack contents:"
+  while IFS= read -r -d '' f; do
+    rel="${f#"$dir"/}"
+    [[ "$rel" == ".pack-meta.json" ]] && continue
+    if pack_path_denied "$rel"; then
+      echo "  ⛔ $rel  (blocked: sensitive destination, will NOT be merged)"
+      denied_count=$((denied_count + 1))
+    elif [[ "$rel" == .claude/* || "$rel" == .cursor/* || "$rel" == .windsurf/* || \
+            "$rel" == .gemini/* || "$rel" == .github/* || "$rel" == .codex/* || \
+            "$rel" == "CLAUDE.md" || "$rel" == "AGENTS.md" || "$rel" == "OPENCODE.md" || \
+            "$rel" == ".cursorrules" || "$rel" == ".windsurfrules" ]]; then
+      echo "  ⚠️  $rel  (AI instruction surface — your assistant will follow this content)"
+      ai_count=$((ai_count + 1))
+    else
+      echo "  •  $rel"
+    fi
+  done < <(find "$dir" -type f -print0 | sort -z)
+  if [[ $ai_count -gt 0 ]]; then
+    echo ""
+    echo "⚠️  ${ai_count} file(s) target AI instruction surfaces. Review them before confirming."
+  fi
+  if [[ $denied_count -gt 0 ]]; then
+    echo "⛔ ${denied_count} file(s) target denied destinations and will be skipped at merge."
+  fi
+  echo ""
+}
+
 # Compute SHA256 hash in a cross-platform way (macOS uses shasum, Linux uses sha256sum).
 compute_sha256() {
   local file="$1"
@@ -307,20 +390,22 @@ registry_install() {
   fi
 
   # Fetch registry and find pack entry.
-  local registry pack_entry pack_url pack_sha256 pack_version_resolved
+  local registry pack_entry pack_url pack_sha256 pack_version_resolved pack_verified
   registry=$(fetch_registry) || return 1
 
   pack_entry=$(registry_resolve_pack_entry "$registry" "$pack_name" "$pack_version") || return 1
 
-  # Extract URL, SHA-256, and version from pack entry.
+  # Extract URL, SHA-256, version, and verified flag from pack entry.
   if command -v jq &>/dev/null; then
     pack_url=$(echo "$pack_entry" | jq -r '.url')
     pack_sha256=$(echo "$pack_entry" | jq -r '.sha256')
     pack_version_resolved=$(echo "$pack_entry" | jq -r '.version')
+    pack_verified=$(echo "$pack_entry" | jq -r '.verified // false')
   else
     pack_url=$(echo "$pack_entry" | grep -oP '"url":\s*"\K[^"]+')
     pack_sha256=$(echo "$pack_entry" | grep -oP '"sha256":\s*"\K[^"]+')
     pack_version_resolved=$(echo "$pack_entry" | grep -oP '"version":\s*"\K[^"]+')
+    pack_verified=$(echo "$pack_entry" | grep -oP '"verified":\s*\K(true|false)' || echo "false")
   fi
 
   if [[ -n "$pack_version" ]] && [[ "$pack_version" != "$pack_version_resolved" ]]; then
@@ -328,17 +413,20 @@ registry_install() {
     return 1
   fi
 
-  # Show confirmation prompt.
-  echo ""
-  echo "Installing: $pack_name v${pack_version_resolved}"
-  read -p "Continue? (Y/n) " -r
-  if [[ "$REPLY" =~ ^[Nn]$ ]]; then
-    echo "Cancelled."
-    return 0
+  # Enforce the registry verified flag. Unverified packs require explicit opt-in.
+  if [[ "$pack_verified" != "true" && "${ALLOW_UNVERIFIED:-false}" != true && "${AGTOOSA_ALLOW_UNVERIFIED:-0}" != "1" ]]; then
+    echo "Error: Pack '$pack_name' is not verified in the registry." >&2
+    echo "Unverified packs have not passed maintainer review." >&2
+    echo "To install anyway, re-run with --allow-unverified (or AGTOOSA_ALLOW_UNVERIFIED=1)." >&2
+    return 1
   fi
 
+  echo ""
+  echo "Installing: $pack_name v${pack_version_resolved}"
+  [[ "$pack_verified" != "true" ]] && echo "⚠️  This pack is NOT verified (installing via --allow-unverified)."
+
   # Download pack tarball.
-  local tmpfile pack_dir
+  local tmpfile stage_dir pack_dir
   tmpfile=$(mktemp -d)/agtoosa-pack-$$.tar.gz
   mkdir -p "$(dirname "$tmpfile")"
 
@@ -365,31 +453,59 @@ registry_install() {
     return 1
   fi
 
-  # Extract to durable pack queue (survives ship/ rebuild on next agtoosa.sh run).
-  echo "Staging pack..."
-  pack_dir=$(_pack_queue_dir_for "$pack_name")
-  tar -xzf "$tmpfile" -C "$pack_dir" || {
-    echo "Error: Failed to extract pack" >&2
-    rm -rf "$(dirname "$tmpfile")" "$pack_dir"
+  # Reject hostile member paths BEFORE any extraction happens.
+  assert_safe_tarball "$tmpfile" || {
+    rm -rf "$(dirname "$tmpfile")"
     return 1
   }
-  _normalize_pack_dir "$pack_dir" "$pack_name"
 
-  validate_pack_files "$pack_dir" || {
-    rm -rf "$(dirname "$tmpfile")" "$pack_dir"
+  # Extract to an isolated staging dir first; only validated, user-confirmed
+  # content ever reaches the durable pack queue.
+  echo "Staging pack..."
+  stage_dir=$(mktemp -d)/agtoosa-stage-$$
+  mkdir -p "$stage_dir"
+  tar -xzf "$tmpfile" -C "$stage_dir" || {
+    echo "Error: Failed to extract pack" >&2
+    rm -rf "$(dirname "$tmpfile")" "$(dirname "$stage_dir")"
+    return 1
+  }
+  _normalize_pack_dir "$stage_dir" "$pack_name"
+
+  validate_pack_files "$stage_dir" || {
+    rm -rf "$(dirname "$tmpfile")" "$(dirname "$stage_dir")"
+    return 1
+  }
+
+  # Informed-consent gate: show full file tree + AI-surface warnings.
+  _print_pack_preview "$stage_dir"
+  if [[ "${ASSUME_YES:-false}" == true ]]; then
+    REPLY="Y"
+  else
+    read -p "Continue? (Y/n) " -r
+  fi
+  if [[ "$REPLY" =~ ^[Nn]$ ]]; then
+    echo "Cancelled."
+    rm -rf "$(dirname "$tmpfile")" "$(dirname "$stage_dir")"
+    return 0
+  fi
+
+  pack_dir=$(_pack_queue_dir_for "$pack_name")
+  cp -R "$stage_dir"/. "$pack_dir"/ || {
+    echo "Error: Failed to queue pack" >&2
+    rm -rf "$(dirname "$tmpfile")" "$(dirname "$stage_dir")" "$pack_dir"
     return 1
   }
 
   local installed_at
   installed_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-  printf '{\n  "name": "%s",\n  "version": "%s",\n  "sha256": "%s",\n  "installed_at": "%s",\n  "source": "registry"\n}\n' \
-    "$pack_name" "$pack_version_resolved" "$pack_sha256" "$installed_at" \
+  printf '{\n  "name": "%s",\n  "version": "%s",\n  "sha256": "%s",\n  "installed_at": "%s",\n  "source": "registry",\n  "verified": %s\n}\n' \
+    "$pack_name" "$pack_version_resolved" "$pack_sha256" "$installed_at" "$pack_verified" \
     > "${pack_dir}/.pack-meta.json"
 
   echo ""
   echo "✅ Pack queued at: $pack_dir"
   echo "Run 'bash agtoosa.sh' in your project to merge queued packs."
-  rm -rf "$(dirname "$tmpfile")"
+  rm -rf "$(dirname "$tmpfile")" "$(dirname "$stage_dir")"
 }
 
 # Install a local pack (offline mode).
@@ -407,9 +523,18 @@ _install_local_pack() {
   local pack_name
   pack_name=$(basename "$pack_path")
 
+  # Validate the source and show contents before asking for consent.
+  validate_pack_files "$pack_path" || return 1
+
   echo ""
   echo "Installing local pack: $pack_name"
-  read -p "Continue? (Y/n) " -r
+  echo "⚠️  Local packs bypass registry review and SHA-256 pinning — trust the source."
+  _print_pack_preview "$pack_path"
+  if [[ "${ASSUME_YES:-false}" == true ]]; then
+    REPLY="Y"
+  else
+    read -p "Continue? (Y/n) " -r
+  fi
   if [[ "$REPLY" =~ ^[Nn]$ ]]; then
     echo "Cancelled."
     return 0

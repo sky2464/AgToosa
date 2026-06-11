@@ -12,6 +12,6 @@ When executing `/agtoosa-qa` or any QA work, follow `Docs/AgToosa_QA.md` precise
 
 - Every Must-priority AC from the active spec must have a passing test.
 - Coverage must meet or exceed the threshold in `Docs/Context/workflow.md`.
-- Browser/device matrix from `Docs/Context/tech-stack.md` must be fully covered.
-- Run the test suite 3× to detect flaky tests before reporting pass.
+- Browser/device matrix from `Docs/Context/tech-stack.md` must be fully covered when the stack and available tooling support it; otherwise record the gap as a manual follow-up instead of claiming coverage.
+- Flaky-test detection: re-run only the tests that changed this story (or use the runner's `--repeat N` when available) instead of running the entire suite 3×; record any nondeterministic test as a defect.
 - Regression tests for bug fixes must follow the naming pattern `regression_[bug-id]_*`.

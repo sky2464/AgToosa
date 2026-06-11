@@ -7,7 +7,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+---
+
+## [5.3.0] — 2026-06-10
+
 ### Added
+
+- 2026-06-10 — feature — DEV-042–DEV-043 + DEV-061–DEV-073 proof engine + supply chain wave: deterministic verifier, CI gate template, phase-event log, tar-slip hardening, pack containment, pinned install chain, executable workflows, adapter/governance fixes, token diet, non-interactive CLI/npm wrapper, spec amend/living specs, doctor/uninstall — `docs/archived/cycle-2026-06-10-release-5.3.0.md`
 
 ---
 

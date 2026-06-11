@@ -7,7 +7,33 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+---
+
+## [5.3.0] — 2026-06-10
+
+MINOR release: proof engine + supply chain wave (DEV-042, DEV-043, DEV-061–DEV-073; 458 bats tests).
+
 ### Added
+
+- **DEV-042 — Spec Quality Analyzer.** Agent-instructed checklist in `/agtoosa-spec` flags weak specs before build; claim boundaries explicit.
+- **DEV-043 — Brownfield Spec Drift Baseline.** Current-state baseline step for existing codebases during spec authoring.
+- **DEV-061 — Deterministic lifecycle verifier.** New `Docs/agtoosa-verify.sh` ships with every install: validates context files, Master-Plan integrity, spec approval markers, EARS acceptance-criteria structure, AC-to-test-plan mapping, threat-model presence, task tree + wave plan, review artifacts, version parity, and RED/GREEN TDD evidence — no AI, no network. Wired into the generator as `agtoosa.sh --verify [path]`; `--strict` promotes warnings; `stats` mode reports cycle analytics.
+- **DEV-062 — AgToosa Gate CI template.** `Docs/agtoosa-gate.yml.example` runs the verifier on PRs/pushes; copy it to `.github/workflows/` to convert agent-instructed gates into CI-enforced checks (AgToosa never writes CI workflows automatically).
+- **DEV-063 — Phase-event log + Update Log rotation.** Workflows append one JSON line per phase transition to `Docs/agtoosa-events.jsonl`; `/agtoosa-ship` rotates Update Log rows beyond 150 into `Docs/archived/updatelog-<year>.md` (rows are preserved, never lost).
+- **DEV-070 — `Docs/AgToosa_Quickref.md`.** One-page command/rules contract as the cheapest context entry point; the Cursor core rule is no longer `alwaysApply` (scoped to Docs/ and `/agtoosa-*` runs); template default flips to `tdd: true`.
+- **DEV-071 — Non-interactive CLI + npm wrapper.** `agtoosa.sh --path <dir> --platforms cursor,claude --yes` installs with no TTY (CI/devcontainers); new `npm/` wrapper (`npx agtoosa`) downloads the release pinned to the package version with archive-safety screening.
+- **DEV-072 — Spec change control + living capability specs.** `/agtoosa-spec amend` with a `## Spec Revision Log` (Must-AC changes require re-approval); `## Capability Delta` (ADDED/MODIFIED/REMOVED) merges into living system specs under `Docs/specs/system/` at ship.
+- **DEV-073 — `--doctor` and `--uninstall`.** Install diagnostics (version skew, wiring, context health) and clean removal that preserves Master-Plan, Context/, archived/, and merged entry-point files.
+- **DEV-060 — Benchmark suite + enforcement comparison.** Reproducible B1–B3 challenge tasks with deterministic scoring (`docs/benchmarks/`) and a published enforcement-boundary comparison across SDD frameworks (`docs/enforcement-comparison.md`).
+
+### Fixed
+
+- **DEV-064 — Tar-slip hardening.** Registry pack installs and both bootstraps now scan archive member lists and reject absolute or `..` paths **before** extraction (previously validation ran post-extract); packs extract to an isolated staging dir before queueing.
+- **DEV-065 — Registry pack containment.** The registry `verified` flag is enforced (unverified packs require `--allow-unverified` / `AGTOOSA_ALLOW_UNVERIFIED=1`); installs show a full content preview flagging AI-instruction surfaces before consent; packs can no longer write `.claude/settings.json`, `.claude/hooks/`, or `.github/workflows/` (denylisted at merge with re-validation and `find -L` containment); PowerShell port gains `Test-SafeTarArchive`/`Test-PackFiles`/`Test-PackPathDenied` parity.
+- **DEV-066 — Pinned install chain fails closed.** `bootstrap.sh --ref vX.Y.Z` no longer falls back to a same-name branch when the tag is missing; new `--sha256 <hex>` verifies downloads; `Formula/agtoosa.rb` pins the tagged tarball + sha256 (was `branch: "main"`); releases publish versioned `bootstrap.sh`/`bootstrap.ps1` + `SHA256SUMS`; release publishing runs in a protected `release` environment; CI pins the bats tarball checksum; `bootstrap.ps1` passes the source dir via environment (quoting-injection fix).
+- **DEV-067 — Workflows are executable by non-interactive agents.** RED evidence (captured failing run) is mandatory before GREEN, with evidence blocks recorded in the story test plan; WIP commits stage explicit paths (no `git add -p`); ship squash is non-interactive (`git reset --soft` + backup ref); deployment branches on documented `tech-stack.md` targets or becomes `[manual]` (never hallucinated); `/agtoosa-revert` mandates a backup branch, prefers `git revert`, and gates `reset --hard` behind explicit confirmation; `/agtoosa-build` executes the spec's Wave Plan wave by wave.
+- **DEV-068 — Adapter drift.** Copilot core instructions no longer invert the PM source of truth (Master-Plan-first restored); all six entry points expose `init zoom-out` and `spec amend`; spec file naming unified on `Docs/archived/spec-[story-id].md` across Build/QA/Status/Master-Plan; stale maintainer mirrors (Linear-era Ship/Review copies) regenerated from canonical templates.
+- **DEV-069 — Governance wiring.** Phase-order abort strings from `AgToosa_Governance.md` now appear in Review/Ship prerequisites; Master-Plan template gains `## Active Diagnosis` / `## Hypotheses` for `/agtoosa-debug`; ship readiness gains QA-cleared and verifier-green rows; `/agtoosa-qa` reads the correct AC heading from SPEC-FORMAT; flake detection scoped to changed tests instead of 3× full-suite runs.
 
 ---
 

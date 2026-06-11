@@ -62,7 +62,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 # ── Version ───────────────────────────────────────────────────
-$AGTOOSA_VERSION = "5.2.7"
+$AGTOOSA_VERSION = "5.3.0"
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $TEMPLATE_DIR = Join-Path $SCRIPT_DIR "template"
 $SHIP_DIR = Join-Path $SCRIPT_DIR "ship"
@@ -424,14 +424,90 @@ function Move-ShipPacksToQueue {
     }
 }
 
+# Destinations a pack must never write to: executable-hook and CI surfaces.
+$PACK_DENYLIST_PREFIXES = @('.claude/hooks/', '.github/workflows/')
+$PACK_DENYLIST_FILES    = @('.claude/settings.json')
+
+function Test-PackPathDenied([string]$relPath) {
+    $norm = $relPath.Replace('\', '/').TrimStart('/')
+    foreach ($f in $PACK_DENYLIST_FILES) {
+        if ($norm -eq $f) { return $true }
+    }
+    foreach ($p in $PACK_DENYLIST_PREFIXES) {
+        if ($norm.StartsWith($p)) { return $true }
+    }
+    return $false
+}
+
+# Reject tarballs with absolute-path or '..' members BEFORE extraction.
+function Test-SafeTarArchive([string]$archivePath) {
+    $members = tar -tzf $archivePath 2>$null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Color "${RED}❌ Unable to read archive member list (corrupt archive?).${NC}"
+        return $false
+    }
+    foreach ($member in $members) {
+        if ([string]::IsNullOrWhiteSpace($member)) { continue }
+        if ($member.StartsWith('/') -or $member.StartsWith('\') -or $member -match '^[A-Za-z]:') {
+            Write-Color "${RED}❌ Archive contains absolute path member: $member${NC}"
+            return $false
+        }
+        if (('/' + $member.Replace('\', '/') + '/') -match '/\.\./') {
+            Write-Color "${RED}❌ Archive contains path traversal member: $member${NC}"
+            return $false
+        }
+    }
+    return $true
+}
+
+# Port of bash validate_pack_files: extension allowlist + canonical-path
+# containment so symlinks or crafted names cannot escape the pack directory.
+function Test-PackFiles([string]$dir) {
+    $allowed = @('md', 'json', 'toml', 'mdc')
+    $canonicalDir = [System.IO.Path]::GetFullPath($dir).TrimEnd('\', '/')
+    foreach ($file in Get-ChildItem -Path $dir -Recurse -File -Force) {
+        $canonicalFile = [System.IO.Path]::GetFullPath($file.FullName)
+        if (-not $canonicalFile.StartsWith($canonicalDir + [System.IO.Path]::DirectorySeparatorChar) -and
+            -not $canonicalFile.StartsWith($canonicalDir + '/')) {
+            Write-Color "${RED}❌ Pack contains path traversal: $($file.FullName)${NC}"
+            return $false
+        }
+        if ($file.LinkType) {
+            $target = $file.ResolveLinkTarget($true)
+            if ($target -and -not ([System.IO.Path]::GetFullPath($target.FullName)).StartsWith($canonicalDir)) {
+                Write-Color "${RED}❌ Pack contains escaping link: $($file.FullName)${NC}"
+                return $false
+            }
+        }
+        if ($file.Name -eq '.pack-meta.json') { continue }
+        $ext = $file.Extension.TrimStart('.')
+        if ([string]::IsNullOrEmpty($ext) -or ($allowed -notcontains $ext)) {
+            Write-Color "${RED}❌ Pack contains disallowed file type: $($file.FullName) (allowed: .md .json .toml .mdc)${NC}"
+            return $false
+        }
+    }
+    return $true
+}
+
 function Merge-PackFromDirectory([string]$packDir, [string]$packName, [string]$projectPath) {
     $allowed = @('md', 'json', 'toml', 'mdc')
     $count = 0
+    $canonicalDir = [System.IO.Path]::GetFullPath($packDir).TrimEnd('\', '/')
     Get-ChildItem -Path $packDir -Recurse -File | ForEach-Object {
         if ($_.Name -eq '.pack-meta.json') { return }
+        # Merge-time containment check (queue may have been modified).
+        $canonicalFile = [System.IO.Path]::GetFullPath($_.FullName)
+        if (-not $canonicalFile.StartsWith($canonicalDir)) {
+            Write-Color "  ${YELLOW}⏭${NC}  Skipping path-escaping file: $($_.FullName)"
+            return
+        }
         $ext = $_.Extension.TrimStart('.')
         if ($allowed -notcontains $ext) { return }
         $rel = $_.FullName.Substring($packDir.Length).TrimStart('\', '/')
+        if (Test-PackPathDenied $rel) {
+            Write-Color "  ${YELLOW}⛔${NC} Skipping sensitive destination: $rel (packs may not write hook or CI surfaces)"
+            return
+        }
         $dst = Join-Path $projectPath $rel
         $dstParent = Split-Path $dst -Parent
         if ($dstParent -and -not (Test-Path $dstParent)) {
@@ -675,6 +751,16 @@ function Invoke-RegistryInstall([string]$packSpec) {
         }
     }
 
+    # Enforce the registry verified flag. Unverified packs require explicit opt-in.
+    $packVerified = $false
+    if ($pack.PSObject.Properties['verified'] -and $pack.verified -eq $true) { $packVerified = $true }
+    if (-not $packVerified -and $env:AGTOOSA_ALLOW_UNVERIFIED -ne '1') {
+        Write-Color "${RED}❌ Pack '$packName' is not verified in the registry.${NC}"
+        Write-Color "Unverified packs have not passed maintainer review."
+        Write-Color "To install anyway, set AGTOOSA_ALLOW_UNVERIFIED=1 and retry."
+        exit 1
+    }
+
     $confirm = Read-Host "Installing: $packName v$($pack.version) — Continue? (Y/n)"
     if ([string]::IsNullOrEmpty($confirm)) { $confirm = "Y" }
     if ($confirm -notmatch "^[Yy]$") {
@@ -707,15 +793,21 @@ function Invoke-RegistryInstall([string]$packSpec) {
         exit 1
     }
 
-    # Extract to durable pack queue (survives ship\ rebuild on next agtoosa.ps1 run).
-    $packDir = New-PackQueueDirectory $packName
-
     $tarAvailable = $null -ne (Get-Command tar -ErrorAction SilentlyContinue)
     if (-not $tarAvailable) {
         Write-Color "${RED}❌ tar is not available on this system. Cannot extract the pack tarball.${NC}"
         Remove-Item $tmpFile -ErrorAction SilentlyContinue
         exit 1
     }
+
+    # Reject hostile member paths BEFORE any extraction happens.
+    if (-not (Test-SafeTarArchive $tmpFile)) {
+        Remove-Item $tmpFile -ErrorAction SilentlyContinue
+        exit 1
+    }
+
+    # Extract to durable pack queue (survives ship\ rebuild on next agtoosa.ps1 run).
+    $packDir = New-PackQueueDirectory $packName
 
     $proc = Start-Process -NoNewWindow -Wait -PassThru -FilePath tar -ArgumentList @('-xzf', $tmpFile, '-C', $packDir)
     if ($proc.ExitCode -ne 0) {
@@ -725,6 +817,14 @@ function Invoke-RegistryInstall([string]$packSpec) {
     }
 
     ConvertTo-PackDirectoryLayout $packDir $packName
+
+    # Validate extracted content (extension allowlist + containment) — parity
+    # with the bash validate_pack_files gate.
+    if (-not (Test-PackFiles $packDir)) {
+        Remove-Item -Recurse -Force $packDir -ErrorAction SilentlyContinue
+        Remove-Item $tmpFile -ErrorAction SilentlyContinue
+        exit 1
+    }
 
     Remove-Item $tmpFile -ErrorAction SilentlyContinue
 

@@ -1,15 +1,16 @@
 # AgToosa Homebrew Formula
 # This file is maintained in the sky2464/AgToosa repo and mirrored to
-# the sky2464/homebrew-agtoosa tap. Release automation should replace
-# the branch source with a tagged tarball and concrete sha256 when release
-# artifact pinning is enabled.
+# the sky2464/homebrew-agtoosa tap. The source is pinned to a tagged
+# release tarball with a concrete sha256 — release automation must bump
+# url/sha256/version together on every release.
 
 class Agtoosa < Formula
   desc "Spec-driven agentic AI framework generator for software development"
   homepage "https://github.com/sky2464/AgToosa"
-  url "https://github.com/sky2464/AgToosa.git", branch: "main"
+  url "https://github.com/sky2464/AgToosa/archive/refs/tags/v5.3.0.tar.gz"
+  sha256 "4fd01485ba571e894b34ef12efce061be06b1038f494b2e4522dfd2928c72859"
   license "MIT"
-  version "5.2.7"
+  version "5.3.0"
 
   def install
     bin.install "agtoosa.sh" => "agtoosa"

@@ -213,6 +213,25 @@ try {
         }
     }
 
+    # Reject archives with absolute-path or '..' members BEFORE extraction
+    # (post-extract checks cannot undo a tar slip).
+    $memberList = tar -tzf $ARCHIVE_PATH 2>$null
+    if ($LASTEXITCODE -ne 0) {
+        Print-Error "Error: Unable to read archive member list (corrupt archive?)"
+        exit 1
+    }
+    foreach ($member in $memberList) {
+        if ([string]::IsNullOrWhiteSpace($member)) { continue }
+        if ($member.StartsWith("/") -or $member.StartsWith("\")) {
+            Print-Error "Error: Archive contains absolute path member: $member"
+            exit 1
+        }
+        if (("/" + $member + "/") -match "/\.\./") {
+            Print-Error "Error: Archive contains path traversal member: $member"
+            exit 1
+        }
+    }
+
     # Extract archive
     Write-Host "Extracting..."
     tar -xzf $ARCHIVE_PATH -C $WORKDIR
@@ -251,10 +270,14 @@ try {
         exit 1
     }
 
-    # Execute agtoosa.sh via Git Bash
+    # Execute agtoosa.sh via Git Bash.
+    # The source directory is passed via the environment, not string
+    # interpolation, so quote characters in the path cannot inject shell code.
     Write-Host "Running AgToosa..."
-    & $gitBashPath -lc "cd '$srcDir' && bash agtoosa.sh"
+    $env:AGTOOSA_BOOTSTRAP_SRC = $srcDir
+    & $gitBashPath -lc 'cd "$AGTOOSA_BOOTSTRAP_SRC" && bash agtoosa.sh'
     $exitCode = $LASTEXITCODE
+    Remove-Item Env:\AGTOOSA_BOOTSTRAP_SRC -ErrorAction SilentlyContinue
 
 } finally {
     Cleanup

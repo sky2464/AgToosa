@@ -1,10 +1,8 @@
 # Product Context
 
-<!-- Fill in during /agtoosa-init. Used by /agtoosa-spec for requirements research. -->
 
 ## App Type
 app_type: "CLI Tool & AI Framework Generator (Bash + PowerShell)"
-# e.g., Web SaaS, Mobile App, CLI Tool, API Service, Browser Extension
 
 ## Target Users
 target_users: "Software developers and agentic AI coding assistants (e.g. Claude Code, Gemini CLI, Cursor, Windsurf, Copilot)"
@@ -28,7 +26,6 @@ non_goals:
 
 ## Current Milestone
 current_milestone: "v5.3.0"
-# e.g., MVP, v1.0, v2.0 public launch
 
 ## Success Metrics
 success_metrics:

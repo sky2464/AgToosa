@@ -1,0 +1,42 @@
+# AgToosa Gate — deterministic lifecycle verification in CI.
+#
+# AgToosa never writes into .github/workflows/ automatically (CI is a
+# sensitive surface). To enable the gate, copy this file yourself:
+#
+#   cp Docs/agtoosa-gate.yml.example .github/workflows/agtoosa-gate.yml
+#
+# The gate runs the repo-local verifier (no AI, no network) and fails the
+# check when AgToosa state is inconsistent: missing spec approval, unmapped
+# acceptance criteria, absent threat model, missing RED/GREEN TDD evidence.
+
+name: AgToosa Gate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: AgToosa lifecycle verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Run AgToosa verifier
+        run: |
+          if [ -f Docs/agtoosa-verify.sh ]; then
+            bash Docs/agtoosa-verify.sh --root .
+          elif [ -f docs/agtoosa-verify.sh ]; then
+            bash docs/agtoosa-verify.sh --root .
+          else
+            echo "agtoosa-verify.sh not found — update AgToosa (bash agtoosa.sh --update .)"
+            exit 1
+          fi
+
+      # Optional: fail on warnings too once your repo is fully green.
+      # - name: Run AgToosa verifier (strict)
+      #   run: bash Docs/agtoosa-verify.sh --root . --strict

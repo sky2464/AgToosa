@@ -24,11 +24,11 @@ During `/agtoosa-qa run`, capture command run, exit code, pass/fail, warnings, e
 ### Part 1 — Test Plan Generation (`/agtoosa-qa plan`)
 
 1. **Read the active spec:**
-   *   Open `Docs/AgToosa_Spec-*.md` and locate the `## Acceptance Criteria` table.
+   *   Open the active spec (`Docs/archived/spec-[story-id].md`) and locate the `### 1.2 Acceptance Criteria (EARS)` table (any heading containing `Acceptance Criteria`, or rows matching `AC-NNN`, qualifies).
    *   If no AC table exists, **stop** and instruct the user to run `/agtoosa-spec` or add ACs manually. Do **not** auto-run `/agtoosa-spec`.
 
-2. **Generate `Docs/AgToosa_TestPlan-[name].md`** containing:
-   *   **Spec reference** — link to the source `AgToosa_Spec-*.md`
+2. **Generate `Docs/AgToosa_TestPlan-[story-id].md`** containing:
+   *   **Spec reference** — link to the source `Docs/archived/spec-[story-id].md`
    *   **AC coverage table** — each `AC-NNN` mapped to one or more test IDs (`T-001`, `T-002`, ...)
    *   **Test category** per test ID: Unit · Integration · E2E · Security · Performance
    *   **Coverage target** — read `coverage_threshold` from `Docs/Context/workflow.md`; default 80%

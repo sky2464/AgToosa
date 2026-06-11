@@ -10,6 +10,7 @@ REPO_NAME="AgToosa"
 REF="main"
 KEEP_WORKDIR=false
 LOCAL_ARCHIVE=""
+EXPECTED_SHA256=""
 
 usage() {
   cat <<'EOF'
@@ -19,8 +20,12 @@ Usage:
 Bootstrap options:
   --ref <git-ref>   Git ref to download (default: main, recommended: vX.Y.Z tag)
   --archive <path>  Use a local .tar.gz archive instead of downloading from GitHub
+  --sha256 <hex>    Verify the downloaded archive against this SHA-256 before running
   --keep            Keep extracted working directory for debugging
   -h, --help        Show this help message
+
+Pinned tags fail closed: if the tag archive cannot be downloaded, bootstrap
+aborts instead of silently falling back to a branch of the same name.
 
 Examples:
   # Recommended: pin a release tag
@@ -176,6 +181,11 @@ while [[ $# -gt 0 ]]; do
       LOCAL_ARCHIVE="$2"
       shift 2
       ;;
+    --sha256)
+      [[ $# -lt 2 ]] && { echo "Error: --sha256 requires a value" >&2; exit 1; }
+      EXPECTED_SHA256="$2"
+      shift 2
+      ;;
     --keep)
       KEEP_WORKDIR=true
       shift
@@ -223,23 +233,65 @@ download_archive() {
     return 0
   fi
 
-  if [[ "$ARCHIVE_KIND" == "tags" ]]; then
-    local fallback_url
-    fallback_url="$(build_archive_url "heads")"
-    echo "Primary download failed; trying branch fallback: ${fallback_url}" >&2
-    if curl -fsSL "$fallback_url" -o "$ARCHIVE_PATH"; then
-      ARCHIVE_URL="$fallback_url"
-      return 0
-    fi
-  fi
-
+  # Pinned tags fail closed. Silently substituting a branch of the same name
+  # would defeat the pin (a moving branch is not the artifact the user asked for).
   echo "Error: Unable to download AgToosa archive for ref '${REF}'." >&2
   echo "Tried: ${primary_url}" >&2
   if [[ "$ARCHIVE_KIND" == "tags" ]]; then
-    echo "Also tried branch fallback for '${REF}'." >&2
+    echo "Pinned tag downloads do not fall back to branches." >&2
+    echo "Check the tag name against https://github.com/${REPO_OWNER}/${REPO_NAME}/releases" >&2
+    echo "or pass an explicit branch name (e.g. --ref main) if you want branch content." >&2
+  else
+    echo "Tip: use a valid release tag (for example vX.Y.Z) or an existing branch name." >&2
   fi
-  echo "Tip: use a valid release tag (for example vX.Y.Z) or an existing branch name." >&2
   return 1
+}
+
+# Reject archives whose member list contains absolute paths or '..' segments
+# BEFORE extraction — post-extract checks cannot undo a tar slip.
+assert_safe_archive() {
+  local archive="$1"
+  local entries entry
+  if ! entries=$(tar -tzf "$archive" 2>/dev/null); then
+    echo "Error: Unable to read archive member list (corrupt archive?)." >&2
+    return 1
+  fi
+  while IFS= read -r entry; do
+    [[ -z "$entry" ]] && continue
+    if [[ "$entry" == /* ]]; then
+      echo "Error: Archive contains absolute path member: $entry" >&2
+      return 1
+    fi
+    case "/$entry/" in
+      */../*)
+        echo "Error: Archive contains path traversal member: $entry" >&2
+        return 1
+        ;;
+    esac
+  done <<< "$entries"
+  return 0
+}
+
+verify_archive_sha256() {
+  local archive="$1" expected="$2"
+  [[ -z "$expected" ]] && return 0
+  local actual
+  if command -v sha256sum &>/dev/null; then
+    actual=$(sha256sum "$archive" | awk '{print $1}')
+  elif command -v shasum &>/dev/null; then
+    actual=$(shasum -a 256 "$archive" | awk '{print $1}')
+  else
+    echo "Error: --sha256 given but neither sha256sum nor shasum is available." >&2
+    return 1
+  fi
+  if [[ "$actual" != "$expected" ]]; then
+    echo "Error: Archive SHA-256 mismatch!" >&2
+    echo "  Expected: $expected" >&2
+    echo "  Got:      $actual" >&2
+    return 1
+  fi
+  echo "SHA-256 verified."
+  return 0
 }
 
 cleanup() {
@@ -268,6 +320,14 @@ if [[ -n "$LOCAL_ARCHIVE" ]]; then
   ARCHIVE_URL="local:${LOCAL_ARCHIVE}"
 else
   download_archive
+fi
+
+if ! verify_archive_sha256 "$ARCHIVE_PATH" "$EXPECTED_SHA256"; then
+  exit 1
+fi
+
+if ! assert_safe_archive "$ARCHIVE_PATH"; then
+  exit 1
 fi
 
 echo "Extracting..."

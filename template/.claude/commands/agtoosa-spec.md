@@ -8,6 +8,7 @@ Dispatch rules based on arguments:
 - `plan` → execute Part 2 only: architecture blueprint and threat model against an already-written spec file.
 - `quick <description>` → abbreviated flow: 2–3 targeted questions + spec + skip full threat model. Use for small bugs or chores.
 - `tasks` → execute Part 4 only: derive atomic tasks from an already-approved spec, generate the test plan skeleton, and update Master-Plan.md. Use this when you need to regenerate the task list without re-running the full spec.
+- `amend` → change-control an already-approved spec: record a Spec Revision Log entry, mark changed ACs, and require re-approval when Must ACs change.
 - `to-issues` → break the active spec or PRD into vertical-slice GitHub issues (one issue per user-facing behaviour change).
 
 If no arguments were given, run the full flow from Docs/AgToosa_Spec.md.

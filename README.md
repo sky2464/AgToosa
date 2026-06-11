@@ -5,7 +5,7 @@
 **The Spec-Driven Agentic AI Framework for Software Development**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-5.2.7-green.svg)](https://github.com/sky2464/AgToosa/releases)
+[![Version](https://img.shields.io/badge/version-5.3.0-green.svg)](https://github.com/sky2464/AgToosa/releases)
 [![CI Status](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml)
 [![Security Scan](https://github.com/sky2464/AgToosa/actions/workflows/security-scan.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/security-scan.yml)
 [![Semantic Release](https://github.com/sky2464/AgToosa/actions/workflows/release.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/release.yml)
@@ -19,7 +19,7 @@
 **Public launch: pinned release**
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.2.7
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.0
 ```
 
 **Private collaborator path: clone and run**
@@ -57,7 +57,16 @@ If any are missing, the bootstrap script will tell you how to install them. Inst
 
 ```bash
 # Public launch: pinned release.
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.2.7
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.0
+
+# Persistent install via Homebrew (formula pinned to the tagged release tarball)
+brew install sky2464/agtoosa/agtoosa
+
+# npm wrapper (downloads the release pinned to the package version)
+npx agtoosa
+
+# Non-interactive (CI, devcontainers, scripted rollouts)
+bash agtoosa.sh --path /path/to/project --platforms cursor,claude --yes
 
 # Manual verification path for local source checkouts:
 git clone https://github.com/sky2464/AgToosa.git
@@ -68,11 +77,15 @@ bash agtoosa.sh --version
 bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh)
 ```
 
+> **Pinned installs fail closed.** `--ref vX.Y.Z` never silently falls back to a branch. Each release publishes `bootstrap.sh` and a `SHA256SUMS` asset — verify with `--sha256 <hex>` for high-assurance installs.
+
+**Day 1 (after install):** open your AI assistant and run five commands — `/agtoosa-init` (once) → `/agtoosa-spec` → `/agtoosa-build` → `/agtoosa-review` → `/agtoosa-ship`. Everything else is optional utilities.
+
 **Windows (native):**
 
 ```powershell
 # Public launch: pinned release.
-$Ref = "v5.2.7"
+$Ref = "v5.3.0"
 iwr -UseBasicParsing https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.ps1 | iex
 .\agtoosa.ps1 -Version
 
@@ -260,89 +273,28 @@ flowchart TD
 
 ---
 
-## Installation
+## More Install Options & Flags
 
-### Option 1: Persistent Installation (Recommended)
+All install paths are documented in [Installation](#installation) above. Additional notes:
 
-Install once and use everywhere:
-
-```bash
-brew install sky2464/agtoosa/agtoosa
-```
-
-Then verify:
-
-```bash
-agtoosa --version
-```
-
-Run the generator:
-
-```bash
-agtoosa
-```
-
-Upgrade later:
-
-```bash
-brew upgrade agtoosa
-```
-
-### Option 2: One-time Usage (No Installation)
-
-Run directly without installing. Recommended approach is to pin a release tag:
-
-```bash
-# Public launch: pinned release
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.2.7
-```
-
-Or use the development-only main branch command (may include unreleased changes):
-
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh)
-```
-
-You can pass generator flags by adding `--` before script arguments:
-
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref vX.Y.Z -- --dry-run
-```
-
-### Option 3: Manual Install (Clone + Run)
-
-```bash
-git clone https://github.com/sky2464/AgToosa.git
-cd AgToosa
-bash agtoosa.sh
-```
-
-### Windows
-
-One-time usage in Git Bash / WSL:
-
-```bash
-# Git Bash or WSL
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref vX.Y.Z
-```
-
-Native PowerShell (clone + run):
-
-```powershell
-git clone https://github.com/sky2464/AgToosa.git
-cd AgToosa
-./agtoosa.ps1
-```
-
-Enter your project path when prompted — the generator copies the workflow files directly into your project.
+- **Homebrew lifecycle:** `brew upgrade agtoosa` to update; `agtoosa --version` to verify. The formula is pinned to the tagged release tarball with a sha256.
+- **Bootstrap pass-through:** add `--` before generator flags: `bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref vX.Y.Z -- --dry-run`
+- **Git Bash / WSL (Windows):** `bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref vX.Y.Z`
+- **Native PowerShell:** clone the repo and run `./agtoosa.ps1`
 
 ### Flags
 
 ```bash
-bash agtoosa.sh --force    # Overwrite existing files
-bash agtoosa.sh --update /path/to/project  # Update an existing install
-bash agtoosa.sh --version  # Print version
-bash agtoosa.sh --help     # Show help
+bash agtoosa.sh --path <dir> --platforms cursor,claude --yes   # Non-interactive install
+bash agtoosa.sh --update /path/to/project   # Update an existing install
+bash agtoosa.sh --verify /path/to/project   # Deterministic lifecycle verification (read-only, no AI)
+bash agtoosa.sh --doctor /path/to/project   # Diagnose install health, version skew, wiring
+bash agtoosa.sh --uninstall /path/to/project # Clean removal (keeps Master-Plan, Context, archived)
+bash agtoosa.sh --force     # Overwrite existing files (creates .bak backups)
+bash agtoosa.sh --dry-run   # Preview without writing
+bash agtoosa.sh --allow-unverified  # Permit unverified registry packs (off by default)
+bash agtoosa.sh --version   # Print version
+bash agtoosa.sh --help      # Show help
 ```
 
 ---
@@ -356,6 +308,20 @@ bash agtoosa.sh --help     # Show help
 5. **Run** `/agtoosa-spec Create a user authentication system` to start building!
 
 The AI will guide you through each phase — asking one goal-aware question at a time when intent is unclear, researching best practices, and generating specifications before writing a single line of code.
+
+---
+
+## Verification — Trust, but Verify
+
+AgToosa is the only multi-assistant SDD framework that ships a **deterministic, no-AI verifier** with every install:
+
+```bash
+bash Docs/agtoosa-verify.sh            # context, spec approval, EARS ACs, AC→test mapping, threat model, TDD evidence
+bash Docs/agtoosa-verify.sh --strict   # warnings fail too
+bash Docs/agtoosa-verify.sh stats      # cycle analytics from your Master-Plan and phase events
+```
+
+Copy `Docs/agtoosa-gate.yml.example` to `.github/workflows/agtoosa-gate.yml` and the same checks **block PRs in CI** — converting agent-instructed discipline into machine-enforced gates. See the [enforcement boundary comparison](docs/enforcement-comparison.md) for how this stacks up against other SDD frameworks, and [docs/benchmarks/](docs/benchmarks/README.md) for the reproducible benchmark suite.
 
 ---
 
@@ -400,6 +366,8 @@ AgToosa **instructs** your AI assistant to apply these practices. The generator 
 | **PII Redaction** | Always | Scrub sensitive data before LLM context | No |
 | **Prompt Injection Guard** | Always | Sanitize inputs from untrusted sources | No |
 | **Initial readiness gates** | `/agtoosa-status readiness` | Context, spec, tests, threat model, task tree | No |
+| **Deterministic lifecycle verifier** | `Docs/agtoosa-verify.sh` (local + CI gate) | Spec approval, EARS lint, AC→test mapping, threat model, TDD evidence presence | Yes — machine-checked script, no AI involved |
+| **Registry pack containment** | `--registry install` | SHA-256 pin, safe extraction, verified-flag enforcement, content preview, hook/CI destination denylist | Yes |
 | **Template file install** | `agtoosa.sh` | Copies registered workflow docs to your project | Yes |
 
 ---
@@ -444,6 +412,9 @@ your-project/
 │   └── copilot-instructions.md  # AI entry point (Copilot) — if selected
 └── Docs/
     ├── AgToosa_Agent.md    # Core instructions & command reference
+    ├── AgToosa_Quickref.md # One-page command + rules quickref (cheapest context entry)
+    ├── agtoosa-verify.sh   # Deterministic lifecycle verifier (no AI; run locally or in CI)
+    ├── agtoosa-gate.yml.example  # Copy to .github/workflows/ to gate PRs on the verifier
     ├── AgToosa_Init.md     # /agtoosa-init workflow
     ├── AgToosa_Spec.md     # /agtoosa-spec workflow
     ├── AgToosa_Build.md    # /agtoosa-build workflow (TDD + testing)
@@ -486,6 +457,12 @@ Comparison last reviewed: 2026-06-07.
 - Use **metaswarm** when you want deeper multi-agent orchestration and are comfortable adopting a more opinionated system.
 
 AgToosa's wedge is narrower: lightweight, repo-native, multi-assistant workflow installation for developers who want stronger launch discipline than ad-hoc prompts.
+
+### Competitive execution wave
+
+DEV-042 through DEV-060 are roadmap specs, not current guarantees. The Competitive execution wave targets repo-native proof gates that alternatives often handle through heavier runtimes, hosted task systems, or single-IDE workflows: spec quality analysis, brownfield drift baselines, EARS-to-test TDD evidence, async agent handoff/import, an evidence ledger, governance policy, signed registry provenance, and benchmark proof.
+
+Until each linked story ships, these remain planned controls. AgToosa's current guarantee stays narrower: repo-native proof gates and multi-assistant workflow files with explicit generator-enforced, CI-enforced, agent-instructed, manual, or roadmap boundaries.
 
 ---
 

@@ -9,7 +9,19 @@
 | `/agtoosa-spec plan` | Part 2 only — architecture blueprint + threat model against an already-written spec |
 | `/agtoosa-spec quick` | Abbreviated — max **2** targeted questions + spec + skip full threat model (use for small bugs/chores) |
 | `/agtoosa-spec tasks` | Part 4 only — derive atomic tasks from an already-approved spec, generate test plan skeleton, update Master-Plan.md |
+| `/agtoosa-spec amend` | Change-control an already-approved spec: record a revision entry, diff vs the approved version, re-approve when Must ACs change |
 | `/agtoosa-spec to-issues` | Break the active spec or PRD into vertical-slice GitHub issues |
+
+## /agtoosa-spec amend — Spec Change Control
+
+Approved specs are contracts; silent edits destroy their audit value. When requirements change after `## ✅ Spec Approved`:
+
+1. Read the active spec (`Docs/archived/spec-[story-id].md`) and present a concise diff of the proposed change (sections touched, ACs added/modified/removed).
+2. Append a row to the spec's `## Spec Revision Log` (create the section before the approval marker if missing — format in `Docs/SPEC-FORMAT.md`):
+   `| R[N] | [YYYY-MM-DD] | [what changed] | [why] | [approved-by or pending] |`
+3. Mark changed acceptance criteria inline: new rows get `(added R[N])`, edited rows get `(modified R[N])`, dropped rows are struck through with `(removed R[N])` — never silently deleted.
+4. **Re-approval gate:** if any **Must**-priority AC was added, modified, or removed, the amendment requires explicit user approval before `/agtoosa-build` may continue; append `## ✅ Amendment R[N] Approved` under the revision log when granted.
+5. Sync downstream artifacts: update the task tree (spec §3.1 + Master-Plan `## Active Tasks`) and the story test plan for any AC changes, and add an Update Log entry to `Docs/Master-Plan.md`.
 
 ## Optional Sub-Commands
 
@@ -19,7 +31,7 @@ Break the active spec (or a provided PRD or plan) into independently-grabbable G
 
 **Vertical slice rule:** Each issue must deliver one complete user-facing behaviour change — never a horizontal slice ("write the tests" or "add the migration" are not valid issues on their own).
 
-1. Read the active `AgToosa_Spec-*.md` file (or the provided description if no spec file exists).
+1. Read the active spec (`Docs/archived/spec-[story-id].md`, or the provided description if no spec file exists).
 2. Identify all user-facing behaviour changes. For each, create one GitHub issue with:
    - **Title:** `[Area] Short description of user-facing change`
    - **Acceptance criteria:** up to 5 AC items in checkbox format
@@ -138,7 +150,7 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
 
     Questions 1–4 sharpen scope. Questions 5–6 feed directly into STRIDE threat modelling in Part 2. Always ask question 6 if the feature touches any trust boundary — it is rarely fully inferable.
 
-    For `/agtoosa-spec quick`, ask only questions 1, 2, and 6 (abbreviated).
+    For `/agtoosa-spec quick`, ask at most questions 1 and 2 (abbreviated) — honoring the 2-question cap. Derive question 6 (failure modes/security) as an inferred finding from the codebase scan instead of asking it.
 5.  **Executable Spec Generation:**
     *   Synthesize all findings into a clean, comprehensive **Executable Specification**.
     *   Specs must act as direct programmatic inputs for the `/agtoosa-build` phase (e.g., BDD syntax, strict preconditions/postconditions, or explicit acceptance criteria).
@@ -183,6 +195,37 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
         - `## ✅ Spec Approved` (appended on approval)
     *   Refer to `Docs/SPEC-FORMAT.md` for the full format reference.
     *   The `Docs/archived/` directory is created automatically by `/agtoosa-init`. If it is missing, create it with `mkdir -p Docs/archived`.
+
+9a. **Spec Quality Analyzer Gate:**
+
+    Before appending `## ✅ Spec Approved`, run the Spec Quality Analyzer checklist against the draft spec and test plan. This is an agent-instructed gate unless a later story wires generator-enforced or CI-enforced checks.
+
+    The analyzer must confirm:
+
+    - Every Must AC is unambiguous, testable, and written as an observable system behavior.
+    - No contradiction exists between the Goal Contract, Non-goals, Build Scope, Acceptance Criteria, task tree, and test plan.
+    - Every Must AC maps to at least one test-plan row.
+    - Every enforcement or launch claim has a Claim Boundary classified as generator-enforced, CI-enforced, agent-instructed, manual, or roadmap.
+    - External agents, trackers, registries, dashboards, or hosted services preserve `Docs/Master-Plan.md` as the repo-local source of truth unless implementation evidence proves otherwise.
+    - No TBD, TODO, or placeholder requirement remains.
+
+    If any check fails, stop and revise the spec before enrollment or approval. Record the analyzer findings in the spec or test plan evidence section.
+
+9b. **Brownfield Spec Drift Baseline:**
+
+    If the story starts from an existing codebase, production behavior, migrated backlog, or partially implemented workflow, add a current-state baseline before approval. This is an agent-instructed workflow unless a later story wires generator-enforced or CI-enforced checks.
+
+    The baseline must record:
+
+    - The user outcome and proof required before the brownfield capability is treated as shipped.
+    - A repo evidence inventory: specific files, commands, docs, tests, workflows, logs, or issue links used to describe current reality.
+    - Current-state baseline behavior: what the repository already does today, including known gaps and manual steps.
+    - Intended change deltas: the smallest observable differences the story will introduce.
+    - drift evidence: conflicts between current code/docs/tests and the proposed spec, plus the planned resolution for each conflict.
+    - Claim Boundary classification for every enforcement statement: generator-enforced, CI-enforced, agent-instructed, manual, or roadmap.
+    - Source-of-truth boundary: `Docs/Master-Plan.md remains the repo-local source of truth`; external agents, trackers, registries, and dashboards can be evidence sources or integrations only when implementation evidence proves that role.
+
+    Do not claim static analysis coverage, architecture-review completeness, hosted dashboard sync, or external-tracker authority from this baseline alone. If the baseline exposes unresolved drift, either revise the spec, split the story, or mark the unresolved item as manual, blocked, or roadmap before approval.
 10. **Master-Plan.md Story Entry:**
     *   Add a Story entry to `Docs/Master-Plan.md`:
         - Title: `Feature: [spec short name]` (use `Bug:` / `Chore:` / `Fix:` as appropriate)
@@ -216,7 +259,7 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
     Out of scope        : [list anything that must NOT be touched]
     ```
 
-    Save the scope declaration under a `## Build Scope` heading at the top of the active `AgToosa_Spec-*.md`.
+    Save the scope declaration in the spec's `### 2.4 Build Scope` section (under `## 2. Design`, per `Docs/SPEC-FORMAT.md`).
 
 13. **Atomic Task Breakdown:**
     *   Read the spec and translate it into atomic, clear, step-by-step actionable tasks.
@@ -235,8 +278,8 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
     *   Mirror the task tree into `Docs/Master-Plan.md` under `## Active Tasks` (replacing the flat table format).
 
 14. **Test Plan Skeleton:**
-    *   Generate **`Docs/AgToosa_TestPlan-[name].md`** containing:
-        - Spec reference (link to `AgToosa_Spec-*.md`)
+    *   Generate **`Docs/AgToosa_TestPlan-[story-id].md`** containing:
+        - Spec reference (link to `Docs/archived/spec-[story-id].md`)
         - AC coverage table — each `AC-NNN` from the spec mapped to test IDs (`T-001`, `T-002`, ...)
         - Test category per ID: Unit · Integration · E2E · Security · Performance
         - Coverage target from `Docs/Context/workflow.md` (`coverage_threshold`), default 80%

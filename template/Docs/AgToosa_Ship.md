@@ -13,6 +13,8 @@
 Deploy the completed feature, clean up the workspace, archive completed work, and suggest the next logical development story.
 
 > **Prerequisites:** `/agtoosa-review` must be approved. Verify that `Docs/archived/review-[story-id].md` exists and contains no unresolved 🔴 Critical findings. If any Critical findings remain, resolve them via `/agtoosa-build` and re-run `/agtoosa-review`.
+>
+> **Phase-order abort (from `Docs/AgToosa_Governance.md`):** If no `Review ✅ Approved` Update Log entry exists for the story, print exactly `⚠️ Story [ID] has not been approved. Run /agtoosa-review and obtain approval before shipping.` and abort.
 
 ## Workflow
 
@@ -34,6 +36,8 @@ Before any deployment, verify all of the following. If **any** check fails, list
 | ✅ Smoke tests tagged | Test plan or test suite has at least one `@smoke`-tagged test per Must-priority AC | `/agtoosa-spec` or `/agtoosa-build` |
 | ✅ Changelog entry drafted | `Docs/AgToosa_Changelog.md` has an entry for this feature | `/agtoosa-ship docs` or manual changelog edit |
 | ✅ No `WIP:` commits remain | `git log` shows no commits whose **subject line** starts with `WIP:` | `/agtoosa-ship` (Part 1 squash) or manual squash |
+| ✅ QA cleared (when QA phase is enabled) | If `Docs/Context/workflow.md` enables a QA gate **or** a `Docs/AgToosa_QAReport-[story-id].md` exists, that report contains no open 🔴 findings | `/agtoosa-qa run` then `/agtoosa-qa triage` |
+| ✅ Verifier green | `bash Docs/agtoosa-verify.sh` exits 0 (no FAIL findings) | Fix the listed findings, then re-run |
 
 **Evidence rules:** Report pass/fail summaries, command names, artifact paths, and test counts. When citing deploy or test logs, **redact** secrets, tokens, API keys, and private URLs before including evidence in chat or review artifacts.
 
@@ -83,19 +87,25 @@ Wait for explicit user approval before Part 1 (WIP squash, deploy, archive).
 
 ### Part 1 — Pre-Deploy: WIP Commit Squash
 
-Before deploying, clean the branch history:
+Before deploying, clean the branch history using the **non-interactive** squash procedure (interactive rebase is unavailable to most agents):
 
 1.  **WIP Commit Squash:**
     *   Identify all `WIP:` commits on the current branch since branching from main/master: `git log main..HEAD --oneline`
-    *   Interactively squash/fixup all `WIP:` commits into clean, atomic, logically grouped commits
+    *   If no `WIP:` commits exist, skip this step.
+    *   Create a safety ref first: `git branch backup/pre-squash-[story-id]`
+    *   Non-interactive squash: `git reset --soft $(git merge-base main HEAD)` then create clean, atomic, logically grouped commits with explicit `git add [paths]` per group.
     *   Each final commit message must follow Conventional Commits: `[type]([scope]): [description]`
-    *   Run the full test suite after squash to confirm nothing broke
+    *   Run the full test suite after squash to confirm nothing broke, then delete the backup ref: `git branch -D backup/pre-squash-[story-id]`
+    *   If anything goes wrong mid-squash, restore with `git reset --hard backup/pre-squash-[story-id]` and report — never leave the branch half-squashed.
 
 ### Part 2 — Deployment & Rollbacks
 
 2.  **Deployment (Zero-Downtime):**
-    *   Initiate deployment logic targeting the environment (e.g., staging or production).
-    *   Monitor post-deployment automated health checks.
+    *   Read the deploy target and command from `Docs/Context/tech-stack.md` (**Deployment** section). Three cases:
+        - **A documented deploy command exists** (e.g. `vercel deploy --prod`, `fly deploy`, `kubectl apply`, a CI pipeline trigger): run it, capture the Terminal Evidence Contract block, and monitor its health output.
+        - **Deployment is owned by CI/CD on merge:** do not deploy from the agent; verify the pipeline run for this branch/tag succeeds and record the run URL as evidence.
+        - **No deploy target is documented:** treat deployment as a `[manual]` step — present what the human must run, record it in Manual / Deferred, and continue with Parts 3+ (never claim a deploy happened without evidence).
+    *   Monitor post-deployment automated health checks when the stack exposes them.
     *   Trigger automated rollbacks if error rates or latencies spike to ensure zero-downtime. If automated rollback is unavailable, use `/agtoosa-revert` for manual git-aware rollback.
 
 3.  **Post-Deploy Smoke Tests:**
@@ -113,6 +123,13 @@ Before deploying, clean the branch history:
 ### Part 3 — Workspace Cleanup & Archiving (`/agtoosa-ship docs` runs Parts 3 + 4)
 
 3.  **Archive Completed Work:** Spec and review artifacts are already saved to `Docs/archived/` (as `spec-[story-id].md` and `review-[story-id].md`). Verify both files exist there before proceeding.
+
+3a. **Merge capability deltas (living system spec):** If the story spec contains a `## Capability Delta` section (see `Docs/SPEC-FORMAT.md`), fold each delta into the matching living capability spec under `Docs/specs/system/[capability].md`:
+    *   `ADDED` requirements append to the capability spec's requirements table.
+    *   `MODIFIED` requirements replace the prior row (cite the story ID in a `Last changed by` column).
+    *   `REMOVED` requirements are struck from the table with a tombstone note (`removed by [story-id]`).
+    *   Create `Docs/specs/system/[capability].md` from the section template in `Docs/SPEC-FORMAT.md` when it does not exist yet.
+    *   This keeps system documentation compounding over time instead of dying in `Docs/archived/`.
 
 #### Version bump (maintainer dogfood)
 
@@ -180,8 +197,12 @@ Run this step when `Docs/Master-Plan.md` exceeds approximately 200 lines **or** 
     *   Remove all `Done` rows from `## Active Tasks` — completed work is tracked in `## Completed This Cycle` and `Docs/archived/`.
     *   If `Master-Plan.md` still exceeds 200 lines after pruning, collapse `## Backlog` to titles only (drop Estimate and Epic columns) until the next `/agtoosa-init zoom-out` refresh.
 
+12. **Rotate the Update Log:** When `## Update Log` exceeds **150 rows**, move all rows older than the current cycle to `Docs/archived/updatelog-[YYYY].md` (append, never overwrite) and leave a pointer comment in their place: `<!-- Older rows: Docs/archived/updatelog-[YYYY].md -->`. The Update Log's "never delete rows" rule means *never lose rows* — rotation to the archive preserves them while keeping Master-Plan inside context-window budgets.
+
 ## Output
 *   Confirm archiving and changelog updates are successful.
+*   Append a phase event to `Docs/agtoosa-events.jsonl`:
+    `{"ts":"[ISO-8601 UTC]","phase":"ship","event":"complete","story":"[Story ID]","by":"AgToosa"}`
 *   Present the suggested next Spec to the user.
 *   Print the closure line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
 *   Ask if they want to run `/agtoosa-spec` for the next story.

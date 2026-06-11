@@ -168,11 +168,9 @@ Use when the AI agent is focused on a specific file or function and needs broade
 
 9.  **Scaffolding:** Create `docs/`, `docs/archived/`, and `docs/Context/` if they don't exist.
 
-10. **Dynamic Generation:** Based on the consultation, update or create:
-    *   `docs/AgToosa_Agent.md` (tailored rules and commands)
-    *   `docs/AgToosa_Claude.md` (Claude-specific, if applicable)
-    *   `docs/AgToosa_Gemini.md` (Gemini-specific, if applicable)
-    *   `docs/Master-Architecture.md` — create or update this as a senior application architect after the smart interview and codebase scan. Include C4-style diagrams, module boundaries, data flow, deployment, security, observability, and ADR links.
+10. **Dynamic Generation:** Based on the consultation, update or create **project-owned files only** — never edit AgToosa-owned workflow docs (`docs/AgToosa_*.md` workflow files, format guides, `docs/agtoosa-verify.sh`), or `/agtoosa-update` can no longer refresh them cleanly. Project tailoring lives in `docs/Context/*` and the files below:
+    *   `docs/Master-Architecture.md` — create or update this as a senior application architect after the smart interview and codebase scan. Include C4-style diagrams, module boundaries, data flow, deployment, security, observability, and ADR links. (Preserved by `--update`.)
+    *   Verify `docs/AgToosa_Claude.md` / `docs/AgToosa_Gemini.md` exist when those platforms are selected — they are AgToosa-owned: report wiring problems instead of editing them.
 
 11. **Project Management Setup:**
 

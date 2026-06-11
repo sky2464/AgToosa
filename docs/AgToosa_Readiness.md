@@ -14,24 +14,26 @@
 | 6 | **Task tree and wave plan present** | `docs/Master-Plan.md` `## Active Tasks` has a checkbox tree for the In Progress story; active spec `## 3. Tasks` includes `### Wave Plan` | `/agtoosa-spec tasks` |
 | 7 | **Release / version parity** | `AGTOOSA_VERSION` in `agtoosa.sh` and `agtoosa.ps1` matches the latest **released** `## [X.Y.Z]` in root `CHANGELOG.md` (ignore leading `v`); **Milestone** may be the **next PATCH** on the active MINOR (e.g. `v5.2.1 (next)` while shipped is `5.2.0`) per `docs/adr/ADR-005-release-cadence.md` | Align manually or `/agtoosa-ship docs` |
 
-## Workflow guidance vs generator enforcement
+## Workflow guidance vs enforcement
 
-AgToosa is markdown instructions for your AI assistant — not a runtime. The generator **installs** workflow docs and platform entry points; it does **not** execute builds, scans, or PM sync.
+AgToosa is markdown instructions for your AI assistant — not a runtime. The generator **installs** workflow docs, platform entry points, and a deterministic verifier; it does **not** execute builds, scans, or PM sync. The verifier (`docs/agtoosa-verify.sh` in this repo) machine-checks lifecycle state locally and becomes **CI-enforced** once wired into a workflow (see `docs/agtoosa-gate.yml.example`).
 
-| Capability | Required by workflow instructions | Automatically enforced by generator |
-|------------|-----------------------------------|-----------------------------------|
-| `docs/Master-Plan.md` as PM source of truth | Yes — every command reads/writes it | No — agent must follow docs |
-| STRIDE / threat model at spec time | Yes (`/agtoosa-spec`, except `quick`) | No |
-| TDD Red-Green-Refactor | Yes (`/agtoosa-build`) | No |
-| Must AC → test mapping | Yes (spec tasks + QA plan) | No |
+| Capability | Required by workflow instructions | Machine-checked |
+|------------|-----------------------------------|-----------------|
+| `docs/Master-Plan.md` as PM source of truth | Yes — every command reads/writes it | Partially — verifier checks Epics, story↔spec↔test-plan integrity |
+| STRIDE / threat model at spec time | Yes (`/agtoosa-spec`, except `quick`) | Yes — verifier Gate 3 fails specs without a threat-model section |
+| Spec approval before build | Yes (`/agtoosa-build` prerequisites) | Yes — verifier Gate 3 fails active stories without `## ✅ Spec Approved` |
+| EARS acceptance criteria | Yes (`docs/SPEC-FORMAT.md`) | Yes — verifier lints AC rows for EARS keywords |
+| TDD Red-Green-Refactor | Yes (`/agtoosa-build`) | Partially — verifier warns when RED evidence blocks are missing from the test plan |
+| Must AC → test mapping | Yes (spec tasks + QA plan) | Yes — verifier warns on ACs absent from the test plan (`--strict` fails) |
 | OpenTelemetry / structured observability | Yes (`/agtoosa-build` refactor step) | No |
 | SBOM + dependency audit | Yes (`/agtoosa-build` Part 2) | No |
 | SAST / DAST / secrets scanning | Yes (`/agtoosa-build`, `/agtoosa-review security`) | No |
 | Browser / E2E QA | Yes when stack supports it (`/agtoosa-qa`, review QA persona) | No |
 | Sandboxed execution (Docker / Firecracker) | Yes when applicable — workflow instructs isolated runs | No |
-| Initial readiness gates (this checklist) | Yes — `/agtoosa-status readiness` | No |
-| Ship readiness gate | Yes (`/agtoosa-ship check`) | No |
+| Initial readiness gates (this checklist) | Yes — `/agtoosa-status readiness` | Yes — `bash docs/agtoosa-verify.sh` (CI-enforceable via the gate workflow) |
+| Ship readiness gate | Yes (`/agtoosa-ship check`) | Partially — verifier covers spec/review/test-plan rows; deploy evidence stays agent-reported |
 | File inventory on install / update | — | Yes — `agtoosa.sh` copies registered template files |
 | Version parity (bash vs PowerShell generator) | — | Yes — `AGTOOSA_VERSION` must match in both entrypoints |
 
-Treat marketing copy and README tables as **aspirational workflow coverage** unless this doc marks a row as generator-enforced.
+Treat marketing copy and README tables as **aspirational workflow coverage** unless this doc marks a row as machine-checked or generator-enforced.

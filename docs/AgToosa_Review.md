@@ -13,27 +13,27 @@
 ## Objective
 Ensure code quality, security, and simplicity through multi-persona review.
 
-> **Prerequisites:** `/agtoosa-build` must be complete. Verify that the full test suite passes and the Story status is `In Progress` in Linear (not `Todo`). If tests are failing or no build artifact exists, run `/agtoosa-build test` first.
+> **Prerequisites:** `/agtoosa-build` must be complete. Verify that the full test suite passes and the Story status in `docs/Master-Plan.md` is `In Progress` (not `Todo`). If tests are failing or no build artifact exists, **stop** and instruct the user to run `/agtoosa-build test`. Do **not** auto-run `/agtoosa-build`.
+>
+> **Phase-order abort (from `docs/AgToosa_Governance.md`):** If the Story status is still `Todo`, print exactly `⚠️ Story [ID] is in 'Todo' state. Run /agtoosa-build first.` and abort.
+
+### Terminal Evidence Contract
+
+> See `docs/AgToosa_Agent.md` → **Terminal Evidence Contract** for the full rules.
+
+Each reviewer persona (or parallel subagent) must report command run, exit code, pass/fail, warnings, errors, changed files, and next action for every test, scan, or command executed. Nonzero exits and tool warnings block a 🟢 Passed verdict unless explicitly accepted with evidence. The orchestrator summarizes unresolved terminal output before presenting the review approval gate.
 
 ### Part 1 — Virtual Specialist Reviews
 
 **Before starting reviews:**
-- Transition the Story issue status to `In Review` in Linear.
 - Update `docs/Master-Plan.md`: set the Story row status to `In Review`.
-- Post a Linear comment on the Story issue:
-
-    ```
-    Review 🔍 Started
-    Date: [YYYY-MM-DD HH:MM]
-
-    Code review started. Running 4-persona review (Security, Eng Manager, CEO, QA Lead).
-
-    Next: Review verdict — pass unblocks /agtoosa-ship; any 🔴 Critical blocks it.
-    ```
+- Add an **Update Log** entry: `YYYY-MM-DD HH:MM — /agtoosa-review — Review 🔍 Started — [Story ID] — 4-persona review running.`
 
 1.  **Security Officer:** OWASP Top 10 + STRIDE audit; SAST/DAST/Secrets scanning (Semgrep, CodeQL, Gitleaks); verify threat model from Spec.
 
 2.  **Engineering Manager (`/agtoosa-review arch`):** Confirm no file exceeds 500 lines; check OOP compliance, observability hooks, and test coverage thresholds. When running the `arch` sub-command, additionally:
+
+    **Master Architecture Alignment:** Read `docs/Master-Architecture.md` and verify the change matches the documented boundaries, diagrams, data flow, deployment, security, and observability notes. Flag missing, stale, or contradicted architecture documentation as a 🟡 Warning, or 🔴 Critical if the implementation violates a documented security or boundary constraint.
 
     **Deep Module Analysis** (see `docs/DEEPENING.md`):
     - Identify shallow modules: pass-through functions, one-line service methods, "Manager/Handler/Helper" classes with no domain meaning.
@@ -49,7 +49,14 @@ Ensure code quality, security, and simplicity through multi-persona review.
     - Identify any significant architectural decisions made in this change that lack a corresponding ADR in `docs/adr/`.
     - Create missing ADRs using `docs/ADR-FORMAT.md` as a template, or flag as 🟡 Warning if creation is out of scope.
 
-3.  **CEO / Product Owner:** Verify feature completeness against the Linear charter and acceptance criteria.
+3.  **CEO / Product Owner:** Verify feature completeness against the Goal Contract, Project Charter in `docs/Master-Plan.md`, and acceptance criteria.
+
+    **Goal Contract Alignment:**
+    - Read the active spec's `### Goal Contract`.
+    - Confirm the implemented behavior satisfies the stated Goal and User outcome.
+    - Confirm the Success condition is measurable and has Proof / evidence in tests, review artifacts, demo notes, or product behavior.
+    - Flag missing, vague, or contradicted Goal Contract fields as 🟡 Warning.
+    - Flag implementation that meets isolated ACs but fails the Goal Contract as 🔴 Critical.
 
 4.  **QA Lead:**
 
@@ -67,7 +74,7 @@ Ensure code quality, security, and simplicity through multi-persona review.
 
     g. **Browser/device matrix** — Check the `browser_matrix` list in `docs/Context/tech-stack.md`; flag untested combinations as 🟡 Warning.
 
-    h. **Flaky test detection** — Run test suite 3× and flag any test that passes/fails non-deterministically as 🟡 Warning.
+    h. **Flaky test detection** — Re-run the tests touched by this story (or use the runner's `--repeat N` when available) and flag any test that passes/fails non-deterministically as 🟡 Warning. Do not re-run the entire suite 3× — scope flake detection to changed tests to keep review time and token cost bounded.
 
     **🔬 Iron Law — Bug Root Cause Protocol** (`/agtoosa-review debug` runs this exclusively):
 
@@ -90,32 +97,14 @@ Ensure code quality, security, and simplicity through multi-persona review.
 
 ### Part 3 — Final Verdict
 
-6.  **Review Report:** Structured findings from all 4 personas — 🔴 Critical / 🟡 Warning / 🟢 Passed. Every 🔴 Critical must include the Iron Law root cause. Block `/agtoosa-ship` if any 🔴 Critical findings remain.
+6.  **Review Report:** Structured findings from all 4 personas — 🔴 Critical / 🟡 Warning / 🟢 Passed. Every 🔴 Critical must include the Iron Law root cause. Include a Goal Contract alignment row. Block `/agtoosa-ship` if any 🔴 Critical findings remain.
 
-    **Ship version suggestion (maintainer dogfood):** In the review report footer, default the suggested release to **PATCH+1** on the current MINOR (e.g. `5.2.0` → `5.2.1` for Fix/Chore/S stories). Use **MINOR** only for a new MINOR train, multi-story batched release, or deliberate cycle boundary; use **MAJOR** only for breaking changes per ADR-004. See `docs/adr/ADR-005-release-cadence.md` and `docs/agtoosa-maintainer.md` → Release Checklist.
+    **Ship version suggestion (maintainer / semver repos):** In the review report footer, default the suggested release to **PATCH+1** on the current MINOR (e.g. `5.2.0` → `5.2.1` for Fix/Chore/S stories). Use **MINOR** only for a new MINOR train, multi-story batched release, or deliberate cycle boundary; use **MAJOR** only for breaking changes per ADR-004. See `docs/adr/ADR-005-release-cadence.md` (generator) or project ADRs. Do not suggest skipping to the next MINOR for routine small stories.
 
-    **Linear update (after verdict):**
-    - If **all clear** (no unresolved 🔴 Critical): post a comment on the Story issue:
+    **Master-Plan update (after verdict):**
+    - If **all clear** (no unresolved 🔴 Critical): add **Update Log** entry `Review ✅ Approved` (per `docs/AgToosa_Governance.md`). Keep Active Cycle status `In Review` until `/agtoosa-ship` completes.
 
-        ```
-        Review ✅ Passed
-        Date: [YYYY-MM-DD HH:MM]
-
-        All 4 personas passed. No 🔴 Critical findings. [N] 🟡 Warnings (accepted / fixed — list them).
-
-        Next: /agtoosa-ship to deploy.
-        ```
-
-    - If **blocked** (unresolved 🔴 Critical): post a comment and transition the Story back to `In Progress`:
-
-        ```
-        Review 🔴 Blocked
-        Date: [YYYY-MM-DD HH:MM]
-
-        [N] 🔴 Critical finding(s) must be resolved before shipping: [brief list]. Story reset to In Progress.
-
-        Next: /agtoosa-build tdd to address findings, then re-run /agtoosa-review.
-        ```
+    - If **blocked** (unresolved 🔴 Critical): add **Update Log** entry `Review 🔴 Blocked: [brief list]`; set Active Cycle status back to `In Progress`.
 
 ### Part 4 — Cross-Platform Second Opinion (`/agtoosa-review cross`)
 

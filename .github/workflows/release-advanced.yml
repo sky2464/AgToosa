@@ -152,6 +152,9 @@ jobs:
   publish-release:
     name: Publish GitHub Release
     runs-on: ubuntu-latest
+    # Protected environment: configure required reviewers on 'release' in repo
+    # settings to gate manual workflow_dispatch releases.
+    environment: release
     permissions:
       contents: write
     needs: [version-validation, extract-changelog]
@@ -180,6 +183,24 @@ jobs:
               --notes-file /tmp/release-notes.md \
               "${args[@]}"
           fi
+
+      - name: Upload versioned entrypoints + SHA256SUMS
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agtoosa-assets
+          cp bootstrap.sh bootstrap.ps1 agtoosa.sh agtoosa.ps1 /tmp/agtoosa-assets/
+          (
+            cd /tmp/agtoosa-assets
+            sha256sum bootstrap.sh bootstrap.ps1 agtoosa.sh agtoosa.ps1 > SHA256SUMS
+            cat SHA256SUMS
+          )
+          gh release upload "${{ needs.version-validation.outputs.tag }}" \
+            /tmp/agtoosa-assets/bootstrap.sh \
+            /tmp/agtoosa-assets/bootstrap.ps1 \
+            /tmp/agtoosa-assets/SHA256SUMS \
+            --clobber
 
   bump-homebrew-formula:
     name: Bump Homebrew Formula

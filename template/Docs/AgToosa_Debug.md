@@ -13,6 +13,13 @@
 
 Diagnose hard bugs and performance regressions through a disciplined, evidence-based loop. Never guess. Never patch without proof.
 
+## Which debug path?
+
+| Situation | Use |
+|-----------|-----|
+| A failing test or bug found **during an active `/agtoosa-review`** | `/agtoosa-review debug` (Iron Law protocol inside the review) |
+| A production bug, heisenbug, performance regression, or anything needing instrumentation and hypothesis tracking | `/agtoosa-debug` (this workflow — writes `## Active Diagnosis` and `## Hypotheses` in `Docs/Master-Plan.md`) |
+
 ## Workflow
 
 ### Phase 1 — Establish a Feedback Loop

@@ -44,6 +44,7 @@ Your core principles are:
 | `/agtoosa-spec plan` | **Part 2 only:** architecture blueprint + STRIDE threat model against an existing spec |
 | `/agtoosa-spec quick` | **Abbreviated:** condensed Q&A + spec for small bug fixes or chores; skips full threat modelling |
 | `/agtoosa-spec tasks` | **Part 4 only:** scope boundary + atomic task breakdown + test plan skeleton against an already-approved spec |
+| `/agtoosa-spec amend` | **Change control:** revise an already-approved spec with a revision-log entry; Must-AC changes require re-approval |
 
 ### `/agtoosa-build` — Implement with TDD, test
 
@@ -91,7 +92,7 @@ Your core principles are:
 | `/agtoosa-task` | `Docs/AgToosa_Task.md` | Fast task capture to Master-Plan.md for bugs, chores, spikes, and fixes |
 | `/agtoosa-update` | `Docs/AgToosa_Update.md` | Detect → Plan → Apply → Verify baseline update (`check` · `plan` · `apply` · `verify`; `check` is read-only) |
 | `/agtoosa-status` | `Docs/AgToosa_Status.md` | Read-only project health dashboard with git cross-reference (`plan` · `readiness` · `git` · `orphans`) |
-| `/agtoosa-status-guide` | `Docs/AgToosa_StatusGuide.md` | Read-only status coach that explains top Recommended Next Actions and asks before fixes |
+| `/agtoosa-status-guide` | `Docs/AgToosa_StatusGuide.md` | Read-only status coach that explains top Recommended Next Actions and asks before fixes. Native picker entry on Copilot (`.github/agents/`) only; on other platforms invoke by name — the agent reads `Docs/AgToosa_StatusGuide.md` directly |
 | `/agtoosa-help` | Platform help entry points (`.claude/commands/`, `.gemini/commands/`, `.github/prompts/`, Cursor/Windsurf core rules) | **Assistance-only:** static command reference; default path does not read Master-Plan or git |
 | `/agtoosa-help next` | Same platform help surfaces | **Assistance-only:** read-only context read; recommends exactly one next command without executing it |
 
@@ -120,7 +121,10 @@ Specialist lanes must emit the **structured evidence block** defined in `Docs/Ag
 
 ## Key References
 
+- `Docs/AgToosa_Quickref.md` — One-page command + rules quickref (cheapest context entry point)
 - `Docs/Master-Plan.md` — Source of truth for project state and backlog (read before every command)
+- `Docs/agtoosa-verify.sh` — Deterministic lifecycle verifier (`bash Docs/agtoosa-verify.sh [--strict|stats]`); CI gate template in `Docs/agtoosa-gate.yml.example`
+- `Docs/agtoosa-events.jsonl` — Append-only phase-event log written at every phase transition
 - `Docs/AgToosa_Readiness.md` — Initial readiness checklist and promise-to-proof matrix
 - `Docs/AgToosa_Goal.md` — Goal clarification utility/sub-workflow
 - `Docs/AgToosa_Skills.md` — Subagent skill-to-command mapping and Codex skill contracts
@@ -181,7 +185,10 @@ Valid types: **Epic** · **Feature** · **Bug** · **Chore** · **Fix** · **Imp
 
 ### Phase Comment Protocol
 
-Post a comment on the active Story issue at each phase transition:
+Record a phase-transition note at each phase boundary. Where it goes depends on how the project tracks issues:
+
+- **Master-Plan-only mode (default):** append the note as an `## Update Log` row in `Docs/Master-Plan.md` **and** one phase-event line in `Docs/agtoosa-events.jsonl`. Do **not** create or comment on external issues.
+- **External issues exist** (the user ran `/agtoosa-spec to-issues` or explicitly tracks GitHub issues): additionally post the note as a comment on the active Story issue.
 
 ```
 [Phase] [emoji] [brief summary]
@@ -336,5 +343,6 @@ Every completed build task, test run, security scan, QA execution, review check,
 4. **Always** follow the TDD Red-Green-Refactor cycle during `/agtoosa-build` (if enabled).
 5. **Never** let a code file exceed 500 lines.
 6. **Always** archive completed work to `Docs/archived/` during `/agtoosa-ship`.
-7. **Always** post a progress comment on the active Story issue at each phase transition using the Phase Comment Protocol above.
+7. **Always** record a phase-transition note at each phase boundary using the Phase Comment Protocol above (Master-Plan Update Log + `Docs/agtoosa-events.jsonl` by default; issue comments only when external issues exist).
 8. **Always** triage any out-of-scope discovery during `/agtoosa-build` using the Discovery Triage Protocol above. Never silently fix or drop an out-of-scope finding.
+9. **Verify before claiming.** `bash Docs/agtoosa-verify.sh` is the deterministic lifecycle gate — run it before declaring a build complete or a story ship-ready, and fix FAIL findings first.

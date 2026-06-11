@@ -13,16 +13,22 @@
 ## Objective
 Give QA testers a dedicated command to own the quality gate — from test planning through defect lifecycle — separate from the code review phase.
 
+## Terminal Evidence Contract
+
+> See `docs/AgToosa_Agent.md` → **Terminal Evidence Contract** for the full rules.
+
+During `/agtoosa-qa run`, capture command run, exit code, pass/fail, warnings, errors, changed files, and next action for every test command. Failing tests or nonzero exits block AC sign-off unless explicitly accepted with evidence. Summarize unresolved terminal output in the QA report before the approval gate.
+
 ## Workflow
 
 ### Part 1 — Test Plan Generation (`/agtoosa-qa plan`)
 
 1. **Read the active spec:**
-   *   Open `docs/AgToosa_Spec-*.md` and locate the `## Acceptance Criteria` table.
-   *   If no AC table exists, stop and tell the user to add one (run `/agtoosa-spec` or add manually).
+   *   Open the active spec (`docs/archived/spec-[story-id].md`) and locate the `### 1.2 Acceptance Criteria (EARS)` table (any heading containing `Acceptance Criteria`, or rows matching `AC-NNN`, qualifies).
+   *   If no AC table exists, **stop** and instruct the user to run `/agtoosa-spec` or add ACs manually. Do **not** auto-run `/agtoosa-spec`.
 
-2. **Generate `docs/AgToosa_TestPlan-[name].md`** containing:
-   *   **Spec reference** — link to the source `AgToosa_Spec-*.md`
+2. **Generate `docs/AgToosa_TestPlan-[story-id].md`** containing:
+   *   **Spec reference** — link to the source `docs/archived/spec-[story-id].md`
    *   **AC coverage table** — each `AC-NNN` mapped to one or more test IDs (`T-001`, `T-002`, ...)
    *   **Test category** per test ID: Unit · Integration · E2E · Security · Performance
    *   **Coverage target** — read `coverage_threshold` from `docs/Context/workflow.md`; default 80%

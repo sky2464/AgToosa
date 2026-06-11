@@ -90,6 +90,19 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 *(Run `/agtoosa-init` to populate this table with your project's Epics.)*
 
+## Active Diagnosis
+
+> Written by `/agtoosa-debug` while a bug investigation is live. Cleared when the diagnosis closes.
+> Holds the current reproduction command / feedback loop for the bug under investigation.
+
+*(Empty — no active diagnosis.)*
+
+## Hypotheses
+
+> Written by `/agtoosa-debug`. Ranked candidate causes for the active diagnosis, marked confirmed/eliminated as evidence arrives.
+
+*(Empty — no active diagnosis.)*
+
 ## Completed This Cycle
 
 > Detail lives in `Docs/archived/`. This section shows pointer rows only — links to archived spec files.
@@ -97,7 +110,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
-| [DEV-XX] | Feature: [name] | [YYYY-MM-DD] | [AgToosa_Spec-[name]-v[N].md](archived/AgToosa_Spec-[name]-v[N].md) |
+| [DEV-XX] | Feature: [name] | [YYYY-MM-DD] | [spec-[DEV-XX].md](archived/spec-[DEV-XX].md) |
 
 *(Empty until `/agtoosa-ship` closes the first story.)*
 

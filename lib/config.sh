@@ -5,6 +5,9 @@
 
 DOCS_FILES=(
   "Docs/AgToosa_Agent.md"
+  "Docs/AgToosa_Quickref.md"
+  "Docs/agtoosa-verify.sh"
+  "Docs/agtoosa-gate.yml.example"
   "Docs/AgToosa_Init.md"
   "Docs/AgToosa_Spec.md"
   "Docs/AgToosa_Build.md"
@@ -371,6 +374,13 @@ print_usage() {
   echo "                           install <name>    — Download and install a pack"
   echo "                           publish           — Contribution wizard for pack authors"
   echo "  --update [path]        Update an existing AgToosa install (skips interactive wizard)"
+  echo "  --verify [path]        Run the deterministic AgToosa lifecycle verifier (read-only)"
+  echo "  --doctor [path]        Diagnose an AgToosa install (versions, wiring, context health)"
+  echo "  --uninstall [path]     Remove AgToosa-owned files from a project (keeps your data)"
+  echo "  --path <dir>           Project path (skips the interactive path prompt)"
+  echo "  --platforms <list>     Comma-separated platforms, e.g. cursor,claude (skips prompt)"
+  echo "  --yes, -y              Assume yes for confirmation prompts (non-interactive)"
+  echo "  --allow-unverified     Permit --registry install of packs not marked verified"
   echo "  --force                Overwrite existing platform config files (creates .bak backups)"
   echo "  --dry-run              Show what would be copied without making changes"
   echo "  --list-template-files  Print every template file path and exit"

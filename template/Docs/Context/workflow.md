@@ -4,8 +4,8 @@
 
 ## TDD
 
-tdd: false
-<!-- Set to true to enforce Red-Green-Refactor in /agtoosa-build -->
+tdd: true
+<!-- Red-Green-Refactor is enforced in /agtoosa-build by default (AgToosa is a TDD framework). Set to false to relax strict ordering. -->
 
 ## Coverage
 

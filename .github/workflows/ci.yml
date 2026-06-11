@@ -90,7 +90,9 @@ jobs:
       - name: Install BATS
         run: |
           BATS_VERSION="v1.13.0"
+          BATS_SHA256="a85e12b8828271a152b338ca8109aa23493b57950987c8e6dff97ba492772ff3"
           curl -sSL "https://github.com/bats-core/bats-core/archive/refs/tags/${BATS_VERSION}.tar.gz" -o bats.tar.gz
+          echo "${BATS_SHA256}  bats.tar.gz" | sha256sum -c -
           tar -xzf bats.tar.gz
           sudo "./bats-core-${BATS_VERSION#v}/install.sh" /usr/local
           bats --version

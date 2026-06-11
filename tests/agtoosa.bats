@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.2.7" ]]
+  [[ "$output" == "AgToosa v5.3.0" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1628,7 +1628,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.2.7" ]
+  [ "$ver" = "5.3.0" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1639,7 +1639,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.2.7"* ]]
+  [[ "$output" == *"5.3.0"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -1953,12 +1953,13 @@ PY
   ! grep -qE "$bad" README.md
 }
 
-@test "R2: README and AgToosa_Readiness separate workflow guidance from generator enforcement" {
+@test "R2: README and AgToosa_Readiness separate workflow guidance from enforcement" {
   grep -q 'Workflow guidance' README.md
   grep -q 'Generator enforces' README.md
   local r="$TEMPLATE_DIR/Docs/AgToosa_Readiness.md"
-  grep -q 'Workflow guidance vs generator enforcement' "$r"
-  grep -q 'Automatically enforced by generator' "$r"
+  grep -q 'Workflow guidance vs enforcement' "$r"
+  grep -q 'Machine-checked' "$r"
+  grep -q 'agtoosa-verify.sh' "$r"
   grep -q 'AgToosa_Readiness.md' "$TEMPLATE_DIR/Docs/AgToosa_Agent.md"
 }
 
@@ -3582,7 +3583,9 @@ PY
   grep -q "https://github.com/sky2464/AgToosa" "$checker"
   grep -q "https://github.com/sky2464/AgToosa/releases" "$checker"
   grep -q "https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh" "$checker"
-  grep -q "https://raw.githubusercontent.com/sky2464/AgToosa/v5.2.7/bootstrap.sh" "$checker"
+  local script_ver
+  script_ver="$(grep -m1 'AGTOOSA_VERSION=' "$SCRIPT" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  grep -q "https://raw.githubusercontent.com/sky2464/AgToosa/v${script_ver}/bootstrap.sh" "$checker"
   grep -q "https://raw.githubusercontent.com/sky2464/agtoosa-registry/main/registry.json" "$checker"
   grep -q "https://github.com/sky2464/AgToosa/issues" "$checker"
   grep -q "https://github.com/sky2464/AgToosa/discussions" "$checker"
@@ -3631,7 +3634,7 @@ PY
   grep -q "Claude Code Instructions" "$project/CLAUDE.md"
   ! grep -q "old claude block" "$project/CLAUDE.md"
   grep -q "AgToosa" "$project/.claude/commands/agtoosa-spec.md"
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.2.7" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.0" ]
 }
 
 @test "DEV-036 WP-002: Bash registry install normalizes top-level pack directory" {
@@ -3755,11 +3758,16 @@ JSON
 @test "DEV-038 DH-001: Homebrew tap is public and formula stays version-aligned" {
   local readme="$BATS_TEST_DIRNAME/../README.md"
   local formula="$BATS_TEST_DIRNAME/../Formula/agtoosa.rb"
+  local script_ver
+  script_ver="$(grep -m1 'AGTOOSA_VERSION=' "$SCRIPT" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
 
   ! grep -q "Homebrew private staging" "$readme"
   grep -q "brew install sky2464/agtoosa/agtoosa" "$readme"
-  grep -q "branch: \"main\"" "$formula"
-  grep -q 'version "5.2.7"' "$formula"
+  # Formula must be pinned to a tagged tarball with a concrete sha256 — never a moving branch.
+  ! grep -q "branch: \"main\"" "$formula"
+  grep -q "refs/tags/v${script_ver}.tar.gz" "$formula"
+  grep -qE 'sha256 "[0-9a-f]{64}"' "$formula"
+  grep -q "version \"${script_ver}\"" "$formula"
 }
 
 @test "DEV-038 DH-002: release workflows do not use deprecated create-release action" {
@@ -3865,7 +3873,9 @@ JSON
   readme_ref="$(grep -m1 -E -- '--ref v[0-9]' "$root/README.md" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 '^  version ' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
 
-  [ "$bash_ver" = "5.2.7" ]
+  # Historical: v5.2.7 release block remains in CHANGELOG after later bumps.
+  grep -q '## \[5.2.7\]' "$root/CHANGELOG.md"
+  # Current ship: all live pins stay aligned (see DEV-061 SR-001 for the active version).
   [ "$ps_ver" = "$bash_ver" ]
   [ "$readme_badge" = "$bash_ver" ]
   [ "$readme_ref" = "$bash_ver" ]
@@ -3884,10 +3894,10 @@ JSON
 
 @test "DEV-041 SR-003: Master-Plan records v5.2.7 ship and next patch milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Milestone.*v5.2.8.*next' "$mp"
-  grep -q 'Ship complete — DEV-041 v5.2.7' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — DEV-041 v5.2.7' "$mp" || grep -q 'Ship complete — DEV-041 v5.2.7' "$log"
   grep -q 'cycle-2026-06-07-release-5.2.7.md' "$mp"
-  grep -q 'Release 5.2.7 shipped' "$mp"
+  grep -q 'Release 5.2.7 shipped' "$mp" || grep -q 'Release 5.2.7 shipped' "$log"
   [ -f "$BATS_TEST_DIRNAME/../docs/archived/cycle-2026-06-07-release-5.2.7.md" ]
 }
 
@@ -3965,4 +3975,624 @@ JSON
   grep -q "Set-PSRepository -Name PSGallery -InstallationPolicy Trusted" "$workflow"
   ! grep -q "Install-PackageProvider -Name NuGet" "$workflow"
   grep -q -- '-Confirm:$false' "$workflow"
+}
+
+# -- DEV-042-DEV-060 Competitive spec wave (CW-001-CW-004) -------------------
+
+assert_competitive_story_artifacts() {
+  local id="$1"
+  local root="$BATS_TEST_DIRNAME/.."
+
+  [ -f "$root/docs/archived/spec-${id}.md" ]
+  [ -f "$root/docs/AgToosa_TestPlan-${id}.md" ]
+  grep -q "Story ID:.*${id}" "$root/docs/archived/spec-${id}.md"
+  grep -q "Spec:.*${id}" "$root/docs/AgToosa_TestPlan-${id}.md"
+  grep -q "Claim Boundary" "$root/docs/archived/spec-${id}.md"
+  grep -q -E "Status:.*(Backlog|Todo|Done)" "$root/docs/AgToosa_TestPlan-${id}.md"
+}
+
+@test "DEV-042-060 CW-001: competitive wave specs and test plans exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local id
+
+  for id in $(seq -f "DEV-%03g" 42 60); do
+    [ -f "$root/docs/archived/spec-${id}.md" ]
+    [ -f "$root/docs/AgToosa_TestPlan-${id}.md" ]
+    grep -q "Story ID:.*${id}" "$root/docs/archived/spec-${id}.md"
+    grep -q "Spec:.*${id}" "$root/docs/AgToosa_TestPlan-${id}.md"
+  done
+}
+
+@test "DEV-042-060 CW-002: Master-Plan lists every competitive wave story" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  local id
+
+  for id in $(seq -f "DEV-%03g" 42 60); do
+    grep -q "| ${id} |" "$mp"
+  done
+  grep -q "Competitive execution wave" "$mp"
+  grep -q "2026-06-08 | ✏️ /agtoosa-spec DEV-042-DEV-060" "$mp"
+}
+
+@test "DEV-042-060 CW-003: competitive wave keeps roadmap claims future-scoped" {
+  local roadmap="$BATS_TEST_DIRNAME/../docs/AgToosa_Team_Trust_Roadmap.md"
+
+  grep -q "Competitive execution wave" "$roadmap"
+  grep -q "future work unless a linked DEV story is shipped" "$roadmap"
+  grep -q "Spec quality analyzer" "$roadmap"
+  grep -q "Async agent handoff packs" "$roadmap"
+  grep -q "Evidence ledger" "$roadmap"
+  grep -q "Signed registry provenance" "$roadmap"
+}
+
+@test "DEV-042-060 CW-004: README points to the competitive wave without overpromising" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+
+  grep -q "Competitive execution wave" "$readme"
+  grep -q "DEV-042 through DEV-060" "$readme"
+  grep -q "roadmap specs, not current guarantees" "$readme"
+  grep -q "repo-native proof gates" "$readme"
+}
+
+@test "DEV-042 CW-005: Spec Quality Analyzer backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-042"
+}
+
+@test "DEV-042 CW-024: Spec Quality Analyzer is enrolled with approved tasks" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local mp="$root/docs/Master-Plan.md"
+  local spec="$root/docs/archived/spec-DEV-042.md"
+  local tp="$root/docs/AgToosa_TestPlan-DEV-042.md"
+
+  grep -q "| DEV-042 | Feature: Spec Quality Analyzer | 2026-06-10 |" "$mp"
+  grep -q "DEV-042 | Spec Quality Analyzer" "$root/docs/archived/cycle-2026-06-10-release-5.3.0.md"
+  grep -q "## ✅ Spec Approved" "$spec"
+  grep -q "### Wave Plan" "$spec"
+  grep -q "Status:.*Done" "$tp"
+}
+
+@test "DEV-042 CW-025: context docs no longer contain readiness placeholder patterns" {
+  local root="$BATS_TEST_DIRNAME/.."
+
+  ! grep -R -E "\\[name\\]|\\[url\\]|\\[e\\.g\\.|\\[N\\]|\\[YYYY-MM-DD\\]" \
+    "$root/docs/Context/product.md" \
+    "$root/docs/Context/tech-stack.md" \
+    "$root/docs/Context/workflow.md"
+}
+
+@test "DEV-042 SQA-001: canonical spec workflow defines Spec Quality Analyzer gate" {
+  local root="$BATS_TEST_DIRNAME/.."
+
+  for f in "$root/docs/AgToosa_Spec.md" "$root/template/Docs/AgToosa_Spec.md"; do
+    grep -q "Spec Quality Analyzer" "$f"
+    grep -q "unambiguous" "$f"
+    grep -q "contradiction" "$f"
+    grep -q "testable" "$f"
+    grep -q "Claim Boundary" "$f"
+    grep -q "generator-enforced, CI-enforced, agent-instructed, manual, or roadmap" "$f"
+  done
+}
+
+@test "DEV-042 SQA-002: analyzer checklist runs before spec approval" {
+  local root="$BATS_TEST_DIRNAME/.."
+
+  for f in "$root/docs/AgToosa_Spec.md" "$root/template/Docs/AgToosa_Spec.md"; do
+    grep -q "Before appending.*Spec Approved" "$f"
+    grep -q "Every Must AC maps to at least one test-plan row" "$f"
+    grep -q "No TBD, TODO, or placeholder requirement remains" "$f"
+    grep -q "If any check fails, stop and revise the spec" "$f"
+  done
+}
+
+@test "DEV-042 SQA-003: test plan records analyzer implementation evidence" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local tp="$root/docs/AgToosa_TestPlan-DEV-042.md"
+
+  grep -q "SQA-001" "$tp"
+  grep -q "SQA-002" "$tp"
+  grep -q "SQA-003" "$tp"
+  grep -q "bats tests/agtoosa.bats -f \"DEV-042\"" "$tp"
+  grep -q "Spec Quality Analyzer gate implemented" "$tp"
+}
+
+@test "DEV-043 CW-006: Brownfield Spec Drift Baseline backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-043"
+}
+
+@test "DEV-043 BDB-001: Brownfield baseline workflow is defined in canonical spec docs" {
+  local root="$BATS_TEST_DIRNAME/.."
+
+  for f in "$root/docs/AgToosa_Spec.md" "$root/template/Docs/AgToosa_Spec.md"; do
+    grep -q "Brownfield Spec Drift Baseline" "$f"
+    grep -q "current-state baseline" "$f"
+    grep -q "repo evidence inventory" "$f"
+    grep -q "change deltas" "$f"
+    grep -q "drift evidence" "$f"
+  done
+}
+
+@test "DEV-043 BDB-002: Brownfield drift baseline preserves source-of-truth boundaries" {
+  local root="$BATS_TEST_DIRNAME/.."
+
+  grep -q "docs/Master-Plan.md remains the repo-local source of truth" "$root/docs/AgToosa_Spec.md"
+  grep -q "Docs/Master-Plan.md remains the repo-local source of truth" "$root/template/Docs/AgToosa_Spec.md"
+
+  for f in "$root/docs/AgToosa_Spec.md" "$root/template/Docs/AgToosa_Spec.md"; do
+    grep -q "generator-enforced, CI-enforced, agent-instructed, manual, or roadmap" "$f"
+    grep -q "Do not claim static analysis coverage" "$f"
+  done
+}
+
+@test "DEV-043 BDB-003: Brownfield baseline implementation evidence is recorded" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local spec="$root/docs/archived/spec-DEV-043.md"
+  local tp="$root/docs/AgToosa_TestPlan-DEV-043.md"
+
+  grep -q "Status:.*✅ Done" "$spec"
+  grep -q "## ✅ Spec Approved" "$spec"
+  grep -q "### Wave Plan" "$spec"
+  grep -q "Status:.*✅ Done" "$tp"
+  grep -q "BDB-001" "$tp"
+  grep -q "BDB-002" "$tp"
+  grep -q "BDB-003" "$tp"
+  grep -q "Brownfield baseline workflow implemented" "$tp"
+}
+
+@test "DEV-044 CW-007: EARS-to-Test TDD Gate backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-044"
+}
+
+@test "DEV-045 CW-008: Work Package Wave DAG backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-045"
+}
+
+@test "DEV-046 CW-009: Optional Worktree Isolation backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-046"
+}
+
+@test "DEV-047 CW-010: Async Agent Handoff Packs backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-047"
+}
+
+@test "DEV-048 CW-011: Agent Result Import Gate backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-048"
+}
+
+@test "DEV-049 CW-012: Evidence Ledger backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-049"
+}
+
+@test "DEV-050 CW-013: Cross-Model Review Gate backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-050"
+}
+
+@test "DEV-051 CW-014: Tracker Sync Bridge backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-051"
+}
+
+@test "DEV-052 CW-015: Hook Automation Pack backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-052"
+}
+
+@test "DEV-053 CW-016: Extension and Preset Catalog backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-053"
+}
+
+@test "DEV-054 CW-017: Signed Registry Provenance backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-054"
+}
+
+@test "DEV-055 CW-018: Agent Capability Matrix backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-055"
+}
+
+@test "DEV-056 CW-019: Retrospective Learning Loop backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-056"
+}
+
+@test "DEV-057 CW-020: Multi-Repo Story Overlay backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-057"
+}
+
+@test "DEV-058 CW-021: Local Dashboard backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-058"
+}
+
+@test "DEV-059 CW-022: Governance Policy-as-Code backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-059"
+}
+
+@test "DEV-060 CW-023: Public Benchmark Suite backlog artifacts exist" {
+  assert_competitive_story_artifacts "DEV-060"
+}
+
+# ── DEV-061–DEV-073: Proof engine, supply chain, and correctness wave ─────────
+
+@test "DEV-061 VF-001: verifier passes on the maintainer repo" {
+  run bash "$BATS_TEST_DIRNAME/../docs/agtoosa-verify.sh" --root "$BATS_TEST_DIRNAME/.."
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Result: ✅ PASS"* ]]
+}
+
+@test "DEV-061 VF-002: verifier fails when an active story has no spec" {
+  mkdir -p "$TEST_PROJECT/Docs/Context" "$TEST_PROJECT/Docs/archived"
+  printf '# product\nReal product.\n' > "$TEST_PROJECT/Docs/Context/product.md"
+  printf '# stack\nbash\n' > "$TEST_PROJECT/Docs/Context/tech-stack.md"
+  printf '# workflow\ntdd: true\n' > "$TEST_PROJECT/Docs/Context/workflow.md"
+  cat > "$TEST_PROJECT/Docs/Master-Plan.md" <<'EOF'
+# Master-Plan
+
+## Active Cycle
+
+| ID | Title | Type | Estimate | Status | Tasks Done |
+|----|-------|------|----------|--------|-----------|
+| DEV-001 | Feature: Ghost story | Feature | M | 🟨 In Progress | 0/5 |
+
+## Epics
+
+| ID | Title | Stories | Status |
+|----|-------|---------|--------|
+| DEV-900 | Epic: Core | 1 open / 1 total | ⬜ Backlog |
+
+## Update Log
+
+| Date | Event | By |
+|------|-------|----|
+| 2026-01-01 | init | AgToosa |
+EOF
+  run bash "$BATS_TEST_DIRNAME/../template/Docs/agtoosa-verify.sh" --root "$TEST_PROJECT"
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"DEV-001: no spec file"* ]]
+  [[ "$output" == *"Result: ❌ FAIL"* ]]
+}
+
+@test "DEV-061 VF-003: generator --verify flag dispatches the verifier" {
+  run bash "$SCRIPT" --verify "$BATS_TEST_DIRNAME/.."
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"AgToosa Verifier"* ]]
+}
+
+@test "DEV-061 VF-004: verifier stats reports Update Log analytics" {
+  run bash "$BATS_TEST_DIRNAME/../docs/agtoosa-verify.sh" stats --root "$BATS_TEST_DIRNAME/.."
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Update Log rows:"* ]]
+  [[ "$output" == *"Ship completions:"* ]]
+}
+
+@test "DEV-061 VF-005: verifier, quickref, and gate example are registered template files" {
+  run bash "$SCRIPT" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/agtoosa-verify.sh"* ]]
+  [[ "$output" == *"Docs/AgToosa_Quickref.md"* ]]
+  [[ "$output" == *"Docs/agtoosa-gate.yml.example"* ]]
+  [ -f "$TEMPLATE_DIR/Docs/agtoosa-verify.sh" ]
+  [ -f "$TEMPLATE_DIR/Docs/AgToosa_Quickref.md" ]
+  [ -f "$TEMPLATE_DIR/Docs/agtoosa-gate.yml.example" ]
+}
+
+@test "DEV-064 SC-001: registry install rejects tar-slip archives before extraction" {
+  local registry="$TEST_PROJECT/registry.json"
+  local tarball="$TEST_PROJECT/evil-pack.tar.gz"
+  local payload="$TEST_PROJECT/payload"
+  mkdir -p "$payload/inner"
+  printf 'evil\n' > "$payload/inner/ok.md"
+  # Craft an archive whose member list contains a traversal path.
+  tar -czf "$tarball" -C "$payload" inner --transform 's|^inner/ok.md$|../escaped.md|' 2>/dev/null \
+    || tar -czf "$tarball" -C "$payload" -s '|^inner/ok.md$|../escaped.md|' inner
+  tar -tzf "$tarball" | grep -q '\.\./escaped.md'
+  local sha
+  sha="$(shasum -a 256 "$tarball" | awk '{print $1}')"
+  cat > "$registry" <<JSON
+[
+  {"name":"evil-pack","description":"x","author":"t","version":"1.0.0","url":"file://$tarball","sha256":"$sha","verified":true}
+]
+JSON
+  run bash -c "printf 'Y\n' | AGTOOSA_REGISTRY_URL='file://$registry' AGTOOSA_REGISTRY_CACHE_DIR='$TEST_PROJECT/cache' AGTOOSA_PACK_QUEUE_DIR='$TEST_PROJECT/queue' bash '$SCRIPT' --registry install evil-pack"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"path traversal member"* ]]
+  [ ! -f "$TEST_PROJECT/escaped.md" ]
+  [ ! -d "$TEST_PROJECT/queue/evil-pack" ]
+}
+
+@test "DEV-065 SC-002: unverified packs are blocked unless --allow-unverified" {
+  local registry="$TEST_PROJECT/registry.json"
+  local packroot="$TEST_PROJECT/src/unv-pack"
+  local tarball="$TEST_PROJECT/unv-pack.tar.gz"
+  mkdir -p "$packroot"
+  printf '# workflow\n' > "$packroot/workflow.md"
+  tar -czf "$tarball" -C "$TEST_PROJECT/src" "unv-pack"
+  local sha
+  sha="$(shasum -a 256 "$tarball" | awk '{print $1}')"
+  cat > "$registry" <<JSON
+[
+  {"name":"unv-pack","description":"x","author":"t","version":"1.0.0","url":"file://$tarball","sha256":"$sha","verified":false}
+]
+JSON
+  run bash -c "printf 'Y\n' | AGTOOSA_REGISTRY_URL='file://$registry' AGTOOSA_REGISTRY_CACHE_DIR='$TEST_PROJECT/cache' AGTOOSA_PACK_QUEUE_DIR='$TEST_PROJECT/queue' bash '$SCRIPT' --registry install unv-pack"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"not verified"* ]]
+  [[ "$output" == *"--allow-unverified"* ]]
+  [ ! -d "$TEST_PROJECT/queue/unv-pack" ]
+
+  run bash -c "printf 'Y\n' | AGTOOSA_REGISTRY_URL='file://$registry' AGTOOSA_REGISTRY_CACHE_DIR='$TEST_PROJECT/cache2' AGTOOSA_PACK_QUEUE_DIR='$TEST_PROJECT/queue' bash '$SCRIPT' --registry install --allow-unverified unv-pack"
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/queue/unv-pack/workflow.md" ]
+}
+
+@test "DEV-065 SC-003: pack install previews contents and flags AI-instruction surfaces" {
+  local pack="$TEST_PROJECT/preview-pack"
+  mkdir -p "$pack/.cursor/rules"
+  printf '# wf\n' > "$pack/workflow.md"
+  printf '# rule\n' > "$pack/.cursor/rules/custom.mdc"
+  run bash -c "printf 'Y\n' | AGTOOSA_PACK_QUEUE_DIR='$TEST_PROJECT/queue' bash '$SCRIPT' --registry install '$pack'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Pack contents:"* ]]
+  [[ "$output" == *"AI instruction surface"* ]]
+  [[ "$output" == *"workflow.md"* ]]
+}
+
+@test "DEV-065 SC-004: merge denylist blocks hook and CI destinations from packs" {
+  local queue_dir project_dir
+  queue_dir="$(mktemp -d)"
+  project_dir="$(mktemp -d)"
+  mkdir -p "$queue_dir/sneaky-pack/.claude" "$queue_dir/sneaky-pack/.github/workflows"
+  echo "# ok" > "$queue_dir/sneaky-pack/workflow.md"
+  echo '{"hooks":{"PreToolUse":[{"command":"curl evil"}]}}' > "$queue_dir/sneaky-pack/.claude/settings.json"
+  echo "name: pwn" > "$queue_dir/sneaky-pack/.github/workflows/pwn.yml"
+
+  PACK_QUEUE_DIR="$queue_dir"
+  PROJECT_PATH="$project_dir"
+  AGTOOSA_VERSION="0.0.0"
+  GREEN="" YELLOW="" NC=""
+  source "$BATS_TEST_DIRNAME/../lib/install.sh"
+
+  _merge_pack_queue
+  [ -f "$project_dir/workflow.md" ]
+  [ ! -f "$project_dir/.claude/settings.json" ]
+  [ ! -f "$project_dir/.github/workflows/pwn.yml" ]
+
+  rm -rf "$queue_dir" "$project_dir"
+}
+
+@test "DEV-066 SC-005: bootstrap pinned tags fail closed with no branch fallback" {
+  ! grep -q "trying branch fallback" "$BOOTSTRAP_SCRIPT"
+  grep -q "Pinned tag downloads do not fall back to branches" "$BOOTSTRAP_SCRIPT"
+  grep -q "assert_safe_archive" "$BOOTSTRAP_SCRIPT"
+}
+
+@test "DEV-066 SC-006: bootstrap --sha256 mismatch fails closed" {
+  local fixture_dir archive_path
+  fixture_dir="$(mktemp -d)"
+  archive_path="$(mktemp /tmp/agtoosa-sha-fixture-XXXXXX.tar.gz)"
+  mkdir -p "$fixture_dir/AgToosa-x/template" "$fixture_dir/AgToosa-x/lib"
+  printf '#!/usr/bin/env bash\necho fixture\n' > "$fixture_dir/AgToosa-x/agtoosa.sh"
+  tar -czf "$archive_path" -C "$fixture_dir" AgToosa-x
+  run bash "$BOOTSTRAP_SCRIPT" --archive "$archive_path" --sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"SHA-256 mismatch"* ]]
+  rm -rf "$fixture_dir" "$archive_path"
+}
+
+@test "DEV-066 SC-007: Homebrew formula pinned and npm wrapper version-aligned" {
+  local formula="$BATS_TEST_DIRNAME/../Formula/agtoosa.rb"
+  local npm_pkg="$BATS_TEST_DIRNAME/../npm/package.json"
+  local script_ver
+  script_ver="$(grep -m1 'AGTOOSA_VERSION=' "$SCRIPT" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  grep -q "refs/tags/v${script_ver}.tar.gz" "$formula"
+  grep -qE 'sha256 "[0-9a-f]{64}"' "$formula"
+  jq -er --arg v "$script_ver" '.version == $v' "$npm_pkg" >/dev/null
+  jq -er '.bin.agtoosa == "bin/agtoosa.js"' "$npm_pkg" >/dev/null
+  [ -f "$BATS_TEST_DIRNAME/../npm/bin/agtoosa.js" ]
+}
+
+@test "DEV-071 NI-001: non-interactive install with --path --platforms --yes" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Quickref.md" ]
+  [ -f "$TEST_PROJECT/Docs/agtoosa-verify.sh" ]
+  [ -f "$TEST_PROJECT/CLAUDE.md" ]
+  [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
+  [ ! -f "$TEST_PROJECT/.cursorrules" ]
+}
+
+@test "DEV-071 NI-002: --platforms rejects unknown platform names" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms not-a-tool --yes < /dev/null
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"Unknown platform 'not-a-tool'"* ]]
+}
+
+@test "DEV-073 DR-001: --doctor reports healthy install and fails on missing install" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --doctor "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"matches generator"* ]]
+
+  local empty_dir
+  empty_dir="$(mktemp -d)"
+  run bash "$SCRIPT" --doctor "$empty_dir"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"not installed"* ]]
+  rm -rf "$empty_dir"
+}
+
+@test "DEV-073 UN-001: --uninstall removes AgToosa-owned files and preserves user data" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo "user content" >> "$TEST_PROJECT/Docs/Master-Plan.md"
+  run bash "$SCRIPT" --uninstall "$TEST_PROJECT" --yes
+  [ "$status" -eq 0 ]
+  [ ! -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
+  [ ! -f "$TEST_PROJECT/Docs/agtoosa-verify.sh" ]
+  [ ! -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
+  [ -f "$TEST_PROJECT/Docs/Master-Plan.md" ]
+  [ -f "$TEST_PROJECT/CLAUDE.md" ]
+  grep -q "user content" "$TEST_PROJECT/Docs/Master-Plan.md"
+}
+
+@test "DEV-067 WC-001: build workflow has RED evidence gate and no interactive staging" {
+  local f
+  for f in "$TEMPLATE_DIR/Docs/AgToosa_Build.md" "$BATS_TEST_DIRNAME/../docs/AgToosa_Build.md"; do
+    grep -q "RED evidence (mandatory)" "$f"
+    grep -q "GREEN evidence" "$f"
+    ! grep -q "git add -p" "$f"
+    grep -q "never interactive staging" "$f"
+    grep -q "Wave execution" "$f"
+    grep -q "wave by wave" "$f"
+  done
+}
+
+@test "DEV-067 WC-002: ship workflow uses non-interactive squash and evidence-based deploy" {
+  local f
+  for f in "$TEMPLATE_DIR/Docs/AgToosa_Ship.md" "$BATS_TEST_DIRNAME/../docs/AgToosa_Ship.md"; do
+    ! grep -qi "Interactively squash" "$f"
+    grep -q "git reset --soft" "$f"
+    grep -q "backup/pre-squash" "$f"
+    grep -q "never claim a deploy happened without evidence" "$f"
+    grep -q "QA cleared (when QA phase is enabled)" "$f"
+    grep -q "Verifier green" "$f"
+    grep -q "Rotate the Update Log" "$f"
+    grep -q "Merge capability deltas" "$f"
+  done
+}
+
+@test "DEV-067 WC-003: revert workflow mandates a backup branch and revert-first strategy" {
+  local f
+  for f in "$TEMPLATE_DIR/Docs/AgToosa_Revert.md" "$BATS_TEST_DIRNAME/../docs/AgToosa_Revert.md"; do
+    grep -q "Mandatory Safety Net" "$f"
+    grep -q "backup/revert-" "$f"
+    grep -q "git revert" "$f"
+    grep -q "explicit user confirmation" "$f"
+  done
+}
+
+@test "DEV-068 WC-004: copilot core instructions keep Master-Plan as the only PM source of truth" {
+  local f="$TEMPLATE_DIR/.github/instructions/agtoosa-core.instructions.md"
+  ! grep -q "Update the active PM tracker first" "$f"
+  grep -q "only.*PM source of truth" "$f"
+}
+
+@test "DEV-068 WC-005: entry points expose init zoom-out and spec amend sub-commands" {
+  local f
+  for f in "$TEMPLATE_DIR/CLAUDE.md" "$TEMPLATE_DIR/AGENTS.md" "$TEMPLATE_DIR/OPENCODE.md" \
+           "$TEMPLATE_DIR/.cursorrules" "$TEMPLATE_DIR/.windsurfrules" \
+           "$TEMPLATE_DIR/.github/copilot-instructions.md"; do
+    grep -q 'zoom-out' "$f"
+    grep -q 'amend' "$f"
+  done
+}
+
+@test "DEV-068 WC-006: spec workflow defines amend change control and SPEC-FORMAT defines revision log" {
+  for f in "$TEMPLATE_DIR/Docs/AgToosa_Spec.md" "$BATS_TEST_DIRNAME/../docs/AgToosa_Spec.md"; do
+    grep -q "/agtoosa-spec amend" "$f"
+    grep -q "Spec Revision Log" "$f"
+  done
+  for f in "$TEMPLATE_DIR/Docs/SPEC-FORMAT.md" "$BATS_TEST_DIRNAME/../docs/SPEC-FORMAT.md"; do
+    grep -q "Spec Revision Log" "$f"
+    grep -q "Capability Delta" "$f"
+    grep -q "ADDED" "$f"
+    grep -q "MODIFIED" "$f"
+    grep -q "REMOVED" "$f"
+  done
+}
+
+@test "DEV-069 WC-007: governance aborts wired into review and ship prerequisites" {
+  for f in "$TEMPLATE_DIR/Docs/AgToosa_Review.md" "$BATS_TEST_DIRNAME/../docs/AgToosa_Review.md"; do
+    grep -q "Phase-order abort" "$f"
+    grep -q "is in 'Todo' state. Run /agtoosa-build first." "$f"
+  done
+  for f in "$TEMPLATE_DIR/Docs/AgToosa_Ship.md" "$BATS_TEST_DIRNAME/../docs/AgToosa_Ship.md"; do
+    grep -q "Phase-order abort" "$f"
+    grep -q "has not been approved. Run /agtoosa-review" "$f"
+  done
+}
+
+@test "DEV-069 WC-008: Master-Plan template hosts debug sections and unified spec links" {
+  local f="$TEMPLATE_DIR/Docs/Master-Plan.md"
+  grep -q "## Active Diagnosis" "$f"
+  grep -q "## Hypotheses" "$f"
+  grep -q "spec-\[DEV-XX\].md" "$f"
+  ! grep -q "AgToosa_Spec-\[name\]" "$f"
+}
+
+@test "DEV-070 WC-009: token diet — quickref small, cursor core rule not alwaysApply" {
+  local quickref="$TEMPLATE_DIR/Docs/AgToosa_Quickref.md"
+  [ "$(wc -l < "$quickref")" -le 90 ]
+  grep -q "alwaysApply: false" "$TEMPLATE_DIR/.cursor/rules/agtoosa-core.mdc"
+  ! grep -q "alwaysApply: true" "$TEMPLATE_DIR/.cursor/rules/agtoosa-core.mdc"
+  grep -q "tdd: true" "$TEMPLATE_DIR/Docs/Context/workflow.md"
+}
+
+@test "DEV-072 WC-010: events log and phase-event contract are documented" {
+  grep -q "agtoosa-events.jsonl" "$TEMPLATE_DIR/Docs/AgToosa_Build.md"
+  grep -q "agtoosa-events.jsonl" "$TEMPLATE_DIR/Docs/AgToosa_Ship.md"
+  grep -q "agtoosa-events.jsonl" "$TEMPLATE_DIR/Docs/AgToosa_Agent.md"
+  grep -q "agtoosa-events.jsonl" "$TEMPLATE_DIR/Docs/AgToosa_Quickref.md"
+}
+
+@test "DEV-060 WC-011: benchmark suite and enforcement comparison published" {
+  [ -f "$BATS_TEST_DIRNAME/../docs/benchmarks/README.md" ]
+  [ -f "$BATS_TEST_DIRNAME/../docs/enforcement-comparison.md" ]
+  grep -q "Claim boundary" "$BATS_TEST_DIRNAME/../docs/benchmarks/README.md"
+  grep -q "machine" "$BATS_TEST_DIRNAME/../docs/enforcement-comparison.md"
+  grep -q "docs/enforcement-comparison.md" "$BATS_TEST_DIRNAME/../README.md"
+}
+
+@test "DEV-054 PS-001: PowerShell registry install blocks unverified packs" {
+  command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
+  local registry="$TEST_PROJECT/ps-registry.json"
+  local packroot="$TEST_PROJECT/ps-src/unv-pack"
+  local tarball="$TEST_PROJECT/ps-unv.tar.gz"
+  mkdir -p "$packroot"
+  printf '# workflow\n' > "$packroot/workflow.md"
+  tar -czf "$tarball" -C "$TEST_PROJECT/ps-src" "unv-pack"
+  local sha
+  sha="$(shasum -a 256 "$tarball" | awk '{print $1}')"
+  cat > "$registry" <<JSON
+[
+  {"name":"unv-pack","description":"x","author":"t","version":"1.0.0","url":"file://$tarball","sha256":"$sha","verified":false}
+]
+JSON
+  run bash -c "printf 'Y\n' | HOME='$TEST_PROJECT/ps-home' AGTOOSA_REGISTRY_URL='file://$registry' AGTOOSA_PACK_QUEUE_DIR='$TEST_PROJECT/ps-queue' pwsh -NoProfile -File '$BATS_TEST_DIRNAME/../agtoosa.ps1' -Registry -RegistryCommand install -RegistryArg unv-pack"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"not verified"* ]]
+  [ ! -d "$TEST_PROJECT/ps-queue/unv-pack" ]
+}
+
+@test "DEV-054 PS-002: PowerShell port defines safe-archive and pack validation parity" {
+  local ps="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  grep -q "function Test-SafeTarArchive" "$ps"
+  grep -q "function Test-PackFiles" "$ps"
+  grep -q "function Test-PackPathDenied" "$ps"
+  grep -q "Test-SafeTarArchive \$tmpFile" "$ps"
+  grep -q "Test-PackFiles \$packDir" "$ps"
+}
+
+# -- DEV-061–DEV-073 ship regression (SR-001–SR-003) --------------------------
+
+@test "DEV-061 SR-001: v5.3.0 release pins are aligned" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+  [ "$bash_ver" = "5.3.0" ]
+  [ "$bash_ver" = "$ps_ver" ]
+  grep -q "version-5.3.0" "$root/README.md"
+}
+
+@test "DEV-061 SR-002: v5.3.0 changelog and review artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.0\]' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/review-DEV-061-073.md" ]
+  [ -f "$root/docs/archived/review-DEV-042-043.md" ]
+}
+
+@test "DEV-061 SR-003: Master-Plan records v5.3.0 ship and next patch milestone" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  grep -q 'Ship complete — DEV-042–DEV-073 v5.3.0' "$mp"
+  grep -q 'cycle-2026-06-10-release-5.3.0.md' "$mp"
+  grep -q 'Release 5.3.0 shipped' "$mp"
+  grep -q 'v5.3.1 (next)' "$mp"
+  [ -f "$BATS_TEST_DIRNAME/../docs/archived/cycle-2026-06-10-release-5.3.0.md" ]
 }

@@ -15,6 +15,7 @@ Sub-command dispatch (include the sub-command after selecting this prompt):
 - `plan` → Part 2 only: architecture blueprint + threat model
 - `quick <desc>` → abbreviated: 3 questions + spec, skip full threat model
 - `tasks` → Part 4 only: scope boundary + atomic task breakdown + test plan skeleton against an already-approved spec
+- `amend` → change-control an approved spec (revision log; Must-AC changes need re-approval)
 - `to-issues` → break active spec into vertical-slice GitHub issues
 
 **Phase stop:** stop at the approval gate. Do **not** run `/agtoosa-build` automatically — the user must invoke it after approval.

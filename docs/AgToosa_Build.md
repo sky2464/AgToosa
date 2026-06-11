@@ -15,7 +15,9 @@ On Claude Code, independent tasks within a phase can be dispatched to parallel s
 - Read the task list in `docs/Master-Plan.md` under `## Active Tasks`.
 - Identify tasks that do not share state with other tasks.
 - Batch those tasks into parallel `Task` tool calls before starting the TDD loop (Part 1).
+- Each parallel subagent must return the **Terminal Evidence Contract** block from `docs/AgToosa_Agent.md` (command, exit code, pass/fail, warnings, errors, changed files, next action).
 - Collect results when all parallel tasks complete; merge conflicts are resolved by the orchestrating agent.
+- The orchestrator must summarize unresolved terminal output before marking any task checkbox done.
 - See `/agtoosa-review` for the reference parallel pattern (4 reviewer personas run simultaneously).
 
 > **Note:** Parallel dispatch applies to Claude Code only. On other platforms, run tasks sequentially.
@@ -25,8 +27,19 @@ Execute TDD against a planned task list and run the full test suite.
 
 > **Prerequisites:** `/agtoosa-spec` must be complete with task planning done.
 > Verify:
-> 1. The active `AgToosa_Spec-*.md` has a `## ✅ Spec Approved` section. If not, run `/agtoosa-spec` first.
-> 2. `docs/Master-Plan.md` has tasks listed under `## Active Tasks`. If not, run `/agtoosa-spec tasks` to generate them.
+> 1. The active spec (`docs/archived/spec-[story-id].md` for the story in `## Active Cycle`) has a `## ✅ Spec Approved` section. If not, **stop** and instruct the user to run `/agtoosa-spec` (or approve the spec). Do **not** auto-run `/agtoosa-spec`.
+> 2. `docs/Master-Plan.md` has tasks listed under `## Active Tasks`. If not, **stop** and instruct the user to run `/agtoosa-spec tasks`. Do **not** auto-run `/agtoosa-spec tasks`.
+> 3. The story status allows building (Todo or In Progress). Out-of-order runs follow `docs/AgToosa_Governance.md` → **Conflict playbook**: warn and abort with the exact message defined there.
+
+## Terminal Evidence Contract
+
+> See `docs/AgToosa_Agent.md` → **Terminal Evidence Contract** for the full rules.
+
+After every command, test run, scan, or parallel subagent during `/agtoosa-build`:
+
+- Report command run, exit code, pass/fail, warnings, errors, changed files, and next action.
+- A nonzero exit code, lint warning, markdownlint warning, or failing test **blocks** marking the task complete unless explicitly classified as accepted/pre-existing with evidence.
+- Before checking off any task in `docs/Master-Plan.md` or the active spec, summarize any unresolved terminal output.
 
 ## Workflow
 
@@ -38,6 +51,8 @@ Execute TDD against a planned task list and run the full test suite.
 
 **Before starting the first TDD task:**
 - Update `docs/Master-Plan.md`: move the Story row from `## Backlog` to `## Active Cycle`, set status to `In Progress`.
+- Append a phase event to `docs/agtoosa-events.jsonl` (create the file if missing):
+  `{"ts":"[ISO-8601 UTC]","phase":"build","event":"start","story":"[Story ID]","by":"AgToosa"}`
 - Add an Update Log entry to `docs/Master-Plan.md`:
 
     ```
@@ -49,7 +64,7 @@ Execute TDD against a planned task list and run the full test suite.
     Next: Task 1/[N] — [task title].
     ```
 
-1.  **Scope Boundary Reminder:** Read the `## Build Scope` section in the active `AgToosa_Spec-*.md`. Any edit to a file not listed there requires stopping and presenting:
+1.  **Scope Boundary Reminder:** Read the `### 2.4 Build Scope` section in the active spec (`docs/archived/spec-[story-id].md`). Any edit to a file not listed there requires stopping and presenting:
     ```
     ❓ [filename] is outside the declared scope.
       → A) Include it in scope (I'll update the spec)
@@ -60,7 +75,7 @@ Execute TDD against a planned task list and run the full test suite.
 
 2.  **Dependency Validation:** Never assume dependency versions from memory — verify via web search or terminal (`npm view`, `pip index`, `dart pub outdated`).
 
-3.  **Parallelization:** Review the task list in `docs/Master-Plan.md` under `## Active Tasks` and identify tasks that can run in parallel via the Claude Code parallel pattern above.
+3.  **Wave execution:** Read `### 3.2 Wave Plan` in the active spec and execute tasks **wave by wave**: complete every task in Wave N — including its Terminal Evidence — before starting Wave N+1. Within a wave, tasks share no files or data dependencies, so on Claude Code they may be dispatched in parallel via the pattern above; on all other platforms run the wave's tasks sequentially. If the spec has no Wave Plan, fall back to the `## Active Tasks` order in `docs/Master-Plan.md`.
 
 4.  **For each atomic task, execute the TDD Cycle:**
 
@@ -87,6 +102,16 @@ Execute TDD against a planned task list and run the full test suite.
     **🔴 RED — Write a Failing Test First:**
     *   Before writing ANY implementation code, write a test that describes the expected behavior.
     *   The test MUST fail initially (confirming it tests something real).
+    *   **RED evidence (mandatory):** run the new test and capture the failing run **before** writing implementation code. Record it in the story test plan (`docs/AgToosa_TestPlan-[story-id].md`) as:
+
+        ```
+        RED evidence — [task-id]
+        Command: [test command]
+        Exit code: [nonzero]
+        Failure excerpt: [1–3 lines of the assertion/error]
+        ```
+
+        A test that passes on first run is **not** RED — it tests nothing new. Rewrite it before proceeding. Tasks without RED evidence cannot be checked off.
     *   Test types: unit tests, integration tests, or E2E tests as appropriate.
     *   **Test Data Rules:**
         - Use clearly fake values only — names like "Test User", emails like "test@example.com"
@@ -99,9 +124,16 @@ Execute TDD against a planned task list and run the full test suite.
     *   Write the MINIMUM code necessary to make the failing test pass.
     *   Do NOT add features, optimizations, or abstractions beyond what the test requires.
     *   Run the test suite to confirm the new test passes and no existing tests break.
-    *   **WIP Micro-Commit:** once green, immediately commit progress:
+    *   **GREEN evidence:** append the passing run to the same test-plan block:
+
         ```
-        git add -p && git commit -m "WIP: [task-id] [short description]"
+        GREEN evidence — [task-id]
+        Command: [test command]
+        Exit code: 0
+        ```
+    *   **WIP Micro-Commit:** once green, immediately commit progress by staging the exact files changed for this task (from the Terminal Evidence Contract changed-files list — never interactive staging, never `git add .`):
+        ```
+        git add [changed file paths] && git commit -m "WIP: [task-id] [short description]"
         ```
         This preserves progress and allows context restoration if the session is interrupted.
 
@@ -112,21 +144,11 @@ Execute TDD against a planned task list and run the full test suite.
     *   Ensure OpenTelemetry observability hooks are present (structured logging, metrics, tracing).
     *   Run the full test suite again to confirm nothing broke.
     *   **Tracking update (per completed task):** After the Refactor step passes:
-        - In the active `AgToosa_Spec-*.md`, change `- [ ] N.M [task]` → `- [x] N.M [task]` in `## 3. Tasks / ### 3.1 Task Tree`.
+        - In the active spec (`docs/archived/spec-[story-id].md`), change `- [ ] N.M [task]` → `- [x] N.M [task]` in `## 3. Tasks / ### 3.1 Task Tree`.
         - In `docs/Master-Plan.md` under `## Active Tasks`, change the same checkbox `- [ ] N.M` → `- [x] N.M`.
         - In `docs/Master-Plan.md` under `## Active Cycle`, increment the progress bar: update the ▰/▱ fill and the counter (e.g. `▰▰▰▱▱▱▱▱ 2/8 tasks` → `▰▰▰▰▱▱▱▱ 3/8 tasks`). Each ▰ represents one completed task.
-        - Transition the Task sub-issue status to `Done` in Linear (if Linear is configured).
         - Update `docs/Master-Plan.md`: increment the Tasks Done count for the Story row.
-        - Post a Linear comment on the Story issue:
-
-            ```
-            Task 🟢 [N]/[M] complete
-            Date: [YYYY-MM-DD HH:MM]
-
-            Completed: Task [N] — [task title]. Tests: [X] new, all green.
-
-            Next: Task [N+1]/[M] — [next task title].
-            ```
+        - Add an **Update Log** entry: `YYYY-MM-DD HH:MM — /agtoosa-build — Task 🟢 [N]/[M] complete — [Story ID] — [task title]; tests green.`
 
 5.  **Repeat** the Red-Green-Refactor cycle for every atomic task.
 
@@ -177,6 +199,9 @@ Any bug, edge case, or out-of-scope requirement discovered during the TDD cycle 
 ### Part 3 — Tracking
 
 10. **Master-Plan Update:** Mark all completed tasks in `docs/Master-Plan.md`; update story status.
+11. **Phase event:** Append to `docs/agtoosa-events.jsonl`:
+    `{"ts":"[ISO-8601 UTC]","phase":"build","event":"complete","story":"[Story ID]","by":"AgToosa"}`
+12. **Self-verify:** Run `bash docs/agtoosa-verify.sh` and resolve any FAIL findings before reporting the build complete.
 
 ## Output
 *   Confirm build and test phases are complete and all tests pass.

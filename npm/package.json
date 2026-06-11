@@ -1,0 +1,40 @@
+{
+  "name": "agtoosa",
+  "version": "5.3.0",
+  "description": "Spec-driven agentic AI framework generator — installs the AgToosa SDLC workflow pack (spec, TDD build, review, ship + deterministic verifier) into your repo for Cursor, Claude Code, Windsurf, Gemini CLI, Copilot, and Codex.",
+  "bin": {
+    "agtoosa": "bin/agtoosa.js"
+  },
+  "files": [
+    "bin/"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "keywords": [
+    "spec-driven-development",
+    "sdd",
+    "tdd",
+    "ai-agents",
+    "agentic",
+    "cursor",
+    "claude-code",
+    "copilot",
+    "windsurf",
+    "workflow",
+    "sdlc"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sky2464/AgToosa.git"
+  },
+  "homepage": "https://github.com/sky2464/AgToosa#readme",
+  "bugs": {
+    "url": "https://github.com/sky2464/AgToosa/issues"
+  },
+  "license": "MIT"
+}

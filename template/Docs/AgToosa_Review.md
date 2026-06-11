@@ -14,6 +14,8 @@
 Ensure code quality, security, and simplicity through multi-persona review.
 
 > **Prerequisites:** `/agtoosa-build` must be complete. Verify that the full test suite passes and the Story status in `Docs/Master-Plan.md` is `In Progress` (not `Todo`). If tests are failing or no build artifact exists, **stop** and instruct the user to run `/agtoosa-build test`. Do **not** auto-run `/agtoosa-build`.
+>
+> **Phase-order abort (from `Docs/AgToosa_Governance.md`):** If the Story status is still `Todo`, print exactly `⚠️ Story [ID] is in 'Todo' state. Run /agtoosa-build first.` and abort.
 
 ### Terminal Evidence Contract
 
@@ -72,7 +74,7 @@ Each reviewer persona (or parallel subagent) must report command run, exit code,
 
     g. **Browser/device matrix** — Check the `browser_matrix` list in `Docs/Context/tech-stack.md`; flag untested combinations as 🟡 Warning.
 
-    h. **Flaky test detection** — Run test suite 3× and flag any test that passes/fails non-deterministically as 🟡 Warning.
+    h. **Flaky test detection** — Re-run the tests touched by this story (or use the runner's `--repeat N` when available) and flag any test that passes/fails non-deterministically as 🟡 Warning. Do not re-run the entire suite 3× — scope flake detection to changed tests to keep review time and token cost bounded.
 
     **🔬 Iron Law — Bug Root Cause Protocol** (`/agtoosa-review debug` runs this exclusively):
 

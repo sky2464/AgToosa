@@ -6,6 +6,28 @@
 #               AGTOOSA_VERSION, BAK_FILES, colors.
 # Globals modified: COPIED, SKIPPED, EXISTING_FILES, KEEP_SHIP.
 
+# Destinations a pack must never write to: executable-hook and CI surfaces.
+# Canonical definition (lib/registry.sh defines a guarded copy for standalone use).
+PACK_DENYLIST_PATTERNS=(
+  ".claude/settings.json"
+  ".claude/hooks/"
+  ".github/workflows/"
+)
+
+# Return 0 when a pack-relative path is on the sensitive denylist.
+pack_path_denied() {
+  local rel="${1#/}"
+  local pat
+  for pat in "${PACK_DENYLIST_PATTERNS[@]}"; do
+    if [[ "$pat" == */ ]]; then
+      [[ "$rel" == "$pat"* ]] && return 0
+    else
+      [[ "$rel" == "$pat" ]] && return 0
+    fi
+  done
+  return 1
+}
+
 # Set EXISTING_FILES to the count of already-present files in PROJECT_PATH.
 # Called before the copy confirmation prompt.
 count_existing_files() {
@@ -103,13 +125,27 @@ count_existing_files() {
   return 0
 }
 
-# Copy pack files into PROJECT_PATH, skipping disallowed file types.
+# Copy pack files into PROJECT_PATH, skipping disallowed file types and
+# sensitive destinations. Revalidates paths at merge time (the queue may have
+# been modified between install and merge).
 _merge_pack() {
   local pack_dir="$1" pack_name="$2"
   local allowed_exts="md json toml mdc"
   local count=0
+  local canonical_dir
+  canonical_dir=$(realpath "$pack_dir" 2>/dev/null || readlink -f "$pack_dir" 2>/dev/null || echo "$pack_dir")
   while IFS= read -r -d '' f; do
     [[ "$(basename "$f")" == ".pack-meta.json" ]] && continue
+
+    # Merge-time containment check: symlinks or tampered queue content must
+    # not let a pack read or write outside its own directory.
+    local canonical_file
+    canonical_file=$(realpath "$f" 2>/dev/null || readlink -f "$f" 2>/dev/null || echo "$f")
+    if [[ "$canonical_file" != "$canonical_dir"/* ]]; then
+      echo -e "  ${YELLOW}⏭${NC}  Skipping path-escaping file: ${f#"$pack_dir"}" >&2
+      continue
+    fi
+
     local ext="${f##*.}"
     local allowed=false
     for e in $allowed_exts; do
@@ -119,12 +155,19 @@ _merge_pack() {
       echo -e "  ${YELLOW}⏭${NC}  Skipping disallowed file: ${f#"$pack_dir"}" >&2
       continue
     fi
+
     local rel="${f#"$pack_dir"}"
+    rel="${rel#/}"
+    if pack_path_denied "$rel"; then
+      echo -e "  ${YELLOW}⛔${NC} Skipping sensitive destination: ${rel} (packs may not write hook or CI surfaces)" >&2
+      continue
+    fi
+
     local dst="${PROJECT_PATH}/${rel}"
     mkdir -p "$(dirname "$dst")"
     cp "$f" "$dst"
     count=$((count + 1))
-  done < <(find "$pack_dir" -type f -print0)
+  done < <(find -L "$pack_dir" -type f -print0)
   echo -e "  ${GREEN}✅${NC} Pack '${pack_name}': ${count} files merged"
 }
 

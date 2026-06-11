@@ -38,8 +38,12 @@ AgToosa is markdown workflow guidance for AI assistants. **Workflow instructions
 | **SAST/DAST Scanning** | `/agtoosa-build` and `/agtoosa-review security` instruct tool runs | No |
 | **IaC Security Scanning** | `/agtoosa-build` instructs Checkov/tfsec when IaC exists | No |
 | **PII Redaction** | Agent instructions mandate scrubbing before LLM context | No |
-| **Prompt Injection Guard** | Input sanitization guidance in workflow docs | No |
-| **Template integrity** | — | Yes — `agtoosa.sh` installs registered template files only |
+| **Prompt Injection Guard** | Input sanitization guidance in workflow docs | Partially — registry packs are screened (see below) |
+| **Core template integrity** | — | Yes — `agtoosa.sh` installs files from a fixed, maintainer-controlled allowlist |
+| **Registry pack containment** | — | Yes — SHA-256 pin, pre-extraction member scan, file-type allowlist, hook/CI destination denylist (`.claude/settings.json`, `.claude/hooks/`, `.github/workflows/`), verified-flag enforcement, and a content preview before consent |
+| **Lifecycle verification** | `/agtoosa-status readiness` instructs checks | Yes — `Docs/agtoosa-verify.sh` is a deterministic script (CI-enforceable via `Docs/agtoosa-gate.yml.example`) |
+
+> **Registry trust boundary:** core template files are maintainer-controlled and allowlisted. Registry packs are third-party content installed with explicit user consent — they are screened and contained as above, but their markdown still instructs your AI assistant. Review the preview before confirming any pack.
 
 ### Scope
 

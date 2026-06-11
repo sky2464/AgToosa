@@ -12,7 +12,7 @@ Use when the user asks for `/agtoosa-spec`, `$agtoosa-spec`, or wants a new or u
 **Generated Project Mode:** See `Docs/AgToosa_Agent.md` → **Operating Contexts** — specs are for **the project/product**, not the AgToosa framework.
 
 1. Read `Docs/AgToosa_Spec.md` in full and **run** its workflow precisely — preserve **Spec Specialist Orchestration** (`Docs/AgToosa_Specialists.md`), the **Plan-Mode Spec Interview Contract**, threat modeling, approval gates, and cycle enrollment steps unless `quick` applies.
-2. **Dispatch** the first matching sub-command from user arguments: `research`, `plan`, `quick`, `tasks`, or `to-issues`. With no argument, run Parts 1–4.
+2. **Dispatch** the first matching sub-command from user arguments: `research`, `plan`, `quick`, `tasks`, `amend`, or `to-issues`. With no argument, run Parts 1–4.
 3. **Phase stop:** stop at the approval gate. Do **not** run `/agtoosa-build` automatically. Approval marks readiness only — the user must invoke `/agtoosa-build` explicitly.
 4. Run Story Skill Opportunity Synthesis when applicable; require **explicit user approval** before writing project skill files. Do not propose project skills named `agtoosa-*` or triggered by `/agtoosa-*` — those names are reserved for AgToosa workflow adapters.
 5. On successful completion, print verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
@@ -36,4 +36,4 @@ Use when the user asks for `/agtoosa-spec`, `$agtoosa-spec`, or wants a new or u
 
 **Forbidden for the full flow:** skipping Plan-Mode Spec Interview or research, Goal Contract, task planning, or the test plan skeleton; copying divergent Part 1 / Part 2 workflow section bodies from `Docs/AgToosa_Spec.md` into this skill; auto-running `/agtoosa-build` after spec.
 
-**Sub-commands:** when the user passes `research`, `plan`, `quick`, `tasks`, or `to-issues`, dispatch that slice only while preserving the canonical phase obligations and stop conditions from `Docs/AgToosa_Spec.md`.
+**Sub-commands:** when the user passes `research`, `plan`, `quick`, `tasks`, `amend`, or `to-issues`, dispatch that slice only while preserving the canonical phase obligations and stop conditions from `Docs/AgToosa_Spec.md`.
