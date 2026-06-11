@@ -189,7 +189,8 @@ _merge_packs_under_root() {
     if _merge_pack "$pack_dir" "$pname"; then
       _PACK_MERGE_COUNT=$((_PACK_MERGE_COUNT + 1))
       if [[ -f "${pack_dir}/.pack-meta.json" ]]; then
-        _PACK_LOCK_ENTRIES+=("${pack_dir}/.pack-meta.json")
+        # Snapshot metadata before the queue dir is removed; lock write happens later.
+        _PACK_LOCK_ENTRIES+=("$(cat "${pack_dir}/.pack-meta.json")")
       fi
       if [[ "$clear_after" == true ]]; then
         rm -rf "$pack_dir"
@@ -216,9 +217,13 @@ _write_lock_file() {
   local packs_json=""
   local sep=""
   for meta in "${meta_files[@]}"; do
-    [[ -f "$meta" ]] || continue
     local entry
-    entry=$(cat "$meta")
+    if [[ -f "$meta" ]]; then
+      entry=$(cat "$meta")
+    else
+      entry="$meta"
+    fi
+    [[ -n "$entry" ]] || continue
     packs_json+="${sep}    ${entry}"
     sep=$',\n'
   done
@@ -229,13 +234,19 @@ _write_lock_file() {
       < <(jq -r '.packs[]?.name' "$lock_file" 2>/dev/null)
     local new_names=()
     for meta in "${meta_files[@]}"; do
-      [[ -f "$meta" ]] || continue
       local n
       if command -v jq &>/dev/null; then
-        n=$(jq -r '.name' "$meta" 2>/dev/null)
-      else
+        if [[ -f "$meta" ]]; then
+          n=$(jq -r '.name' "$meta" 2>/dev/null)
+        else
+          n=$(echo "$meta" | jq -r '.name' 2>/dev/null)
+        fi
+      elif [[ -f "$meta" ]]; then
         n=$(grep -oP '"name":\s*"\K[^"]+' "$meta" | head -1)
+      else
+        n=$(echo "$meta" | grep -oP '"name":\s*"\K[^"]+' | head -1)
       fi
+      [[ -n "$n" ]] || continue
       new_names+=("$n")
     done
     local kept_json=""
