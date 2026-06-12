@@ -4565,8 +4565,34 @@ JSON
   grep -q "function Test-SafeTarArchive" "$ps"
   grep -q "function Test-PackFiles" "$ps"
   grep -q "function Test-PackPathDenied" "$ps"
+  grep -q "function Test-PathUnderRoot" "$ps"
   grep -q "Test-SafeTarArchive \$tmpFile" "$ps"
   grep -q "Test-PackFiles \$packDir" "$ps"
+}
+
+@test "DEV-054 PS-003: pack validation rejects prefix-collision symlink targets" {
+  # Sibling dir named {pack}-suffix must not pass a StartsWith(pack) check.
+  local evil_pack sibling
+  evil_pack="$(mktemp -d)/pack"
+  sibling="$(dirname "$evil_pack")/pack-sibling"
+  mkdir -p "$evil_pack" "$sibling"
+  printf 'secret\n' > "$sibling/steal.md"
+  ln -s "../pack-sibling/steal.md" "$evil_pack/workflow.md"
+
+  run bash -c "
+    SHIP_DIR=/tmp
+    source '$BATS_TEST_DIRNAME/../lib/registry.sh'
+    validate_pack_files '$evil_pack'
+  "
+  [ "$status" -ne 0 ]
+
+  if command -v pwsh >/dev/null 2>&1; then
+    run env AGTOOSA_PS_TEST_PACKFILES_DIR="$evil_pack" pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1"
+    [ "$status" -ne 0 ]
+    [[ "$output" == *"escaping link"* || "$output" == *"path traversal"* ]]
+  fi
+
+  rm -rf "$(dirname "$evil_pack")"
 }
 
 # -- DEV-061–DEV-073 ship regression (SR-001–SR-003) --------------------------
