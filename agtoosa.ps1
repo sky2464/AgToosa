@@ -428,6 +428,15 @@ function Move-ShipPacksToQueue {
 $PACK_DENYLIST_PREFIXES = @('.claude/hooks/', '.github/workflows/')
 $PACK_DENYLIST_FILES    = @('.claude/settings.json')
 
+# True when $path resolves under $root (prefix-safe; avoids pack vs pack-extra collisions).
+function Test-PathUnderRoot([string]$path, [string]$root) {
+    if ([string]::IsNullOrWhiteSpace($path) -or [string]::IsNullOrWhiteSpace($root)) { return $false }
+    $fullPath = [System.IO.Path]::GetFullPath($path)
+    $fullRoot = [System.IO.Path]::GetFullPath($root).TrimEnd([System.IO.Path]::DirectorySeparatorChar, '/')
+    return $fullPath.StartsWith($fullRoot + [System.IO.Path]::DirectorySeparatorChar) -or
+           $fullPath.StartsWith($fullRoot + '/')
+}
+
 function Test-PackPathDenied([string]$relPath) {
     $norm = $relPath.Replace('\', '/').TrimStart('/')
     foreach ($f in $PACK_DENYLIST_FILES) {
@@ -466,18 +475,18 @@ function Test-PackFiles([string]$dir) {
     $allowed = @('md', 'json', 'toml', 'mdc')
     $canonicalDir = [System.IO.Path]::GetFullPath($dir).TrimEnd('\', '/')
     foreach ($file in Get-ChildItem -Path $dir -Recurse -File -Force) {
-        $canonicalFile = [System.IO.Path]::GetFullPath($file.FullName)
-        if (-not $canonicalFile.StartsWith($canonicalDir + [System.IO.Path]::DirectorySeparatorChar) -and
-            -not $canonicalFile.StartsWith($canonicalDir + '/')) {
-            Write-Color "${RED}❌ Pack contains path traversal: $($file.FullName)${NC}"
-            return $false
-        }
+        $resolvedPath = $file.FullName
         if ($file.LinkType) {
             $target = $file.ResolveLinkTarget($true)
-            if ($target -and -not ([System.IO.Path]::GetFullPath($target.FullName)).StartsWith($canonicalDir)) {
+            if ($target) { $resolvedPath = $target.FullName }
+        }
+        if (-not (Test-PathUnderRoot $resolvedPath $canonicalDir)) {
+            if ($file.LinkType) {
                 Write-Color "${RED}❌ Pack contains escaping link: $($file.FullName)${NC}"
-                return $false
+            } else {
+                Write-Color "${RED}❌ Pack contains path traversal: $($file.FullName)${NC}"
             }
+            return $false
         }
         if ($file.Name -eq '.pack-meta.json') { continue }
         $ext = $file.Extension.TrimStart('.')
@@ -493,11 +502,15 @@ function Merge-PackFromDirectory([string]$packDir, [string]$packName, [string]$p
     $allowed = @('md', 'json', 'toml', 'mdc')
     $count = 0
     $canonicalDir = [System.IO.Path]::GetFullPath($packDir).TrimEnd('\', '/')
-    Get-ChildItem -Path $packDir -Recurse -File | ForEach-Object {
+    Get-ChildItem -Path $packDir -Recurse -File -Force | ForEach-Object {
         if ($_.Name -eq '.pack-meta.json') { return }
         # Merge-time containment check (queue may have been modified).
-        $canonicalFile = [System.IO.Path]::GetFullPath($_.FullName)
-        if (-not $canonicalFile.StartsWith($canonicalDir)) {
+        $resolvedPath = $_.FullName
+        if ($_.LinkType) {
+            $target = $_.ResolveLinkTarget($true)
+            if ($target) { $resolvedPath = $target.FullName }
+        }
+        if (-not (Test-PathUnderRoot $resolvedPath $canonicalDir)) {
             Write-Color "  ${YELLOW}⏭${NC}  Skipping path-escaping file: $($_.FullName)"
             return
         }
@@ -530,7 +543,7 @@ function Merge-PacksUnderRoot([string]$packsRoot, [string]$projectPath, [bool]$c
         $null = Merge-PackFromDirectory $packDir.FullName $packDir.Name $projectPath
         $packCount++
         $meta = Join-Path $packDir.FullName ".pack-meta.json"
-        if (Test-Path $meta) { $metaFiles.Add($meta) }
+        if (Test-Path $meta) { $metaFiles.Add((Get-Content $meta -Raw)) }
         if ($clearAfter) {
             Remove-Item -Path $packDir.FullName -Recurse -Force
         }
@@ -551,8 +564,9 @@ function Update-LockFileFromPackMeta([string]$projectPath, [string[]]$metaFiles)
     }
     $newNames = @()
     $newEntries = @()
-    foreach ($metaPath in $metaFiles) {
-        $entry = Get-Content $metaPath -Raw | ConvertFrom-Json
+    foreach ($metaContent in $metaFiles) {
+        if ([string]::IsNullOrWhiteSpace($metaContent)) { continue }
+        $entry = $metaContent | ConvertFrom-Json
         $newNames += $entry.name
         $newEntries += $entry
     }
@@ -850,6 +864,11 @@ function Remove-ShipDir {
     if (-not $keepShip -and (Test-Path $SHIP_DIR)) {
         Remove-Item -Recurse -Force $SHIP_DIR -ErrorAction SilentlyContinue
     }
+}
+
+# Maintainer test hook: validate a pack directory and exit (see bats DEV-054 PS-003).
+if ($env:AGTOOSA_PS_TEST_PACKFILES_DIR) {
+    if (Test-PackFiles $env:AGTOOSA_PS_TEST_PACKFILES_DIR) { exit 0 } else { exit 1 }
 }
 
 # ── Preflight ─────────────────────────────────────────────────

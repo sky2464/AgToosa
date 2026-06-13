@@ -1222,6 +1222,14 @@ PY
     _write_lock_file "${_PACK_LOCK_ENTRIES[@]}"
   fi
   [ -f "$project_dir/Docs/agtoosa-lock.json" ]
+  run python3 - "$project_dir/Docs/agtoosa-lock.json" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1]))
+packs = d.get('packs', [])
+assert len(packs) == 1, f'expected 1 pack entry, got {len(packs)}'
+assert packs[0]['name'] == 'test-pack', packs[0]
+PY
+  [ "$status" -eq 0 ]
 
   rm -rf "$queue_dir" "$project_dir"
 }
@@ -4354,6 +4362,28 @@ JSON
   rm -rf "$queue_dir" "$project_dir"
 }
 
+@test "PK6: merge containment rejects sibling-directory prefix traps" {
+  local queue_dir project_dir sibling
+  queue_dir="$(mktemp -d)"
+  project_dir="$(mktemp -d)"
+  sibling="$(mktemp -d)"
+  mkdir -p "$queue_dir/trap-pack"
+  printf '# outside\n' > "$sibling/escaped.md"
+  ln -s "$sibling/escaped.md" "$queue_dir/trap-pack/link.md"
+
+  PACK_QUEUE_DIR="$queue_dir"
+  PROJECT_PATH="$project_dir"
+  AGTOOSA_VERSION="0.0.0"
+  GREEN="" YELLOW="" NC=""
+  source "$BATS_TEST_DIRNAME/../lib/install.sh"
+
+  _merge_pack "$queue_dir/trap-pack/" "trap-pack"
+  [ ! -f "$project_dir/link.md" ]
+  [ ! -f "$project_dir/escaped.md" ]
+
+  rm -rf "$queue_dir" "$project_dir" "$sibling"
+}
+
 @test "DEV-066 SC-005: bootstrap pinned tags fail closed with no branch fallback" {
   ! grep -q "trying branch fallback" "$BOOTSTRAP_SCRIPT"
   grep -q "Pinned tag downloads do not fall back to branches" "$BOOTSTRAP_SCRIPT"
@@ -4565,8 +4595,34 @@ JSON
   grep -q "function Test-SafeTarArchive" "$ps"
   grep -q "function Test-PackFiles" "$ps"
   grep -q "function Test-PackPathDenied" "$ps"
+  grep -q "function Test-PathUnderRoot" "$ps"
   grep -q "Test-SafeTarArchive \$tmpFile" "$ps"
   grep -q "Test-PackFiles \$packDir" "$ps"
+}
+
+@test "DEV-054 PS-003: pack validation rejects prefix-collision symlink targets" {
+  # Sibling dir named {pack}-suffix must not pass a StartsWith(pack) check.
+  local evil_pack sibling
+  evil_pack="$(mktemp -d)/pack"
+  sibling="$(dirname "$evil_pack")/pack-sibling"
+  mkdir -p "$evil_pack" "$sibling"
+  printf 'secret\n' > "$sibling/steal.md"
+  ln -s "../pack-sibling/steal.md" "$evil_pack/workflow.md"
+
+  run bash -c "
+    SHIP_DIR=/tmp
+    source '$BATS_TEST_DIRNAME/../lib/registry.sh'
+    validate_pack_files '$evil_pack'
+  "
+  [ "$status" -ne 0 ]
+
+  if command -v pwsh >/dev/null 2>&1; then
+    run env AGTOOSA_PS_TEST_PACKFILES_DIR="$evil_pack" pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1"
+    [ "$status" -ne 0 ]
+    [[ "$output" == *"escaping link"* || "$output" == *"path traversal"* ]]
+  fi
+
+  rm -rf "$(dirname "$evil_pack")"
 }
 
 # -- DEV-061–DEV-073 ship regression (SR-001–SR-003) --------------------------
