@@ -76,9 +76,11 @@ async function main() {
   }
 
   const args = process.argv.slice(2);
+  // Run from the user's cwd so relative --path values (e.g. "." or "myapp")
+  // resolve against their project, not the ephemeral extract dir we delete below.
   const run = spawnSync("bash", [path.join(srcDir, "agtoosa.sh"), ...args], {
     stdio: "inherit",
-    cwd: srcDir,
+    cwd: process.cwd(),
   });
 
   fs.rmSync(workdir, { recursive: true, force: true });
