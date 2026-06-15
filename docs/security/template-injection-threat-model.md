@@ -1,7 +1,7 @@
 # Threat Model: Markdown Template Injection via Community Packs
 
-**Status:** Open (Low urgency — escalate to High before public registry launch)  
-**Date:** 2026-05-04  
+**Status:** Partially mitigated (v5.3.0 — DEV-064/065)  
+**Date:** 2026-05-04 (updated 2026-06-15)  
 **Component:** AgToosa Community Registry (`--registry install`)  
 **Affected versions:** v3.1.0+ (registry packs first available in v3.0.0)
 
@@ -97,6 +97,11 @@ vector becomes Active.
 |------------|-------|---------------|
 | **File-type allowlist** | `lib/registry.sh: validate_pack_files()` | High — blocks `.sh`, `.py`, `.js`, and all other executable formats; only `.md`, `.json`, `.toml`, `.mdc` allowed |
 | **SHA-256 pinning** | `lib/registry.sh: compute_sha256()` + `agtoosa-lock.json` | High — prevents post-publish tampering; a compromised pack author cannot silently update an already-installed pack |
+| **Tar-slip pre-scan** | `lib/registry.sh: assert_safe_tarball()`, `bootstrap.sh`, `bootstrap.ps1` | High — rejects absolute paths and `..` members before extraction |
+| **Sensitive destination denylist** | `lib/install.sh: PACK_DENYLIST_PATTERNS` | High — packs cannot merge into `.claude/settings.json`, `.claude/hooks/`, or `.github/workflows/` |
+| **Verified-flag enforcement** | `lib/registry.sh` | Medium — unverified packs require `--allow-unverified` or `AGTOOSA_ALLOW_UNVERIFIED=1` |
+| **Content preview** | `lib/registry.sh: _print_pack_preview()` | Medium — lists staged files and flags AI-instruction surfaces before user consent |
+| **Isolated staging** | `lib/registry.sh` | Medium — packs extract to a temp dir before queueing, not directly into the project |
 | **PR-based curation** | `agtoosa-registry` repo policy | Medium — human review gate for new packs; does not prevent determined bad actor with a merged PR |
 | **No executable code** | Pack policy | High — packs are markdown-only by convention; no runtime execution of pack content at install time |
 
@@ -106,11 +111,12 @@ vector becomes Active.
 
 | Gap | Risk Level | Notes |
 |-----|------------|-------|
-| No content sanitization of pack file bodies | Medium | Metacharacters, template syntax, and YAML fragments are staged verbatim |
+| No content sanitization of pack file bodies | Medium | Metacharacters, template syntax, and YAML fragments are still staged verbatim into allowed destinations |
 | No `actionlint` / workflow linting on generated CI files | Medium | AI-generated workflows that incorporate pack content are not validated |
-| No sandboxed preview before install | Low | User sees only file count, not content, before confirming install |
 | PR curation has no automated linter | Low | Manual review may miss embedded payloads in large packs |
 | `_write_lock_file` trusts `.pack-meta.json` field values | Low | `name` and `sha256` fields are embedded in lock file without escaping; JSON encoding prevents injection into the lock file itself |
+
+**Closed in v5.3.0 (DEV-065):** sandboxed pack preview before install; hook/CI destination denylist; verified-flag enforcement.
 
 ---
 
@@ -142,9 +148,8 @@ files after pack installation. Flag failures as warnings; do not block install.
 
 ### M-4: Sandboxed pack preview (Long-term — v4)
 
-Before staging, render a summary of pack file contents (file list + first 10 lines of
-each file) and require explicit user confirmation. Useful when installing from community
-authors with no prior track record.
+~~Before staging, render a summary of pack file contents (file list + first 10 lines of
+each file) and require explicit user confirmation.~~ **Implemented in v5.3.0** as `_print_pack_preview()` — file tree with AI-surface and denylist flags before consent. Future work: show first N lines of each file for deeper review.
 
 ---
 

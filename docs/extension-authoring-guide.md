@@ -46,9 +46,9 @@ and security requirements.
 
 | Command | Workflow File | Sub-commands |
 |---------|--------------|--------------|
-| `/agtoosa-init`   | `Docs/AgToosa_Init.md`   | _(none)_ |
-| `/agtoosa-spec`   | `Docs/AgToosa_Spec.md`   | `research` · `plan` · `quick` |
-| `/agtoosa-build`  | `Docs/AgToosa_Build.md`  | `scope` · `tdd` · `test` |
+| `/agtoosa-init`   | `Docs/AgToosa_Init.md`   | `zoom-out` |
+| `/agtoosa-spec`   | `Docs/AgToosa_Spec.md`   | `research` · `plan` · `quick` · `tasks` · `amend` |
+| `/agtoosa-build`  | `Docs/AgToosa_Build.md`  | `tdd` · `test` |
 | `/agtoosa-qa`     | `Docs/AgToosa_QA.md`     | `plan` · `run` · `report` · `triage` |
 | `/agtoosa-review` | `Docs/AgToosa_Review.md` | `security` · `arch` · `debug` · `cross` |
 | `/agtoosa-ship`   | `Docs/AgToosa_Ship.md`   | `check` · `docs` · `retro` |
