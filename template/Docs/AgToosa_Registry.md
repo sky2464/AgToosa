@@ -53,11 +53,21 @@ Packs are **markdown-only** for safety — no executable code is automatically r
 ## Installation Flow
 
 1. **Browse or search** the registry to find a pack.
-2. **Confirm** when prompted (packs are reviewed by maintainers before publication).
-3. **Download** the pack tarball from GitHub.
-4. **Verify** the pack's SHA-256 hash against the registry (abort on mismatch).
-5. **Queue** the pack files under `.agtoosa/pack-queue/<pack-name>/` in the AgToosa repo (outside ephemeral `ship/`).
-6. **Review and merge** — run `bash agtoosa.sh` in your project to integrate queued packs alongside core AgToosa workflows.
+2. **Download** the pack tarball from GitHub.
+3. **Pre-scan** the archive member list — absolute paths and `..` segments are rejected before extraction.
+4. **Extract** to an isolated staging directory (not directly into your project).
+5. **Verify** the pack's SHA-256 hash against the registry (abort on mismatch).
+6. **Preview** the staged file tree — AI-instruction surfaces and blocked destinations are flagged.
+7. **Confirm** when prompted (or pass `--yes` for non-interactive installs).
+8. **Queue** the pack files under `.agtoosa/pack-queue/<pack-name>/` in the AgToosa repo (outside ephemeral `ship/`).
+9. **Review and merge** — run `bash agtoosa.sh` in your project to integrate queued packs alongside core AgToosa workflows.
+
+**Verified packs only by default.** Registry entries include a `verified` flag. Packs with `verified: false` require explicit opt-in:
+
+```bash
+bash agtoosa.sh --registry install my-pack --allow-unverified
+# or: AGTOOSA_ALLOW_UNVERIFIED=1 bash agtoosa.sh --registry install my-pack
+```
 
 ---
 
@@ -117,14 +127,24 @@ AgToosa caches `registry.json` locally so list/search/info work when the network
 **How your safety is protected:**
 
 - ✅ **SHA-256 verification** — Ensures the tarball wasn't tampered with during download.
-- ✅ **Markdown-only content** — Packs contain only `.md` and `.json` files; no scripts are executed.
+- ✅ **Pre-extraction tar-slip scan** — Rejects archives with absolute paths or `..` traversal members before any files are written.
+- ✅ **File-type allowlist** — Only `.md`, `.json`, `.toml`, and `.mdc` files are accepted; no scripts or binaries.
+- ✅ **Sensitive destination denylist** — Packs cannot merge into `.claude/settings.json`, `.claude/hooks/`, or `.github/workflows/` (blocked at merge with re-validation).
+- ✅ **Verified-flag enforcement** — Unverified packs require `--allow-unverified` or `AGTOOSA_ALLOW_UNVERIFIED=1`.
+- ✅ **Content preview** — Before you confirm, AgToosa lists every staged file and flags AI-instruction surfaces so you know what your assistant will read.
 - ✅ **Registry review** — New packs require PR approval from maintainers before publication.
 - ✅ **Pinned versions** — Each published version's hash is recorded; existing installs are unaffected if a pack author goes rogue.
 - ✅ **HTTPS from GitHub** — Registry and pack tarballs are fetched over HTTPS from trusted GitHub CDN.
 
+> **Trust boundary:** Packs are third-party markdown that instructs your AI assistant. AgToosa screens and contains them as above, but you should still read the preview before confirming any install.
+
 ---
 
 ## Troubleshooting
+
+**"Pack not verified"**
+- The pack exists in the registry but `verified` is `false`.
+- Re-run with `--allow-unverified` only after reviewing the content preview and trusting the author.
 
 **"Pack not found"**
 - Check the pack name: `bash agtoosa.sh --registry list`
