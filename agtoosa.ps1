@@ -162,6 +162,63 @@ function Copy-FileWithGuard([string]$src, [string]$dst, [string]$label) {
     Write-Color "  ${GREEN}✅${NC} $label ${CYAN}(backup: $(Split-Path -Leaf $bak))${NC}"
 }
 
+# Deep-merge AgToosa hooks into an existing .claude/settings.json without touching
+# user settings. Mirrors lib/copy.sh merge_settings_json (Python dedupe by command).
+function Merge-SettingsJson([string]$src, [string]$dst, [string]$label) {
+    $dir = Split-Path -Parent $dst
+    if ($dir -and -not (Test-Path $dir)) {
+        New-Item -ItemType Directory -Path $dir -Force | Out-Null
+    }
+
+    if (-not (Test-Path $dst)) {
+        Copy-Item $src $dst
+        Write-Color "  ${GREEN}✅${NC} $label"
+        return
+    }
+
+    $python = Get-Command python3 -ErrorAction SilentlyContinue
+    if (-not $python) { $python = Get-Command python -ErrorAction SilentlyContinue }
+    if (-not $python) {
+        Write-Color "  ${YELLOW}⚠️${NC}  $label — Python unavailable or JSON parse error, skipped"
+        return
+    }
+
+    $tmp = [System.IO.Path]::GetTempFileName()
+    $py = @'
+import json, sys
+src_path, dst_path, out_path = sys.argv[1], sys.argv[2], sys.argv[3]
+try:
+    with open(src_path) as f:
+        new_cfg = json.load(f)
+    with open(dst_path) as f:
+        existing = json.load(f)
+except (json.JSONDecodeError, OSError):
+    sys.exit(2)
+for event, handlers in new_cfg.get('hooks', {}).items():
+    existing.setdefault('hooks', {}).setdefault(event, [])
+    existing_cmds = {
+        h.get('command', '')
+        for entry in existing['hooks'][event]
+        for h in entry.get('hooks', [])
+    }
+    for handler in handlers:
+        new_cmds = {h.get('command', '') for h in handler.get('hooks', [])}
+        if not new_cmds.issubset(existing_cmds):
+            existing['hooks'][event].append(handler)
+with open(out_path, 'w') as f:
+    json.dump(existing, f, indent=2)
+    f.write('\n')
+'@
+    & $python.Source -c $py $src $dst $tmp
+    if ($LASTEXITCODE -ne 0) {
+        Remove-Item $tmp -ErrorAction SilentlyContinue
+        Write-Color "  ${YELLOW}⚠️${NC}  $label — Python unavailable or JSON parse error, skipped"
+        return
+    }
+    Move-Item -Path $tmp -Destination $dst -Force
+    Write-Color "  ${GREEN}✅${NC} $label ${CYAN}(hooks merged)${NC}"
+}
+
 function Join-TemplatePath([string]$base, [string]$relativePath) {
     $normalized = $relativePath -replace '/', [System.IO.Path]::DirectorySeparatorChar
     return Join-Path $base $normalized
@@ -474,9 +531,13 @@ function Test-PackFiles([string]$dir) {
         }
         if ($file.LinkType) {
             $target = $file.ResolveLinkTarget($true)
-            if ($target -and -not ([System.IO.Path]::GetFullPath($target.FullName)).StartsWith($canonicalDir)) {
-                Write-Color "${RED}❌ Pack contains escaping link: $($file.FullName)${NC}"
-                return $false
+            if ($target) {
+                $targetPath = [System.IO.Path]::GetFullPath($target.FullName)
+                if (-not ($targetPath.StartsWith($canonicalDir + [System.IO.Path]::DirectorySeparatorChar) -or
+                          $targetPath.StartsWith($canonicalDir + '/'))) {
+                    Write-Color "${RED}❌ Pack contains escaping link: $($file.FullName)${NC}"
+                    return $false
+                }
             }
         }
         if ($file.Name -eq '.pack-meta.json') { continue }
@@ -497,7 +558,8 @@ function Merge-PackFromDirectory([string]$packDir, [string]$packName, [string]$p
         if ($_.Name -eq '.pack-meta.json') { return }
         # Merge-time containment check (queue may have been modified).
         $canonicalFile = [System.IO.Path]::GetFullPath($_.FullName)
-        if (-not $canonicalFile.StartsWith($canonicalDir)) {
+        if (-not ($canonicalFile.StartsWith($canonicalDir + [System.IO.Path]::DirectorySeparatorChar) -or
+                  $canonicalFile.StartsWith($canonicalDir + '/'))) {
             Write-Color "  ${YELLOW}⏭${NC}  Skipping path-escaping file: $($_.FullName)"
             return
         }
@@ -600,7 +662,7 @@ function Install-Files([string]$projectPath, [string[]]$platforms) {
                 Copy-StagedDirectory ".claude/hooks" $projectPath ".claude/hooks/" | Out-Null
                 $settingsSrc = Join-Path $SHIP_DIR ".claude/settings.json"
                 if (Test-Path $settingsSrc) {
-                    Copy-FileWithGuard $settingsSrc (Join-Path $projectPath ".claude/settings.json") ".claude/settings.json"
+                    Merge-SettingsJson $settingsSrc (Join-Path $projectPath ".claude/settings.json") ".claude/settings.json"
                 }
             }
             "gemini" {
