@@ -4569,6 +4569,13 @@ JSON
   grep -q "Test-PackFiles \$packDir" "$ps"
 }
 
+@test "DEV-065 PS-003: PowerShell path containment rejects prefix sibling directories" {
+  local ps="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  grep -q 'function Test-PathUnderRoot' "$ps"
+  grep -q 'Test-PathUnderRoot' "$ps"
+  ! grep -q 'if (-not \$canonicalFile.StartsWith(\$canonicalDir))' "$ps"
+}
+
 # -- DEV-061–DEV-073 ship regression (SR-001–SR-003) --------------------------
 
 @test "DEV-061 SR-001: v5.3.0 release pins are aligned" {

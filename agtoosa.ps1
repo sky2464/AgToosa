@@ -424,6 +424,15 @@ function Move-ShipPacksToQueue {
     }
 }
 
+# Return $true when $childPath resolves inside $rootDir (directory-boundary safe).
+# Plain StartsWith($rootDir) is unsafe: /tmp/pack-evil matches /tmp/pack.
+function Test-PathUnderRoot([string]$childPath, [string]$rootDir) {
+    $root = [System.IO.Path]::GetFullPath($rootDir).TrimEnd('\', '/')
+    $child = [System.IO.Path]::GetFullPath($childPath)
+    $sep = [System.IO.Path]::DirectorySeparatorChar
+    return $child.StartsWith($root + $sep) -or $child.StartsWith($root + '/')
+}
+
 # Destinations a pack must never write to: executable-hook and CI surfaces.
 $PACK_DENYLIST_PREFIXES = @('.claude/hooks/', '.github/workflows/')
 $PACK_DENYLIST_FILES    = @('.claude/settings.json')
@@ -466,15 +475,13 @@ function Test-PackFiles([string]$dir) {
     $allowed = @('md', 'json', 'toml', 'mdc')
     $canonicalDir = [System.IO.Path]::GetFullPath($dir).TrimEnd('\', '/')
     foreach ($file in Get-ChildItem -Path $dir -Recurse -File -Force) {
-        $canonicalFile = [System.IO.Path]::GetFullPath($file.FullName)
-        if (-not $canonicalFile.StartsWith($canonicalDir + [System.IO.Path]::DirectorySeparatorChar) -and
-            -not $canonicalFile.StartsWith($canonicalDir + '/')) {
+        if (-not (Test-PathUnderRoot $file.FullName $canonicalDir)) {
             Write-Color "${RED}❌ Pack contains path traversal: $($file.FullName)${NC}"
             return $false
         }
         if ($file.LinkType) {
             $target = $file.ResolveLinkTarget($true)
-            if ($target -and -not ([System.IO.Path]::GetFullPath($target.FullName)).StartsWith($canonicalDir)) {
+            if ($target -and -not (Test-PathUnderRoot $target.FullName $canonicalDir)) {
                 Write-Color "${RED}❌ Pack contains escaping link: $($file.FullName)${NC}"
                 return $false
             }
@@ -496,8 +503,7 @@ function Merge-PackFromDirectory([string]$packDir, [string]$packName, [string]$p
     Get-ChildItem -Path $packDir -Recurse -File | ForEach-Object {
         if ($_.Name -eq '.pack-meta.json') { return }
         # Merge-time containment check (queue may have been modified).
-        $canonicalFile = [System.IO.Path]::GetFullPath($_.FullName)
-        if (-not $canonicalFile.StartsWith($canonicalDir)) {
+        if (-not (Test-PathUnderRoot $_.FullName $canonicalDir)) {
             Write-Color "  ${YELLOW}⏭${NC}  Skipping path-escaping file: $($_.FullName)"
             return
         }
