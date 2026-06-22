@@ -4569,6 +4569,13 @@ JSON
   grep -q "Test-PackFiles \$packDir" "$ps"
 }
 
+@test "DEV-065 PS-003: PowerShell pack merge uses separator-safe containment" {
+  local ps="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  # Bare StartsWith($canonicalDir) treats .../foo/bar as inside pack .../foo (prefix collision).
+  ! grep -q 'if (-not $canonicalFile.StartsWith($canonicalDir))' "$ps"
+  grep -A2 'Merge-time containment check' "$ps" | grep -q 'DirectorySeparatorChar'
+}
+
 # -- DEV-061–DEV-073 ship regression (SR-001–SR-003) --------------------------
 
 @test "DEV-061 SR-001: v5.3.0 release pins are aligned" {

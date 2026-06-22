@@ -474,9 +474,13 @@ function Test-PackFiles([string]$dir) {
         }
         if ($file.LinkType) {
             $target = $file.ResolveLinkTarget($true)
-            if ($target -and -not ([System.IO.Path]::GetFullPath($target.FullName)).StartsWith($canonicalDir)) {
-                Write-Color "${RED}❌ Pack contains escaping link: $($file.FullName)${NC}"
-                return $false
+            if ($target) {
+                $targetPath = [System.IO.Path]::GetFullPath($target.FullName)
+                if (-not $targetPath.StartsWith($canonicalDir + [System.IO.Path]::DirectorySeparatorChar) -and
+                    -not $targetPath.StartsWith($canonicalDir + '/')) {
+                    Write-Color "${RED}❌ Pack contains escaping link: $($file.FullName)${NC}"
+                    return $false
+                }
             }
         }
         if ($file.Name -eq '.pack-meta.json') { continue }
@@ -497,7 +501,8 @@ function Merge-PackFromDirectory([string]$packDir, [string]$packName, [string]$p
         if ($_.Name -eq '.pack-meta.json') { return }
         # Merge-time containment check (queue may have been modified).
         $canonicalFile = [System.IO.Path]::GetFullPath($_.FullName)
-        if (-not $canonicalFile.StartsWith($canonicalDir)) {
+        if (-not $canonicalFile.StartsWith($canonicalDir + [System.IO.Path]::DirectorySeparatorChar) -and
+            -not $canonicalFile.StartsWith($canonicalDir + '/')) {
             Write-Color "  ${YELLOW}⏭${NC}  Skipping path-escaping file: $($_.FullName)"
             return
         }
