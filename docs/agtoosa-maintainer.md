@@ -79,6 +79,29 @@ Inline comments in `lib/*.sh` and `agtoosa.sh` should describe behavior in plain
 - `.agtoosa/pack-queue/` is the durable staging area for `--registry install` packs until the next project install merges them.
 - The canonical version lives in `AGTOOSA_VERSION` at the top of `agtoosa.sh`.
 
+## CLI Maintenance Surfaces
+
+Beyond install/update, the generator exposes read-only and maintenance commands via `lib/maintain.sh`:
+
+| Flag | Owner | Behavior |
+|------|-------|----------|
+| `--verify [path]` | `lib/maintain.sh` → target's `agtoosa-verify.sh` | Deterministic lifecycle gate (read-only, no AI). Prefers the target's installed copy over the template fallback. |
+| `--doctor [path]` | `lib/maintain.sh` | Diagnose version skew, missing workflow docs, platform wiring gaps, context placeholders, pending pack queue, and stale backups. |
+| `--uninstall [path]` | `lib/maintain.sh` | Remove AgToosa-owned files. Preserves `Master-Plan.md`, `Master-Architecture.md`, `AgToosa_Changelog.md`, `Context/`, `archived/`, and merged platform entry points. |
+
+**Non-interactive install:** `--path <dir>`, `--platforms cursor,claude`, and `--yes` skip TTY prompts (CI, devcontainers, scripted rollouts). Bootstrap pass-through uses `--` before generator flags.
+
+**When changing these surfaces:**
+
+1. Update `lib/config.sh` help text and `lib/maintain.sh` behavior together.
+2. Add or extend bats coverage in `tests/agtoosa.bats` (VF/DR/UN sections).
+3. Keep `npm/package.json` version identical to `AGTOOSA_VERSION` — the npm wrapper pins downloads to that version.
+
+**Shipped template artifacts** (keep `lib/config.sh` file lists aligned):
+
+- `template/Docs/agtoosa-verify.sh` — deterministic verifier installed into every project
+- `template/Docs/agtoosa-gate.yml.example` — CI gate template (users copy manually; AgToosa never writes `.github/workflows/` automatically)
+
 ## Operating Rules
 
 1. Start from the concrete owning surface: the shell file, template file, or test that directly controls the behavior.

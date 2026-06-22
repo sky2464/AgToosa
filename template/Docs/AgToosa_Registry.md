@@ -53,11 +53,14 @@ Packs are **markdown-only** for safety — no executable code is automatically r
 ## Installation Flow
 
 1. **Browse or search** the registry to find a pack.
-2. **Confirm** when prompted (packs are reviewed by maintainers before publication).
+2. **Check verified status** — unverified packs are rejected unless you pass `--allow-unverified` (or set `AGTOOSA_ALLOW_UNVERIFIED=1`).
 3. **Download** the pack tarball from GitHub.
-4. **Verify** the pack's SHA-256 hash against the registry (abort on mismatch).
-5. **Queue** the pack files under `.agtoosa/pack-queue/<pack-name>/` in the AgToosa repo (outside ephemeral `ship/`).
-6. **Review and merge** — run `bash agtoosa.sh` in your project to integrate queued packs alongside core AgToosa workflows.
+4. **Verify SHA-256** against the registry index (abort on mismatch).
+5. **Pre-scan the archive** — member paths with absolute segments or `..` are rejected **before** extraction (tar-slip protection).
+6. **Stage in isolation** — the pack extracts to a temp directory, never directly into your project.
+7. **Preview and confirm** — AgToosa prints the full file tree, flags AI-instruction surfaces, and marks denylisted paths that will be skipped at merge. Confirm to proceed.
+8. **Queue** validated files under `.agtoosa/pack-queue/<pack-name>/` (durable staging outside ephemeral `ship/`).
+9. **Merge** — run `bash agtoosa.sh` in your project to integrate queued packs alongside core AgToosa workflows.
 
 ---
 
@@ -117,8 +120,13 @@ AgToosa caches `registry.json` locally so list/search/info work when the network
 **How your safety is protected:**
 
 - ✅ **SHA-256 verification** — Ensures the tarball wasn't tampered with during download.
+- ✅ **Tar-slip pre-scan** — Archive member lists are checked for absolute paths and `..` segments **before** extraction; hostile tarballs are rejected without writing to disk.
+- ✅ **Isolated staging** — Packs extract to a temp directory first; only user-confirmed content reaches `.agtoosa/pack-queue/`.
+- ✅ **Informed-consent preview** — Before queueing, AgToosa prints the full file tree and flags AI-instruction surfaces (`.cursor/*`, `CLAUDE.md`, etc.) so you know what your assistant will follow.
+- ✅ **Verified-pack gate** — Registry entries with `"verified": false` are rejected unless you pass `--allow-unverified` (or set `AGTOOSA_ALLOW_UNVERIFIED=1`).
+- ✅ **Sensitive-path denylist** — Packs cannot write to `.claude/settings.json`, `.claude/hooks/`, or `.github/workflows/` (blocked at preview and merge).
 - ✅ **Markdown-only content** — Packs contain only `.md` and `.json` files; no scripts are executed.
-- ✅ **Registry review** — New packs require PR approval from maintainers before publication.
+- ✅ **Registry review** — New packs require PR approval from maintainers before publication (`verified: true`).
 - ✅ **Pinned versions** — Each published version's hash is recorded; existing installs are unaffected if a pack author goes rogue.
 - ✅ **HTTPS from GitHub** — Registry and pack tarballs are fetched over HTTPS from trusted GitHub CDN.
 
@@ -145,6 +153,16 @@ AgToosa caches `registry.json` locally so list/search/info work when the network
 - Run `--registry info <name>` to see the version currently in the index.
 - To install the index version, omit `@version`: `--registry install <name>`.
 - Pinned installs fail closed; AgToosa will not install a different version silently.
+
+**"Pack not verified"**
+- The pack exists in the index but has `"verified": false` (not yet reviewed by registry maintainers).
+- Prefer waiting for maintainer approval, or install with explicit opt-in: `bash agtoosa.sh --allow-unverified --registry install <name>`.
+- Unverified packs still run the full preview and denylist checks — verification status is about maintainer review, not tarball integrity.
+
+**"Archive contains path traversal" or "absolute path member"**
+- The tarball failed the pre-extraction tar-slip scan (a member path escapes the archive root).
+- Do not install the pack; report it to the pack maintainer and registry maintainers.
+- For local packs, rebuild the tarball with relative paths only.
 
 **Version pinning**
 - `--registry install <name>` installs the pack row for that name in the registry index.
