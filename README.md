@@ -121,6 +121,30 @@ git clone https://github.com/sky2464/AgToosa.git && cd AgToosa && bash agtoosa.s
 
 If you see an error like `Missing: curl`, the bootstrap script will print installation instructions for your OS. Follow them and try again.
 
+**Install health check:** After installing into a project, run the doctor command to catch version skew, missing workflow docs, or incomplete init:
+
+```bash
+bash agtoosa.sh --doctor /path/to/project
+```
+
+Common doctor findings and fixes:
+
+| Finding | Fix |
+|---------|-----|
+| Installed version ≠ generator version | `bash agtoosa.sh --update /path/to/project` |
+| Context files contain template placeholders | Run `/agtoosa-init` in your AI assistant |
+| Core workflow docs missing | `bash agtoosa.sh --update /path/to/project` |
+| Platform dir exists but entry point missing | Re-run install for that platform, or restore from `.bak.*` backup |
+| Queued pack(s) pending merge | Run `bash agtoosa.sh` in the project to merge queued registry packs |
+
+**Clean removal:** To strip AgToosa workflow files while keeping your Master-Plan, Context, and archived specs:
+
+```bash
+bash agtoosa.sh --uninstall /path/to/project
+```
+
+Merged platform entry points (`.cursorrules`, `CLAUDE.md`, etc.) are preserved — delete AgToosa blocks inside them manually if desired.
+
 For more help, open a [discussion](https://github.com/sky2464/AgToosa/discussions) or [issue](https://github.com/sky2464/AgToosa/issues).
 
 ---

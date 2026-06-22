@@ -53,8 +53,24 @@ bash docs/agtoosa-verify.sh --strict   # warnings fail too
 bash docs/agtoosa-verify.sh stats      # cycle analytics
 ```
 
+| Gate | Checks |
+|------|--------|
+| 1 — Context | `Context/product.md`, `tech-stack.md`, `workflow.md` exist and have no template placeholders |
+| 2 — Master-Plan | Epic rows present; Update Log within rotation budget (150 rows) |
+| 3 — Spec approval | Active-cycle stories have approved specs, EARS AC rows, threat model, AC→test mapping, RED evidence, task tree, Wave Plan |
+| 4 — Review | Done stories have archived review artifacts |
+| 5 — Version | Generator bash/ps1 parity (maintainer repos) or installed `.agtoosa-version` marker |
+
 CI template: copy `docs/agtoosa-gate.yml.example` to
 `.github/workflows/agtoosa-gate.yml` to block PRs on verifier failures.
+
+## Generator CLI (install/maintenance)
+
+```bash
+bash agtoosa.sh --doctor .     # version skew, wiring gaps, context health
+bash agtoosa.sh --uninstall .  # remove AgToosa-owned files (keeps your data)
+bash agtoosa.sh --update .     # refresh workflow docs from generator
+```
 
 ## Phase-event logging
 
