@@ -4385,6 +4385,15 @@ JSON
   [ -f "$BATS_TEST_DIRNAME/../npm/bin/agtoosa.js" ]
 }
 
+@test "DEV-066 SC-008: npm wrapper preserves user cwd and durable pack queue" {
+  local js="$BATS_TEST_DIRNAME/../npm/bin/agtoosa.js"
+  grep -q 'process\.cwd()' "$js"
+  grep -q 'AGTOOSA_PACK_QUEUE_DIR' "$js"
+  grep -q 'PACK_QUEUE_DIR' "$js"
+  grep -q '"pack-queue"' "$js"
+  ! grep -q 'cwd: srcDir' "$js"
+}
+
 @test "DEV-071 NI-001: non-interactive install with --path --platforms --yes" {
   run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
   [ "$status" -eq 0 ]
