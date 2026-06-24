@@ -4354,6 +4354,27 @@ JSON
   rm -rf "$queue_dir" "$project_dir"
 }
 
+@test "DEV-065 SC-008: registry install rejects multi-root pack tarballs" {
+  local registry="$TEST_PROJECT/registry.json"
+  local tarball="$TEST_PROJECT/smuggle-pack.tar.gz"
+  local src="$TEST_PROJECT/smuggle-src"
+  mkdir -p "$src/innocent-pack" "$src/payload-pack/.cursor/rules"
+  printf '# innocent\n' > "$src/innocent-pack/readme.md"
+  printf '# evil rule\n' > "$src/payload-pack/.cursor/rules/evil.mdc"
+  tar -czf "$tarball" -C "$src" innocent-pack payload-pack
+  local sha
+  sha="$(shasum -a 256 "$tarball" | awk '{print $1}')"
+  cat > "$registry" <<JSON
+[
+  {"name":"innocent-pack","description":"x","author":"t","version":"1.0.0","url":"file://$tarball","sha256":"$sha","verified":true}
+]
+JSON
+  run bash -c "printf 'Y\n' | AGTOOSA_REGISTRY_URL='file://$registry' AGTOOSA_REGISTRY_CACHE_DIR='$TEST_PROJECT/cache' AGTOOSA_PACK_QUEUE_DIR='$TEST_PROJECT/queue' bash '$SCRIPT' --registry install innocent-pack"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"multiple top-level directories"* ]]
+  [ ! -d "$TEST_PROJECT/queue/innocent-pack" ]
+}
+
 @test "DEV-066 SC-005: bootstrap pinned tags fail closed with no branch fallback" {
   ! grep -q "trying branch fallback" "$BOOTSTRAP_SCRIPT"
   grep -q "Pinned tag downloads do not fall back to branches" "$BOOTSTRAP_SCRIPT"
@@ -4565,7 +4586,10 @@ JSON
   grep -q "function Test-SafeTarArchive" "$ps"
   grep -q "function Test-PackFiles" "$ps"
   grep -q "function Test-PackPathDenied" "$ps"
+  grep -q "function Assert-PackStageLayout" "$ps"
+  grep -q "function Test-PathUnderDirectory" "$ps"
   grep -q "Test-SafeTarArchive \$tmpFile" "$ps"
+  grep -q "Assert-PackStageLayout \$packDir" "$ps"
   grep -q "Test-PackFiles \$packDir" "$ps"
 }
 

@@ -410,6 +410,41 @@ function ConvertTo-PackDirectoryLayout([string]$packDir, [string]$packName) {
     Remove-Item -Path $nested -Recurse -Force
 }
 
+# Return $true when $childPath is strictly under $parentPath (not a prefix collision).
+function Test-PathUnderDirectory([string]$childPath, [string]$parentPath) {
+    $child = [System.IO.Path]::GetFullPath($childPath).TrimEnd('\', '/')
+    $parent = [System.IO.Path]::GetFullPath($parentPath).TrimEnd('\', '/')
+    $sep = [System.IO.Path]::DirectorySeparatorChar
+    return ($child.StartsWith($parent + $sep) -or $child.StartsWith($parent + '/'))
+}
+
+# Reject pack archives whose staging area contains sibling top-level roots.
+function Assert-PackStageLayout([string]$stage, [string]$packName) {
+    $topDirs = @()
+    $topFiles = @()
+    foreach ($item in Get-ChildItem -Path $stage -Force -ErrorAction SilentlyContinue) {
+        if ($item.Name -eq '.pack-meta.json') { continue }
+        if ($item.PSIsContainer) { $topDirs += $item } else { $topFiles += $item }
+    }
+    if ($topDirs.Count -gt 1) {
+        Write-Color "${RED}❌ Pack archive contains multiple top-level directories (expected a single pack root).${NC}"
+        return $false
+    }
+    if ($topDirs.Count -eq 1 -and $topFiles.Count -gt 0) {
+        Write-Color "${RED}❌ Pack archive mixes top-level files with a directory layout.${NC}"
+        return $false
+    }
+    if ($topDirs.Count -eq 1) {
+        if ($topDirs[0].Name -ne $packName) {
+            Write-Color "${RED}❌ Pack archive top-level directory '$($topDirs[0].Name)' does not match pack name '$packName'.${NC}"
+            return $false
+        }
+        Write-Color "${RED}❌ Pack archive must use a flat layout or a single nested '$packName/' directory.${NC}"
+        return $false
+    }
+    return $true
+}
+
 function Move-ShipPacksToQueue {
     $legacy = Join-Path $SHIP_DIR "packs"
     if (-not (Test-Path $legacy)) { return }
@@ -467,14 +502,13 @@ function Test-PackFiles([string]$dir) {
     $canonicalDir = [System.IO.Path]::GetFullPath($dir).TrimEnd('\', '/')
     foreach ($file in Get-ChildItem -Path $dir -Recurse -File -Force) {
         $canonicalFile = [System.IO.Path]::GetFullPath($file.FullName)
-        if (-not $canonicalFile.StartsWith($canonicalDir + [System.IO.Path]::DirectorySeparatorChar) -and
-            -not $canonicalFile.StartsWith($canonicalDir + '/')) {
+        if (-not (Test-PathUnderDirectory $canonicalFile $canonicalDir)) {
             Write-Color "${RED}❌ Pack contains path traversal: $($file.FullName)${NC}"
             return $false
         }
         if ($file.LinkType) {
             $target = $file.ResolveLinkTarget($true)
-            if ($target -and -not ([System.IO.Path]::GetFullPath($target.FullName)).StartsWith($canonicalDir)) {
+            if ($target -and -not (Test-PathUnderDirectory ([System.IO.Path]::GetFullPath($target.FullName)) $canonicalDir)) {
                 Write-Color "${RED}❌ Pack contains escaping link: $($file.FullName)${NC}"
                 return $false
             }
@@ -497,7 +531,7 @@ function Merge-PackFromDirectory([string]$packDir, [string]$packName, [string]$p
         if ($_.Name -eq '.pack-meta.json') { return }
         # Merge-time containment check (queue may have been modified).
         $canonicalFile = [System.IO.Path]::GetFullPath($_.FullName)
-        if (-not $canonicalFile.StartsWith($canonicalDir)) {
+        if (-not (Test-PathUnderDirectory $canonicalFile $canonicalDir)) {
             Write-Color "  ${YELLOW}⏭${NC}  Skipping path-escaping file: $($_.FullName)"
             return
         }
@@ -817,6 +851,12 @@ function Invoke-RegistryInstall([string]$packSpec) {
     }
 
     ConvertTo-PackDirectoryLayout $packDir $packName
+
+    if (-not (Assert-PackStageLayout $packDir $packName)) {
+        Remove-Item -Recurse -Force $packDir -ErrorAction SilentlyContinue
+        Remove-Item $tmpFile -ErrorAction SilentlyContinue
+        exit 1
+    }
 
     # Validate extracted content (extension allowlist + containment) — parity
     # with the bash validate_pack_files gate.
