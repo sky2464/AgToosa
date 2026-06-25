@@ -4385,6 +4385,14 @@ JSON
   [ -f "$BATS_TEST_DIRNAME/../npm/bin/agtoosa.js" ]
 }
 
+@test "DEV-066 SC-008: npm wrapper resolves relative paths against user cwd" {
+  local npm_js="$BATS_TEST_DIRNAME/../npm/bin/agtoosa.js"
+  grep -q 'cwd: process.cwd()' "$npm_js"
+  grep -q 'AGTOOSA_PACK_QUEUE_DIR' "$npm_js"
+  grep -q '"agtoosa"' "$npm_js"
+  grep -q '"pack-queue"' "$npm_js"
+}
+
 @test "DEV-071 NI-001: non-interactive install with --path --platforms --yes" {
   run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
   [ "$status" -eq 0 ]

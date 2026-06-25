@@ -76,9 +76,22 @@ async function main() {
   }
 
   const args = process.argv.slice(2);
+  // Resolve relative --path / --verify targets against the user's shell cwd, not
+  // the ephemeral extract dir. Keep pack queue durable across npx invocations.
+  const packQueueDir = path.join(
+    os.homedir(),
+    ".cache",
+    "agtoosa",
+    "pack-queue"
+  );
+  fs.mkdirSync(packQueueDir, { recursive: true });
   const run = spawnSync("bash", [path.join(srcDir, "agtoosa.sh"), ...args], {
     stdio: "inherit",
-    cwd: srcDir,
+    cwd: process.cwd(),
+    env: {
+      ...process.env,
+      AGTOOSA_PACK_QUEUE_DIR: packQueueDir,
+    },
   });
 
   fs.rmSync(workdir, { recursive: true, force: true });
