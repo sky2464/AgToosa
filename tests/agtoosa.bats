@@ -4573,6 +4573,7 @@ JSON
   grep -q "function Test-SafeTarArchive" "$ps"
   grep -q "function Test-PackFiles" "$ps"
   grep -q "function Test-PackPathDenied" "$ps"
+  grep -q "function Test-PathUnderRoot" "$ps"
   grep -q "Test-SafeTarArchive \$tmpFile" "$ps"
   grep -q "Test-PackFiles \$packDir" "$ps"
 }

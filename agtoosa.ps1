@@ -439,6 +439,16 @@ function Test-PackPathDenied([string]$relPath) {
     return $false
 }
 
+# True when $canonicalPath is $canonicalRoot or a descendant (not a prefix sibling).
+function Test-PathUnderRoot([string]$canonicalPath, [string]$canonicalRoot) {
+    $root = $canonicalRoot.TrimEnd('\', '/')
+    if ($canonicalPath -eq $root) { return $true }
+    return (
+        $canonicalPath.StartsWith($root + [System.IO.Path]::DirectorySeparatorChar) -or
+        $canonicalPath.StartsWith($root + '/')
+    )
+}
+
 # Reject tarballs with absolute-path or '..' members BEFORE extraction.
 function Test-SafeTarArchive([string]$archivePath) {
     $members = tar -tzf $archivePath 2>$null
@@ -467,14 +477,13 @@ function Test-PackFiles([string]$dir) {
     $canonicalDir = [System.IO.Path]::GetFullPath($dir).TrimEnd('\', '/')
     foreach ($file in Get-ChildItem -Path $dir -Recurse -File -Force) {
         $canonicalFile = [System.IO.Path]::GetFullPath($file.FullName)
-        if (-not $canonicalFile.StartsWith($canonicalDir + [System.IO.Path]::DirectorySeparatorChar) -and
-            -not $canonicalFile.StartsWith($canonicalDir + '/')) {
+        if (-not (Test-PathUnderRoot $canonicalFile $canonicalDir)) {
             Write-Color "${RED}❌ Pack contains path traversal: $($file.FullName)${NC}"
             return $false
         }
         if ($file.LinkType) {
             $target = $file.ResolveLinkTarget($true)
-            if ($target -and -not ([System.IO.Path]::GetFullPath($target.FullName)).StartsWith($canonicalDir)) {
+            if ($target -and -not (Test-PathUnderRoot ([System.IO.Path]::GetFullPath($target.FullName)) $canonicalDir)) {
                 Write-Color "${RED}❌ Pack contains escaping link: $($file.FullName)${NC}"
                 return $false
             }
@@ -497,7 +506,7 @@ function Merge-PackFromDirectory([string]$packDir, [string]$packName, [string]$p
         if ($_.Name -eq '.pack-meta.json') { return }
         # Merge-time containment check (queue may have been modified).
         $canonicalFile = [System.IO.Path]::GetFullPath($_.FullName)
-        if (-not $canonicalFile.StartsWith($canonicalDir)) {
+        if (-not (Test-PathUnderRoot $canonicalFile $canonicalDir)) {
             Write-Color "  ${YELLOW}⏭${NC}  Skipping path-escaping file: $($_.FullName)"
             return
         }
