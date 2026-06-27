@@ -56,6 +56,49 @@ _normalize_pack_dir() {
   rmdir "$nested"
 }
 
+# Reject pack archives whose staging area still contains sibling top-level
+# directories after normalization. A smuggled second root can bypass single-pack
+# validation because validate_pack_files only checks containment within stage/.
+_assert_pack_stage_layout() {
+  local stage="$1" pack_name="$2"
+  local entry base
+  local -a top_dirs=() top_files=()
+
+  shopt -s nullglob
+  for entry in "$stage"/*; do
+    base=$(basename "$entry")
+    [[ "$base" == ".pack-meta.json" ]] && continue
+    if [[ -d "$entry" ]]; then
+      top_dirs+=("$entry")
+    elif [[ -f "$entry" ]]; then
+      top_files+=("$entry")
+    fi
+  done
+  shopt -u nullglob
+
+  if [[ ${#top_dirs[@]} -gt 1 ]]; then
+    echo "Error: Pack archive contains multiple top-level directories (expected a single pack root)." >&2
+    return 1
+  fi
+
+  if [[ ${#top_dirs[@]} -eq 1 && ${#top_files[@]} -gt 0 ]]; then
+    echo "Error: Pack archive mixes top-level files with a directory layout." >&2
+    return 1
+  fi
+
+  if [[ ${#top_dirs[@]} -eq 1 ]]; then
+    base=$(basename "${top_dirs[0]}")
+    if [[ "$base" != "$pack_name" ]]; then
+      echo "Error: Pack archive top-level directory '$base' does not match pack name '$pack_name'." >&2
+      return 1
+    fi
+    echo "Error: Pack archive must use a flat layout or a single nested '$pack_name/' directory." >&2
+    return 1
+  fi
+
+  return 0
+}
+
 REGISTRY_URL="${AGTOOSA_REGISTRY_URL:-https://raw.githubusercontent.com/sky2464/agtoosa-registry/main/registry.json}"
 # Allow tests and offline use to override the cache location.
 REGISTRY_CACHE_DIR="${AGTOOSA_REGISTRY_CACHE_DIR:-${HOME}/.cache/agtoosa}"
@@ -470,6 +513,11 @@ registry_install() {
     return 1
   }
   _normalize_pack_dir "$stage_dir" "$pack_name"
+
+  _assert_pack_stage_layout "$stage_dir" "$pack_name" || {
+    rm -rf "$(dirname "$tmpfile")" "$(dirname "$stage_dir")"
+    return 1
+  }
 
   validate_pack_files "$stage_dir" || {
     rm -rf "$(dirname "$tmpfile")" "$(dirname "$stage_dir")"

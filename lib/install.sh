@@ -189,7 +189,8 @@ _merge_packs_under_root() {
     if _merge_pack "$pack_dir" "$pname"; then
       _PACK_MERGE_COUNT=$((_PACK_MERGE_COUNT + 1))
       if [[ -f "${pack_dir}/.pack-meta.json" ]]; then
-        _PACK_LOCK_ENTRIES+=("${pack_dir}/.pack-meta.json")
+        # Snapshot metadata before the queue dir is removed; lock write happens later.
+        _PACK_LOCK_ENTRIES+=("$(cat "${pack_dir}/.pack-meta.json")")
       fi
       if [[ "$clear_after" == true ]]; then
         rm -rf "$pack_dir"
@@ -216,9 +217,13 @@ _write_lock_file() {
   local packs_json=""
   local sep=""
   for meta in "${meta_files[@]}"; do
-    [[ -f "$meta" ]] || continue
     local entry
-    entry=$(cat "$meta")
+    if [[ -f "$meta" ]]; then
+      entry=$(cat "$meta")
+    else
+      entry="$meta"
+    fi
+    [[ -n "$entry" ]] || continue
     packs_json+="${sep}    ${entry}"
     sep=$',\n'
   done
@@ -229,13 +234,19 @@ _write_lock_file() {
       < <(jq -r '.packs[]?.name' "$lock_file" 2>/dev/null)
     local new_names=()
     for meta in "${meta_files[@]}"; do
-      [[ -f "$meta" ]] || continue
       local n
       if command -v jq &>/dev/null; then
-        n=$(jq -r '.name' "$meta" 2>/dev/null)
-      else
+        if [[ -f "$meta" ]]; then
+          n=$(jq -r '.name' "$meta" 2>/dev/null)
+        else
+          n=$(echo "$meta" | jq -r '.name' 2>/dev/null)
+        fi
+      elif [[ -f "$meta" ]]; then
         n=$(grep -oP '"name":\s*"\K[^"]+' "$meta" | head -1)
+      else
+        n=$(echo "$meta" | grep -oP '"name":\s*"\K[^"]+' | head -1)
       fi
+      [[ -n "$n" ]] || continue
       new_names+=("$n")
     done
     local kept_json=""
@@ -265,18 +276,22 @@ _write_lock_file() {
 install_files() {
   mkdir -p "${PROJECT_PATH}/Docs/archived" "${PROJECT_PATH}/Docs/Context"
 
-  # Docs/ workflow files always overwrite on install
+  # Docs/ workflow files overwrite on install except project-owned state
+  # (Master-Plan, Changelog, Master-Architecture — same boundaries as --update).
   local file
   for file in "${DOCS_FILES[@]}"; do
     if [[ -f "${SHIP_DIR}/${file}" ]]; then
-      if [[ "$file" == "Docs/Master-Architecture.md" ]]; then
+      if [[ "$file" == "Docs/Master-Plan.md" || "$file" == "Docs/AgToosa_Changelog.md" || \
+            "$file" == "Docs/Master-Architecture.md" ]]; then
         if [[ -f "${PROJECT_PATH}/${file}" ]]; then
-          echo -e "  ${YELLOW}⏭${NC}  Skipping ${file} (architecture memory exists)"
+          echo -e "  ${YELLOW}⏭${NC}  Skipping ${file} (project-owned state exists)"
           SKIPPED=$((SKIPPED + 1))
           continue
         fi
-        copy_platform_file "${SHIP_DIR}/${file}" "${PROJECT_PATH}/${file}" "${file}"
-        continue
+        if [[ "$file" == "Docs/Master-Architecture.md" ]]; then
+          copy_platform_file "${SHIP_DIR}/${file}" "${PROJECT_PATH}/${file}" "${file}"
+          continue
+        fi
       fi
       cp "${SHIP_DIR}/${file}" "${PROJECT_PATH}/${file}"
       echo -e "  ${GREEN}✅${NC} ${file}"
