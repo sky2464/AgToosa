@@ -1222,8 +1222,37 @@ PY
     _write_lock_file "${_PACK_LOCK_ENTRIES[@]}"
   fi
   [ -f "$project_dir/Docs/agtoosa-lock.json" ]
+  run python3 - "$project_dir/Docs/agtoosa-lock.json" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1]))
+assert len(d.get("packs", [])) == 1, "lock file packs array must record merged pack"
+assert d["packs"][0]["name"] == "test-pack"
+PY
+  [ "$status" -eq 0 ]
 
   rm -rf "$queue_dir" "$project_dir"
+}
+
+@test "PK6: merge containment rejects sibling-directory prefix traps" {
+  local queue_dir project_dir sibling
+  queue_dir="$(mktemp -d)"
+  project_dir="$(mktemp -d)"
+  sibling="$(mktemp -d)"
+  mkdir -p "$queue_dir/trap-pack"
+  printf '# outside\n' > "$sibling/escaped.md"
+  ln -s "$sibling/escaped.md" "$queue_dir/trap-pack/link.md"
+
+  PACK_QUEUE_DIR="$queue_dir"
+  PROJECT_PATH="$project_dir"
+  AGTOOSA_VERSION="0.0.0"
+  GREEN="" YELLOW="" NC=""
+  source "$BATS_TEST_DIRNAME/../lib/install.sh"
+
+  _merge_pack "$queue_dir/trap-pack/" "trap-pack"
+  [ ! -f "$project_dir/link.md" ]
+  [ ! -f "$project_dir/escaped.md" ]
+
+  rm -rf "$queue_dir" "$project_dir" "$sibling"
 }
 
 @test "PK3: _salvage_ship_packs_to_queue moves legacy ship/packs into queue" {
@@ -4354,6 +4383,27 @@ JSON
   rm -rf "$queue_dir" "$project_dir"
 }
 
+@test "DEV-065 SC-008: registry install rejects multi-root pack tarballs" {
+  local registry="$TEST_PROJECT/registry.json"
+  local tarball="$TEST_PROJECT/smuggle-pack.tar.gz"
+  local src="$TEST_PROJECT/smuggle-src"
+  mkdir -p "$src/innocent-pack" "$src/payload-pack/.cursor/rules"
+  printf '# innocent\n' > "$src/innocent-pack/readme.md"
+  printf '# evil rule\n' > "$src/payload-pack/.cursor/rules/evil.mdc"
+  tar -czf "$tarball" -C "$src" innocent-pack payload-pack
+  local sha
+  sha="$(shasum -a 256 "$tarball" | awk '{print $1}')"
+  cat > "$registry" <<JSON
+[
+  {"name":"innocent-pack","description":"x","author":"t","version":"1.0.0","url":"file://$tarball","sha256":"$sha","verified":true}
+]
+JSON
+  run bash -c "printf 'Y\n' | AGTOOSA_REGISTRY_URL='file://$registry' AGTOOSA_REGISTRY_CACHE_DIR='$TEST_PROJECT/cache' AGTOOSA_PACK_QUEUE_DIR='$TEST_PROJECT/queue' bash '$SCRIPT' --registry install innocent-pack"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"multiple top-level directories"* ]]
+  [ ! -d "$TEST_PROJECT/queue/innocent-pack" ]
+}
+
 @test "DEV-066 SC-005: bootstrap pinned tags fail closed with no branch fallback" {
   ! grep -q "trying branch fallback" "$BOOTSTRAP_SCRIPT"
   grep -q "Pinned tag downloads do not fall back to branches" "$BOOTSTRAP_SCRIPT"
@@ -4385,6 +4435,22 @@ JSON
   [ -f "$BATS_TEST_DIRNAME/../npm/bin/agtoosa.js" ]
 }
 
+@test "DEV-066 SC-008: npm wrapper spawns agtoosa.sh with user cwd" {
+  local js="$BATS_TEST_DIRNAME/../npm/bin/agtoosa.js"
+  grep -q 'cwd: process.cwd()' "$js"
+}
+
+@test "DEV-066 SC-009: relative --path resolves from process cwd" {
+  local parent proj
+  parent="$(mktemp -d)"
+  proj="$parent/myapp"
+  mkdir -p "$proj"
+  run bash -c "cd '$parent' && bash '$SCRIPT' --path myapp --platforms claude --yes"
+  [ "$status" -eq 0 ]
+  [ -f "$proj/Docs/AgToosa_Agent.md" ]
+  rm -rf "$parent"
+}
+
 @test "DEV-071 NI-001: non-interactive install with --path --platforms --yes" {
   run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
   [ "$status" -eq 0 ]
@@ -4400,6 +4466,18 @@ JSON
   run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms not-a-tool --yes < /dev/null
   [ "$status" -ne 0 ]
   [[ "$output" == *"Unknown platform 'not-a-tool'"* ]]
+}
+
+@test "DEV-071 NI-003: re-install preserves project-owned Master-Plan and Changelog" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo "# My Master Plan" > "$TEST_PROJECT/Docs/Master-Plan.md"
+  echo "# My Changelog" > "$TEST_PROJECT/Docs/AgToosa_Changelog.md"
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  grep -q "My Master Plan" "$TEST_PROJECT/Docs/Master-Plan.md"
+  grep -q "My Changelog" "$TEST_PROJECT/Docs/AgToosa_Changelog.md"
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
 }
 
 @test "DEV-073 DR-001: --doctor reports healthy install and fails on missing install" {
@@ -4565,8 +4643,36 @@ JSON
   grep -q "function Test-SafeTarArchive" "$ps"
   grep -q "function Test-PackFiles" "$ps"
   grep -q "function Test-PackPathDenied" "$ps"
+  grep -q "function Test-PathUnderRoot" "$ps"
+  grep -q "function Assert-PackStageLayout" "$ps"
   grep -q "Test-SafeTarArchive \$tmpFile" "$ps"
   grep -q "Test-PackFiles \$packDir" "$ps"
+  grep -q "Assert-PackStageLayout \$packDir" "$ps"
+}
+
+@test "DEV-054 PS-003: pack validation rejects prefix-collision symlink targets" {
+  # Sibling dir named {pack}-suffix must not pass a StartsWith(pack) check.
+  local evil_pack sibling
+  evil_pack="$(mktemp -d)/pack"
+  sibling="$(dirname "$evil_pack")/pack-sibling"
+  mkdir -p "$evil_pack" "$sibling"
+  printf 'secret\n' > "$sibling/steal.md"
+  ln -s "../pack-sibling/steal.md" "$evil_pack/workflow.md"
+
+  run bash -c "
+    SHIP_DIR=/tmp
+    source '$BATS_TEST_DIRNAME/../lib/registry.sh'
+    validate_pack_files '$evil_pack'
+  "
+  [ "$status" -ne 0 ]
+
+  if command -v pwsh >/dev/null 2>&1; then
+    run env AGTOOSA_PS_TEST_PACKFILES_DIR="$evil_pack" pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1"
+    [ "$status" -ne 0 ]
+    [[ "$output" == *"escaping link"* || "$output" == *"path traversal"* ]]
+  fi
+
+  rm -rf "$(dirname "$evil_pack")"
 }
 
 # -- DEV-061–DEV-073 ship regression (SR-001–SR-003) --------------------------
