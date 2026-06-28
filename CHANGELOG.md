@@ -7,6 +7,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+### Fixed
+
+- **Pack lock metadata loss.** Registry pack installs no longer write an empty `packs` array to `Docs/agtoosa-lock.json` — metadata is snapshotted before the durable queue is cleaned up.
+- **Re-install data loss.** `agtoosa.sh --path --yes` on an existing project no longer overwrites project-owned `Docs/Master-Plan.md` or `Docs/AgToosa_Changelog.md` (parity with `--update`).
+- **Multi-root pack tarball smuggle.** Registry installs reject archives with sibling top-level directories that bypass single-pack validation.
+- **npm wrapper cwd.** `npx agtoosa --path .` now resolves relative paths against the user's cwd, not the ephemeral extract directory.
+- **PowerShell pack path prefix bypass.** `Merge-PackFromDirectory` uses directory-boundary containment (`Test-PathUnderRoot`) instead of bare prefix matching.
+
 ---
 
 ## [5.3.0] — 2026-06-10
