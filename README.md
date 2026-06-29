@@ -460,9 +460,21 @@ AgToosa's wedge is narrower: lightweight, repo-native, multi-assistant workflow 
 
 ### Competitive execution wave
 
-DEV-042 through DEV-060 are roadmap specs, not current guarantees. The Competitive execution wave targets repo-native proof gates that alternatives often handle through heavier runtimes, hosted task systems, or single-IDE workflows: spec quality analysis, brownfield drift baselines, EARS-to-test TDD evidence, async agent handoff/import, an evidence ledger, governance policy, signed registry provenance, and benchmark proof.
+The competitive execution wave (DEV-042–DEV-060) strengthens repo-native proof gates that alternatives often handle through heavier runtimes, hosted task systems, or single-IDE workflows. **v5.3.0 shipped the proof-engine core**; remaining stories stay on the Master-Plan backlog until enrolled with passing evidence.
 
-Until each linked story ships, these remain planned controls. AgToosa's current guarantee stays narrower: repo-native proof gates and multi-assistant workflow files with explicit generator-enforced, CI-enforced, agent-instructed, manual, or roadmap boundaries.
+**Shipped (v5.3.0 and earlier in this wave):**
+
+| Story | Capability | Enforcement |
+|-------|------------|-------------|
+| DEV-042 | Spec quality analyzer in `/agtoosa-spec` | agent-instructed |
+| DEV-043 | Brownfield current-state baseline in `/agtoosa-spec` | agent-instructed |
+| DEV-044 | EARS-to-test + RED/GREEN TDD evidence gates | machine-checked (+ agent) |
+| DEV-060 | Public benchmark suite (`docs/benchmarks/`) | manual runs; deterministic scoring |
+| DEV-061–073 | Lifecycle verifier, CI gate template, phase-event log, supply-chain hardening, spec amend/living specs, `--doctor`/`--uninstall` | generator-enforced + machine-checked |
+
+**Still backlog (examples):** work-package DAG schema (DEV-045 partial), worktree isolation (DEV-046), async handoff/import (DEV-047–048), evidence ledger (DEV-049), signed registry metadata (DEV-054 partial), governance policy-as-code (DEV-059). See `docs/Master-Plan.md` → Backlog for the full list.
+
+AgToosa's guarantee is explicit per control: generator-enforced, CI-enforceable, agent-instructed, manual, or roadmap — see `docs/enforcement-comparison.md` and `docs/AgToosa_Team_Trust_Roadmap.md`.
 
 ---
 

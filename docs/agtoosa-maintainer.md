@@ -78,6 +78,35 @@ Inline comments in `lib/*.sh` and `agtoosa.sh` should describe behavior in plain
 - `ship/` is temporary staging output and must never be treated as durable project state.
 - `.agtoosa/pack-queue/` is the durable staging area for `--registry install` packs until the next project install merges them.
 - The canonical version lives in `AGTOOSA_VERSION` at the top of `agtoosa.sh`.
+- `lib/maintain.sh` owns `--verify`, `--doctor`, and `--uninstall` (sourced by `agtoosa.sh`).
+- `template/Docs/agtoosa-verify.sh` ships to generated projects as `Docs/agtoosa-verify.sh`; the maintainer mirror is `docs/agtoosa-verify.sh`. Keep both copies aligned when changing gate logic.
+- `docs/agtoosa-gate.yml.example` (and `template/Docs/agtoosa-gate.yml.example`) is the CI gate template — AgToosa never writes `.github/workflows/` automatically.
+
+## Generator Maintenance CLI
+
+`lib/maintain.sh` implements read-only and destructive maintenance paths. Wire new flags through `agtoosa.sh` argument parsing, not ad-hoc scripts.
+
+| Flag | Behavior | Exit / notes |
+|------|----------|--------------|
+| `--verify [path]` | Runs `agtoosa-verify.sh` against the target. Prefers the target's installed copy (`Docs/` or `docs/`), then falls back to `template/Docs/agtoosa-verify.sh`. | Verifier exit code (0 pass, 1 findings, 2 usage). |
+| `--doctor [path]` | Reports version skew (`Docs/.agtoosa-version` vs generator), missing core workflow docs, platform entry-point wiring gaps, context placeholder tokens, queued packs, and stale `*.bak.*` files. | 0 healthy, 1 issues found, 2 bad path. |
+| `--uninstall [path]` | Removes AgToosa-owned workflow docs and platform command/rule files. **Preserves** `Master-Plan.md`, `Master-Architecture.md`, `AgToosa_Changelog.md`, `Context/`, `archived/`, and merged entry-point files (`.cursorrules`, `CLAUDE.md`, etc.). Prompts for confirmation unless `--yes`. | Blocks uninstall when target is the generator source tree. |
+| `--path` + `--platforms` + `--yes` | Non-interactive install (CI, devcontainers). See `npm/README.md` for the `npx agtoosa` wrapper. | Requires valid path and platform list. |
+
+**Verifier modes** (on either copy of `agtoosa-verify.sh`):
+
+```bash
+bash docs/agtoosa-verify.sh              # default gates
+bash docs/agtoosa-verify.sh --strict     # WARN → FAIL
+bash docs/agtoosa-verify.sh stats        # cycle analytics from Update Log + agtoosa-events.jsonl
+bash agtoosa.sh --verify .               # generator dispatch (maintainer dogfood)
+```
+
+**Common pitfalls:**
+
+- Maintainer repo uses lowercase `docs/`; generated projects use `Docs/`. The verifier auto-detects via `Master-Plan.md` location. `--doctor` only recognizes `Docs/` installs — it reports "not installed" on the generator source tree.
+- `--doctor` on a pre-3.x or partial install reports a missing `Docs/.agtoosa-version` marker — run `--update`.
+- `--uninstall` leaves AGTOOSA START/END blocks inside merged entry points; users delete those manually.
 
 ## Operating Rules
 
@@ -144,6 +173,8 @@ Do **not** advance MINOR for every small story. Update Project Charter **Milesto
 
 - Prefer `bats tests/agtoosa.bats` when generator behavior or template installation changes.
 - Use narrow `bash agtoosa.sh --help`, `--version`, `--list-template-files`, or `--update` checks when they directly cover the touched surface.
+- After touching verifier or maintain helpers: `bash agtoosa.sh --verify .` and `bash docs/agtoosa-verify.sh --strict` on this repo. Use `--doctor` against a generated fixture (doctor checks `Docs/`, not maintainer `docs/`).
+- After changing `lib/maintain.sh` uninstall paths: run focused bats (`-f "DEV-073"` or `-f "UN"`) before the full suite.
 - For documentation-only or agent-config-only changes, verify that each native entry file points to this guide and that no frontmatter errors were introduced.
 
 ## Expected Output
