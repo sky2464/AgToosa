@@ -78,23 +78,46 @@ Inline comments in `lib/*.sh` and `agtoosa.sh` should describe behavior in plain
 - `ship/` is temporary staging output and must never be treated as durable project state.
 - `.agtoosa/pack-queue/` is the durable staging area for `--registry install` packs until the next project install merges them.
 - The canonical version lives in `AGTOOSA_VERSION` at the top of `agtoosa.sh` and must match `agtoosa.ps1` and `npm/package.json`.
-- Proof-engine artifacts ship from `template/Docs/` into every install: `agtoosa-verify.sh`, `agtoosa-gate.yml.example`, and `agtoosa-events.jsonl` (seed file).
+- `lib/maintain.sh` owns `--verify`, `--doctor`, and `--uninstall` (sourced by `agtoosa.sh`).
+- Proof-engine artifacts ship from `template/Docs/` into every install: `agtoosa-verify.sh`, `agtoosa-gate.yml.example`, and `agtoosa-events.jsonl` (seed file). The maintainer mirror is `docs/agtoosa-verify.sh` — keep both copies aligned when changing gate logic.
+- `docs/agtoosa-gate.yml.example` (and `template/Docs/agtoosa-gate.yml.example`) is the CI gate template — AgToosa never writes `.github/workflows/` automatically.
 
 ## Generator CLI Surfaces
 
-Beyond the interactive install wizard, `agtoosa.sh` exposes these maintainer-relevant flags (implemented in `lib/maintain.sh`, `lib/registry.sh`, and `agtoosa.sh`):
+Beyond the interactive install wizard, `agtoosa.sh` exposes these maintainer-relevant flags (implemented in `lib/maintain.sh`, `lib/registry.sh`, and `agtoosa.sh`). Wire new maintenance flags through `agtoosa.sh` argument parsing, not ad-hoc scripts.
 
-| Flag | Owning code | Purpose |
-|------|-------------|---------|
-| `--verify [path]` | `lib/maintain.sh:run_verify` | Run the deterministic lifecycle verifier (prefers the target's installed `Docs/agtoosa-verify.sh`, falls back to template copy) |
-| `--doctor [path]` | `lib/maintain.sh:run_doctor` | Report version skew, missing workflow docs, platform wiring gaps, context placeholders, queued packs |
-| `--uninstall [path]` | `lib/maintain.sh:run_uninstall` | Remove AgToosa-owned files; preserves Master-Plan, Context/, archived/, and user-edited entry points |
-| `--path <dir>` | `agtoosa.sh` | Skip the interactive path prompt |
-| `--platforms <list>` | `agtoosa.sh` | Comma-separated platform list (e.g. `cursor,claude`) |
-| `--yes`, `-y` | `agtoosa.sh` | Non-interactive consent (CI, devcontainers, npm wrapper) |
-| `--allow-unverified` | `lib/registry.sh` | Opt in to installing registry packs where `verified: false` |
+| Flag | Owning code | Purpose | Exit / notes |
+|------|-------------|---------|--------------|
+| `--verify [path]` | `lib/maintain.sh:run_verify` | Run the deterministic lifecycle verifier (prefers the target's installed `Docs/agtoosa-verify.sh` or `docs/agtoosa-verify.sh`, falls back to template copy) | Verifier exit code (0 pass, 1 findings, 2 usage) |
+| `--doctor [path]` | `lib/maintain.sh:run_doctor` | Report version skew (`Docs/.agtoosa-version` vs generator), missing workflow docs, platform wiring gaps, context placeholders, queued packs, stale `*.bak.*` files | 0 healthy, 1 issues found, 2 bad path |
+| `--uninstall [path]` | `lib/maintain.sh:run_uninstall` | Remove AgToosa-owned files; preserves Master-Plan, Context/, archived/, and merged entry points | Blocks uninstall on the generator source tree; prompts unless `--yes` |
+| `--path <dir>` | `agtoosa.sh` | Skip the interactive path prompt | Requires valid path |
+| `--platforms <list>` | `agtoosa.sh` | Comma-separated platform list (e.g. `cursor,claude`) | Used with `--yes` for non-interactive installs |
+| `--yes`, `-y` | `agtoosa.sh` | Non-interactive consent (CI, devcontainers, npm wrapper) | Bootstrap pass-through uses `--` before generator flags |
+| `--allow-unverified` | `lib/registry.sh` | Opt in to installing registry packs where `verified: false` | See Supply Chain section below |
 
 **npm wrapper:** `npm/` publishes a thin `npx agtoosa` shim that downloads the release tarball pinned to `npm/package.json` version, screens archive members, and forwards args to `agtoosa.sh`. Bump `npm/package.json` version in lockstep with `AGTOOSA_VERSION` on every release.
+
+**Verifier modes** (on either copy of `agtoosa-verify.sh`):
+
+```bash
+bash docs/agtoosa-verify.sh              # default gates
+bash docs/agtoosa-verify.sh --strict     # WARN → FAIL
+bash docs/agtoosa-verify.sh stats        # cycle analytics from Update Log + agtoosa-events.jsonl
+bash agtoosa.sh --verify .               # generator dispatch (maintainer dogfood)
+```
+
+**Common pitfalls:**
+
+- Maintainer repo uses lowercase `docs/`; generated projects use `Docs/`. The verifier auto-detects via `Master-Plan.md` location. `--doctor` only recognizes `Docs/` installs — it reports "not installed" on the generator source tree.
+- `--doctor` on a pre-3.x or partial install reports a missing `Docs/.agtoosa-version` marker — run `--update`.
+- `--uninstall` leaves AGTOOSA START/END blocks inside merged entry points; users delete those manually.
+
+**When changing these surfaces:**
+
+1. Update `lib/config.sh` help text and `lib/maintain.sh` behavior together.
+2. Add or extend bats coverage in `tests/agtoosa.bats` (VF/DR/UN sections).
+3. Keep `npm/package.json` version identical to `AGTOOSA_VERSION` — the npm wrapper pins downloads to that version.
 
 ## Proof Engine Artifacts
 
@@ -123,29 +146,6 @@ Registry and bootstrap behavior changed in the v5.3.0 supply-chain wave. Touch t
 | Pinned bootstrap | `bootstrap.sh`, `Formula/agtoosa.rb` | `--ref vX.Y.Z` fails closed (no branch fallback); optional `--sha256`; releases publish `SHA256SUMS` |
 
 User-facing registry docs live in `template/Docs/AgToosa_Registry.md` (mirror: `docs/AgToosa_Registry.md`). Threat-model detail: `docs/security/template-injection-threat-model.md`.
-
-## CLI Maintenance Surfaces
-
-Beyond install/update, the generator exposes read-only and maintenance commands via `lib/maintain.sh`:
-
-| Flag | Owner | Behavior |
-|------|-------|----------|
-| `--verify [path]` | `lib/maintain.sh` → target's `agtoosa-verify.sh` | Deterministic lifecycle gate (read-only, no AI). Prefers the target's installed copy over the template fallback. |
-| `--doctor [path]` | `lib/maintain.sh` | Diagnose version skew, missing workflow docs, platform wiring gaps, context placeholders, pending pack queue, and stale backups. |
-| `--uninstall [path]` | `lib/maintain.sh` | Remove AgToosa-owned files. Preserves `Master-Plan.md`, `Master-Architecture.md`, `AgToosa_Changelog.md`, `Context/`, `archived/`, and merged platform entry points. |
-
-**Non-interactive install:** `--path <dir>`, `--platforms cursor,claude`, and `--yes` skip TTY prompts (CI, devcontainers, scripted rollouts). Bootstrap pass-through uses `--` before generator flags.
-
-**When changing these surfaces:**
-
-1. Update `lib/config.sh` help text and `lib/maintain.sh` behavior together.
-2. Add or extend bats coverage in `tests/agtoosa.bats` (VF/DR/UN sections).
-3. Keep `npm/package.json` version identical to `AGTOOSA_VERSION` — the npm wrapper pins downloads to that version.
-
-**Shipped template artifacts** (keep `lib/config.sh` file lists aligned):
-
-- `template/Docs/agtoosa-verify.sh` — deterministic verifier installed into every project
-- `template/Docs/agtoosa-gate.yml.example` — CI gate template (users copy manually; AgToosa never writes `.github/workflows/` automatically)
 
 ## Operating Rules
 
@@ -214,7 +214,8 @@ Do **not** advance MINOR for every small story. Update Project Charter **Milesto
 
 - Prefer `bats tests/agtoosa.bats` when generator behavior or template installation changes.
 - Use narrow `bash agtoosa.sh --help`, `--version`, `--list-template-files`, or `--update` checks when they directly cover the touched surface.
-- For proof-engine or lifecycle-doc changes: `bash agtoosa.sh --verify .`, `bash docs/agtoosa-verify.sh stats`, and `bash agtoosa.sh --doctor .`.
+- After touching verifier or maintain helpers: `bash agtoosa.sh --verify .` and `bash docs/agtoosa-verify.sh --strict` on this repo. Use `--doctor` against a generated fixture (doctor checks `Docs/`, not maintainer `docs/`).
+- After changing `lib/maintain.sh` uninstall paths: run focused bats (`-f "DEV-073"` or `-f "UN"`) before the full suite.
 - For registry or bootstrap changes: exercise `--registry install` with a test pack and confirm tar-slip rejection, denylist blocking, and preview output.
 - For documentation-only or agent-config-only changes, verify that each native entry file points to this guide and that no frontmatter errors were introduced.
 

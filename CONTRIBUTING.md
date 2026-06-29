@@ -71,6 +71,33 @@ Tests cover:
 - Configuration merging
 - Error handling
 
+### Maintainer validation
+
+When changing `agtoosa.sh`, `lib/maintain.sh`, or `agtoosa-verify.sh`, run these checks from the repo root before opening a PR:
+
+```bash
+# Full regression suite
+bats tests/agtoosa.bats
+
+# Deterministic lifecycle gate (maintainer uses lowercase docs/)
+bash agtoosa.sh --verify .
+bash docs/agtoosa-verify.sh --strict
+
+# Install health — run against a generated project (doctor checks Docs/, not maintainer docs/)
+# bash agtoosa.sh --doctor /path/to/generated-project
+```
+
+See `docs/agtoosa-maintainer.md` for the full maintainer guide (generator maintenance CLI, verifier dual-path conventions, release checklist).
+
+**Install troubleshooting (downstream projects):**
+
+| Symptom | Check |
+|---------|-------|
+| Version skew after a release | `bash agtoosa.sh --doctor /path/to/project` — run `--update` when the generator is newer |
+| Verifier FAIL before ship | `bash Docs/agtoosa-verify.sh` in the project; fix spec approval, EARS ACs, threat model, or RED/GREEN evidence |
+| Partial or broken install | `--doctor` for missing docs/wiring; `--update` to restore; `--uninstall` only when removing AgToosa (preserves Master-Plan and Context/) |
+| CI gate not running | Copy `Docs/agtoosa-gate.yml.example` to `.github/workflows/agtoosa-gate.yml` manually — AgToosa does not write workflows automatically |
+
 ## Report Bugs Using GitHub Issues
 
 We use GitHub Issues to track public bugs. Report a bug by [opening a new issue](https://github.com/sky2464/AgToosa/issues).
