@@ -463,7 +463,7 @@ your-project/
 
 ## How It Differs
 
-Comparison last reviewed: 2026-06-07.
+Comparison last reviewed: 2026-07-06.
 
 ### Use AgToosa when
 
