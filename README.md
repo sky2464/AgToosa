@@ -484,7 +484,7 @@ AgToosa's wedge is narrower: lightweight, repo-native, multi-assistant workflow 
 
 ### Competitive execution wave
 
-The competitive execution wave (DEV-042–DEV-060) strengthens repo-native proof gates that alternatives often handle through heavier runtimes, hosted task systems, or single-IDE workflows. **v5.3.0 shipped the proof-engine core**; remaining stories stay on the Master-Plan backlog until enrolled with passing evidence.
+DEV-042 through DEV-060 are roadmap specs, not current guarantees. The Competitive execution wave strengthens repo-native proof gates that alternatives often handle through heavier runtimes, hosted task systems, or single-IDE workflows. **v5.3.0 shipped the proof-engine core**; remaining stories stay on the Master-Plan backlog until enrolled with passing evidence.
 
 **Shipped (v5.3.0 and earlier in this wave):**
 
