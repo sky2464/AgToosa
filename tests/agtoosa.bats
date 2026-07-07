@@ -4504,6 +4504,18 @@ JSON
   [[ "$output" == *"Unknown platform 'not-a-tool'"* ]]
 }
 
+@test "DEV-071 NI-003: re-install preserves project-owned Master-Plan and Changelog" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo "# My Master Plan" > "$TEST_PROJECT/Docs/Master-Plan.md"
+  echo "# My Changelog" > "$TEST_PROJECT/Docs/AgToosa_Changelog.md"
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  grep -q "My Master Plan" "$TEST_PROJECT/Docs/Master-Plan.md"
+  grep -q "My Changelog" "$TEST_PROJECT/Docs/AgToosa_Changelog.md"
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
+}
+
 @test "DEV-073 DR-001: --doctor reports healthy install and fails on missing install" {
   run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
   [ "$status" -eq 0 ]

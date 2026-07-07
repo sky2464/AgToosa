@@ -276,18 +276,22 @@ _write_lock_file() {
 install_files() {
   mkdir -p "${PROJECT_PATH}/Docs/archived" "${PROJECT_PATH}/Docs/Context"
 
-  # Docs/ workflow files always overwrite on install
+  # Docs/ workflow files overwrite on install except project-owned state
+  # (Master-Plan, Changelog, Master-Architecture — same boundaries as --update).
   local file
   for file in "${DOCS_FILES[@]}"; do
     if [[ -f "${SHIP_DIR}/${file}" ]]; then
-      if [[ "$file" == "Docs/Master-Architecture.md" ]]; then
+      if [[ "$file" == "Docs/Master-Plan.md" || "$file" == "Docs/AgToosa_Changelog.md" || \
+            "$file" == "Docs/Master-Architecture.md" ]]; then
         if [[ -f "${PROJECT_PATH}/${file}" ]]; then
-          echo -e "  ${YELLOW}⏭${NC}  Skipping ${file} (architecture memory exists)"
+          echo -e "  ${YELLOW}⏭${NC}  Skipping ${file} (project-owned state exists)"
           SKIPPED=$((SKIPPED + 1))
           continue
         fi
-        copy_platform_file "${SHIP_DIR}/${file}" "${PROJECT_PATH}/${file}" "${file}"
-        continue
+        if [[ "$file" == "Docs/Master-Architecture.md" ]]; then
+          copy_platform_file "${SHIP_DIR}/${file}" "${PROJECT_PATH}/${file}" "${file}"
+          continue
+        fi
       fi
       cp "${SHIP_DIR}/${file}" "${PROJECT_PATH}/${file}"
       echo -e "  ${GREEN}✅${NC} ${file}"
