@@ -4384,6 +4384,31 @@ JSON
   rm -rf "$queue_dir" "$project_dir" "$sibling"
 }
 
+@test "DEV-065 SC-004b: merge rejects prefix-sibling symlink escapes" {
+  local root_dir queue_dir vault_dir project_dir
+  root_dir="$(mktemp -d)"
+  queue_dir="$root_dir/queue"
+  vault_dir="$root_dir/vault"
+  project_dir="$(mktemp -d)"
+  mkdir -p "$queue_dir/a/.cursor" "$vault_dir/.cursor"
+  echo "# trusted" > "$vault_dir/.cursor/trusted.mdc"
+  ln -s "../../../vault/.cursor/trusted.mdc" "$queue_dir/a/.cursor/stolen.mdc"
+  echo "# ok" > "$queue_dir/a/workflow.md"
+
+  PACK_QUEUE_DIR="$queue_dir"
+  PROJECT_PATH="$project_dir"
+  AGTOOSA_VERSION="0.0.0"
+  GREEN="" YELLOW="" NC=""
+  source "$BATS_TEST_DIRNAME/../lib/install.sh"
+
+  _merge_pack_queue
+  [ -f "$project_dir/workflow.md" ]
+  [ ! -f "$project_dir/.cursor/stolen.mdc" ]
+  [ ! -f "$project_dir/.cursor/trusted.mdc" ]
+
+  rm -rf "$root_dir" "$project_dir"
+}
+
 @test "DEV-066 SC-005: bootstrap pinned tags fail closed with no branch fallback" {
   ! grep -q "trying branch fallback" "$BOOTSTRAP_SCRIPT"
   grep -q "Pinned tag downloads do not fall back to branches" "$BOOTSTRAP_SCRIPT"
@@ -4615,6 +4640,7 @@ JSON
   grep -q "Test-WithinCanonicalDirectory" "$ps"
   grep -q "Test-SafeTarArchive \$tmpFile" "$ps"
   grep -q "Test-PackFiles \$packDir" "$ps"
+  grep -q "Test-WithinCanonicalDirectory \$resolvedPath \$canonicalDir" "$ps"
 }
 
 @test "DEV-054 PS-003: pack validation rejects prefix-collision symlink targets" {
