@@ -147,6 +147,21 @@ Beyond install/update, the generator exposes read-only and maintenance commands 
 - `template/Docs/agtoosa-verify.sh` — deterministic verifier installed into every project
 - `template/Docs/agtoosa-gate.yml.example` — CI gate template (users copy manually; AgToosa never writes `.github/workflows/` automatically)
 
+**Verifier modes** (on either copy of `agtoosa-verify.sh`):
+
+```bash
+bash docs/agtoosa-verify.sh              # default gates
+bash docs/agtoosa-verify.sh --strict     # WARN → FAIL
+bash docs/agtoosa-verify.sh stats        # cycle analytics from Update Log + agtoosa-events.jsonl
+bash agtoosa.sh --verify .               # generator dispatch (maintainer dogfood)
+```
+
+**Common pitfalls:**
+
+- Maintainer repo uses lowercase `docs/`; generated projects use `Docs/`. The verifier auto-detects via `Master-Plan.md` location. `--doctor` only recognizes `Docs/` installs — it reports "not installed" on the generator source tree.
+- `--doctor` on a pre-3.x or partial install reports a missing `Docs/.agtoosa-version` marker — run `--update`.
+- `--uninstall` leaves AGTOOSA START/END blocks inside merged entry points; users delete those manually.
+
 ## Operating Rules
 
 1. Start from the concrete owning surface: the shell file, template file, or test that directly controls the behavior.
