@@ -4471,9 +4471,13 @@ JSON
   [ -f "$BATS_TEST_DIRNAME/../npm/bin/agtoosa.js" ]
 }
 
-@test "DEV-066 SC-008: npm wrapper spawns agtoosa.sh with user cwd" {
+@test "DEV-066 SC-008: npm wrapper preserves user cwd and durable pack queue" {
   local js="$BATS_TEST_DIRNAME/../npm/bin/agtoosa.js"
   grep -q 'cwd: process.cwd()' "$js"
+  grep -q 'AGTOOSA_PACK_QUEUE_DIR' "$js"
+  grep -q 'PACK_QUEUE_DIR' "$js"
+  grep -q '"pack-queue"' "$js"
+  ! grep -q 'cwd: srcDir' "$js"
 }
 
 @test "DEV-066 SC-009: relative --path resolves from process cwd" {

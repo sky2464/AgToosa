@@ -21,6 +21,14 @@ const path = require("node:path");
 const VERSION = require("../package.json").version;
 const REPO = "sky2464/AgToosa";
 const TARBALL_URL = `https://github.com/${REPO}/archive/refs/tags/v${VERSION}.tar.gz`;
+// Durable queue: the wrapper deletes its temp extract after each run, so packs
+// staged via --registry install must survive outside the workdir.
+const PACK_QUEUE_DIR = path.join(
+  os.homedir(),
+  ".cache",
+  "agtoosa",
+  "pack-queue"
+);
 
 function fail(msg) {
   console.error(`agtoosa: ${msg}`);
@@ -75,12 +83,15 @@ async function main() {
     fail("extracted archive does not contain agtoosa.sh");
   }
 
+  fs.mkdirSync(PACK_QUEUE_DIR, { recursive: true });
+
   const args = process.argv.slice(2);
   // Run from the user's cwd so relative --path values (e.g. "." or "myapp")
   // resolve against their project, not the ephemeral extract dir we delete below.
   const run = spawnSync("bash", [path.join(srcDir, "agtoosa.sh"), ...args], {
     stdio: "inherit",
     cwd: process.cwd(),
+    env: { ...process.env, AGTOOSA_PACK_QUEUE_DIR: PACK_QUEUE_DIR },
   });
 
   fs.rmSync(workdir, { recursive: true, force: true });
