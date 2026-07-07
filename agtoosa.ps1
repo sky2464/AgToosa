@@ -467,6 +467,34 @@ function ConvertTo-PackDirectoryLayout([string]$packDir, [string]$packName) {
     Remove-Item -Path $nested -Recurse -Force
 }
 
+
+# Reject pack archives whose staging area contains sibling top-level roots.
+function Assert-PackStageLayout([string]$stage, [string]$packName) {
+    $topDirs = @()
+    $topFiles = @()
+    foreach ($item in Get-ChildItem -Path $stage -Force -ErrorAction SilentlyContinue) {
+        if ($item.Name -eq '.pack-meta.json') { continue }
+        if ($item.PSIsContainer) { $topDirs += $item } else { $topFiles += $item }
+    }
+    if ($topDirs.Count -gt 1) {
+        Write-Color "${RED}❌ Pack archive contains multiple top-level directories (expected a single pack root).${NC}"
+        return $false
+    }
+    if ($topDirs.Count -eq 1 -and $topFiles.Count -gt 0) {
+        Write-Color "${RED}❌ Pack archive mixes top-level files with a directory layout.${NC}"
+        return $false
+    }
+    if ($topDirs.Count -eq 1) {
+        if ($topDirs[0].Name -ne $packName) {
+            Write-Color "${RED}❌ Pack archive top-level directory '$($topDirs[0].Name)' does not match pack name '$packName'.${NC}"
+            return $false
+        }
+        Write-Color "${RED}❌ Pack archive must use a flat layout or a single nested '$packName/' directory.${NC}"
+        return $false
+    }
+    return $true
+}
+
 function Move-ShipPacksToQueue {
     $legacy = Join-Path $SHIP_DIR "packs"
     if (-not (Test-Path $legacy)) { return }
@@ -566,8 +594,7 @@ function Merge-PackFromDirectory([string]$packDir, [string]$packName, [string]$p
             $target = $_.ResolveLinkTarget($true)
             if ($target) { $resolvedPath = $target.FullName }
         }
-        if (-not (Test-WithinCanonicalDirectory $resolvedPath $canonicalDir)) {
-            Write-Color "  ${YELLOW}⏭${NC}  Skipping path-escaping file: $($_.FullName)"
+        if (-not (Test-WithinCanonicalDirectory $resolvedPath $canonicalDir)) {            Write-Color "  ${YELLOW}⏭${NC}  Skipping path-escaping file: $($_.FullName)"
             return
         }
         $ext = $_.Extension.TrimStart('.')
@@ -887,6 +914,12 @@ function Invoke-RegistryInstall([string]$packSpec) {
     }
 
     ConvertTo-PackDirectoryLayout $packDir $packName
+
+    if (-not (Assert-PackStageLayout $packDir $packName)) {
+        Remove-Item -Recurse -Force $packDir -ErrorAction SilentlyContinue
+        Remove-Item $tmpFile -ErrorAction SilentlyContinue
+        exit 1
+    }
 
     # Validate extracted content (extension allowlist + containment) — parity
     # with the bash validate_pack_files gate.
