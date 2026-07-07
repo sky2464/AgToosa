@@ -4409,6 +4409,30 @@ JSON
   rm -rf "$root_dir" "$project_dir"
 }
 
+@test "DEV-065 SC-005: bare registry name is not shadowed by same-named local directory" {
+  local registry="$TEST_PROJECT/registry.json"
+  local tarball="$TEST_PROJECT/shadow-pack.tar.gz"
+  local packroot="$TEST_PROJECT/good-src/shadow-pack"
+  local shadow_dir="$TEST_PROJECT/shadow-pack"
+  mkdir -p "$packroot" "$shadow_dir"
+  printf '# registry content\n' > "$packroot/workflow.md"
+  printf '# shadowed local content\n' > "$shadow_dir/workflow.md"
+  tar -czf "$tarball" -C "$TEST_PROJECT/good-src" shadow-pack
+  local sha
+  sha="$(shasum -a 256 "$tarball" | awk '{print $1}')"
+  cat > "$registry" <<JSON
+[
+  {"name":"shadow-pack","description":"x","author":"t","version":"1.0.0","url":"file://$tarball","sha256":"$sha","verified":true}
+]
+JSON
+  run bash -c "cd '$TEST_PROJECT' && printf 'Y\n' | AGTOOSA_REGISTRY_URL='file://$registry' AGTOOSA_REGISTRY_CACHE_DIR='$TEST_PROJECT/cache' AGTOOSA_PACK_QUEUE_DIR='$TEST_PROJECT/queue' bash '$SCRIPT' --registry install shadow-pack"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Downloading shadow-pack"* ]]
+  [[ "$output" != *"Installing local pack"* ]]
+  grep -q 'registry content' "$TEST_PROJECT/queue/shadow-pack/workflow.md"
+  ! grep -q 'shadowed local content' "$TEST_PROJECT/queue/shadow-pack/workflow.md"
+}
+
 @test "DEV-066 SC-005: bootstrap pinned tags fail closed with no branch fallback" {
   ! grep -q "trying branch fallback" "$BOOTSTRAP_SCRIPT"
   grep -q "Pinned tag downloads do not fall back to branches" "$BOOTSTRAP_SCRIPT"

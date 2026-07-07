@@ -383,8 +383,14 @@ registry_install() {
     pack_version=""
   fi
 
-  # Handle local pack (offline mode): explicit path prefix or any existing directory.
-  if [[ "$pack_spec" == "./"* ]] || [[ "$pack_spec" == "/"* ]] || [[ -d "$pack_spec" ]]; then
+  # Handle local pack (offline mode): require an explicit path (./, /, or a separator).
+  # Bare names always resolve via the registry — a same-named directory in CWD must
+  # not shadow a registry pack and bypass SHA-256 / verified checks.
+  if [[ "$pack_spec" == "./"* ]] || [[ "$pack_spec" == "/"* ]] || [[ "$pack_spec" == */* ]]; then
+    if [[ ! -d "$pack_spec" ]]; then
+      echo "Error: Local pack directory not found: $pack_spec" >&2
+      return 1
+    fi
     _install_local_pack "$pack_spec"
     return $?
   fi
