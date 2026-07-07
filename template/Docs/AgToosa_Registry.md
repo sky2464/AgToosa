@@ -58,7 +58,7 @@ Packs are **markdown-only** for safety — no executable code is automatically r
 4. **Verify SHA-256** against the registry index (abort on mismatch).
 5. **Pre-scan the archive** — member paths with absolute segments or `..` are rejected **before** extraction (tar-slip protection).
 6. **Stage in isolation** — the pack extracts to a temp directory, never directly into your project.
-7. **Preview and confirm** — AgToosa prints the full file tree, flags AI-instruction surfaces, and marks denylisted paths that will be skipped at merge. Confirm to proceed.
+7. **Preview and confirm** — AgToosa prints the full file tree, flags AI-instruction surfaces, and marks denylisted paths that will be skipped at merge. Confirm to proceed (or pass `--yes` for non-interactive installs).
 8. **Queue** validated files under `.agtoosa/pack-queue/<pack-name>/` (durable staging outside ephemeral `ship/`).
 9. **Merge** — run `bash agtoosa.sh` in your project to integrate queued packs alongside core AgToosa workflows.
 
