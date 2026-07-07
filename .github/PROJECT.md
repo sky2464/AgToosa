@@ -63,6 +63,6 @@ Contributors can:
 ## Release Planning
 
 Upcoming releases tracked in:
-- **Milestones** — v2.4.0, v2.5.0, v3.0.0
+- **Milestones** — current open milestone matches `docs/Master-Plan.md` Project Charter (e.g. `v5.3.1` after `v5.3.0` ships); `release-advanced.yml` auto-creates the next PATCH milestone on tag push
 - **Labels** — release-v2.5.0 for tracking commits
 - **Projects** — Separate project per major release
