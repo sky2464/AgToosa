@@ -3482,6 +3482,13 @@ PY
   grep -Eq 'sha256 "[0-9a-f]{64}"|url "https://github.com/sky2464/AgToosa.git", branch: "main"' "$formula"
 }
 
+@test "MR6: PowerShell install deep-merges settings.json hooks (parity with bash)" {
+  local f="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  grep -q '^function Merge-SettingsJson' "$f"
+  grep -q 'Merge-SettingsJson.*settings\.json' "$f"
+  ! grep -q 'Copy-FileWithGuard.*settings\.json' "$f"
+}
+
 # ── DEV-034 Maintainer release-state reconciliation (LR-001–LR-006) ─────────
 
 @test "DEV-034 LR-001: Master-Plan active cycle excludes shipped stories" {
