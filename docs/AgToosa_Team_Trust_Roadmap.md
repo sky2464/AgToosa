@@ -35,7 +35,7 @@ Team/enterprise adoption needs stronger evidence and controls:
 
 ## Competitive execution wave
 
-DEV-042 through DEV-060 define the competitive execution wave. **v5.3.0 shipped the proof-engine and supply-chain core** (DEV-042, DEV-043, DEV-044 via DEV-061/067, DEV-060 suite, DEV-061–073). Remaining DEV-045–059 stories stay backlog until enrolled with passing evidence. The wave strengthens AgToosa where alternatives lean on heavier runtimes while preserving the product boundary: repo-native workflow files, machine-checkable proof where shipped, and explicit agent handoffs.
+DEV-042 through DEV-060 define the Competitive execution wave. **v5.3.0 shipped the proof-engine and supply-chain core** (DEV-042, DEV-043, DEV-044 via DEV-061/067, DEV-060 suite, DEV-061–073). Remaining DEV-045–059 stories are future work unless a linked DEV story is shipped with passing evidence. The wave strengthens AgToosa where alternatives lean on heavier runtimes while preserving the product boundary: repo-native workflow files, machine-checkable proof where shipped, and explicit agent handoffs.
 
 **Shipped in v5.3.0 (examples):**
 
@@ -47,7 +47,7 @@ DEV-042 through DEV-060 define the competitive execution wave. **v5.3.0 shipped 
 - Supply-chain hardening (DEV-064–066) — tar-slip pre-scan, pack containment, pinned installs + `SHA256SUMS`.
 - Public benchmark suite scaffold (DEV-060) — `docs/benchmarks/` (competitor runs manual-deferred).
 
-**Still backlog (examples):** work-package DAG schema (DEV-045 partial), worktree isolation (DEV-046), async handoff/import (DEV-047–048), evidence ledger (DEV-049), cross-model review (DEV-050), tracker sync (DEV-051), hook automation pack (DEV-052), extension catalog (DEV-053), signed registry metadata (DEV-054 partial), agent capability matrix (DEV-055), retrospective loop (DEV-056), multi-repo overlay (DEV-057), local dashboard (DEV-058), governance policy-as-code (DEV-059). See `docs/Master-Plan.md` → Backlog.
+**Still backlog (examples):** work-package DAG schema (DEV-045 partial), worktree isolation (DEV-046), Async agent handoff packs (DEV-047–048), Evidence ledger (DEV-049), cross-model review (DEV-050), tracker sync (DEV-051), hook automation pack (DEV-052), extension catalog (DEV-053), Signed registry provenance (DEV-054 partial), agent capability matrix (DEV-055), retrospective loop (DEV-056), multi-repo overlay (DEV-057), local dashboard (DEV-058), governance policy-as-code (DEV-059). See `docs/Master-Plan.md` → Backlog.
 
 Each story must classify its controls as generator-enforced, CI-enforced, agent-instructed, manual, or roadmap before it can be described as implemented.
 
