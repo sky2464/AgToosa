@@ -4415,6 +4415,22 @@ JSON
   [ -f "$BATS_TEST_DIRNAME/../npm/bin/agtoosa.js" ]
 }
 
+@test "DEV-066 SC-008: npm wrapper spawns agtoosa.sh with user cwd" {
+  local js="$BATS_TEST_DIRNAME/../npm/bin/agtoosa.js"
+  grep -q 'cwd: process.cwd()' "$js"
+}
+
+@test "DEV-066 SC-009: relative --path resolves from process cwd" {
+  local parent proj
+  parent="$(mktemp -d)"
+  proj="$parent/myapp"
+  mkdir -p "$proj"
+  run bash -c "cd '$parent' && bash '$SCRIPT' --path myapp --platforms claude --yes"
+  [ "$status" -eq 0 ]
+  [ -f "$proj/Docs/AgToosa_Agent.md" ]
+  rm -rf "$parent"
+}
+
 @test "DEV-071 NI-001: non-interactive install with --path --platforms --yes" {
   run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
   [ "$status" -eq 0 ]
