@@ -2,19 +2,20 @@
 
 > **Spec:** `docs/archived/spec-DEV-048.md`
 > **Smoke filter:** `bats tests/agtoosa.bats -f "DEV-048"`
-> **Status:** ⬜ Backlog
+> **Status:** ✅ Done
 
 ## Coverage Target
 
-This plan will prove DEV-048 only after the story is enrolled and implemented. Until then, it preserves the competitive execution wave backlog contract and claim boundary.
-
 | AC | Test ID | Type | Description | Automated |
 |----|---------|------|-------------|-----------|
-| AC-001 | DEV-048-T-001 | Docs/Integration | Capability states user outcome and proof before shipped claims | planned |
-| AC-002 | DEV-048-T-002 | Docs/Integration | Enforcement language is classified as generator-enforced, CI-enforced, agent-instructed, manual, or roadmap | planned |
-| AC-003 | DEV-048-T-003 | Docs/Integration | Repo-local source-of-truth boundary is preserved for external integrations | planned |
-| AC-004 | DEV-048-T-004 | Bats | Focused failing regression coverage is added before behavior changes | planned |
-| AC-005 | DEV-048-T-005 | Evidence | Ship evidence is recorded without broader claims | planned |
+| AC-001 | IR-001 | Docs | Import Checklist fields present dual-path | yes @smoke |
+| AC-002 | IR-001 | Docs | IMPORT evidence + Evidence Mapping | yes @smoke |
+| AC-003 | IR-002 | Docs | agent-instructed + verification language; Readiness/Roadmap rows | yes @smoke |
+| AC-004 | IR-003 | Docs | Build External/async detection before tracking | yes @smoke |
+| AC-005 | IR-005 | Docs | Ship soft External agent evidence row | yes |
+| AC-006 | IR-004, IR-005 | Integration | Adapters + config registration | yes @smoke |
+
+Negative / edge: IR-004 asserts adapters do **not** duplicate Import Checklist body.
 
 ## Validation Commands
 
@@ -26,4 +27,12 @@ git diff --check
 
 ## Evidence
 
-Backlog creation evidence is covered by the competitive wave tests in `tests/agtoosa.bats`. Implementation evidence must be added when this story is built.
+### RED evidence — DEV-048
+
+Command: `bats tests/agtoosa.bats -f "DEV-048 IR"` (contract assertions before implementation)
+Expected: FAIL on missing Import docs / Build wiring (pre-implementation).
+
+### GREEN evidence — DEV-048
+
+Command: `bats tests/agtoosa.bats -f "DEV-048"`
+Recorded: 2026-07-08 — IR-001–IR-005 + CW-011 green after docs-first implementation.

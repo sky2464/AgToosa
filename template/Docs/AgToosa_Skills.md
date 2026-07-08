@@ -74,7 +74,7 @@ AgToosa installs one Codex slash prompt per lifecycle command under `.codex/prom
 | Sub-commands | Skills for commands with sub-commands must **Dispatch** to the sub-command named in the workflow doc without pasting the full doc inline |
 | Progressive disclosure | Keep the skill body concise; link to the workflow doc for full steps |
 
-Installed workflow skills: `agtoosa-init`, `agtoosa-spec`, `agtoosa-build`, `agtoosa-qa`, `agtoosa-review`, `agtoosa-ship`, `agtoosa-revert`, `agtoosa-task`, `agtoosa-update`, `agtoosa-status`, `agtoosa-goal`, `agtoosa-help`, `agtoosa-debug`, `agtoosa-concise`.
+Installed workflow skills: `agtoosa-init`, `agtoosa-spec`, `agtoosa-build`, `agtoosa-qa`, `agtoosa-review`, `agtoosa-ship`, `agtoosa-revert`, `agtoosa-task`, `agtoosa-handoff`, `agtoosa-import`, `agtoosa-update`, `agtoosa-status`, `agtoosa-goal`, `agtoosa-help`, `agtoosa-debug`, `agtoosa-concise`.
 
 ## Project Specialists (cross-platform v1)
 

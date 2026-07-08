@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.2" ]]
+  [[ "$output" == "AgToosa v5.3.3" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1636,7 +1636,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.3.2" ]
+  [ "$ver" = "5.3.3" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1647,7 +1647,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.3.2"* ]]
+  [[ "$output" == *"5.3.3"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -3649,7 +3649,7 @@ PY
   grep -q "Claude Code Instructions" "$project/CLAUDE.md"
   ! grep -q "old claude block" "$project/CLAUDE.md"
   grep -q "AgToosa" "$project/.claude/commands/agtoosa-spec.md"
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.2" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.3" ]
 }
 
 @test "DEV-036 WP-002: Bash registry install normalizes top-level pack directory" {
@@ -4171,6 +4171,129 @@ assert_competitive_story_artifacts() {
 
 @test "DEV-048 CW-011: Agent Result Import Gate backlog artifacts exist" {
   assert_competitive_story_artifacts "DEV-048"
+}
+
+# ── DEV-047: Async Agent Handoff Packs (HO-001–HO-005) ───────────────────────
+
+@test "DEV-047 HO-001: handoff contract exists in template and maintainer docs" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Handoff.md" "$root/docs/AgToosa_Handoff.md"; do
+    [ -f "$f" ]
+    grep -q "Pack Template" "$f"
+    grep -q "Return Contract" "$f"
+    grep -q "Allowed Actions" "$f"
+    grep -q "Verification Commands" "$f"
+    grep -q "handoff-\[story-id\]" "$f"
+  done
+}
+
+@test "DEV-047 HO-002: handoff claim boundary and source-of-truth strings" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Handoff.md" "$root/docs/AgToosa_Handoff.md"; do
+    grep -q "agent-instructed" "$f"
+    grep -q "manual" "$f"
+    grep -q "source of truth" "$f"
+    grep -q "No checkbox ticks" "$f"
+    grep -q "remains the repo-local source of truth" "$f"
+  done
+}
+
+@test "DEV-047 HO-003: Build references handoff for async wave export" {
+  local f
+  for f in "$TEMPLATE_DIR/Docs/AgToosa_Build.md" "$BATS_TEST_DIRNAME/../docs/AgToosa_Build.md"; do
+    grep -q "/agtoosa-handoff" "$f"
+    grep -q "/agtoosa-build handoff" "$f"
+    grep -q "Async dispatch" "$f"
+  done
+}
+
+@test "DEV-047 HO-004: native handoff adapters route to AgToosa_Handoff.md" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in \
+    "$root/template/.claude/commands/agtoosa-handoff.md" \
+    "$root/template/.cursor/commands/agtoosa-handoff.md" \
+    "$root/template/.gemini/commands/agtoosa-handoff.toml" \
+    "$root/template/.github/prompts/agtoosa-handoff.prompt.md" \
+    "$root/template/.windsurf/workflows/agtoosa-handoff.md" \
+    "$root/template/.codex/prompts/agtoosa-handoff.md" \
+    "$root/template/.codex/skills/agtoosa-handoff/SKILL.md"; do
+    [ -f "$f" ]
+    grep -q "Docs/AgToosa_Handoff.md" "$f"
+    ! grep -q "Pack Template" "$f"
+  done
+}
+
+@test "DEV-047 HO-005: Handoff doc registered in template file list" {
+  run bash "$BATS_TEST_DIRNAME/../agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Handoff.md"* ]]
+  [[ "$output" == *".cursor/commands/agtoosa-handoff.md"* ]]
+}
+
+# ── DEV-048: Agent Result Import Gate (IR-001–IR-005) ────────────────────────
+
+@test "DEV-048 IR-001: import checklist contract in template and maintainer docs" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Import.md" "$root/docs/AgToosa_Import.md"; do
+    [ -f "$f" ]
+    grep -q "Import Checklist" "$f"
+    grep -q "Evidence Mapping" "$f"
+    grep -q "IMPORT evidence" "$f"
+    grep -q "Closure Gate" "$f"
+  done
+}
+
+@test "DEV-048 IR-002: import claim boundary and verification language" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Import.md" "$root/docs/AgToosa_Import.md"; do
+    grep -q "agent-instructed" "$f"
+    grep -q "Imported claims are not evidence until repo-local verification passes" "$f"
+    grep -q "generator-enforced, CI-enforced, agent-instructed, manual, or roadmap\|not generator-enforced" "$f"
+  done
+  grep -q "Agent result import gate" "$root/docs/AgToosa_Readiness.md"
+  grep -q "Agent result import gate" "$root/docs/AgToosa_Team_Trust_Roadmap.md"
+}
+
+@test "DEV-048 IR-003: Build requires import before tracking out-of-band work" {
+  local f
+  for f in "$TEMPLATE_DIR/Docs/AgToosa_Build.md" "$BATS_TEST_DIRNAME/../docs/AgToosa_Build.md"; do
+    grep -q "External / async task detection" "$f"
+    grep -q "/agtoosa-import" "$f"
+    grep -q "Imported claims are not evidence until repo-local verification passes" "$f"
+  done
+}
+
+@test "DEV-048 IR-004: native import adapters route to AgToosa_Import.md" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in \
+    "$root/template/.claude/commands/agtoosa-import.md" \
+    "$root/template/.cursor/commands/agtoosa-import.md" \
+    "$root/template/.gemini/commands/agtoosa-import.toml" \
+    "$root/template/.github/prompts/agtoosa-import.prompt.md" \
+    "$root/template/.windsurf/workflows/agtoosa-import.md" \
+    "$root/template/.codex/prompts/agtoosa-import.md" \
+    "$root/template/.codex/skills/agtoosa-import/SKILL.md"; do
+    [ -f "$f" ]
+    grep -q "Docs/AgToosa_Import.md" "$f"
+    ! grep -q "Import Checklist" "$f"
+  done
+}
+
+@test "DEV-048 IR-005: Import doc registered and Ship soft readiness row present" {
+  run bash "$BATS_TEST_DIRNAME/../agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Import.md"* ]]
+  [[ "$output" == *".cursor/commands/agtoosa-import.md"* ]]
+  local f
+  for f in "$TEMPLATE_DIR/Docs/AgToosa_Ship.md" "$BATS_TEST_DIRNAME/../docs/AgToosa_Ship.md"; do
+    grep -q "External agent evidence" "$f"
+  done
 }
 
 @test "DEV-049 CW-012: Evidence Ledger backlog artifacts exist" {
@@ -4810,14 +4933,12 @@ JSON
 
 # -- DEV-074 ship regression (SR-001–SR-003) -----------------------------------
 
-@test "DEV-074 SR-001: v5.3.2 release pins are aligned" {
+@test "DEV-074 SR-001: v5.3.2 release was published" {
   local root="$BATS_TEST_DIRNAME/.."
-  local bash_ver ps_ver
-  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
-  [ "$bash_ver" = "5.3.2" ]
-  [ "$bash_ver" = "$ps_ver" ]
-  grep -q "version-5.3.2" "$root/README.md"
+  grep -q '## \[5.3.2\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-074' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/review-DEV-074.md" ]
+  [ -f "$root/docs/archived/spec-DEV-074.md" ]
 }
 
 @test "DEV-074 SR-002: v5.3.2 changelog and review artifacts exist" {
@@ -4832,5 +4953,41 @@ JSON
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   grep -q 'Ship complete — v5.3.2' "$mp"
   grep -q 'Release 5.3.2 shipped' "$mp"
-  grep -q 'v5.3.3 (next)' "$mp"
+  grep -q 'Milestone v5.3.3 (next)' "$mp"
+}
+
+# -- DEV-047/048 ship regression (SR-001–SR-003) --------------------------------
+
+@test "DEV-047 SR-001: v5.3.3 release pins are aligned" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.3" ]
+  [ "$bash_ver" = "$ps_ver" ]
+  [ "$bash_ver" = "$npm_ver" ]
+  grep -q "version-5.3.3" "$root/README.md"
+  grep -qE -- '--ref v5\.3\.3' "$root/README.md"
+}
+
+@test "DEV-047 SR-002: v5.3.3 changelog and review artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.3\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-047' "$root/CHANGELOG.md"
+  grep -q 'DEV-048' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/review-DEV-047-048.md" ]
+  [ -f "$root/docs/archived/spec-DEV-047.md" ]
+  [ -f "$root/docs/archived/spec-DEV-048.md" ]
+  grep -q '## ✅ Spec Approved' "$root/docs/archived/spec-DEV-047.md"
+  grep -q '## ✅ Spec Approved' "$root/docs/archived/spec-DEV-048.md"
+}
+
+@test "DEV-047 SR-003: Master-Plan records v5.3.3 ship and next patch milestone" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  grep -q 'Ship complete — v5.3.3' "$mp"
+  grep -q 'Release 5.3.3 shipped' "$mp"
+  grep -q 'v5.3.4 (next)' "$mp"
+  grep -q '| DEV-047 | Feature: Async Agent Handoff Packs | 2026-07-08 |' "$mp"
+  grep -q '| DEV-048 | Feature: Agent Result Import Gate | 2026-07-08 |' "$mp"
 }

@@ -15,7 +15,7 @@
 
 Utilities (load on demand): `/agtoosa-status`, `/agtoosa-task`, `/agtoosa-qa`,
 `/agtoosa-goal`, `/agtoosa-update`, `/agtoosa-debug`, `/agtoosa-revert`,
-`/agtoosa-concise`, `/agtoosa-help` — each maps to `docs/AgToosa_<Name>.md`.
+`/agtoosa-concise`, `/agtoosa-handoff`, `/agtoosa-import`, `/agtoosa-help` — each maps to `docs/AgToosa_<Name>.md`.
 
 ## Non-negotiables
 
@@ -80,4 +80,4 @@ At every phase transition append one line to `docs/agtoosa-events.jsonl`:
 {"ts":"2026-01-01T00:00:00Z","phase":"build","event":"complete","story":"DEV-012","by":"AgToosa"}
 ```
 
-`phase` ∈ init|spec|build|review|ship|qa|task; `event` ∈ start|complete|blocked.
+`phase` ∈ init|spec|build|review|ship|qa|task|handoff|import; `event` ∈ start|complete|blocked.

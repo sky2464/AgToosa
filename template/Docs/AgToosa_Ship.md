@@ -38,6 +38,7 @@ Before any deployment, verify all of the following. If **any** check fails, list
 | ✅ No `WIP:` commits remain | `git log` shows no commits whose **subject line** starts with `WIP:` | `/agtoosa-ship` (Part 1 squash) or manual squash |
 | ✅ QA cleared (when QA phase is enabled) | If `Docs/Context/workflow.md` enables a QA gate **or** a `Docs/AgToosa_QAReport-[story-id].md` exists, that report contains no open 🔴 findings | `/agtoosa-qa run` then `/agtoosa-qa triage` |
 | ✅ Verifier green | `bash Docs/agtoosa-verify.sh` exits 0 (no FAIL findings) | Fix the listed findings, then re-run |
+| ℹ️ External agent evidence reviewed *(informational — not a verifier FAIL)* | When IMPORT evidence or tasks returned via `/agtoosa-import` exist: confirm verification commands are recorded, ACs are mapped, and no imported claim is counted as evidence without repo-local verification pass | Run `/agtoosa-build import` or review `Docs/AgToosa_Import.md` |
 
 **Evidence rules:** Report pass/fail summaries, command names, artifact paths, and test counts. When citing deploy or test logs, **redact** secrets, tokens, API keys, and private URLs before including evidence in chat or review artifacts.
 

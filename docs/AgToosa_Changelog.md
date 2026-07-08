@@ -9,6 +9,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.3] — 2026-07-08
+
+### Added
+
+- 2026-07-08 — feature — DEV-047 Async Agent Handoff Packs (`/agtoosa-handoff`) + DEV-048 Agent Result Import Gate (`/agtoosa-import`); dual-path docs, adapters, HO/IR bats — `docs/archived/spec-DEV-047.md` · `docs/archived/spec-DEV-048.md` · `docs/archived/review-DEV-047-048.md`
+
+---
+
 ## [5.3.2] — 2026-07-08
 
 ### Added

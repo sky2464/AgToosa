@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-08 (/agtoosa-ship v5.3.2 — DEV-074)
+> **Last updated:** 2026-07-08 (/agtoosa-ship v5.3.3 — DEV-047 + DEV-048)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Milestone | `v5.3.3` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
+| Milestone | `v5.3.4` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
 | Active cycle | — |
 | Cycle capacity | `8 story points` |
-| Current phase | 🏁 v5.3.2 shipped — DEV-074 complete |
+| Current phase | 🏁 v5.3.3 shipped — DEV-047 + DEV-048 complete |
 
 ## Active Cycle
 
@@ -22,6 +22,7 @@
 |----|-------|------|----------|--------|-----------|
 | — | — | — | — | — | — |
 
+<!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.3.md -->
 <!-- DEV-074 shipped 2026-07-08 v5.3.2 — see Completed This Cycle -->
 
 <!-- Archived to docs/archived/cycle-2026-06-10-release-5.3.0.md -->
@@ -38,6 +39,24 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
+
+<!--
+**DEV-047 — Async Agent Handoff Packs** (spec: `docs/archived/spec-DEV-047.md`) — shipped 2026-07-08 v5.3.3
+
+- [x] **1.** RED contract bats (HO-001–HO-005)
+- [x] **2.** Canonical Handoff doc + maintainer mirror
+- [x] **3.** Wire Build, Agent, Quickref, Readiness, Roadmap
+- [x] **4.** Register config + platform adapters + entry points
+- [x] **5.** GREEN bats + test-plan evidence
+
+**DEV-048 — Agent Result Import Gate** (spec: `docs/archived/spec-DEV-048.md`) — shipped 2026-07-08 v5.3.3
+
+- [x] **1.** RED contract bats (IR-001–IR-005)
+- [x] **2.** Canonical Import doc + maintainer mirror
+- [x] **3.** Wire Build, Ship, Agent, Quickref, Readiness, Roadmap
+- [x] **4.** Register config + platform adapters + entry points
+- [x] **5.** GREEN bats + test-plan evidence
+-->
 
 <!--
 **DEV-074 — PS1 non-interactive install parity + Pester suite** (spec: `docs/archived/spec-DEV-074.md`) — shipped 2026-07-08 v5.3.2
@@ -229,8 +248,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | ⬜ Backlog — wave-by-wave execution shipped in DEV-067; owned-files/inputs/outputs schema still open |
 | DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | ⬜ Backlog |
-| DEV-047 | Feature: Async Agent Handoff Packs | Feature | M | DEV-002 | P0 | ⬜ Backlog |
-| DEV-048 | Feature: Agent Result Import Gate | Feature | M | DEV-002 | P0 | ⬜ Backlog |
+| DEV-047 | Feature: Async Agent Handoff Packs | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.3 |
+| DEV-048 | Feature: Agent Result Import Gate | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.3 |
 | DEV-049 | Feature: Evidence Ledger | Feature | M | DEV-004 | P0 | ⬜ Backlog |
 | DEV-050 | Feature: Cross-Model Review Gate | Feature | S | DEV-002 | P1 | ⬜ Backlog |
 | DEV-051 | Feature: Tracker Sync Bridge | Feature | M | DEV-003 | P1 | ⬜ Backlog |
@@ -307,6 +326,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-047 | Feature: Async Agent Handoff Packs | 2026-07-08 | [spec-DEV-047.md](archived/spec-DEV-047.md) · [review-DEV-047-048.md](archived/review-DEV-047-048.md) |
+| DEV-048 | Feature: Agent Result Import Gate | 2026-07-08 | [spec-DEV-048.md](archived/spec-DEV-048.md) · [review-DEV-047-048.md](archived/review-DEV-047-048.md) |
 | DEV-074 | Feature: PS1 non-interactive install parity (`-Path -Platforms -Yes`) + Pester suite | 2026-07-08 | [spec-DEV-074.md](archived/spec-DEV-074.md) · [review-DEV-074.md](archived/review-DEV-074.md) |
 | DEV-005 | Chore: v4.2.0 release hygiene (M1–M4 bats + CHANGELOG) | 2026-05-22 | [spec-DEV-005.md](archived/spec-DEV-005.md) · [review-DEV-005.md](archived/review-DEV-005.md) |
 | DEV-006 | Feature: AgToosa Status Guide sub-agent | 2026-05-23 | [spec-DEV-006.md](archived/spec-DEV-006.md) · [review-DEV-006.md](archived/review-DEV-006.md) |
@@ -391,3 +412,10 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-08 | 🔍 Review ✅ Approved — DEV-074; 0 🔴 Critical, 2 🟡 Warning (accepted); report: `docs/archived/review-DEV-074.md` | AgToosa |
 | 2026-07-08 | 🚀 Ship complete — v5.3.2 — DEV-074 PS1 non-interactive install parity; bats DEV-074 SR-001–SR-003 green | AgToosa |
 | 2026-07-08 | 🚀 Release 5.3.2 shipped — v5.3.2; version parity bash/ps1/npm; Milestone v5.3.3 (next) | AgToosa |
+| 2026-07-08 | ✏️ /agtoosa-spec DEV-047 + DEV-048 enrolled — deepened executable specs; Spec ✅ Approved; estimate M each; Active Cycle | AgToosa |
+| 2026-07-08 | 🏗️ /agtoosa-build DEV-047 + DEV-048 — Task 🟢 5/5 + 5/5 — Handoff/Import docs, adapters, Build/Ship wiring, HO/IR bats | AgToosa |
+| 2026-07-08 | 🏗️ Build complete — DEV-047 + DEV-048; next: `/agtoosa-review` then `/agtoosa-ship` | AgToosa |
+| 2026-07-08 | 🔍 Review 🔍 Started — DEV-047 + DEV-048 — 4-persona review running | AgToosa |
+| 2026-07-08 | 🔍 Review ✅ Approved — DEV-047 + DEV-048; 0 🔴 Critical, 4 🟡 Warning accepted (1 fixed); report: `docs/archived/review-DEV-047-048.md` | AgToosa |
+| 2026-07-08 | 🚀 Ship complete — v5.3.3 — DEV-047 + DEV-048 handoff/import; bats DEV-047/048 HO/IR green | AgToosa |
+| 2026-07-08 | 🚀 Release 5.3.3 shipped — v5.3.3; version parity bash/ps1/npm; Milestone v5.3.4 (next) | AgToosa |

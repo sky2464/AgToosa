@@ -1,0 +1,13 @@
+description = "AgToosa: export a handoff pack for an async or external agent (wave or task)"
+prompt = """
+
+## Gemini command routing
+
+This file is the native Gemini CLI command for `/agtoosa-handoff`. When the user invokes `/agtoosa-handoff`, execute the AgToosa workflow below — do **not** route to `/create-skill` or generate a project skill for AgToosa workflow names.
+
+Read Docs/AgToosa_Handoff.md and execute the handoff pack export workflow.
+
+Use any argument provided to resolve the sub-command (`wave` or `task`) and any story ID or title fragment. If no argument is given, run the full flow from Step 1.
+
+On successful completion, print this line verbatim: ✅ Done. Run /agtoosa-status to verify findings cleared.
+"""

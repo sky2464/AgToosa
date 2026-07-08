@@ -5,6 +5,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.3] — 2026-07-08
+
+Patch release: async agent handoff packs + agent result import gate (DEV-047, DEV-048).
+
+### Added
+
+- **DEV-047 — Async Agent Handoff Packs.** Canonical `/agtoosa-handoff` workflow (`AgToosa_Handoff.md`) exports bounded packs (story, ACs, files, allowed actions, verification, return contract); Build/Agent/Quickref wiring; platform adapters; HO-001–HO-005 bats.
+- **DEV-048 — Agent Result Import Gate.** Canonical `/agtoosa-import` Import Checklist + IMPORT evidence mapping; Build external/async detection before Tracking; Ship soft readiness row; Readiness/Roadmap agent-instructed classification; IR-001–IR-005 bats.
+
+---
+
+## [Unreleased]
+
+---
+
 ## [5.3.2] — 2026-07-08
 
 Patch release: PowerShell non-interactive install parity (DEV-074).
@@ -12,10 +27,6 @@ Patch release: PowerShell non-interactive install parity (DEV-074).
 ### Added
 
 - **DEV-074 — PS1 non-interactive install parity.** `agtoosa.ps1` supports `-Path`, `-Platforms`, and `-Yes` for CI/devcontainer installs without TTY prompts; `ConvertTo-PlatformList` matches bash token validation; Pester suite `tests/pester/agtoosa-install.Tests.ps1` and bats DEV-074 CT-001–CT-004.
-
----
-
-## [Unreleased]
 
 ---
 

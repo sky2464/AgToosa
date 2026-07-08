@@ -7,6 +7,8 @@
 | `/agtoosa-build` | Full flow: Parts 1 + 2 + 3 |
 | `/agtoosa-build tdd` | Part 1 only — TDD Red-Green-Refactor loop against the task list from the approved spec |
 | `/agtoosa-build test` | Parts 2 + 3 — run the full testing army + security scans, then update tracking |
+| `/agtoosa-build handoff` | Export a handoff pack for remaining wave tasks via `docs/AgToosa_Handoff.md` |
+| `/agtoosa-build import` | Run Import Checklist for returning async agent results via `docs/AgToosa_Import.md` |
 
 ### Claude Code Parallel Pattern
 
@@ -18,6 +20,7 @@ On Claude Code, independent tasks within a phase can be dispatched to parallel s
 - Each parallel subagent must return the **Terminal Evidence Contract** block from `docs/AgToosa_Agent.md` (command, exit code, pass/fail, warnings, errors, changed files, next action).
 - Collect results when all parallel tasks complete; merge conflicts are resolved by the orchestrating agent.
 - The orchestrator must summarize unresolved terminal output before marking any task checkbox done.
+- Async or background agents dispatched via parallel sub-agents should receive a `/agtoosa-handoff` pack (run `/agtoosa-build handoff` before dispatch) and return results via `/agtoosa-import` (Terminal Evidence still required).
 - See `/agtoosa-review` for the reference parallel pattern (4 reviewer personas run simultaneously).
 
 > **Note:** Parallel dispatch applies to Claude Code only. On other platforms, run tasks sequentially.
@@ -77,7 +80,13 @@ After every command, test run, scan, or parallel subagent during `/agtoosa-build
 
 3.  **Wave execution:** Read `### 3.2 Wave Plan` in the active spec and execute tasks **wave by wave**: complete every task in Wave N — including its Terminal Evidence — before starting Wave N+1. Within a wave, tasks share no files or data dependencies, so on Claude Code they may be dispatched in parallel via the pattern above; on all other platforms run the wave's tasks sequentially. If the spec has no Wave Plan, fall back to the `## Active Tasks` order in `docs/Master-Plan.md`.
 
+    > **Async dispatch:** Before sending tasks to async or background agents for a wave, offer to run `/agtoosa-handoff wave` (see `docs/AgToosa_Handoff.md`) to export a handoff pack. Agents should return results via `/agtoosa-import` before any Tracking update.
+
 4.  **For each atomic task, execute the TDD Cycle:**
+
+    **⚠️ External / async task detection — runs before every task:**
+    Before starting a task, check whether the work was completed out-of-band (by an async agent, background runner, or external actor). If so, run the Import Checklist (`/agtoosa-import` or `docs/AgToosa_Import.md`) before any Tracking update. Never mark a task complete without recorded verification commands and mapped ACs. "Imported claims are not evidence until repo-local verification passes."
+
 
     **⚠️ Manual Task Detection — runs before every task:**
     Before starting a task, check whether its line in `docs/Master-Plan.md` or the active spec contains `[manual]` or `[manual-deferred]`.
@@ -206,5 +215,6 @@ Any bug, edge case, or out-of-scope requirement discovered during the TDD cycle 
 ## Output
 *   Confirm build and test phases are complete and all tests pass.
 *   Present a summary of test results and any security findings.
+*   If any wave tasks remain for async dispatch, offer to run `/agtoosa-build handoff` (see `docs/AgToosa_Handoff.md`) before handing off to external agents. On return, run `/agtoosa-build import` (see `docs/AgToosa_Import.md`) to verify and integrate results.
 *   Print the closure line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
 *   Prompt the user to run `/agtoosa-review`.

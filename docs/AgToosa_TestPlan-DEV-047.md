@@ -2,19 +2,20 @@
 
 > **Spec:** `docs/archived/spec-DEV-047.md`
 > **Smoke filter:** `bats tests/agtoosa.bats -f "DEV-047"`
-> **Status:** ⬜ Backlog
+> **Status:** ✅ Done
 
 ## Coverage Target
 
-This plan will prove DEV-047 only after the story is enrolled and implemented. Until then, it preserves the competitive execution wave backlog contract and claim boundary.
-
 | AC | Test ID | Type | Description | Automated |
 |----|---------|------|-------------|-----------|
-| AC-001 | DEV-047-T-001 | Docs/Integration | Capability states user outcome and proof before shipped claims | planned |
-| AC-002 | DEV-047-T-002 | Docs/Integration | Enforcement language is classified as generator-enforced, CI-enforced, agent-instructed, manual, or roadmap | planned |
-| AC-003 | DEV-047-T-003 | Docs/Integration | Repo-local source-of-truth boundary is preserved for external integrations | planned |
-| AC-004 | DEV-047-T-004 | Bats | Focused failing regression coverage is added before behavior changes | planned |
-| AC-005 | DEV-047-T-005 | Evidence | Ship evidence is recorded without broader claims | planned |
+| AC-001 | HO-001 | Docs | Pack template sections present in dual-path Handoff docs | yes @smoke |
+| AC-002 | HO-002 | Docs | Claim boundary agent-instructed + manual; SoT strings | yes @smoke |
+| AC-003 | HO-002 | Docs | No checkbox ticks; Master-Plan SoT | yes @smoke |
+| AC-004 | HO-004, HO-005 | Integration | Adapters route to Docs/AgToosa_Handoff.md; registered in config | yes @smoke |
+| AC-005 | HO-003 | Docs | Build references handoff / async wave export | yes @smoke |
+| AC-006 | HO-001–HO-005 | Evidence | This evidence section | yes |
+
+Negative / edge: HO-004 asserts adapters do **not** duplicate Pack Template body.
 
 ## Validation Commands
 
@@ -26,4 +27,12 @@ git diff --check
 
 ## Evidence
 
-Backlog creation evidence is covered by the competitive wave tests in `tests/agtoosa.bats`. Implementation evidence must be added when this story is built.
+### RED evidence — DEV-047
+
+Command: `bats tests/agtoosa.bats -f "DEV-047 HO"` (contract assertions before implementation)
+Expected: FAIL on missing Handoff docs / adapters (pre-implementation).
+
+### GREEN evidence — DEV-047
+
+Command: `bats tests/agtoosa.bats -f "DEV-047"`
+Recorded: 2026-07-08 — HO-001–HO-005 + CW-010 green after docs-first implementation.

@@ -1,0 +1,12 @@
+---
+description: AgToosa handoff workflow rules — activates when exporting a handoff pack for an async or external agent.
+globs: Docs/AgToosa_Handoff.md
+alwaysApply: false
+---
+
+# AgToosa Handoff Rules
+
+When executing `/agtoosa-handoff` or any handoff pack export, follow `Docs/AgToosa_Handoff.md` precisely.
+
+- Reserved: `/agtoosa-handoff` and `agtoosa-handoff` names belong to AgToosa adapters only — do **not** route to `/create-skill`.
+- On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

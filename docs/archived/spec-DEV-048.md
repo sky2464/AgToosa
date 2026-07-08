@@ -1,59 +1,150 @@
-# Spec: DEV-048 - Agent Result Import Gate
+# Spec: DEV-048 — Agent Result Import Gate
 
 > **Story ID:** DEV-048
 > **Epic:** DEV-002
-> **Status:** ⬜ Backlog
+> **Status:** 🏁 Shipped (v5.3.3)
 > **Estimate:** M
 > **Spec created:** 2026-06-08
+> **Spec deepened:** 2026-07-08
 > **Competitive execution wave:** DEV-042 through DEV-060
 
 ## Context
 
-AgToosa has public launch proof and honest positioning as a lightweight, repo-native, multi-assistant SDLC workflow generator. The next competitive gap is making higher-assurance spec-to-test-to-agent execution explicit without claiming runtime enforcement before it exists.
+In-session TDD already requires RED/GREEN Terminal Evidence (DEV-067) and verifier WARNs on missing RED blocks (DEV-061). External/async agent returns have no import checklist, so “agent said done” can become a premature checkbox. DEV-048 adds an **agent-instructed** import gate paired with DEV-047 handoff packs.
 
-DEV-048 captures one candidate capability from the competitive execution wave. It is a backlog spec until explicitly enrolled and built.
+### Brownfield Spec Drift Baseline
 
-## Goal Contract
+| Field | Value |
+|-------|-------|
+| User outcome / proof | Users can map PR/branch/log evidence to ACs before closure; bats prove Import doc + Build/Ship wiring |
+| Repo evidence inventory | `docs/AgToosa_Build.md` RED/GREEN; `docs/AgToosa_Ship.md` Part 0; `docs/agtoosa-verify.sh` Gate 3; stub spec-DEV-048 |
+| Current-state baseline | No `AgToosa_Import.md`; no IMPORT evidence schema; Roadmap lists DEV-047–048 backlog |
+| Intended change deltas | Import workflow; Build external-task detection; Ship soft readiness row; IR bats |
+| Drift evidence | Stub meta-ACs → functional EARS; “blocks closure” clarified as agent-instructed not runtime |
+| Claim Boundary | agent-instructed checklist; verifier FAIL on import = roadmap; hosted ingestion = out of scope |
+| Source of truth | `docs/Master-Plan.md` remains the repo-local source of truth |
+
+## 1. Requirements
+
+### 1.1 Goal Contract
 
 | Field | Value |
 |-------|-------|
 | Goal | Import PRs, branches, logs, screenshots, and test output back into AgToosa evidence. |
 | User outcome | Users can review external agent output against ACs before marking tasks complete. |
-| Success condition | Import workflow maps returned artifacts to task status and blocks closure on missing evidence. |
-| Proof / evidence | Import checklist, evidence mapping, focused bats checks, and test-plan evidence. |
-| Claim Boundary | Capability is roadmap until this story ships with passing evidence; classify controls as generator-enforced, CI-enforced, agent-instructed, manual, or roadmap. |
-| Non-goals | This story does not trust external agent claims without repo-local verification. |
-| Assumptions | AgToosa remains repo-native and markdown-first; external services and agents are integrations, not required runtime dependencies. |
-| Risks | Overpromising current guarantees; adapter drift; workflow text that cannot be verified. |
+| Success condition | Import workflow maps returned artifacts to task status and instructs agents not to close tasks on missing evidence. |
+| Proof / evidence | Import checklist doc, Build/Ship wiring, IR bats, test-plan evidence. |
+| Claim Boundary | Import gate is **agent-instructed**; not generator-enforced; CI/verifier FAIL for import evidence is **roadmap**. Controls classified as generator-enforced, CI-enforced, agent-instructed, manual, or roadmap. |
+| Non-goals | Does not trust external agent claims without repo-local verification; no hosted webhooks; no DEV-049 ledger schema. |
+| Assumptions | DEV-047 handoff return contract fields are available or defined inline in Import doc. |
+| Risks | Agents ignore checklist; overclaiming “blocks” as a runtime engine. |
+| Unresolved questions | None |
 
-## Requirements
+### 1.2 User Stories
 
-| ID | Requirement |
-|----|-------------|
-| AC-001 | WHEN DEV-048 is read THE SYSTEM SHALL state the specific user outcome and proof required before the capability is treated as shipped. |
-| AC-002 | WHEN the capability mentions enforcement THE SYSTEM SHALL classify it as generator-enforced, CI-enforced, agent-instructed, manual, or roadmap. |
-| AC-003 | WHEN external agents, trackers, registries, or dashboards are mentioned THE SYSTEM SHALL preserve AgToosa as the repo-local source of truth unless implementation evidence proves otherwise. |
-| AC-004 | WHEN implementation begins THE SYSTEM SHALL add focused regression coverage before changing generator or template behavior. |
-| AC-005 | WHEN shipping THE SYSTEM SHALL record evidence in the matching test plan and avoid claims broader than the completed scope. |
+**As a** maintainer, **I want** an import checklist for async agent results **so that** I never tick tasks on unverified external claims.
 
-## Design
+**As a** build orchestrator, **I want** Build to detect out-of-band work **so that** I am directed to `/agtoosa-import` before Tracking update.
 
-Implement this story as a focused AgToosa lifecycle enhancement. Prefer docs/workflow contracts first, then narrow generator or template changes only where the acceptance criteria require an enforceable surface. Keep platform adapters delegated to canonical docs instead of duplicating long logic.
+### 1.3 Acceptance Criteria (EARS)
 
-## Build Scope
+| ID | EARS | Priority |
+|----|------|----------|
+| AC-001 | WHEN `/agtoosa-import` runs THE SYSTEM SHALL require an Import Checklist mapping artifact type, pointer, tasks, ACs, verification command, exit code, and reviewer. | Must |
+| AC-002 | WHEN import evidence is recorded THE SYSTEM SHALL use an `IMPORT evidence` section in the story test plan with a task↔AC↔artifact mapping table. | Must |
+| AC-003 | WHEN enforcement is described THE SYSTEM SHALL classify the import gate as agent-instructed and state that imported claims are not evidence until repo-local verification passes. | Must |
+| AC-004 | WHEN `/agtoosa-build` encounters out-of-band or async-completed work THE SYSTEM SHALL instruct running the Import Checklist (or `/agtoosa-import`) before Tracking update / checkbox ticks. | Must |
+| AC-005 | WHEN `/agtoosa-ship check` runs and IMPORT evidence or imported tasks exist THE SYSTEM SHALL include a soft readiness row confirming verification commands were reviewed (informational, not verifier FAIL). | Should |
+| AC-006 | WHEN the template pack ships THE SYSTEM SHALL register `Docs/AgToosa_Import.md` in `lib/config.sh` and provide thin native adapters on major platforms. | Must |
 
-Files in scope will be selected when the story is enrolled. Expected surfaces may include `docs/Master-Plan.md`, `docs/AgToosa_*.md`, `template/Docs/AgToosa_*.md`, platform adapters, `lib/config.sh`, and `tests/agtoosa.bats` depending on the final implementation.
+### 1.4 Out of Scope
 
-Out of scope: broad version bumps, release publication, hosted services, and enterprise/compliance claims not backed by automated evidence.
+- Verifier FAIL on missing IMPORT blocks (roadmap WARN later)
+- Evidence ledger JSON index (DEV-049)
+- Automatic PR polling or cloud agent APIs
 
-## Task Tree
+### Failure modes (Must ACs)
 
-- [ ] **1.** Add focused failing tests - _Requirements: AC-001-AC-005_
-- [ ] **2.** Implement the narrow workflow or generator change - _Requirements: AC-001-AC-004_
-- [ ] **3.** Update docs and platform references without duplicating canonical logic - _Requirements: AC-002, AC-003_
-- [ ] **4.** Record validation evidence in the test plan - _Requirements: AC-005_
-- [ ] **5.** Run focused tests, broader regression slice, full bats, and `git diff --check` - _Requirements: AC-004, AC-005_
+| ID | Maps to | Failure mode |
+|----|---------|--------------|
+| FM-001 | AC-001 | Incomplete checklist → false closure |
+| FM-002 | AC-002 | No test-plan mapping → audit gap |
+| FM-003 | AC-003 | Docs claim runtime engine → dishonest positioning |
+| FM-004 | AC-004 | Build ticks without import → SoT lies |
+| FM-005 | AC-006 | Missing adapters → undiscoverable gate |
 
-## Test Plan
+## 2. Design
 
-Test plan: `docs/AgToosa_TestPlan-DEV-048.md`
+### 2.1 Architecture Blueprint
+
+Files to create:
+- `template/Docs/AgToosa_Import.md`, `docs/AgToosa_Import.md`
+- Platform adapters for `/agtoosa-import` (same platforms as handoff)
+
+Files to change:
+- `template/Docs/AgToosa_Build.md`, `docs/AgToosa_Build.md` — external/async detection before Tracking
+- `template/Docs/AgToosa_Ship.md`, `docs/AgToosa_Ship.md` — soft Part 0 row
+- `template/Docs/AgToosa_Agent.md`, `docs/AgToosa_Agent.md` — Commands
+- `template/Docs/AgToosa_Quickref.md`, `docs/AgToosa_Quickref.md`
+- Readiness + Team Trust Roadmap matrices
+- `lib/config.sh`, `tests/agtoosa.bats` (IR-001–IR-005)
+- Entry point command tables
+
+### 2.2 Data Flow
+
+```
+External agent returns (PR/branch/logs)
+        │
+        ▼
+ /agtoosa-import checklist + local verify
+        │
+        ▼
+ Test plan IMPORT evidence
+        │
+        ▼
+ /agtoosa-build Tracking update (checkboxes)
+```
+
+### 2.3 STRIDE Threat Model
+
+| Threat | Risk | Mitigation |
+|--------|------|------------|
+| Spoofing | Forged “tests passed” logs | Require runnable verification commands with exit codes |
+| Tampering | Checkbox without mapping | Closure gate forbids ticks until checklist green |
+| Repudiation | No import record | IMPORT evidence + phase event `import` |
+| Information Disclosure | Pasting secrets from agent logs | Redact; cite paths only |
+| Denial of Service | — | — |
+| Elevation of Privilege | Import merges hostile CI changes | Build Scope + existing pack denylist unchanged |
+
+### 2.4 Build Scope
+
+**In scope:** files in §2.1.
+**Out of scope:** verifier FAIL implementation; hosted services; version bump unless shipping.
+
+## 3. Tasks
+
+### 3.1 Task Tree
+
+- [x] **1.** RED contract bats (IR-001–IR-005) — _Requirements: AC-001–AC-006_
+- [x] **2.** Canonical Import doc + maintainer mirror — _Requirements: AC-001, AC-002, AC-003_
+- [x] **3.** Wire Build, Ship, Agent, Quickref, Readiness, Roadmap — _Requirements: AC-003, AC-004, AC-005_
+- [x] **4.** Register config + platform adapters + entry points — _Requirements: AC-006_
+- [x] **5.** GREEN bats + test-plan evidence — _Requirements: AC-001–AC-006_
+
+### Wave Plan
+
+**Wave 1 (parallel):** 1, 2
+**Wave 2 (sequential after Wave 1):** 3, 4
+**Wave 3 (sequential after Wave 2):** 5
+
+## Spec Quality Analyzer
+
+- Must ACs unambiguous and testable: yes
+- Mapped to IR tests: yes
+- Claim Boundary honest: yes
+- SoT preserved: yes
+- No TBD placeholders: yes
+
+## ✅ Spec Approved
+
+Approved: 2026-07-08 17:45
