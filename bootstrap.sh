@@ -346,4 +346,11 @@ if [[ ! -d "$SRC_DIR/template" || ! -d "$SRC_DIR/lib" ]]; then
 fi
 
 chmod +x "$SRC_DIR/agtoosa.sh"
+
+# Durable queue: bootstrap deletes its temp extract on exit, so packs staged via
+# --registry install must survive outside WORKDIR (parity with npm/bin/agtoosa.js).
+PACK_QUEUE_DIR="${HOME}/.cache/agtoosa/pack-queue"
+mkdir -p "$PACK_QUEUE_DIR"
+export AGTOOSA_PACK_QUEUE_DIR="$PACK_QUEUE_DIR"
+
 exec bash "$SRC_DIR/agtoosa.sh" "${forwarded_args[@]}"
