@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-08 (/agtoosa-ship v5.3.1 — patch fixes)
+> **Last updated:** 2026-07-08 (/agtoosa-build DEV-074 complete)
 
 ## Project Charter
 
@@ -12,7 +12,7 @@
 | Milestone | `v5.3.2` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
 | Active cycle | DEV-074 — PS1 non-interactive install parity |
 | Cycle capacity | `8 story points` |
-| Current phase | 🟦 DEV-074 spec approved — `/agtoosa-build` next |
+| Current phase | 🟨 DEV-074 build complete — `/agtoosa-review` next |
 
 ## Active Cycle
 
@@ -20,7 +20,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-074 | Feature: PS1 non-interactive install parity (`-Path -Platforms -Yes`) + Pester suite | Feature | M | 🟦 Todo | 0/9 |
+| DEV-074 | Feature: PS1 non-interactive install parity (`-Path -Platforms -Yes`) + Pester suite | Feature | M | 🟨 In Progress | 12/12 |
 
 <!-- Archived to docs/archived/cycle-2026-06-10-release-5.3.0.md -->
 <!-- Archived to docs/archived/cycle-2026-06-07-release-5.2.7.md -->
@@ -37,17 +37,25 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-**DEV-074 — PS1 non-interactive install parity** (spec: `docs/archived/spec-DEV-074.md`)
+**DEV-074 — PS1 non-interactive install parity + Pester suite** (spec: `docs/archived/spec-DEV-074.md`)
 
-- [ ] **1.** PS1 CLI parameters
-  - [ ] 1.1 Add `-Path`, `-Platforms`, `-Yes` to `param()` and `Show-Usage`
-  - [ ] 1.2 Skip interactive prompts when `-Yes`
-  - [ ] 1.3 Validate platform tokens; error on unknown
-- [ ] **2.** Tests
-  - [ ] 2.1 DEV-074 bats greps (PS-001–PS-003)
-  - [ ] 2.2 Pester happy path + unknown platform
-- [ ] **3.** Verify
-  - [ ] 3.1 `bats -f DEV-074` and focused NI regression
+- [x] **1.** RED contract tests
+  - [x] 1.1 Add bats DEV-074 CT-001/CT-002 param and help greps — _Requirements: AC-006, AC-007_
+  - [x] 1.2 Scaffold `tests/pester/agtoosa-install.Tests.ps1` with NI-001..NI-005 — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006_
+- [x] **2.** Implement PS1 non-interactive install
+  - [x] 2.1 Add `-Path`, `-Platforms`, `-Yes` to `param()` and NI entry guard — _Requirements: AC-001, AC-007_
+  - [x] 2.2 Implement `Parse-PlatformList` with bash-equivalent token map and unknown rejection — _Requirements: AC-002_
+  - [x] 2.3 Wire NI path: skip `Read-Host` for path, platforms, confirm when `-Yes` — _Requirements: AC-001_
+  - [x] 2.4 Wire `-DryRun` on NI path without writes — _Requirements: AC-005_
+  - [x] 2.5 Enforce self-target guard before staging on `-Path` — _Requirements: AC-003_
+- [x] **3.** Docs sync
+  - [x] 3.1 Update `Show-Usage` and comment-based help in `agtoosa.ps1` — _Requirements: AC-007_
+  - [x] 3.2 Extend `docs/agtoosa-maintainer.md` PS1 NI flag row — _Requirements: AC-007_
+- [x] **4.** GREEN Pester + evidence
+  - [x] 4.1 Implement NI-001..NI-005 assertions green in Pester — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006_
+  - [x] 4.2 Record RED/GREEN evidence blocks in test plan — _Requirements: AC-006_
+- [x] **5.** Verify
+  - [x] 5.1 Run `Invoke-Pester` + `bats -f "DEV-074"` and focused DEV-033/PK regression — _Requirements: AC-006_
 
 <!--
 **DEV-042 — Spec Quality Analyzer** (spec: `docs/archived/spec-DEV-042.md`) — shipped 2026-06-10 v5.3.0
@@ -226,7 +234,6 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Type | Estimate | Epic | Priority | Status |
 |----|-------|------|----------|------|----------|--------|
-| DEV-074 | Feature: PS1 non-interactive install parity (`-Path -Platforms -Yes`) + Pester suite | Feature | M | DEV-001 | P1 | 🟦 Todo — enrolled 2026-07-08 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | ⬜ Backlog — wave-by-wave execution shipped in DEV-067; owned-files/inputs/outputs schema still open |
 | DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | ⬜ Backlog |
@@ -386,3 +393,4 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-08 | 🚀 Ship complete — v5.3.1 patch; Unreleased fixes + bootstrap durable pack queue (PR #64); focused SR bats green | AgToosa |
 | 2026-07-08 | 🚀 Release 5.3.1 shipped — v5.3.1; version parity bash/ps1/npm; Milestone v5.3.2 (next) | AgToosa |
 | 2026-07-08 | ✏️ /agtoosa-spec DEV-074 enrolled — PS1 non-interactive install parity; spec approved; test plan `docs/AgToosa_TestPlan-DEV-074.md` | AgToosa |
+| 2026-07-08 | 🏗️ /agtoosa-build DEV-074 — Task 🟢 12/12 complete — PS1 `-Path`/`-Platforms`/`-Yes` parity; bats DEV-074 CT-001–CT-004; Pester NI-001–NI-005 green | AgToosa |
