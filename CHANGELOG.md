@@ -5,6 +5,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.5] — 2026-07-08
+
+Patch release: Signed Registry Provenance (DEV-054).
+
+### Added
+
+- **DEV-054 — Signed Registry Provenance.** Optional minisign soft-warn verify for registry packs and release/bootstrap sidecars; provenance schema (minisign primary, cosign documented); ADR-011; bundled pubkey path + `AGTOOSA_MINISIGN_PUBKEY`; SP-001–SP-006 bats. Private-key generation remains Manual/Deferred (M-1); fail-closed require-signatures / SBOM / cosign verify remain roadmap.
+
+---
+
+## [Unreleased]
+
+---
+
 ## [5.3.4] — 2026-07-08
 
 Patch release: Evidence Ledger (DEV-049).
@@ -12,10 +26,6 @@ Patch release: Evidence Ledger (DEV-049).
 ### Added
 
 - **DEV-049 — Evidence Ledger.** Canonical `/agtoosa-evidence` workflow (`AgToosa_Evidence.md`) with per-story `evidence-[id].md` schema and optional `agtoosa-evidence.jsonl` mirror; Review/Ship require ledger updates; platform adapters; EL-001–EL-005 bats. Agent-instructed (not generator/CI-enforced).
-
----
-
-## [Unreleased]
 
 ---
 

@@ -2,7 +2,7 @@
 
 > **Spec:** `docs/archived/spec-DEV-054.md`
 > **Smoke filter:** `bats tests/agtoosa.bats -f "DEV-054"`
-> **Status:** 🟨 Todo — In Progress (build GREEN)
+> **Status:** 🏁 Shipped (v5.3.5)
 
 ## Coverage Target
 

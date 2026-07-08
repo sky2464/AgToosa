@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.4" ]]
+  [[ "$output" == "AgToosa v5.3.5" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1636,7 +1636,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.3.4" ]
+  [ "$ver" = "5.3.5" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1647,7 +1647,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.3.4"* ]]
+  [[ "$output" == *"5.3.5"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -3649,7 +3649,7 @@ PY
   grep -q "Claude Code Instructions" "$project/CLAUDE.md"
   ! grep -q "old claude block" "$project/CLAUDE.md"
   grep -q "AgToosa" "$project/.claude/commands/agtoosa-spec.md"
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.4" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.5" ]
 }
 
 @test "DEV-036 WP-002: Bash registry install normalizes top-level pack directory" {
@@ -5190,4 +5190,38 @@ JSON
   grep -q 'Release 5.3.4 shipped' "$mp"
   grep -q 'v5.3.5 (next)' "$mp"
   grep -q '| DEV-049 | Feature: Evidence Ledger | 2026-07-08 |' "$mp"
+}
+
+# -- DEV-054 ship regression (SR-001–SR-003) --------------------------------
+
+@test "DEV-054 SR-001: v5.3.5 release pins are aligned" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.5" ]
+  [ "$bash_ver" = "$ps_ver" ]
+  [ "$bash_ver" = "$npm_ver" ]
+  grep -q "version-5.3.5" "$root/README.md"
+  grep -qE -- '--ref v5\.3\.5' "$root/README.md"
+}
+
+@test "DEV-054 SR-002: v5.3.5 changelog and review/evidence artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.5\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-054' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/review-DEV-054.md" ]
+  [ -f "$root/docs/archived/spec-DEV-054.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-054.md" ]
+  grep -q '## ✅ Spec Approved' "$root/docs/archived/spec-DEV-054.md"
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-054.md"
+}
+
+@test "DEV-054 SR-003: Master-Plan records v5.3.5 ship and next patch milestone" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  grep -q 'Ship complete — v5.3.5' "$mp"
+  grep -q 'Release 5.3.5 shipped' "$mp"
+  grep -q 'v5.3.6 (next)' "$mp"
+  grep -q '| DEV-054 | Feature: Signed Registry Provenance | 2026-07-08 |' "$mp"
 }

@@ -7,10 +7,10 @@
 class Agtoosa < Formula
   desc "Spec-driven agentic AI framework generator for software development"
   homepage "https://github.com/sky2464/AgToosa"
-  url "https://github.com/sky2464/AgToosa/archive/refs/tags/v5.3.4.tar.gz"
-  sha256 "abef7da0fe3a218184644b38d1b28dc87d65815418ff21e1b1693f2153b5d3a2"
+  url "https://github.com/sky2464/AgToosa/archive/refs/tags/v5.3.5.tar.gz"
+  sha256 "0000000000000000000000000000000000000000000000000000000000000000"
   license "MIT"
-  version "5.3.4"
+  version "5.3.5"
 
   def install
     bin.install "agtoosa.sh" => "agtoosa"

@@ -9,6 +9,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.5] — 2026-07-08
+
+### Added
+
+- 2026-07-08 — feature — DEV-054 Signed Registry Provenance (optional minisign soft-warn, ADR-011, registry/bootstrap verify path, SP bats); M-1 keygen still Manual/Deferred — `docs/archived/spec-DEV-054.md` · `docs/archived/review-DEV-054.md`
+
+---
+
 ## [5.3.4] — 2026-07-08
 
 ### Added
