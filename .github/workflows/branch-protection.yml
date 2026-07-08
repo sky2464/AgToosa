@@ -3,21 +3,9 @@ name: PR Hygiene Checks
 on:
   pull_request:
     branches: [main]
-  push:
-    branches: [main]
 
 jobs:
-  push-main-ok:
-    if: github.event_name == 'push'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Acknowledge push to main
-        run: |
-          echo "✅ Push to main acknowledged."
-          echo "PR label, description, and issue-link checks run only on pull_request."
-
   require-labels:
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
 
     steps:
@@ -30,7 +18,6 @@ jobs:
           fi
 
   require-description:
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
 
     steps:
@@ -44,7 +31,6 @@ jobs:
           fi
 
   link-issue:
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
 
     steps:
@@ -61,7 +47,6 @@ jobs:
           fi
 
   all-checks-pass:
-    if: github.event_name == 'pull_request'
     needs: [require-labels, require-description, link-issue]
     runs-on: ubuntu-latest
 
