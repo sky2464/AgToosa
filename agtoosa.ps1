@@ -33,11 +33,21 @@
 .PARAMETER RegistryArg
     Argument for the registry sub-command (keyword for search, pack name for info/install).
 
+.PARAMETER Path
+    Target project directory (skips the interactive path prompt).
+
+.PARAMETER Platforms
+    Comma-separated platform list (e.g. cursor,claude). Skips interactive platform selection.
+
+.PARAMETER Yes
+    Non-interactive consent for copy and empty-platform prompts (CI, devcontainers). Requires -Path.
+
 .EXAMPLE
     .\agtoosa.ps1
     .\agtoosa.ps1 -Force
     .\agtoosa.ps1 -DryRun
     .\agtoosa.ps1 -Update -UpdatePath C:\Projects\MyApp
+    .\agtoosa.ps1 -Path C:\Projects\MyApp -Platforms cursor,claude -Yes
     .\agtoosa.ps1 -Version
     .\agtoosa.ps1 -Registry -RegistryCommand list
     .\agtoosa.ps1 -Registry -RegistryCommand search -RegistryArg react
@@ -53,6 +63,9 @@ param(
     [switch]$Help,
     [switch]$Update,
     [string]$UpdatePath = "",
+    [string]$Path = "",
+    [string]$Platforms = "",
+    [switch]$Yes,
     [switch]$Registry,
     [string]$RegistryCommand = "",
     [string]$RegistryArg = ""
@@ -91,6 +104,36 @@ function Write-SelfTargetGuidance {
     Write-Color "${YELLOW}   Do not create Docs/ or Docs/.agtoosa-version here.${NC}"
 }
 
+function Parse-PlatformList([string]$PlatformsCsv) {
+    $result = [System.Collections.Generic.List[string]]::new()
+    $addPlatform = {
+        param([string]$name)
+        if (-not $result.Contains($name)) { [void]$result.Add($name) }
+    }
+    foreach ($raw in ($PlatformsCsv -split ',')) {
+        $token = $raw.Trim()
+        if ([string]::IsNullOrWhiteSpace($token)) { continue }
+        switch -Regex ($token.ToLower()) {
+            '^(1|cursor)$' { & $addPlatform 'cursor'; break }
+            '^(2|windsurf)$' { & $addPlatform 'windsurf'; break }
+            '^(3|claude|claude-code)$' { & $addPlatform 'claude'; break }
+            '^(4|gemini|jules)$' { & $addPlatform 'gemini'; break }
+            '^(5|copilot|github-copilot)$' { & $addPlatform 'copilot'; break }
+            '^(6|vscode)$' { & $addPlatform 'copilot'; break }
+            '^(7|codex|opencode|other)$' { & $addPlatform 'opencode'; break }
+            '^(8|all)$' {
+                return [string[]]@('cursor', 'windsurf', 'claude', 'gemini', 'copilot', 'opencode')
+            }
+            default {
+                Write-Color "${RED}❌ Error: Unknown platform '$token' in -Platforms.${NC}"
+                Write-Color "Valid: cursor, windsurf, claude, gemini, copilot, vscode, codex, all"
+                exit 1
+            }
+        }
+    }
+    return [string[]]$result.ToArray()
+}
+
 function Show-Usage {
     Write-Color @"
 ${BOLD}Usage:${NC}
@@ -103,6 +146,9 @@ ${BOLD}Options:${NC}
   -Help                 Show this help
   -Update               Update an existing AgToosa install
   -UpdatePath <path>    Project path to update (used with -Update)
+  -Path <dir>           Target project directory (non-interactive)
+  -Platforms <list>    Comma-separated platforms (e.g. cursor,claude)
+  -Yes                  Non-interactive consent (requires -Path)
 
 ${BOLD}Registry:${NC}
   -Registry -RegistryCommand list               List available packs
@@ -115,6 +161,7 @@ ${BOLD}Examples:${NC}
   .\agtoosa.ps1
   .\agtoosa.ps1 -Force
   .\agtoosa.ps1 -Update -UpdatePath C:\Projects\MyApp
+  .\agtoosa.ps1 -Path C:\Projects\MyApp -Platforms claude -Yes
   .\agtoosa.ps1 -DryRun
   .\agtoosa.ps1 -Registry -RegistryCommand list
   .\agtoosa.ps1 -Registry -RegistryCommand search -RegistryArg react
@@ -1052,6 +1099,11 @@ if ($Update) {
     exit 0
 }
 
+if ($Yes -and [string]::IsNullOrWhiteSpace($Path)) {
+    Write-Color "${RED}❌ Error: -Path requires a directory when using -Yes.${NC}"
+    exit 1
+}
+
 # ── Interactive mode ──────────────────────────────────────────
 Clear-Host
 Write-Color ""
@@ -1074,7 +1126,12 @@ Write-Color "${YELLOW}───────────────────�
 Write-Color ""
 
 # ── Project path ──────────────────────────────────────────────
-$projectPath = Read-Host "Project path"
+if (-not [string]::IsNullOrWhiteSpace($Path)) {
+    $projectPath = $Path
+} else {
+    $projectPath = Read-Host "Project path"
+}
+$projectPath = $projectPath -replace '^~', $env:USERPROFILE
 $projectPath = $projectPath.TrimEnd('\', '/')
 
 if (-not (Test-Path $projectPath -PathType Container)) {
@@ -1095,36 +1152,51 @@ Write-Color "${GREEN}✅ Project found: $projectPath${NC}"
 Write-Color ""
 
 # ── Platform selection ────────────────────────────────────────
-Write-Color "${YELLOW}Select AI platform(s) — enter numbers separated by spaces (e.g. 1 3):${NC}"
-Write-Color "  1) Cursor"
-Write-Color "  2) Windsurf"
-Write-Color "  3) Claude Code"
-Write-Color "  4) Gemini CLI / Jules"
-Write-Color "  5) GitHub Copilot"
-Write-Color "  6) VS Code (Copilot + prompts)"
-Write-Color "  7) OpenCode"
-Write-Color "  8) All of the above"
-Write-Color ""
-$selectionRaw = Read-Host "Selection"
-$selection = $selectionRaw.Trim()
-
-$platforms = [System.Collections.Generic.List[string]]::new()
-if ($selection -eq "8") {
-    $platforms.AddRange([string[]]@("cursor","windsurf","claude","gemini","copilot","opencode"))
+$cliPlatforms = $Platforms
+$selectedPlatforms = [System.Collections.Generic.List[string]]::new()
+if (-not [string]::IsNullOrWhiteSpace($cliPlatforms)) {
+    foreach ($platformName in (Parse-PlatformList $cliPlatforms)) {
+        if (-not $selectedPlatforms.Contains($platformName)) {
+            [void]$selectedPlatforms.Add($platformName)
+        }
+    }
+    Write-Color ""
+    Write-Color "${BOLD}Platforms (from -Platforms):${NC} $cliPlatforms"
 } else {
-    if ($selection -match "1") { $platforms.Add("cursor") }
-    if ($selection -match "2") { $platforms.Add("windsurf") }
-    if ($selection -match "3") { $platforms.Add("claude") }
-    if ($selection -match "4") { $platforms.Add("gemini") }
-    if ($selection -match "5") { $platforms.Add("copilot") }
-    if ($selection -match "6") { $platforms.Add("copilot") }
-    if ($selection -match "7") { $platforms.Add("opencode") }
+    Write-Color "${YELLOW}Select AI platform(s) — enter numbers separated by spaces (e.g. 1 3):${NC}"
+    Write-Color "  1) Cursor"
+    Write-Color "  2) Windsurf"
+    Write-Color "  3) Claude Code"
+    Write-Color "  4) Gemini CLI / Jules"
+    Write-Color "  5) GitHub Copilot"
+    Write-Color "  6) VS Code (Copilot + prompts)"
+    Write-Color "  7) OpenCode"
+    Write-Color "  8) All of the above"
+    Write-Color ""
+    $selectionRaw = Read-Host "Selection"
+    $selection = $selectionRaw.Trim()
+
+    if ($selection -eq "8") {
+        $selectedPlatforms.AddRange([string[]]@("cursor", "windsurf", "claude", "gemini", "copilot", "opencode"))
+    } else {
+        if ($selection -match "1") { $selectedPlatforms.Add("cursor") }
+        if ($selection -match "2") { $selectedPlatforms.Add("windsurf") }
+        if ($selection -match "3") { $selectedPlatforms.Add("claude") }
+        if ($selection -match "4") { $selectedPlatforms.Add("gemini") }
+        if ($selection -match "5") { $selectedPlatforms.Add("copilot") }
+        if ($selection -match "6") { $selectedPlatforms.Add("copilot") }
+        if ($selection -match "7") { $selectedPlatforms.Add("opencode") }
+    }
 }
 
-if ($platforms.Count -eq 0) {
+if ($selectedPlatforms.Count -eq 0) {
     Write-Color ""
     Write-Color "${YELLOW}⚠️  No AI platform selected. Only Docs\ workflow files will be copied.${NC}"
-    $noPlatformConfirm = Read-Host "Continue anyway? (y/N)"
+    if ($Yes) {
+        $noPlatformConfirm = "Y"
+    } else {
+        $noPlatformConfirm = Read-Host "Continue anyway? (y/N)"
+    }
     if ($noPlatformConfirm -notmatch "^[Yy]$") {
         Write-Color "${YELLOW}Re-run agtoosa.ps1 and select at least one platform.${NC}"
         exit 0
@@ -1140,7 +1212,7 @@ try {
     New-Item -ItemType Directory -Path (Join-Path $SHIP_DIR ".github\instructions") -Force | Out-Null
 
     Write-Color ""
-    Copy-StageFiles $platforms.ToArray()
+    Copy-StageFiles $selectedPlatforms.ToArray()
 
     Write-Color ""
     Write-Color "${GREEN}${BOLD}Generated files staged.${NC}"
@@ -1157,11 +1229,15 @@ try {
         exit 0
     }
 
-    $confirm = Read-Host "Copy files now? (Y/n)"
-    if ([string]::IsNullOrEmpty($confirm)) { $confirm = "Y" }
+    if ($Yes) {
+        $confirm = "Y"
+    } else {
+        $confirm = Read-Host "Copy files now? (Y/n)"
+        if ([string]::IsNullOrEmpty($confirm)) { $confirm = "Y" }
+    }
 
     if ($confirm -match "^[Yy]$") {
-        Install-Files $projectPath $platforms.ToArray()
+        Install-Files $projectPath $selectedPlatforms.ToArray()
         Write-Color ""
         Write-Color "${GREEN}${BOLD}✅ AgToosa v${AGTOOSA_VERSION} installed in '$projectPath'!${NC}"
         # Write version marker

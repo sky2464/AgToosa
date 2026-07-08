@@ -4575,6 +4575,42 @@ JSON
   [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
 }
 
+# ── DEV-074 PS1 non-interactive install parity (CT-001–CT-004) ───────────────
+
+@test "DEV-074 CT-001: agtoosa.ps1 defines -Path -Platforms -Yes parameters" {
+  local f="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  grep -q '\[string\]\$Path' "$f"
+  grep -q '\[string\]\$Platforms' "$f"
+  grep -q '\[switch\]\$Yes' "$f"
+  grep -q 'function Parse-PlatformList' "$f"
+}
+
+@test "DEV-074 CT-002: Show-Usage documents non-interactive install switches" {
+  local f="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  grep -q -- '-Path <dir>' "$f"
+  grep -q -- '-Platforms <list>' "$f"
+  grep -q -- '-Yes' "$f"
+}
+
+@test "DEV-074 CT-003: PowerShell non-interactive install writes workflow files" {
+  command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
+
+  rm -rf "$BATS_TEST_DIRNAME/../ship"
+  run pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1" -Path "$TEST_PROJECT" -Platforms claude -Yes
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
+  [ -f "$TEST_PROJECT/CLAUDE.md" ]
+  [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
+}
+
+@test "DEV-074 CT-004: PowerShell -Platforms rejects unknown platform names" {
+  command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
+
+  run pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1" -Path "$TEST_PROJECT" -Platforms not-a-tool -Yes
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"Unknown platform 'not-a-tool'"* ]]
+}
+
 @test "DEV-073 DR-001: --doctor reports healthy install and fails on missing install" {
   run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
   [ "$status" -eq 0 ]

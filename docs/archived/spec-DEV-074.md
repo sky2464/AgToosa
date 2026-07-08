@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-074
 > **Epic:** DEV-001 — Core Generator Engine
-> **Status:** 🟦 Todo
+> **Status:** 🟨 In Progress
 > **Estimate:** M
 > **Spec created:** 2026-07-08
 
@@ -80,15 +80,15 @@ Out of scope        : agtoosa.sh, lib/*.sh, npm/, template/
 
 ### 3.1 Task tree
 
-- [ ] **1.** PS1 CLI parameters
-  - [ ] 1.1 Add `-Path`, `-Platforms`, `-Yes` to `param()` and `Show-Usage` — _AC-001, AC-005_
-  - [ ] 1.2 Skip interactive prompts when `-Yes` — _AC-001_
-  - [ ] 1.3 Validate platform tokens; error on unknown — _AC-002_
-- [ ] **2.** Tests
-  - [ ] 2.1 DEV-074 bats greps (PS-001–PS-003) — _AC-005_
-  - [ ] 2.2 Pester happy path + unknown platform — _AC-006_
-- [ ] **3.** Verify
-  - [ ] 3.1 `bats -f DEV-074` and focused NI regression — _AC-001–AC-004_
+- [x] **1.** PS1 CLI parameters
+  - [x] 1.1 Add `-Path`, `-Platforms`, `-Yes` to `param()` and `Show-Usage` — _AC-001, AC-005_
+  - [x] 1.2 Skip interactive prompts when `-Yes` — _AC-001_
+  - [x] 1.3 Validate platform tokens; error on unknown — _AC-002_
+- [x] **2.** Tests
+  - [x] 2.1 DEV-074 bats greps (PS-001–PS-003) — _AC-005_
+  - [x] 2.2 Pester happy path + unknown platform — _AC-006_
+- [x] **3.** Verify
+  - [x] 3.1 `bats -f DEV-074` and focused NI regression — _AC-001–AC-004_
 
 ### 3.2 Wave Plan
 

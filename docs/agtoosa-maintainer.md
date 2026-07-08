@@ -94,6 +94,9 @@ Beyond the interactive install wizard, `agtoosa.sh` exposes these maintainer-rel
 | `--path <dir>` | `agtoosa.sh` | Skip the interactive path prompt | Requires valid path |
 | `--platforms <list>` | `agtoosa.sh` | Comma-separated platform list (e.g. `cursor,claude`) | Used with `--yes` for non-interactive installs |
 | `--yes`, `-y` | `agtoosa.sh` | Non-interactive consent (CI, devcontainers, npm wrapper) | Bootstrap pass-through uses `--` before generator flags |
+| `-Path <dir>` | `agtoosa.ps1` | Skip the interactive path prompt | Requires valid directory |
+| `-Platforms <list>` | `agtoosa.ps1` | Comma-separated platform list (e.g. `cursor,claude`) | Used with `-Yes` for non-interactive installs |
+| `-Yes` | `agtoosa.ps1` | Non-interactive consent (CI, devcontainers) | Requires `-Path` |
 | `--allow-unverified` | `lib/registry.sh` | Opt in to installing registry packs where `verified: false` | See Supply Chain section below |
 
 **npm wrapper:** `npm/` publishes a thin `npx agtoosa` shim that downloads the release tarball pinned to `npm/package.json` version, screens archive members, and forwards args to `agtoosa.sh`. Bump `npm/package.json` version in lockstep with `AGTOOSA_VERSION` on every release.
