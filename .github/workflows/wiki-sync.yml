@@ -18,7 +18,20 @@ jobs:
       - name: Checkout main repository
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
 
+      - name: Detect GitHub Wiki availability
+        id: wiki
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh api "repos/${{ github.repository }}.wiki" >/dev/null 2>&1; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::GitHub Wiki is not enabled for ${{ github.repository }}; skipping sync."
+          fi
+
       - name: Checkout wiki repository
+        if: steps.wiki.outputs.available == 'true'
         uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           repository: sky2464/AgToosa.wiki
@@ -26,6 +39,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Sync workflow files to wiki
+        if: steps.wiki.outputs.available == 'true'
         run: |
           # Copy main AgToosa docs
           cp template/Docs/AgToosa_Agent.md wiki/AgToosa-Workflow.md
@@ -42,6 +56,7 @@ jobs:
           cp .github/DISCUSSIONS.md wiki/Community-Discussions.md
 
       - name: Update wiki Home.md with links
+        if: steps.wiki.outputs.available == 'true'
         run: |
           cat > wiki/Home.md << "WIKI_EOF"
           # AgToosa Documentation Hub
@@ -86,6 +101,7 @@ jobs:
           WIKI_EOF
 
       - name: Commit and push wiki changes
+        if: steps.wiki.outputs.available == 'true'
         working-directory: wiki
         run: |
           git config user.email "github-actions[bot]@users.noreply.github.com"
