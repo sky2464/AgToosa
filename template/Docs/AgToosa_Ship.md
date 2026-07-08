@@ -39,6 +39,7 @@ Before any deployment, verify all of the following. If **any** check fails, list
 | ✅ QA cleared (when QA phase is enabled) | If `Docs/Context/workflow.md` enables a QA gate **or** a `Docs/AgToosa_QAReport-[story-id].md` exists, that report contains no open 🔴 findings | `/agtoosa-qa run` then `/agtoosa-qa triage` |
 | ✅ Verifier green | `bash Docs/agtoosa-verify.sh` exits 0 (no FAIL findings) | Fix the listed findings, then re-run |
 | ℹ️ External agent evidence reviewed *(informational — not a verifier FAIL)* | When IMPORT evidence or tasks returned via `/agtoosa-import` exist: confirm verification commands are recorded, ACs are mapped, and no imported claim is counted as evidence without repo-local verification pass | Run `/agtoosa-build import` or review `Docs/AgToosa_Import.md` |
+| ℹ️ Evidence ledger finalized *(required by workflow instructions — not a verifier FAIL)* | `Docs/archived/evidence-[story-id].md` exists and contains `phase=ship` rows (finalize via `/agtoosa-evidence ship` or `Docs/AgToosa_Evidence.md`). **Finalize before marking Shipped.** | Run `/agtoosa-evidence ship` |
 
 **Evidence rules:** Report pass/fail summaries, command names, artifact paths, and test counts. When citing deploy or test logs, **redact** secrets, tokens, API keys, and private URLs before including evidence in chat or review artifacts.
 
@@ -123,7 +124,7 @@ Before deploying, clean the branch history using the **non-interactive** squash 
 
 ### Part 3 — Workspace Cleanup & Archiving (`/agtoosa-ship docs` runs Parts 3 + 4)
 
-3.  **Archive Completed Work:** Spec and review artifacts are already saved to `Docs/archived/` (as `spec-[story-id].md` and `review-[story-id].md`). Verify both files exist there before proceeding.
+3.  **Archive Completed Work:** Spec and review artifacts are already saved to `Docs/archived/` (as `spec-[story-id].md` and `review-[story-id].md`). Verify both files exist there before proceeding. Also verify `Docs/archived/evidence-[story-id].md` exists and has `phase=ship` rows; if missing or incomplete, create/finalize it now via `/agtoosa-evidence ship` or `Docs/AgToosa_Evidence.md` before marking Shipped.
 
 3a. **Merge capability deltas (living system spec):** If the story spec contains a `## Capability Delta` section (see `Docs/SPEC-FORMAT.md`), fold each delta into the matching living capability spec under `Docs/specs/system/[capability].md`:
     *   `ADDED` requirements append to the capability spec's requirements table.

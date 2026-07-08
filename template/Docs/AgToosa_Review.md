@@ -118,6 +118,7 @@ Different AI models surface different classes of bugs — a second platform revi
 
 ## Output
 *   Save the review report to `Docs/archived/review-[story-id].md` (e.g., `Docs/archived/review-DEV-15.md`). This file is required by `/agtoosa-ship check`. The file must contain the structured findings table with all 🔴 / 🟡 / 🟢 items.
+*   Create or update `Docs/archived/evidence-[story-id].md` per `Docs/AgToosa_Evidence.md` (or run `/agtoosa-evidence review`). Populate `phase=review` rows from the story test plan and review findings. This step is required when writing the review report — do not defer it to ship.
 *   Present the approval gate:
 
     ```

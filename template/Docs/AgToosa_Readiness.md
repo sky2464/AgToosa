@@ -34,6 +34,7 @@ AgToosa is markdown instructions for your AI assistant — not a runtime. The ge
 | Initial readiness gates (this checklist) | Yes — `/agtoosa-status readiness` | Yes — `bash Docs/agtoosa-verify.sh` (CI-enforced via the gate workflow) |
 | Ship readiness gate | Yes (`/agtoosa-ship check`) | Partially — verifier covers spec/review/test-plan rows; deploy evidence stays agent-reported |
 | Agent result import gate / Async handoff packs | Yes — `/agtoosa-import` gates Tracking updates on repo-local verification; `/agtoosa-handoff` instructs context export before dispatch | No (agent-instructed) |
+| Evidence ledger (per-story proof index) | Yes — required at review and ship phases (`/agtoosa-evidence review` · `ship`); `Docs/archived/evidence-[story-id].md` must exist before marking Shipped | No (agent-instructed) |
 | File inventory on install / update | — | Yes — `agtoosa.sh` copies registered template files |
 | Version parity (bash vs PowerShell generator) | — | Yes — maintainer CI only |
 

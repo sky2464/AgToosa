@@ -15,7 +15,8 @@
 
 Utilities (load on demand): `/agtoosa-status`, `/agtoosa-task`, `/agtoosa-qa`,
 `/agtoosa-goal`, `/agtoosa-update`, `/agtoosa-debug`, `/agtoosa-revert`,
-`/agtoosa-concise`, `/agtoosa-handoff`, `/agtoosa-import`, `/agtoosa-help` — each maps to `Docs/AgToosa_<Name>.md`.
+`/agtoosa-concise`, `/agtoosa-handoff`, `/agtoosa-import`, `/agtoosa-evidence`,
+`/agtoosa-help` — each maps to `Docs/AgToosa_<Name>.md`.
 
 ## Non-negotiables
 
@@ -41,6 +42,7 @@ Utilities (load on demand): `/agtoosa-status`, `/agtoosa-task`, `/agtoosa-qa`,
 | `Docs/AgToosa_TestPlan-<id>.md` | AC-to-test mapping + RED/GREEN evidence |
 | `Docs/archived/review-<id>.md` | Review verdicts |
 | `Docs/agtoosa-events.jsonl` | Append-only phase-event log (one JSON line per transition) |
+| `Docs/agtoosa-evidence.jsonl` | Optional JSONL mirror of per-story evidence ledger (non-authoritative; canonical is `Docs/archived/evidence-<id>.md`) |
 | `Docs/Context/*.md` | Product, tech-stack, workflow context |
 
 ## Verification
@@ -80,4 +82,4 @@ At every phase transition append one line to `Docs/agtoosa-events.jsonl`:
 {"ts":"2026-01-01T00:00:00Z","phase":"build","event":"complete","story":"DEV-012","by":"AgToosa"}
 ```
 
-`phase` ∈ init|spec|build|review|ship|qa|task|handoff|import; `event` ∈ start|complete|blocked.
+`phase` ∈ init|spec|build|review|ship|qa|task|handoff|import|evidence; `event` ∈ start|complete|blocked.

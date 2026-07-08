@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.3" ]]
+  [[ "$output" == "AgToosa v5.3.4" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1636,7 +1636,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.3.3" ]
+  [ "$ver" = "5.3.4" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1647,7 +1647,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.3.3"* ]]
+  [[ "$output" == *"5.3.4"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -3649,7 +3649,7 @@ PY
   grep -q "Claude Code Instructions" "$project/CLAUDE.md"
   ! grep -q "old claude block" "$project/CLAUDE.md"
   grep -q "AgToosa" "$project/.claude/commands/agtoosa-spec.md"
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.3" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.4" ]
 }
 
 @test "DEV-036 WP-002: Bash registry install normalizes top-level pack directory" {
@@ -4293,6 +4293,76 @@ assert_competitive_story_artifacts() {
   local f
   for f in "$TEMPLATE_DIR/Docs/AgToosa_Ship.md" "$BATS_TEST_DIRNAME/../docs/AgToosa_Ship.md"; do
     grep -q "External agent evidence" "$f"
+  done
+}
+
+# ── DEV-049: Evidence Ledger (EL-001–EL-005) ─────────────────────────────────
+
+@test "DEV-049 EL-001: Review workflow requires evidence ledger update" {
+  local f
+  for f in "$TEMPLATE_DIR/Docs/AgToosa_Review.md" "$BATS_TEST_DIRNAME/../docs/AgToosa_Review.md"; do
+    grep -q "evidence-\[story-id\]" "$f" || grep -q 'evidence-[story-id]' "$f"
+    grep -q "AgToosa_Evidence.md" "$f"
+    grep -q "/agtoosa-evidence" "$f"
+  done
+}
+
+@test "DEV-049 EL-002: Ship workflow finalizes evidence ledger" {
+  local f
+  for f in "$TEMPLATE_DIR/Docs/AgToosa_Ship.md" "$BATS_TEST_DIRNAME/../docs/AgToosa_Ship.md"; do
+    grep -q "Evidence ledger" "$f" || grep -q "evidence ledger" "$f"
+    grep -q "evidence-\[story-id\]" "$f" || grep -q 'evidence-[story-id]' "$f"
+    grep -q "AgToosa_Evidence.md" "$f"
+  done
+}
+
+@test "DEV-049 EL-003: Evidence schema and claim boundary in dual-path docs" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Evidence.md" "$root/docs/AgToosa_Evidence.md"; do
+    [ -f "$f" ]
+    grep -q "Markdown schema" "$f"
+    grep -q "agent-instructed" "$f"
+    grep -q "source of truth" "$f"
+    grep -q "Phase" "$f"
+    grep -q "Verification" "$f"
+    grep -q "reviewer" "$f" || grep -q "Reviewer" "$f"
+    grep -q "remains the repo-local source of truth" "$f"
+    ! grep -qiE 'generator-enforced ledger|CI-enforced ledger' "$f"
+  done
+}
+
+@test "DEV-049 EL-004: optional JSONL mirror schema and seed registered" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/template/Docs/agtoosa-evidence.jsonl" ]
+  [ -f "$root/docs/agtoosa-evidence.jsonl" ]
+  for f in "$root/template/Docs/AgToosa_Evidence.md" "$root/docs/AgToosa_Evidence.md"; do
+    grep -q "agtoosa-evidence.jsonl" "$f"
+    grep -q "non-authoritative" "$f"
+  done
+  run bash "$root/agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/agtoosa-evidence.jsonl"* ]]
+}
+
+@test "DEV-049 EL-005: Evidence doc registered and adapters route thinly" {
+  run bash "$BATS_TEST_DIRNAME/../agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Evidence.md"* ]]
+  [[ "$output" == *".cursor/commands/agtoosa-evidence.md"* ]]
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in \
+    "$root/template/.claude/commands/agtoosa-evidence.md" \
+    "$root/template/.cursor/commands/agtoosa-evidence.md" \
+    "$root/template/.gemini/commands/agtoosa-evidence.toml" \
+    "$root/template/.github/prompts/agtoosa-evidence.prompt.md" \
+    "$root/template/.windsurf/workflows/agtoosa-evidence.md" \
+    "$root/template/.codex/prompts/agtoosa-evidence.md" \
+    "$root/template/.codex/skills/agtoosa-evidence/SKILL.md"; do
+    [ -f "$f" ]
+    grep -q "Docs/AgToosa_Evidence.md" "$f"
+    ! grep -q "Markdown schema" "$f"
   done
 }
 
@@ -4958,25 +5028,17 @@ JSON
 
 # -- DEV-047/048 ship regression (SR-001–SR-003) --------------------------------
 
-@test "DEV-047 SR-001: v5.3.3 release pins are aligned" {
-  local root="$BATS_TEST_DIRNAME/.."
-  local bash_ver ps_ver npm_ver
-  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
-  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "5.3.3" ]
-  [ "$bash_ver" = "$ps_ver" ]
-  [ "$bash_ver" = "$npm_ver" ]
-  grep -q "version-5.3.3" "$root/README.md"
-  grep -qE -- '--ref v5\.3\.3' "$root/README.md"
-}
-
-@test "DEV-047 SR-002: v5.3.3 changelog and review artifacts exist" {
+@test "DEV-047 SR-001: v5.3.3 release was published" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q '## \[5.3.3\]' "$root/CHANGELOG.md"
   grep -q 'DEV-047' "$root/CHANGELOG.md"
   grep -q 'DEV-048' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/review-DEV-047-048.md" ]
+}
+
+@test "DEV-047 SR-002: v5.3.3 changelog and review artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.3\]' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-047.md" ]
   [ -f "$root/docs/archived/spec-DEV-048.md" ]
   grep -q '## ✅ Spec Approved' "$root/docs/archived/spec-DEV-047.md"
@@ -4987,7 +5049,41 @@ JSON
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   grep -q 'Ship complete — v5.3.3' "$mp"
   grep -q 'Release 5.3.3 shipped' "$mp"
-  grep -q 'v5.3.4 (next)' "$mp"
+  grep -q 'Milestone v5.3.4 (next)' "$mp"
   grep -q '| DEV-047 | Feature: Async Agent Handoff Packs | 2026-07-08 |' "$mp"
   grep -q '| DEV-048 | Feature: Agent Result Import Gate | 2026-07-08 |' "$mp"
+}
+
+# -- DEV-049 ship regression (SR-001–SR-003) --------------------------------
+
+@test "DEV-049 SR-001: v5.3.4 release pins are aligned" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.4" ]
+  [ "$bash_ver" = "$ps_ver" ]
+  [ "$bash_ver" = "$npm_ver" ]
+  grep -q "version-5.3.4" "$root/README.md"
+  grep -qE -- '--ref v5\.3\.4' "$root/README.md"
+}
+
+@test "DEV-049 SR-002: v5.3.4 changelog and review/evidence artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.4\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-049' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/review-DEV-049.md" ]
+  [ -f "$root/docs/archived/spec-DEV-049.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-049.md" ]
+  grep -q '## ✅ Spec Approved' "$root/docs/archived/spec-DEV-049.md"
+  grep -q 'phase=ship\|ship |' "$root/docs/archived/evidence-DEV-049.md" || grep -q '| ship |' "$root/docs/archived/evidence-DEV-049.md"
+}
+
+@test "DEV-049 SR-003: Master-Plan records v5.3.4 ship and next patch milestone" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  grep -q 'Ship complete — v5.3.4' "$mp"
+  grep -q 'Release 5.3.4 shipped' "$mp"
+  grep -q 'v5.3.5 (next)' "$mp"
+  grep -q '| DEV-049 | Feature: Evidence Ledger | 2026-07-08 |' "$mp"
 }

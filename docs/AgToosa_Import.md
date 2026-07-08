@@ -87,5 +87,5 @@ Language to use when refusing premature closure:
 1. **No blind trust.** External “done” claims are never sufficient alone.
 2. **Honest enforcement.** Describe this gate as agent-instructed, not generator- or CI-enforced, until a verifier check ships.
 3. **Pair with handoff.** Prefer packs from `/agtoosa-handoff` so return contract fields match.
-4. **Defer ledger.** Machine-readable evidence index is DEV-049 (roadmap) — do not invent a hosted ledger here.
+4. **Consolidate into Evidence Ledger.** At review/ship, consolidate test-plan / IMPORT evidence into the per-story ledger via `/agtoosa-evidence` / `docs/AgToosa_Evidence.md`. Do not invent a hosted ledger.
 5. **Secret safety.** When recording logs or screenshots, **redact** secrets, tokens, API keys, and private URLs; cite paths and command names only.

@@ -9,6 +9,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.4] — 2026-07-08
+
+### Added
+
+- 2026-07-08 — feature — DEV-049 Evidence Ledger (`/agtoosa-evidence`, per-story `evidence-*.md`, optional JSONL); Review/Ship wiring; EL bats — `docs/archived/spec-DEV-049.md` · `docs/archived/review-DEV-049.md`
+
+---
+
 ## [5.3.3] — 2026-07-08
 
 ### Added
