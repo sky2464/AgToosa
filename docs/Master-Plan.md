@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-08 (/agtoosa-build DEV-074 complete)
+> **Last updated:** 2026-07-08 (/agtoosa-ship v5.3.2 — DEV-074)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Milestone | `v5.3.2` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | DEV-074 — PS1 non-interactive install parity |
+| Milestone | `v5.3.3` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
+| Active cycle | — |
 | Cycle capacity | `8 story points` |
-| Current phase | 🟨 DEV-074 build complete — `/agtoosa-review` next |
+| Current phase | 🏁 v5.3.2 shipped — DEV-074 complete |
 
 ## Active Cycle
 
@@ -20,7 +20,9 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-074 | Feature: PS1 non-interactive install parity (`-Path -Platforms -Yes`) + Pester suite | Feature | M | 🟨 In Progress | 12/12 |
+| — | — | — | — | — | — |
+
+<!-- DEV-074 shipped 2026-07-08 v5.3.2 — see Completed This Cycle -->
 
 <!-- Archived to docs/archived/cycle-2026-06-10-release-5.3.0.md -->
 <!-- Archived to docs/archived/cycle-2026-06-07-release-5.2.7.md -->
@@ -37,25 +39,15 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-**DEV-074 — PS1 non-interactive install parity + Pester suite** (spec: `docs/archived/spec-DEV-074.md`)
+<!--
+**DEV-074 — PS1 non-interactive install parity + Pester suite** (spec: `docs/archived/spec-DEV-074.md`) — shipped 2026-07-08 v5.3.2
 
 - [x] **1.** RED contract tests
-  - [x] 1.1 Add bats DEV-074 CT-001/CT-002 param and help greps — _Requirements: AC-006, AC-007_
-  - [x] 1.2 Scaffold `tests/pester/agtoosa-install.Tests.ps1` with NI-001..NI-005 — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006_
 - [x] **2.** Implement PS1 non-interactive install
-  - [x] 2.1 Add `-Path`, `-Platforms`, `-Yes` to `param()` and NI entry guard — _Requirements: AC-001, AC-007_
-  - [x] 2.2 Implement `ConvertTo-PlatformList` with bash-equivalent token map and unknown rejection — _Requirements: AC-002_
-  - [x] 2.3 Wire NI path: skip `Read-Host` for path, platforms, confirm when `-Yes` — _Requirements: AC-001_
-  - [x] 2.4 Wire `-DryRun` on NI path without writes — _Requirements: AC-005_
-  - [x] 2.5 Enforce self-target guard before staging on `-Path` — _Requirements: AC-003_
 - [x] **3.** Docs sync
-  - [x] 3.1 Update `Show-Usage` and comment-based help in `agtoosa.ps1` — _Requirements: AC-007_
-  - [x] 3.2 Extend `docs/agtoosa-maintainer.md` PS1 NI flag row — _Requirements: AC-007_
 - [x] **4.** GREEN Pester + evidence
-  - [x] 4.1 Implement NI-001..NI-005 assertions green in Pester — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006_
-  - [x] 4.2 Record RED/GREEN evidence blocks in test plan — _Requirements: AC-006_
 - [x] **5.** Verify
-  - [x] 5.1 Run `Invoke-Pester` + `bats -f "DEV-074"` and focused DEV-033/PK regression — _Requirements: AC-006_
+-->
 
 <!--
 **DEV-042 — Spec Quality Analyzer** (spec: `docs/archived/spec-DEV-042.md`) — shipped 2026-06-10 v5.3.0
@@ -315,6 +307,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-074 | Feature: PS1 non-interactive install parity (`-Path -Platforms -Yes`) + Pester suite | 2026-07-08 | [spec-DEV-074.md](archived/spec-DEV-074.md) · [review-DEV-074.md](archived/review-DEV-074.md) |
 | DEV-005 | Chore: v4.2.0 release hygiene (M1–M4 bats + CHANGELOG) | 2026-05-22 | [spec-DEV-005.md](archived/spec-DEV-005.md) · [review-DEV-005.md](archived/review-DEV-005.md) |
 | DEV-006 | Feature: AgToosa Status Guide sub-agent | 2026-05-23 | [spec-DEV-006.md](archived/spec-DEV-006.md) · [review-DEV-006.md](archived/review-DEV-006.md) |
 | DEV-007 | Feature: /agtoosa-help next on-demand assistance helper | 2026-05-23 | [spec-DEV-007.md](archived/spec-DEV-007.md) · [review-DEV-007.md](archived/review-DEV-007.md) |
@@ -394,3 +387,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-08 | 🚀 Release 5.3.1 shipped — v5.3.1; version parity bash/ps1/npm; Milestone v5.3.2 (next) | AgToosa |
 | 2026-07-08 | ✏️ /agtoosa-spec DEV-074 enrolled — PS1 non-interactive install parity; spec approved; test plan `docs/AgToosa_TestPlan-DEV-074.md` | AgToosa |
 | 2026-07-08 | 🏗️ /agtoosa-build DEV-074 — Task 🟢 12/12 complete — PS1 `-Path`/`-Platforms`/`-Yes` parity; bats DEV-074 CT-001–CT-004; Pester NI-001–NI-005 green | AgToosa |
+| 2026-07-08 | 🔍 Review 🔍 Started — DEV-074 — 4-persona review running | AgToosa |
+| 2026-07-08 | 🔍 Review ✅ Approved — DEV-074; 0 🔴 Critical, 2 🟡 Warning (accepted); report: `docs/archived/review-DEV-074.md` | AgToosa |
+| 2026-07-08 | 🚀 Ship complete — v5.3.2 — DEV-074 PS1 non-interactive install parity; bats DEV-074 SR-001–SR-003 green | AgToosa |
+| 2026-07-08 | 🚀 Release 5.3.2 shipped — v5.3.2; version parity bash/ps1/npm; Milestone v5.3.3 (next) | AgToosa |

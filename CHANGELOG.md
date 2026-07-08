@@ -5,6 +5,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.2] — 2026-07-08
+
+Patch release: PowerShell non-interactive install parity (DEV-074).
+
+### Added
+
+- **DEV-074 — PS1 non-interactive install parity.** `agtoosa.ps1` supports `-Path`, `-Platforms`, and `-Yes` for CI/devcontainer installs without TTY prompts; `ConvertTo-PlatformList` matches bash token validation; Pester suite `tests/pester/agtoosa-install.Tests.ps1` and bats DEV-074 CT-001–CT-004.
+
+---
+
+## [Unreleased]
+
+---
+
 ## [5.3.1] — 2026-07-08
 
 Patch release: accumulated Unreleased supply-chain and install fixes.
@@ -18,10 +32,6 @@ Patch release: accumulated Unreleased supply-chain and install fixes.
 - **Bootstrap durable pack queue.** `bootstrap.sh` exports `AGTOOSA_PACK_QUEUE_DIR` so registry pack staging survives ephemeral extract-dir cleanup (PR #64).
 - **PowerShell settings.json hooks.** Claude installs deep-merge AgToosa guardrail hooks into existing `.claude/settings.json` instead of skipping or overwriting user hooks.
 - **PowerShell merge containment.** `Merge-PackFromDirectory` now uses separator-aware canonical-path checks so sibling-directory prefix traps (e.g. `evil-pack` vs `evil-pack-stuff`) cannot bypass merge-time containment.
-
----
-
-## [Unreleased]
 
 ---
 

@@ -2,3 +2,6 @@
 {"ts":"2026-07-08T20:00:00Z","phase":"ship","event":"complete","story":"v5.3.1-patch","by":"AgToosa"}
 {"ts":"2026-07-08T21:00:00Z","phase":"build","event":"start","story":"DEV-074","by":"AgToosa"}
 {"ts":"2026-07-08T22:30:00Z","phase":"build","event":"complete","story":"DEV-074","by":"AgToosa"}
+{"ts":"2026-07-08T23:00:00Z","phase":"review","event":"start","story":"DEV-074","by":"AgToosa"}
+{"ts":"2026-07-08T23:15:00Z","phase":"review","event":"complete","story":"DEV-074","by":"AgToosa"}
+{"ts":"2026-07-08T23:30:00Z","phase":"ship","event":"complete","story":"DEV-074-v5.3.2","by":"AgToosa"}

@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-074
 > **Epic:** DEV-001 — Core Generator Engine
-> **Status:** 🟨 In Progress
+> **Status:** 🏁 Shipped (v5.3.2)
 > **Estimate:** M
 > **Spec created:** 2026-07-08
 

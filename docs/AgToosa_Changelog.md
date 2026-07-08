@@ -9,6 +9,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.2] — 2026-07-08
+
+### Added
+
+- 2026-07-08 — feature — DEV-074 PS1 non-interactive install parity (`-Path`/`-Platforms`/`-Yes`), `ConvertTo-PlatformList`, bats DEV-074 + Pester NI-001–NI-005 — `docs/archived/spec-DEV-074.md`
+
+---
+
 ## [5.3.1] — 2026-07-08
 
 ### Fixed
