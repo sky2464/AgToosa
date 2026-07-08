@@ -9,6 +9,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.1] — 2026-07-08
+
+### Fixed
+
+- 2026-07-08 — fix — v5.3.1 patch: pack lock provenance, re-install data loss, multi-root pack smuggle, npm/bootstrap durable pack queue (`AGTOOSA_PACK_QUEUE_DIR`), PowerShell hooks deep-merge and merge containment — `CHANGELOG.md`
+
+---
+
 ## [5.3.0] — 2026-06-10
 
 ### Added

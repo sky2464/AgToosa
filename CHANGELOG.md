@@ -5,7 +5,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
-## [Unreleased]
+## [5.3.1] — 2026-07-08
+
+Patch release: accumulated Unreleased supply-chain and install fixes.
 
 ### Fixed
 
@@ -13,8 +15,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 - **Re-install data loss.** `agtoosa.sh --path --yes` on an existing project no longer overwrites project-owned `Docs/Master-Plan.md` or `Docs/AgToosa_Changelog.md` (parity with `--update`).
 - **Multi-root pack tarball smuggle.** Registry installs reject archives with sibling top-level directories that bypass single-pack validation.
 - **npm wrapper cwd and pack queue.** `npx agtoosa` runs from the user's cwd and stages registry packs in a durable `~/.cache/agtoosa/pack-queue` (not the ephemeral extract dir).
+- **Bootstrap durable pack queue.** `bootstrap.sh` exports `AGTOOSA_PACK_QUEUE_DIR` so registry pack staging survives ephemeral extract-dir cleanup (PR #64).
 - **PowerShell settings.json hooks.** Claude installs deep-merge AgToosa guardrail hooks into existing `.claude/settings.json` instead of skipping or overwriting user hooks.
 - **PowerShell merge containment.** `Merge-PackFromDirectory` now uses separator-aware canonical-path checks so sibling-directory prefix traps (e.g. `evil-pack` vs `evil-pack-stuff`) cannot bypass merge-time containment.
+
+---
+
+## [Unreleased]
 
 ---
 

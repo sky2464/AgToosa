@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.0" ]]
+  [[ "$output" == "AgToosa v5.3.1" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1636,7 +1636,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.3.0" ]
+  [ "$ver" = "5.3.1" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1647,7 +1647,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.3.0"* ]]
+  [[ "$output" == *"5.3.1"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -3649,7 +3649,7 @@ PY
   grep -q "Claude Code Instructions" "$project/CLAUDE.md"
   ! grep -q "old claude block" "$project/CLAUDE.md"
   grep -q "AgToosa" "$project/.claude/commands/agtoosa-spec.md"
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.0" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.1" ]
 }
 
 @test "DEV-036 WP-002: Bash registry install normalizes top-level pack directory" {
@@ -4774,28 +4774,29 @@ JSON
 
 # -- DEV-061–DEV-073 ship regression (SR-001–SR-003) --------------------------
 
-@test "DEV-061 SR-001: v5.3.0 release pins are aligned" {
+@test "DEV-061 SR-001: v5.3.1 release pins are aligned" {
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
-  [ "$bash_ver" = "5.3.0" ]
+  [ "$bash_ver" = "5.3.1" ]
   [ "$bash_ver" = "$ps_ver" ]
-  grep -q "version-5.3.0" "$root/README.md"
+  grep -q "version-5.3.1" "$root/README.md"
 }
 
-@test "DEV-061 SR-002: v5.3.0 changelog and review artifacts exist" {
+@test "DEV-061 SR-002: v5.3.1 changelog and review artifacts exist" {
   local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.1\]' "$root/CHANGELOG.md"
   grep -q '## \[5.3.0\]' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/review-DEV-061-073.md" ]
   [ -f "$root/docs/archived/review-DEV-042-043.md" ]
 }
 
-@test "DEV-061 SR-003: Master-Plan records v5.3.0 ship and next patch milestone" {
+@test "DEV-061 SR-003: Master-Plan records v5.3.1 ship and next patch milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — DEV-042–DEV-073 v5.3.0' "$mp"
+  grep -q 'Ship complete — v5.3.1 patch' "$mp"
+  grep -q 'Release 5.3.1 shipped' "$mp"
+  grep -q 'v5.3.2 (next)' "$mp"
   grep -q 'cycle-2026-06-10-release-5.3.0.md' "$mp"
-  grep -q 'Release 5.3.0 shipped' "$mp"
-  grep -q 'v5.3.1 (next)' "$mp"
   [ -f "$BATS_TEST_DIRNAME/../docs/archived/cycle-2026-06-10-release-5.3.0.md" ]
 }

@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-06-10 (/agtoosa-ship v5.3.0 — proof engine + supply chain wave)
+> **Last updated:** 2026-07-08 (/agtoosa-ship v5.3.1 — patch fixes)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Milestone | `v5.3.1` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | _(empty — pick next story via `/agtoosa-spec`)_ |
+| Milestone | `v5.3.2` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
+| Active cycle | DEV-074 — PS1 non-interactive install parity |
 | Cycle capacity | `8 story points` |
-| Current phase | 🏁 v5.3.0 shipped — next: `/agtoosa-spec` for DEV-074 or backlog P0 |
+| Current phase | 🟦 DEV-074 spec approved — `/agtoosa-build` next |
 
 ## Active Cycle
 
@@ -20,7 +20,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| _(empty)_ | — | — | — | — | — |
+| DEV-074 | Feature: PS1 non-interactive install parity (`-Path -Platforms -Yes`) + Pester suite | Feature | M | 🟦 Todo | 0/9 |
 
 <!-- Archived to docs/archived/cycle-2026-06-10-release-5.3.0.md -->
 <!-- Archived to docs/archived/cycle-2026-06-07-release-5.2.7.md -->
@@ -36,6 +36,18 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
+
+**DEV-074 — PS1 non-interactive install parity** (spec: `docs/archived/spec-DEV-074.md`)
+
+- [ ] **1.** PS1 CLI parameters
+  - [ ] 1.1 Add `-Path`, `-Platforms`, `-Yes` to `param()` and `Show-Usage`
+  - [ ] 1.2 Skip interactive prompts when `-Yes`
+  - [ ] 1.3 Validate platform tokens; error on unknown
+- [ ] **2.** Tests
+  - [ ] 2.1 DEV-074 bats greps (PS-001–PS-003)
+  - [ ] 2.2 Pester happy path + unknown platform
+- [ ] **3.** Verify
+  - [ ] 3.1 `bats -f DEV-074` and focused NI regression
 
 <!--
 **DEV-042 — Spec Quality Analyzer** (spec: `docs/archived/spec-DEV-042.md`) — shipped 2026-06-10 v5.3.0
@@ -214,7 +226,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Type | Estimate | Epic | Priority | Status |
 |----|-------|------|----------|------|----------|--------|
-| DEV-074 | Feature: PS1 non-interactive install parity (`-Path -Platforms -Yes`) + Pester suite | Feature | M | DEV-001 | P1 | ⬜ Backlog |
+| DEV-074 | Feature: PS1 non-interactive install parity (`-Path -Platforms -Yes`) + Pester suite | Feature | M | DEV-001 | P1 | 🟦 Todo — enrolled 2026-07-08 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | ⬜ Backlog — wave-by-wave execution shipped in DEV-067; owned-files/inputs/outputs schema still open |
 | DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | ⬜ Backlog |
@@ -369,3 +381,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-06-10 | 🔍 Review ✅ Approved — DEV-061–DEV-073; 0 🔴 Critical, 5 🟡 Warning (accepted); full suite 458/458; verifier PASS; report: `docs/archived/review-DEV-061-073.md` | AgToosa |
 | 2026-06-10 | 🚀 Ship complete — DEV-042–DEV-073 v5.3.0; smoke VF-001/SC-002/NI-001/SC-005 PASS; full suite 461/461; verifier PASS; cycle archived | AgToosa |
 | 2026-06-10 | 🚀 Release 5.3.0 shipped — v5.3.0; proof engine + supply chain wave on branch; version parity bash/ps1/npm; Milestone v5.3.1 (next) | AgToosa |
+
+| 2026-07-07 | 🏗️ Merged v5.3.x fix batch — pack lock provenance, re-install data loss, multi-root tarball smuggle, npm pack queue, PowerShell hooks/merge containment (PRs #36–#48, #61–#63) | AgToosa |
+| 2026-07-08 | 🚀 Ship complete — v5.3.1 patch; Unreleased fixes + bootstrap durable pack queue (PR #64); focused SR bats green | AgToosa |
+| 2026-07-08 | 🚀 Release 5.3.1 shipped — v5.3.1; version parity bash/ps1/npm; Milestone v5.3.2 (next) | AgToosa |
+| 2026-07-08 | ✏️ /agtoosa-spec DEV-074 enrolled — PS1 non-interactive install parity; spec approved; test plan `docs/AgToosa_TestPlan-DEV-074.md` | AgToosa |
