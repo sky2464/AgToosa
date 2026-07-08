@@ -8,7 +8,7 @@ class Agtoosa < Formula
   desc "Spec-driven agentic AI framework generator for software development"
   homepage "https://github.com/sky2464/AgToosa"
   url "https://github.com/sky2464/AgToosa/archive/refs/tags/v5.3.5.tar.gz"
-  sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+  sha256 "14ae9747744867ff747690b68794fcff0256a3b48c59c82a91f96a591e47cfe2"
   license "MIT"
   version "5.3.5"
 
