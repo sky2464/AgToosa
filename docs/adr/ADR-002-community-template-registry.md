@@ -144,9 +144,8 @@ The PR-review bottleneck for index writes is acceptable at current community siz
 - Registry pagination needed if pack count exceeds ~200 entries
 
 **Will need to revisit:**
-- `agtoosa-lock.json` for pack version pinning (v3.1)
 - File-type enforcement in staging (`lib/registry.sh` — reject non-markdown files)
-- GPG signing of `registry.json` index (v4)
+- Fail-closed signed index / require-signatures mode (roadmap; DEV-054 ships optional minisign soft-warn — see ADR-011)
 - Pagination or indexing strategy if pack count exceeds 200
 - Auto-approval GitHub Action for verified authors (when PR bottleneck becomes painful)
 
@@ -159,5 +158,5 @@ The PR-review bottleneck for index writes is acceptable at current community siz
 3. [x] Add file-type allowlist enforcement in staging — reject `.sh`, `.py`, etc. (v3.1)
 4. [x] Ship `--registry publish` contribution wizard (v3.1)
 5. [ ] Add GitHub Action in `agtoosa-registry` to lint/validate pack manifests — deferred to `agtoosa-registry` repo; will implement when first community pack PR is submitted (currently zero community packs)
-6. [ ] Design GPG-signed index verification — deferred to v4; SHA-256 pinning per pack is sufficient for the current maintainer-only registry. Re-evaluate when community pack count >10.
+6. [x] Design signed-index verification — DEV-054 / ADR-011: optional minisign soft-warn (primary); cosign alternate documented; fail-closed GPG/index signing remains roadmap. Re-evaluate fail-closed when community pack count >10.
 7. [ ] Define pagination strategy for registry.json when pack count approaches 200 — deferred; current pack count near zero. Trigger: >200 packs or `registry.json` exceeds 200KB.

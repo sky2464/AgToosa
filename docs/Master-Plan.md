@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-08 (/agtoosa-ship v5.3.4 — DEV-049)
+> **Last updated:** 2026-07-08 (/agtoosa-build DEV-054 complete)
 
 ## Project Charter
 
@@ -10,9 +10,9 @@
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
 | Milestone | `v5.3.5` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | — |
+| Active cycle | DEV-054 |
 | Cycle capacity | `8 story points` |
-| Current phase | 🏁 v5.3.4 shipped — DEV-049 complete |
+| Current phase | ✅ Build complete — DEV-054; next `/agtoosa-review` then `/agtoosa-ship` |
 
 ## Active Cycle
 
@@ -20,7 +20,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| — | — | — | — | — | — |
+| DEV-054 | Feature: Signed Registry Provenance | Feature | M | 🟨 In Progress | 5/5 |
 
 <!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.4.md -->
 <!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.3.md -->
@@ -40,6 +40,20 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
+
+**DEV-054 — Signed Registry Provenance** (spec: `docs/archived/spec-DEV-054.md`)
+
+- [x] **1.** RED contract bats (SP-001–SP-005) — _Requirements: AC-002, AC-003, AC-005_
+- [x] **2.** Provenance schema docs + ADR-011 + Trust/Readiness/Registry claim updates — _Requirements: AC-001, AC-004, AC-006_
+- [x] **3.** Optional soft-warn minisign verify in registry (+ bootstrap if in wave) — _Requirements: AC-002, AC-003_
+- [x] **4.** Bundled pubkey path + config registration + fixture keys for tests — _Requirements: AC-002, AC-006_
+- [x] **5.** GREEN bats + test-plan evidence; keep M-1 Manual/Deferred — _Requirements: AC-007_
+
+### Wave Plan
+
+**Wave 1 (parallel):** 1, 2
+**Wave 2 (sequential after Wave 1):** 4, 3
+**Wave 3 (sequential after Wave 2):** 5
 
 <!--
 **DEV-049 — Evidence Ledger** (spec: `docs/archived/spec-DEV-049.md`) — shipped 2026-07-08 v5.3.4
@@ -266,7 +280,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-051 | Feature: Tracker Sync Bridge | Feature | M | DEV-003 | P1 | ⬜ Backlog |
 | DEV-052 | Feature: Hook Automation Pack | Feature | M | DEV-002 | P1 | ⬜ Backlog |
 | DEV-053 | Feature: Extension and Preset Catalog | Feature | M | DEV-003 | P1 | ⬜ Backlog |
-| DEV-054 | Feature: Signed Registry Provenance | Feature | L | DEV-003 | P0 | ⬜ Backlog — verified-flag enforcement + release SHA256SUMS shipped (DEV-065/066); index/asset signatures still open |
+| DEV-054 | Feature: Signed Registry Provenance | Feature | M | DEV-003 | P0 | 🟨 Active Cycle — build 5/5; optional minisign soft-warn; M-1 keygen still Manual/Deferred |
 | DEV-055 | Feature: Agent Capability Matrix | Feature | S | DEV-002 | P1 | ⬜ Backlog |
 | DEV-056 | Feature: Retrospective Learning Loop | Feature | S | DEV-002 | P2 | ⬜ Backlog |
 | DEV-057 | Feature: Multi-Repo Story Overlay | Feature | L | DEV-002 | P2 | ⬜ Backlog |
@@ -440,3 +454,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-08 | 🔍 Review ✅ Approved — DEV-049; 0 🔴 Critical, 5 🟡 Warning accepted; report: `docs/archived/review-DEV-049.md`; evidence: `docs/archived/evidence-DEV-049.md` | AgToosa |
 | 2026-07-08 | 🚀 Ship complete — v5.3.4 — DEV-049 Evidence Ledger; bats DEV-049 EL/SR green | AgToosa |
 | 2026-07-08 | 🚀 Release 5.3.4 shipped — v5.3.4; version parity bash/ps1/npm; Milestone v5.3.5 (next) | AgToosa |
+| 2026-07-08 | ✏️ /agtoosa-spec DEV-054 enrolled — Signed Registry Provenance deepened (minisign soft-warn, packs+releases); estimate M; Active Cycle Todo; awaiting Spec Approved | AgToosa |
+| 2026-07-08 | /agtoosa-spec — Spec ✅ Approved — DEV-054 — spec-DEV-054.md; estimate M; enrolled in cycle | AgToosa |
+| 2026-07-08 | 🏗️ /agtoosa-build DEV-054 Started — 5 tasks; scope: registry soft-warn minisign, provenance docs, ADR-011, pubkey path, SP bats | AgToosa |
+| 2026-07-08 | 🏗️ /agtoosa-build DEV-054 — Task 🟢 5/5 complete — provenance soft-warn, ADR-011, SP-001–SP-006 green; M-1 remains Manual/Deferred | AgToosa |
+| 2026-07-08 | 🏗️ Build complete — DEV-054; next: `/agtoosa-review` then `/agtoosa-ship` | AgToosa |

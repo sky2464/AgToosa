@@ -326,6 +326,32 @@ if ! verify_archive_sha256 "$ARCHIVE_PATH" "$EXPECTED_SHA256"; then
   exit 1
 fi
 
+# Optional signed provenance (DEV-054 / ADR-011): soft-warn when a sidecar
+# .minisig is present next to the archive. Never fails bootstrap.
+soft_verify_minisign_bootstrap() {
+  local artifact="$1"
+  local sig_path="${artifact}.minisig"
+  [[ -f "$sig_path" ]] || return 0
+  echo "Optional minisign signature found; verifying (soft-warn)..."
+  local pubkey="${AGTOOSA_MINISIGN_PUBKEY:-}"
+  if [[ -z "$pubkey" || ! -f "$pubkey" ]]; then
+    # Bootstrap runs before extract; prefer env, else skip with warn.
+    echo "⚠️  minisign: public key not found (set AGTOOSA_MINISIGN_PUBKEY). Continuing without signature verification." >&2
+    return 0
+  fi
+  if ! command -v minisign &>/dev/null; then
+    echo "⚠️  minisign: binary not found on PATH. Continuing without signature verification." >&2
+    return 0
+  fi
+  if minisign -Vm "$artifact" -x "$sig_path" -p "$pubkey" >/dev/null 2>&1; then
+    echo "✅ minisign signature verified."
+  else
+    echo "⚠️  minisign: signature verification failed for $(basename "$artifact"). Continuing because soft-warn mode is enabled." >&2
+  fi
+  return 0
+}
+soft_verify_minisign_bootstrap "$ARCHIVE_PATH"
+
 if ! assert_safe_archive "$ARCHIVE_PATH"; then
   exit 1
 fi

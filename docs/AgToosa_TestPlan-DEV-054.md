@@ -2,28 +2,64 @@
 
 > **Spec:** `docs/archived/spec-DEV-054.md`
 > **Smoke filter:** `bats tests/agtoosa.bats -f "DEV-054"`
-> **Status:** ⬜ Backlog
+> **Status:** 🟨 Todo — In Progress (build GREEN)
 
 ## Coverage Target
 
-This plan will prove DEV-054 only after the story is enrolled and implemented. Until then, it preserves the competitive execution wave backlog contract and claim boundary.
+Prove optional soft-warn minisign provenance for packs and release docs without claiming fail-closed signatures, SBOM, or completed keygen (M-1).
 
 | AC | Test ID | Type | Description | Automated |
 |----|---------|------|-------------|-----------|
-| AC-001 | DEV-054-T-001 | Docs/Integration | Capability states user outcome and proof before shipped claims | planned |
-| AC-002 | DEV-054-T-002 | Docs/Integration | Enforcement language is classified as generator-enforced, CI-enforced, agent-instructed, manual, or roadmap | planned |
-| AC-003 | DEV-054-T-003 | Docs/Integration | Repo-local source-of-truth boundary is preserved for external integrations | planned |
-| AC-004 | DEV-054-T-004 | Bats | Focused failing regression coverage is added before behavior changes | planned |
-| AC-005 | DEV-054-T-005 | Evidence | Ship evidence is recorded without broader claims | planned |
+| AC-001 | SP-001 | Docs | Provenance schema documents packs + releases; minisign primary; cosign alternate | ✅ |
+| AC-002 | SP-002 | Bats | Present invalid `.minisig` → warning emitted; install still succeeds when SHA-256 (+ verified) pass | ✅ |
+| AC-002 | SP-003 | Bats | Missing `minisign` binary → warning; continue | ✅ |
+| AC-003 | SP-004 | Bats | No signature artifact → behavior unchanged (no new failure) | ✅ |
+| AC-004 | SP-005 | Docs | Readiness/Trust/Registry classify soft-warn / manual / roadmap; Master-Plan SoT | ✅ |
+| AC-005 | SP-002–SP-004 | Bats | Soft-warn contract coverage | ✅ |
+| AC-006 | SP-006 | Docs/Integration | Pubkey path + provenance helper + config registration | ✅ |
+| AC-007 | SP-007 | Evidence | Ship evidence recorded; M-1 still Manual/Deferred | pending ship |
+
+Adjacent (existing): `DEV-054 CW-017`, `DEV-054 PS-001`–`PS-003` remain regression anchors.
+
+## Negative / edge (Must ACs)
+
+| Scenario | Expected |
+|----------|----------|
+| Invalid signature + good SHA-256 | WARN, continue |
+| Missing minisign binary | WARN, continue |
+| Unsigned pack | no new WARN required; existing gates only |
+| `AGTOOSA_MINISIGN_PUBKEY` override | used when set |
+| Private key file in tree | must not be required or committed for GREEN |
 
 ## Validation Commands
 
 ```bash
+bats tests/agtoosa.bats -f "DEV-054 SP-"
 bats tests/agtoosa.bats -f "DEV-054"
-bats tests/agtoosa.bats -f "DEV-042-060"
 git diff --check
 ```
 
 ## Evidence
 
-Backlog creation evidence is covered by the competitive wave tests in `tests/agtoosa.bats`. Implementation evidence must be added when this story is built.
+### RED evidence — Task 1 (contract bats)
+
+Command: `bats tests/agtoosa.bats -f "DEV-054 SP-"` (pre-implementation intent: soft-warn path absent)
+Note: Implementation and SP bats landed in the same build wave; GREEN run below is authoritative for soft-warn semantics.
+
+### GREEN evidence — Task 5
+
+```
+Command: bats tests/agtoosa.bats -f "DEV-054 SP-"
+Exit code: 0
+Result: 6/6 ok (SP-001–SP-006)
+Date: 2026-07-08
+```
+
+Adjacent: `bats tests/agtoosa.bats -f "DEV-054|DEV-065 SC-002|DEV-066 SC-006"` — recorded in build session.
+
+| Phase | Result | Notes |
+|-------|--------|-------|
+| RED | contract written | SP-001–SP-006 |
+| GREEN | ✅ 6/6 | soft-warn path |
+| IMPORT | n/a | |
+| Review/Ship | pending | evidence ledger at review/ship; M-1 remains Manual/Deferred |

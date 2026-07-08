@@ -4390,6 +4390,110 @@ assert_competitive_story_artifacts() {
   assert_competitive_story_artifacts "DEV-054"
 }
 
+# ── DEV-054: Signed Registry Provenance (SP soft-warn) ───────────────────────
+
+@test "DEV-054 SP-001: provenance schema docs cover packs + releases (minisign primary)" {
+  run grep -E "signature|minisign|soft-warn|cosign" "$BATS_TEST_DIRNAME/../docs/AgToosa_Registry.md"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"minisign"* ]]
+  [[ "$output" == *"cosign"* ]] || [[ "$output" == *"Cosign"* ]]
+  run grep -E "minisign|soft-warn|SHA256SUMS" "$BATS_TEST_DIRNAME/../docs/AgToosa_Team_Trust_Roadmap.md"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"soft-warn"* ]] || [[ "$output" == *"minisign"* ]]
+  [ -f "$BATS_TEST_DIRNAME/../docs/adr/ADR-011-minisign-primary-provenance.md" ]
+}
+
+@test "DEV-054 SP-002: invalid .minisig warns but install continues when SHA-256 passes" {
+  local registry="$TEST_PROJECT/registry.json"
+  local packroot="$TEST_PROJECT/src/sig-pack"
+  local tarball="$TEST_PROJECT/sig-pack.tar.gz"
+  local fixtures="$BATS_TEST_DIRNAME/fixtures/minisign"
+  mkdir -p "$packroot"
+  printf '# workflow\n' > "$packroot/workflow.md"
+  tar -czf "$tarball" -C "$TEST_PROJECT/src" "sig-pack"
+  cp "$fixtures/sample.txt.bad.minisig" "${tarball}.minisig"
+  local sha
+  sha="$(shasum -a 256 "$tarball" | awk '{print $1}')"
+  cat > "$registry" <<JSON
+[
+  {"name":"sig-pack","description":"x","author":"t","version":"1.0.0","url":"file://$tarball","sha256":"$sha","verified":true}
+]
+JSON
+  run bash -c "printf 'Y\n' | AGTOOSA_MINISIGN_PUBKEY='$fixtures/test.minisign.pub' AGTOOSA_REGISTRY_URL='file://$registry' AGTOOSA_REGISTRY_CACHE_DIR='$TEST_PROJECT/cache' AGTOOSA_PACK_QUEUE_DIR='$TEST_PROJECT/queue' bash '$SCRIPT' --registry install sig-pack"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"minisign"* ]]
+  [[ "$output" == *"soft-warn"* ]] || [[ "$output" == *"Continuing"* ]] || [[ "$output" == *"verification failed"* ]]
+  [ -f "$TEST_PROJECT/queue/sig-pack/workflow.md" ]
+}
+
+@test "DEV-054 SP-003: missing minisign binary warns and continues" {
+  local registry="$TEST_PROJECT/registry.json"
+  local packroot="$TEST_PROJECT/src/nosigtool-pack"
+  local tarball="$TEST_PROJECT/nosigtool-pack.tar.gz"
+  local fixtures="$BATS_TEST_DIRNAME/fixtures/minisign"
+  mkdir -p "$packroot"
+  printf '# workflow\n' > "$packroot/workflow.md"
+  tar -czf "$tarball" -C "$TEST_PROJECT/src" "nosigtool-pack"
+  # Reuse invalid sidecar so verify would be attempted if minisign existed
+  cp "$fixtures/sample.txt.bad.minisig" "${tarball}.minisig"
+  local sha
+  sha="$(shasum -a 256 "$tarball" | awk '{print $1}')"
+  cat > "$registry" <<JSON
+[
+  {"name":"nosigtool-pack","description":"x","author":"t","version":"1.0.0","url":"file://$tarball","sha256":"$sha","verified":true}
+]
+JSON
+  # Keep jq/curl/shasum on PATH; drop only the directory that provides minisign
+  local filtered_path ms_dir
+  ms_dir="$(dirname "$(command -v minisign)")"
+  filtered_path="$(python3 -c "import os; print(':'.join(p for p in os.environ['PATH'].split(':') if p and p != '''$ms_dir'''))")"
+  run bash -c "printf 'Y\n' | PATH='$filtered_path' AGTOOSA_MINISIGN_PUBKEY='$fixtures/test.minisign.pub' AGTOOSA_REGISTRY_URL='file://$registry' AGTOOSA_REGISTRY_CACHE_DIR='$TEST_PROJECT/cache' AGTOOSA_PACK_QUEUE_DIR='$TEST_PROJECT/queue' bash '$SCRIPT' --registry install nosigtool-pack"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"binary not found"* ]]
+  [ -f "$TEST_PROJECT/queue/nosigtool-pack/workflow.md" ]
+}
+
+@test "DEV-054 SP-004: unsigned pack install unchanged (no signature required)" {
+  local registry="$TEST_PROJECT/registry.json"
+  local packroot="$TEST_PROJECT/src/unsigned-pack"
+  local tarball="$TEST_PROJECT/unsigned-pack.tar.gz"
+  mkdir -p "$packroot"
+  printf '# workflow\n' > "$packroot/workflow.md"
+  tar -czf "$tarball" -C "$TEST_PROJECT/src" "unsigned-pack"
+  local sha
+  sha="$(shasum -a 256 "$tarball" | awk '{print $1}')"
+  cat > "$registry" <<JSON
+[
+  {"name":"unsigned-pack","description":"x","author":"t","version":"1.0.0","url":"file://$tarball","sha256":"$sha","verified":true}
+]
+JSON
+  run bash -c "printf 'Y\n' | AGTOOSA_REGISTRY_URL='file://$registry' AGTOOSA_REGISTRY_CACHE_DIR='$TEST_PROJECT/cache' AGTOOSA_PACK_QUEUE_DIR='$TEST_PROJECT/queue' bash '$SCRIPT' --registry install unsigned-pack"
+  [ "$status" -eq 0 ]
+  [[ "$output" != *"Optional minisign signature found"* ]]
+  [ -f "$TEST_PROJECT/queue/unsigned-pack/workflow.md" ]
+}
+
+@test "DEV-054 SP-005: claim boundary classifies soft-warn / manual / roadmap" {
+  run grep -E "soft-warn|manual|roadmap|Master-Plan" "$BATS_TEST_DIRNAME/../docs/AgToosa_Readiness.md"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"soft-warn"* ]] || [[ "$output" == *"soft warn"* ]] || [[ "$output" == *"Optional minisign"* ]]
+  run grep -E "DEV-054 M-1|manual|roadmap" "$BATS_TEST_DIRNAME/../docs/AgToosa_Team_Trust_Roadmap.md"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"manual"* ]]
+  [[ "$output" == *"roadmap"* ]]
+}
+
+@test "DEV-054 SP-006: bundled pubkey path and provenance helper exist" {
+  [ -f "$BATS_TEST_DIRNAME/../docs/security/agtoosa.minisign.pub" ]
+  [ -f "$BATS_TEST_DIRNAME/../lib/provenance.sh" ]
+  run grep -F "provenance" "$BATS_TEST_DIRNAME/../agtoosa.sh"
+  [ "$status" -eq 0 ]
+  run grep -F "soft_verify_minisign" "$BATS_TEST_DIRNAME/../lib/registry.sh"
+  [ "$status" -eq 0 ]
+  run grep -F "AGTOOSA_MINISIGN_PUBKEY" "$BATS_TEST_DIRNAME/../lib/config.sh"
+  [ "$status" -eq 0 ]
+}
+
 @test "DEV-055 CW-018: Agent Capability Matrix backlog artifacts exist" {
   assert_competitive_story_artifacts "DEV-055"
 }

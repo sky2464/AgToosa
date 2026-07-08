@@ -102,6 +102,18 @@ Each pack entry includes:
 - **url** — Direct link to the release tarball on GitHub
 - **sha256** — SHA-256 hash of the tarball (verified during install)
 - **verified** — Whether the pack has been reviewed and approved
+- **signature** *(optional)* — Signed provenance object (DEV-054 / ADR-011):
+
+```json
+"signature": {
+  "alg": "minisign",
+  "url": "https://example.com/pack.tar.gz.minisig",
+  "pubkey_id": "agtoosa-release"
+}
+```
+
+Primary algorithm: **minisign**. Cosign/Sigstore is a documented future alternate (not implemented).
+A sidecar file next to a `file://` tarball (`pack.tar.gz.minisig`) is also recognized.
 
 ---
 
@@ -114,9 +126,11 @@ AgToosa caches `registry.json` locally so list/search/info work when the network
 | Bash | `$AGTOOSA_REGISTRY_CACHE_DIR/registry.json` if set, else `~/.cache/agtoosa/registry.json` |
 | PowerShell | `%USERPROFILE%\.cache\agtoosa\registry.json` |
 
-**HTTPS trust model:** The registry index is downloaded over HTTPS from GitHub only. There is no GPG or signed manifest for `registry.json` in v1 — treat the index as trusted to the same degree as the HTTPS origin. If you need a fresh index, delete the cache file (or wait for TTL expiry) and run `--registry list` again when online.
+**HTTPS trust model:** The registry index is downloaded over HTTPS from GitHub only. There is no fail-closed signed manifest for `registry.json` in v1 — treat the index as trusted to the same degree as the HTTPS origin. If you need a fresh index, delete the cache file (or wait for TTL expiry) and run `--registry list` again when online.
 
-**High-assurance installs:** Pack tarballs are always SHA-256 checked against the hash in the index during install. For stricter environments, pre-seed `AGTOOSA_REGISTRY_CACHE_DIR` with a vetted `registry.json` and independently verify each pack's SHA-256 (e.g. `sha256sum`) against a trusted source before `bash agtoosa.sh --registry install <name>`.
+**Optional minisign soft-warn (DEV-054):** When a signature sidecar or `signature.url` is present, AgToosa attempts `minisign -Vm` using `AGTOOSA_MINISIGN_PUBKEY` or `docs/security/agtoosa.minisign.pub`. On failure (invalid sig, missing tool, missing pubkey) it **warns and continues** if SHA-256 and the verified-flag gate still pass. Unsigned packs are unchanged. Fail-closed require-signatures remains **roadmap**. Private-key generation remains **manual** (`DEV-054 M-1`).
+
+**High-assurance installs:** Pack tarballs are always SHA-256 checked against the hash in the index during install. For stricter environments, pre-seed `AGTOOSA_REGISTRY_CACHE_DIR` with a vetted `registry.json` and independently verify each pack's SHA-256 (e.g. `sha256sum`) against a trusted source before `bash agtoosa.sh --registry install <name>`. Optionally attach `.minisig` sidecars and set `AGTOOSA_MINISIGN_PUBKEY`.
 
 **Publishing packs:** Use Bash — `bash agtoosa.sh --registry publish` (the PowerShell port prints a redirect; it does not run the publish wizard).
 
@@ -127,7 +141,6 @@ AgToosa caches `registry.json` locally so list/search/info work when the network
 **How your safety is protected:**
 
 - ✅ **SHA-256 verification** — Ensures the tarball wasn't tampered with during download.
-- ✅ **SHA-256 verification** — Ensures the tarball wasn't tampered with during download.
 - ✅ **Tar-slip pre-scan** — Archive member lists are checked for absolute paths and `..` segments **before** extraction; hostile tarballs are rejected without writing to disk.
 - ✅ **Isolated staging** — Packs extract to a temp directory first; only user-confirmed content reaches `.agtoosa/pack-queue/`.
 - ✅ **Informed-consent preview** — Before queueing, AgToosa prints the full file tree and flags AI-instruction surfaces (`.cursor/*`, `CLAUDE.md`, etc.) so you know what your assistant will follow.
@@ -137,6 +150,7 @@ AgToosa caches `registry.json` locally so list/search/info work when the network
 - ✅ **Registry review** — New packs require PR approval from maintainers before publication (`verified: true`).
 - ✅ **Pinned versions** — Each published version's hash is recorded; existing installs are unaffected if a pack author goes rogue.
 - ✅ **HTTPS from GitHub** — Registry and pack tarballs are fetched over HTTPS from trusted GitHub CDN.
+- ⚠️ **Optional minisign soft-warn** — When a `.minisig` / `signature.url` is present, verification is attempted; failures warn and do **not** block install (SHA-256 + verified remain authoritative). Not a mandatory signed-install mode.
 
 > **Trust boundary:** Packs are third-party markdown that instructs your AI assistant. AgToosa screens and contains them as above, but you should still read the preview before confirming any install.
 

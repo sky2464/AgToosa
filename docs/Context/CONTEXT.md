@@ -29,3 +29,5 @@
 **Maintainer Dogfood Mode**: The operating context where the AgToosa repository uses AgToosa workflows to improve the generator; scope is `agtoosa.sh`, `lib/`, `template/`, and bats. Context: DEV-011, `docs/agtoosa-maintainer.md`. Not: "generated install", "downstream project".
 
 **Master Architecture**: The durable project architecture map at `Docs/Master-Architecture.md`, created during setup and treated as high-priority context before architectural decisions. It captures goals, constraints, C4-style diagrams, system boundaries, data flow, deployment, security, observability, and decision links. Not: "Master-Plan", "Context files", "one-off diagram".
+
+**Signed Registry Provenance**: Optional cryptographic signatures (minisign primary; cosign future alternate) on registry packs and release assets, verified with soft-warn when a signature artifact is present. Does not replace SHA-256 integrity or the registry `verified` flag. Not: "mandatory signed install", "SBOM", "fail-closed require-signatures" (those remain roadmap). Context: DEV-054, ADR-011.

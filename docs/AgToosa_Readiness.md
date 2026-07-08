@@ -35,7 +35,17 @@ AgToosa is markdown instructions for your AI assistant — not a runtime. The ge
 | Ship readiness gate | Yes (`/agtoosa-ship check`) | Partially — verifier covers spec/review/test-plan rows; deploy evidence stays agent-reported |
 | Agent result import gate / Async handoff packs | Yes — `/agtoosa-import` gates Tracking updates on repo-local verification; `/agtoosa-handoff` instructs context export before dispatch | No (agent-instructed) |
 | Evidence ledger (per-story proof index) | Yes — required at review and ship phases (`/agtoosa-evidence review` · `ship`); `docs/archived/evidence-[story-id].md` must exist before marking Shipped | No (agent-instructed) |
+| Optional minisign soft-warn (packs + release sidecars) | Yes — when `.minisig` / `signature.url` present; warn-and-continue on failure | Soft generator path (does not fail install); fail-closed require-signatures = roadmap |
 | File inventory on install / update | — | Yes — `agtoosa.sh` copies registered template files |
 | Version parity (bash vs PowerShell generator) | — | Yes — `AGTOOSA_VERSION` must match in both entrypoints |
 
 Treat marketing copy and README tables as **aspirational workflow coverage** unless this doc marks a row as machine-checked or generator-enforced.
+
+### Claim boundary — signed provenance (DEV-054)
+
+| Control | Classification |
+|---------|----------------|
+| Optional minisign verify when signature present | generator-enforced (soft-warn) |
+| Private-key generation / release signing | manual (`DEV-054 M-1`) |
+| Fail-closed `AGTOOSA_REQUIRE_SIGNATURES`, SBOM, cosign verify | roadmap |
+| Repo-local PM source of truth | `docs/Master-Plan.md` |

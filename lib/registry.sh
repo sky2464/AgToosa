@@ -502,6 +502,28 @@ registry_install() {
     return 1
   fi
 
+  # Optional signed provenance (DEV-054): soft-warn when a .minisig sidecar
+  # or registry signature URL is present. Never blocks install.
+  local pack_sig_url="" pack_sig_file=""
+  if command -v jq &>/dev/null; then
+    pack_sig_url=$(echo "$pack_entry" | jq -r '.signature.url // empty')
+  fi
+  if [[ -n "$pack_sig_url" ]]; then
+    pack_sig_file="$(dirname "$tmpfile")/$(basename "$tmpfile").minisig"
+    if curl -fsSL "$pack_sig_url" -o "$pack_sig_file" 2>/dev/null; then
+      soft_verify_minisign "$tmpfile" "$pack_sig_file"
+    else
+      echo "⚠️  minisign: could not download signature from registry entry. Continuing." >&2
+    fi
+  elif [[ -f "${tmpfile}.minisig" ]]; then
+    soft_verify_minisign "$tmpfile"
+  elif [[ "$pack_url" == file://* ]]; then
+    local src_path="${pack_url#file://}"
+    if [[ -f "${src_path}.minisig" ]]; then
+      soft_verify_minisign "$tmpfile" "${src_path}.minisig"
+    fi
+  fi
+
   # Reject hostile member paths BEFORE any extraction happens.
   assert_safe_tarball "$tmpfile" || {
     rm -rf "$(dirname "$tmpfile")"

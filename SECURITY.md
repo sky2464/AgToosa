@@ -38,6 +38,15 @@ AgToosa is markdown workflow guidance for AI assistants. **Workflow instructions
 | **SAST/DAST Scanning** | `/agtoosa-build` and `/agtoosa-review security` instruct tool runs | No |
 | **IaC Security Scanning** | `/agtoosa-build` instructs Checkov/tfsec when IaC exists | No |
 | **PII Redaction** | Agent instructions mandate scrubbing before LLM context | No |
+| **Optional minisign soft-warn** | Registry/bootstrap attempt verify when `.minisig` present | Soft-warn only (DEV-054); not fail-closed |
+
+### Supply-chain surfaces
+
+- Pack tarballs: SHA-256 + verified flag (fail-closed on hash mismatch / unverified without opt-in).
+- Optional signatures: minisign primary (`docs/security/agtoosa.minisign.pub` or `AGTOOSA_MINISIGN_PUBKEY`); cosign future alternate.
+- Release assets: `SHA256SUMS` required; `.minisig` sidecars optional soft-warn.
+- Private keys: never commit; see Manual/Deferred `DEV-054 M-1`.
+
 | **Prompt Injection Guard** | Input sanitization guidance in workflow docs | Partially — registry packs are screened (see below) |
 | **Core template integrity** | — | Yes — `agtoosa.sh` installs files from a fixed, maintainer-controlled allowlist |
 | **Registry pack containment** | — | Yes — SHA-256 pin, pre-extraction member scan, file-type allowlist, hook/CI destination denylist (`.claude/settings.json`, `.claude/hooks/`, `.github/workflows/`), verified-flag enforcement, and a content preview before consent |

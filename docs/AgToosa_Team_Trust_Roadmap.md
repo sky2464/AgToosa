@@ -26,8 +26,8 @@ Before a serious growth push:
 
 Team/enterprise adoption needs stronger evidence and controls:
 
-- signed registry index and signed release assets are future high-assurance work.
-- High-assurance install mode should verify signed metadata before installing packs.
+- signed registry index and signed release assets: optional **minisign soft-warn** verify ships with DEV-054 (ADR-011); fail-closed high-assurance mode remains future work.
+- High-assurance install mode that **refuses** unsigned metadata remains roadmap (`AGTOOSA_REQUIRE_SIGNATURES` not shipped).
 - docs versioning should define which workflow docs belong to each release line.
 - migration guidance should explain breaking workflow changes and how downstream repos update.
 - adapter drift automation should compare generated platform behavior, not only file presence.
@@ -49,7 +49,7 @@ DEV-042 through DEV-060 define the Competitive execution wave. **v5.3.0 shipped 
 
 **Shipped agent-instructed:** Async agent handoff packs (DEV-047 `/agtoosa-handoff`), agent result import gate (DEV-048 `/agtoosa-import`), and Evidence ledger (DEV-049 `/agtoosa-evidence`) — all wired into canonical workflow docs; agent-instructed, not generator-enforced.
 
-**Still backlog (examples):** work-package DAG schema (DEV-045 partial), worktree isolation (DEV-046), cross-model review (DEV-050), tracker sync (DEV-051), hook automation pack (DEV-052), extension catalog (DEV-053), Signed registry provenance (DEV-054 partial), agent capability matrix (DEV-055), retrospective loop (DEV-056), multi-repo overlay (DEV-057), local dashboard (DEV-058), governance policy-as-code (DEV-059). See `docs/Master-Plan.md` → Backlog.
+**Still backlog (examples):** work-package DAG schema (DEV-045 partial), worktree isolation (DEV-046), cross-model review (DEV-050), tracker sync (DEV-051), hook automation pack (DEV-052), extension catalog (DEV-053), agent capability matrix (DEV-055), retrospective loop (DEV-056), multi-repo overlay (DEV-057), local dashboard (DEV-058), governance policy-as-code (DEV-059). Signed registry provenance (DEV-054) ships optional soft-warn minisign; fail-closed / SBOM / cosign verify / private-key automation remain open. See `docs/Master-Plan.md` → Backlog.
 
 Each story must classify its controls as generator-enforced, CI-enforced, agent-instructed, manual, or roadmap before it can be described as implemented.
 
@@ -61,6 +61,10 @@ Each story must classify its controls as generator-enforced, CI-enforced, agent-
 | Registry SHA-256 check | generator-enforced | Registry install verifies the downloaded archive hash. |
 | Registry path/filetype checks | generator-enforced | Pack files are validated before extraction (member-list scan), after staging, and again at merge time. |
 | Registry verified flag | generator-enforced | Unverified packs are blocked unless `--allow-unverified` is passed explicitly. |
+| Optional minisign soft-warn | generator-enforced (soft) | When a `.minisig` / `signature.url` is present, verify is attempted; failures warn and continue. Unsigned path unchanged. Pubkey: `docs/security/agtoosa.minisign.pub` or `AGTOOSA_MINISIGN_PUBKEY`. |
+| Fail-closed require-signatures | roadmap | `AGTOOSA_REQUIRE_SIGNATURES` / refuse unsigned installs — not shipped. |
+| Cosign / Sigstore verify | roadmap | Documented alternate; minisign is primary (ADR-011). |
+| SBOM generation | roadmap / agent-instructed | Not part of DEV-054; workflows may instruct SBOM tools separately. |
 | Pack destination denylist | generator-enforced | Packs cannot write `.claude/settings.json`, `.claude/hooks/`, or `.github/workflows/`; preview shows AI-instruction surfaces before consent. |
 | Pinned install fail-closed | generator-enforced | `bootstrap.sh --ref vX.Y.Z` aborts when the tag is missing (no branch fallback); brew formula pins a tagged tarball + sha256. |
 | Lifecycle verifier | machine-checked (CI-enforceable) | `Docs/agtoosa-verify.sh` validates spec approval, EARS ACs, AC→test mapping, threat model, and TDD evidence; `Docs/agtoosa-gate.yml.example` wires it into PR checks. |
@@ -74,12 +78,13 @@ Each story must classify its controls as generator-enforced, CI-enforced, agent-
 | STRIDE threat modeling | agent-instructed + machine-checked | `/agtoosa-spec` instructs threat modeling; the verifier fails active specs without a threat-model section. |
 | SBOM, SAST, DAST, observability | agent-instructed | Workflows instruct tool use; project stacks must provide the actual tools. |
 | Publishing GitHub repo/tap/registry/npm | manual | The owner must publish external surfaces (including the npm wrapper) before claiming them. |
+| Minisign/cosign private keys | manual | `DEV-054 M-1` — generate keys offline; never commit private keys; wire release signing after keys exist. |
 | Security response timing | manual | Maintainers must choose a support channel and realistic response commitment. |
 
 ## Explicit Non-Guarantees
 
-- AgToosa does not currently provide cryptographically signed registry metadata (the index is HTTPS-trusted; pack tarballs are SHA-256 pinned; the verified flag is enforced at install).
-- AgToosa publishes release checksums (`SHA256SUMS`) but does not yet provide cryptographic signatures (minisign/cosign) on release assets.
+- AgToosa provides **optional** minisign soft-warn verification when a signature artifact is present (DEV-054). It does **not** require signatures by default. The index remains HTTPS-trusted; pack tarballs are SHA-256 pinned; the verified flag is enforced at install.
+- AgToosa publishes release checksums (`SHA256SUMS`). Cryptographic signatures on release assets are optional soft-warn when a `.minisig` sidecar is present; fail-closed signed releases and cosign verify are not current guarantees.
 - AgToosa does not enforce enterprise policy at runtime.
 - AgToosa does not promise an enterprise SLA.
 - AgToosa does not replace a company's CI, legal, compliance, or security review obligations.

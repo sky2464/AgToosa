@@ -439,6 +439,7 @@ print_usage() {
   echo "  --platforms <list>     Comma-separated platforms, e.g. cursor,claude (skips prompt)"
   echo "  --yes, -y              Assume yes for confirmation prompts (non-interactive)"
   echo "  --allow-unverified     Permit --registry install of packs not marked verified"
+  echo "  AGTOOSA_MINISIGN_PUBKEY  Override path to minisign public key (optional soft-warn verify)"
   echo "  --force                Overwrite existing platform config files (creates .bak backups)"
   echo "  --dry-run              Show what would be copied without making changes"
   echo "  --list-template-files  Print every template file path and exit"

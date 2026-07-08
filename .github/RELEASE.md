@@ -56,8 +56,12 @@ The `release-advanced.yml` workflow then:
 1. Validates version consistency between the tag and `agtoosa.sh`
 2. Confirms the CHANGELOG entry exists
 3. Extracts release notes from CHANGELOG
-4. Publishes the GitHub Release
+4. Publishes the GitHub Release (including `SHA256SUMS`)
 5. Creates the next-version milestone automatically
+
+### Optional release signatures (DEV-054)
+
+After Manual/Deferred `DEV-054 M-1` (keygen), maintainers may attach `<asset>.minisig` sidecars next to release assets. Bootstrap and registry soft-warn verify when present; unsigned releases remain valid. Do not claim fail-closed signed releases until that mode ships.
 
 ## Failure recovery
 
