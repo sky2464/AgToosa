@@ -4582,7 +4582,7 @@ JSON
   grep -q '\[string\]\$Path' "$f"
   grep -q '\[string\]\$Platforms' "$f"
   grep -q '\[switch\]\$Yes' "$f"
-  grep -q 'function Parse-PlatformList' "$f"
+  grep -q 'function ConvertTo-PlatformList' "$f"
 }
 
 @test "DEV-074 CT-002: Show-Usage documents non-interactive install switches" {

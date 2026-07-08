@@ -44,7 +44,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
   - [x] 1.2 Scaffold `tests/pester/agtoosa-install.Tests.ps1` with NI-001..NI-005 — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006_
 - [x] **2.** Implement PS1 non-interactive install
   - [x] 2.1 Add `-Path`, `-Platforms`, `-Yes` to `param()` and NI entry guard — _Requirements: AC-001, AC-007_
-  - [x] 2.2 Implement `Parse-PlatformList` with bash-equivalent token map and unknown rejection — _Requirements: AC-002_
+  - [x] 2.2 Implement `ConvertTo-PlatformList` with bash-equivalent token map and unknown rejection — _Requirements: AC-002_
   - [x] 2.3 Wire NI path: skip `Read-Host` for path, platforms, confirm when `-Yes` — _Requirements: AC-001_
   - [x] 2.4 Wire `-DryRun` on NI path without writes — _Requirements: AC-005_
   - [x] 2.5 Enforce self-target guard before staging on `-Path` — _Requirements: AC-003_

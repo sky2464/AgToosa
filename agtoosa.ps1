@@ -104,7 +104,7 @@ function Write-SelfTargetGuidance {
     Write-Color "${YELLOW}   Do not create Docs/ or Docs/.agtoosa-version here.${NC}"
 }
 
-function Parse-PlatformList([string]$PlatformsCsv) {
+function ConvertTo-PlatformList([string]$PlatformsCsv) {
     $result = [System.Collections.Generic.List[string]]::new()
     $addPlatform = {
         param([string]$name)
@@ -1155,7 +1155,7 @@ Write-Color ""
 $cliPlatforms = $Platforms
 $selectedPlatforms = [System.Collections.Generic.List[string]]::new()
 if (-not [string]::IsNullOrWhiteSpace($cliPlatforms)) {
-    foreach ($platformName in (Parse-PlatformList $cliPlatforms)) {
+    foreach ($platformName in (ConvertTo-PlatformList $cliPlatforms)) {
         if (-not $selectedPlatforms.Contains($platformName)) {
             [void]$selectedPlatforms.Add($platformName)
         }
