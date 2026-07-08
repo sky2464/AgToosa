@@ -4519,6 +4519,33 @@ JSON
   rm -rf "$parent"
 }
 
+@test "DEV-066 SC-011: bootstrap exports durable pack queue path" {
+  grep -q 'AGTOOSA_PACK_QUEUE_DIR' "$BOOTSTRAP_SCRIPT"
+  grep -q 'pack-queue' "$BOOTSTRAP_SCRIPT"
+  grep -q 'PACK_QUEUE_DIR=' "$BOOTSTRAP_SCRIPT"
+  grep -q 'AGTOOSA_PACK_QUEUE_DIR' "$BATS_TEST_DIRNAME/../bootstrap.ps1"
+  grep -q 'pack-queue' "$BATS_TEST_DIRNAME/../bootstrap.ps1"
+}
+
+@test "DEV-066 SC-012: bootstrap preserves durable pack queue across exit" {
+  local home_dir fixture_dir archive_path mock_pack repo_root
+  home_dir="$(mktemp -d)"
+  fixture_dir="$(mktemp -d)"
+  archive_path="$(mktemp /tmp/agtoosa-bootstrap-XXXXXX.tar.gz)"
+  mock_pack="$BATS_TEST_DIRNAME/fixtures/mock-pack"
+  repo_root="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+
+  cp -a "$repo_root" "$fixture_dir/AgToosa-fixture"
+  rm -rf "$fixture_dir/AgToosa-fixture/.git"
+  tar -czf "$archive_path" -C "$fixture_dir" AgToosa-fixture
+
+  run env HOME="$home_dir" bash -c "printf 'Y\n' | bash '$BOOTSTRAP_SCRIPT' --archive '$archive_path' -- --registry install '$mock_pack'"
+  [ "$status" -eq 0 ]
+  [ -f "$home_dir/.cache/agtoosa/pack-queue/mock-pack/workflow.md" ]
+
+  rm -rf "$home_dir" "$fixture_dir" "$archive_path"
+}
+
 @test "DEV-071 NI-001: non-interactive install with --path --platforms --yes" {
   run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
   [ "$status" -eq 0 ]

@@ -270,6 +270,12 @@ try {
         exit 1
     }
 
+    # Durable queue: bootstrap deletes its temp extract on exit, so packs staged
+    # via registry install must survive outside WORKDIR (parity with npm wrapper).
+    $packQueueDir = Join-Path $env:USERPROFILE ".cache\agtoosa\pack-queue"
+    New-Item -ItemType Directory -Path $packQueueDir -Force | Out-Null
+    $env:AGTOOSA_PACK_QUEUE_DIR = $packQueueDir
+
     # Execute agtoosa.sh via Git Bash.
     # The source directory is passed via the environment, not string
     # interpolation, so quote characters in the path cannot inject shell code.
