@@ -1,8 +1,7 @@
 # AgToosa minisign public key (DEV-054 / ADR-011)
 
-> **Status:** Placeholder pubkey for the optional soft-warn verify path.
-> Replace with the real maintainer public key after Manual/Deferred `DEV-054 M-1`
-> (generate minisign keys offline — **never** commit `*.minisign.key` / private keys).
+> **Status:** Maintainer pubkey + release `.minisig` sidecars shipped (DEV-054 M-1 complete 2026-07-08).
+> Private key remains local only — **never** commit `*.minisign.key`.
 
 ## Verify a signed artifact
 

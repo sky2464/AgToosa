@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-08 (/agtoosa-ship v5.3.5 — DEV-054)
+> **Last updated:** 2026-07-08 (/agtoosa-build — DEV-054 M-1 manual-done)
 
 ## Project Charter
 
@@ -49,7 +49,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 - [x] **2.** Provenance schema docs + ADR-011 + Trust/Readiness/Registry claim updates
 - [x] **3.** Optional soft-warn minisign verify in registry (+ bootstrap)
 - [x] **4.** Bundled pubkey path + config registration + fixture keys for tests
-- [x] **5.** GREEN bats + test-plan evidence; keep M-1 Manual/Deferred
+- [x] **5.** GREEN bats + test-plan evidence; M-1 minisign keygen + release sidecars `[manual-done]`
 -->
 
 <!--
@@ -248,7 +248,6 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-062 | M-1 | 2026-06-09 | Optional: publish the gate as a GitHub Marketplace Action for discoverability `[manual]` |
 | DEV-066 | M-1 | 2026-06-09 | Configure required reviewers on the `release` environment in repo settings `[manual]` |
 | DEV-066 | M-2 | 2026-06-09 | Mirror the pinned `Formula/agtoosa.rb` to the `sky2464/homebrew-agtoosa` tap `[manual]` |
-| DEV-054 | M-1 | 2026-06-09 | Generate minisign/cosign keys and wire release-asset signing (checksums ship today; signatures still roadmap) `[manual]` |
 | DEV-060 | M-1 | 2026-06-09 | Execute benchmark tasks B1–B3 against Spec Kit/OpenSpec/BMAD and publish results under `docs/benchmarks/results/` `[manual]` |
 
 ## Blocked
@@ -461,3 +460,4 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-08 | 🔍 Review ✅ Approved — DEV-054; 0 🔴 Critical, 6 🟡 Warning accepted; report: `docs/archived/review-DEV-054.md`; evidence: `docs/archived/evidence-DEV-054.md` | AgToosa |
 | 2026-07-08 | 🚀 Ship complete — v5.3.5 — DEV-054 Signed Registry Provenance; bats DEV-054 SP/SR green | AgToosa |
 | 2026-07-08 | 🚀 Release 5.3.5 shipped — v5.3.5; version parity bash/ps1/npm; Milestone v5.3.6 (next) | AgToosa |
+| 2026-07-08 | 🏗️ /agtoosa-build — DEV-054 M-1 `[manual-done]` — maintainer minisign key + pubkey (`4a64308`) + release sidecars (`c4f240b`, `48f3f90`); verify green on bootstrap.sh and agtoosa.sh | AgToosa |

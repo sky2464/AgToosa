@@ -189,7 +189,7 @@ Registry install / bootstrap download
 - [x] **2.** Provenance schema docs + ADR-011 + Trust/Readiness/Registry claim updates — _Requirements: AC-001, AC-004, AC-006_
 - [x] **3.** Optional soft-warn minisign verify in registry (+ bootstrap if in wave) — _Requirements: AC-002, AC-003_
 - [x] **4.** Bundled pubkey path + config registration + fixture keys for tests — _Requirements: AC-002, AC-006_
-- [x] **5.** GREEN bats + test-plan evidence; keep M-1 Manual/Deferred — _Requirements: AC-007_
+- [x] **5.** GREEN bats + test-plan evidence; M-1 minisign keygen + release sidecars `[manual-done]` — _Requirements: AC-007_
 
 ### Wave Plan
 
