@@ -1,7 +1,7 @@
 # AgToosa Executable Product Plan
 
 > **Strategy:** Simplicity-first and subagent-first.
-> **Snapshot:** 2026-07-11, v5.3.6 shipped; DEV-055 active but awaiting explicit spec approval for v5.3.7.
+> **Snapshot:** 2026-07-11, v5.3.6 shipped; DEV-055 is In Progress for v5.3.7 with build Wave 1 complete.
 > **Status:** Planning guidance only. `docs/Master-Plan.md` is the execution source of truth.
 
 ## 1. Goal Contract
@@ -37,7 +37,8 @@
 | 3 | `docs/AgToosa_TestPlan-DEV-*.md` and archived evidence | AC-to-test and completion proof |
 | 4 | `docs/AgToosa_Team_Trust_Roadmap.md` | Trust posture and enforcement boundaries |
 | 5 | This file | Recommended order and evidence gates |
-| 6 | `docs/updates/AgToosa Strategic Improvement Roadmap.md` | Non-authoritative opportunity map |
+| 6 | `docs/updates/roadmap-spec-index.md` | Complete mapping from actionable proposals to future specs |
+| 7 | `docs/updates/AgToosa Strategic Improvement Roadmap.md` | Non-authoritative opportunity map |
 
 If this plan conflicts with Master-Plan, the plan is stale.
 
@@ -57,7 +58,7 @@ If this plan conflicts with Master-Plan, the plan is stale.
 
 ### 4.2 Active
 
-DEV-055, Agent Capability Matrix, is the only active story in this snapshot. It is enrolled but still awaits `## ✅ Spec Approved`; `/agtoosa-build` must not start before explicit approval. Its purpose is lifecycle routing: detect installed agent surfaces and recommend honest build, handoff, review, cross-model, and specialist paths without duplicating the Specialists native-file-target matrix.
+DEV-055, Agent Capability Matrix, is the only active story in this snapshot. Its spec is approved and Wave 1 has completed; the remaining Build tasks must finish before Review and Ship. Its purpose is lifecycle routing: detect installed agent surfaces and recommend honest build, handoff, review, cross-model, and specialist paths without duplicating the Specialists native-file-target matrix.
 
 ### 4.3 Important limits
 
@@ -186,16 +187,24 @@ This is a dependency recommendation, not enrollment. Re-check Master-Plan before
 
 ```text
 DEV-055
+  ├─ DEV-075
   └─ DEV-045
        ├─ DEV-046
        └─ DEV-059
             ├─ DEV-052
             └─ DEV-056
                  ├─ DEV-058
-                 ├─ DEV-053
                  └─ DEV-051
-                      └─ DEV-057 (demand-gated)
+                      └─ DEV-057 (demand-gated; DEV-045 also required)
+
+DEV-053 ──► DEV-080
+DEV-054 ──► DEV-082
+
+Independent validation/adoption:
+DEV-076, DEV-077, DEV-078, DEV-079, DEV-081, DEV-083, DEV-084
 ```
+
+The complete metadata and enrollment gates for DEV-075 through DEV-084 are in `docs/updates/roadmap-spec-index.md`.
 
 Why this order:
 
@@ -215,7 +224,7 @@ Why this order:
 
 Required evidence:
 
-- Explicit `## ✅ Spec Approved` marker and matching Master-Plan phase entry before Build.
+- Explicit `## ✅ Spec Approved` marker and matching Master-Plan phase entry before Build (complete in this snapshot).
 - AM contract tests green.
 - Canonical template doc and maintainer mirror.
 - Build, Handoff, Review, Help, and Specialists cross-links.
@@ -322,12 +331,14 @@ These tasks can proceed without changing the generator architecture:
 
 1. Publish the npm wrapper when account/2FA access is available.
 2. Publish at least one full competitor benchmark result before stronger comparative claims.
-3. Keep `docs/examples/first-15-minutes.md` and its proof repository on the current release.
-4. Add guides for subagent workflows, security-sensitive projects, and solo developers.
-5. Test a minimal static documentation site built from existing markdown.
-6. Surface the extension/pack authoring guide.
-7. Validate three official-quality packs before targeting five or more.
-8. Add GitHub Sponsors only with support expectations the maintainer can meet.
+3. Keep `docs/examples/first-15-minutes.md` and its proof repository on the current release — DEV-078.
+4. Add the subagent walkthrough and persona guide suite — DEV-075.
+5. Test a minimal static documentation site built from existing markdown — DEV-076.
+6. Surface extension and pack authoring guidance — DEV-077.
+7. Add verifier and CI adoption examples — DEV-079.
+8. Validate three official-quality packs before targeting five or more — DEV-053 then DEV-080.
+9. Add a no-telemetry metrics and case-study kit — DEV-083.
+10. Add GitHub Sponsors only with support expectations the maintainer can meet — DEV-084.
 
 These items still need an enrolled chore or recorded manual task when they change repository state.
 
@@ -335,11 +346,11 @@ These items still need an enrolled chore or recorded manual task when they chang
 
 | Add-on | Evidence needed |
 |---|---|
-| Native wrapper | Repeated user failures not solvable in canonical Bash/PowerShell paths |
-| VS Code extension | Repeated demand for command discovery or local state navigation |
-| Fail-closed signatures | Users willing to manage keys and reject unsigned assets |
-| Additional CI platforms | A user maintaining and exercising the platform template |
-| Paid support | Sustained support volume plus a credible response commitment |
+| Native wrapper | DEV-081: repeated user failures not solvable in canonical Bash/PowerShell paths |
+| VS Code extension | DEV-081: repeated demand for command discovery or local state navigation |
+| Fail-closed signatures | DEV-082: users willing to manage keys and reject unsigned assets |
+| Additional CI platforms | DEV-081: a user maintaining and exercising the platform template |
+| Paid support | DEV-084: sustained support volume plus a credible response commitment |
 | Hosted dashboard or SaaS | Multiple organizations requesting shared state, with a funded security and operations model |
 | SSO/RBAC | Hosted identity boundary and real enterprise design partners |
 | MCP/A2A runtime | A concrete workflow impossible through existing platform adapters and handoff/import |
@@ -371,7 +382,7 @@ After shipping a story:
 
 For the current snapshot, the next recommendation is:
 
-1. Obtain explicit DEV-055 spec approval, then build, review, and ship it.
+1. Finish the remaining DEV-055 Build tasks, then review and ship it.
 2. Publish pending benchmark/distribution evidence in parallel where manual access permits.
 3. Deepen and enroll DEV-045.
 4. Reassess DEV-046 versus DEV-059 using the evidence from the first two-lane dogfood story.

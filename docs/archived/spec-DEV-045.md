@@ -1,59 +1,186 @@
-# Spec: DEV-045 - Work Package Wave DAG
+# Spec: DEV-045 — Work Package Wave DAG
 
 > **Story ID:** DEV-045
-> **Epic:** DEV-002
+> **Epic:** DEV-002 — Workflow Templates
 > **Status:** ⬜ Backlog
 > **Estimate:** M
 > **Spec created:** 2026-06-08
-> **Competitive execution wave:** DEV-042 through DEV-060
+> **Spec deepened:** 2026-07-11
+> **Prerequisite gate:** DEV-055 must ship before DEV-045 enrollment
 
 ## Context
 
-AgToosa has public launch proof and honest positioning as a lightweight, repo-native, multi-assistant SDLC workflow generator. The next competitive gap is making higher-assurance spec-to-test-to-agent execution explicit without claiming runtime enforcement before it exists.
+DEV-067 shipped wave-by-wave TDD execution, and `docs/SPEC-FORMAT.md` defines a task tree plus a Wave Plan. Those waves currently identify task IDs only; they do not declare package ownership, dependencies, inputs, outputs, integration order, or package-specific verification. DEV-047 and DEV-048 provide bounded handoff and import workflows, but their packs do not yet carry a shared work-package schema.
 
-DEV-045 captures one candidate capability from the competitive execution wave. It is a backlog spec until explicitly enrolled and built.
+DEV-045 closes only that schema and workflow-wiring gap. It adds dependency-aware work packages to the existing markdown lifecycle; it does not add a runtime scheduler or agent launcher. DEV-055 owns lifecycle routing and must ship first. This story must not reopen `AgToosa_AgentCapability.md`, its AM tests, or its active build artifacts.
 
-## Goal Contract
+## 1. Requirements
+
+### 1.1 Goal Contract
 
 | Field | Value |
 |-------|-------|
-| Goal | Turn task trees into dependency-aware work packages with explicit parallel and sequential waves. |
-| User outcome | Agent work can be delegated safely without overlapping shared files or hidden dependencies. |
-| Success condition | Specs include a wave DAG with owned files, inputs, outputs, and merge order. |
-| Proof / evidence | Spec template wording, example work-package schema, focused bats checks, and test-plan evidence. |
-| Claim Boundary | Capability is roadmap until this story ships with passing evidence; classify controls as generator-enforced, CI-enforced, agent-instructed, manual, or roadmap. |
-| Non-goals | This story does not create a runtime scheduler. |
-| Assumptions | AgToosa remains repo-native and markdown-first; external services and agents are integrations, not required runtime dependencies. |
-| Risks | Overpromising current guarantees; adapter drift; workflow text that cannot be verified. |
+| Goal | Extend approved specs with a Work Package Wave DAG that declares each package's wave, dependencies, owned files, inputs, outputs, merge order, and verification command. |
+| User outcome | Orchestrators and async agents can divide a story into auditable lanes without guessing which files a lane owns or when its result may be integrated. |
+| Success condition | `SPEC-FORMAT.md` defines the schema; Spec, Build, Handoff, and Import consume the same fields; focused tests `DAG-001`–`DAG-007` pass; and the test plan records a two-parallel-package/one-dependent-package dogfood case. |
+| Proof / evidence | RED/GREEN evidence captured during the future build in `docs/AgToosa_TestPlan-DEV-045.md`, focused bats output, schema fixtures, and the dogfood package table. |
+| Non-goals | Runtime scheduling, automatic agent dispatch, mandatory worktrees, changes to DEV-055 routing, or hosted orchestration. |
+| Assumptions | Wave Plan, Terminal Evidence, Handoff, and Import remain available; package execution remains host-dependent and agent-instructed. |
+| Risks | A schema that is too heavy for small stories; false parallel-safety claims; divergent field names across workflow docs. |
+| Unresolved questions | None. Package IDs use `PKG-<task-id>` (for example, `PKG-1.1`). |
 
-## Requirements
+### 1.2 User Stories
 
-| ID | Requirement |
-|----|-------------|
-| AC-001 | WHEN DEV-045 is read THE SYSTEM SHALL state the specific user outcome and proof required before the capability is treated as shipped. |
-| AC-002 | WHEN the capability mentions enforcement THE SYSTEM SHALL classify it as generator-enforced, CI-enforced, agent-instructed, manual, or roadmap. |
-| AC-003 | WHEN external agents, trackers, registries, or dashboards are mentioned THE SYSTEM SHALL preserve AgToosa as the repo-local source of truth unless implementation evidence proves otherwise. |
-| AC-004 | WHEN implementation begins THE SYSTEM SHALL add focused regression coverage before changing generator or template behavior. |
-| AC-005 | WHEN shipping THE SYSTEM SHALL record evidence in the matching test plan and avoid claims broader than the completed scope. |
+**As an** AgToosa orchestrator, **I want** every parallel task bound to explicit dependencies and owned files **so that** I can reject unsafe fan-out before agents start.
 
-## Design
+**As a** maintainer exporting a wave handoff, **I want** the selected work-package rows included in the pack **so that** each async agent receives its inputs, expected outputs, and verification command.
 
-Implement this story as a focused AgToosa lifecycle enhancement. Prefer docs/workflow contracts first, then narrow generator or template changes only where the acceptance criteria require an enforceable surface. Keep platform adapters delegated to canonical docs instead of duplicating long logic.
+**As an** importer, **I want** returned changes checked against package ownership and merge order **so that** out-of-scope edits and premature integration are reported before lifecycle state changes.
 
-## Build Scope
+### 1.3 Acceptance Criteria (EARS)
 
-Files in scope will be selected when the story is enrolled. Expected surfaces may include `docs/Master-Plan.md`, `docs/AgToosa_*.md`, `template/Docs/AgToosa_*.md`, platform adapters, `lib/config.sh`, and `tests/agtoosa.bats` depending on the final implementation.
+| ID | EARS | Priority |
+|----|------|----------|
+| AC-001 | WHEN `docs/SPEC-FORMAT.md` is read THE SYSTEM SHALL define a `### 3.4 Work Package DAG` table with `package_id`, `wave`, `depends_on`, `owned_files`, `inputs`, `outputs`, `merge_order`, and `verification` columns | Must |
+| AC-002 | WHEN `/agtoosa-spec tasks` derives work from an approved spec THE SYSTEM SHALL emit one Work Package row for every executable sub-task, including non-empty `owned_files` and `verification` values for every package proposed for parallel execution | Must |
+| AC-003 | WHEN two packages share a wave THE SYSTEM SHALL require disjoint `owned_files` sets or replace their parallel relationship with an explicit sequential fallback in the Wave Plan | Must |
+| AC-004 | WHEN a package declares `depends_on` THE SYSTEM SHALL require every referenced package to exist and to have an earlier wave, with `merge_order` resolving integration order within each wave | Must |
+| AC-005 | WHEN `/agtoosa-handoff wave` exports work THE SYSTEM SHALL include the selected wave's package IDs, owned files, inputs, outputs, merge order, and verification commands in a Work Packages section | Must |
+| AC-006 | WHEN `/agtoosa-import` evaluates returned work THE SYSTEM SHALL compare changed files with `owned_files`, report ownership gaps, and present results in declared `merge_order` before lifecycle checkboxes may change | Should |
+| AC-007 | WHEN work-package enforcement is described THE SYSTEM SHALL classify installed schema text as generator-enforced, bats/CI assertions as CI-enforced when configured, package generation and dispatch as agent-instructed, user integration as manual, and runtime scheduling as roadmap | Must |
+| AC-008 | WHEN `tests/agtoosa.bats` runs DEV-045 coverage THE SYSTEM SHALL assert dual-path schema parity, Spec/Build/Handoff/Import wiring, dependency ordering, a disjoint-ownership positive fixture, and an overlapping-ownership sequential-fallback fixture | Must |
 
-Out of scope: broad version bumps, release publication, hosted services, and enterprise/compliance claims not backed by automated evidence.
+### 1.4 Failure Modes
 
-## Task Tree
+| AC | Failure mode |
+|----|--------------|
+| AC-001 | Workflow authors invent incompatible package fields because no normative schema exists. |
+| AC-002 | A parallel task has no ownership or verification boundary, so its agent must guess scope and completion. |
+| AC-003 | Same-wave packages own the same file and are still presented as safe to run concurrently. |
+| AC-004 | A missing, circular, or same/later-wave dependency permits work to start before required inputs exist. |
+| AC-005 | A handoff omits package boundaries, allowing an async result to exceed the approved build scope. |
+| AC-006 | Import accepts changed files outside package ownership or ignores declared merge order. |
+| AC-007 | Documentation implies AgToosa schedules or enforces parallel agents at runtime. |
+| AC-008 | Canonical and installed workflow copies drift without a focused regression failure. |
 
-- [ ] **1.** Add focused failing tests - _Requirements: AC-001-AC-005_
-- [ ] **2.** Implement the narrow workflow or generator change - _Requirements: AC-001-AC-004_
-- [ ] **3.** Update docs and platform references without duplicating canonical logic - _Requirements: AC-002, AC-003_
-- [ ] **4.** Record validation evidence in the test plan - _Requirements: AC-005_
-- [ ] **5.** Run focused tests, broader regression slice, full bats, and `git diff --check` - _Requirements: AC-004, AC-005_
+### 1.5 Out of Scope
 
-## Test Plan
+- Any edit to `docs/AgToosa_AgentCapability.md`, `template/Docs/AgToosa_AgentCapability.md`, DEV-055 specs/evidence, or AM tests
+- Git worktree provisioning or isolation (DEV-046)
+- Governance policy-as-code (DEV-059)
+- A verifier hard-fail for DAG violations
+- Automatic launch, monitoring, or cancellation of external agents
+- Version bumps, release publication, or hosted orchestration
+
+### 1.6 Claim Boundary
+
+| Control | Classification |
+|---------|----------------|
+| Shipping the canonical and installed schema copies | generator-enforced |
+| Focused DAG contract checks when run in repository CI | CI-enforced |
+| Deriving and checking Work Package rows during Spec/Build/Handoff/Import | agent-instructed |
+| Selecting agents and integrating package branches | manual |
+| Runtime DAG scheduling or guaranteed parallel isolation | roadmap |
+
+Until DEV-045 ships with recorded GREEN evidence, Work Package Wave DAG support remains roadmap. `docs/Master-Plan.md` remains the repo-local lifecycle source of truth; handoff and import artifacts cannot change story or task status by themselves.
+
+## 2. Design
+
+### 2.1 Architecture Blueprint
+
+Files to change during the future build:
+
+- `docs/SPEC-FORMAT.md`, `template/Docs/SPEC-FORMAT.md` — define `### 3.4 Work Package DAG` after the existing `### 3.3 Test Plan` section
+- `docs/AgToosa_Spec.md`, `template/Docs/AgToosa_Spec.md` — derive packages from the approved task tree and Wave Plan
+- `docs/AgToosa_Build.md`, `template/Docs/AgToosa_Build.md` — check ownership and dependency readiness before fan-out
+- `docs/AgToosa_Handoff.md`, `template/Docs/AgToosa_Handoff.md` — export selected package rows after DEV-055 has shipped
+- `docs/AgToosa_Import.md`, `template/Docs/AgToosa_Import.md` — report ownership gaps and apply merge order
+- `docs/AgToosa_Quickref.md`, `template/Docs/AgToosa_Quickref.md` — summarize DAG readiness
+- `docs/AgToosa_Team_Trust_Roadmap.md` — update the capability claim only after evidence exists
+- `tests/agtoosa.bats` — add `DAG-001`–`DAG-007`
+- `docs/AgToosa_TestPlan-DEV-045.md` — capture future TDD and dogfood evidence
+
+Key interfaces:
+
+- `WorkPackage`: `{ package_id, wave, depends_on, owned_files, inputs, outputs, merge_order, verification }`
+- `/agtoosa-spec tasks`: task tree + Wave Plan → Work Package table
+- `/agtoosa-handoff wave <N>`: Work Package table → selected-wave pack section
+- `/agtoosa-import`: returned changed-file set + package row → ownership-gap and merge-order report
+
+Normative schema target:
+
+```markdown
+| package_id | wave | depends_on | owned_files | inputs | outputs | merge_order | verification |
+|------------|------|------------|-------------|--------|---------|-------------|--------------|
+| PKG-1.1 | 1 | — | `lib/foo.sh` | — | `lib/foo.sh` | 1 | `bats tests/agtoosa.bats -f "foo"` |
+| PKG-1.2 | 1 | — | `docs/AgToosa_Bar.md` | — | `docs/AgToosa_Bar.md` | 1 | `test -s docs/AgToosa_Bar.md` |
+| PKG-2.1 | 2 | PKG-1.1, PKG-1.2 | `tests/agtoosa.bats` | Wave 1 outputs | `tests/agtoosa.bats` | 2 | `bats tests/agtoosa.bats -f "DEV-045"` |
+```
+
+### 2.2 Data Flow
+
+1. `/agtoosa-spec tasks` reads the approved Build Scope, task tree, and Wave Plan.
+2. It writes one package row per executable sub-task and resolves package dependencies from wave sequencing.
+3. Before parallel fan-out, `/agtoosa-build` compares same-wave `owned_files`; overlap converts the affected packages to an explicit sequential fallback.
+4. `/agtoosa-handoff wave <N>` exports only Wave N rows plus their declared inputs and verification commands.
+5. Returned work enters `/agtoosa-import`, which compares changed files to package ownership and reports gaps without mutating `docs/Master-Plan.md`.
+6. The user integrates accepted results in `merge_order`; only the normal Build/Import workflow may then update lifecycle state.
+
+### 2.3 Threat Model (STRIDE)
+
+| Threat | Category | Mitigation |
+|--------|----------|------------|
+| A result impersonates a different package | Spoofing | Require a known `package_id` and matching handoff row before import. |
+| An agent edits files outside its lane | Tampering | Compare returned paths with `owned_files`; report every extra path as a gap. |
+| No record identifies the package used | Repudiation | Handoff and import evidence cite `package_id`, wave, and verification command. |
+| Inputs or commands expose secret values | Information Disclosure | Permit paths, artifact names, and redacted commands only; never embed secret values. |
+| DAG ceremony blocks small work | Denial of Service | Guidance may keep XS/single-task stories sequential while retaining the ordinary Wave Plan. |
+| A package gains sensitive-file authority implicitly | Elevation of Privilege | Require explicit ownership and manual approval for security-sensitive paths; never infer them from a directory wildcard. |
+
+### 2.4 Build Scope
+
+✅ Ready to proceed — Scope Boundary
+
+Files in scope      : `docs/SPEC-FORMAT.md`, `template/Docs/SPEC-FORMAT.md`, `docs/AgToosa_Spec.md`, `template/Docs/AgToosa_Spec.md`, `docs/AgToosa_Build.md`, `template/Docs/AgToosa_Build.md`, `docs/AgToosa_Handoff.md`, `template/Docs/AgToosa_Handoff.md`, `docs/AgToosa_Import.md`, `template/Docs/AgToosa_Import.md`, `docs/AgToosa_Quickref.md`, `template/Docs/AgToosa_Quickref.md`, `docs/AgToosa_Team_Trust_Roadmap.md`, `tests/agtoosa.bats`, `docs/archived/spec-DEV-045.md`, `docs/AgToosa_TestPlan-DEV-045.md`
+
+Directories in scope: none beyond the listed files
+
+Out of scope        : DEV-055 files and AM tests, `lib/config.sh`, platform runtime code, worktree automation, verifier changes, release/version files
+
+The future build may begin only after DEV-055 is shipped. Shared Build/Handoff surfaces are sequenced after that prerequisite; this backlog deepening does not alter them.
+
+## 3. Tasks
+
+### 3.1 Task Tree
+
+- [ ] **1.** Contract and RED coverage
+  - [ ] 1.1 Add failing `DAG-001`–`DAG-007` fixtures and assertions before implementation — _Requirements: AC-008_
+  - [ ] 1.2 Add the normative Work Package schema and examples to both SPEC-FORMAT copies — _Requirements: AC-001, AC-004, AC-007_
+- [ ] **2.** Package derivation and execution
+  - [ ] 2.1 Define Spec task-to-package derivation, dependency checks, and overlap fallback — _Requirements: AC-002, AC-003, AC-004_
+  - [ ] 2.2 Make Build consume ownership, dependencies, and package verification before fan-out — _Requirements: AC-003, AC-004, AC-007_
+- [ ] **3.** Async boundary
+  - [ ] 3.1 Add the selected-wave Work Packages section to Handoff — _Requirements: AC-005_
+  - [ ] 3.2 Add ownership-gap and merge-order reporting to Import — _Requirements: AC-006, AC-007_
+- [ ] **4.** Closure
+  - [ ] 4.1 Sync Quickref/Trust wording, run future GREEN validation, and record the two-parallel/one-dependent dogfood evidence — _Requirements: AC-007, AC-008_
+
+### 3.2 Wave Plan
+
+**Wave 1 (parallel):** 1.1, 1.2
+
+**Wave 2 (sequential after Wave 1):** 2.1
+
+**Wave 3 (parallel after Wave 2):** 2.2, 3.1
+
+**Wave 4 (sequential after Wave 3):** 3.2
+
+**Wave 5 (sequential after Wave 4):** 4.1
+
+### 3.3 Test Plan
 
 Test plan: `docs/AgToosa_TestPlan-DEV-045.md`
+
+AC coverage: 8 ACs mapped to 7 test IDs (`DAG-001`–`DAG-007`)
+
+Smoke set: 5 tests tagged `@smoke` (`DAG-001`, `DAG-002`, `DAG-003`, `DAG-005`, `DAG-007`)

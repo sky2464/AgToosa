@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (/agtoosa-spec — Spec ✅ Approved — DEV-055)
+> **Last updated:** 2026-07-11 (/agtoosa-build — DEV-055 Wave 1)
 
 ## Project Charter
 
@@ -9,7 +9,7 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | ✅ DEV-055 Spec Approved — ready for `/agtoosa-build` |
+| Current phase | 🏗️ DEV-055 Wave 1 — Agent Capability Matrix |
 | Milestone | `v5.3.7` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
 | Active cycle | DEV-055 |
 | Cycle capacity | `8 story points` |
@@ -20,7 +20,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-055 | Feature: Agent Capability Matrix | Feature | S | 🟦 Todo | 0/5 |
+| DEV-055 | Feature: Agent Capability Matrix | Feature | S | 🟨 In Progress | 2/5 |
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.6.md -->
 <!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.5.md -->
@@ -55,8 +55,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 **DEV-055 — Agent Capability Matrix** (spec: `docs/archived/spec-DEV-055.md`)
 
-- [ ] **1.** RED contract bats (AM-001–AM-007)
-- [ ] **2.** Canonical `AgToosa_AgentCapability.md` + maintainer mirror
+- [x] **1.** RED contract bats (AM-001–AM-007)
+- [x] **2.** Canonical `AgToosa_AgentCapability.md` + maintainer mirror
 - [ ] **3.** Wire Handoff, Review, Build, Help cross-links
 - [ ] **4.** Register `lib/config.sh` + Specialists cross-link
 - [ ] **5.** GREEN bats + test-plan evidence
@@ -282,26 +282,37 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 ## Backlog
 
 > Priority-ordered list of upcoming stories and issues. Updated by `/agtoosa-spec` and `/agtoosa-task`.
+> Roadmap coverage and dependency gates: `docs/updates/roadmap-spec-index.md`. A “spec ready” row remains unapproved until explicitly enrolled through `/agtoosa-spec`.
 
 | ID | Title | Type | Estimate | Epic | Priority | Status |
 |----|-------|------|----------|------|----------|--------|
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
-| DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | ⬜ Backlog — wave-by-wave execution shipped in DEV-067; owned-files/inputs/outputs schema still open |
-| DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | ⬜ Backlog |
+| DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | ⬜ Backlog — executable spec ready; prerequisite DEV-055 shipped |
+| DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | ⬜ Backlog — executable spec ready; depends DEV-045 |
 | DEV-047 | Feature: Async Agent Handoff Packs | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.3 |
 | DEV-048 | Feature: Agent Result Import Gate | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.3 |
 | DEV-049 | Feature: Evidence Ledger | Feature | M | DEV-004 | P0 | 🏁 Shipped — v5.3.4 |
 | DEV-050 | Feature: Cross-Model Review Gate | Feature | S | DEV-002 | P1 | 🏁 Shipped — v5.3.6 |
-| DEV-051 | Feature: Tracker Sync Bridge | Feature | M | DEV-003 | P1 | ⬜ Backlog |
-| DEV-052 | Feature: Hook Automation Pack | Feature | M | DEV-002 | P1 | ⬜ Backlog |
-| DEV-053 | Feature: Extension and Preset Catalog | Feature | M | DEV-003 | P1 | ⬜ Backlog |
+| DEV-051 | Feature: Tracker Sync Bridge | Feature | M | DEV-003 | P1 | ⬜ Backlog — executable spec ready; demand-gated, proposal import only |
+| DEV-052 | Feature: Hook Automation Pack | Feature | M | DEV-002 | P1 | ⬜ Backlog — executable spec ready; depends DEV-059 |
+| DEV-053 | Feature: Extension and Preset Catalog | Feature | M | DEV-003 | P1 | ⬜ Backlog — executable spec ready; catalog contract before DEV-080 |
 | DEV-054 | Feature: Signed Registry Provenance | Feature | M | DEV-003 | P0 | 🏁 Shipped — v5.3.5 |
-| DEV-055 | Feature: Agent Capability Matrix | Feature | S | DEV-002 | P1 | 🟦 Todo — Active Cycle |
-| DEV-056 | Feature: Retrospective Learning Loop | Feature | S | DEV-002 | P2 | ⬜ Backlog |
-| DEV-057 | Feature: Multi-Repo Story Overlay | Feature | L | DEV-002 | P2 | ⬜ Backlog |
-| DEV-058 | Feature: Local Dashboard | Feature | M | DEV-004 | P2 | ⬜ Backlog |
-| DEV-059 | Feature: Governance Policy-as-Code | Feature | M | DEV-004 | P1 | ⬜ Backlog |
+| DEV-055 | Feature: Agent Capability Matrix | Feature | S | DEV-002 | P1 | 🟨 In Progress — Active Cycle |
+| DEV-056 | Feature: Retrospective Learning Loop | Feature | S | DEV-002 | P2 | ⬜ Backlog — executable spec ready; stable evidence inputs required |
+| DEV-057 | Feature: Multi-Repo Story Overlay | Feature | L | DEV-002 | P2 | ⬜ Backlog — executable spec ready; demand-gated and requires DEV-045 shipped |
+| DEV-058 | Feature: Local Dashboard | Feature | M | DEV-004 | P2 | ⬜ Backlog — executable spec ready; read-only local scope |
+| DEV-059 | Feature: Governance Policy-as-Code | Feature | M | DEV-004 | P1 | ⬜ Backlog — executable spec ready; honest enforcement classes required |
 | DEV-060 | Docs: Public Benchmark Suite | Docs | M | DEV-004 | P2 | ✅ Done — suite + scoring + claim boundary in `docs/benchmarks/`; competitor runs manual-deferred |
+| DEV-075 | Docs: Subagent and Persona Guide Suite | Docs | M | DEV-002 | P1 | ⬜ Backlog — executable spec ready; depends on shipped DEV-055 contract |
+| DEV-076 | Spike: Static Documentation Site Proof | Spike | S | DEV-004 | P2 | ⬜ Backlog — executable spec ready; no backend or second docs source |
+| DEV-077 | Chore: Authoring Guide and Onboarding Surface | Chore | S | DEV-003 | P2 | ⬜ Backlog — executable spec ready; canonical links, no duplicated contracts |
+| DEV-078 | Chore: First-15-Minutes Maintenance Gate | Chore | XS | DEV-004 | P1 | ⬜ Backlog — executable spec ready; release-pin and proof-link drift |
+| DEV-079 | Docs: Verifier and CI Adoption Examples | Docs | S | DEV-004 | P2 | ⬜ Backlog — executable spec ready; copy-in CI boundary |
+| DEV-080 | Feature: Official Registry Pack Pilot | Feature | L | DEV-003 | P2 | ⬜ Backlog — executable spec ready; depends DEV-053; external publish manual |
+| DEV-081 | Spike: Optional Local DX Add-on Validation | Spike | M | DEV-001 | P2 | ⬜ Backlog — executable spec ready; validation only, no implementation |
+| DEV-082 | Spike: High-Assurance Signature Mode Validation | Spike | S | DEV-003 | P2 | ⬜ Backlog — executable spec ready; precedes fail-closed implementation |
+| DEV-083 | Docs: Voluntary Workflow Metrics and Case Study Kit | Docs | S | DEV-004 | P2 | ⬜ Backlog — executable spec ready; no telemetry |
+| DEV-084 | Chore: Open-Source Sustainability and Support Boundary | Chore | XS | DEV-004 | P2 | ⬜ Backlog — executable spec ready; no feature gates or SLA claim |
 | DEV-035 | Chore: Launch P0 publication and quickstart gate | Chore | M | DEV-004 | P0 | ✅ Done |
 | DEV-036 | Fix: Windows and registry parity | Fix | M | DEV-001 / DEV-003 | P1 | ✅ Done |
 | DEV-037 | Chore: Truthful launch documentation and positioning | Chore | M | DEV-002 | P1 | ✅ Done |
@@ -320,10 +331,10 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Stories | Status |
 |----|-------|---------|--------|
-| DEV-001 | Epic: Core Generator Engine | 1 open / 1 total | ⬜ Backlog |
-| DEV-002 | Epic: Workflow Templates | 9 open / 19 total | 🟦 Todo |
-| DEV-003 | Epic: Community Template Registry | 4 open / 4 total | ⬜ Backlog |
-| DEV-004 | Epic: Testing & QA Harness | 5 open / 6 total | ⬜ Backlog |
+| DEV-001 | Epic: Core Generator Engine | 2 open / 2 total | ⬜ Backlog |
+| DEV-002 | Epic: Workflow Templates | 10 open / 20 total | 🟦 Todo |
+| DEV-003 | Epic: Community Template Registry | 7 open / 7 total | ⬜ Backlog |
+| DEV-004 | Epic: Testing & QA Harness | 10 open / 11 total | ⬜ Backlog |
 
 ### Epic Charters
 
@@ -493,3 +504,6 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🚀 Release 5.3.6 shipped — v5.3.6; version parity bash/ps1/npm; Milestone v5.3.7 (next) | AgToosa |
 | 2026-07-11 | ✏️ /agtoosa-spec DEV-055 enrolled — Agent Capability Matrix deepened (lifecycle routing matrix post-DEV-050); spec `docs/archived/spec-DEV-055.md`; test plan `docs/AgToosa_TestPlan-DEV-055.md`; estimate S; Active Cycle Todo; awaiting Spec Approved | AgToosa |
 | 2026-07-11 | /agtoosa-spec — Spec ✅ Approved — DEV-055 — spec-DEV-055.md; estimate S; enrolled in cycle | AgToosa |
+| 2026-07-11 | 🏗️ Build 🏗️ Started — DEV-055 — TDD cycle; 5 tasks; scope: AgToosa_AgentCapability.md, Handoff/Review/Build/Help, Specialists cross-link, config, bats AM-001–AM-007; Wave 1: RED bats + canonical doc | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-055 — Task 🟢 2/5 — Wave 1 complete: AM bats RED (5 fail / 3 pass); `template/Docs/AgToosa_AgentCapability.md` + `docs/` mirror | AgToosa |
+| 2026-07-11 | ✏️ Roadmap intake split complete — DEV-045/046/051/052/053/056/057/058/059 deepened to executable backlog specs; DEV-075–DEV-084 specs and test plans added; coverage index: `docs/updates/roadmap-spec-index.md`; no stories enrolled or approved | AgToosa |

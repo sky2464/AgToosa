@@ -9,11 +9,21 @@
 3. `docs/AgToosa_TestPlan-DEV-*.md` and archived evidence — proof.
 4. `docs/AgToosa_Team_Trust_Roadmap.md` — enforcement posture and non-guarantees.
 5. `docs/updates/agtoosa-plan-revised.md` — recommended execution sequence.
-6. `docs/updates/AgToosa Strategic Improvement Roadmap.md` — non-authoritative opportunity map.
+6. `docs/updates/roadmap-spec-index.md` — coverage map from actionable proposals to DEV specs.
+7. `docs/updates/AgToosa Strategic Improvement Roadmap.md` — non-authoritative opportunity map.
 
 If an update document conflicts with Master-Plan, Master-Plan wins.
 
 ## Files
+
+### `roadmap-spec-index.md`
+
+The split-work index:
+
+- Links every actionable roadmap proposal to an executable DEV spec, shipped story, or Manual / Deferred row.
+- Records dependency and demand gates.
+- Keeps parked and rejected ideas out of implementation backlog.
+- Provides the completeness check used when these update documents change.
 
 ### `agtoosa-plan-revised.md`
 
