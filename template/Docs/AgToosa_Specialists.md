@@ -108,8 +108,18 @@ Terminal output must include this block so `/agtoosa-status` and reviewers can a
 | `/agtoosa-update` `check` / `plan` | After Detect | Read-only **Specialist Compatibility Check** |
 | `/agtoosa-update` full / `apply` | After Verify | Optional **separate** materialization proposal — not part of CLI Apply |
 | `/agtoosa-spec` | Early Part 1 | Read roster; filter `spec` + trigger; parallel or sequential; merge before Goal Contract finalization |
+| `/agtoosa-review` | After Part 1 personas | Read roster; filter `review` + trigger; parallel or sequential; merge before Part 3 verdict; see `Docs/AgToosa_CrossModelReview.md` |
 
-See `Docs/AgToosa_Init.md`, `Docs/AgToosa_Update.md`, and `Docs/AgToosa_Spec.md` for step-by-step obligations.
+**Review-phase orchestration (`/agtoosa-review`):**
+
+1. If `Docs/Context/specialists.md` is missing, skip specialist lanes (record "no approved specialists").
+2. Load the roster; select specialists where `phase_hooks` includes **`review`** and **trigger** matches the active story (title, paths, epic, or threat-model tier).
+3. For each selected specialist, run a read-only lane that returns the structured evidence block from this doc plus cross-model fields from `Docs/AgToosa_CrossModelReview.md`.
+4. **Parallel:** when the host supports native subagent delegation, run matching review lanes in parallel with the independent cross-model reviewer.
+5. **Sequential fallback:** otherwise run the same lanes one at a time and print: `Cross-model lanes ran sequentially (platform does not support parallel subagents).`
+6. Merge evidence into the review report `## Cross-Model Review` section before the Part 3 verdict table.
+
+See `Docs/AgToosa_Init.md`, `Docs/AgToosa_Update.md`, `Docs/AgToosa_Spec.md`, and `Docs/AgToosa_CrossModelReview.md` for step-by-step obligations.
 
 ## Secret and MCP Safety
 

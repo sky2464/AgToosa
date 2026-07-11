@@ -12,6 +12,7 @@ DOCS_FILES=(
   "Docs/AgToosa_Spec.md"
   "Docs/AgToosa_Build.md"
   "Docs/AgToosa_Review.md"
+  "Docs/AgToosa_CrossModelReview.md"
   "Docs/AgToosa_Ship.md"
   "Docs/AgToosa_QA.md"
   "Docs/AgToosa_Revert.md"
@@ -142,6 +143,7 @@ OPTIONAL_TEMPLATE_FILES=(
   ".github/prompts/agtoosa-help.prompt.md"
   ".github/agents/agtoosa.agent.md"
   ".github/agents/agtoosa-status-guide.agent.md"
+  ".github/agents/agtoosa-cross-model-reviewer.agent.md"
   ".github/instructions/agtoosa-core.instructions.md"
   ".github/instructions/agtoosa-testing.instructions.md"
   ".github/instructions/agtoosa-security.instructions.md"
@@ -331,6 +333,7 @@ COPILOT_PROMPT_FILES=(
 COPILOT_AGENT_FILES=(
   ".github/agents/agtoosa.agent.md"
   ".github/agents/agtoosa-status-guide.agent.md"
+  ".github/agents/agtoosa-cross-model-reviewer.agent.md"
 )
 
 COPILOT_INSTRUCTION_FILES=(

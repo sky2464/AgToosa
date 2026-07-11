@@ -16,19 +16,19 @@ Maintain a **per-story evidence ledger** — a concise, auditable proof index fo
 >
 > **Claim Boundary:** This workflow is **agent-instructed** (not generator-enforced). Verifier WARN/FAIL for missing ledgers is **roadmap**. The optional JSONL mirror is **non-authoritative**.
 >
-> **Source of truth:** `docs/Master-Plan.md` remains the repo-local source of truth. The markdown ledger is the canonical index; `docs/agtoosa-evidence.jsonl` is an optional tooling mirror.
+> **Source of truth:** `Docs/Master-Plan.md` remains the repo-local source of truth. The markdown ledger is the canonical index; `Docs/agtoosa-evidence.jsonl` is an optional tooling mirror.
 
 ## When to update
 
 | Gate | Action |
 |------|--------|
-| `/agtoosa-review` | Create or update `docs/archived/evidence-[story-id].md` with `phase=review` rows |
+| `/agtoosa-review` | Create or update `Docs/archived/evidence-[story-id].md` with `phase=review` rows |
 | `/agtoosa-ship` | Finalize the same file with `phase=ship` rows before marking Shipped |
 | `/agtoosa-build` / `/agtoosa-import` | Do **not** write the ledger live — keep writing test-plan / IMPORT evidence; consolidate at review/ship |
 
 ## Markdown schema (canonical)
 
-Write to `docs/archived/evidence-[story-id].md` (sanitize story-id to `[A-Za-z0-9._-]+`):
+Write to `Docs/archived/evidence-[story-id].md` (sanitize story-id to `[A-Za-z0-9._-]+`):
 
 ```markdown
 # Evidence Ledger — [Story ID]
@@ -39,16 +39,18 @@ Write to `docs/archived/evidence-[story-id].md` (sanitize story-id to `[A-Za-z0-
 
 | Phase | AC | Artifact | Pointer | Verification | Exit | Reviewer | ts |
 |-------|----|----------|---------|--------------|------|----------|-----|
-| review | AC-001 | test-log | docs/AgToosa_TestPlan-….md#GREEN | bats … -f "…" | 0 | AgToosa | ISO-8601 |
+| review | AC-001 | test-log | Docs/AgToosa_TestPlan-….md#GREEN | bats … -f "…" | 0 | AgToosa | ISO-8601 |
 ```
 
 **Required columns:** Phase (`review` \| `ship`), AC, Artifact, Pointer, Verification, Exit, Reviewer, ts.
 
-**Artifact types:** `test-log` · `review` · `pr` · `branch` · `screenshot` · `spec` · `verifier` · `other`
+**Artifact types:** `test-log` · `review` · `cross-model` · `pr` · `branch` · `screenshot` · `spec` · `verifier` · `other`
+
+**Cross-model row (review phase):** When `/agtoosa-review cross-model` runs or is skipped with rationale, add a row with `artifact=cross-model`, pointer to `docs/archived/review-[story-id].md## Cross-Model Review`, and verification noting reviewer identity, outcome (`completed` / `fallback` / `skipped`), and skip rationale when applicable.
 
 ## Optional JSONL mirror (non-authoritative)
 
-When useful, append one JSON object per new ledger row to `docs/agtoosa-evidence.jsonl`:
+When useful, append one JSON object per new ledger row to `Docs/agtoosa-evidence.jsonl`:
 
 ```json
 {"ts":"ISO-8601","story":"DEV-049","phase":"review","ac":["AC-001"],"artifact":"test-log","pointer":"…","verification":"…","exit":0,"reviewer":"AgToosa"}
@@ -63,7 +65,7 @@ Never treat JSONL as overriding the markdown file.
 3. **Write/update markdown** — Merge rows; do not delete prior review rows when shipping.
 4. **Optional JSONL** — Append new rows only.
 5. **Secret safety** — Cite paths and command names only; **redact** tokens, API keys, passwords, private URLs.
-6. **Phase event** — Append to `docs/agtoosa-events.jsonl`:
+6. **Phase event** — Append to `Docs/agtoosa-events.jsonl`:
    `{"ts":"[ISO-8601 UTC]","phase":"evidence","event":"update","story":"[Story ID]","by":"AgToosa"}`
 
 ## Output

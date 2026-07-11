@@ -35,7 +35,7 @@ Present every candidate in a table using these columns:
 | **safety_notes** | If any | Secret handling, production touch, or trust-boundary warnings. |
 | **platform_targets** | Yes | Which native files to create per installed platform (see Platform Matrix). |
 
-**Decision column** (proposal tables): `Approve` / `Decline` / `Defer` — record outcomes in `docs/Master-Plan.md` **Update Log**.
+**Decision column** (proposal tables): `Approve` / `Decline` / `Defer` — record outcomes in `Docs/Master-Plan.md` **Update Log**.
 
 ## Rejection Rules
 
@@ -53,7 +53,7 @@ After **explicit user approval** only:
 
 | Artifact | Path | Notes |
 |----------|------|-------|
-| Roster | `docs/Context/specialists.md` | YAML or markdown list of approved specialists — **not** shipped in `template/` |
+| Roster | `Docs/Context/specialists.md` | YAML or markdown list of approved specialists — **not** shipped in `template/` |
 | Codex | `.codex/skills/<id>/SKILL.md` | Valid `name` + `description` frontmatter; specialist execution body |
 | Claude Code | `.claude/skills/<id>.md` | Thin runner; may use Agent tool for delegation |
 | GitHub Copilot | `.github/agents/<id>.agent.md` | Agent definition per repo conventions |
@@ -61,7 +61,7 @@ After **explicit user approval** only:
 | Windsurf | `.windsurf/workflows/<id>-specialist.md` | Sequential lane default |
 | Gemini | `.gemini/commands/<id>-specialist.toml` | Sequential lane default |
 
-`agtoosa.sh --update` installs AgToosa-owned template inventory only — it must **never** register or overwrite `docs/Context/specialists.md` or project specialist native files.
+`agtoosa.sh --update` installs AgToosa-owned template inventory only — it must **never** register or overwrite `Docs/Context/specialists.md` or project specialist native files.
 
 ## Platform Capability Matrix (v1)
 
@@ -78,7 +78,7 @@ After **explicit user approval** only:
 
 Before proposing specialists, detect installed platforms using:
 
-- `docs/.agtoosa-version` and `.agtoosa-lock.json` platform list
+- `Docs/.agtoosa-version` and `.agtoosa-lock.json` platform list
 - Sentinel files: `.codex/`, `.claude/`, `.cursor/`, `.windsurf/`, `.gemini/`, `.github/agents/`
 - Entry points: `CLAUDE.md`, `AGENTS.md`, `.cursorrules`, `.windsurfrules`, `OPENCODE.md`
 
@@ -108,8 +108,18 @@ Terminal output must include this block so `/agtoosa-status` and reviewers can a
 | `/agtoosa-update` `check` / `plan` | After Detect | Read-only **Specialist Compatibility Check** |
 | `/agtoosa-update` full / `apply` | After Verify | Optional **separate** materialization proposal — not part of CLI Apply |
 | `/agtoosa-spec` | Early Part 1 | Read roster; filter `spec` + trigger; parallel or sequential; merge before Goal Contract finalization |
+| `/agtoosa-review` | After Part 1 personas | Read roster; filter `review` + trigger; parallel or sequential; merge before Part 3 verdict; see `Docs/AgToosa_CrossModelReview.md` |
 
-See `docs/AgToosa_Init.md`, `docs/AgToosa_Update.md`, and `docs/AgToosa_Spec.md` for step-by-step obligations.
+**Review-phase orchestration (`/agtoosa-review`):**
+
+1. If `Docs/Context/specialists.md` is missing, skip specialist lanes (record "no approved specialists").
+2. Load the roster; select specialists where `phase_hooks` includes **`review`** and **trigger** matches the active story (title, paths, epic, or threat-model tier).
+3. For each selected specialist, run a read-only lane that returns the structured evidence block from this doc plus cross-model fields from `Docs/AgToosa_CrossModelReview.md`.
+4. **Parallel:** when the host supports native subagent delegation, run matching review lanes in parallel with the independent cross-model reviewer.
+5. **Sequential fallback:** otherwise run the same lanes one at a time and print: `Cross-model lanes ran sequentially (platform does not support parallel subagents).`
+6. Merge evidence into the review report `## Cross-Model Review` section before the Part 3 verdict table.
+
+See `Docs/AgToosa_Init.md`, `Docs/AgToosa_Update.md`, `Docs/AgToosa_Spec.md`, and `Docs/AgToosa_CrossModelReview.md` for step-by-step obligations.
 
 ## Secret and MCP Safety
 
@@ -119,6 +129,6 @@ See `docs/AgToosa_Init.md`, `docs/AgToosa_Update.md`, and `docs/AgToosa_Spec.md`
 
 ## Related Workflows
 
-- **Project Skill Discovery** — `docs/AgToosa_Init.md` Phase F; Codex-first repeatable commands (DEV-008)
-- **Story Skill Opportunity Synthesis** — `docs/AgToosa_Spec.md`; story-scoped skill candidates
-- **Virtual review personas** — `docs/AgToosa_Review.md`; not replaced by project specialists
+- **Project Skill Discovery** — `Docs/AgToosa_Init.md` Phase F; Codex-first repeatable commands (DEV-008)
+- **Story Skill Opportunity Synthesis** — `Docs/AgToosa_Spec.md`; story-scoped skill candidates
+- **Virtual review personas** — `Docs/AgToosa_Review.md`; not replaced by project specialists
