@@ -4374,7 +4374,7 @@ assert_competitive_story_artifacts() {
   assert_competitive_story_artifacts "DEV-050"
 }
 
-# ── DEV-050: Cross-Model Review Gate (CM-001–CM-006) ─────────────────────────
+# ── DEV-050: Cross-Model Review Gate (CM-001–CM-007) ─────────────────────────
 
 @test "DEV-050 CM-001: cross-model contract exists in template and maintainer docs" {
   local root="$BATS_TEST_DIRNAME/.."

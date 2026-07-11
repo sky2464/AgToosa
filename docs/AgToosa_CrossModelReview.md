@@ -16,7 +16,7 @@ Run an optional **cross-model review gate** that separates the **writer** (build
 >
 > **Claim Boundary:** This gate is **agent-instructed**. AgToosa documents orchestration and evidence; it does **not** route paid model APIs or enforce a second model at generator runtime.
 >
-> **Source of truth:** `Docs/Master-Plan.md` remains the repo-local source of truth. External reviewers are integrations, not authorities.
+> **Source of truth:** `docs/Master-Plan.md` remains the repo-local source of truth. External reviewers are integrations, not authorities.
 
 ## Roles
 
@@ -39,8 +39,8 @@ Compute tier from the active spec STRIDE table and Must AC keywords — do not r
 ## Workflow
 
 1. **Tier check** — Read active spec threat model and Must ACs; record tier in review notes.
-2. **Delegate reviewer** — Launch independent reviewer subagent(s) with read-only scope: diff, spec, test logs, threat model, test plan.
-3. **Specialist lanes** — When `Docs/Context/specialists.md` exists, run only specialists whose `phase_hooks` includes `review` and whose `trigger` matches the active story (see `Docs/AgToosa_Specialists.md`).
+2. **Delegate reviewer** — Launch independent reviewer subagent(s) with read-only scope: diff, spec, test logs, threat model, test plan. **Do not paste secrets** into reviewer prompts — redact sensitive values from diffs and logs (same rules as `docs/AgToosa_Handoff.md`).
+3. **Specialist lanes** — When `docs/Context/specialists.md` exists, run only specialists whose `phase_hooks` includes `review` and whose `trigger` matches the active story (see `docs/AgToosa_Specialists.md`).
 4. **Parallel execution** — When the host supports native parallel subagent delegation (Task tool, Agent tool, GitHub agent), run reviewer persona(s) and matching specialists in parallel.
 5. **Sequential fallback** — When parallel delegation is unavailable, run the same lanes sequentially and record exactly:
 
@@ -57,7 +57,7 @@ Compute tier from the active spec STRIDE table and Must AC keywords — do not r
 
 ## Structured Evidence Block
 
-Every reviewer lane must return this shape (extends `Docs/AgToosa_Specialists.md`):
+Every reviewer lane must return this shape (extends `docs/AgToosa_Specialists.md`):
 
 ```markdown
 ### Cross-model evidence: <reviewer-id>
@@ -85,11 +85,13 @@ Deduplicate before the verdict table; prefer `both-models` when descriptions mat
 
 ## Read-Only Guarantee
 
-The independent reviewer **must not** modify `Docs/Master-Plan.md`, git state, or implementation files during the gate. If a fix is needed, the orchestrator asks the user to authorize `/agtoosa-build` or a scoped fix — same pattern as `Docs/AgToosa_StatusGuide.md`.
+The independent reviewer **must not** modify `docs/Master-Plan.md`, git state, or implementation files during the gate. If a fix is needed, the orchestrator asks the user to authorize `/agtoosa-build` or a scoped fix — same pattern as `docs/AgToosa_StatusGuide.md`.
+
+> **Claim boundary:** On GitHub Copilot and other hosts, read-only is **agent-instructed** — native agent tool manifests may still list `terminal` or write-capable tools. Enforcement is policy + orchestrator authorization, not tool-level sandboxing (v1).
 
 ## Review Report Section
 
-Append to `Docs/archived/review-[story-id].md`:
+Append to `docs/archived/review-[story-id].md`:
 
 ```markdown
 ## Cross-Model Review
@@ -105,14 +107,14 @@ Append to `Docs/archived/review-[story-id].md`:
 [Merged findings with confidence tiers]
 ```
 
-Update `Docs/archived/evidence-[story-id].md` with a `cross-model` row per `Docs/AgToosa_Evidence.md`.
+Update `docs/archived/evidence-[story-id].md` with a `cross-model` row per `docs/AgToosa_Evidence.md`.
 
 ## Related Workflows
 
-- **Virtual personas** — `Docs/AgToosa_Review.md` Part 1 (not replaced)
-- **Cross-platform** — `Docs/AgToosa_Review.md` Part 4 (`/agtoosa-review cross`)
-- **Project specialists** — `Docs/AgToosa_Specialists.md`
-- **Handoff packs** — `Docs/AgToosa_Handoff.md` when reviewer runs async/external
+- **Virtual personas** — `docs/AgToosa_Review.md` Part 1 (not replaced)
+- **Cross-platform** — `docs/AgToosa_Review.md` Part 4 (`/agtoosa-review cross`)
+- **Project specialists** — `docs/AgToosa_Specialists.md`
+- **Handoff packs** — `docs/AgToosa_Handoff.md` when reviewer runs async/external
 
 ## Output
 

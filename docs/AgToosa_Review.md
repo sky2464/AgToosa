@@ -9,48 +9,48 @@
 | `/agtoosa-review arch` | Engineering Manager persona only — architecture, 500-line limit, observability |
 | `/agtoosa-review debug` | Iron Law root-cause investigation for a specific bug or failing test |
 | `/agtoosa-review cross` | Cross-platform second-opinion guidance (switch to another installed AI platform and re-run review) |
-| `/agtoosa-review cross-model` | Cross-model review gate — independent reviewer subagent/model (`Docs/AgToosa_CrossModelReview.md`) |
+| `/agtoosa-review cross-model` | Cross-model review gate — independent reviewer subagent/model (`docs/AgToosa_CrossModelReview.md`) |
 
 ## Objective
 Ensure code quality, security, and simplicity through multi-persona review.
 
-> **Prerequisites:** `/agtoosa-build` must be complete. Verify that the full test suite passes and the Story status in `Docs/Master-Plan.md` is `In Progress` (not `Todo`). If tests are failing or no build artifact exists, **stop** and instruct the user to run `/agtoosa-build test`. Do **not** auto-run `/agtoosa-build`.
+> **Prerequisites:** `/agtoosa-build` must be complete. Verify that the full test suite passes and the Story status in `docs/Master-Plan.md` is `In Progress` (not `Todo`). If tests are failing or no build artifact exists, **stop** and instruct the user to run `/agtoosa-build test`. Do **not** auto-run `/agtoosa-build`.
 >
-> **Phase-order abort (from `Docs/AgToosa_Governance.md`):** If the Story status is still `Todo`, print exactly `⚠️ Story [ID] is in 'Todo' state. Run /agtoosa-build first.` and abort.
+> **Phase-order abort (from `docs/AgToosa_Governance.md`):** If the Story status is still `Todo`, print exactly `⚠️ Story [ID] is in 'Todo' state. Run /agtoosa-build first.` and abort.
 
 ### Terminal Evidence Contract
 
-> See `Docs/AgToosa_Agent.md` → **Terminal Evidence Contract** for the full rules.
+> See `docs/AgToosa_Agent.md` → **Terminal Evidence Contract** for the full rules.
 
 Each reviewer persona (or parallel subagent) must report command run, exit code, pass/fail, warnings, errors, changed files, and next action for every test, scan, or command executed. Nonzero exits and tool warnings block a 🟢 Passed verdict unless explicitly accepted with evidence. The orchestrator summarizes unresolved terminal output before presenting the review approval gate.
 
 ### Part 1 — Virtual Specialist Reviews
 
 **Before starting reviews:**
-- Update `Docs/Master-Plan.md`: set the Story row status to `In Review`.
+- Update `docs/Master-Plan.md`: set the Story row status to `In Review`.
 - Add an **Update Log** entry: `YYYY-MM-DD HH:MM — /agtoosa-review — Review 🔍 Started — [Story ID] — 4-persona review running.`
 
 1.  **Security Officer:** OWASP Top 10 + STRIDE audit; SAST/DAST/Secrets scanning (Semgrep, CodeQL, Gitleaks); verify threat model from Spec.
 
 2.  **Engineering Manager (`/agtoosa-review arch`):** Confirm no file exceeds 500 lines; check OOP compliance, observability hooks, and test coverage thresholds. When running the `arch` sub-command, additionally:
 
-    **Master Architecture Alignment:** Read `Docs/Master-Architecture.md` and verify the change matches the documented boundaries, diagrams, data flow, deployment, security, and observability notes. Flag missing, stale, or contradicted architecture documentation as a 🟡 Warning, or 🔴 Critical if the implementation violates a documented security or boundary constraint.
+    **Master Architecture Alignment:** Read `docs/Master-Architecture.md` and verify the change matches the documented boundaries, diagrams, data flow, deployment, security, and observability notes. Flag missing, stale, or contradicted architecture documentation as a 🟡 Warning, or 🔴 Critical if the implementation violates a documented security or boundary constraint.
 
-    **Deep Module Analysis** (see `Docs/DEEPENING.md`):
+    **Deep Module Analysis** (see `docs/DEEPENING.md`):
     - Identify shallow modules: pass-through functions, one-line service methods, "Manager/Handler/Helper" classes with no domain meaning.
     - For each shallow module found: flag as 🟡 Warning with specific refactor suggestion.
     - Check that interfaces reveal WHAT the module does, not HOW it does it.
 
-    **Domain Language Alignment** (see `Docs/LANGUAGE.md` + `Docs/Context/CONTEXT.md`):
-    - Verify that variable names, function names, error messages, and API endpoints use terms from `Docs/Context/CONTEXT.md`.
+    **Domain Language Alignment** (see `docs/LANGUAGE.md` + `docs/Context/CONTEXT.md`):
+    - Verify that variable names, function names, error messages, and API endpoints use terms from `docs/Context/CONTEXT.md`.
     - Flag any inconsistency (e.g., `userId` when domain says `accountId`) as 🟡 Warning.
-    - If `Docs/Context/CONTEXT.md` doesn't exist, note it as 🟡 Warning and suggest running `/agtoosa-spec` to establish domain language alignment.
+    - If `docs/Context/CONTEXT.md` doesn't exist, note it as 🟡 Warning and suggest running `/agtoosa-spec` to establish domain language alignment.
 
     **ADR Coverage:**
-    - Identify any significant architectural decisions made in this change that lack a corresponding ADR in `Docs/adr/`.
-    - Create missing ADRs using `Docs/ADR-FORMAT.md` as a template, or flag as 🟡 Warning if creation is out of scope.
+    - Identify any significant architectural decisions made in this change that lack a corresponding ADR in `docs/adr/`.
+    - Create missing ADRs using `docs/ADR-FORMAT.md` as a template, or flag as 🟡 Warning if creation is out of scope.
 
-3.  **CEO / Product Owner:** Verify feature completeness against the Goal Contract, Project Charter in `Docs/Master-Plan.md`, and acceptance criteria.
+3.  **CEO / Product Owner:** Verify feature completeness against the Goal Contract, Project Charter in `docs/Master-Plan.md`, and acceptance criteria.
 
     **Goal Contract Alignment:**
     - Read the active spec's `### Goal Contract`.
@@ -63,7 +63,7 @@ Each reviewer persona (or parallel subagent) must report command run, exit code,
 
     a. **Test suite** — Confirm all unit, integration, E2E, and browser QA tests pass; verify TDD cycle was followed if enabled.
 
-    b. **Coverage gate** — Read `coverage_threshold` from `Docs/Context/workflow.md`; flag below-threshold as 🔴 Critical.
+    b. **Coverage gate** — Read `coverage_threshold` from `docs/Context/workflow.md`; flag below-threshold as 🔴 Critical.
 
     c. **AC coverage** — Verify every `AC-NNN` (Must-priority) in the active spec has at least one passing test in the test plan. Any uncovered AC is 🔴 Critical.
 
@@ -73,7 +73,7 @@ Each reviewer persona (or parallel subagent) must report command run, exit code,
 
     f. **Performance baseline** — For web: verify Core Web Vitals are not regressed vs. prior run; flag regressions as 🟡 Warning.
 
-    g. **Browser/device matrix** — Check the `browser_matrix` list in `Docs/Context/tech-stack.md`; flag untested combinations as 🟡 Warning.
+    g. **Browser/device matrix** — Check the `browser_matrix` list in `docs/Context/tech-stack.md`; flag untested combinations as 🟡 Warning.
 
     h. **Flaky test detection** — Re-run the tests touched by this story (or use the runner's `--repeat N` when available) and flag any test that passes/fails non-deterministically as 🟡 Warning. Do not re-run the entire suite 3× — scope flake detection to changed tests to keep review time and token cost bounded.
 
@@ -100,10 +100,10 @@ Each reviewer persona (or parallel subagent) must report command run, exit code,
 
 6.  **Review Report:** Structured findings from all 4 personas — 🔴 Critical / 🟡 Warning / 🟢 Passed. Every 🔴 Critical must include the Iron Law root cause. Include a Goal Contract alignment row. Block `/agtoosa-ship` if any 🔴 Critical findings remain.
 
-    **Ship version suggestion (maintainer / semver repos):** In the review report footer, default the suggested release to **PATCH+1** on the current MINOR (e.g. `5.2.0` → `5.2.1` for Fix/Chore/S stories). Use **MINOR** only for a new MINOR train, multi-story batched release, or deliberate cycle boundary; use **MAJOR** only for breaking changes per ADR-004. See `Docs/adr/ADR-005-release-cadence.md` (generator) or project ADRs. Do not suggest skipping to the next MINOR for routine small stories.
+    **Ship version suggestion (maintainer / semver repos):** In the review report footer, default the suggested release to **PATCH+1** on the current MINOR (e.g. `5.2.0` → `5.2.1` for Fix/Chore/S stories). Use **MINOR** only for a new MINOR train, multi-story batched release, or deliberate cycle boundary; use **MAJOR** only for breaking changes per ADR-004. See `docs/adr/ADR-005-release-cadence.md` (generator) or project ADRs. Do not suggest skipping to the next MINOR for routine small stories.
 
     **Master-Plan update (after verdict):**
-    - If **all clear** (no unresolved 🔴 Critical): add **Update Log** entry `Review ✅ Approved` (per `Docs/AgToosa_Governance.md`). Keep Active Cycle status `In Review` until `/agtoosa-ship` completes.
+    - If **all clear** (no unresolved 🔴 Critical): add **Update Log** entry `Review ✅ Approved` (per `docs/AgToosa_Governance.md`). Keep Active Cycle status `In Review` until `/agtoosa-ship` completes.
 
     - If **blocked** (unresolved 🔴 Critical): add **Update Log** entry `Review 🔴 Blocked: [brief list]`; set Active Cycle status back to `In Progress`.
 
@@ -119,19 +119,19 @@ Different AI models surface different classes of bugs — a second platform revi
 
 ### Part 5 — Cross-Model Review Gate (`/agtoosa-review cross-model`)
 
-Writer/reviewer separation across different agents or models reduces single-agent blind spots. **Do not duplicate the full contract here** — read and execute `Docs/AgToosa_CrossModelReview.md`.
+Writer/reviewer separation across different agents or models reduces single-agent blind spots. **Do not duplicate the full contract here** — read and execute `docs/AgToosa_CrossModelReview.md`.
 
 8.  **Cross-Model Review:**
     *   After Part 1 virtual personas (or when running `cross-model` alone), compute the risk tier from the active spec threat model and Must ACs.
     *   For **recommended** or **strongly recommended** tiers, run `/agtoosa-review cross-model` or record an explicit **skip rationale** in the review report `## Cross-Model Review` section.
     *   Delegate an **independent reviewer** subagent or second model with a **read-only** guarantee — the reviewer must not modify files or git state during the gate.
-    *   When `Docs/Context/specialists.md` exists, orchestrate `review`-phase specialists per `Docs/AgToosa_Specialists.md` (trigger match only).
+    *   When `docs/Context/specialists.md` exists, orchestrate `review`-phase specialists per `docs/AgToosa_Specialists.md` (trigger match only).
     *   Merge findings with confidence tiers (`both-models`, `reviewer-only`, `writer-only`, `virtual-persona-only`) before Part 3 verdict.
-    *   Fallback when no second model is available: `/agtoosa-review cross`, sequential virtual personas, or documented skip — see `Docs/AgToosa_CrossModelReview.md`.
+    *   Fallback when no second model is available: `/agtoosa-review cross`, sequential virtual personas, or documented skip — see `docs/AgToosa_CrossModelReview.md`.
 
 ## Output
-*   Save the review report to `Docs/archived/review-[story-id].md` (e.g., `Docs/archived/review-DEV-15.md`). This file is required by `/agtoosa-ship check`. The file must contain the structured findings table with all 🔴 / 🟡 / 🟢 items.
-*   Create or update `Docs/archived/evidence-[story-id].md` per `Docs/AgToosa_Evidence.md` (or run `/agtoosa-evidence review`). Populate `phase=review` rows from the story test plan and review findings. This step is required when writing the review report — do not defer it to ship.
+*   Save the review report to `docs/archived/review-[story-id].md` (e.g., `docs/archived/review-DEV-15.md`). This file is required by `/agtoosa-ship check`. The file must contain the structured findings table with all 🔴 / 🟡 / 🟢 items.
+*   Create or update `docs/archived/evidence-[story-id].md` per `docs/AgToosa_Evidence.md` (or run `/agtoosa-evidence review`). Populate `phase=review` rows from the story test plan and review findings. This step is required when writing the review report — do not defer it to ship.
 *   Present the approval gate:
 
     ```

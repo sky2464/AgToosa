@@ -12,7 +12,7 @@
 | Milestone | `v5.3.6` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
 | Active cycle | — |
 | Cycle capacity | `8 story points` |
-| Current phase | 🏗️ DEV-050 build complete — ready for `/agtoosa-review` |
+| Current phase | 🔍 DEV-050 review approved — ready for `/agtoosa-ship` |
 
 ## Active Cycle
 
@@ -20,7 +20,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-050 | Feature: Cross-Model Review Gate | Feature | S | 🟨 In Progress | 5/5 |
+| DEV-050 | Feature: Cross-Model Review Gate | Feature | S | 🔍 In Review | 5/5 |
 
 <!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.5.md -->
 <!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.4.md -->
@@ -475,3 +475,5 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-050 — Task 🟢 2/5 — Wave 1 complete: CM bats RED (3 fail / 3 pass); `template/Docs/AgToosa_CrossModelReview.md` + `docs/` mirror | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-050 — Task 🟢 4/5 — Wave 2 complete: Review Part 5 + Specialists review hook + Evidence cross-model row + config + GitHub agent + adapters; CM-001–CM-006 green | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-050 — Task 🟢 5/5 — Wave 3 complete: CM-007 Agent/Skills/Quickref cross-links + GREEN evidence in test plan; DEV-050 filter 8/8 green; build complete — next: `/agtoosa-review` | AgToosa |
+| 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-050 — 4-persona + cross-model review running | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-050; 0 🔴 Critical, 5 🟡 Warning (4 fixed, 1 accepted); report: `docs/archived/review-DEV-050.md`; evidence: `docs/archived/evidence-DEV-050.md` | AgToosa |

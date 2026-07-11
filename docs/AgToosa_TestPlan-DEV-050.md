@@ -21,7 +21,7 @@
 | AC-009 | CM-001 | Bats | `lib/config.sh` registers `AgToosa_CrossModelReview.md` and `agtoosa-cross-model-reviewer.agent.md` | yes @smoke |
 | AC-010 | CM-002 | Integration | `AgToosa_Review.md` lists `cross-model` sub-command and routes to canonical doc | yes @smoke |
 | AC-011 | CM-005 | Docs | `AgToosa_Evidence.md` allows cross-model evidence row | yes |
-| AC-012 | CM-001–CM-006 | Bats | Full DEV-050 filter green; adapter parity spot-check | yes @smoke |
+| AC-012 | CM-001–CM-007 | Bats | Full DEV-050 filter green; adapter parity spot-check | yes @smoke |
 
 ## Negative / Edge Scenarios
 
@@ -42,6 +42,16 @@ git diff --check
 ## Evidence
 
 Record implementation evidence in this file and `docs/archived/evidence-DEV-050.md` at review/ship time.
+
+### RED evidence — DEV-050
+
+| Field | Value |
+|-------|--------|
+| Command | `bats tests/agtoosa.bats -f "DEV-050"` (Wave 1, before implementation) |
+| Exit code | 1 |
+| Pass/fail | FAIL — 3 fail / 3 pass (CM-001–CM-003 failing; CM-004–CM-006 passing on partial wiring) |
+| Failure excerpt | CM-001: missing `AgToosa_CrossModelReview.md`; CM-002: Review doc lacked `cross-model` routing; CM-003: evidence block fields absent |
+| Recorded | 2026-07-11 |
 
 ### GREEN evidence — DEV-050
 

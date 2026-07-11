@@ -39,7 +39,7 @@ Compute tier from the active spec STRIDE table and Must AC keywords — do not r
 ## Workflow
 
 1. **Tier check** — Read active spec threat model and Must ACs; record tier in review notes.
-2. **Delegate reviewer** — Launch independent reviewer subagent(s) with read-only scope: diff, spec, test logs, threat model, test plan.
+2. **Delegate reviewer** — Launch independent reviewer subagent(s) with read-only scope: diff, spec, test logs, threat model, test plan. **Do not paste secrets** into reviewer prompts — redact sensitive values from diffs and logs (same rules as `Docs/AgToosa_Handoff.md`).
 3. **Specialist lanes** — When `Docs/Context/specialists.md` exists, run only specialists whose `phase_hooks` includes `review` and whose `trigger` matches the active story (see `Docs/AgToosa_Specialists.md`).
 4. **Parallel execution** — When the host supports native parallel subagent delegation (Task tool, Agent tool, GitHub agent), run reviewer persona(s) and matching specialists in parallel.
 5. **Sequential fallback** — When parallel delegation is unavailable, run the same lanes sequentially and record exactly:
@@ -86,6 +86,8 @@ Deduplicate before the verdict table; prefer `both-models` when descriptions mat
 ## Read-Only Guarantee
 
 The independent reviewer **must not** modify `Docs/Master-Plan.md`, git state, or implementation files during the gate. If a fix is needed, the orchestrator asks the user to authorize `/agtoosa-build` or a scoped fix — same pattern as `Docs/AgToosa_StatusGuide.md`.
+
+> **Claim boundary:** On GitHub Copilot and other hosts, read-only is **agent-instructed** — native agent tool manifests may still list `terminal` or write-capable tools. Enforcement is policy + orchestrator authorization, not tool-level sandboxing (v1).
 
 ## Review Report Section
 
