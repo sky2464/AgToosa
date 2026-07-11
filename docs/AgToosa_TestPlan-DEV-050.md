@@ -2,7 +2,7 @@
 
 > **Spec:** `docs/archived/spec-DEV-050.md`
 > **Smoke filter:** `bats tests/agtoosa.bats -f "DEV-050"`
-> **Status:** ✅ Done
+> **Status:** ✅ Done (shipped v5.3.6)
 
 ## Coverage Target
 

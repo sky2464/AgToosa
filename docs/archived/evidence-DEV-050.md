@@ -6,3 +6,5 @@
 | build | AC-001–AC-011 | spec | `docs/archived/spec-DEV-050.md` | CM-001–CM-007 grep contract | PASS | AgToosa | 2026-07-11 |
 | review | cross-model | cross-model | `docs/archived/review-DEV-050.md## Cross-Model Review` | Independent Opus reviewer; outcome completed; 0 unresolved Critical | PASS | Independent Cross-Model Reviewer | 2026-07-11 |
 | review | AC-012 | review | `docs/archived/review-DEV-050.md` | 4 virtual personas + cross-model gate; verdict PASS | PASS | AgToosa | 2026-07-11 |
+| ship | AC-012 | test-log | `docs/AgToosa_TestPlan-DEV-050.md#GREEN` | `bats tests/agtoosa.bats -f "DEV-050"` exit 0, 8/8 | 0 | AgToosa | 2026-07-11 |
+| ship | AC-001–AC-011 | changelog | `CHANGELOG.md##[5.3.6]` | grep '## \[5.3.6\]' CHANGELOG.md; version parity bash/ps1/npm | 0 | AgToosa | 2026-07-11 |

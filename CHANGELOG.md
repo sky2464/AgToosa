@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.6] — 2026-07-11
+
+Patch release: Cross-Model Review Gate (DEV-050).
+
+### Added
+
+- **DEV-050 — Cross-Model Review Gate.** Optional writer/reviewer separation via `/agtoosa-review cross-model`; canonical `AgToosa_CrossModelReview.md`; Review Part 5 + Specialists `review` phase orchestration; Evidence `cross-model` row; GitHub `agtoosa-cross-model-reviewer` agent; CM-001–CM-007 bats. Agent-instructed (not runtime-enforced).
+
+---
+
 ## [5.3.5] — 2026-07-08
 
 Patch release: Signed Registry Provenance (DEV-054).

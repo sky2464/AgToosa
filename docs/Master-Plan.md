@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (/agtoosa-build — DEV-050 Wave 3 complete)
+> **Last updated:** 2026-07-11 (/agtoosa-ship — DEV-050 v5.3.6)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Milestone | `v5.3.6` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
+| Milestone | `v5.3.7` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
 | Active cycle | — |
 | Cycle capacity | `8 story points` |
-| Current phase | 🔍 DEV-050 review approved — ready for `/agtoosa-ship` |
+| Current phase | 🏁 v5.3.6 shipped — DEV-050 complete |
 
 ## Active Cycle
 
@@ -20,8 +20,9 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-050 | Feature: Cross-Model Review Gate | Feature | S | 🔍 In Review | 5/5 |
+| — | — | — | — | — | — |
 
+<!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.6.md -->
 <!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.5.md -->
 <!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.4.md -->
 <!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.3.md -->
@@ -42,13 +43,15 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-**DEV-050 — Cross-Model Review Gate** (spec: `docs/archived/spec-DEV-050.md`)
+<!--
+**DEV-050 — Cross-Model Review Gate** (spec: `docs/archived/spec-DEV-050.md`) — shipped 2026-07-11 v5.3.6
 
-- [x] **1.** RED contract bats (CM-001–CM-006) — _AC-001, AC-009, AC-012_
-- [x] **2.** Canonical `AgToosa_CrossModelReview.md` + maintainer mirror — _AC-001, AC-003, AC-007, AC-008_
-- [x] **3.** Wire Review Part 5 + `cross-model` sub-command; Specialists `review` hook — _AC-004, AC-005, AC-006, AC-010_
-- [x] **4.** Evidence doc row + GitHub agent + config registration + platform adapters — _AC-002, AC-009, AC-011_
-- [x] **5.** GREEN bats + test-plan evidence + Agent/Skills/Quickref cross-links — _AC-012_
+- [x] **1.** RED contract bats (CM-001–CM-006)
+- [x] **2.** Canonical `AgToosa_CrossModelReview.md` + maintainer mirror
+- [x] **3.** Wire Review Part 5 + `cross-model` sub-command; Specialists `review` hook
+- [x] **4.** Evidence doc row + GitHub agent + config registration + platform adapters
+- [x] **5.** GREEN bats + test-plan evidence + Agent/Skills/Quickref cross-links
+-->
 
 <!--
 **DEV-054 — Signed Registry Provenance** (spec: `docs/archived/spec-DEV-054.md`) — shipped 2026-07-08 v5.3.5
@@ -280,7 +283,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-047 | Feature: Async Agent Handoff Packs | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.3 |
 | DEV-048 | Feature: Agent Result Import Gate | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.3 |
 | DEV-049 | Feature: Evidence Ledger | Feature | M | DEV-004 | P0 | 🏁 Shipped — v5.3.4 |
-| DEV-050 | Feature: Cross-Model Review Gate | Feature | S | DEV-002 | P1 | 🟨 In Progress — build complete 2026-07-11 |
+| DEV-050 | Feature: Cross-Model Review Gate | Feature | S | DEV-002 | P1 | 🏁 Shipped — v5.3.6 |
 | DEV-051 | Feature: Tracker Sync Bridge | Feature | M | DEV-003 | P1 | ⬜ Backlog |
 | DEV-052 | Feature: Hook Automation Pack | Feature | M | DEV-002 | P1 | ⬜ Backlog |
 | DEV-053 | Feature: Extension and Preset Catalog | Feature | M | DEV-003 | P1 | ⬜ Backlog |
@@ -355,6 +358,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-050 | Feature: Cross-Model Review Gate | 2026-07-11 | [spec-DEV-050.md](archived/spec-DEV-050.md) · [review-DEV-050.md](archived/review-DEV-050.md) · [evidence-DEV-050.md](archived/evidence-DEV-050.md) |
 | DEV-054 | Feature: Signed Registry Provenance | 2026-07-08 | [spec-DEV-054.md](archived/spec-DEV-054.md) · [review-DEV-054.md](archived/review-DEV-054.md) · [evidence-DEV-054.md](archived/evidence-DEV-054.md) |
 | DEV-049 | Feature: Evidence Ledger | 2026-07-08 | [spec-DEV-049.md](archived/spec-DEV-049.md) · [review-DEV-049.md](archived/review-DEV-049.md) · [evidence-DEV-049.md](archived/evidence-DEV-049.md) |
 | DEV-047 | Feature: Async Agent Handoff Packs | 2026-07-08 | [spec-DEV-047.md](archived/spec-DEV-047.md) · [review-DEV-047-048.md](archived/review-DEV-047-048.md) |
@@ -477,3 +481,5 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-050 — Task 🟢 5/5 — Wave 3 complete: CM-007 Agent/Skills/Quickref cross-links + GREEN evidence in test plan; DEV-050 filter 8/8 green; build complete — next: `/agtoosa-review` | AgToosa |
 | 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-050 — 4-persona + cross-model review running | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-050; 0 🔴 Critical, 5 🟡 Warning (4 fixed, 1 accepted); report: `docs/archived/review-DEV-050.md`; evidence: `docs/archived/evidence-DEV-050.md` | AgToosa |
+| 2026-07-11 | 🚀 Ship complete — v5.3.6 — DEV-050 Cross-Model Review Gate; bats DEV-050 CM/SR green; smoke PASS | AgToosa |
+| 2026-07-11 | 🚀 Release 5.3.6 shipped — v5.3.6; version parity bash/ps1/npm; Milestone v5.3.7 (next) | AgToosa |
