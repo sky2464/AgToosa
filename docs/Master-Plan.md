@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (/agtoosa-ship — DEV-050 v5.3.6)
+> **Last updated:** 2026-07-11 (/agtoosa-spec — DEV-055 enrolled)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
+| Current phase | ✏️ DEV-055 spec enrolled — Agent Capability Matrix |
 | Milestone | `v5.3.7` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | — |
+| Active cycle | DEV-055 |
 | Cycle capacity | `8 story points` |
-| Current phase | 🏁 v5.3.6 shipped — DEV-050 complete |
 
 ## Active Cycle
 
@@ -20,7 +20,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| — | — | — | — | — | — |
+| DEV-055 | Feature: Agent Capability Matrix | Feature | S | 🟦 Todo | 0/5 |
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.6.md -->
 <!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.5.md -->
@@ -52,6 +52,14 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 - [x] **4.** Evidence doc row + GitHub agent + config registration + platform adapters
 - [x] **5.** GREEN bats + test-plan evidence + Agent/Skills/Quickref cross-links
 -->
+
+**DEV-055 — Agent Capability Matrix** (spec: `docs/archived/spec-DEV-055.md`)
+
+- [ ] **1.** RED contract bats (AM-001–AM-007)
+- [ ] **2.** Canonical `AgToosa_AgentCapability.md` + maintainer mirror
+- [ ] **3.** Wire Handoff, Review, Build, Help cross-links
+- [ ] **4.** Register `lib/config.sh` + Specialists cross-link
+- [ ] **5.** GREEN bats + test-plan evidence
 
 <!--
 **DEV-054 — Signed Registry Provenance** (spec: `docs/archived/spec-DEV-054.md`) — shipped 2026-07-08 v5.3.5
@@ -288,7 +296,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-052 | Feature: Hook Automation Pack | Feature | M | DEV-002 | P1 | ⬜ Backlog |
 | DEV-053 | Feature: Extension and Preset Catalog | Feature | M | DEV-003 | P1 | ⬜ Backlog |
 | DEV-054 | Feature: Signed Registry Provenance | Feature | M | DEV-003 | P0 | 🏁 Shipped — v5.3.5 |
-| DEV-055 | Feature: Agent Capability Matrix | Feature | S | DEV-002 | P1 | ⬜ Backlog |
+| DEV-055 | Feature: Agent Capability Matrix | Feature | S | DEV-002 | P1 | 🟦 Todo — Active Cycle |
 | DEV-056 | Feature: Retrospective Learning Loop | Feature | S | DEV-002 | P2 | ⬜ Backlog |
 | DEV-057 | Feature: Multi-Repo Story Overlay | Feature | L | DEV-002 | P2 | ⬜ Backlog |
 | DEV-058 | Feature: Local Dashboard | Feature | M | DEV-004 | P2 | ⬜ Backlog |
@@ -483,3 +491,4 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-050; 0 🔴 Critical, 5 🟡 Warning (4 fixed, 1 accepted); report: `docs/archived/review-DEV-050.md`; evidence: `docs/archived/evidence-DEV-050.md` | AgToosa |
 | 2026-07-11 | 🚀 Ship complete — v5.3.6 — DEV-050 Cross-Model Review Gate; bats DEV-050 CM/SR green; smoke PASS | AgToosa |
 | 2026-07-11 | 🚀 Release 5.3.6 shipped — v5.3.6; version parity bash/ps1/npm; Milestone v5.3.7 (next) | AgToosa |
+| 2026-07-11 | ✏️ /agtoosa-spec DEV-055 enrolled — Agent Capability Matrix deepened (lifecycle routing matrix post-DEV-050); spec `docs/archived/spec-DEV-055.md`; test plan `docs/AgToosa_TestPlan-DEV-055.md`; estimate S; Active Cycle Todo; awaiting Spec Approved | AgToosa |

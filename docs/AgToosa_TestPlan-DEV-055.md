@@ -1,29 +1,34 @@
-# Test Plan: DEV-055 - Agent Capability Matrix
+# Test Plan: DEV-055 — Agent Capability Matrix
 
 > **Spec:** `docs/archived/spec-DEV-055.md`
 > **Smoke filter:** `bats tests/agtoosa.bats -f "DEV-055"`
-> **Status:** ⬜ Backlog
+> **Status:** 🟦 Todo
 
 ## Coverage Target
 
-This plan will prove DEV-055 only after the story is enrolled and implemented. Until then, it preserves the competitive execution wave backlog contract and claim boundary.
+80% — focused contract tests on docs, config inventory, and workflow cross-links.
 
 | AC | Test ID | Type | Description | Automated |
 |----|---------|------|-------------|-----------|
-| AC-001 | DEV-055-T-001 | Docs/Integration | Capability states user outcome and proof before shipped claims | planned |
-| AC-002 | DEV-055-T-002 | Docs/Integration | Enforcement language is classified as generator-enforced, CI-enforced, agent-instructed, manual, or roadmap | planned |
-| AC-003 | DEV-055-T-003 | Docs/Integration | Repo-local source-of-truth boundary is preserved for external integrations | planned |
-| AC-004 | DEV-055-T-004 | Bats | Focused failing regression coverage is added before behavior changes | planned |
-| AC-005 | DEV-055-T-005 | Evidence | Ship evidence is recorded without broader claims | planned |
+| AC-001 | AM-001 | Integration | `AgToosa_AgentCapability.md` exists in template + docs; defines detection, matrix columns, routing algorithm, fallbacks | yes @smoke |
+| AC-002 | AM-001 | Integration | Claim Boundary table classifies enforcement per row | yes |
+| AC-003 | AM-002 | Bats | `lib/config.sh` / `--list-template-files` registers `AgToosa_AgentCapability.md` | yes @smoke |
+| AC-004 | AM-003 | Integration | Handoff doc references matrix for target-agent recommendation | yes @smoke |
+| AC-005 | AM-004 | Integration | Review + CrossModelReview reference matrix for parallel vs sequential | yes @smoke |
+| AC-006 | AM-005 | Integration | Help `next` mode may reference matrix (read-only hint) | yes |
+| AC-007 | AM-006 | Integration | Specialists cross-links AgentCapability; does not duplicate full routing table | yes |
+| AC-008 | AM-001 | Integration | SoT boundary preserved for external agents | yes |
+| AC-009 | AM-007 | Bats | Matrix includes rows aligned with platform sentinels in `lib/config.sh` | yes @smoke |
+| AC-010 | AM-001–AM-007 | Bats | Full DEV-055 filter green | yes @smoke |
 
 ## Validation Commands
 
 ```bash
 bats tests/agtoosa.bats -f "DEV-055"
-bats tests/agtoosa.bats -f "DEV-042-060"
+bats tests/agtoosa.bats -f "AM-"
 git diff --check
 ```
 
 ## Evidence
 
-Backlog creation evidence is covered by the competitive wave tests in `tests/agtoosa.bats`. Implementation evidence must be added when this story is built.
+Record RED/GREEN evidence here and in `docs/archived/evidence-DEV-055.md` at review/ship.
