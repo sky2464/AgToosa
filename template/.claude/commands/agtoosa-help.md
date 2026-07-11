@@ -40,6 +40,7 @@ Output the table below directly. Do not read any Docs file for the default path.
 ### Key files
 - `Docs/Master-Plan.md` — project management source of truth
 - `Docs/AgToosa_Goal.md` — goal clarification utility/sub-workflow
+- `Docs/AgToosa_AgentCapability.md` — lifecycle routing matrix (installed surfaces → handoff/review paths)
 - `Docs/Context/` — product, tech-stack, and workflow configuration
 - `Docs/archived/` — completed specs and plans
 - `Docs/AgToosa_Changelog.md` — auto-maintained changelog
@@ -53,7 +54,8 @@ Output the table below directly. Do not read any Docs file for the default path.
    - All automated tasks done, no archived review → `/agtoosa-review`
    - Review passed, ready to close → `/agtoosa-ship`
    - Multiple blockers or unclear state → `/agtoosa-status`
-3. Output:
+3. Optionally include **one** matrix-based routing hint from `Docs/AgToosa_AgentCapability.md` when the recommended command is handoff, review, or async build (read-only; no mutation).
+4. Output:
 
 ```
 Next command: `/agtoosa-<command>`

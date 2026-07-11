@@ -65,6 +65,8 @@ After **explicit user approval** only:
 
 ## Platform Capability Matrix (v1)
 
+> **Lifecycle routing** (handoff / review / cross-model / build-async recommendations) lives in `docs/AgToosa_AgentCapability.md`. This table is **specialist native file targets only** — do not duplicate the full lifecycle routing table here.
+
 | Platform | Native target | Parallel spec lanes | Notes |
 |----------|---------------|----------------------|-------|
 | Codex / OpenCode | `.codex/skills/<id>/SKILL.md` | When host supports delegated agents | Same folder as project skills — distinct id/trigger contract |
@@ -78,7 +80,7 @@ After **explicit user approval** only:
 
 Before proposing specialists, detect installed platforms using:
 
-- `docs/.agtoosa-version` and `.agtoosa-lock.json` platform list
+- `Docs/.agtoosa-version` and `.agtoosa-lock.json` platform list
 - Sentinel files: `.codex/`, `.claude/`, `.cursor/`, `.windsurf/`, `.gemini/`, `.github/agents/`
 - Entry points: `CLAUDE.md`, `AGENTS.md`, `.cursorrules`, `.windsurfrules`, `OPENCODE.md`
 
@@ -132,3 +134,4 @@ See `docs/AgToosa_Init.md`, `docs/AgToosa_Update.md`, `docs/AgToosa_Spec.md`, an
 - **Project Skill Discovery** — `docs/AgToosa_Init.md` Phase F; Codex-first repeatable commands (DEV-008)
 - **Story Skill Opportunity Synthesis** — `docs/AgToosa_Spec.md`; story-scoped skill candidates
 - **Virtual review personas** — `docs/AgToosa_Review.md`; not replaced by project specialists
+- **Agent Capability Matrix** — `docs/AgToosa_AgentCapability.md`; lifecycle routing (not specialist native targets)

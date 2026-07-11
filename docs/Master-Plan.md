@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (/agtoosa-build — DEV-055 Wave 1)
+> **Last updated:** 2026-07-11 (/agtoosa-build — DEV-055 complete)
 
 ## Project Charter
 
@@ -9,7 +9,7 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | 🏗️ DEV-055 Wave 1 — Agent Capability Matrix |
+| Current phase | 🏗️ DEV-055 build complete — ready for `/agtoosa-review` |
 | Milestone | `v5.3.7` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
 | Active cycle | DEV-055 |
 | Cycle capacity | `8 story points` |
@@ -20,7 +20,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-055 | Feature: Agent Capability Matrix | Feature | S | 🟨 In Progress | 2/5 |
+| DEV-055 | Feature: Agent Capability Matrix | Feature | S | 🟨 In Progress | 5/5 |
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.6.md -->
 <!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.5.md -->
@@ -57,9 +57,9 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 - [x] **1.** RED contract bats (AM-001–AM-007)
 - [x] **2.** Canonical `AgToosa_AgentCapability.md` + maintainer mirror
-- [ ] **3.** Wire Handoff, Review, Build, Help cross-links
-- [ ] **4.** Register `lib/config.sh` + Specialists cross-link
-- [ ] **5.** GREEN bats + test-plan evidence
+- [x] **3.** Wire Handoff, Review, Build, Help cross-links
+- [x] **4.** Register `lib/config.sh` + Specialists cross-link
+- [x] **5.** GREEN bats + test-plan evidence
 
 <!--
 **DEV-054 — Signed Registry Provenance** (spec: `docs/archived/spec-DEV-054.md`) — shipped 2026-07-08 v5.3.5
@@ -506,4 +506,6 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | /agtoosa-spec — Spec ✅ Approved — DEV-055 — spec-DEV-055.md; estimate S; enrolled in cycle | AgToosa |
 | 2026-07-11 | 🏗️ Build 🏗️ Started — DEV-055 — TDD cycle; 5 tasks; scope: AgToosa_AgentCapability.md, Handoff/Review/Build/Help, Specialists cross-link, config, bats AM-001–AM-007; Wave 1: RED bats + canonical doc | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-055 — Task 🟢 2/5 — Wave 1 complete: AM bats RED (5 fail / 3 pass); `template/Docs/AgToosa_AgentCapability.md` + `docs/` mirror | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-055 — Task 🟢 4/5 — Wave 2 complete: Handoff/Review/Build/Help + CrossModelReview + Specialists + config; AM-001–AM-007 green | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-055 — Task 🟢 5/5 — Wave 3 complete: GREEN evidence in test plan; DEV-055 filter 8/8 green; build complete — next: `/agtoosa-review` | AgToosa |
 | 2026-07-11 | ✏️ Roadmap intake split complete — DEV-045/046/051/052/053/056/057/058/059 deepened to executable backlog specs; DEV-075–DEV-084 specs and test plans added; coverage index: `docs/updates/roadmap-spec-index.md`; no stories enrolled or approved | AgToosa |

@@ -4003,7 +4003,7 @@ assert_competitive_story_artifacts() {
   grep -q "Story ID:.*${id}" "$root/docs/archived/spec-${id}.md"
   grep -q "Spec:.*${id}" "$root/docs/AgToosa_TestPlan-${id}.md"
   grep -q "Claim Boundary" "$root/docs/archived/spec-${id}.md"
-  grep -q -E "Status:.*(Backlog|Todo|Done)" "$root/docs/AgToosa_TestPlan-${id}.md"
+  grep -q -E "Status:.*(Backlog|Todo|In Progress|Done)" "$root/docs/AgToosa_TestPlan-${id}.md"
 }
 
 @test "DEV-042-060 CW-001: competitive wave specs and test plans exist" {

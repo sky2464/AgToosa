@@ -7,7 +7,7 @@
 | `/agtoosa-build` | Full flow: Parts 1 + 2 + 3 |
 | `/agtoosa-build tdd` | Part 1 only — TDD Red-Green-Refactor loop against the task list from the approved spec |
 | `/agtoosa-build test` | Parts 2 + 3 — run the full testing army + security scans, then update tracking |
-| `/agtoosa-build handoff` | Export a handoff pack for remaining wave tasks via `Docs/AgToosa_Handoff.md` |
+| `/agtoosa-build handoff` | Export a handoff pack for remaining wave tasks via `Docs/AgToosa_Handoff.md` (recommend target via `Docs/AgToosa_AgentCapability.md`) |
 | `/agtoosa-build import` | Run Import Checklist for returning async agent results via `Docs/AgToosa_Import.md` |
 
 ### Claude Code Parallel Pattern
@@ -21,6 +21,7 @@ On Claude Code, independent tasks within a phase can be dispatched to parallel s
 - Collect results when all parallel tasks complete; merge conflicts are resolved by the orchestrating agent.
 - The orchestrator must summarize unresolved terminal output before marking any task checkbox done.
 - Async or background agents dispatched via parallel sub-agents should receive a `/agtoosa-handoff` pack (run `/agtoosa-build handoff` before dispatch) and return results via `/agtoosa-import` (Terminal Evidence still required).
+- Before async dispatch, consult `Docs/AgToosa_AgentCapability.md` for an installed-surface routing recommendation and documented fallbacks.
 - See `/agtoosa-review` for the reference parallel pattern (4 reviewer personas run simultaneously).
 
 > **Note:** Parallel dispatch applies to Claude Code only. On other platforms, run tasks sequentially.

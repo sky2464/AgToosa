@@ -13,6 +13,7 @@ DOCS_FILES=(
   "Docs/AgToosa_Build.md"
   "Docs/AgToosa_Review.md"
   "Docs/AgToosa_CrossModelReview.md"
+  "Docs/AgToosa_AgentCapability.md"
   "Docs/AgToosa_Ship.md"
   "Docs/AgToosa_QA.md"
   "Docs/AgToosa_Revert.md"

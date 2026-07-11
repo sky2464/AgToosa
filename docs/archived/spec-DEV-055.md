@@ -155,9 +155,9 @@ AgToosa_AgentCapability.md (canonical matrix)
 
 - [x] **1.** RED contract bats (AM-001–AM-007) — _Requirements: AC-003, AC-009, AC-010_
 - [x] **2.** Canonical `AgToosa_AgentCapability.md` + maintainer mirror — _Requirements: AC-001, AC-002, AC-008_
-- [ ] **3.** Wire Handoff, Review, Build, Help cross-links — _Requirements: AC-004, AC-005, AC-006, AC-007_
-- [ ] **4.** Register `lib/config.sh` + Specialists cross-link — _Requirements: AC-003, AC-007_
-- [ ] **5.** GREEN bats + test-plan evidence — _Requirements: AC-009, AC-010_
+- [x] **3.** Wire Handoff, Review, Build, Help cross-links — _Requirements: AC-004, AC-005, AC-006, AC-007_
+- [x] **4.** Register `lib/config.sh` + Specialists cross-link — _Requirements: AC-003, AC-007_
+- [x] **5.** GREEN bats + test-plan evidence — _Requirements: AC-009, AC-010_
 
 ### Wave Plan
 

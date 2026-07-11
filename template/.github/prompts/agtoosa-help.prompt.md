@@ -47,4 +47,5 @@ Typical workflow: `/agtoosa-spec` → `/agtoosa-build` → `/agtoosa-qa` → `/a
    - All automated tasks done, no archived review → `/agtoosa-review`
    - Review passed, ready to close → `/agtoosa-ship`
    - Multiple blockers or unclear state → `/agtoosa-status`
-3. Present mutating commands as **suggestions only** — **do not auto-run** `/agtoosa-spec`, `/agtoosa-build`, `/agtoosa-task`, or `/agtoosa-ship`.
+3. Optionally include **one** matrix-based routing hint from `Docs/AgToosa_AgentCapability.md` when the recommended command is handoff, review, or async build (read-only; no mutation).
+4. Present mutating commands as **suggestions only** — **do not auto-run** `/agtoosa-spec`, `/agtoosa-build`, `/agtoosa-task`, or `/agtoosa-ship`.

@@ -41,7 +41,7 @@ Compute tier from the active spec STRIDE table and Must AC keywords — do not r
 1. **Tier check** — Read active spec threat model and Must ACs; record tier in review notes.
 2. **Delegate reviewer** — Launch independent reviewer subagent(s) with read-only scope: diff, spec, test logs, threat model, test plan. **Do not paste secrets** into reviewer prompts — redact sensitive values from diffs and logs (same rules as `Docs/AgToosa_Handoff.md`).
 3. **Specialist lanes** — When `Docs/Context/specialists.md` exists, run only specialists whose `phase_hooks` includes `review` and whose `trigger` matches the active story (see `Docs/AgToosa_Specialists.md`).
-4. **Parallel execution** — When the host supports native parallel subagent delegation (Task tool, Agent tool, GitHub agent), run reviewer persona(s) and matching specialists in parallel.
+4. **Parallel execution** — When the host supports native parallel subagent delegation (Task tool, Agent tool, GitHub agent), run reviewer persona(s) and matching specialists in parallel. Confirm parallel vs sequential support via `Docs/AgToosa_AgentCapability.md` before claiming parallel lanes.
 5. **Sequential fallback** — When parallel delegation is unavailable, run the same lanes sequentially and record exactly:
 
     ```
@@ -115,6 +115,7 @@ Update `Docs/archived/evidence-[story-id].md` with a `cross-model` row per `Docs
 - **Cross-platform** — `Docs/AgToosa_Review.md` Part 4 (`/agtoosa-review cross`)
 - **Project specialists** — `Docs/AgToosa_Specialists.md`
 - **Handoff packs** — `Docs/AgToosa_Handoff.md` when reviewer runs async/external
+- **Lifecycle routing** — `Docs/AgToosa_AgentCapability.md` (parallel vs sequential per installed host)
 
 ## Output
 

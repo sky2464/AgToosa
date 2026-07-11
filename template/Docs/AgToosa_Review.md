@@ -121,6 +121,8 @@ Different AI models surface different classes of bugs — a second platform revi
 
 Writer/reviewer separation across different agents or models reduces single-agent blind spots. **Do not duplicate the full contract here** — read and execute `Docs/AgToosa_CrossModelReview.md`.
 
+For parallel vs sequential routing per installed host, consult `Docs/AgToosa_AgentCapability.md` (Cross-model column + Fallback Chain) before launching reviewer lanes.
+
 8.  **Cross-Model Review:**
     *   After Part 1 virtual personas (or when running `cross-model` alone), compute the risk tier from the active spec threat model and Must ACs.
     *   For **recommended** or **strongly recommended** tiers, run `/agtoosa-review cross-model` or record an explicit **skip rationale** in the review report `## Cross-Model Review` section.

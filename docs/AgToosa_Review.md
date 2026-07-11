@@ -34,21 +34,21 @@ Each reviewer persona (or parallel subagent) must report command run, exit code,
 
 2.  **Engineering Manager (`/agtoosa-review arch`):** Confirm no file exceeds 500 lines; check OOP compliance, observability hooks, and test coverage thresholds. When running the `arch` sub-command, additionally:
 
-    **Master Architecture Alignment:** Read `docs/Master-Architecture.md` and verify the change matches the documented boundaries, diagrams, data flow, deployment, security, and observability notes. Flag missing, stale, or contradicted architecture documentation as a 🟡 Warning, or 🔴 Critical if the implementation violates a documented security or boundary constraint.
+    **Master Architecture Alignment:** Read `Docs/Master-Architecture.md` and verify the change matches the documented boundaries, diagrams, data flow, deployment, security, and observability notes. Flag missing, stale, or contradicted architecture documentation as a 🟡 Warning, or 🔴 Critical if the implementation violates a documented security or boundary constraint.
 
-    **Deep Module Analysis** (see `docs/DEEPENING.md`):
+    **Deep Module Analysis** (see `Docs/DEEPENING.md`):
     - Identify shallow modules: pass-through functions, one-line service methods, "Manager/Handler/Helper" classes with no domain meaning.
     - For each shallow module found: flag as 🟡 Warning with specific refactor suggestion.
     - Check that interfaces reveal WHAT the module does, not HOW it does it.
 
-    **Domain Language Alignment** (see `docs/LANGUAGE.md` + `docs/Context/CONTEXT.md`):
+    **Domain Language Alignment** (see `Docs/LANGUAGE.md` + `docs/Context/CONTEXT.md`):
     - Verify that variable names, function names, error messages, and API endpoints use terms from `docs/Context/CONTEXT.md`.
     - Flag any inconsistency (e.g., `userId` when domain says `accountId`) as 🟡 Warning.
     - If `docs/Context/CONTEXT.md` doesn't exist, note it as 🟡 Warning and suggest running `/agtoosa-spec` to establish domain language alignment.
 
     **ADR Coverage:**
-    - Identify any significant architectural decisions made in this change that lack a corresponding ADR in `docs/adr/`.
-    - Create missing ADRs using `docs/ADR-FORMAT.md` as a template, or flag as 🟡 Warning if creation is out of scope.
+    - Identify any significant architectural decisions made in this change that lack a corresponding ADR in `Docs/adr/`.
+    - Create missing ADRs using `Docs/ADR-FORMAT.md` as a template, or flag as 🟡 Warning if creation is out of scope.
 
 3.  **CEO / Product Owner:** Verify feature completeness against the Goal Contract, Project Charter in `docs/Master-Plan.md`, and acceptance criteria.
 
@@ -100,7 +100,7 @@ Each reviewer persona (or parallel subagent) must report command run, exit code,
 
 6.  **Review Report:** Structured findings from all 4 personas — 🔴 Critical / 🟡 Warning / 🟢 Passed. Every 🔴 Critical must include the Iron Law root cause. Include a Goal Contract alignment row. Block `/agtoosa-ship` if any 🔴 Critical findings remain.
 
-    **Ship version suggestion (maintainer / semver repos):** In the review report footer, default the suggested release to **PATCH+1** on the current MINOR (e.g. `5.2.0` → `5.2.1` for Fix/Chore/S stories). Use **MINOR** only for a new MINOR train, multi-story batched release, or deliberate cycle boundary; use **MAJOR** only for breaking changes per ADR-004. See `docs/adr/ADR-005-release-cadence.md` (generator) or project ADRs. Do not suggest skipping to the next MINOR for routine small stories.
+    **Ship version suggestion (maintainer / semver repos):** In the review report footer, default the suggested release to **PATCH+1** on the current MINOR (e.g. `5.2.0` → `5.2.1` for Fix/Chore/S stories). Use **MINOR** only for a new MINOR train, multi-story batched release, or deliberate cycle boundary; use **MAJOR** only for breaking changes per ADR-004. See `Docs/adr/ADR-005-release-cadence.md` (generator) or project ADRs. Do not suggest skipping to the next MINOR for routine small stories.
 
     **Master-Plan update (after verdict):**
     - If **all clear** (no unresolved 🔴 Critical): add **Update Log** entry `Review ✅ Approved` (per `docs/AgToosa_Governance.md`). Keep Active Cycle status `In Review` until `/agtoosa-ship` completes.
@@ -120,6 +120,8 @@ Different AI models surface different classes of bugs — a second platform revi
 ### Part 5 — Cross-Model Review Gate (`/agtoosa-review cross-model`)
 
 Writer/reviewer separation across different agents or models reduces single-agent blind spots. **Do not duplicate the full contract here** — read and execute `docs/AgToosa_CrossModelReview.md`.
+
+For parallel vs sequential routing per installed host, consult `docs/AgToosa_AgentCapability.md` (Cross-model column + Fallback Chain) before launching reviewer lanes.
 
 8.  **Cross-Model Review:**
     *   After Part 1 virtual personas (or when running `cross-model` alone), compute the risk tier from the active spec threat model and Must ACs.

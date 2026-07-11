@@ -66,14 +66,17 @@ Return artifacts that `/agtoosa-import` can map to tasks and ACs:
 ## Workflow
 
 1. **Resolve target** — Active Cycle story; if multiple In Progress, ask which ID. For `wave` / `task`, resolve against the active spec Wave Plan or Active Tasks.
-2. **Assemble pack** — Fill every section from the approved spec, Master-Plan Active Tasks, and test plan. Prefer inference; ask at most one clarifying question (target agent) if unknown.
-3. **Write file** — Create `docs/archived/handoff-…md`. Do not overwrite prior packs.
-4. **Phase event** — Append to `docs/agtoosa-events.jsonl`:
+2. **Recommend target agent** — Consult `docs/AgToosa_AgentCapability.md` (Installed-Surface Detection + Routing Recommendation Algorithm). Prefer an **installed** surface for handoff; document the chosen row and **fallback** when the preferred surface is absent. Record the recommendation in the pack `Target agent` field.
+3. **Assemble pack** — Fill every section from the approved spec, Master-Plan Active Tasks, and test plan. Prefer inference; ask at most one clarifying question (target agent) if unknown after the matrix recommendation.
+4. **Write file** — Create `docs/archived/handoff-…md`. Do not overwrite prior packs.
+5. **Phase event** — Append to `docs/agtoosa-events.jsonl`:
    `{"ts":"[ISO-8601 UTC]","phase":"handoff","event":"export","story":"[Story ID]","by":"AgToosa"}`
-5. **Update Log** — Append a row to `docs/Master-Plan.md` → `## Update Log` noting the pack path.
-6. **Print next step** — Tell the user to launch the external agent **manually**, then run `/agtoosa-import` when results return.
+6. **Update Log** — Append a row to `docs/Master-Plan.md` → `## Update Log` noting the pack path.
+7. **Print next step** — Tell the user to launch the external agent **manually**, then run `/agtoosa-import` when results return.
 
 ## Platform Notes
+
+> Lifecycle routing (which installed host to recommend) lives in `docs/AgToosa_AgentCapability.md` — use it to recommend a target and document fallbacks. The table below is pack-usage only.
 
 | Surface | How to use the pack |
 |---------|---------------------|
