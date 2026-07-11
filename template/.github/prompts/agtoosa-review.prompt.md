@@ -13,3 +13,4 @@ Sub-command dispatch:
 - `arch` → Engineering Manager only: 500-line limit, OOP, observability
 - `debug` → Iron Law root-cause investigation for a failing test or bug
 - `cross` → cross-platform second-opinion guidance
+- `cross-model` → cross-model review gate (`Docs/AgToosa_CrossModelReview.md`)

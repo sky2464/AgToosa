@@ -13,4 +13,5 @@ Dispatch based on any arguments provided after the command:
 - /agtoosa-review arch      → Engineering Manager only: 500-line limit, OOP, observability
 - /agtoosa-review debug     → Iron Law root-cause investigation for a failing test or bug
 - /agtoosa-review cross     → cross-platform second-opinion guidance
+- /agtoosa-review cross-model → cross-model review gate (Docs/AgToosa_CrossModelReview.md)
 """

@@ -8,6 +8,7 @@ Dispatch rules based on arguments:
 - `arch` → Engineering Manager persona only: 500-line limit check, OOP compliance, observability hooks, test coverage.
 - `debug` → Iron Law root-cause investigation: hypothesis, reproduction test, regression test for a failing test or bug.
 - `cross` → Cross-platform second-opinion guidance: suggest switching to another installed AI platform and re-running review.
+- `cross-model` → Cross-model review gate: read-only independent reviewer; follow `Docs/AgToosa_CrossModelReview.md`.
 
 If no arguments were given, run the full flow:
 1. Launch 4 parallel specialist reviews (Security Officer, Engineering Manager, CEO/Product Owner, QA Lead) using the Agent tool.

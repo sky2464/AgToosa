@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (/agtoosa-build — DEV-050 Wave 1)
+> **Last updated:** 2026-07-11 (/agtoosa-build — DEV-050 Wave 2)
 
 ## Project Charter
 
@@ -12,7 +12,7 @@
 | Milestone | `v5.3.6` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
 | Active cycle | — |
 | Cycle capacity | `8 story points` |
-| Current phase | 🏗️ DEV-050 build — Wave 1 complete (RED bats + canonical doc) |
+| Current phase | 🏗️ DEV-050 build — Wave 2 complete (Review/Specialists/Evidence/config) |
 
 ## Active Cycle
 
@@ -20,7 +20,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-050 | Feature: Cross-Model Review Gate | Feature | S | 🟨 In Progress | 2/5 |
+| DEV-050 | Feature: Cross-Model Review Gate | Feature | S | 🟨 In Progress | 4/5 |
 
 <!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.5.md -->
 <!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.4.md -->
@@ -46,8 +46,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 - [x] **1.** RED contract bats (CM-001–CM-006) — _AC-001, AC-009, AC-012_
 - [x] **2.** Canonical `AgToosa_CrossModelReview.md` + maintainer mirror — _AC-001, AC-003, AC-007, AC-008_
-- [ ] **3.** Wire Review Part 5 + `cross-model` sub-command; Specialists `review` hook — _AC-004, AC-005, AC-006, AC-010_
-- [ ] **4.** Evidence doc row + GitHub agent + config registration + platform adapters — _AC-002, AC-009, AC-011_
+- [x] **3.** Wire Review Part 5 + `cross-model` sub-command; Specialists `review` hook — _AC-004, AC-005, AC-006, AC-010_
+- [x] **4.** Evidence doc row + GitHub agent + config registration + platform adapters — _AC-002, AC-009, AC-011_
 - [ ] **5.** GREEN bats + test-plan evidence + Agent/Skills/Quickref cross-links — _AC-012_
 
 <!--
@@ -280,7 +280,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-047 | Feature: Async Agent Handoff Packs | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.3 |
 | DEV-048 | Feature: Agent Result Import Gate | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.3 |
 | DEV-049 | Feature: Evidence Ledger | Feature | M | DEV-004 | P0 | 🏁 Shipped — v5.3.4 |
-| DEV-050 | Feature: Cross-Model Review Gate | Feature | S | DEV-002 | P1 | 🟨 In Progress — Wave 1 complete 2026-07-11 |
+| DEV-050 | Feature: Cross-Model Review Gate | Feature | S | DEV-002 | P1 | 🟨 In Progress — Wave 2 complete 2026-07-11 |
 | DEV-051 | Feature: Tracker Sync Bridge | Feature | M | DEV-003 | P1 | ⬜ Backlog |
 | DEV-052 | Feature: Hook Automation Pack | Feature | M | DEV-002 | P1 | ⬜ Backlog |
 | DEV-053 | Feature: Extension and Preset Catalog | Feature | M | DEV-003 | P1 | ⬜ Backlog |
@@ -473,3 +473,4 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | /agtoosa-spec — Spec ✅ Approved — DEV-050 — spec-DEV-050.md; estimate S; enrolled in cycle | AgToosa |
 | 2026-07-11 | 🏗️ Build 🏗️ Started — DEV-050 — TDD cycle; 5 tasks; scope: AgToosa_CrossModelReview.md, Review, Specialists, Evidence, config, adapters, bats CM-001–CM-006; Wave 1: RED bats + canonical doc | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-050 — Task 🟢 2/5 — Wave 1 complete: CM bats RED (3 fail / 3 pass); `template/Docs/AgToosa_CrossModelReview.md` + `docs/` mirror | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-050 — Task 🟢 4/5 — Wave 2 complete: Review Part 5 + Specialists review hook + Evidence cross-model row + config + GitHub agent + adapters; CM-001–CM-006 green | AgToosa |

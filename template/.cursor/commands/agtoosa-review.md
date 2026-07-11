@@ -8,4 +8,4 @@ This file is the native Cursor project command for `/agtoosa-review`. When the u
 
 Read `Docs/AgToosa_Review.md` and execute the `/agtoosa-review` workflow.
 
-Dispatch based on any arguments after the command: `security`, `arch`, `debug`, or `cross`.
+Dispatch based on any arguments after the command: `security`, `arch`, `debug`, `cross`, or `cross-model` (see `Docs/AgToosa_CrossModelReview.md`).
