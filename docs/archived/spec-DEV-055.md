@@ -173,3 +173,7 @@ AgToosa_AgentCapability.md (canonical matrix)
 - Enforcement classified: yes (§1.5)
 - SoT preserved: yes
 - No TBD/TODO placeholders: yes
+
+## ✅ Spec Approved
+
+Approved: 2026-07-11 15:34

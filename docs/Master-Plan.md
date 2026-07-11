@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (/agtoosa-spec — DEV-055 enrolled)
+> **Last updated:** 2026-07-11 (/agtoosa-spec — Spec ✅ Approved — DEV-055)
 
 ## Project Charter
 
@@ -9,7 +9,7 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | ✏️ DEV-055 spec enrolled — Agent Capability Matrix |
+| Current phase | ✅ DEV-055 Spec Approved — ready for `/agtoosa-build` |
 | Milestone | `v5.3.7` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
 | Active cycle | DEV-055 |
 | Cycle capacity | `8 story points` |
@@ -492,3 +492,4 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🚀 Ship complete — v5.3.6 — DEV-050 Cross-Model Review Gate; bats DEV-050 CM/SR green; smoke PASS | AgToosa |
 | 2026-07-11 | 🚀 Release 5.3.6 shipped — v5.3.6; version parity bash/ps1/npm; Milestone v5.3.7 (next) | AgToosa |
 | 2026-07-11 | ✏️ /agtoosa-spec DEV-055 enrolled — Agent Capability Matrix deepened (lifecycle routing matrix post-DEV-050); spec `docs/archived/spec-DEV-055.md`; test plan `docs/AgToosa_TestPlan-DEV-055.md`; estimate S; Active Cycle Todo; awaiting Spec Approved | AgToosa |
+| 2026-07-11 | /agtoosa-spec — Spec ✅ Approved — DEV-055 — spec-DEV-055.md; estimate S; enrolled in cycle | AgToosa |
