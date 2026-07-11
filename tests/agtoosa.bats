@@ -4455,6 +4455,23 @@ assert_competitive_story_artifacts() {
   done
 }
 
+@test "DEV-050 CM-007: Agent Skills Quickref cross-link cross-model gate" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Agent.md" "$root/docs/AgToosa_Agent.md"; do
+    grep -q "cross-model" "$f"
+    grep -q "AgToosa_CrossModelReview.md" "$f"
+  done
+  for f in "$root/template/Docs/AgToosa_Skills.md" "$root/docs/AgToosa_Skills.md"; do
+    grep -q "cross-model" "$f"
+    grep -q "AgToosa_CrossModelReview.md" "$f"
+  done
+  for f in "$root/template/Docs/AgToosa_Quickref.md" "$root/docs/AgToosa_Quickref.md"; do
+    grep -q "cross-model" "$f"
+    grep -q "AgToosa_CrossModelReview.md" "$f"
+  done
+}
+
 @test "DEV-051 CW-014: Tracker Sync Bridge backlog artifacts exist" {
   assert_competitive_story_artifacts "DEV-051"
 }

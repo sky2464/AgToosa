@@ -32,12 +32,15 @@ Map specific agent personas and functional skills to slash commands so that the 
     *   **Focus:** Giving QA testers a dedicated command to own — from test plan through defect lifecycle — separate from code review.
 
 6.  **`/agtoosa-review` (The Evaluators):**
-    *   **Skills:** Code simplification, OWASP audits, Secrets scanning, Lint enforcement.
+    *   **Skills:** Code simplification, OWASP audits, Secrets scanning, Lint enforcement, cross-model reviewer delegation.
     *   **Personas:**
         *   🔒 Security Officer — Audits & SAST/DAST
         *   👷 Engineering Manager — Architecture compliance
         *   📊 CEO / Product Owner — Feature alignment
         *   🧪 QA Lead — Test coverage & edge cases
+        *   🔀 Independent Reviewer — read-only cross-model lane (`/agtoosa-review cross-model`; see `Docs/AgToosa_CrossModelReview.md`)
+    *   **Sub-commands:** `security` · `arch` · `debug` · `cross` · `cross-model` — dispatch without duplicating canonical docs inline.
+    *   **Parallel:** on hosts with native subagent delegation, run virtual personas and cross-model reviewer lanes in parallel; otherwise sequential with explicit fallback note.
 
 7.  **`/agtoosa-ship` (The DevOps Engineer & PM):**
     *   **Skills:** Automated health checks, Zero-downtime deployment strategies, Workspace archiving, Changelog generation, Next-story suggestion.

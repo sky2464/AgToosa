@@ -10,7 +10,7 @@
 | 0. Once per project | `/agtoosa-init` | `docs/AgToosa_Init.md` |
 | 1. Spec & plan | `/agtoosa-spec <idea>` | `docs/AgToosa_Spec.md` |
 | 2. TDD build | `/agtoosa-build` | `docs/AgToosa_Build.md` |
-| 3. Review gate | `/agtoosa-review` | `docs/AgToosa_Review.md` |
+| 3. Review gate | `/agtoosa-review` | `docs/AgToosa_Review.md` (`security` · `arch` · `debug` · `cross` · `cross-model` → `docs/AgToosa_CrossModelReview.md`) |
 | 4. Ship & archive | `/agtoosa-ship` | `docs/AgToosa_Ship.md` |
 
 Utilities (load on demand): `/agtoosa-status`, `/agtoosa-task`, `/agtoosa-qa`,

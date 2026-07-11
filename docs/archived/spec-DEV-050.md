@@ -207,7 +207,7 @@ docs/archived/review-[id].md + evidence cross-model row
 - [x] **2.** Canonical `AgToosa_CrossModelReview.md` + maintainer mirror — _Requirements: AC-001, AC-003, AC-007, AC-008_
 - [x] **3.** Wire Review Part 5 + `cross-model` sub-command; Specialists `review` hook — _Requirements: AC-004, AC-005, AC-006, AC-010_
 - [x] **4.** Evidence doc row + GitHub agent + config registration + platform adapters — _Requirements: AC-002, AC-009, AC-011_
-- [ ] **5.** GREEN bats + test-plan evidence + Agent/Skills/Quickref cross-links — _Requirements: AC-012_
+- [x] **5.** GREEN bats + test-plan evidence + Agent/Skills/Quickref cross-links — _Requirements: AC-012_
 
 ### Wave Plan
 

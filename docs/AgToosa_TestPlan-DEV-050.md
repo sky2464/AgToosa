@@ -2,7 +2,7 @@
 
 > **Spec:** `docs/archived/spec-DEV-050.md`
 > **Smoke filter:** `bats tests/agtoosa.bats -f "DEV-050"`
-> **Status:** 🟦 Todo
+> **Status:** ✅ Done
 
 ## Coverage Target
 
@@ -42,3 +42,13 @@ git diff --check
 ## Evidence
 
 Record implementation evidence in this file and `docs/archived/evidence-DEV-050.md` at review/ship time.
+
+### GREEN evidence — DEV-050
+
+| Field | Value |
+|-------|--------|
+| Command | `bats tests/agtoosa.bats -f "DEV-050"` |
+| Exit code | 0 |
+| Pass/fail | PASS — 8/8 (CW-013, CM-001–CM-007) |
+| Verifier | `bash docs/agtoosa-verify.sh` → PASS |
+| Recorded | 2026-07-11 |
