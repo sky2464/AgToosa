@@ -1,29 +1,44 @@
-# Test Plan: DEV-050 - Cross-Model Review Gate
+# Test Plan: DEV-050 — Cross-Model Review Gate
 
 > **Spec:** `docs/archived/spec-DEV-050.md`
 > **Smoke filter:** `bats tests/agtoosa.bats -f "DEV-050"`
-> **Status:** ⬜ Backlog
+> **Status:** 🟦 Todo
 
 ## Coverage Target
 
-This plan will prove DEV-050 only after the story is enrolled and implemented. Until then, it preserves the competitive execution wave backlog contract and claim boundary.
+80% — focused contract tests on docs, config inventory, and adapter routing (no live multi-model API calls).
 
 | AC | Test ID | Type | Description | Automated |
 |----|---------|------|-------------|-----------|
-| AC-001 | DEV-050-T-001 | Docs/Integration | Capability states user outcome and proof before shipped claims | planned |
-| AC-002 | DEV-050-T-002 | Docs/Integration | Enforcement language is classified as generator-enforced, CI-enforced, agent-instructed, manual, or roadmap | planned |
-| AC-003 | DEV-050-T-003 | Docs/Integration | Repo-local source-of-truth boundary is preserved for external integrations | planned |
-| AC-004 | DEV-050-T-004 | Bats | Focused failing regression coverage is added before behavior changes | planned |
-| AC-005 | DEV-050-T-005 | Evidence | Ship evidence is recorded without broader claims | planned |
+| AC-001 | CM-001 | Integration | `AgToosa_CrossModelReview.md` exists in template + docs mirrors; defines writer/reviewer roles, triggers, evidence schema, merge rules, fallbacks | yes @smoke |
+| AC-002 | CM-002 | Integration | Review doc + cross-model agent state read-only reviewer guarantee (no silent write instructions) | yes @smoke |
+| AC-003 | CM-003 | Integration | Evidence block fields include Specialist schema + cross-model extensions (`Reviewer identity`, `Model/platform`, `Confidence tier`) | yes |
+| AC-004 | CM-004 | Integration | Review or Specialists doc includes parallel subagent path AND sequential fallback note verbatim | yes @smoke |
+| AC-005 | CM-005 | Integration | Review doc strongly recommends cross-model for security/registry/auth-tier stories or documents skip rationale requirement | yes |
+| AC-006 | CM-006 | Integration | Specialists doc documents `review` phase_hook orchestration with trigger matching | yes |
+| AC-007 | CM-003 | Integration | Merge rules tag confidence tiers (`both-models`, `reviewer-only`, `writer-only`, `virtual-persona-only`) | yes |
+| AC-008 | CM-001 | Integration | Fallback chain documented: cross-platform, sequential personas, explicit skip | yes |
+| AC-009 | CM-001 | Bats | `lib/config.sh` registers `AgToosa_CrossModelReview.md` and `agtoosa-cross-model-reviewer.agent.md` | yes @smoke |
+| AC-010 | CM-002 | Integration | `AgToosa_Review.md` lists `cross-model` sub-command and routes to canonical doc | yes @smoke |
+| AC-011 | CM-005 | Docs | `AgToosa_Evidence.md` allows cross-model evidence row | yes |
+| AC-012 | CM-001–CM-006 | Bats | Full DEV-050 filter green; adapter parity spot-check | yes @smoke |
+
+## Negative / Edge Scenarios
+
+| Scenario | Test ID | Expected |
+|----------|---------|----------|
+| Adapter duplicates full gate contract instead of routing | CM-002 | Adapter references `AgToosa_CrossModelReview.md`; no conflicting writer/reviewer rules |
+| `agtoosa-*` shadowing for cross-model agent id | CM-001 | Agent file named `agtoosa-cross-model-reviewer` is lifecycle adapter, not project specialist |
+| Missing maintainer mirror | CM-001 | `docs/AgToosa_CrossModelReview.md` exists when template copy exists |
 
 ## Validation Commands
 
 ```bash
 bats tests/agtoosa.bats -f "DEV-050"
-bats tests/agtoosa.bats -f "DEV-042-060"
+bats tests/agtoosa.bats -f "CM-"
 git diff --check
 ```
 
 ## Evidence
 
-Backlog creation evidence is covered by the competitive wave tests in `tests/agtoosa.bats`. Implementation evidence must be added when this story is built.
+Record implementation evidence in this file and `docs/archived/evidence-DEV-050.md` at review/ship time.

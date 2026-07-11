@@ -4374,6 +4374,87 @@ assert_competitive_story_artifacts() {
   assert_competitive_story_artifacts "DEV-050"
 }
 
+# ── DEV-050: Cross-Model Review Gate (CM-001–CM-006) ─────────────────────────
+
+@test "DEV-050 CM-001: cross-model contract exists in template and maintainer docs" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_CrossModelReview.md" "$root/docs/AgToosa_CrossModelReview.md"; do
+    [ -f "$f" ]
+    grep -q "Writer" "$f"
+    grep -q "Independent reviewer" "$f"
+    grep -q "Risk-Tier Triggers" "$f"
+    grep -q "Structured Evidence Block" "$f"
+    grep -q "Merge and Confidence Rules" "$f"
+    grep -q "Fallback chain" "$f"
+    grep -q "Read-Only Guarantee" "$f"
+  done
+  run bash "$root/agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_CrossModelReview.md"* ]]
+  [[ "$output" == *"agtoosa-cross-model-reviewer.agent.md"* ]]
+}
+
+@test "DEV-050 CM-002: Review routes cross-model sub-command to canonical doc" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Review.md" "$root/docs/AgToosa_Review.md"; do
+    grep -q "cross-model" "$f"
+    grep -q "AgToosa_CrossModelReview.md" "$f"
+    grep -q "read-only" "$f"
+  done
+}
+
+@test "DEV-050 CM-003: cross-model evidence block extends specialist schema" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_CrossModelReview.md" "$root/docs/AgToosa_CrossModelReview.md"; do
+    grep -q "Reviewer identity" "$f"
+    grep -q "Model/platform" "$f"
+    grep -q "Findings:" "$f"
+    grep -q "Files read:" "$f"
+    grep -q "Commands:" "$f"
+    grep -q "both-models" "$f"
+    grep -q "reviewer-only" "$f"
+    grep -q "writer-only" "$f"
+    grep -q "virtual-persona-only" "$f"
+  done
+}
+
+@test "DEV-050 CM-004: cross-model documents parallel and sequential fallback" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_CrossModelReview.md" "$root/docs/AgToosa_CrossModelReview.md"; do
+    grep -q "parallel subagent delegation" "$f"
+    grep -q "Cross-model lanes ran sequentially (platform does not support parallel subagents)." "$f"
+  done
+}
+
+@test "DEV-050 CM-005: cross-model tier triggers and skip rationale" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_CrossModelReview.md" "$root/docs/AgToosa_CrossModelReview.md"; do
+    grep -q "Strongly recommended" "$f"
+    grep -q "Skip rationale" "$f"
+    grep -q "security" "$f"
+    grep -q "registry" "$f"
+  done
+  for f in "$root/template/Docs/AgToosa_Evidence.md" "$root/docs/AgToosa_Evidence.md"; do
+    grep -q "cross-model" "$f"
+  done
+}
+
+@test "DEV-050 CM-006: specialists doc documents review phase orchestration" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Specialists.md" "$root/docs/AgToosa_Specialists.md"; do
+    grep -q "phase_hooks" "$f"
+    grep -q '`review`' "$f"
+    grep -q "/agtoosa-review" "$f"
+    grep -q "trigger" "$f"
+  done
+}
+
 @test "DEV-051 CW-014: Tracker Sync Bridge backlog artifacts exist" {
   assert_competitive_story_artifacts "DEV-051"
 }
