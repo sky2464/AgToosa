@@ -2,11 +2,11 @@
 
 > **Story ID:** DEV-055
 > **Epic:** DEV-002 — Workflow Templates
-> **Status:** 🟦 Todo
+> **Status:** 🟨 In Progress
 > **Estimate:** S
 > **Spec created:** 2026-06-08
 > **Spec deepened:** 2026-07-11
-
+> **Build started:** 2026-07-11 (Wave 1)
 ## Context
 
 DEV-031 shipped project-specific specialists with a **platform native-target** matrix in `AgToosa_Specialists.md`. DEV-047 shipped async handoff packs; DEV-050 shipped cross-model review. The remaining gap is a **lifecycle capability matrix**: detect which agent surfaces are installed in a repo and recommend the best path for build, handoff, review (including cross-model), and specialist delegation — with honest fallbacks when a platform lacks native subagents.
@@ -153,8 +153,8 @@ AgToosa_AgentCapability.md (canonical matrix)
 
 ### 3.1 Task Tree
 
-- [ ] **1.** RED contract bats (AM-001–AM-007) — _Requirements: AC-003, AC-009, AC-010_
-- [ ] **2.** Canonical `AgToosa_AgentCapability.md` + maintainer mirror — _Requirements: AC-001, AC-002, AC-008_
+- [x] **1.** RED contract bats (AM-001–AM-007) — _Requirements: AC-003, AC-009, AC-010_
+- [x] **2.** Canonical `AgToosa_AgentCapability.md` + maintainer mirror — _Requirements: AC-001, AC-002, AC-008_
 - [ ] **3.** Wire Handoff, Review, Build, Help cross-links — _Requirements: AC-004, AC-005, AC-006, AC-007_
 - [ ] **4.** Register `lib/config.sh` + Specialists cross-link — _Requirements: AC-003, AC-007_
 - [ ] **5.** GREEN bats + test-plan evidence — _Requirements: AC-009, AC-010_

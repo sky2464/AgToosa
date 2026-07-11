@@ -4596,6 +4596,104 @@ JSON
   assert_competitive_story_artifacts "DEV-055"
 }
 
+# ── DEV-055: Agent Capability Matrix (AM-001–AM-007) ─────────────────────────
+
+@test "DEV-055 AM-001: AgentCapability contract exists with detection matrix routing fallbacks" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_AgentCapability.md" "$root/docs/AgToosa_AgentCapability.md"; do
+    [ -f "$f" ]
+    grep -q "Installed-Surface Detection" "$f"
+    grep -q "Lifecycle Capability Matrix" "$f"
+    grep -q "Routing Recommendation Algorithm" "$f"
+    grep -q "Fallback Chain" "$f"
+    grep -q "Claim Boundary" "$f"
+    grep -q "agent-instructed" "$f"
+    grep -q "generator-enforced" "$f"
+    grep -q "Master-Plan.md" "$f"
+    grep -q "source of truth" "$f"
+  done
+}
+
+@test "DEV-055 AM-002: config inventory registers AgToosa_AgentCapability.md" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_AgentCapability.md"* ]]
+  run grep -F "Docs/AgToosa_AgentCapability.md" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-055 AM-003: Handoff consults Agent Capability Matrix for target recommendation" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Handoff.md" "$root/docs/AgToosa_Handoff.md"; do
+    grep -q "AgToosa_AgentCapability.md" "$f"
+    grep -q "recommend" "$f"
+    grep -q "fallback" "$f"
+  done
+}
+
+@test "DEV-055 AM-004: Review and CrossModelReview reference capability matrix routing" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Review.md" "$root/docs/AgToosa_Review.md"; do
+    grep -q "AgToosa_AgentCapability.md" "$f"
+  done
+  for f in "$root/template/Docs/AgToosa_CrossModelReview.md" "$root/docs/AgToosa_CrossModelReview.md"; do
+    grep -q "AgToosa_AgentCapability.md" "$f"
+    grep -q "parallel" "$f"
+    grep -q "sequential" "$f"
+  done
+  for f in "$root/template/Docs/AgToosa_Build.md" "$root/docs/AgToosa_Build.md"; do
+    grep -q "AgToosa_AgentCapability.md" "$f"
+  done
+}
+
+@test "DEV-055 AM-005: Help next may include matrix routing hint" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in \
+    "$root/template/.claude/commands/agtoosa-help.md" \
+    "$root/template/.cursor/commands/agtoosa-help.md" \
+    "$root/template/.github/prompts/agtoosa-help.prompt.md"
+  do
+    grep -q "AgToosa_AgentCapability.md" "$f"
+  done
+}
+
+@test "DEV-055 AM-006: Specialists cross-links AgentCapability without duplicating routing table" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Specialists.md" "$root/docs/AgToosa_Specialists.md"; do
+    grep -q "AgToosa_AgentCapability.md" "$f"
+    grep -q "Platform Capability Matrix" "$f"
+    # Lifecycle routing lives in AgentCapability — Specialists must not host a second full routing table
+    ! grep -q "Lifecycle Capability Matrix" "$f"
+  done
+}
+
+@test "DEV-055 AM-007: matrix rows cover platform sentinels from config inventory" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_AgentCapability.md" "$root/docs/AgToosa_AgentCapability.md"; do
+    grep -q "Cursor" "$f"
+    grep -q "Claude Code" "$f"
+    grep -q "Codex" "$f"
+    grep -q "GitHub Copilot" "$f"
+    grep -q "Windsurf" "$f"
+    grep -q "Gemini" "$f"
+    grep -q "VS Code" "$f"
+    grep -q "\.cursor/" "$f"
+    grep -q "\.claude/" "$f"
+    grep -q "\.codex/" "$f"
+    grep -q "\.github/agents/" "$f"
+    grep -q "\.windsurf/" "$f"
+    grep -q "\.gemini/" "$f"
+    grep -q "\.github/copilot-instructions.md" "$f"
+  done
+}
+
 @test "DEV-056 CW-019: Retrospective Learning Loop backlog artifacts exist" {
   assert_competitive_story_artifacts "DEV-056"
 }

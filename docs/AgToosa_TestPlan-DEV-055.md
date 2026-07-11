@@ -2,7 +2,7 @@
 
 > **Spec:** `docs/archived/spec-DEV-055.md`
 > **Smoke filter:** `bats tests/agtoosa.bats -f "DEV-055"`
-> **Status:** 🟦 Todo
+> **Status:** 🟨 In Progress — Wave 1 complete
 
 ## Coverage Target
 
@@ -31,4 +31,20 @@ git diff --check
 
 ## Evidence
 
-Record RED/GREEN evidence here and in `docs/archived/evidence-DEV-055.md` at review/ship.
+### Wave 1 RED (2026-07-11)
+
+```text
+$ bats tests/agtoosa.bats -f "DEV-055"
+1..8
+ok 1 DEV-055 CW-018
+ok 2 DEV-055 AM-001
+not ok 3 DEV-055 AM-002  # config registration (Wave 2)
+not ok 4 DEV-055 AM-003  # Handoff wiring (Wave 2)
+not ok 5 DEV-055 AM-004  # Review/Build wiring (Wave 2)
+not ok 6 DEV-055 AM-005  # Help wiring (Wave 2)
+not ok 7 DEV-055 AM-006  # Specialists cross-link (Wave 2)
+ok 8 DEV-055 AM-007
+```
+
+Result: **3 pass / 5 fail** (expected RED for AM-002–AM-006 until Wave 2).
+Artifacts: `template/Docs/AgToosa_AgentCapability.md`, `docs/AgToosa_AgentCapability.md`.
