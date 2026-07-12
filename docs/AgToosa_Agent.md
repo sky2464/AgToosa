@@ -99,6 +99,8 @@ Your core principles are:
 | `/agtoosa-import` | `docs/AgToosa_Import.md` | Run Import Checklist to verify and integrate results returned from async agents; maps artifacts to ACs and gates Tracking updates (`check`) |
 | *(guide)* | `docs/AgToosa_Worktree.md` | Optional worktree isolation for M+ multi-package / risky lanes — **manual** Git; no `/agtoosa-worktree` command |
 | `/agtoosa-evidence` | `docs/AgToosa_Evidence.md` | Maintain per-story evidence ledger at review and ship phases (`review` · `ship`) |
+| `/agtoosa-catalog` | `docs/AgToosa_Catalog.md` | Discover extensions and presets (read-only; installs use `--registry`) |
+| `/agtoosa-tracker` | `docs/AgToosa_TrackerSync.md` | Export Master-Plan stories or propose tracker return changes (`export` · `propose`; no live API sync) |
 | `/agtoosa-help` | Platform help entry points (`.claude/commands/`, `.gemini/commands/`, `.github/prompts/`, Cursor/Windsurf core rules) | **Assistance-only:** static command reference; default path does not read Master-Plan or git |
 | `/agtoosa-help next` | Same platform help surfaces | **Assistance-only:** read-only context read; recommends exactly one next command without executing it |
 

@@ -15,13 +15,15 @@ Every actionable proposal in the update documents is represented by one of:
 
 Editing this index does not enroll a story. Backlog stories still require `/agtoosa-spec`, explicit approval, and a separate `/agtoosa-build` invocation.
 
-## Active Stories (v5.3.14 — 2026-07-11)
+## Active Stories
 
-| ID | Story | Estimate | Spec | Test plan | Status |
-|---|---|---|---|---|---|
-| DEV-051 | Tracker Sync Bridge | M | `docs/archived/spec-DEV-051.md` | `docs/AgToosa_TestPlan-DEV-051.md` | 🟦 Todo — Spec ✅ Approved |
+_(None — cycle parked. Parked demand-gated: **DEV-057**.)_
 
-Parked demand-gated: **DEV-057**.
+## Recently shipped (v5.3.14 — 2026-07-11)
+
+| ID | Story | Type | Spec |
+|---|---|---|---|
+| DEV-051 | Tracker Sync Bridge | Feature | `docs/archived/spec-DEV-051.md` |
 
 ## Recently shipped (v5.3.13 — 2026-07-11)
 

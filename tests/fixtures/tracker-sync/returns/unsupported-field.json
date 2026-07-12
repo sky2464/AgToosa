@@ -1,0 +1,15 @@
+{
+  "schema_version": "agtoosa.tracker-bridge/v1",
+  "base_export_id": "6222028bd168aa251fdb46646f52c44588fdef21445182d851314a5e89f0f796",
+  "provider": "jira",
+  "changes": [
+    {
+      "story_id": "DEV-Alpha",
+      "field": "owner",
+      "proposed_value": "tracker-user",
+      "external_ref": "PROJ-101",
+      "observed_at": "2026-07-11T12:00:00Z",
+      "rationale": "Provider assignee has no v1 AgToosa field mapping"
+    }
+  ]
+}

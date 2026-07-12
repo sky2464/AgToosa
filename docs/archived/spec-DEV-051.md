@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-051
 > **Epic:** DEV-003
-> **Status:** 🟦 Todo (enrolled v5.3.14 — 2026-07-11)
+> **Status:** 🏁 Shipped (v5.3.14)
 > **Estimate:** M
 > **Spec created:** 2026-06-08
 > **Spec deepened:** 2026-07-11
@@ -206,20 +206,20 @@ No build task may broaden this boundary to live provider writes without a spec a
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Contract and fixtures: lock v1 semantics before runtime changes
-  - [ ] 1.1 Add TS-001–TS-008 as RED tests with deterministic project and provider fixtures — _Requirements: AC-001–AC-010_
-  - [ ] 1.2 Add before/after source hashes and unsafe-input fixtures — _Requirements: AC-003, AC-004, AC-007, AC-010_
-- [ ] **2.** Neutral bridge core: implement local export and proposal rendering
-  - [ ] 2.1 Implement normalized export schema, ordering, and digest — _Requirements: AC-001, AC-002_
-  - [ ] 2.2 Implement return validation, stale detection, and proposal-only output — _Requirements: AC-003–AC-005, AC-007_
-  - [ ] 2.3 Wire Bash and PowerShell command parity without network access — _Requirements: AC-001, AC-003, AC-009_
-- [ ] **3.** Canonical workflow and adapters: document transport and authority boundaries
-  - [ ] 3.1 Create Tracker Sync canonical doc, schema, and four provider mappings — _Requirements: AC-006, AC-008, AC-009_
-  - [ ] 3.2 Add thin platform adapters and config inventory entries — _Requirements: AC-008_
-  - [ ] 3.3 Add Quickref/Agent discoverability and explicit proposal-acceptance route — _Requirements: AC-005, AC-009_
-- [ ] **4.** Verification and evidence: prove only the implemented v1 claim
-  - [ ] 4.1 Run focused and full regression commands after GREEN implementation — _Requirements: AC-010_
-  - [ ] 4.2 Record RED/GREEN output and claim-boundary review in the test plan — _Requirements: AC-011_
+- [x] **1.** Contract and fixtures: lock v1 semantics before runtime changes
+  - [x] 1.1 Add TS-001–TS-008 as RED tests with deterministic project and provider fixtures — _Requirements: AC-001–AC-010_
+  - [x] 1.2 Add before/after source hashes and unsafe-input fixtures — _Requirements: AC-003, AC-004, AC-007, AC-010_
+- [x] **2.** Neutral bridge core: implement local export and proposal rendering
+  - [x] 2.1 Implement normalized export schema, ordering, and digest — _Requirements: AC-001, AC-002_
+  - [x] 2.2 Implement return validation, stale detection, and proposal-only output — _Requirements: AC-003–AC-005, AC-007_
+  - [x] 2.3 Wire Bash and PowerShell command parity without network access — _Requirements: AC-001, AC-003, AC-009_
+- [x] **3.** Canonical workflow and adapters: document transport and authority boundaries
+  - [x] 3.1 Create Tracker Sync canonical doc, schema, and four provider mappings — _Requirements: AC-006, AC-008, AC-009_
+  - [x] 3.2 Add thin platform adapters and config inventory entries — _Requirements: AC-008_
+  - [x] 3.3 Add Quickref/Agent discoverability and explicit proposal-acceptance route — _Requirements: AC-005, AC-009_
+- [x] **4.** Verification and evidence: prove only the implemented v1 claim
+  - [x] 4.1 Run focused and full regression commands after GREEN implementation — _Requirements: AC-010_
+  - [x] 4.2 Record RED/GREEN output and claim-boundary review in the test plan — _Requirements: AC-011_
 
 ### 3.2 Wave Plan
 

@@ -37,6 +37,8 @@ DOCS_FILES=(
   "Docs/AgToosa_Update.md"
   "Docs/AgToosa_Registry.md"
   "Docs/AgToosa_Catalog.md"
+  "Docs/AgToosa_TrackerSync.md"
+  "Docs/agtoosa-tracker-sync.schema.json"
   "Docs/AgToosa_Skills.md"
   "Docs/AgToosa_Specialists.md"
   "Docs/CONTEXT-FORMAT.md"
@@ -82,6 +84,7 @@ OPTIONAL_TEMPLATE_FILES=(
   ".claude/commands/agtoosa-debug.md"
   ".claude/commands/agtoosa-concise.md"
   ".claude/commands/agtoosa-catalog.md"
+  ".claude/commands/agtoosa-tracker.md"
   ".cursor/commands/agtoosa-init.md"
   ".cursor/commands/agtoosa-spec.md"
   ".cursor/commands/agtoosa-build.md"
@@ -100,14 +103,17 @@ OPTIONAL_TEMPLATE_FILES=(
   ".cursor/commands/agtoosa-debug.md"
   ".cursor/commands/agtoosa-concise.md"
   ".cursor/commands/agtoosa-catalog.md"
+  ".cursor/commands/agtoosa-tracker.md"
   ".cursor/rules/agtoosa-concise.mdc"
   ".windsurf/rules/agtoosa-debug.md"
   ".windsurf/rules/agtoosa-concise.md"
   ".gemini/commands/agtoosa-debug.toml"
   ".gemini/commands/agtoosa-concise.toml"
   ".gemini/commands/agtoosa-catalog.toml"
+  ".gemini/commands/agtoosa-tracker.toml"
   ".github/prompts/agtoosa-concise.prompt.md"
   ".github/prompts/agtoosa-catalog.prompt.md"
+  ".github/prompts/agtoosa-tracker.prompt.md"
   ".cursor/rules/agtoosa-core.mdc"
   ".cursor/rules/agtoosa-spec.mdc"
   ".cursor/rules/agtoosa-build.mdc"
@@ -195,6 +201,7 @@ OPTIONAL_TEMPLATE_FILES=(
   ".codex/prompts/agtoosa-debug.md"
   ".codex/prompts/agtoosa-concise.md"
   ".codex/prompts/agtoosa-catalog.md"
+  ".codex/prompts/agtoosa-tracker.md"
   ".windsurf/rules/agtoosa-spec.md"
   ".windsurf/rules/agtoosa-build.md"
   ".windsurf/rules/agtoosa-qa.md"
@@ -226,6 +233,7 @@ OPTIONAL_TEMPLATE_FILES=(
   ".windsurf/workflows/agtoosa-debug.md"
   ".windsurf/workflows/agtoosa-concise.md"
   ".windsurf/workflows/agtoosa-catalog.md"
+  ".windsurf/workflows/agtoosa-tracker.md"
 )
 
 CONTEXT_FILES=(
@@ -255,6 +263,7 @@ CLAUDE_COMMAND_FILES=(
   ".claude/commands/agtoosa-debug.md"
   ".claude/commands/agtoosa-concise.md"
   ".claude/commands/agtoosa-catalog.md"
+  ".claude/commands/agtoosa-tracker.md"
 )
 
 CLAUDE_SKILL_FILES=(
@@ -304,6 +313,7 @@ CURSOR_COMMAND_FILES=(
   ".cursor/commands/agtoosa-debug.md"
   ".cursor/commands/agtoosa-concise.md"
   ".cursor/commands/agtoosa-catalog.md"
+  ".cursor/commands/agtoosa-tracker.md"
 )
 
 GEMINI_COMMAND_FILES=(
@@ -325,6 +335,7 @@ GEMINI_COMMAND_FILES=(
   ".gemini/commands/agtoosa-debug.toml"
   ".gemini/commands/agtoosa-concise.toml"
   ".gemini/commands/agtoosa-catalog.toml"
+  ".gemini/commands/agtoosa-tracker.toml"
 )
 
 COPILOT_PROMPT_FILES=(
@@ -346,6 +357,7 @@ COPILOT_PROMPT_FILES=(
   ".github/prompts/agtoosa-debug.prompt.md"
   ".github/prompts/agtoosa-concise.prompt.md"
   ".github/prompts/agtoosa-catalog.prompt.md"
+  ".github/prompts/agtoosa-tracker.prompt.md"
 )
 
 COPILOT_AGENT_FILES=(
@@ -399,6 +411,7 @@ WINDSURF_WORKFLOW_FILES=(
   ".windsurf/workflows/agtoosa-debug.md"
   ".windsurf/workflows/agtoosa-concise.md"
   ".windsurf/workflows/agtoosa-catalog.md"
+  ".windsurf/workflows/agtoosa-tracker.md"
 )
 
 CODEX_SKILL_FILES=(
@@ -440,6 +453,7 @@ CODEX_PROMPT_FILES=(
   ".codex/prompts/agtoosa-debug.md"
   ".codex/prompts/agtoosa-concise.md"
   ".codex/prompts/agtoosa-catalog.md"
+  ".codex/prompts/agtoosa-tracker.md"
 )
 
 print_usage() {
@@ -460,11 +474,16 @@ print_usage() {
   echo "                           info <id>         — Show entry details and compatibility"
   echo "                           validate <path>   — Validate a catalog JSON file"
   echo "                           plan <preset-id>  — Emit non-executing registry install plan"
+  echo "  --tracker <cmd>        Tracker Sync Bridge (local export + proposal; no live API sync)"
+  echo "                           export            — Export Master-Plan stories to neutral JSON"
+  echo "                           propose           — Validate return envelope; write proposal artifact"
+  echo "  --path <dir>           Project path (install wizard, or --tracker export|propose target)"
+  echo "  --input <file>         Return envelope path (with --tracker propose)"
+  echo "  --output <file>        Export or proposal output path (with --tracker)"
   echo "  --update [path]        Update an existing AgToosa install (skips interactive wizard)"
   echo "  --verify [path]        Run the deterministic AgToosa lifecycle verifier (read-only)"
   echo "  --doctor [path]        Diagnose an AgToosa install (versions, wiring, context health)"
   echo "  --uninstall [path]     Remove AgToosa-owned files from a project (keeps your data)"
-  echo "  --path <dir>           Project path (skips the interactive path prompt)"
   echo "  --platforms <list>     Comma-separated platforms, e.g. cursor,claude (skips prompt)"
   echo "  --yes, -y              Assume yes for confirmation prompts (non-interactive)"
   echo "  --allow-unverified     Permit --registry install of packs not marked verified"

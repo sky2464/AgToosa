@@ -13,7 +13,7 @@
 | 3. Review gate | `/agtoosa-review` | `docs/AgToosa_Review.md` (`security` · `arch` · `debug` · `cross` · `cross-model` → `docs/AgToosa_CrossModelReview.md`) |
 | 4. Ship & archive | `/agtoosa-ship` | `docs/AgToosa_Ship.md` |
 
-Utilities (on demand): `/agtoosa-status`, `/agtoosa-task`, `/agtoosa-qa`, `/agtoosa-goal`, `/agtoosa-update`, `/agtoosa-debug`, `/agtoosa-revert`, `/agtoosa-concise`, `/agtoosa-handoff`, `/agtoosa-import`, `/agtoosa-evidence`, `/agtoosa-help`, `/agtoosa-catalog` — each maps to `docs/AgToosa_<Name>.md`.
+Utilities (on demand): `/agtoosa-status`, `/agtoosa-task`, `/agtoosa-qa`, `/agtoosa-goal`, `/agtoosa-update`, `/agtoosa-debug`, `/agtoosa-revert`, `/agtoosa-concise`, `/agtoosa-handoff`, `/agtoosa-import`, `/agtoosa-evidence`, `/agtoosa-help`, `/agtoosa-catalog`, `/agtoosa-tracker` (`docs/AgToosa_TrackerSync.md`) — each other utility maps to `docs/AgToosa_<Name>.md`.
 
 ## Non-negotiables
 

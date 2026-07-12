@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AgToosa Tracker Sync Bridge",
+  "description": "Provider-neutral export and return envelopes for agtoosa.tracker-bridge/v1",
+  "oneOf": [
+    { "$ref": "#/$defs/export_envelope" },
+    { "$ref": "#/$defs/return_envelope" }
+  ],
+  "$defs": {
+    "schema_version": {
+      "type": "string",
+      "const": "agtoosa.tracker-bridge/v1"
+    },
+    "story_id": {
+      "type": "string",
+      "pattern": "^[A-Z]+-[0-9]{3}$",
+      "maxLength": 32
+    },
+    "status_token": {
+      "type": "string",
+      "maxLength": 64
+    },
+    "estimate_token": {
+      "type": "string",
+      "enum": ["XS", "S", "M", "L", "XL"]
+    },
+    "acceptance_criterion_ref": {
+      "type": "object",
+      "required": ["id"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "maxLength": 16 },
+        "summary": { "type": "string", "maxLength": 512 }
+      }
+    },
+    "normalized_story": {
+      "type": "object",
+      "required": [
+        "story_id",
+        "title",
+        "epic",
+        "status",
+        "estimate",
+        "spec_path",
+        "acceptance_criteria"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "story_id": { "$ref": "#/$defs/story_id" },
+        "title": { "type": "string", "maxLength": 256 },
+        "epic": { "type": "string", "maxLength": 64 },
+        "status": { "$ref": "#/$defs/status_token" },
+        "estimate": { "$ref": "#/$defs/estimate_token" },
+        "spec_path": { "type": "string", "maxLength": 512 },
+        "acceptance_criteria": {
+          "type": "array",
+          "maxItems": 64,
+          "items": { "$ref": "#/$defs/acceptance_criterion_ref" }
+        }
+      }
+    },
+    "export_envelope": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "export_id",
+        "generated_at",
+        "repository",
+        "source",
+        "stories"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "$ref": "#/$defs/schema_version" },
+        "export_id": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "repository": {
+          "type": "object",
+          "required": ["name"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string", "maxLength": 256 },
+            "remote_url": { "type": "string", "maxLength": 512 }
+          }
+        },
+        "source": {
+          "type": "object",
+          "required": ["master_plan_sha256"],
+          "additionalProperties": false,
+          "properties": {
+            "commit": { "type": "string", "maxLength": 64 },
+            "master_plan_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+          }
+        },
+        "stories": {
+          "type": "array",
+          "maxItems": 256,
+          "items": { "$ref": "#/$defs/normalized_story" }
+        }
+      }
+    },
+    "change_record": {
+      "type": "object",
+      "required": [
+        "story_id",
+        "field",
+        "proposed_value",
+        "external_ref",
+        "observed_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "story_id": { "$ref": "#/$defs/story_id" },
+        "field": {
+          "type": "string",
+          "enum": ["title", "status", "estimate", "epic", "spec_path"]
+        },
+        "proposed_value": { "type": "string", "maxLength": 4096 },
+        "external_ref": { "type": "string", "maxLength": 256 },
+        "observed_at": { "type": "string", "format": "date-time" },
+        "rationale": { "type": "string", "maxLength": 4096 }
+      }
+    },
+    "return_envelope": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "base_export_id",
+        "provider",
+        "changes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "$ref": "#/$defs/schema_version" },
+        "base_export_id": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "provider": {
+          "type": "string",
+          "enum": ["github-issues", "linear", "jira", "taskmaster", "other"]
+        },
+        "changes": {
+          "type": "array",
+          "maxItems": 256,
+          "items": { "$ref": "#/$defs/change_record" }
+        }
+      }
+    }
+  }
+}

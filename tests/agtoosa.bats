@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.13" ]]
+  [[ "$output" == "AgToosa v5.3.14" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1636,7 +1636,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.3.13" ]
+  [ "$ver" = "5.3.14" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1647,7 +1647,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.3.13"* ]]
+  [[ "$output" == *"5.3.14"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -3649,7 +3649,7 @@ PY
   grep -q "Claude Code Instructions" "$project/CLAUDE.md"
   ! grep -q "old claude block" "$project/CLAUDE.md"
   grep -q "AgToosa" "$project/.claude/commands/agtoosa-spec.md"
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.13" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.14" ]
 }
 
 @test "DEV-036 WP-002: Bash registry install normalizes top-level pack directory" {
@@ -4809,6 +4809,131 @@ _dag_deps_valid() {
 
 @test "DEV-051 CW-014: Tracker Sync Bridge backlog artifacts exist" {
   assert_competitive_story_artifacts "DEV-051"
+}
+
+# ── DEV-051: Tracker Sync Bridge (TS-001–TS-008) ─────────────────────────────
+
+@test "DEV-051 TS-001: stable export id and required v1 fields" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local out1="$TEST_PROJECT/ts-export-1.json"
+  local out2="$TEST_PROJECT/ts-export-2.json"
+  run bash "$SCRIPT" --tracker export --path "$fixture" --output "$out1"
+  [ "$status" -eq 0 ]
+  sleep 1
+  run bash "$SCRIPT" --tracker export --path "$fixture" --output "$out2"
+  [ "$status" -eq 0 ]
+  [ "$(jq -r .export_id "$out1")" = "$(jq -r .export_id "$out2")" ]
+  run jq -e '.schema_version == "agtoosa.tracker-bridge/v1" and (.export_id|length > 0) and (.source.master_plan_sha256|length > 0) and (.stories|length >= 1)' "$out1"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-051 TS-002: stories sorted by story_id with AC refs" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local out="$TEST_PROJECT/ts-export-sort.json"
+  run bash "$SCRIPT" --tracker export --path "$fixture" --output "$out"
+  [ "$status" -eq 0 ]
+  [ "$(jq -r '.stories[0].story_id' "$out")" = "DEV-Alpha" ]
+  [ "$(jq -r '.stories[1].story_id' "$out")" = "DEV-Beta" ]
+  run jq -e '.stories[] | select(.story_id=="DEV-Alpha") | (.acceptance_criteria_refs|length) >= 1' "$out"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-051 TS-003: propose mutation guard leaves Master-Plan unchanged" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local mp="$fixture/docs/Master-Plan.md"
+  local spec="$fixture/docs/archived/spec-DEV-Alpha.md"
+  local export="$TEST_PROJECT/ts-valid-export.json"
+  local proposal="$TEST_PROJECT/ts-valid-proposal.md"
+  local before_mp before_spec after_mp after_spec
+  before_mp=$(shasum -a 256 "$mp" | awk '{print $1}')
+  before_spec=$(shasum -a 256 "$spec" | awk '{print $1}')
+  run bash "$SCRIPT" --tracker export --path "$fixture" --output "$export"
+  [ "$status" -eq 0 ]
+  local export_id
+  export_id=$(jq -r .export_id "$export")
+  jq -n --arg id "$export_id" \
+    '{schema_version:"agtoosa.tracker-bridge/v1",base_export_id:$id,provider:"github-issues",changes:[{story_id:"DEV-Alpha",field:"status",proposed_value:"Done",external_ref:"issue-1",observed_at:"2026-07-11T00:00:00Z",rationale:"bats"}]}' \
+    >"$TEST_PROJECT/ts-valid-return.json"
+  run bash "$SCRIPT" --tracker propose --path "$fixture" --input "$TEST_PROJECT/ts-valid-return.json" --output "$proposal"
+  [ "$status" -eq 0 ]
+  [ -f "$proposal" ]
+  after_mp=$(shasum -a 256 "$mp" | awk '{print $1}')
+  after_spec=$(shasum -a 256 "$spec" | awk '{print $1}')
+  [ "$before_mp" = "$after_mp" ]
+  [ "$before_spec" = "$after_spec" ]
+  run bash "$SCRIPT" --tracker propose --path "$fixture" --input "$TEST_PROJECT/ts-valid-return.json" --output "$mp"
+  [ "$status" -ne 0 ]
+}
+
+@test "DEV-051 TS-004: stale unknown unsupported and conflict dispositions" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local returns="$BATS_TEST_DIRNAME/fixtures/tracker-sync/returns"
+  local out
+  out="$TEST_PROJECT/ts-stale.md"
+  run bash "$SCRIPT" --tracker propose --path "$fixture" --input "$returns/stale.json" --output "$out"
+  [ "$status" -eq 0 ]
+  grep -q 'Disposition:.*stale' "$out"
+  out="$TEST_PROJECT/ts-unknown.md"
+  run bash "$SCRIPT" --tracker propose --path "$fixture" --input "$returns/unknown-story.json" --output "$out"
+  [ "$status" -eq 0 ]
+  grep -q 'Disposition:.*rejected' "$out"
+  out="$TEST_PROJECT/ts-unsupported.md"
+  run bash "$SCRIPT" --tracker propose --path "$fixture" --input "$returns/unsupported-field.json" --output "$out"
+  [ "$status" -eq 0 ]
+  grep -q 'Disposition:.*unsupported' "$out"
+}
+
+@test "DEV-051 TS-005: canonical doc maps four providers without API claims" {
+  local doc="$BATS_TEST_DIRNAME/../docs/AgToosa_TrackerSync.md"
+  [ -f "$doc" ]
+  grep -q 'GitHub Issues' "$doc"
+  grep -q 'Linear' "$doc"
+  grep -q 'Jira' "$doc"
+  grep -q 'TaskMaster' "$doc"
+  grep -q 'no live API' "$doc" || grep -q 'no network' "$doc"
+  grep -q 'Do not claim two-way sync' "$doc"
+}
+
+@test "DEV-051 TS-006: secret-bearing return redacts without echoing credential" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local out="$TEST_PROJECT/ts-secret.md"
+  run bash "$SCRIPT" --tracker propose --path "$fixture" \
+    --input "$BATS_TEST_DIRNAME/fixtures/tracker-sync/returns/secret-bearing.json" \
+    --output "$out"
+  [ "$status" -eq 0 ]
+  grep -q 'Disposition:.*rejected' "$out"
+  ! grep -q 'SECRET_TOKEN_FIXTURE' "$out"
+  run bash "$SCRIPT" --tracker propose --path "$fixture" \
+    --input "$BATS_TEST_DIRNAME/fixtures/tracker-sync/returns/oversized.json" \
+    --output "$TEST_PROJECT/ts-oversized.md"
+  [ "$status" -ne 0 ]
+}
+
+@test "DEV-051 TS-007: tracker docs adapters and config inventory registered" {
+  [ -f "$TEMPLATE_DIR/Docs/AgToosa_TrackerSync.md" ]
+  [ -f "$BATS_TEST_DIRNAME/../docs/AgToosa_TrackerSync.md" ]
+  run bash "$SCRIPT" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_TrackerSync.md"* ]]
+  [[ "$output" == *"agtoosa-tracker"* ]]
+  [ -f "$TEMPLATE_DIR/.cursor/commands/agtoosa-tracker.md" ]
+  [ -f "$TEMPLATE_DIR/.claude/commands/agtoosa-tracker.md" ]
+  [ -f "$TEMPLATE_DIR/.windsurf/workflows/agtoosa-tracker.md" ]
+  [ -f "$TEMPLATE_DIR/.gemini/commands/agtoosa-tracker.toml" ]
+  [ -f "$TEMPLATE_DIR/.github/prompts/agtoosa-tracker.prompt.md" ]
+  [ -f "$TEMPLATE_DIR/.codex/prompts/agtoosa-tracker.md" ]
+  run bash "$SCRIPT" --help
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"--tracker"* ]]
+  grep -q 'generator-enforced' "$BATS_TEST_DIRNAME/../docs/AgToosa_TrackerSync.md"
+}
+
+@test "DEV-051 TS-008: DEV-051 filter suite green with claim boundary" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bats "$BATS_TEST_DIRNAME/agtoosa.bats" -f "DEV-051 TS-00[1-7]"
+  [ "$status" -eq 0 ]
+  grep -q 'Do not claim two-way sync' "$root/docs/AgToosa_TrackerSync.md"
+  grep -q 'without using live provider APIs' "$root/docs/AgToosa_TestPlan-DEV-051.md"
 }
 
 @test "DEV-052 CW-015: Hook Automation Pack backlog artifacts exist" {
@@ -7132,6 +7257,39 @@ JSON
   grep -q 'Release 5.3.13 shipped' "$mp"
   grep -q 'v5.3.14 (next)' "$mp"
   grep -q '| DEV-085 | Chore: Post-v5.3.12 release hygiene' "$mp"
+}
+
+# -- DEV-051 ship regression v5.3.14 (SR-001–SR-003) ----------------------------
+
+@test "DEV-051 SR-001: v5.3.14 release pins are aligned" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.14" ]
+  [ "$bash_ver" = "$ps_ver" ]
+  [ "$bash_ver" = "$npm_ver" ]
+  grep -q "version-5.3.14" "$root/README.md"
+  grep -qE -- '--ref v5\.3\.14' "$root/README.md"
+}
+
+@test "DEV-051 SR-002: v5.3.14 changelog and review/evidence/spec artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.14\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-051' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/review-DEV-051.md" ]
+  [ -f "$root/docs/archived/spec-DEV-051.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-051.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-051.md"
+}
+
+@test "DEV-051 SR-003: Master-Plan records v5.3.14 ship and v5.3.15 next milestone" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  grep -q 'Ship complete — v5.3.14' "$mp"
+  grep -q 'Release 5.3.14 shipped' "$mp"
+  grep -q 'v5.3.15 (next)' "$mp"
+  grep -q '| DEV-051 | Feature: Tracker Sync Bridge' "$mp"
 }
 
 # ── DEV-081: Optional Local DX Add-on Validation (DXV-001–DXV-008) ───────────

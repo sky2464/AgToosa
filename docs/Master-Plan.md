@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (DEV-051 enrolled — v5.3.14 Tracker Sync Bridge)
+> **Last updated:** 2026-07-11 (DEV-051 shipped — v5.3.14 Tracker Sync Bridge)
 
 ## Project Charter
 
@@ -9,9 +9,9 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | v5.3.13 shipped — v5.3.14 cycle open (DEV-051 enrolled) |
-| Milestone | `v5.3.14` (active) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | `v5.3.14 (DEV-051)` |
+| Current phase | v5.3.14 shipped — cycle parked (demand-gated backlog only) |
+| Milestone | `v5.3.15` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
+| Active cycle | _(none — parked)_ |
 | Cycle capacity | `8 story points` |
 
 ## Active Cycle
@@ -20,7 +20,9 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-051 | Feature: Tracker Sync Bridge | Feature | M | 🟦 Todo | 0/10 |
+| _(none — cycle parked)_ | | | | | |
+
+<!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.14.md -->
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.13.md -->
 
@@ -39,22 +41,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-### DEV-051 — Tracker Sync Bridge
-
-- [ ] **1.** Contract and fixtures: lock v1 semantics before runtime changes
-  - [ ] 1.1 Add TS-001–TS-008 as RED tests with deterministic project and provider fixtures — _Requirements: AC-001–AC-010_
-  - [ ] 1.2 Add before/after source hashes and unsafe-input fixtures — _Requirements: AC-003, AC-004, AC-007, AC-010_
-- [ ] **2.** Neutral bridge core: implement local export and proposal rendering
-  - [ ] 2.1 Implement normalized export schema, ordering, and digest — _Requirements: AC-001, AC-002_
-  - [ ] 2.2 Implement return validation, stale detection, and proposal-only output — _Requirements: AC-003–AC-005, AC-007_
-  - [ ] 2.3 Wire Bash and PowerShell command parity without network access — _Requirements: AC-001, AC-003, AC-009_
-- [ ] **3.** Canonical workflow and adapters: document transport and authority boundaries
-  - [ ] 3.1 Create Tracker Sync canonical doc, schema, and four provider mappings — _Requirements: AC-006, AC-008, AC-009_
-  - [ ] 3.2 Add thin platform adapters and config inventory entries — _Requirements: AC-008_
-  - [ ] 3.3 Add Quickref/Agent discoverability and explicit proposal-acceptance route — _Requirements: AC-005, AC-009_
-- [ ] **4.** Verification and evidence: prove only the implemented v1 claim
-  - [ ] 4.1 Run focused and full regression commands after GREEN implementation — _Requirements: AC-010_
-  - [ ] 4.2 Record RED/GREEN output and claim-boundary review in the test plan — _Requirements: AC-011_
+_(Empty — cycle parked. Next enrollment via `/agtoosa-spec` when demand un-gates a backlog story.)_
 
 ## Manual / Deferred Tasks
 
@@ -96,7 +83,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-048 | Feature: Agent Result Import Gate | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.3 |
 | DEV-049 | Feature: Evidence Ledger | Feature | M | DEV-004 | P0 | 🏁 Shipped — v5.3.4 |
 | DEV-050 | Feature: Cross-Model Review Gate | Feature | S | DEV-002 | P1 | 🏁 Shipped — v5.3.6 |
-| DEV-051 | Feature: Tracker Sync Bridge | Feature | M | DEV-003 | P1 | 🟦 Todo — v5.3.14 cycle |
+| DEV-051 | Feature: Tracker Sync Bridge | Feature | M | DEV-003 | P1 | 🏁 Shipped — v5.3.14 |
 | DEV-052 | Feature: Hook Automation Pack | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.11 |
 | DEV-053 | Feature: Extension and Preset Catalog | Feature | M | DEV-003 | P1 | 🏁 Shipped — v5.3.8 |
 | DEV-054 | Feature: Signed Registry Provenance | Feature | M | DEV-003 | P0 | 🏁 Shipped — v5.3.5 |
@@ -137,7 +124,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 |----|-------|---------|--------|-----------|
 | DEV-001 | Epic: Core Generator Engine | 0 open / 5 total | 🏁 Complete | — |
 | DEV-002 | Epic: Workflow Templates | 1 open / 14 total | 🟨 Demand-gated | DEV-057 (demand-gated) |
-| DEV-003 | Epic: Community Template Registry | 1 open / 7 total | 🟨 In Progress | DEV-051 |
+| DEV-003 | Epic: Community Template Registry | 0 open / 7 total | 🏁 Complete | — |
 | DEV-004 | Epic: Testing & QA Harness | 0 open / 11 total | 🏁 Complete | — |
 
 ### Epic Charters
@@ -160,7 +147,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Last shipped:** DEV-052 — Hook Automation Pack → `docs/archived/spec-DEV-052.md`
     *   **Last shipped:** DEV-056 — Retrospective Learning Loop → `docs/archived/spec-DEV-056.md`
     *   **Last shipped:** DEV-045 — Work Package Wave DAG → `docs/archived/spec-DEV-045.md`
-    *   **Current:** Wave stories shipped; demand-gated DEV-051 · DEV-057 remain in backlog
+    *   **Current:** Wave stories shipped; demand-gated DEV-057 remains in backlog
 
 *   **DEV-003 - Epic: Community Template Registry**
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
@@ -172,6 +159,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Last shipped:** DEV-077 — Authoring Guide and Onboarding Surface → `docs/archived/spec-DEV-077.md`
     *   **Last shipped:** DEV-080 — Official Registry Pack Pilot → `docs/archived/spec-DEV-080.md`
     *   **Last shipped:** DEV-082 — High-Assurance Signature Mode Validation → `docs/archived/spec-DEV-082.md`
+    *   **Last shipped:** DEV-051 — Tracker Sync Bridge → `docs/archived/spec-DEV-051.md`
     *   **Current:** All epic stories shipped; DEV-080 external registry publish remains [manual-deferred]
 
 *   **DEV-004 - Epic: Testing & QA Harness**
@@ -196,6 +184,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-051 | Feature: Tracker Sync Bridge | 2026-07-11 | [spec-DEV-051.md](archived/spec-DEV-051.md) · [review-DEV-051.md](archived/review-DEV-051.md) · [evidence-DEV-051.md](archived/evidence-DEV-051.md) |
 | DEV-085 | Chore: Post-v5.3.12 release hygiene (bats restore + Master-Plan reconciliation) | 2026-07-11 | [spec-DEV-085.md](archived/spec-DEV-085.md) · [review-DEV-085.md](archived/review-DEV-085.md) · [evidence-DEV-085.md](archived/evidence-DEV-085.md) |
 | DEV-058 | Feature: Local Dashboard | 2026-07-11 | [spec-DEV-058.md](archived/spec-DEV-058.md) · [review-DEV-058.md](archived/review-DEV-058.md) · [evidence-DEV-058.md](archived/evidence-DEV-058.md) |
 | DEV-052 | Feature: Hook Automation Pack | 2026-07-11 | [spec-DEV-052.md](archived/spec-DEV-052.md) · [review-DEV-052.md](archived/review-DEV-052.md) · [evidence-DEV-052.md](archived/evidence-DEV-052.md) |
@@ -423,3 +412,10 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🚀 Release 5.3.13 shipped — v5.3.13; version parity bash/ps1/npm; Milestone v5.3.14 (next); post-ship hygiene complete | AgToosa |
 | 2026-07-11 | ✏️ /agtoosa-spec DEV-051 enrolled — Tracker Sync Bridge; demand un-gated; GitHub Issues first adapter; spec `docs/archived/spec-DEV-051.md`; test plan `docs/AgToosa_TestPlan-DEV-051.md`; estimate M; Active Cycle Todo | AgToosa |
 | 2026-07-11 | /agtoosa-spec — Spec ✅ Approved — DEV-051 — spec-DEV-051.md; estimate M; enrolled in v5.3.14 cycle | AgToosa |
+| 2026-07-11 | 🏗️ Build 🏗️ Started — DEV-051 — TDD cycle; 10 tasks; scope: lib/tracker.sh, AgToosa_TrackerSync.md, --tracker CLI, TS-001–TS-008 bats | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-051 — Task 🟢 10/10 — TS-001–TS-008 green; export/propose local-only; Master-Plan mutation guard PASS | AgToosa |
+| 2026-07-11 | 🏗️ Build complete — DEV-051; next: `/agtoosa-review` | AgToosa |
+| 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-051 — 4-persona review running | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-051; 0 🔴 Critical, 2 🟡 Warning (accepted); report: `docs/archived/review-DEV-051.md`; evidence: `docs/archived/evidence-DEV-051.md` | AgToosa |
+| 2026-07-11 | 🚀 Ship complete — v5.3.14 — DEV-051 Tracker Sync Bridge; smoke PASS; cycle archived | AgToosa |
+| 2026-07-11 | 🚀 Release 5.3.14 shipped — v5.3.14; version parity bash/ps1/npm; Milestone v5.3.15 (next); all unblocked remaining specs complete | AgToosa |

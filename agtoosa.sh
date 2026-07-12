@@ -10,7 +10,7 @@ set -euo pipefail
 #   bash agtoosa.sh [--force] [--dry-run] [--version] [--help]
 # ──────────────────────────────────────────────────────────────
 
-AGTOOSA_VERSION="5.3.13"
+AGTOOSA_VERSION="5.3.14"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
 SHIP_DIR="${SCRIPT_DIR}/ship"
@@ -29,7 +29,7 @@ if [[ ! -d "${SCRIPT_DIR}/lib" ]]; then
 fi
 
 # ── Source modular libraries ──────────────────────────────────
-for _lib in config version copy generate dryrun install update provenance registry catalog maintain; do
+for _lib in config version copy generate dryrun install update provenance registry catalog tracker maintain; do
   # shellcheck source=/dev/null
   source "${SCRIPT_DIR}/lib/${_lib}.sh"
 done
@@ -72,6 +72,12 @@ CATALOG=false
 CATALOG_COMMAND=""
 CATALOG_ARG=""
 CATALOG_PATH=""
+TRACKER=false
+TRACKER_COMMAND=""
+TRACKER_PATH=""
+TRACKER_INPUT=""
+TRACKER_OUTPUT=""
+_PATH_ARG=""
 ALLOW_UNVERIFIED=false
 ASSUME_YES=false
 CLI_PROJECT_PATH=""
@@ -87,6 +93,7 @@ while [[ $# -gt 0 ]]; do
   case "$arg" in
     --registry)            REGISTRY=true ;;
     --catalog)             CATALOG=true ;;
+    --tracker)             TRACKER=true ;;
     --update)              UPDATE=true ;;
     --verify)              VERIFY=true ;;
     --doctor)              DOCTOR=true ;;
@@ -99,7 +106,17 @@ while [[ $# -gt 0 ]]; do
       if [[ $# -lt 2 ]]; then
         echo -e "${RED}❌ Error: --path requires a directory argument.${NC}"; exit 1
       fi
-      CLI_PROJECT_PATH="$2"; shift ;;
+      _PATH_ARG="$2"; shift ;;
+    --input)
+      if [[ $# -lt 2 ]]; then
+        echo -e "${RED}❌ Error: --input requires a file argument.${NC}"; exit 1
+      fi
+      TRACKER_INPUT="$2"; shift ;;
+    --output)
+      if [[ $# -lt 2 ]]; then
+        echo -e "${RED}❌ Error: --output requires a file argument.${NC}"; exit 1
+      fi
+      TRACKER_OUTPUT="$2"; shift ;;
     --platforms)
       if [[ $# -lt 2 ]]; then
         echo -e "${RED}❌ Error: --platforms requires a comma-separated list (e.g. cursor,claude).${NC}"; exit 1
@@ -117,6 +134,8 @@ while [[ $# -gt 0 ]]; do
         CATALOG_COMMAND="$arg"
       elif [[ "$CATALOG" == true && -n "$CATALOG_COMMAND" && -z "$CATALOG_ARG" && "$arg" != --* ]]; then
         CATALOG_ARG="$arg"
+      elif [[ "$TRACKER" == true && -z "$TRACKER_COMMAND" && "$arg" != --* ]]; then
+        TRACKER_COMMAND="$arg"
       elif [[ "$UPDATE" == true && -z "$UPDATE_PATH" && "$arg" != --* ]]; then
         UPDATE_PATH="$arg"
       elif [[ "$VERIFY" == true && -z "$VERIFY_PATH" && "$arg" != --* ]]; then
@@ -135,6 +154,15 @@ while [[ $# -gt 0 ]]; do
   esac
   shift
 done
+
+if [[ -n "$_PATH_ARG" ]]; then
+  if [[ "$TRACKER" == true ]]; then
+    TRACKER_PATH="$_PATH_ARG"
+  else
+    CLI_PROJECT_PATH="$_PATH_ARG"
+  fi
+fi
+unset _PATH_ARG
 
 # ── Source guard (allows sourcing for unit tests) ─────────────
 [[ "${BASH_SOURCE[0]}" == "${0}" ]] || return 0
@@ -214,6 +242,32 @@ if [[ "$CATALOG" == true ]]; then
     *)
       echo -e "${RED}❌ Error: Unknown catalog command '${CATALOG_COMMAND}'.${NC}" >&2
       echo "Available commands: list, search, info, validate, plan" >&2
+      exit 1
+      ;;
+  esac
+fi
+
+# ── Tracker mode (local export + proposal-only import) ─────────
+if [[ "$TRACKER" == true ]]; then
+  _tracker_project="${TRACKER_PATH:-$PWD}"
+  case "$TRACKER_COMMAND" in
+    export)
+      if [[ -z "$TRACKER_OUTPUT" ]]; then
+        echo -e "${RED}❌ Error: --tracker export requires --output <file>.${NC}" >&2
+        exit 1
+      fi
+      tracker_export "$_tracker_project" "$TRACKER_OUTPUT"
+      exit $? ;;
+    propose)
+      if [[ -z "$TRACKER_INPUT" || -z "$TRACKER_OUTPUT" ]]; then
+        echo -e "${RED}❌ Error: --tracker propose requires --input <file> and --output <file>.${NC}" >&2
+        exit 1
+      fi
+      tracker_propose "$_tracker_project" "$TRACKER_INPUT" "$TRACKER_OUTPUT"
+      exit $? ;;
+    *)
+      echo -e "${RED}❌ Error: Unknown tracker command '${TRACKER_COMMAND}'.${NC}" >&2
+      echo "Available commands: export, propose" >&2
       exit 1
       ;;
   esac

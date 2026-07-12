@@ -9,6 +9,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.14] — 2026-07-11
+
+Patch release: DEV-051 Tracker Sync Bridge.
+
+### Added
+
+- **DEV-051 — Tracker Sync Bridge.** `lib/tracker.sh` + `--tracker export|propose` CLI; `AgToosa_TrackerSync.md`; provider-neutral schema; six platform adapters; TS-001–TS-008 bats. Local export + proposal-only import — no live API sync.
+
 ## [5.3.13] — 2026-07-11
 
 Patch release: post-ship hygiene (DEV-085).

@@ -45,6 +45,18 @@
 .PARAMETER CatalogPath
     Optional catalog JSON path (sets AGTOOSA_CATALOG_PATH for the Bash catalog implementation).
 
+.PARAMETER Tracker
+    Tracker Sync Bridge — local export and proposal-only import (delegates to Bash).
+
+.PARAMETER TrackerCommand
+    Tracker sub-command: export or propose.
+
+.PARAMETER TrackerInput
+    Return envelope path (with -Tracker propose).
+
+.PARAMETER TrackerOutput
+    Export or proposal output path (with -Tracker export or propose).
+
 .PARAMETER Path
     Target project directory (skips the interactive path prompt).
 
@@ -84,14 +96,18 @@ param(
     [switch]$Catalog,
     [string]$CatalogCommand = "",
     [string]$CatalogArg = "",
-    [string]$CatalogPath = ""
+    [string]$CatalogPath = "",
+    [switch]$Tracker,
+    [string]$TrackerCommand = "",
+    [string]$TrackerInput = "",
+    [string]$TrackerOutput = ""
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 # ── Version ───────────────────────────────────────────────────
-$AGTOOSA_VERSION = "5.3.13"
+$AGTOOSA_VERSION = "5.3.14"
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $TEMPLATE_DIR = Join-Path $SCRIPT_DIR "template"
 $SHIP_DIR = Join-Path $SCRIPT_DIR "ship"
@@ -180,6 +196,10 @@ ${BOLD}Catalog:${NC}
   -Catalog -CatalogCommand validate -CatalogArg <path>  Validate catalog JSON
   -Catalog -CatalogCommand plan -CatalogArg <preset>    Non-executing install plan
   -CatalogPath <path>                           Optional catalog JSON override
+
+${BOLD}Tracker:${NC}
+  -Tracker -TrackerCommand export -Path <dir> -TrackerOutput <file>  Export stories to JSON
+  -Tracker -TrackerCommand propose -Path <dir> -TrackerInput <file> -TrackerOutput <file>  Proposal artifact
 
 ${BOLD}Examples:${NC}
   .\agtoosa.ps1
@@ -1072,6 +1092,23 @@ if ($Catalog) {
     if ($CatalogCommand) { $args += $CatalogCommand }
     if ($CatalogArg) { $args += $CatalogArg }
     if ($CatalogPath) { $env:AGTOOSA_CATALOG_PATH = $CatalogPath }
+    & $bash.Source @args
+    exit $LASTEXITCODE
+}
+
+# ── --tracker (delegates to Bash implementation) ─────────────
+if ($Tracker) {
+    $bash = Get-Command bash -ErrorAction SilentlyContinue
+    if (-not $bash) {
+        Write-Color "${RED}❌ Tracker commands require Bash (Git Bash or WSL).${NC}"
+        Write-Color "Example: bash agtoosa.sh --tracker export --path . --output export.json"
+        exit 1
+    }
+    $args = @("$SCRIPT_DIR/agtoosa.sh", "--tracker")
+    if ($TrackerCommand) { $args += $TrackerCommand }
+    if ($Path) { $args += "--path"; $args += $Path }
+    if ($TrackerInput) { $args += "--input"; $args += $TrackerInput }
+    if ($TrackerOutput) { $args += "--output"; $args += $TrackerOutput }
     & $bash.Source @args
     exit $LASTEXITCODE
 }

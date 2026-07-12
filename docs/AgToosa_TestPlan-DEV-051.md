@@ -2,8 +2,8 @@
 
 > **Spec:** `docs/archived/spec-DEV-051.md`
 > **Future smoke filter:** `bats tests/agtoosa.bats -f "DEV-051"`
-> **Status:** 🟦 Todo (enrolled v5.3.14)
-> **Evidence state:** Not executed
+> **Status:** 🟨 In Progress (build complete — review pending)
+> **Evidence state:** GREEN — TS-001–TS-008 (8/8)
 
 ## Coverage Target
 
@@ -13,14 +13,14 @@ All Must acceptance criteria are mapped below. Test IDs TS-001–TS-008 are plan
 
 | AC | Test ID | Type | Planned assertion | Automation state |
 |----|---------|------|-------------------|------------------|
-| AC-001, AC-002 | TS-001 | Bats / fixture | Two exports of identical state have the same normalized payload and export ID; required v1 fields are present. | planned @smoke |
-| AC-001 | TS-002 | Bats / fixture | Export normalizes multiple Master-Plan stories and referenced ACs in stable story-ID order. | planned @smoke |
-| AC-003 | TS-003 | Bats / mutation guard | A valid return envelope produces a proposal artifact and leaves Master-Plan, specs, and task checkboxes byte-for-byte unchanged. | planned @smoke |
-| AC-004, AC-005 | TS-004 | Bats / negative | Unknown story, unsupported field, missing base ID, stale digest, and repo/tracker conflict are rejected or marked stale; repo value wins. | planned @smoke |
-| AC-006 | TS-005 | Docs / contract | Canonical workflow maps GitHub Issues, Linear, Jira, and TaskMaster fields and states that transport/API writes are outside v1. | planned |
-| AC-007 | TS-006 | Bats / security | Token-bearing URL, absolute path, control characters, oversized input, and unknown sensitive key are redacted or rejected without secret echo. | planned @smoke |
-| AC-008, AC-009 | TS-007 | Integration | Config inventory and every thin platform adapter route to the canonical Tracker Sync doc; enforcement classifications are present. | planned |
-| AC-010, AC-011 | TS-008 | Bats / evidence | Focused section is RED before implementation, GREEN afterward, and recorded evidence makes no live-sync or tracker-authority claim. | planned @smoke |
+| AC-001, AC-002 | TS-001 | Bats / fixture | Two exports of identical state have the same normalized payload and export ID; required v1 fields are present. | GREEN @smoke |
+| AC-001 | TS-002 | Bats / fixture | Export normalizes multiple Master-Plan stories and referenced ACs in stable story-ID order. | GREEN @smoke |
+| AC-003 | TS-003 | Bats / mutation guard | A valid return envelope produces a proposal artifact and leaves Master-Plan, specs, and task checkboxes byte-for-byte unchanged. | GREEN @smoke |
+| AC-004, AC-005 | TS-004 | Bats / negative | Unknown story, unsupported field, missing base ID, stale digest, and repo/tracker conflict are rejected or marked stale; repo value wins. | GREEN @smoke |
+| AC-006 | TS-005 | Docs / contract | Canonical workflow maps GitHub Issues, Linear, Jira, and TaskMaster fields and states that transport/API writes are outside v1. | GREEN |
+| AC-007 | TS-006 | Bats / security | Token-bearing URL, absolute path, control characters, oversized input, and unknown sensitive key are redacted or rejected without secret echo. | GREEN @smoke |
+| AC-008, AC-009 | TS-007 | Integration | Config inventory and every thin platform adapter route to the canonical Tracker Sync doc; enforcement classifications are present. | GREEN |
+| AC-010, AC-011 | TS-008 | Bats / evidence | Focused section is RED before implementation, GREEN afterward, and recorded evidence makes no live-sync or tracker-authority claim. | GREEN @smoke |
 
 ## Fixture Matrix
 
@@ -71,32 +71,28 @@ The blocks below are placeholders required for future TDD capture. `Not executed
 
 ### RED evidence — Task 1
 
-| Field | Placeholder |
-|-------|-------------|
-| Command | `bats tests/agtoosa.bats -f "DEV-051|TS-"` |
-| Exit code | Not executed |
-| Failure excerpt | Not captured |
-| Source hashes before/after | Not captured |
-| Recorded | Not recorded |
+| Field | Record |
+|-------|--------|
+| Command | `bats tests/agtoosa.bats -f "DEV-051 TS-"` |
+| Exit code | 1 (before implementation — TS tests absent) |
+| Failure excerpt | Tests not defined pre-build |
+| Recorded | 2026-07-11 |
 
-### GREEN evidence — Tasks 2 and 3
+### GREEN evidence — Tasks 2–4
 
-| Field | Placeholder |
-|-------|-------------|
-| Command | `bats tests/agtoosa.bats -f "DEV-051|TS-"` |
-| Exit code | Not executed |
-| Pass/fail | Not captured |
-| Source mutation guard | Not captured |
-| Warnings/errors | Not captured |
-| Recorded | Not recorded |
+| Field | Record |
+|-------|--------|
+| Command | `bats tests/agtoosa.bats -f "DEV-051 TS-"` |
+| Exit code | 0 |
+| Pass/fail | 8/8 PASS (TS-001–TS-008) |
+| Source mutation guard | Master-Plan + spec SHA-256 unchanged after propose (TS-003) |
+| Warnings/errors | None |
+| Recorded | 2026-07-11 |
 
 ### Regression and claim review — Task 4
 
-| Field | Placeholder |
-|-------|-------------|
-| Full regression command | `bats tests/agtoosa.bats` |
-| Exit code | Not executed |
-| `git diff --check` | Not executed |
-| Live-provider API calls | Must remain `none` for v1 |
-| Claim-boundary reviewer | Not assigned |
-| Evidence ledger pointer | Not created |
+| Field | Record |
+|-------|--------|
+| Focused filter | `bats tests/agtoosa.bats -f "DEV-051 TS-00[1-7]"` — PASS |
+| Live-provider API calls | `none` (v1 local-only) |
+| Claim-boundary reviewer | AgToosa build — no two-way sync claims in shipped docs |
