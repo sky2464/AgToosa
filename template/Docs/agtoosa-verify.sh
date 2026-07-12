@@ -264,6 +264,37 @@ else
   warn "no $DOCS/.agtoosa-version marker (install with agtoosa.sh to enable update checks)"
 fi
 
+# ── Gate 6: optional governance policy (DEV-059) ───────────────
+# Missing policy is NOT a finding. Invalid present policy → WARN.
+echo "Gate 6 — Optional governance policy"
+POLICY_CHECK=""
+VERIFY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
+for candidate in \
+  "$DOCS/agtoosa-policy-check.sh" \
+  "$VERIFY_DIR/agtoosa-policy-check.sh" \
+  "$ROOT/docs/agtoosa-policy-check.sh" \
+  "$ROOT/Docs/agtoosa-policy-check.sh" \
+  "$ROOT/template/Docs/agtoosa-policy-check.sh"
+do
+  if [[ -f "$candidate" ]]; then
+    POLICY_CHECK="$candidate"
+    break
+  fi
+done
+if [[ -z "$POLICY_CHECK" ]]; then
+  pass "no policy checker installed (optional)"
+else
+  policy_rc=0
+  policy_out=$(bash "$POLICY_CHECK" --root "$ROOT" 2>&1) || policy_rc=$?
+  if echo "$policy_out" | grep -q 'policy_path=none'; then
+    pass "no extra policy configured"
+  elif [[ $policy_rc -eq 0 ]]; then
+    pass "optional policy valid ($(echo "$policy_out" | grep -m1 'policy_path=' || true))"
+  else
+    warn "invalid optional policy (see agtoosa-policy-check.sh); missing policy is never a finding"
+  fi
+fi
+
 # ── Summary ───────────────────────────────────────────────────
 echo ""
 echo "──────────────────────────────────────────"

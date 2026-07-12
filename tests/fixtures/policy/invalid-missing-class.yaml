@@ -1,0 +1,7 @@
+# Invalid: rule omits enforcement_class (FM-001 / AC-005).
+version: 1
+
+paths:
+  - id: PATH-BAD
+    description: Missing enforcement_class must fail validation
+    on_violation: warn

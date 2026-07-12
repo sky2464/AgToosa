@@ -307,6 +307,10 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
     *   Require **explicit user approval** before writing any `.codex/skills/<skill-name>/SKILL.md` file.
     *   Record accepted and declined decisions in the active spec file or `docs/Master-Plan.md` **Update Log**.
 
+## Policy violation contract
+
+Consult `docs/AgToosa_GovernancePolicy.md` (checker: `docs/agtoosa-policy-check.sh`) before actions covered by a declared rule. On a policy violation: identify the rule `id`, `enforcement_class`, and `on_violation`; follow that `on_violation` only (`warn` / `instruct_stop` / wired `block_generator`); never invent stronger enforcement; never echo secret values. Preserve `docs/Master-Plan.md` as lifecycle authority — policy handling must not write story status or tasks.
+
 ## Output
 *   Present the generated Spec (with Goal Contract and embedded plan), task list, and test plan skeleton to the user.
 *   Print the closure line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`

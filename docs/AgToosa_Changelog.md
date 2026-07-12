@@ -9,6 +9,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.10] — 2026-07-11
+
+Patch release: wave 2 dependents (DEV-046, DEV-059).
+
+### Added
+
+- **DEV-046 — Optional Worktree Isolation.** `AgToosa_Worktree.md` dual-path; Build/Handoff/Import wiring; WT-001–WT-006 bats. Optional/agent-instructed (no automatic git worktree execution).
+- **DEV-059 — Governance Policy-as-Code.** `AgToosa_GovernancePolicy.md`, inert example, deterministic checker, Handoff Applicable Policy, optional verifier WARN; GP-001–GP-009 bats. Missing policy stays healthy.
+
 ## [5.3.9] — 2026-07-11
 
 Patch release: remaining-specs fan-out wave 1 (DEV-045, DEV-076, DEV-077, DEV-079, DEV-080, DEV-082, DEV-083, DEV-084).

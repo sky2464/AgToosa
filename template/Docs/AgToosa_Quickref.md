@@ -38,6 +38,9 @@ Utilities (load on demand): `/agtoosa-status`, `/agtoosa-task`, `/agtoosa-qa`,
    selected-wave packages; Import reports ownership gaps. Derivation and
    checks are **agent-instructed**; schema copies are **generator-enforced**;
    bats/CI when wired are **CI-enforced**; a runtime scheduler is **roadmap**.
+8. **Optional worktree isolation.** For M+ multi-package or risky lanes, see
+   `Docs/AgToosa_Worktree.md` — preferred path `../<repo>-<package_id>`;
+   Git commands are **manual**; automatic provisioning is **roadmap**.
 
 ## State files
 

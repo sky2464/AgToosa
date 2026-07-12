@@ -68,6 +68,20 @@ Selected-wave package rows only (from active spec `### 3.4 Work Package DAG`). O
 | package_id | wave | depends_on | owned_files | inputs | outputs | merge_order | verification |
 |------------|------|------------|-------------|--------|---------|-------------|--------------|
 | PKG-[N.M] | [N] | [deps or —] | [paths] | [inputs] | [outputs] | [order] | [command] |
+
+## 8b. Worktree Hint (optional)
+When parallel packages use optional isolation — suggested only; does not create paths or branches.
+
+| package_id | suggested_path | suggested_branch |
+|------------|----------------|------------------|
+| PKG-[N.M] | ../<repo>-PKG-[N.M] | lane/PKG-[N.M] |
+
+## 9. Applicable Policy
+Resolved source and rule metadata from `docs/AgToosa_GovernancePolicy.md` via `bash docs/agtoosa-policy-check.sh` — copy only; **does not mutate** policy or Master-Plan lifecycle state.
+
+- `policy_path=[.agtoosa/policy.yaml | docs/Context/agtoosa-policy.yaml | none]`
+- If `policy_path=none`: state exactly `no extra policy configured`
+- If present: list applicable rule `id`, `description`, `enforcement_class`, `on_violation` (never secret values)
 ```
 
 ## Workflow
@@ -76,6 +90,8 @@ Selected-wave package rows only (from active spec `### 3.4 Work Package DAG`). O
 2. **Recommend target agent** — Consult `docs/AgToosa_AgentCapability.md` (Installed-Surface Detection + Routing Recommendation Algorithm). Prefer an **installed** surface for handoff; document the chosen row and **fallback** when the preferred surface is absent. Record the recommendation in the pack `Target agent` field.
 3. **Assemble pack** — Fill every section from the approved spec, Master-Plan Active Tasks, and test plan. Prefer inference; ask at most one clarifying question (target agent) if unknown after the matrix recommendation.
    - For `/agtoosa-handoff wave`, include **§8 Work Packages** with only the **selected-wave** rows (`package_id`, `owned_files`, `inputs`, `outputs`, `merge_order`, `verification`, plus `depends_on` / `wave` for context). Do not export packages from unselected waves.
+   - **Optional Worktree Hint (agent-instructed):** IF the selected wave has parallel DEV-045 packages and isolation is selected, append a Worktree Hint table mapping each known `package_id` → `suggested_path` (default `../<repo>-<package_id>`) and `suggested_branch`. The hint is optional, package-scoped, and **read-only** — it **does not create** paths or branches and performs **no Git mutation**. Full checklist: `docs/AgToosa_Worktree.md`. When skipping isolation, state exactly: `No worktree: run packages sequentially in one branch and verify a clean working tree between packages.`
+   - Include **§9 Applicable Policy**: resolve via `docs/agtoosa-policy-check.sh`; embed `policy_path` and rule metadata or `no extra policy configured`. Handoff **does not mutate** policy files or Master-Plan status.
 4. **Write file** — Create `docs/archived/handoff-…md`. Do not overwrite prior packs.
 5. **Phase event** — Append to `docs/agtoosa-events.jsonl`:
    `{"ts":"[ISO-8601 UTC]","phase":"handoff","event":"export","story":"[Story ID]","by":"AgToosa"}`

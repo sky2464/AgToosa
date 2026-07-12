@@ -54,6 +54,15 @@ When the handoff pack or active spec includes `### 3.4 Work Package DAG` / §8 W
 3. Present accepted packages in declared **`merge_order`** before any lifecycle checkbox or Master-Plan status mutation.
 4. Import evidence **cannot** directly mark Master-Plan tasks complete; only `/agtoosa-build` (or an explicit user request to close via import after green verification) may tick checkboxes after this gate.
 
+## Worktree integration gate (agent-instructed)
+
+When results arrive from optional worktree lanes (see `docs/AgToosa_Worktree.md` and any Handoff **Worktree Hint**):
+
+1. For **each** package branch: require a **clean-status** check (`git status --short` / clean working tree) and run that package's exact **`verification`** command in the assigned tree.
+2. Present accepted branches in DEV-045 **`merge_order`** before integration approval or status mutation.
+3. Defer worktree **cleanup** (`git worktree remove` / `git worktree prune`) until **after** accepted results are integrated — never cleanup before integration.
+4. When isolation was skipped, state exactly: `No worktree: run packages sequentially in one branch and verify a clean working tree between packages.`
+
 ## Closure Gate (agent-instructed)
 
 **Do not** mark `- [x]` on `docs/Master-Plan.md` → `## Active Tasks` or the active spec task tree until:
@@ -86,6 +95,10 @@ Language to use when refusing premature closure:
 |-------|------|
 | `/agtoosa-build` | Before Tracking update, if work was done out-of-band / async, run this Import Checklist (or `/agtoosa-import`) first |
 | `/agtoosa-ship check` | Soft row: when `[imported]` or IMPORT evidence exists, confirm verification commands were green — informational, not a verifier FAIL |
+
+## Policy violation contract
+
+Consult `docs/AgToosa_GovernancePolicy.md` (checker: `docs/agtoosa-policy-check.sh`) before actions covered by a declared rule. On a policy violation: identify the rule `id`, `enforcement_class`, and `on_violation`; follow that `on_violation` only (`warn` / `instruct_stop` / wired `block_generator`); never invent stronger enforcement; never echo secret values. Preserve `docs/Master-Plan.md` as lifecycle authority — policy handling must not write story status or tasks.
 
 ## Output
 

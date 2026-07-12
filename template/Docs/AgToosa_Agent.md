@@ -96,6 +96,7 @@ Your core principles are:
 | `/agtoosa-status-guide` | `Docs/AgToosa_StatusGuide.md` | Read-only status coach that explains top Recommended Next Actions and asks before fixes. Native picker entry on Copilot (`.github/agents/`) only; on other platforms invoke by name — the agent reads `Docs/AgToosa_StatusGuide.md` directly |
 | `/agtoosa-handoff` | `Docs/AgToosa_Handoff.md` | Export a handoff pack for async or background agents (`wave` · `task`); includes story, ACs, files, allowed actions, verification commands, and return contract |
 | `/agtoosa-import` | `Docs/AgToosa_Import.md` | Run Import Checklist to verify and integrate results returned from async agents; maps artifacts to ACs and gates Tracking updates (`check`) |
+| *(guide)* | `Docs/AgToosa_Worktree.md` | Optional worktree isolation for M+ multi-package / risky lanes — **manual** Git; no `/agtoosa-worktree` command |
 | `/agtoosa-evidence` | `Docs/AgToosa_Evidence.md` | Maintain per-story evidence ledger at review and ship phases (`review` · `ship`) |
 | `/agtoosa-help` | Platform help entry points (`.claude/commands/`, `.gemini/commands/`, `.github/prompts/`, Cursor/Windsurf core rules) | **Assistance-only:** static command reference; default path does not read Master-Plan or git |
 | `/agtoosa-help next` | Same platform help surfaces | **Assistance-only:** read-only context read; recommends exactly one next command without executing it |

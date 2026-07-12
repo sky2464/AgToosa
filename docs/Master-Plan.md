@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (/agtoosa-ship — v5.3.9 remaining-specs wave 1 shipped)
+> **Last updated:** 2026-07-11 (/agtoosa-ship — v5.3.10 wave 2 shipped)
 
 ## Project Charter
 
@@ -9,9 +9,9 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | 🏁 v5.3.9 shipped — wave 1 complete; dependents next |
-| Milestone | `v5.3.10` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | — (wave 1 archived; enroll DEV-046 · DEV-059 next) |
+| Current phase | 🏁 v5.3.10 shipped — wave 2; enroll DEV-052 · DEV-056 next |
+| Milestone | `v5.3.11` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
+| Active cycle | — (wave 2 archived) |
 | Cycle capacity | `8 story points` |
 
 ## Active Cycle
@@ -21,6 +21,7 @@
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
 
+<!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.10.md -->
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.9.md -->
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.8.md -->
 Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blocked · 🔧 Awaiting Manual · 🏁 Shipped
@@ -30,7 +31,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-<!-- Wave 1 tasks shipped — see docs/archived/cycle-2026-07-11-release-5.3.9.md and archived specs -->
+<!-- Wave 2 shipped — see docs/archived/cycle-2026-07-11-release-5.3.10.md -->
+
 
 ## Manual / Deferred Tasks
 
@@ -67,20 +69,20 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 |----|-------|------|----------|------|----------|--------|
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
-| DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | ⬜ Backlog — unblocked after DEV-045 |
+| DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v5.3.10 |
 | DEV-047 | Feature: Async Agent Handoff Packs | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.3 |
 | DEV-048 | Feature: Agent Result Import Gate | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.3 |
 | DEV-049 | Feature: Evidence Ledger | Feature | M | DEV-004 | P0 | 🏁 Shipped — v5.3.4 |
 | DEV-050 | Feature: Cross-Model Review Gate | Feature | S | DEV-002 | P1 | 🏁 Shipped — v5.3.6 |
 | DEV-051 | Feature: Tracker Sync Bridge | Feature | M | DEV-003 | P1 | ⬜ Backlog — executable spec ready; demand-gated, proposal import only |
-| DEV-052 | Feature: Hook Automation Pack | Feature | M | DEV-002 | P1 | ⬜ Backlog — executable spec ready; depends DEV-059 |
+| DEV-052 | Feature: Hook Automation Pack | Feature | M | DEV-002 | P1 | ⬜ Backlog — unblocked after DEV-059 |
 | DEV-053 | Feature: Extension and Preset Catalog | Feature | M | DEV-003 | P1 | 🏁 Shipped — v5.3.8 |
 | DEV-054 | Feature: Signed Registry Provenance | Feature | M | DEV-003 | P0 | 🏁 Shipped — v5.3.5 |
 | DEV-055 | Feature: Agent Capability Matrix | Feature | S | DEV-002 | P1 | 🏁 Shipped — v5.3.7 |
-| DEV-056 | Feature: Retrospective Learning Loop | Feature | S | DEV-002 | P2 | ⬜ Backlog — executable spec ready; stable evidence inputs required |
+| DEV-056 | Feature: Retrospective Learning Loop | Feature | S | DEV-002 | P2 | ⬜ Backlog — unblocked after DEV-059 |
 | DEV-057 | Feature: Multi-Repo Story Overlay | Feature | L | DEV-002 | P2 | ⬜ Backlog — executable spec ready; demand-gated and requires DEV-045 shipped |
 | DEV-058 | Feature: Local Dashboard | Feature | M | DEV-004 | P2 | ⬜ Backlog — executable spec ready; read-only local scope |
-| DEV-059 | Feature: Governance Policy-as-Code | Feature | M | DEV-004 | P1 | ⬜ Backlog — recommended next after DEV-045 |
+| DEV-059 | Feature: Governance Policy-as-Code | Feature | M | DEV-004 | P1 | 🏁 Shipped — v5.3.10 |
 | DEV-060 | Docs: Public Benchmark Suite | Docs | M | DEV-004 | P2 | ✅ Done — suite + scoring + claim boundary in `docs/benchmarks/`; competitor runs manual-deferred |
 | DEV-075 | Docs: Subagent and Persona Guide Suite | Docs | M | DEV-002 | P1 | 🏁 Shipped — v5.3.8 |
 | DEV-076 | Spike: Static Documentation Site Proof | Spike | S | DEV-004 | P2 | 🏁 Shipped — v5.3.9 |
@@ -342,3 +344,14 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-084 | Chore: Open-Source Sustainability and Support Boundary | 2026-07-11 | [spec-DEV-084.md](archived/spec-DEV-084.md) · [review-DEV-084.md](archived/review-DEV-084.md) · [evidence-DEV-084.md](archived/evidence-DEV-084.md) |
 | 2026-07-11 | 🚀 Ship complete — v5.3.9 — remaining-specs wave 1 (DEV-045/076/077/079/080/082/083/084); smoke PASS; cycle archived | AgToosa |
 | 2026-07-11 | 🚀 Release 5.3.9 shipped — v5.3.9; version parity bash/ps1/npm; Milestone v5.3.10 (next) | AgToosa |
+| 2026-07-11 | ✅ /agtoosa-spec — Spec ✅ Approved — wave 2: DEV-046 · DEV-059; enrolled post v5.3.9 | AgToosa |
+| 2026-07-11 | 🏗️ Build 🏗️ Started — wave 2 — DEV-046 · DEV-059 parallel subagents | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-046 — Task 🟢 4/4 — WT-001–006 green; AgToosa_Worktree.md + Build/Handoff/Import wiring | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-059 — Task 🟢 4/4 — GP-001–009 green; GovernancePolicy + checker + Handoff Applicable Policy | AgToosa |
+| 2026-07-11 | 🏗️ Build complete — wave 2 (DEV-046 · DEV-059); next: parallel /agtoosa-review | AgToosa |
+| 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — wave 2 DEV-046 · DEV-059 | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-059; 0 🔴 Critical, 4 🟡 Warning accepted; report: `docs/archived/review-DEV-059.md`; evidence: `docs/archived/evidence-DEV-059.md` | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-046; 0 🔴 Critical, 4 🟡 Warning accepted; report: `docs/archived/review-DEV-046.md`; evidence: `docs/archived/evidence-DEV-046.md` | AgToosa || DEV-046 | Feature: Optional Worktree Isolation | 2026-07-11 | [spec-DEV-046.md](archived/spec-DEV-046.md) · [review-DEV-046.md](archived/review-DEV-046.md) · [evidence-DEV-046.md](archived/evidence-DEV-046.md) |
+| DEV-059 | Feature: Governance Policy-as-Code | 2026-07-11 | [spec-DEV-059.md](archived/spec-DEV-059.md) · [review-DEV-059.md](archived/review-DEV-059.md) · [evidence-DEV-059.md](archived/evidence-DEV-059.md) |
+| 2026-07-11 | 🚀 Ship complete — v5.3.10 — wave 2 DEV-046 · DEV-059; smoke PASS; cycle archived | AgToosa |
+| 2026-07-11 | 🚀 Release 5.3.10 shipped — v5.3.10; version parity bash/ps1/npm; Milestone v5.3.11 (next) | AgToosa |

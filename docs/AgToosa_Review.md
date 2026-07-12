@@ -131,6 +131,10 @@ For parallel vs sequential routing per installed host, consult `docs/AgToosa_Age
     *   Merge findings with confidence tiers (`both-models`, `reviewer-only`, `writer-only`, `virtual-persona-only`) before Part 3 verdict.
     *   Fallback when no second model is available: `/agtoosa-review cross`, sequential virtual personas, or documented skip — see `docs/AgToosa_CrossModelReview.md`.
 
+## Policy violation contract
+
+Consult `docs/AgToosa_GovernancePolicy.md` (checker: `docs/agtoosa-policy-check.sh`) before actions covered by a declared rule. On a policy violation: identify the rule `id`, `enforcement_class`, and `on_violation`; follow that `on_violation` only (`warn` / `instruct_stop` / wired `block_generator`); never invent stronger enforcement; never echo secret values. Preserve `docs/Master-Plan.md` as lifecycle authority — policy handling must not write story status or tasks.
+
 ## Output
 *   Save the review report to `docs/archived/review-[story-id].md` (e.g., `docs/archived/review-DEV-15.md`). This file is required by `/agtoosa-ship check`. The file must contain the structured findings table with all 🔴 / 🟡 / 🟢 items.
 *   Create or update `docs/archived/evidence-[story-id].md` per `docs/AgToosa_Evidence.md` (or run `/agtoosa-evidence review`). Populate `phase=review` rows from the story test plan and review findings. This step is required when writing the review report — do not defer it to ship.

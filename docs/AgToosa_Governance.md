@@ -51,6 +51,10 @@ Every AgToosa command must read and write Master-Plan.md as follows:
 3. Keep the Active Cycle table current. When status changes, update the row immediately.
 4. When a story reaches `Done`, move its row from the Active Cycle table to the `## Completed This Cycle` section.
 
+## Policy violation contract
+
+Consult `docs/AgToosa_GovernancePolicy.md` (checker: `docs/agtoosa-policy-check.sh`) before actions covered by a declared rule. On a policy violation: identify the rule `id`, `enforcement_class`, and `on_violation`; follow that `on_violation` only (`warn` / `instruct_stop` / wired `block_generator`); never invent stronger enforcement; never echo secret values. Preserve `docs/Master-Plan.md` as lifecycle authority — policy handling must not write story status or tasks outside the normal AgToosa commands.
+
 ## Breaking Change & Deprecation Policy
 
 Breaking changes must have a one-minor-release deprecation notice before removal. Announce the deprecation in a minor release with a runtime warning; remove in the next minor or major release. See `CONTRIBUTING.md` for the full deprecation procedure and timeline example.

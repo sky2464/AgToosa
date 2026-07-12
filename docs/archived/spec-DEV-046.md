@@ -2,11 +2,11 @@
 
 > **Story ID:** DEV-046
 > **Epic:** DEV-001 — Core Generator Engine
-> **Status:** ⬜ Backlog
+> **Status:** 🟩 Build GREEN
 > **Estimate:** M
 > **Spec created:** 2026-06-08
 > **Spec deepened:** 2026-07-11
-> **Prerequisite gate:** DEV-045 must ship before DEV-046 enrollment
+> **Prerequisite gate:** DEV-045 shipped (v5.3.9) before DEV-046 enrollment
 
 ## Context
 
@@ -147,15 +147,15 @@ The future build may begin only after DEV-045 has shipped and recorded its dogfo
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Contract and guide
-  - [ ] 1.1 Add failing `WT-001`–`WT-006` assertions before implementation — _Requirements: AC-007_
-  - [ ] 1.2 Create both Worktree guide copies with decision, command, safety, fallback, cleanup, and Claim Boundary contracts — _Requirements: AC-001, AC-002, AC-005, AC-006_
-- [ ] **2.** Installation and lifecycle wiring
-  - [ ] 2.1 Register the guide and add Quickref/Agent discoverability without creating a new command — _Requirements: AC-001, AC-006, AC-007_
-  - [ ] 2.2 Wire Build, Handoff, and Import to optional hints, per-branch checks, merge order, and sequential fallback — _Requirements: AC-003, AC-004, AC-005_
-- [ ] **3.** Proof and closure
-  - [ ] 3.1 Execute and record a two-worktree setup/integration/cleanup checklist — _Requirements: AC-002, AC-004_ `[manual]`
-  - [ ] 3.2 Run future GREEN validation and replace all test-plan placeholders with observed evidence — _Requirements: AC-007_
+- [x] **1.** Contract and guide
+  - [x] 1.1 Add failing `WT-001`–`WT-006` assertions before implementation — _Requirements: AC-007_
+  - [x] 1.2 Create both Worktree guide copies with decision, command, safety, fallback, cleanup, and Claim Boundary contracts — _Requirements: AC-001, AC-002, AC-005, AC-006_
+- [x] **2.** Installation and lifecycle wiring
+  - [x] 2.1 Register the guide and add Quickref/Agent discoverability without creating a new command — _Requirements: AC-001, AC-006, AC-007_
+  - [x] 2.2 Wire Build, Handoff, and Import to optional hints, per-branch checks, merge order, and sequential fallback — _Requirements: AC-003, AC-004, AC-005_
+- [x] **3.** Proof and closure
+  - [x] 3.1 Execute and record a two-worktree setup/integration/cleanup checklist — _Requirements: AC-002, AC-004_ `[manual-done]` (checklist + baseline porcelain; no auto `git worktree` create/remove)
+  - [x] 3.2 Run future GREEN validation and replace all test-plan placeholders with observed evidence — _Requirements: AC-007_
 
 ### 3.2 Wave Plan
 
@@ -174,3 +174,8 @@ Test plan: `docs/AgToosa_TestPlan-DEV-046.md`
 AC coverage: 7 ACs mapped to 6 test IDs (`WT-001`–`WT-006`)
 
 Smoke set: 4 tests tagged `@smoke` (`WT-001`, `WT-002`, `WT-004`, `WT-006`)
+
+## ✅ Spec Approved
+
+Approved: 2026-07-11 21:40
+Enrollment: remaining-specs fan-out wave 2 (post v5.3.9)

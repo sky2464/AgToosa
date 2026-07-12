@@ -20,6 +20,7 @@ DOCS_FILES=(
   "Docs/AgToosa_Task.md"
   "Docs/AgToosa_Handoff.md"
   "Docs/AgToosa_Import.md"
+  "Docs/AgToosa_Worktree.md"
   "Docs/AgToosa_Evidence.md"
   "Docs/agtoosa-evidence.jsonl"
   "Docs/AgToosa_MetricsKit.md"
@@ -41,6 +42,8 @@ DOCS_FILES=(
   "Docs/DEEPENING.md"
   "Docs/LANGUAGE.md"
   "Docs/AgToosa_Governance.md"
+  "Docs/AgToosa_GovernancePolicy.md"
+  "Docs/agtoosa-policy-check.sh"
   "Docs/Master-Architecture.md"
   "Docs/Master-Plan.md"
   "Docs/AgToosa_Changelog.md"
@@ -225,6 +228,7 @@ CONTEXT_FILES=(
   "Docs/Context/tech-stack.md"
   "Docs/Context/product.md"
   "Docs/Context/product-guidelines.md"
+  "Docs/Context/agtoosa-policy.example.yaml"
 )
 
 CLAUDE_COMMAND_FILES=(

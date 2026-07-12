@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.8" ]]
+  [[ "$output" == "AgToosa v5.3.10" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1636,7 +1636,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.3.8" ]
+  [ "$ver" = "5.3.10" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1647,7 +1647,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.3.8"* ]]
+  [[ "$output" == *"5.3.10"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -3649,7 +3649,7 @@ PY
   grep -q "Claude Code Instructions" "$project/CLAUDE.md"
   ! grep -q "old claude block" "$project/CLAUDE.md"
   grep -q "AgToosa" "$project/.claude/commands/agtoosa-spec.md"
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.8" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.10" ]
 }
 
 @test "DEV-036 WP-002: Bash registry install normalizes top-level pack directory" {
@@ -4369,6 +4369,146 @@ _dag_deps_valid() {
   grep -q "Observed exit code: 0" "$tp"
   grep -qiE 'Status:.*(?:GREEN|executed|complete)' "$tp"
   grep -q "two-parallel" "$tp" || grep -q "PKG-2.1" "$tp"
+}
+
+# ── DEV-046: Optional Worktree Isolation (WT-001–WT-006) ─────────────────────
+
+@test "DEV-046 WT-001: Worktree guide defines use/skip criteria and Claim Boundary @smoke" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Worktree.md" "$root/template/Docs/AgToosa_Worktree.md"; do
+    [ -f "$f" ]
+    # Use: M+ with at least two parallel packages or explicitly risky lane
+    grep -qiE 'M\+|M\+ work|estimate.*M' "$f"
+    grep -qiE 'two parallel|at least two|parallel packages' "$f"
+    grep -qiE 'risky lane|higher-risk|explicitly risky' "$f"
+    # Skip: XS/S single-lane
+    grep -qiE 'XS/S|XS.*S' "$f"
+    grep -qiE 'single-lane|single lane|skip' "$f"
+    # Enforcement classes / Claim Boundary
+    grep -q "generator-enforced" "$f"
+    grep -q "CI-enforced" "$f"
+    grep -q "agent-instructed" "$f"
+    grep -q "manual" "$f"
+    grep -q "roadmap" "$f"
+    grep -qi "Claim Boundary" "$f"
+    # Reject mandatory / automatic-isolation overclaims
+    ! grep -qiE 'worktrees? (are|is) mandatory|must (always )?use (a )?worktree|automatic(ally)? (creates?|provision|isolat)|guarantees? (lane )?isolation|AgToosa (creates|provisions) worktrees' "$f"
+  done
+}
+
+@test "DEV-046 WT-002: Worktree guide documents safe commands, paths, secrets, cleanup @smoke" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Worktree.md" "$root/template/Docs/AgToosa_Worktree.md"; do
+    [ -f "$f" ]
+    grep -q "git worktree add" "$f"
+    grep -q "git worktree list" "$f"
+    grep -q "git worktree remove" "$f"
+    grep -q "git worktree prune" "$f"
+    # Preferred sibling path pattern
+    grep -q '../<repo>-<package_id>' "$f"
+    # In-repo alternative requires ignore
+    grep -q '.worktrees/' "$f"
+    grep -qiE 'ignore|\.gitignore' "$f"
+    # Secret / env boundary — prohibit automatic copying
+    grep -qiE '\.env|secret|credential' "$f"
+    grep -qiE 'do not (automatically )?copy|never copy|prohibit.*(copy|env)|no automatic copying' "$f"
+    # Cleanup after integration
+    grep -qiE 'cleanup|remove.*prune|prune.*remove' "$f"
+  done
+}
+
+@test "DEV-046 WT-003: Handoff optional Worktree Hint is package-scoped and read-only" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Handoff.md" "$root/template/Docs/AgToosa_Handoff.md"; do
+    [ -f "$f" ]
+    grep -qiE 'Worktree Hint|worktree hint' "$f"
+    grep -q "package_id" "$f"
+    grep -qiE 'suggested.?path|suggested_path' "$f"
+    grep -qiE 'suggested.?branch|suggested_branch' "$f"
+    # Optional / conditional — not mandatory creation
+    grep -qiE 'optional|when.*parallel|IF.*parallel|if isolation' "$f"
+    # Read-only: no Git mutation / no creation
+    grep -qiE 'does not create|without creating|no (Git )?mutation|does not run git|hint.*(read-only|no creation)|never create' "$f"
+  done
+}
+
+@test "DEV-046 WT-004: Import requires clean status, verification, merge_order, then cleanup @smoke" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Import.md" "$root/template/Docs/AgToosa_Import.md"; do
+    [ -f "$f" ]
+    grep -qiE 'clean.?status|clean working tree|status --short|git status' "$f"
+    grep -qiE 'verification|package.?verification' "$f"
+    grep -q "merge_order" "$f"
+    grep -qiE 'worktree|Worktree' "$f"
+    # Cleanup deferred until after accepted integration
+    grep -qiE 'cleanup|remove|prune' "$f"
+    grep -qiE 'after.*(integrat|accept)|until.*(integrat|accept)|defer.*cleanup|cleanup.*after' "$f"
+  done
+}
+
+@test "DEV-046 WT-005: exact sequential fallback string; AgentCapability read-only" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f exact
+  exact='No worktree: run packages sequentially in one branch and verify a clean working tree between packages.'
+  for f in \
+    "$root/docs/AgToosa_Worktree.md" "$root/template/Docs/AgToosa_Worktree.md" \
+    "$root/docs/AgToosa_Build.md" "$root/template/Docs/AgToosa_Build.md" \
+    "$root/docs/AgToosa_Handoff.md" "$root/template/Docs/AgToosa_Handoff.md" \
+    "$root/docs/AgToosa_Import.md" "$root/template/Docs/AgToosa_Import.md"; do
+    [ -f "$f" ]
+    grep -Fq "$exact" "$f"
+  done
+  # AgToosa_AgentCapability.md remains a read-only routing reference (not edited for Worktree)
+  for f in "$root/docs/AgToosa_Worktree.md" "$root/template/Docs/AgToosa_Worktree.md" \
+           "$root/docs/AgToosa_Build.md" "$root/template/Docs/AgToosa_Build.md"; do
+    grep -q "AgToosa_AgentCapability.md" "$f"
+    grep -qiE 'read-only|routing reference|consult.*AgentCapability|do not (edit|modify).*AgentCapability' "$f"
+  done
+  # DEV-055 surfaces must not gain Worktree content
+  ! grep -qiE 'Worktree|worktree|git worktree' "$root/docs/AgToosa_AgentCapability.md"
+  ! grep -qiE 'Worktree|worktree|git worktree' "$root/template/Docs/AgToosa_AgentCapability.md"
+}
+
+@test "DEV-046 WT-006: config registration, dual-path cross-links, no DEV-055 edits @smoke" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f tp
+  # Dual-path guide present
+  [ -f "$root/docs/AgToosa_Worktree.md" ]
+  [ -f "$root/template/Docs/AgToosa_Worktree.md" ]
+  # Registered in generator inventory
+  grep -q 'Docs/AgToosa_Worktree.md' "$root/lib/config.sh"
+  run bash "$root/agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Worktree.md"* ]]
+  # Build / Handoff / Import / Quickref / Agent cross-links
+  for f in \
+    "$root/docs/AgToosa_Build.md" "$root/template/Docs/AgToosa_Build.md" \
+    "$root/docs/AgToosa_Handoff.md" "$root/template/Docs/AgToosa_Handoff.md" \
+    "$root/docs/AgToosa_Import.md" "$root/template/Docs/AgToosa_Import.md" \
+    "$root/docs/AgToosa_Quickref.md" "$root/template/Docs/AgToosa_Quickref.md" \
+    "$root/docs/AgToosa_Agent.md" "$root/template/Docs/AgToosa_Agent.md"; do
+    [ -f "$f" ]
+    grep -qiE 'AgToosa_Worktree|worktree isolation|optional.*worktree' "$f"
+  done
+  # Safety / cleanup fields in guide
+  for f in "$root/docs/AgToosa_Worktree.md" "$root/template/Docs/AgToosa_Worktree.md"; do
+    grep -q "git worktree remove" "$f"
+    grep -q "git worktree prune" "$f"
+    grep -q '../<repo>-<package_id>' "$f"
+  done
+  # Test plan smoke set + evidence structure
+  tp="$root/docs/AgToosa_TestPlan-DEV-046.md"
+  [ -f "$tp" ]
+  grep -q "WT-001" "$tp"
+  grep -q "WT-002" "$tp"
+  grep -q "WT-004" "$tp"
+  grep -q "WT-006" "$tp"
+  # No requirement to modify DEV-055 files
+  ! grep -qiE 'edit.*AgentCapability|modify.*AgentCapability|must.*(change|update).*AgentCapability' "$tp"
 }
 
 @test "DEV-047 HO-001: handoff contract exists in template and maintainer docs" {
@@ -5116,6 +5256,258 @@ JSON
   assert_competitive_story_artifacts "DEV-060"
 }
 
+# ── DEV-059: Governance Policy-as-Code (GP-001–GP-008) ────────────────────────
+
+@test "DEV-059 GP-001: GovernancePolicy doc and inert example define schema vocabulary" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_GovernancePolicy.md" "$root/docs/AgToosa_GovernancePolicy.md"; do
+    [ -f "$f" ]
+    grep -q "paths" "$f"
+    grep -q "tools" "$f"
+    grep -q "network" "$f"
+    grep -q "secrets" "$f"
+    grep -q "approvals" "$f"
+    grep -q "risky_actions" "$f"
+    grep -q "enforcement_class" "$f"
+    grep -q "on_violation" "$f"
+    grep -q "generator-enforced" "$f"
+    grep -q "CI-enforced" "$f"
+    grep -q "agent-instructed" "$f"
+    grep -q "manual" "$f"
+    grep -q "roadmap" "$f"
+    grep -q "warn" "$f"
+    grep -q "instruct_stop" "$f"
+    grep -q "block_generator" "$f"
+    grep -q "no extra policy configured" "$f"
+  done
+  for f in \
+    "$root/template/Docs/Context/agtoosa-policy.example.yaml" \
+    "$root/docs/Context/agtoosa-policy.example.yaml"
+  do
+    [ -f "$f" ]
+    grep -q "^paths:" "$f"
+    grep -q "^tools:" "$f"
+    grep -q "^network:" "$f"
+    grep -q "^secrets:" "$f"
+    grep -q "^approvals:" "$f"
+    grep -q "^risky_actions:" "$f"
+    grep -q "enforcement_class:" "$f"
+    grep -q "on_violation:" "$f"
+    # Example must never contain credential literals
+    ! grep -qiE '^\s*(value|token|password|api_key|private_key):' "$f"
+  done
+}
+
+@test "DEV-059 GP-002: resolver prefers .agtoosa/policy.yaml, ignores example, allows absent" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local checker="$root/docs/agtoosa-policy-check.sh"
+  [ -f "$checker" ]
+
+  # Absent policy → success, policy_path=none
+  local empty="$TEST_PROJECT/empty-root"
+  mkdir -p "$empty/docs"
+  printf '# plan\n' > "$empty/docs/Master-Plan.md"
+  run bash "$checker" --root "$empty"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"policy_path=none"* ]]
+  [[ "$output" == *"no extra policy configured"* ]]
+
+  # Example alone must not activate
+  mkdir -p "$empty/docs/Context"
+  cp "$root/docs/Context/agtoosa-policy.example.yaml" "$empty/docs/Context/agtoosa-policy.example.yaml"
+  run bash "$checker" --root "$empty"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"policy_path=none"* ]]
+
+  # Context active policy
+  cp "$root/tests/fixtures/policy/valid.yaml" "$empty/docs/Context/agtoosa-policy.yaml"
+  run bash "$checker" --root "$empty"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"policy_path=docs/Context/agtoosa-policy.yaml"* ]]
+
+  # .agtoosa/policy.yaml wins over Context
+  mkdir -p "$empty/.agtoosa"
+  cp "$root/tests/fixtures/policy/valid.yaml" "$empty/.agtoosa/policy.yaml"
+  run bash "$checker" --root "$empty"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"policy_path=.agtoosa/policy.yaml"* ]]
+}
+
+@test "DEV-059 GP-003: Handoff Applicable Policy section without lifecycle mutation" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Handoff.md" "$root/docs/AgToosa_Handoff.md"; do
+    grep -q "Applicable Policy" "$f"
+    grep -q "agtoosa-policy-check.sh\|GovernancePolicy\|policy_path" "$f"
+    grep -q "no extra policy configured\|no-policy\|policy_path=none" "$f"
+    # Must not instruct mutating Master-Plan status from handoff policy copy
+    grep -q "without mutating\|Do not mutate\|no mutation\|does not mutate" "$f"
+  done
+}
+
+@test "DEV-059 GP-004: Spec Build Review Import Governance share violation contract" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in \
+    "$root/template/Docs/AgToosa_Spec.md" "$root/docs/AgToosa_Spec.md" \
+    "$root/template/Docs/AgToosa_Build.md" "$root/docs/AgToosa_Build.md" \
+    "$root/template/Docs/AgToosa_Review.md" "$root/docs/AgToosa_Review.md" \
+    "$root/template/Docs/AgToosa_Import.md" "$root/docs/AgToosa_Import.md" \
+    "$root/template/Docs/AgToosa_Governance.md" "$root/docs/AgToosa_Governance.md"
+  do
+    grep -q "AgToosa_GovernancePolicy.md" "$f"
+    grep -q "on_violation\|enforcement_class\|policy violation" "$f"
+    grep -q "Master-Plan.md" "$f"
+  done
+}
+
+@test "DEV-059 GP-005: checker validates fixtures and rejects malformed policies" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local checker="$root/docs/agtoosa-policy-check.sh"
+  [ -f "$checker" ]
+
+  run bash "$checker" --policy "$root/tests/fixtures/policy/valid.yaml"
+  [ "$status" -eq 0 ]
+
+  run bash "$checker" --policy "$root/tests/fixtures/policy/invalid-missing-class.yaml"
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"PATH-BAD"* ]]
+  [[ "$output" == *"enforcement_class"* ]]
+
+  # Duplicate IDs
+  local dup="$TEST_PROJECT/dup.yaml"
+  cat > "$dup" <<'EOF'
+version: 1
+paths:
+  - id: DUP-001
+    description: first
+    enforcement_class: manual
+    on_violation: warn
+tools:
+  - id: DUP-001
+    description: second
+    enforcement_class: manual
+    on_violation: warn
+EOF
+  run bash "$checker" --policy "$dup"
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"DUP-001"* ]]
+
+  # Unknown category
+  local unk="$TEST_PROJECT/unk.yaml"
+  cat > "$unk" <<'EOF'
+version: 1
+widgets:
+  - id: WID-001
+    description: unsupported
+    enforcement_class: manual
+    on_violation: warn
+EOF
+  run bash "$checker" --policy "$unk"
+  [ "$status" -eq 1 ]
+
+  # Bad enum
+  local badenum="$TEST_PROJECT/badenum.yaml"
+  cat > "$badenum" <<'EOF'
+version: 1
+paths:
+  - id: PATH-ENUM
+    description: bad class
+    enforcement_class: sandbox-enforced
+    on_violation: warn
+EOF
+  run bash "$checker" --policy "$badenum"
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"enforcement_class"* ]]
+
+  # Oversized
+  local big="$TEST_PROJECT/big.yaml"
+  python3 -c "print('version: 1\npaths:\n  - id: PATH-BIG\n    description: ' + ('x'*70000) + '\n    enforcement_class: manual\n    on_violation: warn')" > "$big"
+  run bash "$checker" --policy "$big"
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"size"* || "$output" == *"too large"* || "$output" == *"65536"* ]]
+}
+
+@test "DEV-059 GP-006: block_generator limited; no runtime-sandbox claims" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_GovernancePolicy.md" "$root/docs/AgToosa_GovernancePolicy.md"; do
+    grep -q "block_generator" "$f"
+    grep -q "generator_operation\|wired generator\|generator-owned" "$f"
+    grep -q "agent-instructed" "$f"
+    grep -q "roadmap" "$f"
+    # Must not claim host tool/network sandbox as runtime-enforced by AgToosa
+    ! grep -qiE 'runtime.?intercept|sandboxes? (agent )?tool|network firewall|OS access control' "$f"
+    ! grep -qiE 'AgToosa (enforces|blocks) (host|agent) (tools|network) at runtime' "$f"
+  done
+}
+
+@test "DEV-059 GP-007: verifier WARNs on invalid policy; missing policy is not a finding" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local verify="$root/docs/agtoosa-verify.sh"
+
+  # Maintainer repo has no active policy → must still PASS (missing is not a finding)
+  run bash "$verify" --root "$root"
+  [ "$status" -eq 0 ]
+  ! echo "$output" | grep -E '⚠️  WARN .*[Pp]olicy'
+
+  # Temporary project with invalid optional policy → WARN (not healthy-blocking in default mode)
+  mkdir -p "$TEST_PROJECT/docs/Context" "$TEST_PROJECT/docs/archived" "$TEST_PROJECT/.agtoosa"
+  printf '# product\nReal.\n' > "$TEST_PROJECT/docs/Context/product.md"
+  printf '# stack\nbash\n' > "$TEST_PROJECT/docs/Context/tech-stack.md"
+  printf '# workflow\ntdd: true\n' > "$TEST_PROJECT/docs/Context/workflow.md"
+  cat > "$TEST_PROJECT/docs/Master-Plan.md" <<'EOF'
+# Master-Plan
+
+## Active Cycle
+
+| ID | Title | Type | Estimate | Status | Tasks Done |
+|----|-------|------|----------|--------|-----------|
+
+## Epics
+
+| ID | Title | Stories | Status |
+|----|-------|---------|--------|
+| DEV-900 | Epic: Core | 0 open / 0 total | ⬜ Backlog |
+
+## Update Log
+
+| Date | Event | By |
+|------|-------|----|
+| 2026-01-01 | init | AgToosa |
+EOF
+  cp "$root/tests/fixtures/policy/invalid-missing-class.yaml" "$TEST_PROJECT/.agtoosa/policy.yaml"
+  run bash "$verify" --root "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  echo "$output" | grep -E '⚠️  WARN .*invalid optional policy'
+
+  run bash "$verify" --strict --root "$TEST_PROJECT"
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"strict"* || "$output" == *"FAIL"* ]]
+}
+
+@test "DEV-059 GP-008: secret-value fixture fails without echoing the literal" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local checker="$root/docs/agtoosa-policy-check.sh"
+  [ -f "$checker" ]
+
+  run bash "$checker" --policy "$root/tests/fixtures/policy/invalid-secret-value.yaml"
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"SEC-BAD"* ]]
+  [[ "$output" == *"value"* ]]
+  [[ "$output" != *"SUPERSECRET_TOKEN_VALUE_NEVER_ECHO"* ]]
+}
+
+@test "DEV-059 GP-009: config inventory registers governance policy artifacts" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  echo "$output" | grep -F "Docs/AgToosa_GovernancePolicy.md"
+  echo "$output" | grep -F "Docs/agtoosa-policy-check.sh"
+  echo "$output" | grep -F "Docs/Context/agtoosa-policy.example.yaml"
+}
+
 # ── DEV-061–DEV-073: Proof engine, supply chain, and correctness wave ─────────
 
 @test "DEV-061 VF-001: verifier passes on the maintainer repo" {
@@ -5764,11 +6156,12 @@ JSON
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "5.3.4" ]
+  grep -q '## \[5.3.4\]' "$root/CHANGELOG.md"
+  grep -q 'Release 5.3.4 shipped' "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
-  grep -q "version-5.3.4" "$root/README.md"
-  grep -qE -- '--ref v5\.3\.4' "$root/README.md"
+  grep -qE "version-${bash_ver}" "$root/README.md"
+  grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
 @test "DEV-049 SR-002: v5.3.4 changelog and review/evidence artifacts exist" {
@@ -5798,11 +6191,12 @@ JSON
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "5.3.5" ]
+  grep -q '## \[5.3.5\]' "$root/CHANGELOG.md"
+  grep -q 'Release 5.3.5 shipped' "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
-  grep -q "version-5.3.5" "$root/README.md"
-  grep -qE -- '--ref v5\.3\.5' "$root/README.md"
+  grep -qE "version-${bash_ver}" "$root/README.md"
+  grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
 @test "DEV-054 SR-002: v5.3.5 changelog and review/evidence artifacts exist" {
@@ -5832,11 +6226,12 @@ JSON
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "5.3.6" ]
+  grep -q '## \[5.3.6\]' "$root/CHANGELOG.md"
+  grep -q 'Release 5.3.6 shipped' "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
-  grep -q "version-5.3.6" "$root/README.md"
-  grep -qE -- '--ref v5\.3\.6' "$root/README.md"
+  grep -qE "version-${bash_ver}" "$root/README.md"
+  grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
 @test "DEV-050 SR-002: v5.3.6 changelog and review/evidence artifacts exist" {
@@ -5866,11 +6261,12 @@ JSON
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "5.3.7" ]
+  grep -q '## \[5.3.7\]' "$root/CHANGELOG.md"
+  grep -q 'Release 5.3.7 shipped' "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
-  grep -q "version-5.3.7" "$root/README.md"
-  grep -qE -- '--ref v5\.3\.7' "$root/README.md"
+  grep -qE "version-${bash_ver}" "$root/README.md"
+  grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
 @test "DEV-055 SR-002: v5.3.7 changelog and review/evidence artifacts exist" {
@@ -5900,11 +6296,13 @@ JSON
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "5.3.8" ]
+  # Historical release still recorded; live pins stay mutually consistent on the active train.
+  grep -q '## \[5.3.8\]' "$root/CHANGELOG.md"
+  grep -q 'Release 5.3.8 shipped' "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
-  grep -q "version-5.3.8" "$root/README.md"
-  grep -qE -- '--ref v5\.3\.8' "$root/README.md"
+  grep -qE "version-${bash_ver}" "$root/README.md"
+  grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
 @test "DEV-053 SR-002: v5.3.8 batched changelog and review/evidence artifacts exist" {
@@ -5927,11 +6325,81 @@ JSON
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   grep -q 'Ship complete — v5.3.8' "$mp"
   grep -q 'Release 5.3.8 shipped' "$mp"
-  grep -q 'v5.3.9 (next)' "$mp"
+  grep -q 'Milestone v5.3.9 (next)' "$mp"
   grep -q '| DEV-075 | Docs: Subagent and Persona Guide Suite | 2026-07-11 |' "$mp"
   grep -q '| DEV-053 | Feature: Extension and Preset Catalog | 2026-07-11 |' "$mp"
   grep -q '| DEV-078 | Chore: First-15-Minutes Maintenance Gate | 2026-07-11 |' "$mp"
   grep -q '| DEV-081 | Spike: Optional Local DX Add-on Validation | 2026-07-11 |' "$mp"
+}
+
+
+# -- remaining-specs wave 1 ship regression v5.3.9 (SR-001–SR-003) ------------
+
+@test "DEV-045 SR-001: v5.3.9 release pins are aligned" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  grep -q '## \[5.3.9\]' "$root/CHANGELOG.md"
+  grep -q 'Release 5.3.9 shipped' "$root/docs/Master-Plan.md"
+  [ "$bash_ver" = "$ps_ver" ]
+  [ "$bash_ver" = "$npm_ver" ]
+  grep -qE "version-${bash_ver}" "$root/README.md"
+  grep -qE -- "--ref v${bash_ver}" "$root/README.md"
+}
+
+@test "DEV-045 SR-002: v5.3.9 changelog and wave-1 review/evidence artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.9\]' "$root/CHANGELOG.md"
+  for id in 045 076 077 079 080 082 083 084; do
+    [ -f "$root/docs/archived/review-DEV-${id}.md" ]
+    [ -f "$root/docs/archived/spec-DEV-${id}.md" ]
+    [ -f "$root/docs/archived/evidence-DEV-${id}.md" ]
+  done
+}
+
+@test "DEV-045 SR-003: Master-Plan records v5.3.9 ship" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  grep -q 'Ship complete — v5.3.9' "$mp"
+  grep -q 'Release 5.3.9 shipped' "$mp"
+}
+
+# -- wave 2 ship regression v5.3.10 (SR-001–SR-003) ---------------------------
+
+@test "DEV-046 SR-001: v5.3.10 release pins are aligned" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.10" ]
+  [ "$bash_ver" = "$ps_ver" ]
+  [ "$bash_ver" = "$npm_ver" ]
+  grep -q "version-5.3.10" "$root/README.md"
+  grep -qE -- '--ref v5\.3\.10' "$root/README.md"
+}
+
+@test "DEV-046 SR-002: v5.3.10 changelog and wave-2 review/evidence artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.10\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-046' "$root/CHANGELOG.md"
+  grep -q 'DEV-059' "$root/CHANGELOG.md"
+  for id in 046 059; do
+    [ -f "$root/docs/archived/review-DEV-${id}.md" ]
+    [ -f "$root/docs/archived/spec-DEV-${id}.md" ]
+    [ -f "$root/docs/archived/evidence-DEV-${id}.md" ]
+    grep -q '| ship |' "$root/docs/archived/evidence-DEV-${id}.md"
+  done
+}
+
+@test "DEV-046 SR-003: Master-Plan records v5.3.10 ship and next patch milestone" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  grep -q 'Ship complete — v5.3.10' "$mp"
+  grep -q 'Release 5.3.10 shipped' "$mp"
+  grep -q 'v5.3.11 (next)' "$mp"
+  grep -q '| DEV-046 | Feature: Optional Worktree Isolation | 2026-07-11 |' "$mp"
+  grep -q '| DEV-059 | Feature: Governance Policy-as-Code | 2026-07-11 |' "$mp"
 }
 
 # ── DEV-081: Optional Local DX Add-on Validation (DXV-001–DXV-008) ───────────

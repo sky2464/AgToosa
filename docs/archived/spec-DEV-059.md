@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-059
 > **Epic:** DEV-004
-> **Status:** ⬜ Backlog
+> **Status:** 🟨 In Progress — build GREEN
 > **Estimate:** M
 > **Spec created:** 2026-06-08
 > **Spec deepened:** 2026-07-11
@@ -160,26 +160,26 @@ Out of scope        : hook installation, hosted policy services, identity/RBAC, 
 
 ### 3.1 Task Tree
 
-- [ ] **1. Contract-first policy fixtures and tests:** establish falsifiable schema and safety behavior
-  - [ ] 1.1 Add valid, missing-class, and secret-value fixtures — _Requirements: AC-001, AC-005, AC-008_
-  - [ ] 1.2 Add failing GP-001, GP-002, GP-005, and GP-008 checks and record RED evidence — _Requirements: AC-001, AC-002, AC-005, AC-008_
-- [ ] **2. Canonical policy contract:** document one schema and honest enforcement model
-  - [ ] 2.1 Create GovernancePolicy canonical doc and maintainer mirror — _Requirements: AC-001, AC-002, AC-006_
-  - [ ] 2.2 Add inert example policy with all six categories — _Requirements: AC-001, AC-008_
-- [ ] **3. Deterministic local checker:** resolve and validate optional policy safely
-  - [ ] 3.1 Implement resolution, required-field, enum, uniqueness, and size checks — _Requirements: AC-002, AC-005_
-  - [ ] 3.2 Implement secret-field rejection and redacted diagnostics — _Requirements: AC-008_
-  - [ ] 3.3 Register the doc, example, and checker in `lib/config.sh` — _Requirements: AC-001, AC-005_
-- [ ] **4. Workflow policy consumption:** make violation handling consistent without duplicating schema
-  - [ ] 4.1 Add Handoff `Applicable Policy` behavior — _Requirements: AC-003_
-  - [ ] 4.2 Wire Spec, Build, Review, Import, and Governance references — _Requirements: AC-004, AC-006_
-  - [ ] 4.3 Add GP-003, GP-004, and GP-006 checks — _Requirements: AC-003, AC-004, AC-006_
-- [ ] **5. Optional verifier warning:** add only the soft integration permitted by the contract
-  - [ ] 5.1 Add invalid-present-policy WARN and absent-policy no-finding behavior — _Requirements: AC-007_
-  - [ ] 5.2 Add GP-007 coverage for default and strict verifier semantics — _Requirements: AC-007_
-- [ ] **6. Complete future verification:** close the TDD loop without broadening claims
-  - [ ] 6.1 Run GP-001–GP-008 and focused regression commands, then record GREEN evidence — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008_
-  - [ ] 6.2 Review policy claims and secret-safe diagnostics before ship evidence is finalized — _Requirements: AC-006, AC-008_
+- [x] **1. Contract-first policy fixtures and tests:** establish falsifiable schema and safety behavior
+  - [x] 1.1 Add valid, missing-class, and secret-value fixtures — _Requirements: AC-001, AC-005, AC-008_
+  - [x] 1.2 Add failing GP-001, GP-002, GP-005, and GP-008 checks and record RED evidence — _Requirements: AC-001, AC-002, AC-005, AC-008_
+- [x] **2. Canonical policy contract:** document one schema and honest enforcement model
+  - [x] 2.1 Create GovernancePolicy canonical doc and maintainer mirror — _Requirements: AC-001, AC-002, AC-006_
+  - [x] 2.2 Add inert example policy with all six categories — _Requirements: AC-001, AC-008_
+- [x] **3. Deterministic local checker:** resolve and validate optional policy safely
+  - [x] 3.1 Implement resolution, required-field, enum, uniqueness, and size checks — _Requirements: AC-002, AC-005_
+  - [x] 3.2 Implement secret-field rejection and redacted diagnostics — _Requirements: AC-008_
+  - [x] 3.3 Register the doc, example, and checker in `lib/config.sh` — _Requirements: AC-001, AC-005_
+- [x] **4. Workflow policy consumption:** make violation handling consistent without duplicating schema
+  - [x] 4.1 Add Handoff `Applicable Policy` behavior — _Requirements: AC-003_
+  - [x] 4.2 Wire Spec, Build, Review, Import, and Governance references — _Requirements: AC-004, AC-006_
+  - [x] 4.3 Add GP-003, GP-004, and GP-006 checks — _Requirements: AC-003, AC-004, AC-006_
+- [x] **5. Optional verifier warning:** add only the soft integration permitted by the contract
+  - [x] 5.1 Add invalid-present-policy WARN and absent-policy no-finding behavior — _Requirements: AC-007_
+  - [x] 5.2 Add GP-007 coverage for default and strict verifier semantics — _Requirements: AC-007_
+- [x] **6. Complete future verification:** close the TDD loop without broadening claims
+  - [x] 6.1 Run GP-001–GP-008 and focused regression commands, then record GREEN evidence — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008_
+  - [x] 6.2 Review policy claims and secret-safe diagnostics before ship evidence is finalized — _Requirements: AC-006, AC-008_
 
 ### 3.2 Wave Plan
 
@@ -196,3 +196,8 @@ AC coverage: 8 of 8 ACs mapped to GP-001–GP-008
 Must coverage: 7 of 7 Must ACs mapped
 Smoke set: 7 planned tests tagged `@smoke`
 Execution state: not run; this story is Backlog
+
+## ✅ Spec Approved
+
+Approved: 2026-07-11 21:40
+Enrollment: remaining-specs fan-out wave 2 (post v5.3.9)

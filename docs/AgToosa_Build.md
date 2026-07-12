@@ -87,6 +87,8 @@ After every command, test run, scan, or parallel subagent during `/agtoosa-build
     > - Run each package's `verification` command after its lane completes; present accepted results in `merge_order` before Tracking updates.
     > - Claim Boundary: package checks are **agent-instructed**; agent selection and branch integration are **manual**; a runtime scheduler is **roadmap**.
 
+    > **Optional worktree isolation (agent-instructed):** For **M+** waves with at least two parallel packages (or an explicitly risky lane), offer optional isolation per `docs/AgToosa_Worktree.md`. Preferred path: `../<repo>-<package_id>`. Git worktree add/list/remove/prune is **manual** — AgToosa does not create worktrees. When skipping: state exactly `No worktree: run packages sequentially in one branch and verify a clean working tree between packages.` Lifecycle routing remains a **read-only** consult of `docs/AgToosa_AgentCapability.md` (do not edit it).
+
     > **Async dispatch:** Before sending tasks to async or background agents for a wave, offer to run `/agtoosa-handoff wave` (see `docs/AgToosa_Handoff.md`) to export a handoff pack that includes the selected-wave Work Packages section. Agents should return results via `/agtoosa-import` before any Tracking update.
 
 4.  **For each atomic task, execute the TDD Cycle:**
@@ -218,6 +220,10 @@ Any bug, edge case, or out-of-scope requirement discovered during the TDD cycle 
 11. **Phase event:** Append to `docs/agtoosa-events.jsonl`:
     `{"ts":"[ISO-8601 UTC]","phase":"build","event":"complete","story":"[Story ID]","by":"AgToosa"}`
 12. **Self-verify:** Run `bash docs/agtoosa-verify.sh` and resolve any FAIL findings before reporting the build complete.
+
+## Policy violation contract
+
+Consult `docs/AgToosa_GovernancePolicy.md` (checker: `docs/agtoosa-policy-check.sh`) before actions covered by a declared rule. On a policy violation: identify the rule `id`, `enforcement_class`, and `on_violation`; follow that `on_violation` only (`warn` / `instruct_stop` / wired `block_generator`); never invent stronger enforcement; never echo secret values. Preserve `docs/Master-Plan.md` as lifecycle authority — policy handling must not write story status or tasks.
 
 ## Output
 *   Confirm build and test phases are complete and all tests pass.
