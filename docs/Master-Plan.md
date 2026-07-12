@@ -22,12 +22,12 @@
 |----|-------|------|----------|--------|-----------|
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | 🟨 In Progress | 0/4 |
 | DEV-076 | Spike: Static Documentation Site Proof | Spike | S | 🟨 In Progress | 0/4 |
-| DEV-077 | Chore: Authoring Guide and Onboarding Surface | Chore | S | 🟨 In Progress | 0/5 |
-| DEV-079 | Docs: Verifier and CI Adoption Examples | Docs | S | 🟨 In Progress | 0/5 |
+| DEV-077 | Chore: Authoring Guide and Onboarding Surface | Chore | S | 🟨 In Progress | 5/5 |
+| DEV-079 | Docs: Verifier and CI Adoption Examples | Docs | S | 🟨 In Progress | 5/5 |
 | DEV-080 | Feature: Official Registry Pack Pilot | Feature | L | 🔧 Awaiting Manual | 3/4 |
 | DEV-082 | Spike: High-Assurance Signature Mode Validation | Spike | S | 🟨 In Progress | 4/4 |
 | DEV-083 | Docs: Voluntary Workflow Metrics and Case Study Kit | Docs | S | 🟨 In Progress | 4/4 |
-| DEV-084 | Chore: Open-Source Sustainability and Support Boundary | Chore | XS | 🟨 In Progress | 0/4 |
+| DEV-084 | Chore: Open-Source Sustainability and Support Boundary | Chore | XS | 🔧 Awaiting Manual | 3/4 |
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.8.md -->
 <!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.5.md -->
@@ -696,3 +696,6 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-082 — Task 🟢 4/4 — HAS bats green; spike decision Defer; no production flags | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-083 — Task 🟢 4/4 — MET-001–010 green; metrics kit + case-study template; no telemetry | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-080 — Task 🟢 3/4 automated (OPP-001–010); 4.2/4.3 external publish [manual-deferred]; local candidates only | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-079 — Task 🟢 5/5 — VCA-001–009 green; verifier-ci-adoption guide + gate/Quickref/Readiness alignment | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-084 — Task 🟢 3/4 automated (OSS-001–007); Sponsors live enablement [manual-deferred]; SUPPORT boundary aligned | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-077 — Task 🟢 5/5 — AUTH-001–008 green; authoring guides + Registry/README/help discovery | AgToosa |

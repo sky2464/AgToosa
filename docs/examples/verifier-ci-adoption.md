@@ -82,7 +82,7 @@ cp docs/agtoosa-gate.yml.example .github/workflows/agtoosa-gate.yml
 
 ## 4. Other CI providers (provider-neutral, unmaintained)
 
-Guidance for GitLab CI, CircleCI, Jenkins, Azure Pipelines, and similar systems is **provider-neutral** and **unmaintained**. Those platforms are not shipped as copy-ready provider examples. There is no checked-in provider file or focused contract coverage for them in this repository.
+Guidance for GitLab CI, CircleCI, Jenkins, and Azure Pipelines is **provider-neutral** and **unmaintained**. AgToosa does not ship checked-in workflow files or focused contract bats for those platforms.
 
 Provider-neutral contract:
 

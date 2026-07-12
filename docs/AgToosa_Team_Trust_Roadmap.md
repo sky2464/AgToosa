@@ -49,7 +49,7 @@ DEV-042 through DEV-060 define the Competitive execution wave. **v5.3.0 shipped 
 
 **Shipped agent-instructed:** Async agent handoff packs (DEV-047 `/agtoosa-handoff`), agent result import gate (DEV-048 `/agtoosa-import`), Evidence ledger (DEV-049 `/agtoosa-evidence`), and Work Package Wave DAG schema (DEV-045 — Spec/Build/Handoff/Import consume `### 3.4 Work Package DAG`; agent-instructed derivation and fan-out checks; no runtime scheduler) — all wired into canonical workflow docs; agent-instructed where noted, not a hosted orchestrator.
 
-**Still backlog (examples):** worktree isolation (DEV-046), cross-model review (DEV-050), tracker sync (DEV-051), hook automation pack (DEV-052), extension catalog (DEV-053), retrospective loop (DEV-056), multi-repo overlay (DEV-057), local dashboard (DEV-058), governance policy-as-code (DEV-059). Agent capability matrix (DEV-055) and signed registry provenance (DEV-054) soft-warn minisign are shipped separately; fail-closed / SBOM / cosign verify / private-key automation remain open. See `docs/Master-Plan.md` → Backlog.
+**Still backlog (examples):** worktree isolation (DEV-046), cross-model review (DEV-050), tracker sync (DEV-051), hook automation pack (DEV-052), extension catalog (DEV-053), retrospective loop (DEV-056), multi-repo overlay (DEV-057), local dashboard (DEV-058), governance policy-as-code (DEV-059). Agent capability matrix (DEV-055) shipped separately. Signed registry provenance (DEV-054) ships optional soft-warn minisign; fail-closed / SBOM / cosign verify / private-key automation remain open. See `docs/Master-Plan.md` → Backlog.
 
 Each story must classify its controls as generator-enforced, CI-enforced, agent-instructed, manual, or roadmap before it can be described as implemented.
 

@@ -262,7 +262,7 @@ Declares auditable parallel lanes for `/agtoosa-build`, `/agtoosa-handoff`, and 
 - `merge_order` resolves integration order within each wave after verification passes.
 - XS / single-task stories may keep a sequential Wave Plan without full DAG ceremony; when packages are proposed for parallel execution, `owned_files` and `verification` must be non-empty.
 
-**Claim Boundary:** Shipping these schema copies is **generator-enforced**. Focused DAG bats when run in CI are **CI-enforced**. Deriving and checking package rows during Spec/Build/Handoff/Import is **agent-instructed**. Selecting agents and integrating branches is **manual**. A runtime scheduler or guaranteed parallel isolation remains **roadmap** — AgToosa does not schedule parallel agents at runtime.
+**Claim Boundary:** Shipping these schema copies is **generator-enforced**. Focused DAG bats when run in CI are **CI-enforced**. Deriving and checking package rows during Spec/Build/Handoff/Import is **agent-instructed**. Selecting agents and integrating branches is **manual**. In-runtime parallel dispatch and guaranteed isolation remain **roadmap** — orchestrators own fan-out outside AgToosa.
 
 ---
 

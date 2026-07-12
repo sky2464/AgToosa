@@ -6309,23 +6309,51 @@ EOF
 
 # ── DEV-076: Static Documentation Site Proof (SITE-001–SITE-008) ──────────────
 
+# Locate a jekyll binary (PATH or common Homebrew/gem install layouts).
+site076_jekyll_bin() {
+  if command -v jekyll >/dev/null 2>&1; then
+    command -v jekyll
+    return 0
+  fi
+  local candidate
+  for candidate in \
+    /opt/homebrew/lib/ruby/gems/*/bin/jekyll \
+    /usr/local/lib/ruby/gems/*/bin/jekyll \
+    "$HOME"/.gem/ruby/*/bin/jekyll; do
+    if [ -x "$candidate" ]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
 # Build docs/ into an isolated destination using Jekyll (local binary or Docker).
 site076_jekyll_build() {
   local root="$1"
   local outdir="$2"
+  local jekyll_bin=""
   mkdir -p "$outdir"
-  if command -v jekyll >/dev/null 2>&1; then
-    (cd "$root" && jekyll build --source docs --destination "$outdir" --baseurl /AgToosa)
+  if jekyll_bin="$(site076_jekyll_bin)"; then
+    # Prefer the matching Homebrew Ruby when invoking a gem-installed jekyll.
+    local ruby_bindir
+    ruby_bindir="$(dirname "$jekyll_bin")"
+    PATH="$ruby_bindir:/opt/homebrew/opt/ruby/bin:/usr/local/opt/ruby/bin:$PATH" \
+      "$jekyll_bin" build --source "$root/docs" --destination "$outdir" --baseurl /AgToosa
     return $?
   fi
   if command -v docker >/dev/null 2>&1; then
     chmod 777 "$outdir" 2>/dev/null || true
+    # Prefer the well-known socket when Docker Desktop's user socket is absent.
+    if [ -z "${DOCKER_HOST:-}" ] && [ -S /var/run/docker.sock ]; then
+      export DOCKER_HOST=unix:///var/run/docker.sock
+    fi
     docker run --rm \
       -v "$root:/repo:ro" \
       -v "$outdir:/out" \
       -e JEKYLL_ENV=production \
       jekyll/jekyll:4.2.2 \
-      jekyll build --source /repo/docs --destination /out --baseurl /AgToosa
+      bash -lc 'gem install --silent jekyll-optional-front-matter --no-document && jekyll build --source /repo/docs --destination /out --baseurl /AgToosa'
     return $?
   fi
   echo "SITE-076: need jekyll or docker to execute the static build" >&2

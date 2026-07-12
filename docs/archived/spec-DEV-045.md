@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-045
 > **Epic:** DEV-002 — Workflow Templates
-> **Status:** 🟦 Todo
+> **Status:** 🟨 In Progress
 > **Estimate:** M
 > **Spec created:** 2026-06-08
 > **Spec deepened:** 2026-07-11
@@ -117,7 +117,7 @@ DEV-045 closes only that schema and workflow-wiring gap. It adds dependency-awar
 | Selecting agents and integrating package branches | manual |
 | Runtime DAG scheduling or guaranteed parallel isolation | roadmap |
 
-Until DEV-045 ships with recorded GREEN evidence, Work Package Wave DAG support remains roadmap. `docs/Master-Plan.md` remains the repo-local lifecycle source of truth; handoff and import artifacts cannot change story or task status by themselves.
+Until DEV-045 records GREEN evidence in `docs/AgToosa_TestPlan-DEV-045.md`, Work Package Wave DAG support remains roadmap. With GREEN DAG-001–DAG-007 evidence recorded, the schema and workflow wiring are shipped as classified above. `docs/Master-Plan.md` remains the repo-local lifecycle source of truth; handoff and import artifacts cannot change story or task status by themselves.
 
 ## 2. Design
 
@@ -188,17 +188,17 @@ The future build may begin only after DEV-055 is shipped. Shared Build/Handoff s
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Contract and RED coverage
-  - [ ] 1.1 Add failing `DAG-001`–`DAG-007` fixtures and assertions before implementation — _Requirements: AC-008_
-  - [ ] 1.2 Add the normative Work Package schema and examples to both SPEC-FORMAT copies — _Requirements: AC-001, AC-004, AC-007_
-- [ ] **2.** Package derivation and execution
-  - [ ] 2.1 Define Spec task-to-package derivation, dependency checks, and overlap fallback — _Requirements: AC-002, AC-003, AC-004_
-  - [ ] 2.2 Make Build consume ownership, dependencies, and package verification before fan-out — _Requirements: AC-003, AC-004, AC-007_
-- [ ] **3.** Async boundary
-  - [ ] 3.1 Add the selected-wave Work Packages section to Handoff — _Requirements: AC-005_
-  - [ ] 3.2 Add ownership-gap and merge-order reporting to Import — _Requirements: AC-006, AC-007_
-- [ ] **4.** Closure
-  - [ ] 4.1 Sync Quickref/Trust wording, run future GREEN validation, and record the two-parallel/one-dependent dogfood evidence — _Requirements: AC-007, AC-008_
+- [x] **1.** Contract and RED coverage
+  - [x] 1.1 Add failing `DAG-001`–`DAG-007` fixtures and assertions before implementation — _Requirements: AC-008_
+  - [x] 1.2 Add the normative Work Package schema and examples to both SPEC-FORMAT copies — _Requirements: AC-001, AC-004, AC-007_
+- [x] **2.** Package derivation and execution
+  - [x] 2.1 Define Spec task-to-package derivation, dependency checks, and overlap fallback — _Requirements: AC-002, AC-003, AC-004_
+  - [x] 2.2 Make Build consume ownership, dependencies, and package verification before fan-out — _Requirements: AC-003, AC-004, AC-007_
+- [x] **3.** Async boundary
+  - [x] 3.1 Add the selected-wave Work Packages section to Handoff — _Requirements: AC-005_
+  - [x] 3.2 Add ownership-gap and merge-order reporting to Import — _Requirements: AC-006, AC-007_
+- [x] **4.** Closure
+  - [x] 4.1 Sync Quickref/Trust wording, run future GREEN validation, and record the two-parallel/one-dependent dogfood evidence — _Requirements: AC-007, AC-008_
 
 ### 3.2 Wave Plan
 

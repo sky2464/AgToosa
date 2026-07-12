@@ -5,6 +5,10 @@ description: AgToosa framework documentation (static proof)
 baseurl: "/AgToosa"
 url: "https://sky2464.github.io"
 
+# Match GitHub Pages: render markdown without requiring per-file front matter.
+plugins:
+  - jekyll-optional-front-matter
+
 # Exclude paths that are not part of the browsable proof surface, plus
 # markdown that embeds GitHub Actions `${{ }}` / Liquid-like tokens which
 # would break a Jekyll build if processed as templates.

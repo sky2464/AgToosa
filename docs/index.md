@@ -11,7 +11,7 @@ Project Pages base path: `/AgToosa/`.
 
 ## Start here
 
-- [Agent instructions](AgToosa_Agent.md) — operating contexts, commands, and the Terminal Evidence Contract (`docs/AgToosa_Agent.md`); browsable render: [Agent guide]({{ '/AgToosa_Agent.html' | relative_url }})
+- [Agent instructions](AgToosa_Agent.md) — operating contexts and commands (`docs/AgToosa_Agent.md`); browsable render: [Agent guide]({{ '/AgToosa_Agent.html' | relative_url }})
 - [First 15 minutes](examples/first-15-minutes.md) — smallest credible proof walkthrough (`docs/examples/first-15-minutes.md`); browsable render: [First 15 walkthrough]({{ '/examples/first-15-minutes.html' | relative_url }})
 
 ## More guides
