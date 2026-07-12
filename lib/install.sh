@@ -288,7 +288,13 @@ install_files() {
       if [[ "$file" == "Docs/Master-Plan.md" || "$file" == "Docs/AgToosa_Changelog.md" || \
             "$file" == "Docs/Master-Architecture.md" ]]; then
         if [[ -f "${PROJECT_PATH}/${file}" ]]; then
-          echo -e "  ${YELLOW}⏭${NC}  Skipping ${file} (project-owned state exists)"
+          if declare -F apply_note_preserved >/dev/null 2>&1; then
+            apply_note_preserved
+          fi
+          local preserve_reason="your project plan"
+          [[ "$file" == "Docs/AgToosa_Changelog.md" ]] && preserve_reason="your changelog"
+          [[ "$file" == "Docs/Master-Architecture.md" ]] && preserve_reason="your architecture"
+          echo -e "  ${BLUE}🔒${NC} Preserved ${file} ${CYAN}(${preserve_reason})${NC}"
           SKIPPED=$((SKIPPED + 1))
           continue
         fi
@@ -579,15 +585,17 @@ install_files() {
 
   # Summary
   echo ""
-  echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
-  echo -e "  ${GREEN}Copied:  ${COPIED} files${NC}"
-  [[ $SKIPPED -gt 0 ]] && echo -e "  ${YELLOW}Skipped: ${SKIPPED} files (use --force to overwrite)${NC}"
-  if declare -F apply_print_summary >/dev/null 2>&1; then
-    apply_print_summary
+  local summary_verb="installed"
+  [[ "${SMART_UPGRADE_MODE:-false}" == true ]] && summary_verb="applied"
+  if declare -F emit_apply_summary_human >/dev/null 2>&1; then
+    emit_apply_summary_human "$summary_verb"
+  else
+    echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
+    echo -e "  ${GREEN}Copied:  ${COPIED} files${NC}"
+    echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
+    echo ""
+    echo -e "${GREEN}${BOLD}✅ AgToosa v${AGTOOSA_VERSION} ${summary_verb} to ${PROJECT_PATH}${NC}"
   fi
-  echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
-  echo ""
-  echo -e "${GREEN}${BOLD}✅ AgToosa v${AGTOOSA_VERSION} installed to ${PROJECT_PATH}${NC}"
 
   # Warn about .bak files when backups were created
   if [[ ${#BAK_FILES[@]} -gt 0 ]]; then

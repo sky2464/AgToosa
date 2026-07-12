@@ -10,7 +10,7 @@ set -euo pipefail
 #   bash agtoosa.sh [--force] [--dry-run] [--version] [--help]
 # ──────────────────────────────────────────────────────────────
 
-AGTOOSA_VERSION="5.3.22"
+AGTOOSA_VERSION="5.3.23"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
 SHIP_DIR="${SCRIPT_DIR}/ship"
@@ -405,7 +405,10 @@ if [[ "$UPDATE" == true ]]; then
   echo ""
 
   COPIED=0; SKIPPED=0
-  run_update "$OLD_VERSION"
+  SMART_APPLY_USE_UPDATE=true
+  OLD_INSTALLED_VERSION="$OLD_VERSION"
+  SMART_UPGRADE_MODE=true
+  smart_apply
   exit 0
 fi
 
@@ -440,6 +443,8 @@ if [[ "$PLAN_JSON_MODE" != true ]]; then
   echo -e "  3. We copy them directly to your project"
   echo -e "  4. Run ${BOLD}/agtoosa-init${NC} in your AI assistant (one-time)"
   echo -e "  5. Then use: ${BOLD}/agtoosa-spec → /agtoosa-build → /agtoosa-review → /agtoosa-ship${NC}"
+  echo ""
+  echo -e "${CYAN}Re-run on an existing project to upgrade — no --force needed.${NC}"
   echo ""
   echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
   echo ""
@@ -478,8 +483,37 @@ if [[ "$PLAN_JSON_MODE" != true ]]; then
   echo ""
 fi
 
+# ── Detect existing install (smart upgrade mode) ─────────────
+SMART_UPGRADE_MODE=false
+OLD_INSTALLED_VERSION=""
+if detect_existing_agtoosa "$PROJECT_PATH"; then
+  SMART_UPGRADE_MODE=true
+  OLD_INSTALLED_VERSION="$(read_installed_version "$PROJECT_PATH")"
+  if [[ "$PLAN_JSON_MODE" != true ]]; then
+    echo -e "${PURPLE}${BOLD}Upgrading AgToosa v${OLD_INSTALLED_VERSION} → v${AGTOOSA_VERSION}${NC}"
+    echo ""
+  fi
+fi
+
 # ── Platform selection ────────────────────────────────────────
-if [[ -n "$CLI_PLATFORMS" ]]; then
+if [[ "$SMART_UPGRADE_MODE" == true && -z "$CLI_PLATFORMS" ]]; then
+  detect_installed_platforms
+  if [[ "$PLAN_JSON_MODE" != true ]]; then
+    echo -e "${BOLD}Found:${NC} $(platform_flags_to_names)"
+    if [[ "$ASSUME_YES" != true ]]; then
+      echo -e "${CYAN}Add platforms? (Enter to keep, or numbers e.g. 3 5)${NC}"
+      echo ""
+      read -rp "Add platforms: " ADD_PLATFORM_SELECTION
+      ADD_PLATFORM_SELECTION="${ADD_PLATFORM_SELECTION//[[:space:]]/}"
+      if [[ -n "$ADD_PLATFORM_SELECTION" ]]; then
+        union_platform_selection "$ADD_PLATFORM_SELECTION"
+        echo ""
+        echo -e "${GREEN}Platforms:${NC} $(platform_flags_to_names)"
+        echo ""
+      fi
+    fi
+  fi
+elif [[ -n "$CLI_PLATFORMS" ]]; then
   # Non-interactive: map platform names (or numbers) to selection digits.
   SELECTION=""
   while IFS= read -r token; do
@@ -502,6 +536,11 @@ if [[ -n "$CLI_PLATFORMS" ]]; then
     esac
   done < <(tr ',' '\n' <<< "$CLI_PLATFORMS")
   SELECTION="${SELECTION# }"
+  apply_platform_selection "$SELECTION"
+  if [[ "$SMART_UPGRADE_MODE" == true ]]; then
+    detect_installed_platforms
+    union_platform_selection "$SELECTION"
+  fi
   [[ "$PLAN_JSON_MODE" != true ]] && echo -e "${BOLD}Platforms (from --platforms):${NC} ${CLI_PLATFORMS}"
 else
   echo -e "${BOLD}Which AI coding assistant(s) do you use?${NC}"
@@ -517,28 +556,11 @@ else
   echo "  8) All of the above"
   echo ""
   read -rp "Your selection: " SELECTION
+  apply_platform_selection "$SELECTION"
 fi
 
-USE_CURSOR=false; USE_WINDSURF=false; USE_CLAUDE=false
-USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false; USE_VSCODE=false
-
-if [[ "$SELECTION" == *"8"* ]]; then
-  USE_CURSOR=true; USE_WINDSURF=true; USE_CLAUDE=true
-  USE_GEMINI=true; USE_COPILOT=true; USE_OPENCODE=true; USE_VSCODE=true
-else
-  [[ "$SELECTION" == *"1"* ]] && USE_CURSOR=true
-  [[ "$SELECTION" == *"2"* ]] && USE_WINDSURF=true
-  [[ "$SELECTION" == *"3"* ]] && USE_CLAUDE=true
-  [[ "$SELECTION" == *"4"* ]] && USE_GEMINI=true
-  [[ "$SELECTION" == *"5"* ]] && USE_COPILOT=true
-  [[ "$SELECTION" == *"6"* ]] && USE_VSCODE=true
-  [[ "$SELECTION" == *"7"* ]] && USE_OPENCODE=true
-fi
-
-echo ""
-
-# Warn on invalid platform selection tokens
-if [[ "$SELECTION" != *"8"* ]]; then
+# Warn on invalid platform selection tokens (fresh install menu path only)
+if [[ -z "$CLI_PLATFORMS" && "$SMART_UPGRADE_MODE" != true ]]; then
   while IFS= read -r token; do
     token="${token//[[:space:]]/}"
     [[ -z "$token" ]] && continue
@@ -548,7 +570,7 @@ if [[ "$SELECTION" != *"8"* ]]; then
   done < <(tr ' ' '\n' <<< "$SELECTION")
 fi
 
-# Warn if no platform selected
+echo ""
 SOME_PLATFORM_SELECTED=false
 [[ "$USE_CURSOR" == true || "$USE_WINDSURF" == true || "$USE_CLAUDE" == true || \
    "$USE_GEMINI" == true || "$USE_COPILOT" == true || "$USE_OPENCODE" == true || \
@@ -595,7 +617,11 @@ if [[ "$PLAN_JSON_MODE" != true ]]; then
   echo -e "${GREEN}${BOLD}Generated ${GENERATED} files.${NC}"
   echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
   echo ""
-  echo -e "${BOLD}Ready to copy AgToosa files to:${NC}"
+  if [[ "$SMART_UPGRADE_MODE" == true ]]; then
+    echo -e "${BOLD}Ready to apply AgToosa v${AGTOOSA_VERSION} to:${NC}"
+  else
+    echo -e "${BOLD}Ready to copy AgToosa files to:${NC}"
+  fi
   echo -e "  ${CYAN}${PROJECT_PATH}${NC}"
   echo ""
 fi
@@ -603,8 +629,8 @@ fi
 # ── Existing file count + hint ────────────────────────────────
 EXISTING_FILES=0
 count_existing_files
-if [[ "$PLAN_JSON_MODE" != true && $EXISTING_FILES -gt 0 ]]; then
-  echo -e "${CYAN}ℹ️  ${EXISTING_FILES} file(s) already exist — platform configs will be merged, Context/ files preserved.${NC}"
+if [[ "$PLAN_JSON_MODE" != true && $EXISTING_FILES -gt 0 && "$SMART_UPGRADE_MODE" != true ]]; then
+  echo -e "${CYAN}ℹ️  ${EXISTING_FILES} file(s) already exist — platform configs will be merged, your project files preserved.${NC}"
   echo ""
 fi
 
@@ -622,14 +648,17 @@ fi
 if [[ "$ASSUME_YES" == true ]]; then
   CONFIRM="Y"
 else
-  read -rp "Copy files now? (Y/n): " CONFIRM
+  if [[ "$SMART_UPGRADE_MODE" == true ]]; then
+    read -rp "Apply upgrade now? (Y/n): " CONFIRM
+  else
+    read -rp "Copy files now? (Y/n): " CONFIRM
+  fi
   CONFIRM="${CONFIRM:-Y}"
 fi
 
 if [[ "$CONFIRM" =~ ^[Yy]$ ]]; then
-  COPIED=0
-  SKIPPED=0
-  install_files
+  SMART_APPLY_USE_UPDATE=false
+  smart_apply
 else
   manual_copy_instructions
 fi

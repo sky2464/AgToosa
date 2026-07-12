@@ -129,7 +129,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 # ── Version ───────────────────────────────────────────────────
-$AGTOOSA_VERSION = "5.3.22"
+$AGTOOSA_VERSION = "5.3.23"
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $TEMPLATE_DIR = Join-Path $SCRIPT_DIR "template"
 $SHIP_DIR = Join-Path $SCRIPT_DIR "ship"
@@ -144,6 +144,7 @@ $ESC = [char]27
 $RED    = "${ESC}[31m"
 $GREEN  = "${ESC}[32m"
 $YELLOW = "${ESC}[33m"
+$BLUE   = "${ESC}[34m"
 $CYAN   = "${ESC}[36m"
 $PURPLE = "${ESC}[35m"
 $BOLD   = "${ESC}[1m"
@@ -315,7 +316,49 @@ function Test-Prerequisites {
     }
 }
 
+function Test-ExistingAgToosa([string]$projectPath) {
+    if (Test-Path (Join-Path $projectPath "Docs\.agtoosa-version")) { return $true }
+    if (Test-Path (Join-Path $projectPath "Docs\AgToosa_Agent.md")) { return $true }
+    return $false
+}
+
+function Test-ContextPlaceholderFile([string]$filePath, [string]$projectPath) {
+    if (-not (Test-Path $filePath)) { return $false }
+    if (Select-String -Path $filePath -Pattern '\[name\]|\[url\]|\[e\.g\.' -Quiet) { return $true }
+    $rel = $filePath.Substring($projectPath.Length).TrimStart('\', '/')
+    $tpl = Join-TemplatePath $TEMPLATE_DIR ($rel -replace '\\', '/')
+    if (-not (Test-Path $tpl)) {
+        $tpl = Join-TemplatePath $SHIP_DIR ($rel -replace '\\', '/')
+    }
+    if (Test-Path $tpl) {
+        $dstHash = (Get-FileHash $filePath -Algorithm SHA256).Hash
+        $srcHash = (Get-FileHash $tpl -Algorithm SHA256).Hash
+        if ($dstHash -eq $srcHash) { return $true }
+    }
+    return $false
+}
+
+function Get-PlatformDisplayNames([string[]]$platforms) {
+    $names = [System.Collections.Generic.List[string]]::new()
+    foreach ($p in $platforms) {
+        switch ($p) {
+            "cursor"   { $names.Add("Cursor") }
+            "windsurf" { $names.Add("Windsurf") }
+            "claude"   { $names.Add("Claude Code") }
+            "gemini"   { $names.Add("Gemini") }
+            "copilot"  { $names.Add("GitHub Copilot") }
+            "opencode" { $names.Add("Codex/OpenCode") }
+        }
+    }
+    if ($names.Count -eq 0) { return "none" }
+    return ($names -join ", ")
+}
+
 function Get-InstalledVersion([string]$projectPath) {
+    $verFile = Join-Path $projectPath "Docs\.agtoosa-version"
+    if (Test-Path $verFile) {
+        return (Get-Content $verFile -Raw).Trim()
+    }
     $agentFile = Join-Path $projectPath "Docs\AgToosa_Agent.md"
     if (-not (Test-Path $agentFile)) { return "unknown" }
     $line = Select-String -Path $agentFile -Pattern "AgToosa v\d+\.\d+\.\d+" | Select-Object -First 1
@@ -325,7 +368,7 @@ function Get-InstalledVersion([string]$projectPath) {
     return "unknown"
 }
 
-function Copy-FileWithGuard([string]$src, [string]$dst, [string]$label) {
+function Copy-FileWithGuard([string]$src, [string]$dst, [string]$label, [string]$projectPath) {
     $dir = Split-Path -Parent $dst
     if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
 
@@ -336,7 +379,20 @@ function Copy-FileWithGuard([string]$src, [string]$dst, [string]$label) {
     }
 
     if (-not $Force) {
-        Write-Color "  ${YELLOW}⏭${NC}  Skipping $label (exists, use -Force to overwrite)"
+        if ($label -like "Docs\Context\*" -and (Test-ContextPlaceholderFile $dst $projectPath)) {
+            Copy-Item $src $dst -Force
+            Write-Color "  ${GREEN}✅${NC} $label"
+            return
+        }
+        if ($label -like "Docs\Master-Plan.md" -or $label -like "Docs\AgToosa_Changelog.md" -or $label -like "Docs\Master-Architecture.md") {
+            Write-Color "  ${BLUE}🔒${NC} Preserved $label ${CYAN}(your project plan)${NC}"
+            return
+        }
+        if ($label -like "Docs\Context\*") {
+            Write-Color "  ${BLUE}🔒${NC} Preserved $label ${CYAN}(your project config)${NC}"
+            return
+        }
+        Write-Color "  ${BLUE}🔒${NC} Preserved $label ${CYAN}(your project config)${NC}"
         return
     }
 
@@ -863,7 +919,7 @@ function Install-Files([string]$projectPath, [string[]]$platforms) {
         New-Item -ItemType Directory -Path $dstDocs -Force | Out-Null
         Get-ChildItem -Path $shipDocs -Recurse -File | ForEach-Object {
             $rel = $_.FullName.Substring($shipDocs.Length).TrimStart('\', '/')
-            Copy-FileWithGuard $_.FullName (Join-Path $dstDocs $rel) "Docs\$rel"
+            Copy-FileWithGuard $_.FullName (Join-Path $dstDocs $rel) "Docs\$rel" $projectPath
         }
     }
 
@@ -1292,6 +1348,8 @@ Write-Color "  3. We copy them directly to your project"
 Write-Color "  4. Run /agtoosa-init in your AI assistant (one-time)"
 Write-Color "  5. Then use: /agtoosa-spec → /agtoosa-build → /agtoosa-review → /agtoosa-ship"
 Write-Color ""
+Write-Color "${CYAN}Re-run on an existing project to upgrade — no -Force needed.${NC}"
+Write-Color ""
 Write-Color "${YELLOW}────────────────────────────────────────────────────${NC}"
 Write-Color ""
 
@@ -1321,10 +1379,43 @@ Write-Color ""
 Write-Color "${GREEN}✅ Project found: $projectPath${NC}"
 Write-Color ""
 
+$smartUpgradeMode = Test-ExistingAgToosa $projectPath
+$oldInstalledVersion = "unknown"
+if ($smartUpgradeMode) {
+    $oldInstalledVersion = Get-InstalledVersion $projectPath
+    Write-Color "${PURPLE}${BOLD}Upgrading AgToosa v${oldInstalledVersion} → v${AGTOOSA_VERSION}${NC}"
+    Write-Color ""
+}
+
 # ── Platform selection ────────────────────────────────────────
 $cliPlatforms = $Platforms
 $selectedPlatforms = [System.Collections.Generic.List[string]]::new()
-if (-not [string]::IsNullOrWhiteSpace($cliPlatforms)) {
+if ($smartUpgradeMode -and [string]::IsNullOrWhiteSpace($cliPlatforms)) {
+    foreach ($p in (Get-InstalledPlatforms $projectPath)) {
+        if (-not $selectedPlatforms.Contains($p)) { [void]$selectedPlatforms.Add($p) }
+    }
+    Write-Color "${BOLD}Found:${NC} $(Get-PlatformDisplayNames $selectedPlatforms.ToArray())"
+    if (-not $Yes) {
+        Write-Color "${CYAN}Add platforms? (Enter to keep, or numbers e.g. 3 5)${NC}"
+        $addSelection = Read-Host "Add platforms"
+        if (-not [string]::IsNullOrWhiteSpace($addSelection)) {
+            if ($addSelection -match "8") {
+                $selectedPlatforms.Clear()
+                $selectedPlatforms.AddRange([string[]]@("cursor", "windsurf", "claude", "gemini", "copilot", "opencode"))
+            } else {
+                if ($addSelection -match "1") { if (-not $selectedPlatforms.Contains("cursor")) { $selectedPlatforms.Add("cursor") } }
+                if ($addSelection -match "2") { if (-not $selectedPlatforms.Contains("windsurf")) { $selectedPlatforms.Add("windsurf") } }
+                if ($addSelection -match "3") { if (-not $selectedPlatforms.Contains("claude")) { $selectedPlatforms.Add("claude") } }
+                if ($addSelection -match "4") { if (-not $selectedPlatforms.Contains("gemini")) { $selectedPlatforms.Add("gemini") } }
+                if ($addSelection -match "5") { if (-not $selectedPlatforms.Contains("copilot")) { $selectedPlatforms.Add("copilot") } }
+                if ($addSelection -match "6") { if (-not $selectedPlatforms.Contains("copilot")) { $selectedPlatforms.Add("copilot") } }
+                if ($addSelection -match "7") { if (-not $selectedPlatforms.Contains("opencode")) { $selectedPlatforms.Add("opencode") } }
+            }
+            Write-Color ""
+            Write-Color "${GREEN}Platforms:${NC} $(Get-PlatformDisplayNames $selectedPlatforms.ToArray())"
+        }
+    }
+} elseif (-not [string]::IsNullOrWhiteSpace($cliPlatforms)) {
     foreach ($platformName in (ConvertTo-PlatformList $cliPlatforms)) {
         if (-not $selectedPlatforms.Contains($platformName)) {
             [void]$selectedPlatforms.Add($platformName)
@@ -1332,6 +1423,11 @@ if (-not [string]::IsNullOrWhiteSpace($cliPlatforms)) {
     }
     Write-Color ""
     Write-Color "${BOLD}Platforms (from -Platforms):${NC} $cliPlatforms"
+    if ($smartUpgradeMode) {
+        foreach ($p in (Get-InstalledPlatforms $projectPath)) {
+            if (-not $selectedPlatforms.Contains($p)) { [void]$selectedPlatforms.Add($p) }
+        }
+    }
 } else {
     Write-Color "${YELLOW}Select AI platform(s) — enter numbers separated by spaces (e.g. 1 3):${NC}"
     Write-Color "  1) Cursor"
@@ -1388,7 +1484,11 @@ try {
     Write-Color "${GREEN}${BOLD}Generated files staged.${NC}"
     Write-Color "${YELLOW}────────────────────────────────────────────────────${NC}"
     Write-Color ""
-    Write-Color "${BOLD}Ready to copy AgToosa files to:${NC}"
+    if ($smartUpgradeMode) {
+        Write-Color "${BOLD}Ready to apply AgToosa v${AGTOOSA_VERSION} to:${NC}"
+    } else {
+        Write-Color "${BOLD}Ready to copy AgToosa files to:${NC}"
+    }
     Write-Color "  ${CYAN}$projectPath${NC}"
     Write-Color ""
 
@@ -1401,6 +1501,9 @@ try {
 
     if ($Yes) {
         $confirm = "Y"
+    } elseif ($smartUpgradeMode) {
+        $confirm = Read-Host "Apply upgrade now? (Y/n)"
+        if ([string]::IsNullOrEmpty($confirm)) { $confirm = "Y" }
     } else {
         $confirm = Read-Host "Copy files now? (Y/n)"
         if ([string]::IsNullOrEmpty($confirm)) { $confirm = "Y" }
@@ -1409,7 +1512,11 @@ try {
     if ($confirm -match "^[Yy]$") {
         Install-Files $projectPath $selectedPlatforms.ToArray()
         Write-Color ""
-        Write-Color "${GREEN}${BOLD}✅ AgToosa v${AGTOOSA_VERSION} installed in '$projectPath'!${NC}"
+        if ($smartUpgradeMode) {
+            Write-Color "${GREEN}${BOLD}✅ AgToosa v${AGTOOSA_VERSION} applied to '$projectPath'${NC}"
+        } else {
+            Write-Color "${GREEN}${BOLD}✅ AgToosa v${AGTOOSA_VERSION} installed in '$projectPath'!${NC}"
+        }
         # Write version marker
         $verFile = Join-Path $projectPath "Docs\.agtoosa-version"
         $AGTOOSA_VERSION | Out-File -FilePath $verFile -Encoding UTF8 -NoNewline

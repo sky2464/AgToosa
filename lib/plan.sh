@@ -87,23 +87,57 @@ _plan_categorize_file() {
     return
   fi
 
-  if [[ "$rel" == Docs/Context/* ]]; then
+  if [[ "$rel" == "Docs/Master-Plan.md" || "$rel" == "Docs/AgToosa_Changelog.md" || "$rel" == "Docs/Master-Architecture.md" ]]; then
+    PLAN_CAT="preserve"
+    PLAN_DETAIL="project-owned state preserved"
+    return
+  fi
+
+  case "$rel" in
+    Docs/Context/*)
     if [[ "$FORCE" == true ]]; then
       old_ver="$(extract_version "$target")"
       PLAN_CAT="backup_replace"
       PLAN_DETAIL="backup + replace (v${old_ver:-unknown} → v${AGTOOSA_VERSION})"
+    elif declare -F context_is_placeholder_file >/dev/null 2>&1 \
+         && context_is_placeholder_file "$target"; then
+      local src="${SHIP_DIR}/${rel}"
+      [[ "$PLAN_OPERATION" == "update" ]] && src="${TEMPLATE_DIR}/${rel}"
+      if [[ -f "$src" ]] && declare -F apply_content_sha256 >/dev/null 2>&1 \
+         && [[ "$(apply_content_sha256 "$target")" == "$(apply_content_sha256 "$src")" ]]; then
+        PLAN_CAT="up_to_date"
+        PLAN_DETAIL="template stub unchanged"
+      else
+        PLAN_CAT="overwrite"
+        PLAN_DETAIL="refresh unfilled Context stub"
+      fi
     else
-      PLAN_CAT="skip"
-      PLAN_DETAIL="exists, use --force to overwrite"
+      PLAN_CAT="preserve"
+      PLAN_DETAIL="your project config preserved"
     fi
     return
-  fi
+    ;;
+  esac
 
-  if [[ "$rel" == Docs/* ]]; then
-    PLAN_CAT="overwrite"
-    PLAN_DETAIL="workflow file, always updated"
+  case "$rel" in
+    Docs/*)
+    if declare -F apply_content_sha256 >/dev/null 2>&1; then
+      local src="${SHIP_DIR}/${rel}"
+      [[ "$PLAN_OPERATION" == "update" ]] && src="${TEMPLATE_DIR}/${rel}"
+      if [[ -f "$src" ]] && [[ "$(apply_content_sha256 "$target")" == "$(apply_content_sha256 "$src")" ]]; then
+        PLAN_CAT="up_to_date"
+        PLAN_DETAIL="Already up to date"
+      else
+        PLAN_CAT="overwrite"
+        PLAN_DETAIL="workflow file, always updated"
+      fi
+    else
+      PLAN_CAT="overwrite"
+      PLAN_DETAIL="workflow file, always updated"
+    fi
     return
-  fi
+    ;;
+  esac
 
   if [[ "$FORCE" == true ]]; then
     old_ver="$(extract_version "$target")"
@@ -306,9 +340,12 @@ _emit_plan_human_line() {
     backup_replace)
       echo -e "  ${CYAN}📦${NC} ${rel}  → Would backup + replace (${detail#backup + replace })"
       ;;
+    preserve)
+      echo -e "  ${BLUE}🔒${NC} ${rel}  → Would preserve (${detail})"
+      ;;
     skip)
-      if [[ "$detail" == *"preserving customizations"* ]]; then
-        echo -e "  ${YELLOW}⏭${NC}  ${rel}  → Would keep (${detail})"
+      if [[ "$detail" == *"preserving customizations"* || "$detail" == *"preserved"* ]]; then
+        echo -e "  ${BLUE}🔒${NC} ${rel}  → Would preserve (${detail})"
       else
         echo -e "  ${YELLOW}⏭${NC}  ${rel}  → Would skip (${detail})"
       fi

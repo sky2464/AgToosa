@@ -48,7 +48,26 @@ copy_platform_file() {
   fi
 
   if [[ "$FORCE" == false ]]; then
-    echo -e "  ${YELLOW}⏭${NC}  Skipping ${label} (exists, use --force to overwrite)"
+    if [[ "$label" == Docs/Context/* ]] \
+       && declare -F context_is_placeholder_file >/dev/null 2>&1 \
+       && context_is_placeholder_file "$dst"; then
+      if declare -F apply_copy_if_changed >/dev/null 2>&1; then
+        apply_copy_if_changed "$src" "$dst" "$label" || return 1
+      else
+        cp "$src" "$dst"
+        echo -e "  ${GREEN}✅${NC} ${label}"
+      fi
+      COPIED=$((COPIED + 1))
+      return
+    fi
+    if declare -F apply_note_preserved >/dev/null 2>&1; then
+      apply_note_preserved
+    fi
+    if [[ "$label" == Docs/Context/* ]]; then
+      echo -e "  ${BLUE}🔒${NC} Preserved ${label} ${CYAN}(your project config)${NC}"
+    else
+      echo -e "  ${BLUE}🔒${NC} Preserved ${label} ${CYAN}(your project config)${NC}"
+    fi
     SKIPPED=$((SKIPPED + 1))
     return
   fi
@@ -94,11 +113,11 @@ merge_platform_file() {
   local old_ver
   old_ver="$(extract_version "$dst")"
 
-  # --force path
   if [[ "$FORCE" == true ]]; then
     if [[ -n "$old_ver" ]] && ! version_lt "$old_ver" "$AGTOOSA_VERSION"; then
-      echo -e "  ${YELLOW}⏭${NC}  ${label} ${CYAN}(v${AGTOOSA_VERSION} — keeping your customizations)${NC}"
-      SKIPPED=$((SKIPPED + 1))
+      APPLY_UNCHANGED=$((APPLY_UNCHANGED + 1))
+      echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(v${AGTOOSA_VERSION}, up to date)${NC}"
+      COPIED=$((COPIED + 1))
       return
     fi
     local bak
@@ -106,6 +125,11 @@ merge_platform_file() {
     BAK_FILES+=("$bak")
     cp "$src" "$dst"
     echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(v${old_ver:-unknown} → v${AGTOOSA_VERSION}, backup: $(basename "$bak"))${NC}"
+    if declare -F apply_note_merged >/dev/null 2>&1; then
+      apply_note_merged
+    else
+      APPLY_WRITTEN=$((APPLY_WRITTEN + 1))
+    fi
     COPIED=$((COPIED + 1))
     return
   fi
@@ -113,6 +137,7 @@ merge_platform_file() {
   # Case B: existing START/END block
   if grep -qE 'AgToosa v[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]* START' "$dst" 2>/dev/null; then
     if [[ -n "$old_ver" ]] && ! version_lt "$old_ver" "$AGTOOSA_VERSION"; then
+      APPLY_UNCHANGED=$((APPLY_UNCHANGED + 1))
       echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(v${AGTOOSA_VERSION}, up to date)${NC}"
       COPIED=$((COPIED + 1))
       return
@@ -134,6 +159,9 @@ merge_platform_file() {
     fi
     mv "$tmp_out" "$dst"
     echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(merged: v${old_ver:-unknown} → v${AGTOOSA_VERSION}, backup: $(basename "$bak"))${NC}"
+    if declare -F apply_note_merged >/dev/null 2>&1; then
+      apply_note_merged
+    fi
     COPIED=$((COPIED + 1))
     return
   fi
@@ -141,6 +169,7 @@ merge_platform_file() {
   # Case C: old-format AgToosa file
   if [[ -n "$old_ver" ]]; then
     if ! version_lt "$old_ver" "$AGTOOSA_VERSION"; then
+      APPLY_UNCHANGED=$((APPLY_UNCHANGED + 1))
       echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(v${AGTOOSA_VERSION}, up to date)${NC}"
       COPIED=$((COPIED + 1))
       return
@@ -150,6 +179,9 @@ merge_platform_file() {
     BAK_FILES+=("$bak")
     cp "$src" "$dst"
     echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(v${old_ver} → v${AGTOOSA_VERSION}, backup: $(basename "$bak"))${NC}"
+    if declare -F apply_note_merged >/dev/null 2>&1; then
+      apply_note_merged
+    fi
     COPIED=$((COPIED + 1))
     return
   fi
@@ -164,6 +196,9 @@ merge_platform_file() {
   cat "$src" >> "$tmp_out"
   mv "$tmp_out" "$dst"
   echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(appended to existing file, backup: $(basename "$bak"))${NC}"
+  if declare -F apply_note_merged >/dev/null 2>&1; then
+    apply_note_merged
+  fi
   COPIED=$((COPIED + 1))
 }
 

@@ -231,6 +231,22 @@ run_update() {
   echo ""
   echo -e "${YELLOW}Updating platform native dirs...${NC}"
 
+  # Step 2b: Context/ — refresh placeholder stubs only; preserve user-filled files.
+  local cfile csrc cdst
+  for cfile in "${CONTEXT_FILES[@]}"; do
+    csrc="${TEMPLATE_DIR}/${cfile}"; cdst="${PROJECT_PATH}/${cfile}"
+    [[ -f "$csrc" ]] || continue
+    if [[ ! -f "$cdst" ]] || { declare -F context_is_placeholder_file >/dev/null 2>&1 \
+         && context_is_placeholder_file "$cdst"; }; then
+      copy_platform_file "$csrc" "$cdst" "$cfile"
+    else
+      if declare -F apply_note_preserved >/dev/null 2>&1; then
+        apply_note_preserved
+      fi
+      echo -e "  ${BLUE}🔒${NC} Preserved ${cfile} ${CYAN}(your project config)${NC}"
+    fi
+  done
+
   # Step 3: Native dirs — overwrite known AgToosa files only
   dirs_updated="$(update_native_dirs)"
 
@@ -293,20 +309,19 @@ print_update_summary() {
   local old_ver="$1" docs_updated="$2" platforms_merged="$3" dirs_updated="$4"
   shift 4
   local detected_names=("$@")
-  local platform_str
-  platform_str="$(IFS=", "; echo "${detected_names[*]:-none}")"
 
-  echo ""
-  echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
-  echo ""
-  echo -e "${GREEN}${BOLD}✅ AgToosa updated v${old_ver} → v${AGTOOSA_VERSION}${NC}"
-  echo ""
-  echo -e "  Workflow files updated : ${docs_updated}"
-  echo -e "  Platform files merged  : ${platforms_merged}  (${platform_str})"
-  echo -e "  Platform dirs updated  : ${dirs_updated}"
-  echo -e "  Context/ preserved     : ${GREEN}✅${NC} (${#CONTEXT_FILES[@]} files untouched)"
-  if declare -F apply_print_summary >/dev/null 2>&1; then
-    apply_print_summary
+  if declare -F emit_apply_summary_human >/dev/null 2>&1; then
+    emit_apply_summary_human "applied"
+  else
+    echo ""
+    echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
+    echo ""
+    echo -e "${GREEN}${BOLD}✅ AgToosa updated v${old_ver} → v${AGTOOSA_VERSION}${NC}"
+    echo ""
+    echo -e "  Workflow files updated : ${docs_updated}"
+    echo -e "  Platform files merged  : ${platforms_merged}  ($(IFS=", "; echo "${detected_names[*]:-none}"))"
+    echo -e "  Platform dirs updated  : ${dirs_updated}"
+    echo -e "  Context/ preserved     : ${GREEN}✅${NC} (user-filled files untouched)"
   fi
 
   if [[ ${#BAK_FILES[@]} -gt 0 ]]; then

@@ -10,16 +10,146 @@ APPLY_WRITTEN=0
 APPLY_MERGED=0
 APPLY_UNCHANGED=0
 APPLY_FAILED=0
+APPLY_PRESERVED=0
+SMART_UPGRADE_MODE=false
+OLD_INSTALLED_VERSION=""
+SMART_APPLY_USE_UPDATE=false
 
 apply_reset_summary() {
   APPLY_WRITTEN=0
   APPLY_MERGED=0
   APPLY_UNCHANGED=0
   APPLY_FAILED=0
+  APPLY_PRESERVED=0
 }
 
 apply_print_summary() {
-  echo "apply summary: written=${APPLY_WRITTEN} merged=${APPLY_MERGED} unchanged=${APPLY_UNCHANGED} failed=${APPLY_FAILED}"
+  echo "apply summary: written=${APPLY_WRITTEN} merged=${APPLY_MERGED} unchanged=${APPLY_UNCHANGED} preserved=${APPLY_PRESERVED} failed=${APPLY_FAILED}"
+}
+
+apply_note_preserved() {
+  APPLY_PRESERVED=$((APPLY_PRESERVED + 1))
+}
+
+# Return 0 when project already has AgToosa installed.
+detect_existing_agtoosa() {
+  local project_path="$1"
+  [[ -f "${project_path}/Docs/.agtoosa-version" ]] && return 0
+  [[ -f "${project_path}/Docs/AgToosa_Agent.md" ]] && return 0
+  return 1
+}
+
+# True when a Context/ file is still an unfilled template stub (safe to refresh).
+context_is_placeholder_file() {
+  local f="$1"
+  local rel tpl src
+
+  [[ -f "$f" ]] || return 1
+  if grep -qE '\[name\]|\[url\]|\[e\.g\.' "$f" 2>/dev/null; then
+    return 0
+  fi
+  rel="${f#"${PROJECT_PATH}/"}"
+  for tpl in "${TEMPLATE_DIR}/${rel}" "${SHIP_DIR:-}/${rel}"; do
+    [[ -f "$tpl" ]] || continue
+    if [[ "$(apply_content_sha256 "$f")" == "$(apply_content_sha256 "$tpl")" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+# Human-readable platform list from USE_* globals.
+platform_flags_to_names() {
+  local -a names=()
+  [[ "${USE_CURSOR:-false}" == true ]] && names+=("Cursor")
+  [[ "${USE_WINDSURF:-false}" == true ]] && names+=("Windsurf")
+  [[ "${USE_CLAUDE:-false}" == true ]] && names+=("Claude Code")
+  [[ "${USE_GEMINI:-false}" == true ]] && names+=("Gemini")
+  [[ "${USE_COPILOT:-false}" == true ]] && names+=("GitHub Copilot")
+  [[ "${USE_VSCODE:-false}" == true ]] && names+=("VS Code")
+  [[ "${USE_OPENCODE:-false}" == true ]] && names+=("Codex/OpenCode")
+  if ((${#names[@]} == 0)); then
+    echo "none"
+  else
+    local IFS=', '
+    echo "${names[*]}"
+  fi
+}
+
+# Set USE_* from a space-separated selection string (digits 1-8).
+apply_platform_selection() {
+  local selection="$1"
+  USE_CURSOR=false; USE_WINDSURF=false; USE_CLAUDE=false
+  USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false; USE_VSCODE=false
+  if [[ "$selection" == *"8"* ]]; then
+    USE_CURSOR=true; USE_WINDSURF=true; USE_CLAUDE=true
+    USE_GEMINI=true; USE_COPILOT=true; USE_OPENCODE=true; USE_VSCODE=true
+    return 0
+  fi
+  [[ "$selection" == *"1"* ]] && USE_CURSOR=true || true
+  [[ "$selection" == *"2"* ]] && USE_WINDSURF=true || true
+  [[ "$selection" == *"3"* ]] && USE_CLAUDE=true || true
+  [[ "$selection" == *"4"* ]] && USE_GEMINI=true || true
+  [[ "$selection" == *"5"* ]] && USE_COPILOT=true || true
+  [[ "$selection" == *"6"* ]] && USE_VSCODE=true || true
+  [[ "$selection" == *"7"* ]] && USE_OPENCODE=true || true
+  return 0
+}
+
+# Union additional platform selection digits into current USE_* flags.
+union_platform_selection() {
+  local add_selection="$1"
+  local uc uw ucl ug uco uv uop
+  uc="$USE_CURSOR"; uw="$USE_WINDSURF"; ucl="$USE_CLAUDE"
+  ug="$USE_GEMINI"; uco="$USE_COPILOT"; uv="$USE_VSCODE"; uop="$USE_OPENCODE"
+  apply_platform_selection "$add_selection"
+  [[ "$uc" == true ]] && USE_CURSOR=true || true
+  [[ "$uw" == true ]] && USE_WINDSURF=true || true
+  [[ "$ucl" == true ]] && USE_CLAUDE=true || true
+  [[ "$ug" == true ]] && USE_GEMINI=true || true
+  [[ "$uco" == true ]] && USE_COPILOT=true || true
+  [[ "$uv" == true ]] && USE_VSCODE=true || true
+  [[ "$uop" == true ]] && USE_OPENCODE=true || true
+  return 0
+}
+
+emit_apply_summary_human() {
+  local verb="${1:-installed}"
+  echo ""
+  echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
+  [[ "${APPLY_WRITTEN:-0}" -gt 0 ]] \
+    && echo -e "  ${GREEN}Updated:${NC}    ${APPLY_WRITTEN} framework files"
+  [[ "${APPLY_PRESERVED:-0}" -gt 0 ]] \
+    && echo -e "  ${BLUE}Preserved:${NC}  ${APPLY_PRESERVED} project files (your plan, context, changelog)"
+  [[ "${APPLY_UNCHANGED:-0}" -gt 0 ]] \
+    && echo -e "  ${CYAN}Unchanged:${NC}  ${APPLY_UNCHANGED} files already up to date"
+  [[ "${APPLY_MERGED:-0}" -gt 0 ]] \
+    && echo -e "  ${CYAN}Merged:${NC}     ${APPLY_MERGED} platform config(s)"
+  [[ "${APPLY_FAILED:-0}" -gt 0 ]] \
+    && echo -e "  ${RED}Failed:${NC}     ${APPLY_FAILED} files"
+  echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
+  echo ""
+  if [[ "$verb" == "applied" ]]; then
+    echo -e "${GREEN}${BOLD}✅ AgToosa v${AGTOOSA_VERSION} applied to ${PROJECT_PATH}${NC}"
+  else
+    echo -e "${GREEN}${BOLD}✅ AgToosa v${AGTOOSA_VERSION} ${verb} to ${PROJECT_PATH}${NC}"
+  fi
+}
+
+# Unified apply entry: ship-based install or template-based update.
+smart_apply() {
+  apply_reset_summary
+  COPIED=0
+  SKIPPED=0
+  BAK_FILES=("${BAK_FILES[@]+"${BAK_FILES[@]}"}")
+
+  if [[ "${SMART_APPLY_USE_UPDATE:-false}" == true ]]; then
+    local old_ver="${OLD_INSTALLED_VERSION:-$(read_installed_version "$PROJECT_PATH")}"
+    run_update "$old_ver"
+    return $?
+  fi
+
+  install_files
 }
 
 apply_content_sha256() {

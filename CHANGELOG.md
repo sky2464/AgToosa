@@ -5,6 +5,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.23] — 2026-07-12
+
+Patch release: DEV-111 — Smart One-Command Install UX.
+
+### Added
+
+- **DEV-111 — Smart One-Command Install UX.** Auto-detect upgrade on re-run; `Found:` platform detect + optional add; `smart_apply()` unified path; smart per-file preserve/refresh (Master-Plan, Context placeholders); human summary buckets (Updated/Preserved/Unchanged/Merged); `--force` hidden from interactive UX; PS1 parity; SAU-001–SAU-010 bats.
+
 ## [5.3.22] — 2026-07-12
 
 Patch release: DEV-110 — AgToosa Project Intake.

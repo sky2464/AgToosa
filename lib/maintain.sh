@@ -251,7 +251,18 @@ PY
 
   # Context health.
   if [[ -d "${docs_dir}/Context" ]]; then
-    if grep -lE '\[name\]|\[url\]|\[e\.g\.' "${docs_dir}/Context/"*.md >/dev/null 2>&1; then
+    local ctx_file has_placeholder=false
+    for ctx_file in "${docs_dir}/Context/"*.md; do
+      [[ -f "$ctx_file" ]] || continue
+      if declare -F context_is_placeholder_file >/dev/null 2>&1; then
+        PROJECT_PATH="$target"
+        context_is_placeholder_file "$ctx_file" && has_placeholder=true && break
+      elif grep -qE '\[name\]|\[url\]|\[e\.g\.' "$ctx_file" 2>/dev/null; then
+        has_placeholder=true
+        break
+      fi
+    done
+    if [[ "$has_placeholder" == true ]]; then
       _doc_finding warn "DR-context-placeholders" \
         "Context files still contain template placeholders" \
         "Agents may treat placeholders as real product facts." \

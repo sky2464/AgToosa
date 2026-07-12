@@ -23,6 +23,20 @@ Detect whether the installed AgToosa baseline is behind, plan the update, get ex
 
 The default `/agtoosa-update` flow is **Detect → Plan → Apply → Verify** with **ask-then-apply** when drift is detected. The agent orchestrates preflight and approval; **file mutation is delegated to the CLI** — do not hand-edit workflow files in place of `agtoosa.sh --update`.
 
+### One-command smart apply (CLI)
+
+For humans and CI, **re-running the generator is enough** — no separate install vs update mental model:
+
+```bash
+bash agtoosa.sh                    # interactive: fresh install or smart upgrade
+bash agtoosa.sh --path <dir> --yes # non-interactive apply
+bash agtoosa.sh --update <dir>     # backward-compatible alias (same apply engine)
+```
+
+When `Docs/.agtoosa-version` or `Docs/AgToosa_Agent.md` exists, the CLI enters **upgrade mode**: auto-detects installed platforms, offers to add more, preserves project-owned files (`Master-Plan`, `Changelog`, filled `Context/`), refreshes unfilled Context stubs, smart-merges entry points, and prints summary buckets (`Updated` / `Preserved` / `Unchanged` / `Merged`).
+
+**`--force` (advanced / CI only):** Not shown in interactive copy. Use with `--yes` when you intentionally need full replace on Context or platform entry points (still never overwrites `Master-Plan`, `Changelog`, or `Master-Architecture`). Example: `bash agtoosa.sh --path <dir> --platforms cursor --yes --force`.
+
 ## Workflow
 
 ### Stage 1 — Detect
@@ -148,6 +162,7 @@ When approved (or when running full `/agtoosa-update` and the user confirms at t
    ```bash
    bash agtoosa.sh --update <project-path>
    ```
+   Equivalent for humans: `bash agtoosa.sh` and enter the same project path (smart upgrade when already installed).
    For MAJOR bumps use `--dry-run` first, then `--accept-breaking` after review. Use `--dry-run` first when preflight flagged high risk and the user has not yet seen the dry-run output.
 
 2. **Forbidden:** Hand-copying individual template files, editing workflow docs manually, or syncing without the CLI when the goal is a baseline update.

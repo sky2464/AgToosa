@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.22" ]]
+  [[ "$output" == "AgToosa v5.3.23" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -705,7 +705,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
   local rerun_output="$output"
   run grep -q "my-custom-tech-stack-sentinel" "$TEST_PROJECT/Docs/Context/tech-stack.md"
   [ "$status" -eq 0 ]
-  [[ "$rerun_output" == *"Skipping"* ]]
+  [[ "$rerun_output" == *"Preserved"* ]]
 }
 # ── Generator: .gitignore warning absent when no backups ────────
 @test "gitignore warning NOT shown on clean install with no backups" {
@@ -841,10 +841,10 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
 @test "--update shows old version when prior version file exists" {
   run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
-  echo "2.0.0" > "$TEST_PROJECT/Docs/.agtoosa-version"
+  echo "5.3.21" > "$TEST_PROJECT/Docs/.agtoosa-version"
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
-  [[ "$output" == *"2.0.0"* ]]
+  [[ "$output" == *"5.3.21"* ]]
 }
 # ── --update: platform detection ─────────────────────────────
 @test "--update detects installed Claude platform and merges CLAUDE.md" {
@@ -1636,7 +1636,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.3.22" ]
+  [ "$ver" = "5.3.23" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1647,7 +1647,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.3.22"* ]]
+  [[ "$output" == *"5.3.23"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -3649,7 +3649,7 @@ PY
   grep -q "Claude Code Instructions" "$project/CLAUDE.md"
   ! grep -q "old claude block" "$project/CLAUDE.md"
   grep -q "AgToosa" "$project/.claude/commands/agtoosa-spec.md"
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.22" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.23" ]
 }
 
 @test "DEV-036 WP-002: Bash registry install normalizes top-level pack directory" {
@@ -9621,7 +9621,7 @@ EOF
   run pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1" -Update -UpdatePath "$project"
   [ "$status" -eq 0 ]
   [ -f "$project/Docs/.agtoosa-version" ]
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.22" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.23" ]
 }
 
 @test "DEV-105 PSP-005: maintain switches require -UpdatePath" {
@@ -10043,7 +10043,7 @@ PY
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.22"
+    AGTOOSA_VERSION="5.3.23"
     PROJECT_PATH="'"$proj"'"
     apply_reset_summary
     apply_begin_staging "'"$proj"'"
@@ -10102,7 +10102,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.22"
+    AGTOOSA_VERSION="5.3.23"
     PROJECT_PATH="'"$proj"'"
     USE_CURSOR=true; USE_CLAUDE=true
     USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10120,7 +10120,7 @@ d = json.load(open(sys.argv[1]))
 plats = set(d.get("platforms") or [])
 assert "cursor" in plats and "claude" in plats, plats
 assert "gemini" not in plats, "stale platform should be reconciled out"
-assert d.get("agtoosa_version") == "5.3.22"
+assert d.get("agtoosa_version") == "5.3.23"
 PY
   [ "$status" -eq 0 ]
 }
@@ -10135,7 +10135,7 @@ PY
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.22"
+    AGTOOSA_VERSION="5.3.23"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10192,7 +10192,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.22"
+    AGTOOSA_VERSION="5.3.23"
     PROJECT_PATH="'"$proj"'"
     # Inject observed SHA that differs from lock pin
     AGTOOSA_PACK_OBSERVED_SHA_tampered_pack="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
@@ -10227,7 +10227,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.22"
+    AGTOOSA_VERSION="5.3.23"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10251,7 +10251,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.22"
+    AGTOOSA_VERSION="5.3.23"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10279,7 +10279,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.22"
+    AGTOOSA_VERSION="5.3.23"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -12347,7 +12347,7 @@ PY
 
   PACK_QUEUE_DIR="$queue_dir"
   PROJECT_PATH="$project_dir"
-  AGTOOSA_VERSION="5.3.22"
+  AGTOOSA_VERSION="5.3.23"
   GREEN="" YELLOW="" NC=""
   source "$BATS_TEST_DIRNAME/../lib/install.sh"
   _merge_pack_queue
@@ -12376,7 +12376,7 @@ PY
 
   PACK_QUEUE_DIR="$queue_dir"
   PROJECT_PATH="$project_dir"
-  AGTOOSA_VERSION="5.3.22"
+  AGTOOSA_VERSION="5.3.23"
   GREEN="" YELLOW="" NC=""
   source "$BATS_TEST_DIRNAME/../lib/install.sh"
   _merge_pack_queue
@@ -12615,18 +12615,18 @@ PY
   [ "$status" -eq 0 ]
 }
 
-# -- Wave 3 ship regression v5.3.20 (SR-001–SR-003) + v5.3.22 current pins --------
+# -- Wave 3 ship regression v5.3.20 (SR-001–SR-003) + v5.3.23 current pins --------
 
-@test "DEV-096 SR-001: v5.3.22 release pins are aligned" {
+@test "DEV-096 SR-001: v5.3.23 release pins are aligned" {
   local root="$BATS_TEST_DIRNAME/.."
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -oE '"version": "[0-9]+\.[0-9]+\.[0-9]+"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "5.3.22" ]
-  [ "$ps_ver" = "5.3.22" ]
-  [ "$npm_ver" = "5.3.22" ]
-  grep -q '## \[5.3.22\]' "$root/CHANGELOG.md"
-  grep -q 'version-5.3.22' "$root/README.md"
+  [ "$bash_ver" = "5.3.23" ]
+  [ "$ps_ver" = "5.3.23" ]
+  [ "$npm_ver" = "5.3.23" ]
+  grep -q '## \[5.3.23\]' "$root/CHANGELOG.md"
+  grep -q 'version-5.3.23' "$root/README.md"
 }
 
 @test "DEV-096 SR-002: v5.3.20 changelog and Wave 3 review/evidence/spec artifacts exist" {
@@ -12643,13 +12643,13 @@ PY
   done
 }
 
-@test "DEV-096 SR-003: Master-Plan records v5.3.22 ship and v5.3.23 next milestone" {
+@test "DEV-096 SR-003: Master-Plan records v5.3.23 ship and v5.3.24 next milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v5.3.22' "$mp"
-  grep -q 'Release 5.3.22 shipped' "$mp"
-  grep -q 'v5.3.23 (next)' "$mp"
-  grep -q 'DEV-110' "$mp"
-  grep -q 'Shipped — v5.3.22' "$mp"
+  grep -q 'Ship complete — v5.3.23' "$mp"
+  grep -q 'Release 5.3.23 shipped' "$mp"
+  grep -q 'v5.3.24 (next)' "$mp"
+  grep -q 'DEV-111' "$mp"
+  grep -q 'Shipped — v5.3.23' "$mp"
 }
 
 # ── DEV-109: Lifecycle Next-Step Sync + Multi-Spec Clarity (LNS-001–LNS-010) ───
@@ -12841,7 +12841,7 @@ PY
   grep -q 'Project Intake' "$root/template/Docs/AgToosa_Quickref.md"
 }
 
-# -- DEV-110 ship regression v5.3.22 (SR-001–SR-002) ---------------------------
+# -- DEV-110 ship regression v5.3.23 (SR-001–SR-002) ---------------------------
 
 @test "DEV-110 SR-001: v5.3.22 changelog and DEV-110 review/evidence/spec artifacts exist" {
   local root="$BATS_TEST_DIRNAME/.."
@@ -12858,4 +12858,126 @@ PY
   [ -f "$root/docs/adr/ADR-013-project-intake.md" ]
   grep -q 'Accepted' "$root/docs/adr/ADR-013-project-intake.md"
   grep -q 'DEV-110' "$root/docs/adr/ADR-013-project-intake.md"
+}
+
+# ── Smart Apply UX (SAU-001–SAU-010) ─────────────────────────
+
+@test "SAU-001: re-run on existing install enters upgrade mode without full platform menu" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --yes < /dev/null
+  [ "$status" -eq 0 ]
+  run bash -c "printf '$TEST_PROJECT\n\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Upgrading AgToosa"* ]]
+  [[ "$output" == *"Found:"* ]]
+  [[ "$output" != *"Which AI coding assistant(s) do you use?"* ]]
+}
+
+@test "SAU-002: upgrade mode Enter keeps detected Cursor only" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --yes < /dev/null
+  [ "$status" -eq 0 ]
+  run bash -c "printf '$TEST_PROJECT\n\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Found:"*"Cursor"* ]]
+  [ -f "$TEST_PROJECT/.cursorrules" ]
+  [ ! -f "$TEST_PROJECT/CLAUDE.md" ]
+}
+
+@test "SAU-003: upgrade mode adding platform 3 unions Claude" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --yes < /dev/null
+  [ "$status" -eq 0 ]
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Platforms:"*"Claude Code"* ]]
+  [ -f "$TEST_PROJECT/CLAUDE.md" ]
+  [ -f "$TEST_PROJECT/.cursorrules" ]
+}
+
+@test "SAU-004: populated Context preserved without --force" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo "my-custom-tech-stack-sentinel" >> "$TEST_PROJECT/Docs/Context/tech-stack.md"
+  run bash -c "printf '$TEST_PROJECT\n\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  grep -q "my-custom-tech-stack-sentinel" "$TEST_PROJECT/Docs/Context/tech-stack.md"
+  [[ "$output" == *"Preserved"* ]]
+  [[ "$output" != *"use --force"* ]]
+}
+
+@test "SAU-005: placeholder Context refreshed on upgrade" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --yes < /dev/null
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/Docs/Context/product.md" ]
+  local before_hash after_hash
+  before_hash="$(shasum -a 256 "$TEMPLATE_DIR/Docs/Context/product.md" | awk '{print $1}')"
+  after_hash="$(shasum -a 256 "$TEST_PROJECT/Docs/Context/product.md" | awk '{print $1}')"
+  [ "$before_hash" = "$after_hash" ]
+  run bash -c "printf '$TEST_PROJECT\n\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  after_hash="$(shasum -a 256 "$TEST_PROJECT/Docs/Context/product.md" | awk '{print $1}')"
+  [ "$before_hash" = "$after_hash" ]
+}
+
+@test "SAU-006: summary shows buckets without --force hint" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --yes < /dev/null
+  [ "$status" -eq 0 ]
+  run bash -c "printf '$TEST_PROJECT\n\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Updated:"* || "$output" == *"Unchanged:"* || "$output" == *"Preserved:"* || "$output" == *"Merged:"* ]]
+  [[ "$output" != *"use --force"* ]]
+  [[ "$output" == *"applied to"* ]]
+}
+
+@test "SAU-007: Master-Plan preserved and dry-run plan uses preserve category" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo "# My Master Plan" > "$TEST_PROJECT/Docs/Master-Plan.md"
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --dry-run < /dev/null
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Would preserve"* ]] || [[ "$output" == *"preserve"* ]]
+  run bash -c "printf '$TEST_PROJECT\n\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  grep -q "My Master Plan" "$TEST_PROJECT/Docs/Master-Plan.md"
+  [[ "$output" == *"Preserved Docs/Master-Plan.md"* ]]
+}
+
+@test "SAU-008: merge increments merged count in apply summary" {
+  mkdir -p "$TEST_PROJECT"
+  printf '# User rules\n' > "$TEST_PROJECT/.cursorrules"
+  run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"merged:"* || "$output" == *"Merged:"* ]]
+}
+
+@test "SAU-009: --force still works non-interactively for CI" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo "custom sentinel" >> "$TEST_PROJECT/Docs/Context/workflow.md"
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --yes --force < /dev/null
+  [ "$status" -eq 0 ]
+  ! grep -q "custom sentinel" "$TEST_PROJECT/Docs/Context/workflow.md" || \
+    grep -q "tdd:" "$TEST_PROJECT/Docs/Context/workflow.md"
+}
+
+@test "SAU-010: --update and plain agtoosa.sh both apply on same fixture" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --yes < /dev/null
+  [ "$status" -eq 0 ]
+  local ver_before
+  ver_before="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --yes < /dev/null
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
+  run bash "$SCRIPT" --update "$TEST_PROJECT" --yes < /dev/null
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
+  [[ "$(cat "$TEST_PROJECT/Docs/.agtoosa-version")" == "$ver_before" ]]
+}
+
+@test "DEV-111 SR-001: v5.3.23 changelog and DEV-111 review/evidence/spec artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.23\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-111' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-111.md" ]
+  [ -f "$root/docs/archived/review-DEV-111.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-111.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-111.md"
 }
