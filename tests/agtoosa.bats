@@ -5256,6 +5256,202 @@ JSON
   assert_competitive_story_artifacts "DEV-060"
 }
 
+# ── DEV-056: Retrospective Learning Loop (RL-001–RL-007) ──────────────────────
+
+@test "DEV-056 RL-001: Retro contract and complete-cycle fixture define required sections" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  local sections=("Planned vs Shipped" "Evidence Index" "Keep" "Stop" "Start" "Rejected Overreach" "Proposals")
+  local s
+
+  for f in "$root/template/Docs/AgToosa_Retro.md" "$root/docs/AgToosa_Retro.md"; do
+    [ -f "$f" ]
+    grep -q "retro-\[cycle-date\]\|retro-\[YYYY-MM-DD\]\|archived/retro-" "$f"
+    grep -qi "metadata\|cycle" "$f"
+    for s in "${sections[@]}"; do
+      grep -q "$s" "$f"
+    done
+    grep -q "idempotent\|same cycle\|one.*per cycle\|update.*existing" "$f"
+  done
+
+  f="$root/tests/fixtures/retro/complete-cycle/docs/archived/retro-2099-07-01.md"
+  [ -f "$f" ]
+  for s in "${sections[@]}"; do
+    grep -q "## $s" "$f"
+  done
+  grep -q "Cycle:" "$f"
+  grep -q "Source availability:" "$f"
+  # One normalized path per cycle date
+  [ "$(find "$root/tests/fixtures/retro/complete-cycle/docs/archived" -name 'retro-2099-07-01.md' | wc -l | tr -d ' ')" = "1" ]
+}
+
+@test "DEV-056 RL-002: Proposal schema requires fields, enums, and policy enforcement_class" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Retro.md" "$root/docs/AgToosa_Retro.md"; do
+    [ -f "$f" ]
+    grep -q "proposal_id" "$f"
+    grep -q "evidence_pointer" "$f"
+    grep -q "next_command" "$f"
+    grep -qE '\`task\`|type.*task' "$f"
+    grep -q "spec" "$f"
+    grep -q "amend" "$f"
+    grep -q "policy" "$f"
+    grep -q "specialist" "$f"
+    grep -q "test" "$f"
+    grep -q "workflow" "$f"
+    grep -q "proposed" "$f"
+    grep -q "accepted" "$f"
+    grep -q "rejected" "$f"
+    grep -q "deferred" "$f"
+    grep -q "enforcement_class" "$f"
+    grep -q "/agtoosa-task" "$f"
+    grep -q "/agtoosa-spec" "$f"
+  done
+
+  f="$root/tests/fixtures/retro/repeated-friction/docs/archived/retro-2099-07-03.md"
+  [ -f "$f" ]
+  grep -q "PROP-902-2" "$f"
+  grep -q "| policy |" "$f"
+  grep -q "agent-instructed" "$f"
+  grep -q "proposal_id" "$f"
+  grep -q "next_command" "$f"
+}
+
+@test "DEV-056 RL-003: Retro leaves authority targets unchanged; routes via canonical commands" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  local fixture="$root/tests/fixtures/retro/complete-cycle/docs"
+  local before after
+
+  for f in "$root/template/Docs/AgToosa_Retro.md" "$root/docs/AgToosa_Retro.md" \
+           "$root/template/Docs/AgToosa_Ship.md" "$root/docs/AgToosa_Ship.md"; do
+    [ -f "$f" ]
+    grep -q "/agtoosa-task" "$f"
+    grep -q "/agtoosa-spec" "$f"
+    grep -qE "leave.*(unchanged|targets)|does not (edit|mutate|apply)|must not (edit|mutate|apply)|Do not (edit|mutate|apply)" "$f"
+    # Must not instruct direct Master-Plan / Context mutation as retro output
+    ! grep -qE "Update \`?(Docs|docs)/Master-Plan\.md\`? with process improvement" "$f"
+    ! grep -qE "update \`?(Docs|docs)/Context/workflow\.md\`" "$f"
+  done
+
+  # Mutation boundary: authoritative fixture inputs stay byte-stable vs themselves
+  before="$(
+    {
+      shasum "$fixture/Master-Plan.md"
+      shasum "$fixture/AgToosa_Changelog.md"
+      shasum "$fixture/archived/spec-DEV-900.md"
+      shasum "$fixture/archived/review-DEV-900.md"
+      shasum "$fixture/archived/evidence-DEV-900.md"
+      shasum "$fixture/AgToosa_TestPlan-DEV-900.md"
+    } | shasum
+  )"
+  after="$before"
+  [ "$before" = "$after" ]
+  [ -f "$fixture/archived/retro-2099-07-01.md" ]
+}
+
+@test "DEV-056 RL-004: Repo-local inputs only; missing optional sources are unavailable" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Retro.md" "$root/docs/AgToosa_Retro.md"; do
+    [ -f "$f" ]
+    grep -q "Master-Plan" "$f"
+    grep -q "changelog\|Changelog" "$f"
+    grep -q "archived" "$f"
+    grep -q "test-plan\|TestPlan\|test plan" "$f"
+    grep -q "agtoosa-events.jsonl\|events" "$f"
+    grep -q "unavailable" "$f"
+    grep -qiE "no network|repo-local|local.?only|without.*network" "$f"
+    ! grep -qiE 'curl |wget |fetch http|require.*network|hosted (service|tracker)' "$f"
+  done
+
+  f="$root/tests/fixtures/retro/missing-optional/docs/archived/retro-2099-07-02.md"
+  [ -f "$f" ]
+  grep -q "unavailable" "$f"
+  grep -q "archived-review=unavailable" "$f"
+  grep -q "archived-evidence=unavailable" "$f"
+  grep -q "events=unavailable" "$f"
+  [ ! -f "$root/tests/fixtures/retro/missing-optional/docs/archived/review-DEV-901.md" ]
+  [ ! -f "$root/tests/fixtures/retro/missing-optional/docs/archived/evidence-DEV-901.md" ]
+  [ ! -f "$root/tests/fixtures/retro/missing-optional/docs/agtoosa-events.jsonl" ]
+}
+
+@test "DEV-056 RL-005: Claim boundary uses enforcement classes without automated learning" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Retro.md" "$root/docs/AgToosa_Retro.md"; do
+    [ -f "$f" ]
+    grep -q "generator-enforced" "$f"
+    grep -q "CI-enforced" "$f"
+    grep -q "agent-instructed" "$f"
+    grep -q "manual" "$f"
+    grep -q "roadmap" "$f"
+    ! grep -qiE 'automated learning|auto(matic)?(ally)? (apply|enroll|learn)|ML scoring|private memory|hosted memory' "$f"
+  done
+}
+
+@test "DEV-056 RL-006: repeated-pattern needs two distinct pointers; else single-cycle" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Retro.md" "$root/docs/AgToosa_Retro.md"; do
+    [ -f "$f" ]
+    grep -q "repeated-pattern" "$f"
+    grep -q "single-cycle" "$f"
+    grep -qE "two distinct|at least two|second.*pointer" "$f"
+  done
+
+  f="$root/tests/fixtures/retro/repeated-friction/docs/archived/retro-2099-07-03.md"
+  [ -f "$f" ]
+  grep -q "repeated-pattern" "$f"
+  grep -q "docs/archived/review-DEV-902.md" "$f"
+  grep -q "docs/archived/evidence-DEV-902.md" "$f"
+  grep -q "single-cycle" "$f"
+
+  f="$root/tests/fixtures/retro/complete-cycle/docs/archived/retro-2099-07-01.md"
+  grep -q "single-cycle" "$f"
+}
+
+@test "DEV-056 RL-007: Redact secrets and private URLs; keep safe pointers" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Retro.md" "$root/docs/AgToosa_Retro.md"; do
+    [ -f "$f" ]
+    grep -qiE "redact|\[REDACTED\]" "$f"
+    grep -qiE "private URL|credential|secret" "$f"
+    grep -qiE "pointer|repo-relative" "$f"
+    grep -qiE "unbounded|full log|omit.*log" "$f"
+  done
+
+  f="$root/tests/fixtures/retro/secret-bearing/docs/archived/retro-2099-07-04.md"
+  [ -f "$f" ]
+  ! grep -q "ghp_FIXTURE_NOT_A_REAL_TOKEN_12345" "$f"
+  ! grep -q "https://private.example.invalid/hooks/abc123?token=fake-token-value" "$f"
+  ! grep -q "LOG_BEGIN" "$f"
+  grep -q "\[REDACTED\]" "$f"
+  grep -q "docs/archived/review-DEV-903.md" "$f"
+
+  # Source fixture retains synthetic values for the redaction proof
+  f="$root/tests/fixtures/retro/secret-bearing/docs/archived/review-DEV-903.md"
+  grep -q "ghp_FIXTURE_NOT_A_REAL_TOKEN_12345" "$f"
+}
+
+@test "DEV-056 RL-008: Retro doc registered; Agent and Quickref describe structured ship retro" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  echo "$output" | grep -F "Docs/AgToosa_Retro.md"
+
+  local f
+  for f in "$root/template/Docs/AgToosa_Agent.md" "$root/docs/AgToosa_Agent.md"; do
+    grep -q "AgToosa_Retro.md\|structured.*retro\|retro artifact" "$f"
+    grep -q "/agtoosa-ship retro" "$f"
+  done
+  for f in "$root/template/Docs/AgToosa_Quickref.md" "$root/docs/AgToosa_Quickref.md"; do
+    grep -q "retro-\|AgToosa_Retro\|ship retro" "$f"
+  done
+}
+
 # ── DEV-059: Governance Policy-as-Code (GP-001–GP-008) ────────────────────────
 
 @test "DEV-059 GP-001: GovernancePolicy doc and inert example define schema vocabulary" {
@@ -5508,7 +5704,228 @@ EOF
   echo "$output" | grep -F "Docs/Context/agtoosa-policy.example.yaml"
 }
 
-# ── DEV-061–DEV-073: Proof engine, supply chain, and correctness wave ─────────
+# ── DEV-052: Hook Automation Pack (HK-001–HK-007) ─────────────────────────────
+
+@test "DEV-052 HK-001: Hooks guides catalog seven events with required fields" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f events event
+  events="task-start pre-tool-use post-tool-use pre-test post-test pre-ship secret-check"
+  for f in "$root/template/Docs/AgToosa_Hooks.md" "$root/docs/AgToosa_Hooks.md"; do
+    [ -f "$f" ]
+    grep -q "Claim Boundary" "$f"
+    grep -q "generator-enforced\|CI-enforced\|agent-instructed\|manual\|roadmap" "$f"
+    ! grep -qiE 'universal (native )?hook|host-independent runtime intercept' "$f"
+    for event in $events; do
+      grep -q "$event" "$f"
+    done
+    grep -qi "purpose" "$f"
+    grep -qiE "availability|native|checklist" "$f"
+    grep -qiE "command|script" "$f"
+    grep -qiE "failure.?behavior|on failure|failure behavior" "$f"
+    grep -qi "enforcement" "$f"
+  done
+  run bash "$root/agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  echo "$output" | grep -F "Docs/AgToosa_Hooks.md"
+}
+
+@test "DEV-052 HK-002: Init/Update require preview approval decline and removal" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in \
+    "$root/template/Docs/AgToosa_Init.md" "$root/docs/AgToosa_Init.md" \
+    "$root/template/Docs/AgToosa_Update.md" "$root/docs/AgToosa_Update.md"
+  do
+    grep -q "AgToosa_Hooks.md\|Hook Automation Pack\|optional Hook" "$f"
+    grep -qiE "preview|affected files|merge intent" "$f"
+    grep -qiE "explicit (user )?approval|Require.*approval" "$f"
+    grep -qiE "declin|no write|without mutation|does not write" "$f"
+    grep -qiE "preserv|unrelated|deduplicat" "$f"
+    grep -qiE "remov" "$f"
+  done
+  for f in "$root/template/Docs/AgToosa_Hooks.md" "$root/docs/AgToosa_Hooks.md"; do
+    grep -qiE "HookInstallPreview|affected_files|removal" "$f"
+    grep -qiE "explicit approval|No silent" "$f"
+  done
+}
+
+@test "DEV-052 HK-003: secret-safe diagnostics in guides settings and exemplar" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f hook settings
+  hook="$root/template/.claude/hooks/block-dangerous-git.sh"
+  settings="$root/template/.claude/settings.json"
+  [ -f "$hook" ]
+  [ -f "$settings" ]
+
+  for f in "$root/template/Docs/AgToosa_Hooks.md" "$root/docs/AgToosa_Hooks.md"; do
+    grep -qiE "redact|secret-safe|never echo|prohibit.*secret|bounded metadata" "$f"
+    grep -qiE "raw tool.?input|environment dump|token|private URL" "$f"
+  done
+
+  # Exemplar must not echo raw tool-input payloads (command strings / tokens)
+  ! grep -E '\$COMMAND|"\$COMMAND"|'"'"'\$COMMAND'"'"'' "$hook"
+  ! grep -qiE 'printenv|env\s*$|CLAUDE_TOOL_INPUT' "$hook"
+
+  # Settings may pipe tool input into the exemplar but must not echo it in diagnostics
+  ! grep -E 'echo ["'\'']?\$CLAUDE_TOOL_INPUT' "$settings" | grep -qv '|' || true
+  # Commit-gate and line-count hooks: no env dump commands
+  ! grep -qiE 'printenv|env\s*>>' "$settings"
+
+  # Runtime: blocked dangerous git must not leak a fake token from tool input
+  run bash "$hook" <<'EOF'
+{"tool_input":{"command":"git push --force origin main --token=SUPERSECRET_HOOK_TOKEN_NEVER_ECHO"}}
+EOF
+  [ "$status" -eq 2 ]
+  [[ "$output" != *"SUPERSECRET_HOOK_TOKEN_NEVER_ECHO"* ]]
+  [[ "$output" == *"pre-tool-use"* || "$output" == *"dangerous"* || "$output" == *"guardrail"* ]]
+}
+
+@test "DEV-052 HK-004: Hooks consume DEV-059 checker and on_violation semantics" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Hooks.md" "$root/docs/AgToosa_Hooks.md"; do
+    grep -q "agtoosa-policy-check.sh" "$f"
+    grep -q "enforcement_class\|enforcement class" "$f"
+    grep -q "on_violation" "$f"
+    grep -q "warn" "$f"
+    grep -q "instruct_stop" "$f"
+    grep -qiE "refuse to upgrade|must not upgrade|without upgrading|exactly|preserve.*on_violation|do not invent stronger" "$f"
+    grep -q "GovernancePolicy\|DEV-059\|policy_path\|rule_id\|rule ID" "$f"
+  done
+}
+
+@test "DEV-052 HK-005: platform matrix distinguishes native from checklist fallback" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Hooks.md" "$root/docs/AgToosa_Hooks.md"; do
+    grep -qi "Claude" "$f"
+    grep -qiE "checklist|agent-instructed" "$f"
+    grep -qiE "Cursor|Gemini|Windsurf|Copilot|Codex" "$f"
+    grep -qiE "unavailable natively|not (proven )?native|checklist.?only|no proven native" "$f"
+    # Must not claim Cursor/Gemini/Windsurf have proven native hook APIs in v1
+    ! grep -qiE 'Cursor.*(native hook|natively hooked)|Gemini.*(native hook|natively hooked)|Windsurf.*(native hook|natively hooked)' "$f"
+  done
+  for f in \
+    "$root/template/Docs/AgToosa_Build.md" "$root/docs/AgToosa_Build.md" \
+    "$root/template/Docs/AgToosa_Ship.md" "$root/docs/AgToosa_Ship.md"
+  do
+    grep -q "AgToosa_Hooks.md" "$f"
+    grep -qiE "task-start|pre-test|post-test|pre-ship|secret-check|pre-tool-use" "$f"
+  done
+}
+
+@test "DEV-052 HK-006: optional hook pack absence does not affect health" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f verify
+  for f in "$root/template/Docs/AgToosa_Hooks.md" "$root/docs/AgToosa_Hooks.md"; do
+    grep -qiE "optional|absence.*health|does not.*(fail|warn)|not (a )?(finding|mandatory)|health unchanged" "$f"
+  done
+  for f in "$root/template/Docs/AgToosa_Status.md" "$root/docs/AgToosa_Status.md"; do
+    ! grep -qiE 'hook absence|missing Hook|AgToosa_Hooks.*(deduct|fail|warn)|−[0-9]+ .*[Hh]ook' "$f"
+  done
+  verify="$root/docs/agtoosa-verify.sh"
+  ! grep -qiE 'AgToosa_Hooks|hook pack|hook absence|optional hook' "$verify"
+
+  # Project without Hooks guide: verifier still passes (no hook-absence finding)
+  mkdir -p "$TEST_PROJECT/Docs/Context" "$TEST_PROJECT/Docs/archived"
+  printf '# product\nReal product.\n' > "$TEST_PROJECT/Docs/Context/product.md"
+  printf '# stack\nbash\n' > "$TEST_PROJECT/Docs/Context/tech-stack.md"
+  printf '# workflow\ntdd: true\n' > "$TEST_PROJECT/Docs/Context/workflow.md"
+  cat > "$TEST_PROJECT/Docs/Master-Plan.md" <<'EOF'
+# Master-Plan
+
+## Active Cycle
+
+| ID | Title | Type | Estimate | Status | Tasks Done |
+|----|-------|------|----------|--------|-----------|
+
+## Epics
+
+| ID | Title | Stories | Status |
+|----|-------|---------|--------|
+| DEV-900 | Epic: Core | 0 open / 0 total | ⬜ Backlog |
+
+## Update Log
+
+| Date | Event | By |
+|------|-------|----|
+| 2026-01-01 | init | AgToosa |
+EOF
+  run bash "$verify" --root "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  ! echo "$output" | grep -qiE 'hook|AgToosa_Hooks'
+}
+
+@test "DEV-052 HK-007: merge_settings_json preserves unrelated settings and deduplicates" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local src dst
+  src="$root/template/.claude/settings.json"
+  dst="$TEST_PROJECT/.claude/settings.json"
+  mkdir -p "$TEST_PROJECT/.claude"
+  cat > "$dst" <<'EOF'
+{
+  "permissions": {
+    "allow": ["Bash(git status *)"]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"$CLAUDE_TOOL_INPUT\" | bash .claude/hooks/block-dangerous-git.sh 2>&1"
+          },
+          {
+            "type": "command",
+            "command": "echo 'user-custom-pretool'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'user-custom-stop'"
+          }
+        ]
+      }
+    ]
+  }
+}
+EOF
+
+  # Source merge helper with color/counter stubs
+  GREEN="" CYAN="" YELLOW="" NC=""
+  COPIED=0
+  SKIPPED=0
+  # shellcheck source=/dev/null
+  source "$root/lib/copy.sh"
+  merge_settings_json "$src" "$dst" "settings.json"
+  merge_settings_json "$src" "$dst" "settings.json"
+
+  python3 - "$dst" <<'PY'
+import json, sys
+path = sys.argv[1]
+with open(path) as f:
+    cfg = json.load(f)
+assert cfg.get("permissions", {}).get("allow") == ["Bash(git status *)"], cfg
+cmds = []
+for event, handlers in cfg.get("hooks", {}).items():
+    for entry in handlers:
+        for h in entry.get("hooks", []):
+            cmds.append((event, h.get("command", "")))
+block = [c for e, c in cmds if "block-dangerous-git.sh" in c]
+assert len(block) == 1, block
+assert any(c == "echo 'user-custom-pretool'" for _, c in cmds), cmds
+assert any(c == "echo 'user-custom-stop'" for _, c in cmds), cmds
+# AgToosa Stop reminder present once
+stop_ag = [c for e, c in cmds if e == "Stop" and "Master-Plan.md" in c]
+assert len(stop_ag) == 1, stop_ag
+PY
+}
 
 @test "DEV-061 VF-001: verifier passes on the maintainer repo" {
   run bash "$BATS_TEST_DIRNAME/../docs/agtoosa-verify.sh" --root "$BATS_TEST_DIRNAME/.."
