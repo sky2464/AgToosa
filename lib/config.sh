@@ -7,6 +7,7 @@ DOCS_FILES=(
   "Docs/AgToosa_Agent.md"
   "Docs/AgToosa_Quickref.md"
   "Docs/agtoosa-verify.sh"
+  "Docs/schemas/verify-result-v1.json"
   "Docs/agtoosa-gate.yml.example"
   "Docs/AgToosa_Init.md"
   "Docs/AgToosa_Spec.md"
@@ -22,6 +23,8 @@ DOCS_FILES=(
   "Docs/AgToosa_Import.md"
   "Docs/AgToosa_Worktree.md"
   "Docs/AgToosa_Evidence.md"
+  "Docs/AgToosa_Delivery_Evidence_Contract.md"
+  "Docs/agtoosa-evidence-profile-check.sh"
   "Docs/agtoosa-evidence.jsonl"
   "Docs/AgToosa_Retro.md"
   "Docs/AgToosa_MetricsKit.md"
@@ -242,6 +245,12 @@ CONTEXT_FILES=(
   "Docs/Context/product.md"
   "Docs/Context/product-guidelines.md"
   "Docs/Context/agtoosa-policy.example.yaml"
+)
+
+# Optional .agtoosa/ config index + examples (never overwrite live policy/evidence.yml).
+AGTOOSA_DOTDIR_FILES=(
+  ".agtoosa/README.md"
+  ".agtoosa/evidence.yml.example"
 )
 
 CLAUDE_COMMAND_FILES=(
@@ -483,6 +492,8 @@ print_usage() {
   echo "  --update [path]        Update an existing AgToosa install (skips interactive wizard)"
   echo "  --verify [path]        Run the deterministic AgToosa lifecycle verifier (read-only)"
   echo "  --doctor [path]        Diagnose an AgToosa install (versions, wiring, context health)"
+  echo "  --format text|json     Machine output for --verify / --doctor (default: text)"
+  echo "  --strict               With --verify: treat WARN findings as failures"
   echo "  --uninstall [path]     Remove AgToosa-owned files from a project (keeps your data)"
   echo "  --platforms <list>     Comma-separated platforms, e.g. cursor,claude (skips prompt)"
   echo "  --yes, -y              Assume yes for confirmation prompts (non-interactive)"
@@ -496,5 +507,5 @@ print_usage() {
 }
 
 print_template_files() {
-  printf '%s\n' "${DOCS_FILES[@]}" "${OPTIONAL_TEMPLATE_FILES[@]}" "${CONTEXT_FILES[@]}"
+  printf '%s\n' "${DOCS_FILES[@]}" "${OPTIONAL_TEMPLATE_FILES[@]}" "${CONTEXT_FILES[@]}" "${AGTOOSA_DOTDIR_FILES[@]}"
 }

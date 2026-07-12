@@ -17,6 +17,8 @@ Maintain a **per-story evidence ledger** — a concise, auditable proof index fo
 > **Claim Boundary:** This workflow is **agent-instructed** (not generator-enforced). Verifier WARN/FAIL for missing ledgers is **roadmap**. The optional JSONL mirror is **non-authoritative**.
 >
 > **Source of truth:** `Docs/Master-Plan.md` remains the repo-local source of truth. The markdown ledger is the canonical index; `Docs/agtoosa-evidence.jsonl` is an optional tooling mirror.
+>
+> **Delivery profiles:** Class minimums (`standard`, `security-sensitive`, `release`) and Guided / Evidenced / Enforced labels are defined in `Docs/AgToosa_Delivery_Evidence_Contract.md` (optional `.agtoosa/evidence.yml`). Ledger rows still consolidate at review/ship — profiles declare *what* to collect; this workflow indexes *pointers*.
 
 ## When to update
 

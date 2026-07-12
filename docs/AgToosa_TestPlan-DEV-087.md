@@ -1,7 +1,7 @@
 # Test Plan: DEV-087 — Delivery Evidence Contract + Profiles
 
 > **Spec:** `docs/archived/spec-DEV-087.md`
-> **Status:** 🟦 Todo — spec approved; build not started
+> **Status:** ✅ Pass — DEC-001–DEC-009 green
 > **Created:** 2026-07-12
 > **Test prefix:** `DEC`
 
@@ -13,15 +13,15 @@ Documentation, example YAML, config index, schema-only checker, `lib/config.sh` 
 
 | AC | Test ID | Named test | Type | Expected result | Status |
 |----|---------|------------|------|-----------------|--------|
-| AC-001 | DEC-001 | Delivery contract defines assurance taxonomy | Docs contract | Guided, Evidenced, Enforced levels with examples | ⬜ Pending |
-| AC-002 | DEC-002 | Standard security-sensitive and release profiles documented | Docs contract | Three profile names with required artifact classes | ⬜ Pending |
-| AC-003 | DEC-003 | evidence.yml.example matches contract | Fixture/YAML | Example parses; required keys documented | ⬜ Pending |
-| AC-004 | DEC-004 | .agtoosa README indexes policy and evidence configs | Docs contract | policy.yaml + evidence.yml purposes; Gate 6→7→lifecycle order | ⬜ Pending |
-| AC-005 | DEC-005 | Schema checker accepts valid YAML | Integration | Valid fixture exits 0; invalid fixture exits non-zero | ⬜ Pending |
-| AC-005 | DEC-006 | Schema checker does not claim full compliance | Claim contract | Output states schema-only; no artifact existence assertions | ⬜ Pending |
-| AC-006 | DEC-007 | Terminal Evidence cross-link preserved | Link/non-duplication | Agent.md links Delivery contract; Terminal section intact | ⬜ Pending |
-| AC-007, AC-008 | DEC-008 | Config registration and enforcement labels | Inventory | `lib/config.sh` lists contract, example, index, checker | ⬜ Pending |
-| AC-009 | DEC-009 | Evidence ledger cross-link present | Link contract | `AgToosa_Evidence.md` references delivery profiles | ⬜ Pending |
+| AC-001 | DEC-001 | Delivery contract defines assurance taxonomy | Docs contract | Guided, Evidenced, Enforced levels with examples | ✅ Pass |
+| AC-002 | DEC-002 | Standard security-sensitive and release profiles documented | Docs contract | Three profile names with required artifact classes | ✅ Pass |
+| AC-003 | DEC-003 | evidence.yml.example matches contract | Fixture/YAML | Example parses; required keys documented | ✅ Pass |
+| AC-004 | DEC-004 | .agtoosa README indexes policy and evidence configs | Docs contract | policy.yaml + evidence.yml purposes; Gate 6→7→lifecycle order | ✅ Pass |
+| AC-005 | DEC-005 | Schema checker accepts valid YAML | Integration | Valid fixture exits 0; invalid fixture exits non-zero | ✅ Pass |
+| AC-005 | DEC-006 | Schema checker does not claim full compliance | Claim contract | Output states schema-only; no artifact existence assertions | ✅ Pass |
+| AC-006 | DEC-007 | Terminal Evidence cross-link preserved | Link/non-duplication | Agent.md links Delivery contract; Terminal section intact | ✅ Pass |
+| AC-007, AC-008 | DEC-008 | Config registration and enforcement labels | Inventory | `lib/config.sh` lists contract, example, index, checker | ✅ Pass |
+| AC-009 | DEC-009 | Evidence ledger cross-link present | Link contract | `AgToosa_Evidence.md` references delivery profiles | ✅ Pass |
 
 ## Negative and Edge Scenarios
 
@@ -45,16 +45,29 @@ Planned smoke command: `bats tests/agtoosa.bats -f "DEV-087|DEC-"`
 
 | Task group | Planned command | Exit code | Failure excerpt |
 |------------|-----------------|-----------|-----------------|
-| 1. Contract and schema RED coverage | `bats tests/agtoosa.bats -f "DEV-087\|DEC-"` | — | _Pending — record during `/agtoosa-build`_ |
-| 2. Delivery Evidence Contract surfaces | `bats tests/agtoosa.bats -f "DEC-001\|DEC-002\|DEC-003\|DEC-004\|DEC-005\|DEC-006"` | — | _Pending — record during `/agtoosa-build`_ |
-| 3. Wiring and registration | `bats tests/agtoosa.bats -f "DEC-007\|DEC-008\|DEC-009"` | — | _Pending — record during `/agtoosa-build`_ |
-| 4. Evidence | `bats tests/agtoosa.bats -f "DEV-087\|DEC-"` | — | _Pending — record during `/agtoosa-build`_ |
+| 1. Contract and schema RED coverage | `bats tests/agtoosa.bats -f "DEV-087\|DEC-"` | 1 (pre-implement) | `not ok … DEC-001` / missing `AgToosa_Delivery_Evidence_Contract.md` before surfaces landed |
+| 2. Delivery Evidence Contract surfaces | `bats tests/agtoosa.bats -f "DEC-001\|DEC-002\|DEC-003\|DEC-004\|DEC-005\|DEC-006"` | 1 (partial) | DEC-004 failed until README gate-order one-liner: `grep -qiE "policy \(Gate 6\).*evidence profile \(Gate 7|…"` |
+| 3. Wiring and registration | `bats tests/agtoosa.bats -f "DEC-007\|DEC-008\|DEC-009"` | — | Covered in full suite after wiring |
+| 4. Evidence | `bats tests/agtoosa.bats -f "DEV-087\|DEC-"` | 1 | Intermediate: `not ok 4 DEV-087 DEC-004` (gate-order grep) |
 
 ## GREEN Evidence
 
 | Task group | Planned command | Exit code | Pass excerpt |
 |------------|-----------------|-----------|--------------|
-| 1. Contract and schema RED coverage | `bats tests/agtoosa.bats -f "DEV-087\|DEC-"` | — | _Pending — record during `/agtoosa-build`_ |
-| 2. Delivery Evidence Contract surfaces | `bats tests/agtoosa.bats -f "DEC-001\|DEC-002\|DEC-003\|DEC-004\|DEC-005\|DEC-006"` | — | _Pending — record during `/agtoosa-build`_ |
-| 3. Wiring and registration | `bats tests/agtoosa.bats -f "DEC-007\|DEC-008\|DEC-009"` | — | _Pending — record during `/agtoosa-build`_ |
-| 4. Evidence | `bats tests/agtoosa.bats -f "DEV-087\|DEC-"` | — | _Pending — record during `/agtoosa-build`_ |
+| 1. Contract and schema RED coverage | `bats tests/agtoosa.bats -f "DEV-087\|DEC-"` | 0 | `ok 1 DEV-087 DEC-001` … `ok 9 DEV-087 DEC-009` / `1..9` |
+| 2. Delivery Evidence Contract surfaces | `bats tests/agtoosa.bats -f "DEC-001\|DEC-002\|DEC-003\|DEC-004\|DEC-005\|DEC-006"` | 0 | All six ok |
+| 3. Wiring and registration | `bats tests/agtoosa.bats -f "DEC-007\|DEC-008\|DEC-009"` | 0 | `ok … DEC-007` `DEC-008` `DEC-009` |
+| 4. Evidence | `bats tests/agtoosa.bats -f "DEV-087\|DEC-"` | 0 | Full excerpt below |
+
+```
+1..9
+ok 1 DEV-087 DEC-001: Delivery contract defines assurance taxonomy
+ok 2 DEV-087 DEC-002: Standard security-sensitive and release profiles documented
+ok 3 DEV-087 DEC-003: evidence.yml.example matches contract
+ok 4 DEV-087 DEC-004: .agtoosa README indexes policy and evidence configs
+ok 5 DEV-087 DEC-005: Schema checker accepts valid YAML and rejects invalid
+ok 6 DEV-087 DEC-006: Schema checker does not claim full compliance
+ok 7 DEV-087 DEC-007: Terminal Evidence cross-link preserved
+ok 8 DEV-087 DEC-008: Config registration and enforcement labels
+ok 9 DEV-087 DEC-009: Evidence ledger cross-link present
+```

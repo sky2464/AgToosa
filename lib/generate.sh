@@ -2,7 +2,7 @@
 
 # ── AgToosa: stage files into ship/ ──────────────────────────
 # Sourced by agtoosa.sh.
-# Globals read: TEMPLATE_DIR, SHIP_DIR, USE_*, DOCS_FILES, CONTEXT_FILES, colors.
+# Globals read: TEMPLATE_DIR, SHIP_DIR, USE_*, DOCS_FILES, CONTEXT_FILES, AGTOOSA_DOTDIR_FILES, colors.
 # Globals modified: GENERATED.
 
 stage_files() {
@@ -11,6 +11,7 @@ stage_files() {
   # Core workflow docs — always included
   for file in "${DOCS_FILES[@]}"; do
     if [[ -f "${TEMPLATE_DIR}/${file}" ]]; then
+      mkdir -p "$(dirname "${SHIP_DIR}/${file}")"
       cp "${TEMPLATE_DIR}/${file}" "${SHIP_DIR}/${file}"
       echo -e "  ${GREEN}✅${NC} ${file}"
       GENERATED=$((GENERATED + 1))
@@ -107,6 +108,20 @@ stage_files() {
   done
   if [[ $context_staged -gt 0 ]]; then
     echo -e "  ${GREEN}✅${NC} Docs/Context/ ${CYAN}(${context_staged} config stubs — fill in during /agtoosa-init)${NC}"
+  fi
+
+  # .agtoosa/ config index + examples (DEV-087)
+  local afile agtoosa_staged=0
+  mkdir -p "${SHIP_DIR}/.agtoosa"
+  for afile in "${AGTOOSA_DOTDIR_FILES[@]}"; do
+    if [[ -f "${TEMPLATE_DIR}/${afile}" ]]; then
+      cp "${TEMPLATE_DIR}/${afile}" "${SHIP_DIR}/${afile}"
+      agtoosa_staged=$((agtoosa_staged + 1))
+      GENERATED=$((GENERATED + 1))
+    fi
+  done
+  if [[ $agtoosa_staged -gt 0 ]]; then
+    echo -e "  ${GREEN}✅${NC} .agtoosa/ ${CYAN}(${agtoosa_staged} config index + evidence example)${NC}"
   fi
 
   # Claude Code native commands, hooks, and skills — staged when Claude selected

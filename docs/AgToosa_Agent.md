@@ -345,6 +345,8 @@ Every completed build task, test run, security scan, QA execution, review check,
 
 **Parallel subagents** (e.g. Claude Code `Task` tool during `/agtoosa-build` or `/agtoosa-review`): each subagent returns the full evidence block above; the orchestrator merges results, resolves conflicts, and does not check off tasks until all blocking terminal output is resolved or explicitly accepted.
 
+> **Related — Delivery Evidence Contract:** Minimum evidence by delivery class (Guided / Evidenced / Enforced profiles) lives in `docs/AgToosa_Delivery_Evidence_Contract.md` and optional `.agtoosa/evidence.yml`. That contract is **not** a rename of this Terminal Evidence Contract — keep both.
+
 ## Rules
 
 1. **Always** read `docs/Context/`, `docs/Master-Plan.md`, `docs/Master-Architecture.md`, and `.github/instructions/*.instructions.md` (if present) before generating code. Use `Master-Plan.md` as the cycle/backlog snapshot and `Master-Architecture.md` as the architecture snapshot.

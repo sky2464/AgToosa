@@ -22,8 +22,10 @@ Editing this index does not enroll a story. Backlog stories still require `/agto
 | DEV-086 | Canonical Proof Product Experience | 1a | 🟦 Todo — active cycle |
 | DEV-090 | Unified Install/Update Plan Engine | 1a | 🟦 Todo — active cycle |
 | DEV-105 | PowerShell Maintain + Update Parity | 1a | 🟦 Todo — active cycle |
+| DEV-087 | Delivery Evidence Contract + Profiles | 1b partial | 🟦 Todo — active cycle |
+| DEV-088 | Verifier and Doctor Machine Output | 1b partial | 🟦 Todo — active cycle |
 
-Demand-gated (unchanged): **DEV-057**.
+Deferred to Cycle C (hard dep DEV-090): **DEV-091**. Demand-gated: **DEV-057**.
 
 ## Rev4 Wave — Spec Approved (2026-07-12)
 
@@ -45,6 +47,8 @@ Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
 | DEV-088 | Verifier and Doctor Machine Output | Feature | M | DEV-004 | P0 | `docs/archived/spec-DEV-088.md` | `docs/AgToosa_TestPlan-DEV-088.md` |
 | DEV-089 | Evidence-Profile Verifier Gates | Feature | M | DEV-004 | P1 | `docs/archived/spec-DEV-089.md` | `docs/AgToosa_TestPlan-DEV-089.md` |
 | DEV-091 | Migration Wizard + Rollback Manifest | Feature | L | DEV-001 | P0 | `docs/archived/spec-DEV-091.md` | `docs/AgToosa_TestPlan-DEV-091.md` |
+
+> **Enrollment note (2026-07-12):** DEV-087 + DEV-088 enrolled Active Cycle (Wave 1b partial). DEV-091 remains backlog until DEV-090 ships — then Cycle C.
 
 ### Wave 2
 

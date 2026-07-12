@@ -18,18 +18,33 @@ The installed verifier is a **local machine check**. Running it on your laptop d
 ### Generated project
 
 ```bash
-bash Docs/agtoosa-verify.sh              # default gates
-bash Docs/agtoosa-verify.sh --strict     # WARN → FAIL
-bash Docs/agtoosa-verify.sh stats        # cycle analytics
+bash Docs/agtoosa-verify.sh                    # default gates (human text)
+bash Docs/agtoosa-verify.sh --strict           # WARN → FAIL
+bash Docs/agtoosa-verify.sh --format json      # verify-result-v1 machine output
+bash Docs/agtoosa-verify.sh stats              # cycle analytics
 ```
 
 ### Maintainer repository (Dogfood)
 
 ```bash
-bash docs/agtoosa-verify.sh              # default gates
-bash docs/agtoosa-verify.sh --strict     # WARN → FAIL
-bash docs/agtoosa-verify.sh stats        # cycle analytics
+bash docs/agtoosa-verify.sh                    # default gates (human text)
+bash docs/agtoosa-verify.sh --strict           # WARN → FAIL
+bash docs/agtoosa-verify.sh --format json      # verify-result-v1 machine output
+bash docs/agtoosa-verify.sh stats              # cycle analytics
 ```
+
+### JSON machine output
+
+`--format json` prints a single `verify-result-v1` document on stdout (schema: `Docs/schemas/verify-result-v1.json` / `docs/schemas/verify-result-v1.json`). Required fields: `schema_version`, `tool`, `exit_code`, `summary`, `findings[]` (`id`, `severity`, `problem`, `impact`, `fix`; optional `assurance`, `ac_refs`). Exit codes stay `0` / `1` / `2`. Human text mode remains the default and uses **Problem / Impact / Fix** blocks for WARN/FAIL findings.
+
+Generator dispatch:
+
+```bash
+bash agtoosa.sh --verify --format json .
+bash agtoosa.sh --doctor --format json .
+```
+
+Doctor JSON includes a `provenance` object labeling `Docs/.agtoosa-version` (semver marker, committed), `Docs/agtoosa-lock.json` (pack pins, committed when used), and `.agtoosa/state.json` (operational hashes, gitignored — absent is OK).
 
 ### Exit codes
 
@@ -56,6 +71,8 @@ Never call the uncopied `.example` file **CI-enforced**. AgToosa never writes `.
 ## 3. GitHub Actions adoption (maintained, copy-ready)
 
 GitHub Actions is the only **maintained**, **copy-ready** provider example. Owning surfaces: `Docs/agtoosa-gate.yml.example` / `docs/agtoosa-gate.yml.example` (mirrors) and this guide. Contract coverage: VCA bats in `tests/agtoosa.bats`.
+
+The shipped gate runs the verifier with `--format json`, validates non-empty JSON via `jq`, and **preserves the verifier exit status** (JSON parse success must not mask a verifier failure).
 
 ### Safe copy sequence
 

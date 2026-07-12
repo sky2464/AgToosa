@@ -236,6 +236,17 @@ run_update() {
   # Write version marker
   echo "$AGTOOSA_VERSION" > "${PROJECT_PATH}/Docs/.agtoosa-version"
 
+  # .agtoosa/ config index + examples (DEV-087) — overwrite AgToosa-owned files only
+  local afile
+  mkdir -p "${PROJECT_PATH}/.agtoosa"
+  for afile in "${AGTOOSA_DOTDIR_FILES[@]}"; do
+    src="${TEMPLATE_DIR}/${afile}"; dst="${PROJECT_PATH}/${afile}"
+    [[ ! -f "$src" ]] && continue
+    cp "$src" "$dst"
+    echo -e "  ${GREEN}✅${NC} ${afile}"
+    docs_updated=$((docs_updated + 1))
+  done
+
   print_update_summary "$old_ver" "$docs_updated" "$platforms_merged" "$dirs_updated" \
     "${detected_names[@]+"${detected_names[@]}"}"
 }

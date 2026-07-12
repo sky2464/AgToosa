@@ -1,7 +1,7 @@
 # Test Plan: DEV-091 — Migration Wizard + Rollback Manifest
 
 > **Spec:** `docs/archived/spec-DEV-091.md`
-> **Status:** 🟦 Planned — Rev4 Wave 2
+> **Status:** ⬜ Backlog — Cycle C after DEV-090 (Rev4 Wave 1b remainder)
 > **Created:** 2026-07-12
 > **Test prefix:** `MWZ`
 

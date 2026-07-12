@@ -1,0 +1,9 @@
+version: 1
+active: standard
+profiles:
+  standard:
+    required: [spec, tests, review]
+  security-sensitive:
+    required: [spec, threat-model, tests, sast, dependency-scan, review]
+  release:
+    required: [spec, tests, review, changelog, rollback-note]

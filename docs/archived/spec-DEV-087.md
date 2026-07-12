@@ -3,7 +3,7 @@
 > **Story ID:** DEV-087
 > **Type:** Feature
 > **Epic:** DEV-002 — Workflow Templates
-> **Status:** 🟦 Todo
+> **Status:** 🟩 Built
 > **Estimate:** M
 > **Priority:** P0
 > **Spec created:** 2026-07-12
@@ -137,18 +137,18 @@ Out of scope        : Gate 7 enforcement, ledger schema changes, hosted audit, T
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Contract and schema RED coverage
-  - [ ] 1.1 Add DEC bats for doc title, taxonomy, profiles, and cross-links — _Requirements: AC-001, AC-002, AC-006, AC-009_
-  - [ ] 1.2 Add DEC bats for example YAML, config index, and schema checker invalid fixtures — _Requirements: AC-003, AC-004, AC-005, AC-009_
-- [ ] **2.** Delivery Evidence Contract surfaces
-  - [ ] 2.1 Author `AgToosa_Delivery_Evidence_Contract.md` with profiles and assurance levels — _Requirements: AC-001, AC-002, AC-007_
-  - [ ] 2.2 Ship `evidence.yml.example` and `.agtoosa/README.md` config index — _Requirements: AC-003, AC-004_
-  - [ ] 2.3 Implement `agtoosa-evidence-profile-check.sh` schema-only validation — _Requirements: AC-005, AC-007_
-- [ ] **3.** Wiring and registration
-  - [ ] 3.1 Register files in `lib/config.sh` and add Agent/Evidence cross-links — _Requirements: AC-006, AC-008_
-  - [ ] 3.2 Mirror maintainer `docs/` copies — _Requirements: AC-008_
-- [ ] **4.** Evidence
-  - [ ] 4.1 Record DEC RED/GREEN evidence in test plan — _Requirements: AC-001–AC-009_
+- [x] **1.** Contract and schema RED coverage
+  - [x] 1.1 Add DEC bats for doc title, taxonomy, profiles, and cross-links — _Requirements: AC-001, AC-002, AC-006, AC-009_
+  - [x] 1.2 Add DEC bats for example YAML, config index, and schema checker invalid fixtures — _Requirements: AC-003, AC-004, AC-005, AC-009_
+- [x] **2.** Delivery Evidence Contract surfaces
+  - [x] 2.1 Author `AgToosa_Delivery_Evidence_Contract.md` with profiles and assurance levels — _Requirements: AC-001, AC-002, AC-007_
+  - [x] 2.2 Ship `evidence.yml.example` and `.agtoosa/README.md` config index — _Requirements: AC-003, AC-004_
+  - [x] 2.3 Implement `agtoosa-evidence-profile-check.sh` schema-only validation — _Requirements: AC-005, AC-007_
+- [x] **3.** Wiring and registration
+  - [x] 3.1 Register files in `lib/config.sh` and add Agent/Evidence cross-links — _Requirements: AC-006, AC-008_
+  - [x] 3.2 Mirror maintainer `docs/` copies — _Requirements: AC-008_
+- [x] **4.** Evidence
+  - [x] 4.1 Record DEC RED/GREEN evidence in test plan — _Requirements: AC-001–AC-009_
 
 ### 3.2 Wave Plan
 
@@ -166,4 +166,4 @@ Smoke set: 3 tests tagged `@smoke`
 ## ✅ Spec Approved
 
 Approved: 2026-07-12 09:00
-Enrollment: Rev4 Wave 1 — delivery evidence contract
+Enrollment: Rev4 Wave 1b partial — Active Cycle 2026-07-12 (with DEV-088); Wave 1a retained

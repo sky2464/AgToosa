@@ -10,10 +10,12 @@ set -uo pipefail
 # threat model, task tree + wave plan, and TDD evidence blocks.
 #
 # Usage:
-#   bash Docs/agtoosa-verify.sh [--root <repo-root>] [--strict] [stats]
+#   bash Docs/agtoosa-verify.sh [--root <repo-root>] [--strict]
+#                               [--format text|json] [stats]
 #
 # Exit codes: 0 = pass, 1 = findings (FAIL), 2 = usage/setup error.
 # --strict promotes WARN findings to failures.
+# --format json emits a single verify-result-v1 document on stdout.
 # `stats` prints cycle analytics from the Master-Plan Update Log
 # and phase-event log instead of running gate checks.
 # ──────────────────────────────────────────────────────────────
@@ -21,6 +23,8 @@ set -uo pipefail
 ROOT="$PWD"
 STRICT=false
 MODE="verify"
+FORMAT="text"
+MAX_FINDINGS=200
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -28,9 +32,15 @@ while [[ $# -gt 0 ]]; do
       [[ $# -lt 2 ]] && { echo "Error: --root requires a directory" >&2; exit 2; }
       ROOT="$2"; shift ;;
     --strict) STRICT=true ;;
+    --format)
+      [[ $# -lt 2 ]] && { echo "Error: --format requires text|json" >&2; exit 2; }
+      FORMAT="$2"; shift
+      case "$FORMAT" in text|json) ;; *)
+        echo "Error: invalid --format '$FORMAT' (expected text|json)" >&2; exit 2 ;;
+      esac ;;
     stats)    MODE="stats" ;;
     -h|--help)
-      sed -n '4,20p' "$0"; exit 0 ;;
+      sed -n '4,22p' "$0"; exit 0 ;;
     *)
       echo "Error: unknown argument '$1'" >&2; exit 2 ;;
   esac
@@ -55,10 +65,123 @@ MP="$DOCS/Master-Plan.md"
 PASS_COUNT=0
 WARN_COUNT=0
 FAIL_COUNT=0
+FINDINGS_FILE="$(mktemp)"
+trap 'rm -f "$FINDINGS_FILE"' EXIT
 
-pass() { PASS_COUNT=$((PASS_COUNT + 1)); echo "  ✅ PASS  $1"; }
-warn() { WARN_COUNT=$((WARN_COUNT + 1)); echo "  ⚠️  WARN  $1"; }
-fail() { FAIL_COUNT=$((FAIL_COUNT + 1)); echo "  ❌ FAIL  $1"; }
+# Append one finding as a JSON object line (python-escaped later).
+# Args: severity id problem impact fix assurance [ac_refs_csv]
+_add_finding() {
+  local severity="$1" id="$2" problem="$3" impact="$4" fix="$5" assurance="$6"
+  local ac_refs="${7:-}"
+  local total=$((WARN_COUNT + FAIL_COUNT))
+  if [[ $total -ge $MAX_FINDINGS ]]; then
+    return 0
+  fi
+  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+    "$severity" "$id" "$problem" "$impact" "$fix" "$assurance" "$ac_refs" >> "$FINDINGS_FILE"
+}
+
+_human_block() {
+  local icon="$1" label="$2" id="$3" problem="$4" impact="$5" fix="$6"
+  echo "  ${icon} ${label}  ${id}"
+  echo "  Problem: ${problem}"
+  echo "  Impact:  ${impact}"
+  echo "  Fix:     ${fix}"
+}
+
+pass() {
+  PASS_COUNT=$((PASS_COUNT + 1))
+  if [[ "$FORMAT" == "text" ]]; then
+    echo "  ✅ PASS  $1"
+  fi
+}
+
+warn() {
+  # Args: id problem impact fix assurance [ac_refs]
+  local id="$1" problem="$2" impact="$3" fix="$4" assurance="${5:-guided}" ac_refs="${6:-}"
+  WARN_COUNT=$((WARN_COUNT + 1))
+  _add_finding "warn" "$id" "$problem" "$impact" "$fix" "$assurance" "$ac_refs"
+  if [[ "$FORMAT" == "text" ]]; then
+    _human_block "⚠️ " "WARN" "$id" "$problem" "$impact" "$fix"
+  fi
+}
+
+fail() {
+  local id="$1" problem="$2" impact="$3" fix="$4" assurance="${5:-enforced}" ac_refs="${6:-}"
+  FAIL_COUNT=$((FAIL_COUNT + 1))
+  _add_finding "fail" "$id" "$problem" "$impact" "$fix" "$assurance" "$ac_refs"
+  if [[ "$FORMAT" == "text" ]]; then
+    _human_block "❌" "FAIL" "$id" "$problem" "$impact" "$fix"
+  fi
+}
+
+gate() { if [[ "$FORMAT" == "text" ]]; then echo "$1"; fi; }
+
+emit_json() {
+  local exit_code="$1"
+  PASS_COUNT="$PASS_COUNT" WARN_COUNT="$WARN_COUNT" FAIL_COUNT="$FAIL_COUNT" \
+  FINDINGS_FILE="$FINDINGS_FILE" EXIT_CODE="$exit_code" python3 - <<'PY'
+import json, os
+findings = []
+path = os.environ["FINDINGS_FILE"]
+if os.path.exists(path) and os.path.getsize(path) > 0:
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            parts = line.rstrip("\n").split("\t", 6)
+            if len(parts) < 6:
+                continue
+            sev, fid, problem, impact, fix, assurance = parts[:6]
+            ac_csv = parts[6] if len(parts) > 6 else ""
+            item = {
+                "id": fid,
+                "severity": sev,
+                "problem": problem,
+                "impact": impact,
+                "fix": fix,
+                "assurance": assurance,
+            }
+            refs = [r for r in ac_csv.split(",") if r]
+            if refs:
+                item["ac_refs"] = refs
+            findings.append(item)
+doc = {
+    "schema_version": "verify-result-v1",
+    "tool": "verify",
+    "exit_code": int(os.environ["EXIT_CODE"]),
+    "summary": {
+        "pass": int(os.environ["PASS_COUNT"]),
+        "warn": int(os.environ["WARN_COUNT"]),
+        "fail": int(os.environ["FAIL_COUNT"]),
+    },
+    "findings": findings,
+}
+print(json.dumps(doc, ensure_ascii=False, separators=(",", ":")))
+PY
+}
+
+finish() {
+  local exit_code=0
+  if [[ $FAIL_COUNT -gt 0 ]]; then
+    exit_code=1
+  elif [[ "$STRICT" == true && $WARN_COUNT -gt 0 ]]; then
+    exit_code=1
+  fi
+  if [[ "$FORMAT" == "json" ]]; then
+    emit_json "$exit_code"
+  else
+    echo ""
+    echo "──────────────────────────────────────────"
+    echo "Verifier summary: $PASS_COUNT pass · $WARN_COUNT warn · $FAIL_COUNT fail"
+    if [[ $FAIL_COUNT -gt 0 ]]; then
+      echo "Result: ❌ FAIL"
+    elif [[ "$STRICT" == true && $WARN_COUNT -gt 0 ]]; then
+      echo "Result: ❌ FAIL (strict mode: warnings are failures)"
+    else
+      echo "Result: ✅ PASS"
+    fi
+  fi
+  exit "$exit_code"
+}
 
 # ── stats mode ────────────────────────────────────────────────
 run_stats() {
@@ -75,13 +198,11 @@ run_stats() {
   echo "Build events:          $builds"
   echo "Review events:         $reviews"
   echo "Ship completions:      $ships"
-
   local archived_specs archived_reviews
   archived_specs=$(find "$DOCS/archived" -name 'spec-*.md' 2>/dev/null | wc -l | tr -d ' ')
   archived_reviews=$(find "$DOCS/archived" -name 'review-*.md' 2>/dev/null | wc -l | tr -d ' ')
   echo "Archived specs:        $archived_specs"
   echo "Archived reviews:      $archived_reviews"
-
   local events="$DOCS/agtoosa-events.jsonl"
   if [[ -f "$events" ]]; then
     echo "Phase events recorded: $(wc -l < "$events" | tr -d ' ')"
@@ -93,7 +214,6 @@ run_stats() {
   else
     echo "Phase events recorded: 0 (no $events yet)"
   fi
-
   if [[ $total_rows -gt 150 ]]; then
     echo ""
     echo "⚠️  Update Log has $total_rows rows — rotate older rows to ${DOCS}/archived/updatelog-<year>.md (see AgToosa_Ship.md)."
@@ -103,57 +223,71 @@ run_stats() {
 
 [[ "$MODE" == "stats" ]] && run_stats
 
-echo "AgToosa Verifier — $ROOT"
-echo "Docs root: $DOCS"
-echo ""
+if [[ "$FORMAT" == "text" ]]; then
+  echo "AgToosa Verifier — $ROOT"
+  echo "Docs root: $DOCS"
+  echo ""
+fi
 
 # ── Gate 1: context files populated ───────────────────────────
-echo "Gate 1 — Context files"
+gate "Gate 1 — Context files"
 ctx_missing=0
 for f in product.md tech-stack.md workflow.md; do
   if [[ ! -f "$DOCS/Context/$f" ]]; then
-    fail "missing $DOCS/Context/$f (run /agtoosa-init)"
+    fail "G1-missing-$f" "missing $DOCS/Context/$f (run /agtoosa-init)" \
+      "Lifecycle gates cannot validate product/tech/workflow context." \
+      "Create Docs/Context/$f via /agtoosa-init." enforced
     ctx_missing=1
   fi
 done
 if [[ $ctx_missing -eq 0 ]]; then
   if grep -lE '\[name\]|\[url\]|\[e\.g\.|\[N\]|\[YYYY-MM-DD\]' \
        "$DOCS/Context/product.md" "$DOCS/Context/tech-stack.md" "$DOCS/Context/workflow.md" >/dev/null 2>&1; then
-    warn "context files contain template placeholders (run /agtoosa-init)"
+    warn "G1-placeholders" "context files contain template placeholders (run /agtoosa-init)" \
+      "Agents may treat placeholders as real product facts." \
+      "Replace placeholders in Docs/Context/*.md via /agtoosa-init." guided
   else
     pass "context files exist with no template placeholders"
   fi
 fi
 
 # ── Gate 2: Master-Plan integrity ──────────────────────────────
-echo "Gate 2 — Master-Plan integrity"
+gate "Gate 2 — Master-Plan integrity"
 if grep -qE '^\| DEV-[0-9]+ .*\| Epic' "$MP" || grep -qE '^\| DEV-[0-9]{3} \| Epic' "$MP" \
    || grep -A5 '^## Epics' "$MP" | grep -qE '\| DEV-[0-9]+'; then
   pass "Epics section has at least one real epic row"
 else
-  fail "no real Epic rows in Master-Plan ## Epics (run /agtoosa-init)"
+  fail "G2-epics" "no real Epic rows in Master-Plan ## Epics (run /agtoosa-init)" \
+    "Without epics, story planning and Active Cycle tracking lack structure." \
+    "Add at least one epic row under ## Epics (run /agtoosa-init)." enforced
 fi
 
 dup_ids=$(grep -oE 'DEV-[0-9]{3}' "$MP" | sort | uniq -c | awk '$1 > 50 {print $2}')
 if [[ -n "$dup_ids" ]]; then
-  warn "story IDs appear unusually often (possible Update Log bloat): $(echo "$dup_ids" | tr '\n' ' ')"
+  warn "G2-dup-ids" "story IDs appear unusually often (possible Update Log bloat): $(echo "$dup_ids" | tr '\n' ' ')" \
+    "Update Log noise can hide real status changes." \
+    "Rotate older Update Log rows to archived/updatelog-<year>.md." guided
 fi
 
 log_rows=$(grep -cE '^\| [0-9]{4}-[0-9]{2}-[0-9]{2}' "$MP" 2>/dev/null || echo 0)
 if [[ $log_rows -gt 150 ]]; then
-  warn "Update Log has $log_rows rows; rotate older rows to archived/updatelog-<year>.md"
+  warn "G2-log-bloat" "Update Log has $log_rows rows; rotate older rows to archived/updatelog-<year>.md" \
+    "Large Update Logs slow reviews and inflate Master-Plan noise." \
+    "Move older rows to Docs/archived/updatelog-<year>.md (see AgToosa_Ship.md)." guided
 else
   pass "Update Log within rotation budget ($log_rows rows)"
 fi
 
 # ── Gate 3: active stories have approved specs ────────────────
-echo "Gate 3 — Spec approval and naming"
+gate "Gate 3 — Spec approval and naming"
 active_ids=$(awk '/^## Active Cycle/,/^## [^A]/' "$MP" | grep -oE '^\| DEV-[0-9]{3}' | grep -oE 'DEV-[0-9]{3}' | sort -u)
 if [[ -z "$active_ids" ]]; then
   if awk '/^## Active Cycle/,/^## [^A]/' "$MP" | grep -qiE 'cycle parked|_\(none'; then
     pass "Active Cycle idle (parked — spec checks skipped)"
   else
-    warn "no stories found in ## Active Cycle (idle is fine; verify skipped spec checks)"
+    warn "G3-idle" "no stories found in ## Active Cycle (idle is fine; verify skipped spec checks)" \
+      "No active story means lifecycle gates for specs/tests are skipped." \
+      "Enroll a story via /agtoosa-spec or park the Active Cycle explicitly." guided
   fi
 else
   for id in $active_ids; do
@@ -162,19 +296,24 @@ else
       [[ -f "$candidate" ]] && spec="$candidate" && break
     done
     if [[ -z "$spec" ]]; then
-      fail "$id: no spec file (expected $DOCS/archived/spec-${id}.md)"
+      fail "G3-spec-missing-${id}" "$id: no spec file (expected $DOCS/archived/spec-${id}.md)" \
+        "Build cannot proceed without an approved spec for the active story." \
+        "Run /agtoosa-spec for $id (or remove it from Active Cycle)." enforced
       continue
     fi
     if grep -qE '^## ✅ Spec Approved|^## Spec Approved' "$spec"; then
       pass "$id: spec exists and is approved ($(basename "$spec"))"
     else
-      fail "$id: spec found but missing '## ✅ Spec Approved' marker"
+      fail "G3-spec-unapproved-${id}" "$id: spec found but missing '## ✅ Spec Approved' marker" \
+        "Unapproved specs must not enter /agtoosa-build." \
+        "Complete /agtoosa-spec approval for $id." enforced
     fi
 
-    # EARS acceptance criteria structural lint.
     ac_rows=$(grep -cE '^\| *AC-[0-9]{3}' "$spec" 2>/dev/null || echo 0)
     if [[ $ac_rows -eq 0 ]]; then
-      fail "$id: no AC-NNN rows found in spec acceptance criteria"
+      fail "G3-no-ac-${id}" "$id: no AC-NNN rows found in spec acceptance criteria" \
+        "Without ACs there is no testable contract for the story." \
+        "Add EARS acceptance criteria rows (AC-001…) to the spec." enforced
     else
       bad_ears=0
       while IFS= read -r row; do
@@ -183,94 +322,108 @@ else
         fi
       done < <(grep -E '^\| *AC-[0-9]{3}' "$spec")
       if [[ $bad_ears -gt 0 ]]; then
-        warn "$id: $bad_ears of $ac_rows AC rows lack EARS keywords (WHEN/WHILE/WHERE/IF/SHALL)"
+        warn "G3-ears-${id}" "$id: $bad_ears of $ac_rows AC rows lack EARS keywords (WHEN/WHILE/WHERE/IF/SHALL)" \
+          "Weak AC wording reduces testability and review clarity." \
+          "Rewrite AC rows using EARS patterns (WHEN… THE SYSTEM SHALL…)." guided
       else
         pass "$id: all $ac_rows AC rows use EARS patterns"
       fi
     fi
 
-    # Threat model presence.
     if grep -qiE 'threat model|STRIDE' "$spec"; then
       pass "$id: threat model section present"
     else
-      fail "$id: no threat model / STRIDE section in spec"
+      fail "G3-threat-${id}" "$id: no threat model / STRIDE section in spec" \
+        "Security-by-design requires threat analysis before build." \
+        "Add a STRIDE / threat model section to the $id spec." enforced
     fi
 
-    # Spec revision integrity: amended specs must log revisions.
     if grep -qE '^## Spec Revision Log' "$spec"; then
       pass "$id: spec has a revision log"
     fi
 
-    # AC-to-test mapping in the story test plan.
     tp=""
     for candidate in "$DOCS/AgToosa_TestPlan-${id}.md" "$DOCS"/AgToosa_TestPlan-*"${id}"*.md; do
       [[ -f "$candidate" ]] && tp="$candidate" && break
     done
     if [[ -z "$tp" ]]; then
-      fail "$id: no test plan (expected $DOCS/AgToosa_TestPlan-${id}.md)"
+      fail "G3-no-tp-${id}" "$id: no test plan (expected $DOCS/AgToosa_TestPlan-${id}.md)" \
+        "Stories without a test plan cannot prove AC coverage." \
+        "Create Docs/AgToosa_TestPlan-${id}.md mapping each AC to named tests." enforced
     else
       unmapped=""
       while IFS= read -r ac; do
         grep -q "$ac" "$tp" || unmapped+="$ac "
       done < <(grep -oE 'AC-[0-9]{3}' "$spec" | sort -u)
       if [[ -n "$unmapped" ]]; then
-        warn "$id: ACs not referenced in test plan: $unmapped"
+        warn "G3-unmapped-${id}" "$id: ACs not referenced in test plan: $unmapped" \
+          "Unmapped ACs may ship without coverage." \
+          "Reference every AC-NNN in Docs/AgToosa_TestPlan-${id}.md." evidenced
       else
         pass "$id: every AC in the spec is referenced in the test plan"
       fi
 
-      # TDD evidence: RED (failing) before GREEN (passing) capture.
       if grep -qiE 'RED evidence|RED run|exit[ _-]?code: *[1-9]' "$tp"; then
         pass "$id: test plan records RED (failing-run) evidence"
       else
-        warn "$id: no RED failing-run evidence block in test plan (TDD gate)"
+        warn "G3-no-red-${id}" "$id: no RED failing-run evidence block in test plan (TDD gate)" \
+          "Missing RED evidence weakens the TDD claim for this story." \
+          "Capture a failing test run in the test plan RED Evidence section." evidenced
       fi
     fi
 
-    # Task tree + wave plan.
     if awk '/^## Active Tasks/,/^## [^A]/' "$MP" | grep -q "$id"; then
       pass "$id: task tree present in Master-Plan ## Active Tasks"
     else
-      warn "$id: no task tree under ## Active Tasks for this story"
+      warn "G3-no-tasks-${id}" "$id: no task tree under ## Active Tasks for this story" \
+        "Without a task tree, build progress is hard to track." \
+        "Add an Active Tasks tree for $id in Master-Plan.md." guided
     fi
     if grep -qE '^### Wave Plan' "$spec"; then
       pass "$id: spec contains a Wave Plan"
     else
-      warn "$id: spec has no ### Wave Plan section"
+      warn "G3-no-wave-${id}" "$id: spec has no ### Wave Plan section" \
+        "Missing wave plan reduces sequencing clarity for multi-task stories." \
+        "Add ### Wave Plan to the $id spec." guided
     fi
   done
 fi
 
 # ── Gate 4: review artifacts for Done stories ─────────────────
-echo "Gate 4 — Review artifacts"
+gate "Gate 4 — Review artifacts"
 done_ids=$(awk '/^## Active Cycle/,/^## [^A]/' "$MP" | grep -E '✅ Done|🏁 Shipped' | grep -oE 'DEV-[0-9]{3}' | sort -u)
 for id in $done_ids; do
   if ls "$DOCS/archived/review-${id}"*.md >/dev/null 2>&1 || ls "$DOCS/archived/review-"*"${id}"*.md >/dev/null 2>&1; then
     pass "$id: review artifact archived"
   else
-    warn "$id: marked Done but no archived review-${id}.md yet (run /agtoosa-review)"
+    warn "G4-no-review-${id}" "$id: marked Done but no archived review-${id}.md yet (run /agtoosa-review)" \
+      "Done without review artifact skips the independent review gate." \
+      "Run /agtoosa-review and archive review-${id}.md." evidenced
   fi
 done
 
 # ── Gate 5: generator version parity (maintainer repos only) ──
-echo "Gate 5 — Version parity"
+gate "Gate 5 — Version parity"
 if [[ -f "$ROOT/agtoosa.sh" && -f "$ROOT/agtoosa.ps1" ]]; then
   bv=$(grep -m1 'AGTOOSA_VERSION=' "$ROOT/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || true)
   pv=$(grep -m1 'AGTOOSA_VERSION' "$ROOT/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || true)
   if [[ -n "$bv" && "$bv" == "$pv" ]]; then
     pass "generator version parity (bash=$bv, ps1=$pv)"
   else
-    fail "generator version mismatch (bash=$bv, ps1=$pv)"
+    fail "G5-version-mismatch" "generator version mismatch (bash=$bv, ps1=$pv)" \
+      "Mismatched generator versions break install/update consistency." \
+      "Align AGTOOSA_VERSION in agtoosa.sh and agtoosa.ps1 (and npm/package.json)." enforced
   fi
 elif [[ -f "$DOCS/.agtoosa-version" ]]; then
   pass "installed AgToosa version: $(cat "$DOCS/.agtoosa-version")"
 else
-  warn "no $DOCS/.agtoosa-version marker (install with agtoosa.sh to enable update checks)"
+  warn "G5-no-version" "no $DOCS/.agtoosa-version marker (install with agtoosa.sh to enable update checks)" \
+    "Without a version marker, --doctor/--update cannot detect skew." \
+    "Re-install or update with agtoosa.sh to write Docs/.agtoosa-version." guided
 fi
 
 # ── Gate 6: optional governance policy (DEV-059) ───────────────
-# Missing policy is NOT a finding. Invalid present policy → WARN.
-echo "Gate 6 — Optional governance policy"
+gate "Gate 6 — Optional governance policy"
 POLICY_CHECK=""
 VERIFY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 for candidate in \
@@ -295,21 +448,10 @@ else
   elif [[ $policy_rc -eq 0 ]]; then
     pass "optional policy valid ($(echo "$policy_out" | grep -m1 'policy_path=' || true))"
   else
-    warn "invalid optional policy (see agtoosa-policy-check.sh); missing policy is never a finding"
+    warn "G6-bad-policy" "invalid optional policy (see agtoosa-policy-check.sh); missing policy is never a finding" \
+      "An invalid present policy can mislead governance claims." \
+      "Fix or remove the optional policy file; missing policy is OK." guided
   fi
 fi
 
-# ── Summary ───────────────────────────────────────────────────
-echo ""
-echo "──────────────────────────────────────────"
-echo "Verifier summary: $PASS_COUNT pass · $WARN_COUNT warn · $FAIL_COUNT fail"
-if [[ $FAIL_COUNT -gt 0 ]]; then
-  echo "Result: ❌ FAIL"
-  exit 1
-fi
-if [[ "$STRICT" == true && $WARN_COUNT -gt 0 ]]; then
-  echo "Result: ❌ FAIL (strict mode: warnings are failures)"
-  exit 1
-fi
-echo "Result: ✅ PASS"
-exit 0
+finish

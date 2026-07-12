@@ -1,7 +1,7 @@
 # Test Plan: DEV-088 — Verifier and Doctor Machine Output
 
 > **Spec:** `docs/archived/spec-DEV-088.md`
-> **Status:** 🟦 Todo — spec approved; build not started
+> **Status:** ✅ Pass — build complete; VFJ-001–VFJ-010 green
 > **Created:** 2026-07-12
 > **Test prefix:** `VFJ`
 
@@ -13,16 +13,16 @@ JSON emitter, JSON Schema conformance, Problem/Impact/Fix human format, doctor p
 
 | AC | Test ID | Named test | Type | Expected result | Status |
 |----|---------|------------|------|-----------------|--------|
-| AC-001 | VFJ-001 | Verifier JSON mode emits valid document | Integration | `--format json` stdout parses; exit codes preserved | ⬜ Pending |
-| AC-001, AC-003 | VFJ-002 | JSON conforms to verify-result-v1 schema | Schema | Required fields present on pass and fail fixtures | ⬜ Pending |
-| AC-002 | VFJ-003 | Human findings use Problem Impact Fix | Docs/output | Each finding includes three labeled sections | ⬜ Pending |
-| AC-004 | VFJ-004 | Doctor JSON labels provenance surfaces | Integration | version_marker, lock_file, state_file with authority text | ⬜ Pending |
-| AC-005 | VFJ-005 | Findings include assurance classification | Contract | `guided`/`evidenced`/`enforced` metadata where applicable | ⬜ Pending |
-| AC-006 | VFJ-006 | Gate example runs verifier JSON step | Workflow contract | Template invokes `--format json` and fails on non-zero exit | ⬜ Pending |
-| AC-006 | VFJ-007 | Gate preserves verifier exit status | Regression | JSON parse success does not mask verifier failure | ⬜ Pending |
-| AC-007 | VFJ-008 | Default human mode remains usable | Regression | No `--format json` still exits correctly on fixtures | ⬜ Pending |
-| AC-008 | VFJ-009 | agtoosa.sh passes format flag to verify and doctor | CLI contract | `--verify --format json` and `--doctor --format json` dispatch | ⬜ Pending |
-| AC-009 | VFJ-010 | Schema file installed in template and docs | Inventory | `docs/schemas/verify-result-v1.json` registered | ⬜ Pending |
+| AC-001 | VFJ-001 | Verifier JSON mode emits valid document | Integration | `--format json` stdout parses; exit codes preserved | ✅ Pass |
+| AC-001, AC-003 | VFJ-002 | JSON conforms to verify-result-v1 schema | Schema | Required fields present on pass and fail fixtures | ✅ Pass |
+| AC-002 | VFJ-003 | Human findings use Problem Impact Fix | Docs/output | Each finding includes three labeled sections | ✅ Pass |
+| AC-004 | VFJ-004 | Doctor JSON labels provenance surfaces | Integration | version_marker, lock_file, state_file with authority text | ✅ Pass |
+| AC-005 | VFJ-005 | Findings include assurance classification | Contract | `guided`/`evidenced`/`enforced` metadata where applicable | ✅ Pass |
+| AC-006 | VFJ-006 | Gate example runs verifier JSON step | Workflow contract | Template invokes `--format json` and fails on non-zero exit | ✅ Pass |
+| AC-006 | VFJ-007 | Gate preserves verifier exit status | Regression | JSON parse success does not mask verifier failure | ✅ Pass |
+| AC-007 | VFJ-008 | Default human mode remains usable | Regression | No `--format json` still exits correctly on fixtures | ✅ Pass |
+| AC-008 | VFJ-009 | agtoosa.sh passes format flag to verify and doctor | CLI contract | `--verify --format json` and `--doctor --format json` dispatch | ✅ Pass |
+| AC-009 | VFJ-010 | Schema file installed in template and docs | Inventory | `docs/schemas/verify-result-v1.json` registered | ✅ Pass |
 
 ## Negative and Edge Scenarios
 
@@ -46,18 +46,27 @@ Planned smoke command: `bats tests/agtoosa.bats -f "DEV-088|VFJ-"`
 
 | Task group | Planned command | Exit code | Failure excerpt |
 |------------|-----------------|-----------|-----------------|
-| 1. Schema and contract RED coverage | `bats tests/agtoosa.bats -f "DEV-088\|VFJ-"` | — | _Pending — record during `/agtoosa-build`_ |
-| 2. Verifier machine output | `bats tests/agtoosa.bats -f "VFJ-001\|VFJ-002\|VFJ-003\|VFJ-005\|VFJ-008"` | — | _Pending — record during `/agtoosa-build`_ |
-| 3. Doctor machine output | `bats tests/agtoosa.bats -f "VFJ-004\|VFJ-009"` | — | _Pending — record during `/agtoosa-build`_ |
-| 4. CI adoption | `bats tests/agtoosa.bats -f "VFJ-006\|VFJ-007\|VFJ-010"` | — | _Pending — record during `/agtoosa-build`_ |
-| 5. Evidence | `bats tests/agtoosa.bats -f "DEV-088\|VFJ-"` | — | _Pending — record during `/agtoosa-build`_ |
+| 1. Schema and contract RED coverage | `bats tests/agtoosa.bats -f "DEV-088\|VFJ-"` (pre-fix doctor JSON) | 1 | `not ok 4 DEV-088 VFJ-004` / `agtoosa.sh: line 197: _doctor_args[@]: unbound variable` (bash 3.2 `set -u` empty-array expand) |
+| 2. Verifier machine output | same suite mid-fix | 1 | `not ok 9 DEV-088 VFJ-009` — doctor JSON aborted on `[[ "$format" == "text" ]] && echo` under `set -e` (function returned 1) |
+| 3. Doctor machine output | `bats … -f "VFJ-004\|VFJ-009"` | 1 | Doctor JSON produced empty stdout / non-zero before `_doc_pass` if-fix |
+| 4. CI adoption | contract greps on gate (pre-update) | 1 | Gate lacked `--format json` / `exit "$rc"` before template update |
+| 5. Evidence | full VFJ filter before GREEN | 1 | 2 failing tests (VFJ-004, VFJ-009) of 10 |
 
 ## GREEN Evidence
 
 | Task group | Planned command | Exit code | Pass excerpt |
 |------------|-----------------|-----------|--------------|
-| 1. Schema and contract RED coverage | `bats tests/agtoosa.bats -f "DEV-088\|VFJ-"` | — | _Pending — record during `/agtoosa-build`_ |
-| 2. Verifier machine output | `bats tests/agtoosa.bats -f "VFJ-001\|VFJ-002\|VFJ-003\|VFJ-005\|VFJ-008"` | — | _Pending — record during `/agtoosa-build`_ |
-| 3. Doctor machine output | `bats tests/agtoosa.bats -f "VFJ-004\|VFJ-009"` | — | _Pending — record during `/agtoosa-build`_ |
-| 4. CI adoption | `bats tests/agtoosa.bats -f "VFJ-006\|VFJ-007\|VFJ-010"` | — | _Pending — record during `/agtoosa-build`_ |
-| 5. Evidence | `bats tests/agtoosa.bats -f "DEV-088\|VFJ-"` | — | _Pending — record during `/agtoosa-build`_ |
+| 1. Schema and contract RED coverage | `bats tests/agtoosa.bats -f "DEV-088\|VFJ-"` | 0 | `ok 1 … VFJ-001` … `ok 10 … VFJ-010` (`1..10`) |
+| 2. Verifier machine output | `bats … -f "VFJ-001\|VFJ-002\|VFJ-003\|VFJ-005\|VFJ-008"` | 0 | JSON `schema_version=verify-result-v1`; human `Problem:`/`Impact:`/`Fix:`; VF-001/VF-002 still pass |
+| 3. Doctor machine output | `bats … -f "VFJ-004\|VFJ-009"` | 0 | `.provenance.state_file.present == false` with gitignored authority; `--format xml` → `invalid --format` |
+| 4. CI adoption | `bats … -f "VFJ-006\|VFJ-007\|VFJ-010"` | 0 | Gate has `--format json`, `jq -e`, `exit "$rc"`; schema in DOCS_FILES |
+| 5. Evidence | `bats tests/agtoosa.bats -f "DEV-088\|VFJ-"` | 0 | All 10 VFJ tests ok (2026-07-12) |
+
+### Regression smoke
+
+```text
+$ bats tests/agtoosa.bats -f "VF-001|VF-002"
+1..2
+ok 1 DEV-061 VF-001: verifier passes on the maintainer repo
+ok 2 DEV-061 VF-002: verifier fails when an active story has no spec
+```

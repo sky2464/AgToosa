@@ -88,6 +88,8 @@ DOCTOR=false
 DOCTOR_PATH=""
 UNINSTALL=false
 UNINSTALL_PATH=""
+OUTPUT_FORMAT=""
+VERIFY_STRICT=false
 while [[ $# -gt 0 ]]; do
   arg="$1"
   case "$arg" in
@@ -102,6 +104,18 @@ while [[ $# -gt 0 ]]; do
     --dry-run)             DRY_RUN=true ;;
     --allow-unverified)    ALLOW_UNVERIFIED=true ;;
     --yes|-y)              ASSUME_YES=true ;;
+    --strict)              VERIFY_STRICT=true ;;
+    --format)
+      if [[ $# -lt 2 ]]; then
+        echo -e "${RED}❌ Error: --format requires text|json.${NC}"; exit 1
+      fi
+      OUTPUT_FORMAT="$2"; shift
+      case "$OUTPUT_FORMAT" in
+        text|json) ;;
+        *)
+          echo -e "${RED}❌ Error: invalid --format '${OUTPUT_FORMAT}' (expected text|json).${NC}"
+          exit 2 ;;
+      esac ;;
     --path)
       if [[ $# -lt 2 ]]; then
         echo -e "${RED}❌ Error: --path requires a directory argument.${NC}"; exit 1
@@ -169,13 +183,25 @@ unset _PATH_ARG
 
 # ── Verify mode (deterministic lifecycle gate) ────────────────
 if [[ "$VERIFY" == true ]]; then
-  run_verify "${VERIFY_PATH:-$PWD}"
+  if [[ "$VERIFY_STRICT" == true && -n "$OUTPUT_FORMAT" ]]; then
+    run_verify "${VERIFY_PATH:-$PWD}" --format "$OUTPUT_FORMAT" --strict
+  elif [[ "$VERIFY_STRICT" == true ]]; then
+    run_verify "${VERIFY_PATH:-$PWD}" --strict
+  elif [[ -n "$OUTPUT_FORMAT" ]]; then
+    run_verify "${VERIFY_PATH:-$PWD}" --format "$OUTPUT_FORMAT"
+  else
+    run_verify "${VERIFY_PATH:-$PWD}"
+  fi
   exit $?
 fi
 
 # ── Doctor mode (install diagnostics) ─────────────────────────
 if [[ "$DOCTOR" == true ]]; then
-  run_doctor "${DOCTOR_PATH:-$PWD}"
+  if [[ -n "$OUTPUT_FORMAT" ]]; then
+    run_doctor "${DOCTOR_PATH:-$PWD}" --format "$OUTPUT_FORMAT"
+  else
+    run_doctor "${DOCTOR_PATH:-$PWD}"
+  fi
   exit $?
 fi
 
@@ -494,6 +520,7 @@ fi
 _salvage_ship_packs_to_queue
 [[ -d "$SHIP_DIR" ]] && rm -rf "$SHIP_DIR"
 mkdir -p "$SHIP_DIR/Docs/archived" "$SHIP_DIR/Docs/Context" \
+         "$SHIP_DIR/.agtoosa" \
          "$SHIP_DIR/.claude/commands" "$SHIP_DIR/.claude/skills" \
            "$SHIP_DIR/.cursor/rules" "$SHIP_DIR/.cursor/commands" \
            "$SHIP_DIR/.gemini/commands" \

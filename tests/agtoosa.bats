@@ -8801,3 +8801,372 @@ _auth_help_adapters() {
   # Must not call manual registry approval CI-enforced
   ! grep -qiE 'registry (approval|review) is CI-enforced|CI-enforced registry (approval|review)' "$handbook"
 }
+
+# ── DEV-087: Delivery Evidence Contract (DEC-001–DEC-009) ──
+
+@test "DEV-087 DEC-001: Delivery contract defines assurance taxonomy" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in \
+    "$root/template/Docs/AgToosa_Delivery_Evidence_Contract.md" \
+    "$root/docs/AgToosa_Delivery_Evidence_Contract.md"
+  do
+    [ -f "$f" ]
+    grep -q "AgToosa Delivery Evidence Contract" "$f"
+    ! grep -qE '^# AgToosa_Evidence_Contract' "$f"
+    grep -q "Guided" "$f"
+    grep -q "Evidenced" "$f"
+    grep -q "Enforced" "$f"
+    grep -qiE "semantic review.*(Guided|Evidenced)|Guided.*Evidenced" "$f"
+    grep -q "Terminal Evidence" "$f"
+  done
+}
+
+@test "DEV-087 DEC-002: Standard security-sensitive and release profiles documented" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in \
+    "$root/template/Docs/AgToosa_Delivery_Evidence_Contract.md" \
+    "$root/docs/AgToosa_Delivery_Evidence_Contract.md"
+  do
+    grep -q "standard" "$f"
+    grep -q "security-sensitive" "$f"
+    grep -q "release" "$f"
+    grep -q "spec" "$f"
+    grep -q "tests" "$f"
+    grep -q "review" "$f"
+    grep -q "threat-model" "$f"
+    grep -q "changelog" "$f"
+  done
+}
+
+@test "DEV-087 DEC-003: evidence.yml.example matches contract" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local ex="$root/template/.agtoosa/evidence.yml.example"
+  [ -f "$ex" ]
+  grep -q "profiles:" "$ex"
+  grep -q "standard:" "$ex"
+  grep -q "security-sensitive:" "$ex"
+  grep -q "release:" "$ex"
+  grep -q "required:" "$ex"
+  # Example content validates when activated as evidence.yml
+  local tmp
+  tmp=$(mktemp -d)
+  mkdir -p "$tmp/.agtoosa"
+  # Strip only needed — copy example body; checker ignores comments
+  cp "$ex" "$tmp/.agtoosa/evidence.yml"
+  run bash "$root/docs/agtoosa-evidence-profile-check.sh" --root "$tmp"
+  echo "$output"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"schema-only"* ]]
+  rm -rf "$tmp"
+}
+
+@test "DEV-087 DEC-004: .agtoosa README indexes policy and evidence configs" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f="$root/template/.agtoosa/README.md"
+  [ -f "$f" ]
+  grep -q "policy.yaml" "$f"
+  grep -q "evidence.yml" "$f"
+  grep -q "DEV-059" "$f"
+  grep -q "DEV-087" "$f"
+  grep -q "Gate 6" "$f"
+  grep -q "Gate 7" "$f"
+  grep -q "DEV-089" "$f"
+  grep -qiE "policy \(Gate 6\).*evidence profile \(Gate 7|Gate 6.*Gate 7.*lifecycle" "$f"
+}
+
+@test "DEV-087 DEC-005: Schema checker accepts valid YAML and rejects invalid" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local checker="$root/docs/agtoosa-evidence-profile-check.sh"
+  [ -f "$checker" ]
+  [ -x "$checker" ] || chmod +x "$checker"
+
+  # Usage error
+  run bash "$checker" --root /no/such/path
+  [ "$status" -eq 2 ]
+
+  # Absent evidence.yml is ok
+  local empty
+  empty=$(mktemp -d)
+  run bash "$checker" --root "$empty"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"schema-only"* ]]
+  [[ "$output" == *"evidence_path=none"* ]]
+
+  # Valid
+  mkdir -p "$empty/.agtoosa"
+  cp "$root/tests/fixtures/evidence/valid.yml" "$empty/.agtoosa/evidence.yml"
+  run bash "$checker" --root "$empty"
+  [ "$status" -eq 0 ]
+
+  # Missing profiles
+  cp "$root/tests/fixtures/evidence/invalid-missing-profiles.yml" "$empty/.agtoosa/evidence.yml"
+  run bash "$checker" --root "$empty"
+  [ "$status" -ne 0 ]
+  [ "$status" -eq 1 ]
+
+  # Unknown profile key
+  cp "$root/tests/fixtures/evidence/invalid-unknown-profile.yml" "$empty/.agtoosa/evidence.yml"
+  run bash "$checker" --root "$empty"
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"unknown profile"* || "$stderr" == *"unknown profile"* || "$output" == *"Error"* ]]
+
+  # Unknown artifact token
+  cp "$root/tests/fixtures/evidence/invalid-artifact.yml" "$empty/.agtoosa/evidence.yml"
+  run bash "$checker" --root "$empty"
+  [ "$status" -eq 1 ]
+
+  rm -rf "$empty"
+}
+
+@test "DEV-087 DEC-006: Schema checker does not claim full compliance" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local checker="$root/docs/agtoosa-evidence-profile-check.sh"
+  local tmp
+  tmp=$(mktemp -d)
+  mkdir -p "$tmp/.agtoosa"
+  cp "$root/tests/fixtures/evidence/valid.yml" "$tmp/.agtoosa/evidence.yml"
+  run bash "$checker" --root "$tmp"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"schema-only"* ]]
+  [[ "$output" == *"not full delivery compliance"* || "$output" == *"schema valid"* ]]
+  # Must not assert artifact files on disk
+  ! echo "$output" | grep -qiE 'artifact (missing|not found|exist)|checking artifact presence|full delivery compliance$'
+  # No network tooling
+  ! grep -qE 'curl |wget |http://|https://' "$checker"
+  rm -rf "$tmp"
+}
+
+@test "DEV-087 DEC-007: Terminal Evidence cross-link preserved" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Agent.md" "$root/docs/AgToosa_Agent.md"; do
+    grep -q "### Terminal Evidence Contract" "$f"
+    grep -q "AgToosa_Delivery_Evidence_Contract.md" "$f"
+    grep -qi "Delivery Evidence Contract" "$f"
+    # Must not rename Terminal Evidence away
+    ! grep -qiE 'renamed.*Terminal Evidence|Terminal Evidence Contract.*deprecated' "$f"
+  done
+}
+
+@test "DEV-087 DEC-008: Config registration and enforcement labels" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  echo "$output" | grep -F "Docs/AgToosa_Delivery_Evidence_Contract.md"
+  echo "$output" | grep -F "Docs/agtoosa-evidence-profile-check.sh"
+  echo "$output" | grep -F ".agtoosa/evidence.yml.example"
+  echo "$output" | grep -F ".agtoosa/README.md"
+
+  local contract="$root/template/Docs/AgToosa_Delivery_Evidence_Contract.md"
+  grep -qi "schema-only" "$contract"
+  grep -q "DEV-089" "$contract"
+  grep -qi "Gate 7" "$contract"
+}
+
+@test "DEV-087 DEC-009: Evidence ledger cross-link present" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Evidence.md" "$root/docs/AgToosa_Evidence.md"; do
+    grep -q "AgToosa_Delivery_Evidence_Contract.md" "$f"
+    grep -qiE "delivery profile|Delivery Evidence" "$f"
+  done
+}
+
+# ── DEV-088: Verifier JSON (VFJ-001–VFJ-010) ──────────────────────────────────
+
+_vfj_fail_fixture() {
+  mkdir -p "$TEST_PROJECT/Docs/Context" "$TEST_PROJECT/Docs/archived"
+  printf '# product\nReal product.\n' > "$TEST_PROJECT/Docs/Context/product.md"
+  printf '# stack\nbash\n' > "$TEST_PROJECT/Docs/Context/tech-stack.md"
+  printf '# workflow\ntdd: true\n' > "$TEST_PROJECT/Docs/Context/workflow.md"
+  cat > "$TEST_PROJECT/Docs/Master-Plan.md" <<'EOF'
+# Master-Plan
+
+## Active Cycle
+
+| ID | Title | Type | Estimate | Status | Tasks Done |
+|----|-------|------|----------|--------|-----------|
+| DEV-001 | Feature: Ghost story | Feature | M | 🟨 In Progress | 0/5 |
+
+## Epics
+
+| ID | Title | Stories | Status |
+|----|-------|---------|--------|
+| DEV-900 | Epic: Core | 1 open / 1 total | ⬜ Backlog |
+
+## Update Log
+
+| Date | Event | By |
+|------|-------|----|
+| 2026-01-01 | init | AgToosa |
+EOF
+}
+
+_vfj_assert_schema_fields() {
+  local json="$1"
+  echo "$json" | jq -e '
+    .schema_version == "verify-result-v1"
+    and (.tool == "verify" or .tool == "doctor")
+    and (.exit_code | type == "number")
+    and (.summary.pass | type == "number")
+    and (.summary.warn | type == "number")
+    and (.summary.fail | type == "number")
+    and (.findings | type == "array")
+    and (
+      (.findings | length == 0)
+      or
+      all(.findings[];
+        (.id|type=="string") and (.severity|type=="string")
+        and (.problem|type=="string") and (.impact|type=="string")
+        and (.fix|type=="string")
+      )
+    )
+  ' >/dev/null
+}
+
+@test "DEV-088 @smoke VFJ-001: Verifier JSON mode emits valid document" {
+  run bash "$BATS_TEST_DIRNAME/../docs/agtoosa-verify.sh" --root "$BATS_TEST_DIRNAME/.." --format json
+  [ "$status" -eq 0 ]
+  echo "$output" | jq -e . >/dev/null
+  echo "$output" | jq -e '.schema_version == "verify-result-v1" and .tool == "verify" and .exit_code == 0' >/dev/null
+}
+
+@test "DEV-088 VFJ-002: JSON conforms to verify-result-v1 schema" {
+  # Pass fixture (maintainer repo)
+  run bash "$BATS_TEST_DIRNAME/../docs/agtoosa-verify.sh" --root "$BATS_TEST_DIRNAME/.." --format json
+  [ "$status" -eq 0 ]
+  _vfj_assert_schema_fields "$output"
+  local schema="$BATS_TEST_DIRNAME/../docs/schemas/verify-result-v1.json"
+  [ -f "$schema" ]
+  grep -q '"schema_version"' "$schema"
+  grep -q '"findings"' "$schema"
+  grep -q '"assurance"' "$schema"
+
+  # Fail fixture
+  _vfj_fail_fixture
+  run bash "$BATS_TEST_DIRNAME/../template/Docs/agtoosa-verify.sh" --root "$TEST_PROJECT" --format json
+  [ "$status" -eq 1 ]
+  _vfj_assert_schema_fields "$output"
+  echo "$output" | jq -e '.summary.fail >= 1 and (.findings | length >= 1)' >/dev/null
+  echo "$output" | jq -e '.findings[] | select(.problem | contains("DEV-001: no spec file"))' >/dev/null
+}
+
+@test "DEV-088 @smoke VFJ-003: Human findings use Problem Impact Fix" {
+  _vfj_fail_fixture
+  run bash "$BATS_TEST_DIRNAME/../template/Docs/agtoosa-verify.sh" --root "$TEST_PROJECT"
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"Problem:"* ]]
+  [[ "$output" == *"Impact:"* ]]
+  [[ "$output" == *"Fix:"* ]]
+  [[ "$output" == *"DEV-001: no spec file"* ]]
+  [[ "$output" == *"Result: ❌ FAIL"* ]]
+}
+
+@test "DEV-088 VFJ-004: Doctor JSON labels provenance surfaces" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  # No state.json by default — absent must still report authority text
+  [ ! -f "$TEST_PROJECT/.agtoosa/state.json" ]
+  run bash "$SCRIPT" --doctor "$TEST_PROJECT" --format json
+  [ "$status" -eq 0 ]
+  _vfj_assert_schema_fields "$output"
+  echo "$output" | jq -e '.tool == "doctor"' >/dev/null
+  echo "$output" | jq -e '
+    .provenance.version_marker.path == "Docs/.agtoosa-version"
+    and .provenance.version_marker.present == true
+    and .provenance.version_marker.committed == true
+    and (.provenance.version_marker.authority | test("semver|version"; "i"))
+    and .provenance.lock_file.path == "Docs/agtoosa-lock.json"
+    and .provenance.lock_file.committed == true
+    and (.provenance.lock_file.authority | test("pack|pin|reproducib"; "i"))
+    and .provenance.state_file.path == ".agtoosa/state.json"
+    and .provenance.state_file.present == false
+    and .provenance.state_file.committed == false
+    and (.provenance.state_file.authority | test("gitignored|absent|OK|operational"; "i"))
+  ' >/dev/null
+}
+
+@test "DEV-088 VFJ-005: Findings include assurance classification" {
+  _vfj_fail_fixture
+  run bash "$BATS_TEST_DIRNAME/../template/Docs/agtoosa-verify.sh" --root "$TEST_PROJECT" --format json
+  [ "$status" -eq 1 ]
+  echo "$output" | jq -e '
+    [.findings[].assurance] | length >= 1
+    and all(.[]; . == "guided" or . == "evidenced" or . == "enforced")
+  ' >/dev/null
+  echo "$output" | jq -e '
+    any(.findings[]; .assurance == "enforced" and (.problem | contains("no spec file")))
+  ' >/dev/null
+}
+
+@test "DEV-088 @smoke VFJ-006: Gate example runs verifier JSON step" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/agtoosa-gate.yml.example" "$root/template/Docs/agtoosa-gate.yml.example"; do
+    [ -f "$f" ]
+    grep -q -- '--format json' "$f"
+    grep -q 'jq -e' "$f"
+    grep -q 'agtoosa-verify.sh' "$f"
+    grep -q 'not found' "$f"
+    grep -q 'exit 1' "$f"
+  done
+  diff -u "$root/docs/agtoosa-gate.yml.example" "$root/template/Docs/agtoosa-gate.yml.example"
+}
+
+@test "DEV-088 VFJ-007: Gate preserves verifier exit status" {
+  local gate="$BATS_TEST_DIRNAME/../docs/agtoosa-gate.yml.example"
+  grep -q 'exit "$rc"' "$gate"
+  grep -q 'rc=$?' "$gate"
+  # JSON validation must not force success after verifier failure
+  ! grep -Eq 'agtoosa-verify\.sh.*\|\|[[:space:]]*true' "$gate"
+  ! grep -Eq 'agtoosa-verify\.sh.*;[[:space:]]*exit 0' "$gate"
+  ! grep -Eq 'jq.*\|\|[[:space:]]*true' "$gate"
+  # Simulate gate body: failing verifier JSON still exits 1 after jq succeeds
+  _vfj_fail_fixture
+  set +e
+  out="$(bash "$BATS_TEST_DIRNAME/../template/Docs/agtoosa-verify.sh" --root "$TEST_PROJECT" --format json)"
+  rc=$?
+  set -e
+  [ -n "$out" ]
+  echo "$out" | jq -e . >/dev/null
+  [ "$rc" -eq 1 ]
+}
+
+@test "DEV-088 VFJ-008: Default human mode remains usable" {
+  run bash "$BATS_TEST_DIRNAME/../docs/agtoosa-verify.sh" --root "$BATS_TEST_DIRNAME/.."
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Result: ✅ PASS"* ]]
+  _vfj_fail_fixture
+  run bash "$BATS_TEST_DIRNAME/../template/Docs/agtoosa-verify.sh" --root "$TEST_PROJECT"
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"Result: ❌ FAIL"* ]]
+}
+
+@test "DEV-088 VFJ-009: agtoosa.sh passes format flag to verify and doctor" {
+  run bash "$SCRIPT" --verify --format json "$BATS_TEST_DIRNAME/.."
+  [ "$status" -eq 0 ]
+  echo "$output" | jq -e '.tool == "verify" and .schema_version == "verify-result-v1"' >/dev/null
+
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --doctor --format json "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  echo "$output" | jq -e '.tool == "doctor" and .provenance.version_marker.present == true' >/dev/null
+
+  run bash "$SCRIPT" --verify --format xml "$BATS_TEST_DIRNAME/.."
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"invalid --format"* ]]
+}
+
+@test "DEV-088 VFJ-010: Schema file installed in template and docs" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/docs/schemas/verify-result-v1.json" ]
+  [ -f "$root/template/Docs/schemas/verify-result-v1.json" ]
+  diff -u "$root/docs/schemas/verify-result-v1.json" "$root/template/Docs/schemas/verify-result-v1.json"
+  run bash "$SCRIPT" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/schemas/verify-result-v1.json"* ]]
+  grep -q 'Docs/schemas/verify-result-v1.json' "$root/lib/config.sh"
+}

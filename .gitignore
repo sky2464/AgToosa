@@ -54,4 +54,7 @@ docs/_site/
 # ── AgToosa Generated Output ────────────────────────────────
 ship/
 .agtoosa/
+# Template pack ships committed .agtoosa/ examples (DEV-087 config index).
+!template/.agtoosa/
+!template/.agtoosa/**
 .worktrees/

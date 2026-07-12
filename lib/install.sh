@@ -293,6 +293,7 @@ install_files() {
           continue
         fi
       fi
+      mkdir -p "$(dirname "${PROJECT_PATH}/${file}")"
       cp "${SHIP_DIR}/${file}" "${PROJECT_PATH}/${file}"
       echo -e "  ${GREEN}✅${NC} ${file}"
       COPIED=$((COPIED + 1))
@@ -351,6 +352,19 @@ install_files() {
     [[ -f "${SHIP_DIR}/${cfile}" ]] \
       && copy_platform_file "${SHIP_DIR}/${cfile}" "${PROJECT_PATH}/${cfile}" "${cfile}"
   done
+
+  # .agtoosa/ config index + examples — overwrite AgToosa-owned examples only
+  # (never write live evidence.yml / policy.yaml from the pack).
+  local afile agtoosa_count=0
+  mkdir -p "${PROJECT_PATH}/.agtoosa"
+  for afile in "${AGTOOSA_DOTDIR_FILES[@]}"; do
+    if [[ -f "${SHIP_DIR}/${afile}" ]]; then
+      cp "${SHIP_DIR}/${afile}" "${PROJECT_PATH}/${afile}"
+      agtoosa_count=$((agtoosa_count + 1))
+      COPIED=$((COPIED + 1))
+    fi
+  done
+  [[ $agtoosa_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .agtoosa/ (${agtoosa_count} config index + evidence example)"
 
   # Claude Code commands, hooks, and skills — always overwrite (AgToosa-owned)
   if [[ "$USE_CLAUDE" == true ]]; then

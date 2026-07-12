@@ -3,12 +3,13 @@
 > **Story ID:** DEV-091
 > **Type:** Feature
 > **Epic:** DEV-001 — Core Generator & Install
-> **Status:** 🟦 Todo — Rev4 Wave 2 (approved)
+> **Status:** ⬜ Backlog — Cycle C after DEV-090 (Rev4 Wave 1b remainder)
 > **Estimate:** L
 > **Priority:** P0
 > **Depends on:** DEV-090 (install/update plan schema and lock-path correction)
 > **Spec created:** 2026-07-12
 > **Spec deepened:** 2026-07-12
+> **Enrollment wave:** Rev4 Wave 1b / Cycle C (after DEV-090) — corrected R1 from mislabeled Wave 2
 
 ## Context
 
@@ -179,7 +180,17 @@ Smoke set: 4 tests tagged `@smoke`
 - Must ACs unambiguous and testable: yes
 - Unresolved questions: none
 
+## Spec Revision Log
+
+| Rev | Date | What changed | Why | Approved-by |
+|-----|------|--------------|-----|-------------|
+| R1 | 2026-07-12 | Status/enrollment labels: Wave 2 → Wave 1b / Cycle C after DEV-090; no Must AC changes | Align with Master-Plan and roadmap-spec-index; hard-dep deferral | Wave 1b fan-in |
+
 ## ✅ Spec Approved
 
 Approved: 2026-07-12 09:56
-Enrollment: Rev4 Wave 2 (DEV-001 safe MAJOR upgrades — ADR-004 item 5)
+Enrollment: Rev4 Wave 1b remainder / Cycle C after DEV-090 (ADR-004 item 5); Active Cycle deferred until DEV-090 ships
+
+## ✅ Amendment R1 Approved
+
+Approved: 2026-07-12 — wave-label correction only; no Must AC changes.

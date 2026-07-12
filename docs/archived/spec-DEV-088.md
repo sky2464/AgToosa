@@ -167,4 +167,4 @@ Smoke set: 3 tests tagged `@smoke`
 ## ✅ Spec Approved
 
 Approved: 2026-07-12 09:00
-Enrollment: Rev4 Wave 1 — verifier and doctor machine output
+Enrollment: Rev4 Wave 1b partial — Active Cycle 2026-07-12 (with DEV-087); Wave 1a retained; parallel with DEV-087 (no hard dep)
