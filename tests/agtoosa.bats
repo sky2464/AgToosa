@@ -5426,7 +5426,7 @@ JSON
 
   f="$root/tests/fixtures/retro/secret-bearing/docs/archived/retro-2099-07-04.md"
   [ -f "$f" ]
-  ! grep -q "ghp_FIXTURE_NOT_A_REAL_TOKEN_12345" "$f"
+  ! grep -q "SYNTHETIC_CREDENTIAL_FIXTURE_VALUE_001" "$f"
   ! grep -q "https://private.example.invalid/hooks/abc123?token=fake-token-value" "$f"
   ! grep -q "LOG_BEGIN" "$f"
   grep -q "\[REDACTED\]" "$f"
@@ -5434,7 +5434,7 @@ JSON
 
   # Source fixture retains synthetic values for the redaction proof
   f="$root/tests/fixtures/retro/secret-bearing/docs/archived/review-DEV-903.md"
-  grep -q "ghp_FIXTURE_NOT_A_REAL_TOKEN_12345" "$f"
+  grep -q "SYNTHETIC_CREDENTIAL_FIXTURE_VALUE_001" "$f"
 }
 
 @test "DEV-056 RL-008: Retro doc registered; Agent and Quickref describe structured ship retro" {

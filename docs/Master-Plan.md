@@ -20,7 +20,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-052 | Feature: Hook Automation Pack | Feature | M | 🟨 In Progress | 0/4 |
+| DEV-052 | Feature: Hook Automation Pack | Feature | M | 🟨 In Progress | 4/4 |
 | DEV-056 | Feature: Retrospective Learning Loop | Feature | S | 🟨 In Progress | 0/4 |
 
 
@@ -372,3 +372,4 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🚀 Release 5.3.10 shipped — v5.3.10; version parity bash/ps1/npm; Milestone v5.3.11 (next) | AgToosa |
 | 2026-07-11 | ✅ /agtoosa-spec — Spec ✅ Approved — wave 3: DEV-052 · DEV-056 | AgToosa |
 | 2026-07-11 | 🏗️ Build 🏗️ Started — wave 3 — DEV-052 · DEV-056 parallel subagents | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-052 — Task 🟢 4/4 — HK-001–007 green; Hooks pack + Init/Update preview; no silent install | AgToosa |

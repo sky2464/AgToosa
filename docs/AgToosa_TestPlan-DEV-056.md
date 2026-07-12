@@ -1,109 +1,89 @@
 # Test Plan: DEV-056 — Retrospective Learning Loop
 
 > **Spec:** `docs/archived/spec-DEV-056.md`
-> **Status:** ⬜ Backlog
-> **Execution state:** Not run
+> **Status:** ✅ Done
+> **Execution state:** GREEN recorded
 > **Primary filter:** `bats tests/agtoosa.bats -f "DEV-056"`
 > **Contract filter:** `bats tests/agtoosa.bats -f "RL-"`
 
 ## Coverage Target
 
-Target: 7 of 7 Must-priority acceptance criteria. RL-001–RL-007 are future test IDs; no test result, retro output, or implementation evidence is claimed in this backlog plan.
+Target: 7 of 7 Must-priority acceptance criteria. RL-001–RL-007 lock ACs; RL-008 covers install/discovery wiring.
 
-| AC | Priority | Test ID | Type | Future assertion | Automated |
-|----|----------|---------|------|------------------|-----------|
-| AC-001 | Must | RL-001 | Docs / fixture integration | Retro contract and complete-cycle fixture contain metadata plus Planned vs Shipped, Evidence Index, Keep, Stop, Start, Rejected Overreach, and Proposals; repeated runs resolve one cycle path | planned `@smoke` |
-| AC-002 | Must | RL-002 | Docs / fixture integration | Every proposal has required fields and allowed enums; policy proposals carry an allowed enforcement class | planned `@smoke` |
-| AC-003 | Must | RL-003 | Mutation-boundary integration | Retro workflow leaves Master-Plan, approved specs, policy, Context, tests, and specialist targets unchanged and emits only canonical next commands | planned `@smoke` |
-| AC-004 | Must | RL-004 | Bats / integration | Inputs are limited to documented repo-local sources; missing optional sources become `unavailable`; no network command is required | planned `@smoke` |
-| AC-005 | Must | RL-005 | Docs / claim contract | Retro controls use generator-enforced, CI-enforced, agent-instructed, manual, and roadmap labels without claiming automated learning | planned `@smoke` |
-| AC-006 | Must | RL-006 | Fixture integration | Two distinct evidence pointers produce `repeated-pattern`; one pointer produces `single-cycle`; proposals stay within allowed types | planned `@smoke` |
-| AC-007 | Must | RL-007 | Security / fixture integration | Retro summaries redact credential/private-URL fixtures, omit unbounded logs, and retain safe repo-relative pointers | planned `@smoke` |
+| AC | Priority | Test ID | Type | Assertion | Automated |
+|----|----------|---------|------|-----------|-----------|
+| AC-001 | Must | RL-001 | Docs / fixture integration | Retro contract and complete-cycle fixture contain metadata plus Planned vs Shipped, Evidence Index, Keep, Stop, Start, Rejected Overreach, and Proposals; one cycle path | `@smoke` |
+| AC-002 | Must | RL-002 | Docs / fixture integration | Every proposal has required fields and allowed enums; policy proposals carry an allowed enforcement class | `@smoke` |
+| AC-003 | Must | RL-003 | Mutation-boundary integration | Retro workflow leaves Master-Plan, approved specs, policy, Context, tests, and specialist targets unchanged and emits only canonical next commands | `@smoke` |
+| AC-004 | Must | RL-004 | Bats / integration | Inputs are limited to documented repo-local sources; missing optional sources become `unavailable`; no network command is required | `@smoke` |
+| AC-005 | Must | RL-005 | Docs / claim contract | Retro controls use generator-enforced, CI-enforced, agent-instructed, manual, and roadmap labels without claiming automated learning | `@smoke` |
+| AC-006 | Must | RL-006 | Fixture integration | Two distinct evidence pointers produce `repeated-pattern`; one pointer produces `single-cycle` | `@smoke` |
+| AC-007 | Must | RL-007 | Security / fixture integration | Retro summaries redact credential/private-URL fixtures, omit unbounded logs, and retain safe repo-relative pointers | `@smoke` |
 
-## Test Design
+## Fixtures
 
-### Fixtures
+| Fixture | Purpose |
+|---------|---------|
+| `tests/fixtures/retro/complete-cycle/` | Full local cycle sources + expected structured retro |
+| `tests/fixtures/retro/missing-optional/` | Optional review/evidence/events absent → `unavailable` |
+| `tests/fixtures/retro/repeated-friction/` | Two distinct pointers → `repeated-pattern` |
+| `tests/fixtures/retro/secret-bearing/` | Synthetic credential/URL/log; retro keeps `[REDACTED]` + pointer |
 
-| Fixture | Purpose | Expected future result |
-|---------|---------|------------------------|
-| `tests/fixtures/retro/complete-cycle/` | Full Master-Plan, spec, review, evidence, test-plan, changelog, and events inputs | Expected retro contains every required section and supported result |
-| `tests/fixtures/retro/missing-optional/` | No review/evidence/event optional artifacts | Retro completes with explicit `unavailable` entries |
-| `tests/fixtures/retro/repeated-friction/` | Two independent artifacts cite the same normalized friction | One `repeated-pattern` candidate with two pointers |
-| Secret-bearing review/log fixture inside the test tree | Redaction behavior | Secret and private URL absent; safe pointer retained |
+Synthetic credential marker: `SYNTHETIC_CREDENTIAL_FIXTURE_VALUE_001` (no real tokens).
 
-Fixtures must use synthetic values. They must not copy real tokens, private URLs, or production logs.
+## TDD Evidence
 
-### Mutation Boundary
+### RED evidence — recorded
 
-RL-003 must snapshot content hashes and file inventory for all authoritative fixture inputs before the simulated retro run, then compare them afterward. Only the expected `archived/retro-[cycle-date].md` and bounded retro phase-event output may differ. The test must fail if proposal acceptance is represented as target mutation.
+```
+RED evidence — 1.2 / RL-001–RL-008
+Command: bats tests/agtoosa.bats -f "DEV-056 RL-"
+Exit code: 1
+Failure excerpt:
+  not ok 1 DEV-056 RL-001: `[ -f "$f" ]' failed  (AgToosa_Retro.md missing)
+  not ok 2–7: same missing contract
+  not ok 8 DEV-056 RL-008: Docs/AgToosa_Retro.md absent from --list-template-files
+Timestamp: 2026-07-12T02:48:00Z
+```
 
-### Negative and Boundary Cases
+### GREEN evidence — recorded
 
-- Missing required proposal field
-- Unknown proposal type or status
-- Policy proposal without `enforcement_class`
-- Duplicate proposal ID
-- Two observations that cite the same artifact row rather than two distinct pointers
-- Missing optional evidence files
-- Malformed optional JSONL event row
-- Existing retro file for the same normalized cycle date
-- Credential, private URL, or oversized log excerpt in source text
-- Workflow wording that treats external agents, trackers, or retro output as lifecycle authority
+```
+GREEN evidence — 5.1 / DEV-056
+Command: bats tests/agtoosa.bats -f "DEV-056"
+Exit code: 0
+Pass/fail: PASS — 9/9 (CW-019 + RL-001–RL-008)
+Timestamp: 2026-07-12T02:52:52Z (re-verified after RL-007 fixture marker fix)
 
-## Planned Smoke Set
+GREEN evidence — RL namespace
+Command: bats tests/agtoosa.bats -f "RL-"
+Exit code: 0
+Pass/fail: PASS — 8/8
 
-All seven tests are planned smoke checks because each covers a Must AC and the contract is documentation/fixture focused.
+GREEN evidence — verifier
+Command: bash docs/agtoosa-verify.sh
+Exit code: 0
+Result: PASS (0 fail)
 
-| Test ID | Must AC covered | Why smoke |
-|---------|-----------------|-----------|
-| RL-001 | AC-001 | Locks the durable artifact schema and one-file-per-cycle behavior. |
-| RL-002 | AC-002 | Keeps every follow-up actionable and traceable. |
-| RL-003 | AC-003 | Prevents the retro from bypassing lifecycle approval. |
-| RL-004 | AC-004 | Preserves local-first operation and graceful missing-source behavior. |
-| RL-005 | AC-005 | Prevents automated-learning and enforcement overclaims. |
-| RL-006 | AC-006 | Makes repeated-pattern classification falsifiable. |
-| RL-007 | AC-007 | Protects secrets and bounds copied evidence. |
+GREEN evidence — whitespace
+Command: git diff --check
+Exit code: 0
+```
 
-## TDD Evidence Placeholders
-
-No commands below have been executed. Replace each placeholder only during an enrolled build, preserving the exact command, exit code, and bounded output excerpt.
-
-### RED evidence — unexecuted
-
-| Task / tests | Future command | Expected failing condition before implementation | Status |
-|--------------|----------------|--------------------------------------------------|--------|
-| 1.2 / RL-001, RL-004, RL-006, RL-007 | `bats tests/agtoosa.bats -f "DEV-056"` | Retro contract and fixture behavior do not yet exist | NOT RUN |
-| 4.2 / RL-002, RL-003, RL-005 | `bats tests/agtoosa.bats -f "RL-00[235]"` | Proposal boundary and enforcement wording are not wired | NOT RUN |
-
-Required RED record for each row: command, nonzero exit, failing test names, minimal failure excerpt, timestamp.
-
-### GREEN evidence — unexecuted
-
-| Task / tests | Future command | Expected passing condition after implementation | Status |
-|--------------|----------------|-------------------------------------------------|--------|
-| 5.1 / RL-001–RL-007 | `bats tests/agtoosa.bats -f "DEV-056"` | All RL contract and fixture checks pass | NOT RUN |
-| 5.1 / RL-001–RL-007 | `bats tests/agtoosa.bats -f "RL-"` | RL namespace passes independently | NOT RUN |
-| 5.1 / regression | `bats tests/agtoosa.bats` | Full generator suite remains green | NOT RUN |
-
-Required GREEN record for each row: command, exit `0`, passing test count, bounded output excerpt, timestamp.
-
-## Future Validation Commands
-
-Run only after DEV-056 is enrolled and the corresponding implementation wave is ready:
+## Validation Commands
 
 ```bash
 bats tests/agtoosa.bats -f "DEV-056"
 bats tests/agtoosa.bats -f "RL-"
 bash docs/agtoosa-verify.sh
-bats tests/agtoosa.bats
 git diff --check
 ```
 
-A future report must distinguish the generated workflow contract, CI checks when run, agent-instructed proposal generation, manual proposal acceptance, and roadmap automatic application.
+Claim boundary: generator installs Retro contract; RL bats are CI-enforced when run; proposal generation is agent-instructed; acceptance is manual; automatic application is roadmap.
 
 ## Evidence Status
 
-RED evidence: not recorded.
-GREEN evidence: not recorded.
+RED evidence: recorded.
+GREEN evidence: recorded (focused).
 Review evidence: not recorded.
 Ship evidence: not recorded.

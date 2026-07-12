@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-052
 > **Epic:** DEV-002 — Workflow Templates
-> **Status:** ⬜ Backlog
+> **Status:** ✅ Done
 > **Estimate:** M
 > **Spec created:** 2026-06-08
 > **Spec deepened:** 2026-07-11
@@ -154,18 +154,18 @@ The future build may begin only after DEV-059 is shipped. Any hook-script or set
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Contract and RED coverage
-  - [ ] 1.1 Add failing `HK-001`–`HK-007` assertions and safe merge fixtures before implementation — _Requirements: AC-008_
-  - [ ] 1.2 Create both Hooks guide copies with the event matrix, Claim Boundary, secret-safe output, optional-health, and removal contracts — _Requirements: AC-001, AC-003, AC-005, AC-006_
-- [ ] **2.** Lifecycle and policy wiring
-  - [ ] 2.1 Add Init/Update preview, explicit approval, preservation, deduplication, decline, and removal behavior — _Requirements: AC-002, AC-007_
-  - [ ] 2.2 Link the shipped DEV-059 resolver and exact enforcement/on-violation semantics without changing its schema — _Requirements: AC-004_
-  - [ ] 2.3 Add Build/Ship event pointers and checklist fallbacks for every event without duplicating the matrix — _Requirements: AC-001, AC-005, AC-006_
-- [ ] **3.** Installation and proof
-  - [ ] 3.1 Register the guide and lock existing Claude settings/script parity plus secret-safe output — _Requirements: AC-003, AC-007, AC-008_
-  - [ ] 3.2 Run future GREEN validation, capture an approved and declined preview fixture, and replace every evidence placeholder — _Requirements: AC-002, AC-008_
+- [x] **1.** Contract and RED coverage
+  - [x] 1.1 Add failing `HK-001`–`HK-007` assertions and safe merge fixtures before implementation — _Requirements: AC-008_
+  - [x] 1.2 Create both Hooks guide copies with the event matrix, Claim Boundary, secret-safe output, optional-health, and removal contracts — _Requirements: AC-001, AC-003, AC-005, AC-006_
+- [x] **2.** Lifecycle and policy wiring
+  - [x] 2.1 Add Init/Update preview, explicit approval, preservation, deduplication, decline, and removal behavior — _Requirements: AC-002, AC-007_
+  - [x] 2.2 Link the shipped DEV-059 resolver and exact enforcement/on-violation semantics without changing its schema — _Requirements: AC-004_
+  - [x] 2.3 Add Build/Ship event pointers and checklist fallbacks for every event without duplicating the matrix — _Requirements: AC-001, AC-005, AC-006_
+- [x] **3.** Installation and proof
+  - [x] 3.1 Register the guide and lock existing Claude settings/script parity plus secret-safe output — _Requirements: AC-003, AC-007, AC-008_
+  - [x] 3.2 Run future GREEN validation, capture an approved and declined preview fixture, and replace every evidence placeholder — _Requirements: AC-002, AC-008_
 
-### 3.2 Wave Plan
+### Wave Plan
 
 **Wave 1 (parallel):** 1.1, 1.2
 
