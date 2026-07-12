@@ -3,7 +3,7 @@
 > **Story ID:** DEV-106
 > **Type:** Docs
 > **Epic:** DEV-004 — Delivery, Quality & Operations
-> **Status:** 🟦 Todo — Rev4 Wave 3 (enrolled)
+> **Status:** 🟩 Built — SHOW-001–007 green
 > **Estimate:** XS
 > **Priority:** P2
 > **Spec created:** 2026-07-12
@@ -106,7 +106,7 @@ Optional: add a `## Built with AgToosa` subsection in `README.md` with one link 
 
 ### 2.4 Build Scope
 
-⬜ Backlog — Proposed Scope Boundary (not build authorization)
+🟩 Built — Wave 3
 
 Files in scope      : `docs/built-with-agtoosa.md`, index discovery link, optional README link, SHOW bats
 Directories in scope: `docs/`, `tests/`
@@ -116,14 +116,14 @@ Out of scope        : gallery app, analytics, paid placement, automatic scraping
 
 ### 3.1 Task Tree
 
-- [ ] **1.** RED showcase contract
-  - [ ] 1.1 Add SHOW page presence and submission-rule fixtures — _Requirements: AC-001, AC-002, AC-003_
-  - [ ] 1.2 Add link-only, case-study cross-link, and forbidden-claim fixtures — _Requirements: AC-004, AC-005, AC-007_
-- [ ] **2.** Author showcase
-  - [ ] 2.1 Write `built-with-agtoosa.md` with rules and listing table — _Requirements: AC-001–AC-005_
-  - [ ] 2.2 Add `docs/index.md` discovery link — _Requirements: AC-006_
-- [ ] **3.** Evidence
-  - [ ] 3.1 Record RED/GREEN SHOW evidence — _Requirements: AC-001–AC-007_
+- [x] **1.** RED showcase contract
+  - [x] 1.1 Add SHOW page presence and submission-rule fixtures — _Requirements: AC-001, AC-002, AC-003_
+  - [x] 1.2 Add link-only, case-study cross-link, and forbidden-claim fixtures — _Requirements: AC-004, AC-005, AC-007_
+- [x] **2.** Author showcase
+  - [x] 2.1 Write `built-with-agtoosa.md` with rules and listing table — _Requirements: AC-001–AC-005_
+  - [x] 2.2 Add `docs/index.md` discovery link — _Requirements: AC-006_
+- [x] **3.** Evidence
+  - [x] 3.1 Record RED/GREEN SHOW evidence — _Requirements: AC-001–AC-007_
 
 ### 3.2 Wave Plan
 

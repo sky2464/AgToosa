@@ -38,7 +38,7 @@ Users report two related product failures:
 | Must AC → test-plan mapping | Pass — see test plan |
 | Claim Boundary classified | Pass — §1.6 |
 | Master-Plan source of truth preserved | Pass |
-| TBD / placeholder requirements | Pass — estimate pending enrollment only |
+| TBD / placeholder requirements | Pass — estimate L; backlog only (not Active Cycle) |
 
 ## 1. Requirements
 
@@ -50,8 +50,8 @@ Users report two related product failures:
 | User outcome | After any lifecycle phase, the obvious next step is the next lifecycle command plus a one-line SYNC pulse; multi-spec work cannot finalize detailed specs while tagged `needs-interview`. |
 | Success condition | Dual-line closure + SYNC format documented and wired in Spec/Build/Review/Ship (+ mirrors/adapters); Bash `--status-line` and PS1 `-StatusLine` emit the same pulse; multi-spec intake + soft interview budget + clarity tags in Spec/Agent/Master-Plan template; LNS bats + PS1 greps green. |
 | Proof / evidence | `docs/AgToosa_TestPlan-DEV-109.md`; bats filter `DEV-109` / `LNS-`; review evidence at ship. |
-| Non-goals | Replacing full `/agtoosa-status`; auto-chaining phases (Phase Stop preserved); runtime swarm (DEV-107); voluntary scorecard (roadmap DEV-108); changing Part 5.5 finding-ranking algorithm beyond empty/healthy lifecycle nudge. |
-| Assumptions | Wave 1a (086/090/105) may still be In Review; this story enrolls backlog until capacity frees unless user enrolls earlier. |
+| Non-goals | Replacing full `/agtoosa-status`; auto-chaining phases (Phase Stop preserved); runtime swarm (DEV-107); voluntary scorecard (roadmap DEV-108); changing Part 5.5 finding-ranking algorithm beyond empty/healthy lifecycle nudge; merging into DEV-110 (DEV-110 handles freeform cold-start Project Intake; DEV-109 handles post-phase lifecycle sync and multi-spec clarity). |
+| Assumptions | Wave 3 may occupy Active Cycle; DEV-109 stays backlog until after last wave; build deferred until capacity frees (not enrolled in Active Cycle). |
 | Risks | Closure-line bats break everywhere; Clarity column confuses old Master-Plans; agents ignore tags. Mitigate with optional column, alias acceptance, and contract bats. |
 | Unresolved questions | None for Must scope. |
 
@@ -288,3 +288,19 @@ See `docs/AgToosa_TestPlan-DEV-109.md`.
 | Skill name | Trigger | Purpose | Decision |
 |------------|---------|---------|----------|
 | _(none)_ | — | Dual-line/SYNC belongs in core AgToosa workflows; reserved `agtoosa-*` names must not be generated | **Do not generate** |
+
+## Capability Delta
+
+Capability: lifecycle-next-step-sync
+
+| Change | Requirement | Notes |
+|--------|-------------|-------|
+| ADDED | WHEN Spec/Build/Review/Ship completes successfully, THE SYSTEM SHALL print a primary lifecycle next-step (not `/agtoosa-status` as headline) plus an executive SYNC pulse | dual-line close |
+| ADDED | WHEN `agtoosa.sh --status-line` or `agtoosa.ps1 -StatusLine` runs, THE SYSTEM SHALL emit the same SYNC format read-only from Master-Plan | generator-enforced CLI |
+| ADDED | WHEN multi-objective spec work is requested, THE SYSTEM SHALL run multi-spec intake with combinable clarity tags (`ready`, `sa-ready`, `needs-interview`) | per-story interview gate |
+| ADDED | WHEN Plan-Mode Spec Interview hits soft cap, THE SYSTEM SHALL allow repeating +4 on free-text new directions until Decision-complete | not a hard stop at 8 |
+| ADDED | WHEN describing phase close, THE SYSTEM SHALL demote universal status-only closure to optional verify guidance | preserves closure-loop without obscuring lifecycle |
+
+## ✅ Spec Approved
+
+Approved: 2026-07-12 14:30

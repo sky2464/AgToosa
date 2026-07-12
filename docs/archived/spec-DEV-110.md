@@ -29,7 +29,16 @@ Closest existing patterns (extend, do not replace): Discovery Triage (mid-build 
 
 **Specialist lanes:** none (no `docs/Context/specialists.md`).
 
-### Spec Quality Analyzer (2026-07-12)
+**Story Skill Opportunity Synthesis (2026-07-12):**
+
+| Skill name | Trigger | Purpose | Decision | Reason |
+|------------|---------|---------|----------|--------|
+| `project-intake` | Freeform ask without `/agtoosa-*` | Classify and route intake | **Do not generate** | Reserved `agtoosa-*` namespace; behavior belongs in always-on Agent contract + `agtoosa-core.mdc` |
+| `agtoosa-help` duplicate | Same as help-next | Suggest next command | **Do not generate** | help-next is suggest-only; intake is classify + expedite/hard-gate |
+
+**Active Tasks policy:** Task tree lives in spec §3.1 until enrollment; mirror to `docs/Master-Plan.md` `## Active Tasks` when DEV-110 enters Active Cycle (backlog after DEV-109; expedite when capacity frees).
+
+### Spec Quality Analyzer (2026-07-12, re-run)
 
 | Check | Result |
 |-------|--------|

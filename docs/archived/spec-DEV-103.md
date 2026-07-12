@@ -3,7 +3,7 @@
 > **Story ID:** DEV-103
 > **Type:** Chore
 > **Epic:** DEV-003 — Community Template Registry
-> **Status:** 🟦 Todo — Rev4 Wave 3 (enrolled)
+> **Status:** 🟩 Built — Rev4 Wave 3 (PUB green)
 > **Estimate:** S
 > **Priority:** P2
 > **Spec created:** 2026-07-12
@@ -123,14 +123,14 @@ Out of scope        : external registry automation, install behavior changes, ma
 
 ### 3.1 Task Tree
 
-- [ ] **1.** RED runbook contract
-  - [ ] 1.1 Add PUB phase and checklist completeness fixtures — _Requirements: AC-001, AC-002, AC-006_
-  - [ ] 1.2 Add state-machine and forbidden-claim fixtures — _Requirements: AC-004, AC-005, AC-007_
-- [ ] **2.** Author runbook
-  - [ ] 2.1 Write `registry-external-publication-runbook.md` with pre-submit, submit, confirm sections — _Requirements: AC-001–AC-005_
-  - [ ] 2.2 Link from pilot checklist and registry inventory — _Requirements: AC-006_
-- [ ] **3.** Evidence
-  - [ ] 3.1 Record RED/GREEN PUB evidence — _Requirements: AC-001–AC-007_
+- [x] **1.** RED runbook contract
+  - [x] 1.1 Add PUB phase and checklist completeness fixtures — _Requirements: AC-001, AC-002, AC-006_
+  - [x] 1.2 Add state-machine and forbidden-claim fixtures — _Requirements: AC-004, AC-005, AC-007_
+- [x] **2.** Author runbook
+  - [x] 2.1 Write `registry-external-publication-runbook.md` with pre-submit, submit, confirm sections — _Requirements: AC-001–AC-005_
+  - [x] 2.2 Link from pilot checklist and registry inventory — _Requirements: AC-006_
+- [x] **3.** Evidence
+  - [x] 3.1 Record RED/GREEN PUB evidence — _Requirements: AC-001–AC-007_
 
 ### 3.2 Wave Plan
 

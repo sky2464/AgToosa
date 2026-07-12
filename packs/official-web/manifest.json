@@ -43,7 +43,7 @@
         "registry_name": "official-web",
         "version": "0.1.0",
         "source": "packs/official-web/ AgToosa maintainer repo local candidate",
-        "sha256": "462f4747237ddd5cfeef3a5196bd0e1688eace6ec65edc08bfbd2fec7352752a",
+        "sha256": "e8ebe42ec7125a9de0a89d561e0aa9eb647d72bd2a73e16df300c54c3f26ea69",
         "signature": "not-present"
       }
     }

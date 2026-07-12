@@ -118,14 +118,14 @@ Out of scope        : new offline features, registry transport changes, proxy to
 
 ### 3.1 Task Tree
 
-- [ ] **1.** RED matrix contract
-  - [ ] 1.1 Add NET required-row and dependency-class fixtures — _Requirements: AC-002, AC-004, AC-006_
-  - [ ] 1.2 Add cross-link and non-duplication fixtures — _Requirements: AC-005_
-- [ ] **2.** Author matrix
-  - [ ] 2.1 Write `AgToosa_Network_Matrix.md` and template mirror — _Requirements: AC-001–AC-004_
-  - [ ] 2.2 Add Agent/Registry discovery links; register in `DOCS_FILES` if applicable — _Requirements: AC-005_
-- [ ] **3.** Evidence
-  - [ ] 3.1 Record RED/GREEN NET evidence — _Requirements: AC-001–AC-006_
+- [x] **1.** RED matrix contract
+  - [x] 1.1 Add NET required-row and dependency-class fixtures — _Requirements: AC-002, AC-004, AC-006_
+  - [x] 1.2 Add cross-link and non-duplication fixtures — _Requirements: AC-005_
+- [x] **2.** Author matrix
+  - [x] 2.1 Write `AgToosa_Network_Matrix.md` and template mirror — _Requirements: AC-001–AC-004_
+  - [x] 2.2 Add Agent/Registry discovery links; register in `DOCS_FILES` if applicable — _Requirements: AC-005_
+- [x] **3.** Evidence
+  - [x] 3.1 Record RED/GREEN NET evidence — _Requirements: AC-001–AC-006_
 
 ### 3.2 Wave Plan
 

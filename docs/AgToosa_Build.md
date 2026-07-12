@@ -81,6 +81,8 @@ After every command, test run, scan, or parallel subagent during `/agtoosa-build
 
 3.  **Wave execution:** Read `### 3.2 Wave Plan` and `### 3.4 Work Package DAG` in the active spec and execute tasks **wave by wave**: complete every task in Wave N — including its Terminal Evidence — before starting Wave N+1. Within a wave, tasks share no files or data dependencies, so on Claude Code they may be dispatched in parallel via the pattern above; on all other platforms run the wave's tasks sequentially. If the spec has no Wave Plan, fall back to the `## Active Tasks` order in `docs/Master-Plan.md`.
 
+    > **Orchestration Brain step 0:** Before Wave / Work Package fan-out, read `docs/AgToosa_Orchestration.md` and run Capability Inventory → lane plan → parallel or sequential dispatch → orchestrator merge.
+
     > **Work Package fan-out gate (agent-instructed):** Before parallel fan-out of a wave, read each Work Package row for that wave:
     > - Confirm every `depends_on` package exists, is complete, and has an **earlier wave**.
     > - Confirm same-wave `owned_files` sets are **disjoint**. On overlap, do **not** fan out in parallel — convert the affected packages to an explicit **sequential fallback** in the Wave Plan and run them in `merge_order`.

@@ -124,6 +124,8 @@ A sidecar file next to a `file://` tarball (`pack.tar.gz.minisig`) is also recog
 
 ## Offline cache and trust
 
+> **Canonical CLI matrix:** See [`Docs/AgToosa_Network_Matrix.md`](AgToosa_Network_Matrix.md) for offline / network-optional / network-required classes across install, update, verify, doctor, registry, catalog, and launch-readiness. This section covers registry cache locations only — not a competing dependency table.
+
 AgToosa caches `registry.json` locally so list/search/info work when the network is slow or unavailable (default TTL: 1 hour).
 
 | Surface | Cache location |
@@ -247,7 +249,7 @@ Official pilots and other inventory rows use the same honesty rules:
 | **submitted** | PR or submission opened against `agtoosa-registry` | “submitted” — **not** published, **not** “available in the registry” |
 | **published** | Accepted external registry record **independently confirmed** | “externally published” / “available” in registry |
 
-Do not report a pack as published or available until that independent confirmation exists. External publication procedure ownership remains with the pilot checklist today; a dedicated runbook may be linked here when authored — this section does not claim that runbook exists yet.
+Do not report a pack as published or available until that independent confirmation exists. Canonical external submit/confirm procedure: see the AgToosa distribution’s `docs/registry-external-publication-runbook.md` (maintainer dogfood path; not installed into host `Docs/` by default).
 
 ### Install safety reminder
 
@@ -257,17 +259,19 @@ Do not report a pack as published or available until that independent confirmati
 
 ## Official Pack Pilot
 
-AgToosa maintains exactly three **local candidate** official pilot packs (not a marketplace; **not externally published** until an accepted external registry record is confirmed). Catalog contract: DEV-053 `schema_version` 1.0.
+AgToosa maintains exactly five **local candidate** official pilot packs (Rev4 five-pack maximum; not a marketplace; **not externally published** until an accepted external registry record is confirmed). Catalog contract: DEV-053 `schema_version` 1.0. `official-web` is stack-agnostic SPA; `official-react` is React/Next/Vite-specific.
 
 | Pack | Primary domain | Status |
 |------|----------------|--------|
 | `official-web` | primary domain: web | local candidate — not externally published |
 | `official-api` | primary domain: api | local candidate — not externally published |
 | `official-infra` | primary domain: infrastructure | local candidate — not externally published |
+| `official-react` | primary domain: react | local candidate — not externally published |
+| `official-security` | primary domain: security | local candidate — not externally published |
 
 **Support boundary:** “Official” means curated under documented maintenance policy for the pilot — not a fit guarantee. Install via local pack path when provided by your AgToosa distribution; registry safety controls (preview, consent, allowlist, denylist) remain authoritative.
 
-External submission/approval is **manual**. A local artifact or open PR is not proof of publication.
+External submission/approval is **manual**. A local artifact or open PR is not proof of publication. Maintainer procedure: `docs/registry-external-publication-runbook.md` (AgToosa source tree).
 
 ## Extension and Preset Catalog
 

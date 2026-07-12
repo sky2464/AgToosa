@@ -105,7 +105,7 @@ Files to change:
 
 ### 2.4 Build Scope
 
-⬜ Backlog — Proposed Scope Boundary (not build authorization)
+✅ Build authorized — Rev4 Wave 3 (DEV-099)
 
 Files in scope      : `docs/AgToosa_Core_Contract.md`, template mirror, `lib/config.sh` registration, README link, CORE bats
 Directories in scope: `docs/`, `template/Docs/`, `lib/`, `tests/`
@@ -115,14 +115,14 @@ Out of scope        : install behavior changes, pack trust labeling, registry co
 
 ### 3.1 Task Tree
 
-- [ ] **1.** RED parity contract
-  - [ ] 1.1 Add CORE document presence and array parity fixtures — _Requirements: AC-002–AC-005_
-  - [ ] 1.2 Add core-command inventory and enforcement-class fixtures — _Requirements: AC-001, AC-006_
-- [ ] **2.** Author core contract
-  - [ ] 2.1 Write `AgToosa_Core_Contract.md` and template mirror from config arrays — _Requirements: AC-001–AC-004, AC-006_
-  - [ ] 2.2 Register doc in `DOCS_FILES` and add README discovery link — _Requirements: AC-007_
-- [ ] **3.** Evidence
-  - [ ] 3.1 Record RED/GREEN CORE evidence — _Requirements: AC-001–AC-007_
+- [x] **1.** RED parity contract
+  - [x] 1.1 Add CORE document presence and array parity fixtures — _Requirements: AC-002–AC-005_
+  - [x] 1.2 Add core-command inventory and enforcement-class fixtures — _Requirements: AC-001, AC-006_
+- [x] **2.** Author core contract
+  - [x] 2.1 Write `AgToosa_Core_Contract.md` and template mirror from config arrays — _Requirements: AC-001–AC-004, AC-006_
+  - [x] 2.2 Register doc in `DOCS_FILES` and add README discovery link — _Requirements: AC-007_
+- [x] **3.** Evidence
+  - [x] 3.1 Record RED/GREEN CORE evidence — _Requirements: AC-001–AC-007_
 
 ### 3.2 Wave Plan
 

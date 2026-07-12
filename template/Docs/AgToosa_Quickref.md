@@ -31,6 +31,7 @@ Utilities (on demand): `/agtoosa-status`, `/agtoosa-task`, `/agtoosa-qa`, `/agto
    the Master-Plan Backlog, not into the current diff.
 7. **Work Package DAG (when present).** Specs may declare `### 3.4 Work Package DAG` rows; Build checks ownership before fan-out; Handoff/Import report gaps. Agent-instructed derivation; generator-enforced schema copies; bats/CI when wired.
 8. **Optional worktree isolation.** See `Docs/AgToosa_Worktree.md` for M+ multi-package lanes; Git commands are **manual**.
+9. **Orchestration Brain.** Before lifecycle fan-out, run step 0 in `Docs/AgToosa_Orchestration.md` (inventory → lanes → merge). Agent-instructed; not a runtime scheduler.
 
 ## State files
 

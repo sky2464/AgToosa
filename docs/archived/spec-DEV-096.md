@@ -3,13 +3,13 @@
 > **Story ID:** DEV-096
 > **Type:** Chore
 > **Epic:** DEV-003 — Community Template Registry
-> **Status:** 🟦 Todo — Rev4 Wave 3 (enrolled)
+> **Status:** 🟩 Built — Rev4 Wave 3
 > **Estimate:** S
 > **Priority:** P1
 > **Spec created:** 2026-07-12
 > **Spec deepened:** 2026-07-12
 > **Depends on:** DEV-080 (shipped three-pack pilot and OPP tests)
-> **Blocks:** DEV-095 (official pack expansion)
+> **Blocks:** DEV-095 (official pack expansion) — **unlocked** (DEV-096 GREEN)
 
 ## Context
 
@@ -113,9 +113,9 @@ No change to registry install semantics.
 
 ### 2.4 Build Scope
 
-⬜ Backlog — Proposed Scope Boundary (not build authorization)
+✅ Built — DEV-096 GREEN (2026-07-12)
 
-Files in scope      : `.github/workflows/pack-validate.yml`, validation helper script, PV bats, checklist doc update
+Files in scope      : `.github/workflows/pack-validate.yml`, `scripts/validate-official-packs.sh`, PV bats, checklist doc update
 Directories in scope: `.github/workflows/`, `scripts/`, `packs/official-*`, `tests/fixtures/registry-packs/official-*`, `tests/`
 Out of scope        : community pack validation at scale, automatic fixture rewrite, external registry CI
 
@@ -123,14 +123,14 @@ Out of scope        : community pack validation at scale, automatic fixture rewr
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Fixture-based RED coverage
-  - [ ] 1.1 Add SHA drift and manifest failure fixtures — _Requirements: AC-002, AC-003, AC-006_
-  - [ ] 1.2 Add fixture parity mismatch and actionable-error fixtures — _Requirements: AC-004, AC-006_
-- [ ] **2.** Validation helper and workflow
-  - [ ] 2.1 Implement deterministic SHA and tree parity checks — _Requirements: AC-003, AC-004, AC-006_
-  - [ ] 2.2 Add `pack-validate.yml` with path filters and OPP bats step — _Requirements: AC-001, AC-005, AC-007_
-- [ ] **3.** Evidence
-  - [ ] 3.1 Record RED/GREEN PV evidence and verify green OPP baseline — _Requirements: AC-001–AC-007_
+- [x] **1.** Fixture-based RED coverage
+  - [x] 1.1 Add SHA drift and manifest failure fixtures — _Requirements: AC-002, AC-003, AC-006_
+  - [x] 1.2 Add fixture parity mismatch and actionable-error fixtures — _Requirements: AC-004, AC-006_
+- [x] **2.** Validation helper and workflow
+  - [x] 2.1 Implement deterministic SHA and tree parity checks — _Requirements: AC-003, AC-004, AC-006_
+  - [x] 2.2 Add `pack-validate.yml` with path filters and OPP bats step — _Requirements: AC-001, AC-005, AC-007_
+- [x] **3.** Evidence
+  - [x] 3.1 Record RED/GREEN PV evidence and verify green OPP baseline — _Requirements: AC-001–AC-007_
 
 ### 3.2 Wave Plan
 

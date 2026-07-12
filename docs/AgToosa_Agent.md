@@ -129,6 +129,7 @@ Specialist lanes must emit the **structured evidence block** defined in `docs/Ag
 
 ## Key References
 
+- `docs/AgToosa_Network_Matrix.md` — Offline / network-optional / network-required CLI matrix (canonical; do not duplicate elsewhere)
 - `docs/AgToosa_Quickref.md` — One-page command + rules quickref (cheapest context entry point)
 - `docs/Master-Plan.md` — Source of truth for project state and backlog (read before every command)
 - `docs/agtoosa-verify.sh` — Deterministic lifecycle verifier (`bash docs/agtoosa-verify.sh [--strict|stats]`); CI gate template in `docs/agtoosa-gate.yml.example`
@@ -138,6 +139,7 @@ Specialist lanes must emit the **structured evidence block** defined in `docs/Ag
 - `docs/AgToosa_Goal.md` — Goal clarification utility/sub-workflow
 - `docs/AgToosa_Skills.md` — Subagent skill-to-command mapping and Codex skill contracts
 - `docs/AgToosa_Specialists.md` — Project-specific specialist subagent contract and orchestration
+- `docs/AgToosa_Orchestration.md` — Agent-instructed fan-out brain (inventory → lane plan → merge; step 0 before lifecycle fan-out)
 - `docs/AgToosa_CrossModelReview.md` — Cross-model review gate (writer/reviewer separation, evidence merge, fallbacks)
 - `docs/AgToosa_Changelog.md` — Project changelog
 - `docs/Master-Architecture.md` — Current solution architecture, C4-style diagrams, boundaries, data flow, deployment, security, and observability

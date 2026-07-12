@@ -18,6 +18,8 @@ Deploy the completed feature, clean up the workspace, archive completed work, an
 
 ## Workflow
 
+**Orchestration Brain step 0:** Before independent check / docs / retro prep lanes that may run in parallel, read `docs/AgToosa_Orchestration.md` and run Capability Inventory → lane plan → parallel or sequential dispatch → orchestrator merge.
+
 ### Part 0 — Ship Readiness Gate (`/agtoosa-ship check` runs this exclusively)
 
 > **`/agtoosa-ship check` contract (read-only):** Execute **Part 0 only**. Read `docs/Master-Plan.md`, archived spec/review, changelog, and git history as needed. **Do not** deploy, squash WIP commits, archive specs, bump versions, or mutate any file. **Do not** present the full-flow deployment approval gate. Stop after printing the readiness output below.

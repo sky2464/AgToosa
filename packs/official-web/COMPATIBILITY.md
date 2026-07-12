@@ -6,6 +6,16 @@
 |-----------|-------|
 | AgToosa | `>=5.0.0 <6.0.0` |
 | Platforms | `cursor`, `claude` |
+| Frontend scope | Stack-agnostic SPA / generic web workflow |
+
+## Domain boundary vs official-react
+
+| Pack | Role |
+|------|------|
+| `official-web` | Stack-agnostic SPA / generic web (this pack — retain; no rename) |
+| `official-react` | React/Next/Vite-specific ACs and tooling hooks |
+
+Do not treat React-specific hooks as primary guidance here — use `official-react` for that domain.
 
 ## Untested / incompatible
 

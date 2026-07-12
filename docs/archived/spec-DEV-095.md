@@ -3,7 +3,7 @@
 > **Story ID:** DEV-095
 > **Type:** Feature
 > **Epic:** DEV-003 — Community Template Registry
-> **Status:** 🚫 Blocked — Wave 3 enrolled (wait DEV-096 GREEN)
+> **Status:** 🟩 Built — Wave 3 (OPE 10/10)
 > **Estimate:** M
 > **Priority:** P1
 > **Spec created:** 2026-07-12
@@ -140,18 +140,18 @@ Out of scope        : sixth pack, `official-web` rename, marketplace, automatic 
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Expansion contract and RED coverage
-  - [ ] 1.1 Add OPE inventory and manifest fixtures for five-pack ceiling — _Requirements: AC-001, AC-002_
-  - [ ] 1.2 Add negative fixtures for web/react domain overlap and sixth-pack rejection — _Requirements: AC-001, AC-004_
-- [ ] **2.** Author `official-react`
-  - [ ] 2.1 Author manifest, examples with example-repo link, compatibility, and ownership — _Requirements: AC-002, AC-003, AC-004, AC-008_
-  - [ ] 2.2 Add fixture and isolated install/preview/queue/merge proof — _Requirements: AC-006, AC-007_
-- [ ] **3.** Author `official-security`
-  - [ ] 3.1 Author manifest, examples with example-repo link, compatibility, and ownership — _Requirements: AC-002, AC-003, AC-005, AC-008_
-  - [ ] 3.2 Add fixture and isolated install/preview/queue/merge proof — _Requirements: AC-006, AC-007_
-- [ ] **4.** Inventory and evidence
-  - [ ] 4.1 Update registry docs and checklist to five-pack inventory with honest publication state — _Requirements: AC-001, AC-009_
-  - [ ] 4.2 Record RED/GREEN OPE evidence — _Requirements: AC-001–AC-009_
+- [x] **1.** Expansion contract and RED coverage
+  - [x] 1.1 Add OPE inventory and manifest fixtures for five-pack ceiling — _Requirements: AC-001, AC-002_
+  - [x] 1.2 Add negative fixtures for web/react domain overlap and sixth-pack rejection — _Requirements: AC-001, AC-004_
+- [x] **2.** Author `official-react`
+  - [x] 2.1 Author manifest, examples with example-repo link, compatibility, and ownership — _Requirements: AC-002, AC-003, AC-004, AC-008_
+  - [x] 2.2 Add fixture and isolated install/preview/queue/merge proof — _Requirements: AC-006, AC-007_
+- [x] **3.** Author `official-security`
+  - [x] 3.1 Author manifest, examples with example-repo link, compatibility, and ownership — _Requirements: AC-002, AC-003, AC-005, AC-008_
+  - [x] 3.2 Add fixture and isolated install/preview/queue/merge proof — _Requirements: AC-006, AC-007_
+- [x] **4.** Inventory and evidence
+  - [x] 4.1 Update registry docs and checklist to five-pack inventory with honest publication state — _Requirements: AC-001, AC-009_
+  - [x] 4.2 Record RED/GREEN OPE evidence — _Requirements: AC-001–AC-009_
 
 ### 3.2 Wave Plan
 

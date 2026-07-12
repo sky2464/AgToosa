@@ -124,6 +124,8 @@ A sidecar file next to a `file://` tarball (`pack.tar.gz.minisig`) is also recog
 
 ## Offline cache and trust
 
+> **Canonical CLI matrix:** See [`docs/AgToosa_Network_Matrix.md`](AgToosa_Network_Matrix.md) for offline / network-optional / network-required classes across install, update, verify, doctor, registry, catalog, and launch-readiness. This section covers registry cache locations only — not a competing dependency table.
+
 AgToosa caches `registry.json` locally so list/search/info work when the network is slow or unavailable (default TTL: 1 hour).
 
 | Surface | Cache location |
@@ -247,7 +249,7 @@ Official pilots and other inventory rows use the same honesty rules:
 | **submitted** | PR or submission opened against `agtoosa-registry` | “submitted” — **not** published, **not** “available in the registry” |
 | **published** | Accepted external registry record **independently confirmed** | “externally published” / “available” in registry |
 
-Do not report a pack as published or available until that independent confirmation exists. External publication procedure ownership remains with the pilot checklist today; a dedicated runbook may be linked here when authored (DEV-103) — this section does not claim that runbook exists yet.
+Do not report a pack as published or available until that independent confirmation exists. Canonical procedure for external submit/confirm (DEV-080 tasks 4.2/4.3): [`docs/registry-external-publication-runbook.md`](registry-external-publication-runbook.md).
 
 ### Install safety reminder
 
@@ -257,13 +259,15 @@ Do not report a pack as published or available until that independent confirmati
 
 ## Official Pack Pilot
 
-DEV-080 maintains exactly three **local candidate** packs (not a marketplace; **not externally published**). Catalog contract: DEV-053 `schema_version` 1.0. Maintainer: sky2464.
+DEV-095 maintains exactly five **local candidate** packs (Rev4 five-pack maximum; not a marketplace; **not externally published**). Catalog contract: DEV-053 `schema_version` 1.0. Maintainer: sky2464. Domain split: `official-web` stays stack-agnostic SPA; `official-react` is React/Next/Vite-specific.
 
 | Pack | Primary domain | Source root | Install fixture | Status |
 |------|----------------|-------------|-----------------|--------|
 | `official-web` | primary domain: web | `packs/official-web/` | `tests/fixtures/registry-packs/official-web/` | local candidate — not externally published |
 | `official-api` | primary domain: api | `packs/official-api/` | `tests/fixtures/registry-packs/official-api/` | local candidate — not externally published |
 | `official-infra` | primary domain: infrastructure | `packs/official-infra/` | `tests/fixtures/registry-packs/official-infra/` | local candidate — not externally published |
+| `official-react` | primary domain: react | `packs/official-react/` | `tests/fixtures/registry-packs/official-react/` | local candidate — not externally published |
+| `official-security` | primary domain: security | `packs/official-security/` | `tests/fixtures/registry-packs/official-security/` | local candidate — not externally published |
 
 **Support boundary:** “Official” means curated under each pack’s `MAINTENANCE.md` for the pilot. It is not a fit guarantee for every project and does not imply external registry availability.
 
@@ -273,11 +277,13 @@ DEV-080 maintains exactly three **local candidate** packs (not a marketplace; **
 bash agtoosa.sh --registry install ./packs/official-web
 bash agtoosa.sh --registry install ./packs/official-api
 bash agtoosa.sh --registry install ./packs/official-infra
+bash agtoosa.sh --registry install ./packs/official-react
+bash agtoosa.sh --registry install ./packs/official-security
 ```
 
-Evidence and review checklist: `docs/official-pack-pilot-checklist.md` · test plan: `docs/AgToosa_TestPlan-DEV-080.md`.
+Evidence and review checklist: `docs/official-pack-pilot-checklist.md` · test plans: `docs/AgToosa_TestPlan-DEV-080.md`, `docs/AgToosa_TestPlan-DEV-095.md` · external publication runbook: [`docs/registry-external-publication-runbook.md`](registry-external-publication-runbook.md).
 
-External submission/approval remains **manual**. Do not report a pack as externally published until the accepted `agtoosa-registry` record is independently confirmed.
+External submission/approval remains **manual**. Do not report a pack as externally published until the accepted `agtoosa-registry` record is independently confirmed (runbook confirm phase).
 
 ## Extension and Preset Catalog
 

@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "entries": [
+    {
+      "id": "ext-official-react",
+      "kind": "extension",
+      "name": "Official React Pack",
+      "summary": "Maintained AgToosa pilot pack for React/Next/Vite frontend workflows. Primary domain: react. Local candidate only \u2014 not externally published.",
+      "tags": [
+        "official",
+        "pilot",
+        "react",
+        "next",
+        "vite",
+        "frontend"
+      ],
+      "examples": [
+        "Install locally: bash agtoosa.sh --registry install ./packs/official-react",
+        "After queue, merge with bash agtoosa.sh in the host project"
+      ],
+      "maintainers": [
+        {
+          "name": "sky2464",
+          "contact": "https://github.com/sky2464"
+        }
+      ],
+      "support": "https://github.com/sky2464/AgToosa/issues",
+      "lifecycle": "maintained",
+      "reviewed_at": "2026-07-12",
+      "compatibility": {
+        "agtoosa": ">=5.0.0 <6.0.0",
+        "platforms": [
+          "cursor",
+          "claude"
+        ],
+        "requires": [],
+        "conflicts": []
+      },
+      "trust": {
+        "curation_tier": "official-pilot",
+        "registry_verified_snapshot": false,
+        "review_status": "local-candidate"
+      },
+      "provenance": {
+        "registry_name": "official-react",
+        "version": "0.1.0",
+        "source": "packs/official-react/ AgToosa maintainer repo local candidate",
+        "sha256": "52d02ae72ebe46dfa6a1daad3e89092f7658038198b086f05f391e09654b19a5",
+        "signature": "not-present"
+      }
+    }
+  ]
+}

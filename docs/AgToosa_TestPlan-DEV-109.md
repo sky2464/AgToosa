@@ -2,7 +2,7 @@
 
 > **Spec:** `docs/archived/spec-DEV-109.md`  
 > **Smoke filter:** `bats tests/agtoosa.bats -f "DEV-109\\|LNS-"`  
-> **Status:** ⬜ Spec draft — awaiting approval  
+> **Status:** ⬜ Spec Approved — build deferred (backlog after last wave)  
 > **Coverage target:** 80% focused contract tests (docs + CLI + PS1 greps)
 
 ## AC Coverage

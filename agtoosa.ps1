@@ -101,6 +101,8 @@ param(
     [switch]$Verify,
     [switch]$Doctor,
     [switch]$Uninstall,
+    [switch]$Reinstall,
+    [switch]$Clean,
     [string]$UpdatePath = "",
     [string]$Path = "",
     [string]$Platforms = "",
@@ -122,7 +124,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 # ── Version ───────────────────────────────────────────────────
-$AGTOOSA_VERSION = "5.3.18"
+$AGTOOSA_VERSION = "5.3.20"
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $TEMPLATE_DIR = Join-Path $SCRIPT_DIR "template"
 $SHIP_DIR = Join-Path $SCRIPT_DIR "ship"
@@ -195,10 +197,11 @@ ${BOLD}Options:${NC}
   -Verify               Run lifecycle verifier for a project (bash dispatch)
   -Doctor               Diagnose an AgToosa install (bash dispatch)
   -Uninstall            Remove AgToosa-owned files (bash dispatch; preserves user data)
+  -Reinstall -Clean     Optional destructive fresh reinstall (ADR-004 Option C; bash dispatch)
   -UpdatePath <path>    Target project path (required for maintain switches)
   -Path <dir>           Target project directory (non-interactive)
   -Platforms <list>    Comma-separated platforms (e.g. cursor,claude)
-  -Yes                  Non-interactive consent (requires -Path)
+  -Yes                  Non-interactive consent (requires -Path; required for -Reinstall -Clean)
 
 ${BOLD}Registry:${NC}
   -Registry -RegistryCommand list               List available packs
@@ -252,11 +255,14 @@ function Get-AgToosaBash {
 
 function Invoke-AgToosaMaintain {
     param(
-        [ValidateSet('verify', 'doctor', 'uninstall', 'update')]
+        [ValidateSet('verify', 'doctor', 'uninstall', 'update', 'reinstall-clean')]
         [string]$Operation,
-        [string]$ProjectPath
+        [string]$ProjectPath,
+        [switch]$Yes
     )
-    $switchLabel = $Operation.Substring(0, 1).ToUpper() + $Operation.Substring(1)
+    $switchLabel = if ($Operation -eq 'reinstall-clean') { 'Reinstall' } else {
+        $Operation.Substring(0, 1).ToUpper() + $Operation.Substring(1)
+    }
     if ([string]::IsNullOrWhiteSpace($ProjectPath)) {
         Write-Color "${RED}❌ Error: -UpdatePath requires a project directory path.${NC}"
         Write-Color "Example: .\agtoosa.ps1 -${switchLabel} -UpdatePath C:\Projects\MyApp"
@@ -275,13 +281,22 @@ function Invoke-AgToosaMaintain {
     if (-not $bash) {
         Write-Color "${RED}❌ Maintain commands require Bash (Git Bash or WSL).${NC}"
         Write-Color "Install Git for Windows: https://git-scm.com/download/win"
-        Write-Color "Example: bash agtoosa.sh --$Operation `"$ProjectPath`""
+        if ($Operation -eq 'reinstall-clean') {
+            Write-Color "Example: bash agtoosa.sh --reinstall --clean `"$ProjectPath`" --yes"
+        } else {
+            Write-Color "Example: bash agtoosa.sh --$Operation `"$ProjectPath`""
+        }
         exit 1
     }
 
     $agtoosaSh = Join-Path $SCRIPT_DIR 'agtoosa.sh'
-    # Parity dispatch: bash agtoosa.sh --update <path> (also verify, doctor, uninstall)
-    $args = @($agtoosaSh, "--$Operation", $ProjectPath)
+    # Parity dispatch: bash agtoosa.sh --update / --verify / --doctor / --uninstall / --reinstall --clean
+    $args = if ($Operation -eq 'reinstall-clean') {
+        @($agtoosaSh, '--reinstall', '--clean', $ProjectPath)
+    } else {
+        @($agtoosaSh, "--$Operation", $ProjectPath)
+    }
+    if ($Yes) { $args += '--yes' }
     & $bash @args
     exit $LASTEXITCODE
 }
@@ -1216,11 +1231,22 @@ if ($Doctor) {
 }
 
 if ($Uninstall) {
-    Invoke-AgToosaMaintain -Operation uninstall -ProjectPath $UpdatePath
+    Invoke-AgToosaMaintain -Operation uninstall -ProjectPath $UpdatePath -Yes:$Yes
+}
+
+if ($Reinstall -or $Clean) {
+    if (-not $Reinstall -or -not $Clean) {
+        Write-Color "${RED}❌ Error: -Reinstall and -Clean must be used together (ADR-004 Option C).${NC}"
+        Write-Color "Default safe upgrade remains: .\agtoosa.ps1 -Update -UpdatePath <project>"
+        exit 1
+    }
+    $reinstallTarget = $UpdatePath
+    if ([string]::IsNullOrWhiteSpace($reinstallTarget)) { $reinstallTarget = $Path }
+    Invoke-AgToosaMaintain -Operation reinstall-clean -ProjectPath $reinstallTarget -Yes:$Yes
 }
 
 if ($Update) {
-    Invoke-AgToosaMaintain -Operation update -ProjectPath $UpdatePath
+    Invoke-AgToosaMaintain -Operation update -ProjectPath $UpdatePath -Yes:$Yes
 }
 
 if ($Yes -and [string]::IsNullOrWhiteSpace($Path)) {

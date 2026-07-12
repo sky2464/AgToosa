@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-107
 > **Epic:** DEV-002 — Workflow Templates
-> **Status:** ⬜ Backlog (Spec Approved; build after Wave 1a)
+> **Status:** 🏁 Shipped — v5.3.19
 > **Estimate:** M
 > **Spec created:** 2026-07-12
 
@@ -218,17 +218,17 @@ Capability lanes ran sequentially (platform does not support parallel subagents)
 
 ### 3.1 Task Tree
 
-- [ ] **1.** RED contract bats
-  - [ ] 1.1 Add ORB-001–ORB-008 failing greps for doc, inventory, Claim Boundary, hooks, config — _Requirements: AC-008, AC-010_
-- [ ] **2.** Canonical Orchestration Brain
-  - [ ] 2.1 Author `template/Docs/AgToosa_Orchestration.md` + `docs/` mirror — _Requirements: AC-001, AC-002, AC-004_
-  - [ ] 2.2 Amend ADR-003 follow-up (default-parallel when capable) — _Requirements: AC-004_
-- [ ] **3.** Workflow + guide hooks
-  - [ ] 3.1 Wire Spec, Build, Review, Ship step 0 pointers — _Requirements: AC-003, AC-005, AC-006_
-  - [ ] 3.2 Wire Agent, Quickref, subagent-heavy guide; optional QA/task Should pointers — _Requirements: AC-003, AC-009_
-  - [ ] 3.3 Register `lib/config.sh` inventory entry — _Requirements: AC-007_
-- [ ] **4.** Evidence
-  - [ ] 4.1 GREEN ORB bats + test-plan RED/GREEN blocks — _Requirements: AC-008, AC-010_
+- [x] **1.** RED contract bats
+  - [x] 1.1 Add ORB-001–ORB-008 failing greps for doc, inventory, Claim Boundary, hooks, config — _Requirements: AC-008, AC-010_
+- [x] **2.** Canonical Orchestration Brain
+  - [x] 2.1 Author `template/Docs/AgToosa_Orchestration.md` + `docs/` mirror — _Requirements: AC-001, AC-002, AC-004_
+  - [x] 2.2 Amend ADR-003 follow-up (default-parallel when capable) — _Requirements: AC-004_
+- [x] **3.** Workflow + guide hooks
+  - [x] 3.1 Wire Spec, Build, Review, Ship step 0 pointers — _Requirements: AC-003, AC-005, AC-006_
+  - [x] 3.2 Wire Agent, Quickref, subagent-heavy guide; optional QA/task Should pointers — _Requirements: AC-003, AC-009_
+  - [x] 3.3 Register `lib/config.sh` inventory entry — _Requirements: AC-007_
+- [x] **4.** Evidence
+  - [x] 4.1 GREEN ORB bats + test-plan RED/GREEN blocks — _Requirements: AC-008, AC-010_
 
 ### Wave Plan
 

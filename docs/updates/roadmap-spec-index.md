@@ -19,8 +19,8 @@ Editing this index does not enroll a story. Backlog stories still require `/agto
 
 | ID | Story | Wave | Status |
 |---|---|---|---|
-| DEV-096 | Pack Validation CI | 3 | 🟦 Todo — enrolled; unlocks 095 |
-| DEV-095 | Official Pack Expansion (5-pack max) | 3 | 🚫 Blocked on DEV-096 |
+| DEV-096 | Pack Validation CI | 3 | 🟩 Built — unlocks 095 |
+| DEV-095 | Official Pack Expansion (5-pack max) | 3 | 🟦 Todo — unblocked (096 GREEN) |
 | DEV-098 | Navigation by User Job | 3 | 🟦 Todo — enrolled |
 | DEV-099 | Core vs Optional Pack Boundary | 3 | 🟦 Todo — enrolled |
 | DEV-101 | Verified vs Community Pack Labeling | 3 | 🟦 Todo — enrolled |
@@ -29,7 +29,7 @@ Editing this index does not enroll a story. Backlog stories still require `/agto
 | DEV-104 | `--reinstall --clean` (ADR-004 Option C) | 3 | 🟦 Todo — enrolled (DEV-090 shipped) |
 | DEV-106 | Built with AgToosa Showcase | 3 | 🟦 Todo — enrolled |
 
-> **Enrollment note (2026-07-12):** Wave 3 enrolled after v5.3.18. Soft capacity overrun (~14 SP vs 8). Build: parallel docs **098 · 099 · 101 · 102 · 103 · 106** (soft file locks); **096 → 095**; **104** ready. Shipped through v5.3.18: Waves 1a/1b/2. Demand-gated: **DEV-057**. Post-Rev4 drafts (not enrolled): **DEV-109 · DEV-110**. Spec Approved backlog: **DEV-107**.
+> **Enrollment note (2026-07-12):** Wave 3 enrolled after v5.3.18. Soft capacity overrun (~14 SP vs 8). Build: parallel docs **098 · 099 · 101 · 102 · 103 · 106** (soft file locks); **096 → 095**; **104** ready. Shipped through v5.3.19: **DEV-107** (Orchestration Brain). Waves 1a/1b/2 through v5.3.18. Demand-gated: **DEV-057**. Post-Rev4 drafts (not enrolled): **DEV-110**. Spec Approved backlog: **DEV-109**.
 
 ## Rev4 Wave — Spec Approved (2026-07-12)
 
@@ -92,7 +92,7 @@ Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
 
 > **Enrollment note (2026-07-12):** DEV-107 Spec Approved; remains Backlog until after Wave 1a capacity frees. Build must not displace DEV-086 / DEV-090 / DEV-105.
 >
-> **Enrollment note (2026-07-12):** DEV-109 estimate L; backlog after last wave; spec draft awaiting approval; ID skips DEV-108 (roadmap-reserved voluntary scorecard).
+> **Enrollment note (2026-07-12):** DEV-109 Spec Approved; estimate L; backlog after last wave; not in Active Cycle; build deferred until capacity frees. ID skips DEV-108 (roadmap-reserved voluntary scorecard).
 >
 > **Enrollment note (2026-07-12):** DEV-110 estimate M; backlog immediately after planned specs (after DEV-109); expedite build when capacity frees; dual-mode freeform Project Intake (not merged into DEV-109); spec draft awaiting approval.
 

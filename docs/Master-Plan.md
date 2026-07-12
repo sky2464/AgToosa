@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-12 (Wave 3 build started)
+> **Last updated:** 2026-07-12 (Wave 3 shipped v5.3.20)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | v5.3.18 shipped — Wave 3 enrolled (095–106); capacity soft overrun |
-| Milestone | `v5.3.19` (next) — Wave 3 build |
-| Active cycle | Rev4 Wave 3 (095–106) — capacity soft overrun |
-| Cycle capacity | `8 story points` (Wave 3 ~14 SP — soft overrun accepted; sequence 096→095) |
+| Current phase | v5.3.20 shipped — Rev4 Wave 3 + DEV-107 batched |
+| Milestone | `v5.3.21` (next) |
+| Active cycle | _empty — enroll next story via `/agtoosa-spec`_ |
+| Cycle capacity | `8 story points` |
 
 ## Active Cycle
 
@@ -20,17 +20,9 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-096 | Chore: Pack Validation CI | Chore | S | 🟨 In Progress | 0/3 |
-| DEV-095 | Feature: Official Pack Expansion (5-pack max) | Feature | M | 🚫 Blocked | 0/4 |
-| DEV-098 | Docs: Navigation by User Job | Docs | XS | 🟨 In Progress | 3/3 |
-| DEV-099 | Docs: Core vs Optional Pack Boundary | Docs | XS | 🟨 In Progress | 0/3 |
-| DEV-101 | Docs: Verified vs Community Pack Labeling | Docs | XS | 🟨 In Progress | 3/3 |
-| DEV-102 | Docs: Offline and Network-Dependency Matrix | Docs | XS | 🟨 In Progress | 0/3 |
-| DEV-103 | Chore: External Registry Publication Runbook | Chore | S | 🟨 In Progress | 0/3 |
-| DEV-104 | Feature: `--reinstall --clean` (ADR-004 Option C) | Feature | S | 🟨 In Progress | 0/3 |
-| DEV-106 | Docs: Built with AgToosa Showcase | Docs | XS | 🟨 In Progress | 0/3 |
+| _empty_ | — | — | — | — | — |
 
-<!-- Wave 3 build order: parallel docs 098·099·101·102·103·106 (file soft-locks); 096 then 095; 104 ready (090 shipped) -->
+<!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.20.md (Wave 3 + DEV-107 batched v5.3.20) -->
 <!-- Wave 1a archived to docs/archived/cycle-2026-07-12-release-5.3.17.md -->
 <!-- Wave 1b/2 remainder archived via v5.3.18 ship -->
 
@@ -56,120 +48,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 > Task breakdown for enrolled Active Cycle stories. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
-> Wave 3: **build started** — soft capacity overrun (~14 SP vs 8). Build mode: **parallel** docs + 096 + 104; **095** blocked until 096 GREEN. Soft file locks: Registry/checklist (101·103·095), `docs/index.md` (098→106), `DOCS_FILES` (099·102).
-
-### DEV-096 — Pack Validation CI (3/3) — enroll; unlocks DEV-095
-
-
-- [ ] **1.** Fixture-based RED coverage
-  - [ ] 1.1 Add SHA drift and manifest failure fixtures — _Requirements: AC-002, AC-003, AC-006_
-  - [ ] 1.2 Add fixture parity mismatch and actionable-error fixtures — _Requirements: AC-004, AC-006_
-- [ ] **2.** Validation helper and workflow
-  - [ ] 2.1 Implement deterministic SHA and tree parity checks — _Requirements: AC-003, AC-004, AC-006_
-  - [ ] 2.2 Add `pack-validate.yml` with path filters and OPP bats step — _Requirements: AC-001, AC-005, AC-007_
-- [ ] **3.** Evidence
-  - [ ] 3.1 Record RED/GREEN PV evidence and verify green OPP baseline — _Requirements: AC-001–AC-007_
-
-### DEV-095 — Official Pack Expansion (4/4) — blocked on DEV-096
-
-
-- [ ] **1.** Expansion contract and RED coverage
-  - [ ] 1.1 Add OPE inventory and manifest fixtures for five-pack ceiling — _Requirements: AC-001, AC-002_
-  - [ ] 1.2 Add negative fixtures for web/react domain overlap and sixth-pack rejection — _Requirements: AC-001, AC-004_
-- [ ] **2.** Author `official-react`
-  - [ ] 2.1 Author manifest, examples with example-repo link, compatibility, and ownership — _Requirements: AC-002, AC-003, AC-004, AC-008_
-  - [ ] 2.2 Add fixture and isolated install/preview/queue/merge proof — _Requirements: AC-006, AC-007_
-- [ ] **3.** Author `official-security`
-  - [ ] 3.1 Author manifest, examples with example-repo link, compatibility, and ownership — _Requirements: AC-002, AC-003, AC-005, AC-008_
-  - [ ] 3.2 Add fixture and isolated install/preview/queue/merge proof — _Requirements: AC-006, AC-007_
-- [ ] **4.** Inventory and evidence
-  - [ ] 4.1 Update registry docs and checklist to five-pack inventory with honest publication state — _Requirements: AC-001, AC-009_
-  - [ ] 4.2 Record RED/GREEN OPE evidence — _Requirements: AC-001–AC-009_
-
-### DEV-098 — Navigation by User Job (3/3)
-
-
-- [x] **1.** RED navigation contract
-  - [x] 1.1 Add NAV section inventory and required-link fixtures — _Requirements: AC-001, AC-003–AC-007_
-  - [x] 1.2 Add non-duplication and broken-link negative fixtures — _Requirements: AC-002, AC-005_
-- [x] **2.** Landing page update
-  - [x] 2.1 Restructure `docs/index.md` into five job sections with canonical links — _Requirements: AC-001–AC-007_
-- [x] **3.** Static site regression
-  - [x] 3.1 Confirm SITE build and `/AgToosa/` link checks still pass — _Requirements: AC-008_
-  - [x] 3.2 Record RED/GREEN NAV evidence — _Requirements: AC-001–AC-008_
-
-### DEV-099 — Core vs Optional Pack Boundary (3/3)
-
-
-- [ ] **1.** RED parity contract
-  - [ ] 1.1 Add CORE document presence and array parity fixtures — _Requirements: AC-002–AC-005_
-  - [ ] 1.2 Add core-command inventory and enforcement-class fixtures — _Requirements: AC-001, AC-006_
-- [ ] **2.** Author core contract
-  - [ ] 2.1 Write `AgToosa_Core_Contract.md` and template mirror from config arrays — _Requirements: AC-001–AC-004, AC-006_
-  - [ ] 2.2 Register doc in `DOCS_FILES` and add README discovery link — _Requirements: AC-007_
-- [ ] **3.** Evidence
-  - [ ] 3.1 Record RED/GREEN CORE evidence — _Requirements: AC-001–AC-007_
-
-### DEV-101 — Verified vs Community Pack Labeling (3/3)
-
-
-- [x] **1.** RED trust vocabulary
-  - [x] 1.1 Add TRUST label inventory and forbidden-claim fixtures — _Requirements: AC-001, AC-002, AC-006_
-  - [x] 1.2 Add manifest mapping and publication-state fixtures — _Requirements: AC-003, AC-004, AC-005_
-- [x] **2.** Registry documentation
-  - [x] 2.1 Author trust surface section in registry docs and template mirror — _Requirements: AC-001–AC-005_
-- [x] **3.** Evidence
-  - [x] 3.1 Record RED/GREEN TRUST evidence — _Requirements: AC-001–AC-006_
-
-### DEV-102 — Offline and Network-Dependency Matrix (3/3)
-
-
-- [ ] **1.** RED matrix contract
-  - [ ] 1.1 Add NET required-row and dependency-class fixtures — _Requirements: AC-002, AC-004, AC-006_
-  - [ ] 1.2 Add cross-link and non-duplication fixtures — _Requirements: AC-005_
-- [ ] **2.** Author matrix
-  - [ ] 2.1 Write `AgToosa_Network_Matrix.md` and template mirror — _Requirements: AC-001–AC-004_
-  - [ ] 2.2 Add Agent/Registry discovery links; register in `DOCS_FILES` if applicable — _Requirements: AC-005_
-- [ ] **3.** Evidence
-  - [ ] 3.1 Record RED/GREEN NET evidence — _Requirements: AC-001–AC-006_
-
-### DEV-103 — External Registry Publication Runbook (3/3)
-
-
-- [ ] **1.** RED runbook contract
-  - [ ] 1.1 Add PUB phase and checklist completeness fixtures — _Requirements: AC-001, AC-002, AC-006_
-  - [ ] 1.2 Add state-machine and forbidden-claim fixtures — _Requirements: AC-004, AC-005, AC-007_
-- [ ] **2.** Author runbook
-  - [ ] 2.1 Write `registry-external-publication-runbook.md` with pre-submit, submit, confirm sections — _Requirements: AC-001–AC-005_
-  - [ ] 2.2 Link from pilot checklist and registry inventory — _Requirements: AC-006_
-- [ ] **3.** Evidence
-  - [ ] 3.1 Record RED/GREEN PUB evidence — _Requirements: AC-001–AC-007_
-
-### DEV-104 — `--reinstall --clean` (3/3) — ready (DEV-090 shipped)
-
-
-- [ ] **1.** RED reinstall contract
-  - [ ] 1.1 Add RCL confirmation, archive, and warning fixtures — _Requirements: AC-001, AC-002, AC-005_
-  - [ ] 1.2 Add regeneration, lock rewrite, and idempotency fixtures — _Requirements: AC-003, AC-004, AC-006_
-- [ ] **2.** Implement clean reinstall
-  - [ ] 2.1 Bash archive + regenerate + lock rewrite — _Requirements: AC-001–AC-006_
-  - [ ] 2.2 PowerShell parity — _Requirements: AC-007_
-- [ ] **3.** Documentation and evidence
-  - [ ] 3.1 Update AgToosa_Update docs for ADR-004 Option C positioning — _Requirements: AC-008_
-  - [ ] 3.2 Record RED/GREEN RCL evidence — _Requirements: AC-001–AC-008_
-
-### DEV-106 — Built with AgToosa Showcase (3/3)
-
-
-- [ ] **1.** RED showcase contract
-  - [ ] 1.1 Add SHOW page presence and submission-rule fixtures — _Requirements: AC-001, AC-002, AC-003_
-  - [ ] 1.2 Add link-only, case-study cross-link, and forbidden-claim fixtures — _Requirements: AC-004, AC-005, AC-007_
-- [ ] **2.** Author showcase
-  - [ ] 2.1 Write `built-with-agtoosa.md` with rules and listing table — _Requirements: AC-001–AC-005_
-  - [ ] 2.2 Add `docs/index.md` discovery link — _Requirements: AC-006_
-- [ ] **3.** Evidence
-  - [ ] 3.1 Record RED/GREEN SHOW evidence — _Requirements: AC-001–AC-007_
-
+> _No active tasks — Wave 3 archived to `docs/archived/cycle-2026-07-12-release-5.3.20.md`._
 
 ## Manual / Deferred Tasks
 
@@ -193,14 +72,13 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 ## Blocked
 
-> **Status:** 🟡 DEV-095 blocked on DEV-096
-> Update this section and change status pill if an issue is blocked during `/agtoosa-build`.
+> **Status:** 🟢 Wave 3 shipped v5.3.20 — five-pack official inventory (local candidates)
 
 | ID | Title | Blocked by | Since |
 |----|-------|-----------|-------|
-| DEV-095 | Feature: Official Pack Expansion (5-pack max) | DEV-096 (pack validation CI not GREEN) | 2026-07-12 |
+| — | (none) | — | — |
 
-Conflict playbook: Do not start DEV-095 until DEV-096 GREEN on existing pilots. Soft-serialize Registry/checklist edits (101 → 103 → 095). Prefer 098 before 106 for `docs/index.md`. DEV-104 ready (DEV-090 shipped).
+Conflict playbook: _Wave 3 complete — next enroll via `/agtoosa-spec` (e.g. DEV-109)._
 
 ## Backlog
 
@@ -253,24 +131,24 @@ Conflict playbook: Do not start DEV-095 until DEV-096 GREEN on existing pilots. 
 | DEV-088 | Feature: Verifier and Doctor Machine Output | Feature | M | DEV-004 | P0 | 🏁 Shipped — v5.3.15 |
 | DEV-089 | Feature: Evidence-Profile Verifier Gates | Feature | M | DEV-004 | P1 | 🏁 Shipped — v5.3.18 |
 | DEV-090 | Feature: Unified Install/Update Plan Engine | Feature | M | DEV-001 | P0 | 🏁 Shipped — v5.3.17 |
-| DEV-091 | Feature: Migration Wizard + Rollback Manifest | Feature | L | DEV-001 | P0 | 🟨 In Progress — build GREEN MWZ 10/10 |
+| DEV-091 | Feature: Migration Wizard + Rollback Manifest | Feature | L | DEV-001 | P0 | 🏁 Shipped — v5.3.18 |
 | DEV-092 | Chore: Transactional Apply + Idempotency | Chore | M | DEV-001 | P1 | 🏁 Shipped — v5.3.16 |
 | DEV-093 | Feature: Install State File + Lock Reconciliation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v5.3.18 |
 | DEV-094 | Feature: Assistant Compatibility Contract | Feature | M | DEV-004 | P1 | 🏁 Shipped — v5.3.16 |
-| DEV-095 | Feature: Official Pack Expansion (5-pack max) | Feature | M | DEV-003 | P1 | 🚫 Blocked — Wave 3 enrolled; wait DEV-096 GREEN |
-| DEV-096 | Chore: Pack Validation CI | Chore | S | DEV-003 | P1 | 🟦 Todo — Wave 3 enrolled |
+| DEV-095 | Feature: Official Pack Expansion (5-pack max) | Feature | M | DEV-003 | P1 | 🏁 Shipped — v5.3.20 |
+| DEV-096 | Chore: Pack Validation CI | Chore | S | DEV-003 | P1 | 🏁 Shipped — v5.3.20 |
 | DEV-097 | Docs: Framework Supply-Chain Threat Model | Docs | S | DEV-004 | P1 | 🏁 Shipped — v5.3.16 |
-| DEV-098 | Docs: Navigation by User Job | Docs | XS | DEV-004 | P2 | 🟦 Todo — Wave 3 enrolled |
-| DEV-099 | Docs: Core vs Optional Pack Boundary | Docs | XS | DEV-002 | P2 | 🟦 Todo — Wave 3 enrolled |
+| DEV-098 | Docs: Navigation by User Job | Docs | XS | DEV-004 | P2 | 🏁 Shipped — v5.3.20 |
+| DEV-099 | Docs: Core vs Optional Pack Boundary | Docs | XS | DEV-003 | P2 | 🏁 Shipped — v5.3.20 |
 | DEV-100 | Feature: Shared JSON Output for Install/Registry | Feature | S | DEV-001 | P2 | 🏁 Shipped — v5.3.18 |
-| DEV-101 | Docs: Verified vs Community Pack Labeling | Docs | XS | DEV-003 | P2 | 🟨 In Progress — Wave 3 build |
-| DEV-102 | Docs: Offline and Network-Dependency Matrix | Docs | XS | DEV-001 | P2 | 🟦 Todo — Wave 3 enrolled |
-| DEV-103 | Chore: External Registry Publication Runbook | Chore | S | DEV-003 | P2 | 🟦 Todo — Wave 3 enrolled |
-| DEV-104 | Feature: `--reinstall --clean` (ADR-004 Option C) | Feature | S | DEV-001 | P2 | 🟦 Todo — Wave 3 enrolled |
+| DEV-101 | Docs: Verified vs Community Pack Labeling | Docs | XS | DEV-003 | P2 | 🏁 Shipped — v5.3.20 |
+| DEV-102 | Docs: Offline and Network-Dependency Matrix | Docs | XS | DEV-004 | P2 | 🏁 Shipped — v5.3.20 |
+| DEV-103 | Chore: External Registry Publication Runbook | Chore | S | DEV-003 | P2 | 🏁 Shipped — v5.3.20 |
+| DEV-104 | Feature: `--reinstall --clean` (ADR-004 Option C) | Feature | S | DEV-001 | P2 | 🏁 Shipped — v5.3.20 |
 | DEV-105 | Feature: PowerShell Maintain + Update Parity | Feature | M | DEV-001 | P0 | 🏁 Shipped — v5.3.17 |
-| DEV-106 | Docs: Built with AgToosa Showcase | Docs | XS | DEV-004 | P2 | 🟦 Todo — Wave 3 enrolled |
-| DEV-107 | Feature: Agent-Instructed Orchestration Brain | Feature | M | DEV-002 | P1 | ⬜ Backlog — Spec Approved; after Wave 1a |
-| DEV-109 | Feature: Lifecycle Next-Step Sync + Multi-Spec Clarity | Feature | L | DEV-002 / DEV-001 | P0 | ⬜ Backlog — spec draft; after last wave; awaiting Spec Approved |
+| DEV-106 | Docs: Built with AgToosa Showcase | Docs | XS | DEV-004 | P2 | 🏁 Shipped — v5.3.20 |
+| DEV-107 | Feature: Agent-Instructed Orchestration Brain | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.20 |
+| DEV-109 | Feature: Lifecycle Next-Step Sync + Multi-Spec Clarity | Feature | L | DEV-002 / DEV-001 | P0 | ⬜ Backlog — Spec Approved; after last wave |
 | DEV-110 | Feature: AgToosa Project Intake | Feature | M | DEV-002 | P0 | ⬜ Backlog — spec draft; after planned specs (after DEV-109); expedite when capacity frees; awaiting Spec Approved |
 
 ## Epics
@@ -280,8 +158,8 @@ Conflict playbook: Do not start DEV-095 until DEV-096 GREEN on existing pilots. 
 | ID | Title | Stories | Status | Next spec |
 |----|-------|---------|--------|-----------|
 | DEV-001 | Epic: Core Generator Engine | 5 open / 12 total | 🟨 Active | DEV-093 · DEV-091 · DEV-100 |
-| DEV-002 | Epic: Workflow Templates | 3 open / 17 total | 🟨 Active | DEV-107 (after Wave 1a); DEV-089 (after DEV-087) |
-| DEV-003 | Epic: Community Template Registry | 4 open / 11 total | 🟨 Active | DEV-096 (Wave 3) |
+| DEV-002 | Epic: Workflow Templates | 1 open / 18 total | 🟨 Active | DEV-109 (after Wave 3 ship); DEV-089 (after DEV-087) |
+| DEV-003 | Epic: Community Template Registry | 2 open / 11 total | 🟨 Active | DEV-109 (next); external publish manual |
 | DEV-004 | Epic: Testing & QA Harness | 5 open / 18 total | 🟨 Active | DEV-089 (Wave 1b) |
 
 ### Epic Charters
@@ -305,7 +183,7 @@ Conflict playbook: Do not start DEV-095 until DEV-096 GREEN on existing pilots. 
     *   **Last shipped:** DEV-052 — Hook Automation Pack → `docs/archived/spec-DEV-052.md`
     *   **Last shipped:** DEV-056 — Retrospective Learning Loop → `docs/archived/spec-DEV-056.md`
     *   **Last shipped:** DEV-045 — Work Package Wave DAG → `docs/archived/spec-DEV-045.md`
-    *   **Current:** Rev4 wave — DEV-099, DEV-107, DEV-109, DEV-110 in backlog; DEV-107 Spec Approved (build after Wave 1a); DEV-109 lifecycle next-step sync + multi-spec clarity (spec draft); DEV-110 Project Intake (spec draft; after DEV-109; expedite when free); DEV-087 shipped v5.3.15; demand-gated DEV-057 remains separate
+    *   **Current:** v5.3.20 shipped — Wave 3 + DEV-107; DEV-109 Spec Approved (next build); DEV-110 Project Intake (spec draft); demand-gated DEV-057 remains separate
 
 *   **DEV-003 - Epic: Community Template Registry**
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
@@ -318,7 +196,7 @@ Conflict playbook: Do not start DEV-095 until DEV-096 GREEN on existing pilots. 
     *   **Last shipped:** DEV-080 — Official Registry Pack Pilot → `docs/archived/spec-DEV-080.md`
     *   **Last shipped:** DEV-082 — High-Assurance Signature Mode Validation → `docs/archived/spec-DEV-082.md`
     *   **Last shipped:** DEV-051 — Tracker Sync Bridge → `docs/archived/spec-DEV-051.md`
-    *   **Current:** Rev4 wave — DEV-095, DEV-096, DEV-101, DEV-103 in backlog; DEV-080 external publish remains [manual-deferred]
+    *   **Current:** Wave 3 shipped v5.3.20 (095–106); DEV-080 external publish remains [manual-deferred]
 
 *   **DEV-004 - Epic: Testing & QA Harness**
     *   **Goal:** Comprehensive end-to-end integration and version verification suites validating the robustness of the entire framework.
@@ -342,6 +220,16 @@ Conflict playbook: Do not start DEV-095 until DEV-096 GREEN on existing pilots. 
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-096 | Chore: Pack Validation CI | 2026-07-12 | [spec-DEV-096.md](archived/spec-DEV-096.md) · [review-DEV-096.md](archived/review-DEV-096.md) · [evidence-DEV-096.md](archived/evidence-DEV-096.md) |
+| DEV-095 | Feature: Official Pack Expansion (5-pack max) | 2026-07-12 | [spec-DEV-095.md](archived/spec-DEV-095.md) · [review-DEV-095.md](archived/review-DEV-095.md) · [evidence-DEV-095.md](archived/evidence-DEV-095.md) |
+| DEV-098 | Docs: Navigation by User Job | 2026-07-12 | [spec-DEV-098.md](archived/spec-DEV-098.md) · [review-DEV-098.md](archived/review-DEV-098.md) · [evidence-DEV-098.md](archived/evidence-DEV-098.md) |
+| DEV-099 | Docs: Core vs Optional Pack Boundary | 2026-07-12 | [spec-DEV-099.md](archived/spec-DEV-099.md) · [review-DEV-099.md](archived/review-DEV-099.md) · [evidence-DEV-099.md](archived/evidence-DEV-099.md) |
+| DEV-101 | Docs: Verified vs Community Pack Labeling | 2026-07-12 | [spec-DEV-101.md](archived/spec-DEV-101.md) · [review-DEV-101.md](archived/review-DEV-101.md) · [evidence-DEV-101.md](archived/evidence-DEV-101.md) |
+| DEV-102 | Docs: Offline and Network-Dependency Matrix | 2026-07-12 | [spec-DEV-102.md](archived/spec-DEV-102.md) · [review-DEV-102.md](archived/review-DEV-102.md) · [evidence-DEV-102.md](archived/evidence-DEV-102.md) |
+| DEV-103 | Chore: External Registry Publication Runbook | 2026-07-12 | [spec-DEV-103.md](archived/spec-DEV-103.md) · [review-DEV-103.md](archived/review-DEV-103.md) · [evidence-DEV-103.md](archived/evidence-DEV-103.md) |
+| DEV-104 | Feature: `--reinstall --clean` (ADR-004 Option C) | 2026-07-12 | [spec-DEV-104.md](archived/spec-DEV-104.md) · [review-DEV-104.md](archived/review-DEV-104.md) · [evidence-DEV-104.md](archived/evidence-DEV-104.md) |
+| DEV-106 | Docs: Built with AgToosa Showcase | 2026-07-12 | [spec-DEV-106.md](archived/spec-DEV-106.md) · [review-DEV-106.md](archived/review-DEV-106.md) · [evidence-DEV-106.md](archived/evidence-DEV-106.md) |
+| DEV-107 | Feature: Agent-Instructed Orchestration Brain | 2026-07-12 | [spec-DEV-107.md](archived/spec-DEV-107.md) · [review-DEV-107.md](archived/review-DEV-107.md) · [evidence-DEV-107.md](archived/evidence-DEV-107.md) |
 | DEV-089 | Feature: Evidence-Profile Verifier Gates | 2026-07-12 | [spec-DEV-089.md](archived/spec-DEV-089.md) · [review-DEV-089.md](archived/review-DEV-089.md) · [evidence-DEV-089.md](archived/evidence-DEV-089.md) |
 | DEV-091 | Feature: Migration Wizard + Rollback Manifest | 2026-07-12 | [spec-DEV-091.md](archived/spec-DEV-091.md) · [review-DEV-091.md](archived/review-DEV-091.md) · [evidence-DEV-091.md](archived/evidence-DEV-091.md) |
 | DEV-093 | Feature: Install State File + Lock Reconciliation | 2026-07-12 | [spec-DEV-093.md](archived/spec-DEV-093.md) · [review-DEV-093.md](archived/review-DEV-093.md) · [evidence-DEV-093.md](archived/evidence-DEV-093.md) |
@@ -598,7 +486,9 @@ Conflict playbook: Do not start DEV-095 until DEV-096 GREEN on existing pilots. 
 | 2026-07-12 | 🔍 Review complete — Wave 1a DEV-086 · DEV-090 · DEV-105 PASS (0 critical); next: `/agtoosa-ship` v5.3.16 | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — DEV-109 draft — Lifecycle Next-Step Sync + Multi-Spec Clarity; ADR-012; test plan `docs/AgToosa_TestPlan-DEV-109.md`; backlog; awaiting Spec Approved | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — DEV-109 estimate L; backlog only (after last wave); not enrolled in Active Cycle | AgToosa |
+| 2026-07-12 | /agtoosa-spec — Spec ✅ Approved — DEV-109 — spec-DEV-109.md; estimate L; backlog only | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — DEV-110 draft — AgToosa Project Intake; ADR-013; test plan `docs/AgToosa_TestPlan-DEV-110.md`; backlog after DEV-109; expedite when capacity frees; awaiting Spec Approved | AgToosa |
+| 2026-07-12 | ✏️ /agtoosa-spec — DEV-110 Part 4 complete — Story Skill synthesis (decline all); Spec Quality re-run pass; approval gate presented; tasks in spec until enrollment | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — Wave 2 A+B enroll — DEV-092 · DEV-093 · DEV-094 · DEV-097 · DEV-100 into Active Cycle; Wave 1a retained through ship; DEV-093 blocked on 092; DEV-100 R1 amend `--format json` pending; capacity soft overrun | AgToosa |
 | 2026-07-12 | 🏗️ Build 🏗️ Started — Wave 2 parallel — DEV-092 · DEV-094 · DEV-097; DEV-093 blocked; DEV-100 skipped (R1 amend pending); no worktree (sequential stories, clean tree between) | AgToosa |
 | 2026-07-12 | 🏗️ /agtoosa-build Wave 2 — DEV-092 · DEV-094 · DEV-097 Task 🟢 complete — TAP/ACC/FST green; DEV-093 blocked; DEV-100 R1 pending | AgToosa |
@@ -627,3 +517,23 @@ Conflict playbook: Do not start DEV-095 until DEV-096 GREEN on existing pilots. 
 | 2026-07-12 | 🚀 Release 5.3.18 shipped — v5.3.18; version parity bash/ps1/npm; Milestone v5.3.19 (next); Waves 1a/1b/2 complete | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — Wave 3 enroll — DEV-096 · DEV-095 (blocked) · DEV-098 · DEV-099 · DEV-101 · DEV-102 · DEV-103 · DEV-104 · DEV-106 into Active Cycle; ~14 SP soft overrun; sequence 096→095; docs parallel with soft file locks | AgToosa |
 | 2026-07-12 | 🏗️ Build 🏗️ Started — Wave 3 parallel — DEV-096 · DEV-098 · DEV-099 · DEV-101 · DEV-102 · DEV-103 · DEV-104 · DEV-106; DEV-095 blocked on 096; no worktree (sequential packages within story, clean tree between) | AgToosa |
+| 2026-07-12 | 🏗️ /agtoosa-build DEV-101 — Task 🟢 3/3 — TRUST-001–006 green; Trust surface verified/community/official-pilot labeling | AgToosa |
+| 2026-07-12 | 🏗️ /agtoosa-build DEV-106 — Task 🟢 3/3 — SHOW-001–007 green; Built with AgToosa showcase | AgToosa |
+| 2026-07-12 | 🏗️ /agtoosa-build DEV-103 — Task 🟢 3/3 — PUB-001–007 green; WIP: DEV-103 external registry publication runbook | AgToosa |
+| 2026-07-12 | 🏗️ /agtoosa-build DEV-102 — Task 🟢 3/3 — NET-001–006 green; offline/network dependency matrix | AgToosa |
+| 2026-07-12 | 🏗️ /agtoosa-build DEV-096 — Task 🟢 3/3 — PV-001–008 green; pack-validate.yml + validate-official-packs.sh; OPP baseline green; unlocks DEV-095 | AgToosa |
+| 2026-07-12 | 🏗️ /agtoosa-build DEV-104 — Task 🟢 3/3 — RCL-001–008 green; WIP: DEV-104 reinstall --clean | AgToosa |
+| 2026-07-12 | 🏗️ /agtoosa-build — DEV-096 GREEN — pack-validate CI; unblocked DEV-095 | AgToosa |
+| 2026-07-12 | 🏗️ /agtoosa-build DEV-095 — Task 🟢 4/4 — OPE-001–010 green; official-react + official-security; five-pack inventory local candidates | AgToosa |
+| 2026-07-12 | 🏗️ Build 🏗️ Started — DEV-107 — Orchestration Brain; 4 tasks; scope: AgToosa_Orchestration.md, workflow hooks, lib/config.sh, ORB-001–ORB-008 | AgToosa |
+| 2026-07-12 | 🏗️ /agtoosa-build DEV-107 — Task 🟢 4/4 — ORB-001–ORB-008 green; canonical brain + Spec/Build/Review/Ship/Agent/Quickref/guide hooks | AgToosa |
+| 2026-07-12 | 🏗️ Build complete — DEV-107; next: `/agtoosa-review` | AgToosa |
+| 2026-07-12 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-107 — 4-persona + cross-model review running | AgToosa |
+| 2026-07-12 | 🔍 Review ✅ Approved — DEV-107; 0 🔴 Critical, 3 🟡 Warning accepted; report: `docs/archived/review-DEV-107.md`; evidence: `docs/archived/evidence-DEV-107.md` | AgToosa |
+| 2026-07-12 | ✏️ /agtoosa-spec — DEV-107 Part 4 synced; Active Tasks added; Wave 1a blocker cleared; ready for `/agtoosa-build` | AgToosa |
+| 2026-07-12 | 🏗️ Build complete — Wave 3 (DEV-095 · DEV-096 · DEV-098 · DEV-099 · DEV-101 · DEV-102 · DEV-103 · DEV-104 · DEV-106); smoke PASS; next: `/agtoosa-review` | AgToosa |
+| 2026-07-12 | 🔍 /agtoosa-review — Review 🔍 Started — Wave 3 (095 · 096 · 098 · 099 · 101 · 102 · 103 · 104 · 106) — 4-persona + cross-model | AgToosa |
+| 2026-07-12 | 🔍 Review ✅ Approved — Wave 3 DEV-095 · DEV-096 · DEV-098 · DEV-099 · DEV-101 · DEV-102 · DEV-103 · DEV-104 · DEV-106; 0 🔴 Critical; reports: `docs/archived/review-DEV-09*.md` · `review-DEV-10*.md` | AgToosa |
+| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — Wave 3 (095·096·098·099·101·102·103·104·106) + DEV-107 batched — smoke PASS; v5.3.20 | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v5.3.20 — Rev4 Wave 3 + DEV-107; smoke PASS; cycle archived | AgToosa |
+| 2026-07-12 | 🚀 Release 5.3.20 shipped — v5.3.20; version parity bash/ps1/npm; Milestone v5.3.21 (next) | AgToosa |

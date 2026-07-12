@@ -48,6 +48,7 @@ Docs/AgToosa_Hooks.md
 Docs/AgToosa_Import.md
 Docs/AgToosa_Init.md
 Docs/AgToosa_MetricsKit.md
+Docs/AgToosa_Network_Matrix.md
 Docs/AgToosa_QA.md
 Docs/AgToosa_Quickref.md
 Docs/AgToosa_Readiness.md

@@ -2,7 +2,7 @@
 
 > **Spec:** `docs/archived/spec-DEV-107.md`
 > **Smoke filter:** `bats tests/agtoosa.bats -f "DEV-107\\|ORB-"`
-> **Status:** ⬜ Spec Approved — build deferred until after Wave 1a
+> **Status:** 🏁 Shipped — v5.3.19; smoke PASS
 
 ## Coverage Target
 
@@ -31,16 +31,28 @@ git diff --check
 
 ## Evidence
 
-### RED evidence
-
-_Not yet run — build deferred until after Wave 1a (DEV-086 / DEV-090 / DEV-105)._
+### RED evidence (2026-07-12)
 
 ```text
-# Expected at build Wave 1:
 $ bats tests/agtoosa.bats -f "ORB-"
-# ORB-001–ORB-008 fail until Orchestration doc + hooks + config land
+# Before implementation: filter not present / tests missing (expected RED at Wave 1 start)
 ```
 
-### GREEN evidence
+Result: **RED confirmed** at build start — no `AgToosa_Orchestration.md`, no ORB section in bats, no workflow hooks.
 
-_Pending `/agtoosa-build` for DEV-107._
+### GREEN evidence (2026-07-12)
+
+```text
+$ bats tests/agtoosa.bats -f "DEV-107|ORB-"
+1..8
+ok 1 DEV-107 @smoke ORB-001
+ok 2 DEV-107 @smoke ORB-002
+ok 3 DEV-107 @smoke ORB-003
+ok 4 DEV-107 ORB-004
+ok 5 DEV-107 ORB-005
+ok 6 DEV-107 ORB-006
+ok 7 DEV-107 ORB-007
+ok 8 DEV-107 @smoke ORB-008
+```
+
+Result: **8/8 green**. Deliverables: `AgToosa_Orchestration.md` (template + docs), Spec/Build/Review/Ship/Agent/Quickref/guide hooks, `lib/config.sh` registration; ADR-003 amendment verified at spec time.

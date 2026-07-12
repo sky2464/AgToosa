@@ -9,6 +9,27 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.20] — 2026-07-12
+
+Patch release: DEV-107 + Rev4 Wave 3 (DEV-095, DEV-096, DEV-098, DEV-099, DEV-101, DEV-102, DEV-103, DEV-104, DEV-106).
+
+### Added
+
+- **DEV-107 — Agent-Instructed Orchestration Brain.** Canonical `AgToosa_Orchestration.md` (inventory → lane plan → merge); step-0 hooks in Spec/Build/Review/Ship/Agent/Quickref/subagent guide; `lib/config.sh` registration; ORB-001–ORB-008 bats.
+- **DEV-096 — Pack Validation CI.** `pack-validate.yml` + `scripts/validate-official-packs.sh`; manifest/SHA/fixture parity; PV-001–008 bats.
+- **DEV-095 — Official Pack Expansion (5-pack max).** `official-react` + `official-security` pilots; inventory/checklist updates; OPE-001–010 bats.
+- **DEV-104 — `--reinstall --clean` (ADR-004 Option C).** `lib/reinstall.sh`; archive + confirmation gate; bash/PS1 parity; RCL-001–008 bats.
+- **DEV-098 — Navigation by User Job.** `docs/index.md` Start/Use/Trust/Adapt/Maintain nav; NAV-001–008 bats.
+- **DEV-099 — Core vs Optional Pack Boundary.** `AgToosa_Core_Contract.md`; CORE-001–006 bats.
+- **DEV-101 — Verified vs Community Pack Labeling.** Registry trust surface; TRUST-001–006 bats.
+- **DEV-102 — Offline and Network-Dependency Matrix.** `AgToosa_Network_Matrix.md`; NET-001–006 bats.
+- **DEV-103 — External Registry Publication Runbook.** `registry-external-publication-runbook.md`; PUB-001–007 bats.
+- **DEV-106 — Built with AgToosa Showcase.** `built-with-agtoosa.md`; SHOW-001–007 bats.
+
+## [5.3.19] — 2026-07-12
+
+_Superseded by [5.3.20] batched ship — DEV-107 included in 5.3.20._
+
 ## [5.3.18] — 2026-07-12
 
 Patch release: Rev4 Wave 1b/2 remainder (DEV-089, DEV-091, DEV-093, DEV-100).

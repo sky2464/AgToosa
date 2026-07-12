@@ -26,6 +26,8 @@ Each reviewer persona (or parallel subagent) must report command run, exit code,
 
 ### Part 1 — Virtual Specialist Reviews
 
+**Orchestration Brain step 0:** Before persona, specialist, and cross-model fan-out, read `docs/AgToosa_Orchestration.md` and run Capability Inventory → lane plan → parallel or sequential dispatch → orchestrator merge.
+
 **Before starting reviews:**
 - Update `docs/Master-Plan.md`: set the Story row status to `In Review`.
 - Add an **Update Log** entry: `YYYY-MM-DD HH:MM — /agtoosa-review — Review 🔍 Started — [Story ID] — 4-persona review running.`

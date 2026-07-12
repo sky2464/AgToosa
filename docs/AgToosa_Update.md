@@ -259,6 +259,27 @@ End with:
 | Project specialist native files | Never touched — `.codex/skills/<project-id>/`, `.claude/skills/<project-id>.md`, `.github/agents/<project-id>.agent.md`, platform specialist fallbacks |
 | User files in platform dirs | Never touched |
 
+## Upgrade Paths (ADR-004)
+
+| Path | When to use | Behavior |
+|------|-------------|----------|
+| **`--update` (default safe upgrade)** | Routine sync to a newer generator | Marker-based merge: AgToosa-owned blocks refresh; user content **outside** markers is preserved |
+| **`--reinstall --clean` (optional, destructive)** | Corrupted install or you want a deterministic fresh AgToosa file set (ADR-004 Option C) | Archives generated files under `.agtoosa/reinstall-archive/<timestamp>/`, regenerates like a fresh install for selected platforms, rewrites `Docs/agtoosa-lock.json`. **Custom edits outside markers may not be preserved.** Requires confirmation (`--yes` when non-interactive). |
+
+Prefer `--update` unless you explicitly accept Option C trade-offs. Clean reinstall is not the default upgrade path.
+
+```bash
+bash agtoosa.sh --update <project>                    # default safe upgrade
+bash agtoosa.sh --reinstall --clean <project> --yes   # optional destructive fresh state
+```
+
+PowerShell parity:
+
+```powershell
+.\agtoosa.ps1 -Update -UpdatePath <project>
+.\agtoosa.ps1 -Reinstall -Clean -UpdatePath <project> -Yes
+```
+
 ## Output
 
 On successful completion of the full flow or `apply`, print verbatim:

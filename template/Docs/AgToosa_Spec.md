@@ -99,6 +99,8 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
 
 ### Part 1 — Research & Specification
 
+**Orchestration Brain step 0:** Before fan-out (specialist lanes, parallel research), read `Docs/AgToosa_Orchestration.md` and run Capability Inventory → lane plan → parallel or sequential dispatch → orchestrator merge. Consult `Docs/AgToosa_AgentCapability.md` for parallel vs sequential; do not duplicate routing tables here.
+
 1.  **Context Gathering & Domain Language Alignment:**
     *   Read `Docs/Context/product.md`, `tech-stack.md`, and `workflow.md` to align with project goals.
     *   Read `Docs/Master-Architecture.md` as the current solution architecture before proposing architecture changes. If it is missing or stale, record that as a context gap and include an update task when architecture is in scope.

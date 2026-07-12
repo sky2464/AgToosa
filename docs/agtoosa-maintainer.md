@@ -91,6 +91,7 @@ Beyond the interactive install wizard, `agtoosa.sh` exposes these maintainer-rel
 | `--verify [path]` | `lib/maintain.sh:run_verify` | Run the deterministic lifecycle verifier (prefers the target's installed `Docs/agtoosa-verify.sh` or `docs/agtoosa-verify.sh`, falls back to template copy) | Verifier exit code (0 pass, 1 findings, 2 usage) |
 | `--doctor [path]` | `lib/maintain.sh:run_doctor` | Report version skew (`Docs/.agtoosa-version` vs generator), missing workflow docs, platform wiring gaps, context placeholders, queued packs, stale `*.bak.*` files | 0 healthy, 1 issues found, 2 bad path |
 | `--uninstall [path]` | `lib/maintain.sh:run_uninstall` | Remove AgToosa-owned files; preserves Master-Plan, Context/, archived/, and merged entry points | Blocks uninstall on the generator source tree; prompts unless `--yes` |
+| `--reinstall --clean [path]` | `lib/reinstall.sh:run_reinstall_clean` | ADR-004 Option C: archive generated files, regenerate fresh for platforms, rewrite `Docs/agtoosa-lock.json` | Destructive; requires confirmation (`--yes` non-interactive); default upgrade remains `--update` |
 | `--path <dir>` | `agtoosa.sh` | Skip the interactive path prompt | Requires valid path |
 | `--platforms <list>` | `agtoosa.sh` | Comma-separated platform list (e.g. `cursor,claude`) | Used with `--yes` for non-interactive installs |
 | `--yes`, `-y` | `agtoosa.sh` | Non-interactive consent (CI, devcontainers, npm wrapper) | Bootstrap pass-through uses `--` before generator flags |

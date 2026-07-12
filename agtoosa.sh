@@ -10,7 +10,7 @@ set -euo pipefail
 #   bash agtoosa.sh [--force] [--dry-run] [--version] [--help]
 # ──────────────────────────────────────────────────────────────
 
-AGTOOSA_VERSION="5.3.18"
+AGTOOSA_VERSION="5.3.20"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
 SHIP_DIR="${SCRIPT_DIR}/ship"
@@ -29,7 +29,7 @@ if [[ ! -d "${SCRIPT_DIR}/lib" ]]; then
 fi
 
 # ── Source modular libraries ──────────────────────────────────
-for _lib in config version copy apply state lock generate plan dryrun install update migrate provenance registry catalog tracker maintain; do
+for _lib in config version copy apply state lock generate plan dryrun install update migrate provenance registry catalog tracker maintain reinstall; do
   # shellcheck source=/dev/null
   source "${SCRIPT_DIR}/lib/${_lib}.sh"
 done
@@ -88,6 +88,9 @@ DOCTOR=false
 DOCTOR_PATH=""
 UNINSTALL=false
 UNINSTALL_PATH=""
+REINSTALL=false
+REINSTALL_PATH=""
+CLEAN=false
 OUTPUT_FORMAT=""
 VERIFY_STRICT=false
 PLAN_JSON_MODE=false
@@ -102,6 +105,8 @@ while [[ $# -gt 0 ]]; do
     --verify)              VERIFY=true ;;
     --doctor)              DOCTOR=true ;;
     --uninstall)           UNINSTALL=true ;;
+    --reinstall)           REINSTALL=true ;;
+    --clean)               CLEAN=true ;;
     --force)               FORCE=true ;;
     --dry-run)             DRY_RUN=true ;;
     --allow-unverified)    ALLOW_UNVERIFIED=true ;;
@@ -163,6 +168,8 @@ while [[ $# -gt 0 ]]; do
         DOCTOR_PATH="$arg"
       elif [[ "$UNINSTALL" == true && -z "$UNINSTALL_PATH" && "$arg" != --* ]]; then
         UNINSTALL_PATH="$arg"
+      elif [[ "$REINSTALL" == true && -z "$REINSTALL_PATH" && "$arg" != --* ]]; then
+        REINSTALL_PATH="$arg"
       else
         echo -e "${RED}❌ Error: Unknown option '${arg}'.${NC}"
         echo ""
@@ -177,11 +184,25 @@ done
 if [[ -n "$_PATH_ARG" ]]; then
   if [[ "$TRACKER" == true ]]; then
     TRACKER_PATH="$_PATH_ARG"
+  elif [[ "$REINSTALL" == true && -z "$REINSTALL_PATH" ]]; then
+    REINSTALL_PATH="$_PATH_ARG"
+    CLI_PROJECT_PATH="$_PATH_ARG"
   else
     CLI_PROJECT_PATH="$_PATH_ARG"
   fi
 fi
 unset _PATH_ARG
+
+# --reinstall and --clean are a paired Option C surface (ADR-004).
+if [[ "$REINSTALL" == true && "$CLEAN" != true ]]; then
+  echo -e "${RED}❌ Error: --reinstall requires --clean (ADR-004 Option C).${NC}" >&2
+  echo -e "${YELLOW}Default safe upgrade remains: bash agtoosa.sh --update <project>${NC}" >&2
+  exit 1
+fi
+if [[ "$CLEAN" == true && "$REINSTALL" != true ]]; then
+  echo -e "${RED}❌ Error: --clean requires --reinstall.${NC}" >&2
+  exit 1
+fi
 
 if [[ "$DRY_RUN" == true && "$OUTPUT_FORMAT" == "json" ]]; then
   PLAN_JSON_MODE=true
@@ -226,6 +247,12 @@ fi
 # ── Uninstall mode ─────────────────────────────────────────────
 if [[ "$UNINSTALL" == true ]]; then
   run_uninstall "${UNINSTALL_PATH:-}"
+  exit $?
+fi
+
+# ── Reinstall --clean mode (ADR-004 Option C) ─────────────────
+if [[ "$REINSTALL" == true && "$CLEAN" == true ]]; then
+  run_reinstall_clean "${REINSTALL_PATH:-${CLI_PROJECT_PATH:-}}"
   exit $?
 fi
 

@@ -4,6 +4,10 @@
 
 Teams that routinely delegate waves or tasks to subagents, background agents, or external async runners (Cursor, Claude Code Task tool, Copilot cloud agents, Codex sessions, etc.).
 
+## Entry algorithm
+
+Before partitioning lanes or exporting handoff packs, run **Orchestration Brain step 0** in [`docs/AgToosa_Orchestration.md`](../AgToosa_Orchestration.md): Capability Inventory → lane plan → parallel or sequential fan-out → orchestrator merge. Platform routing detail stays in [`docs/AgToosa_AgentCapability.md`](../AgToosa_AgentCapability.md) — do not duplicate it here.
+
 ## Recommended Lifecycle Path
 
 1. Approve spec and Active Tasks.
@@ -49,6 +53,7 @@ If two lanes would edit the same file without a documented merge rule, rewrite t
 Do not duplicate these contracts — link and follow the canonical workflow docs:
 
 - **Handoff packs:** [`docs/AgToosa_Handoff.md`](../AgToosa_Handoff.md)
+- **Orchestration Brain:** [`docs/AgToosa_Orchestration.md`](../AgToosa_Orchestration.md)
 - **Import and closure gate:** [`docs/AgToosa_Import.md`](../AgToosa_Import.md)
 - **Cross-model review:** [`docs/AgToosa_CrossModelReview.md`](../AgToosa_CrossModelReview.md)
 - **Platform routing and parallel vs sequential:** [`docs/AgToosa_AgentCapability.md`](../AgToosa_AgentCapability.md)

@@ -55,4 +55,5 @@ Upgrade, diagnose, and contribute:
 - [Quickref (doctor / uninstall)](AgToosa_Quickref.md) — `--doctor` and `--uninstall` surfaces
 - [Revert](AgToosa_Revert.md) — uninstall / revert guidance
 - [Maintainer guide](agtoosa-maintainer.md) — Maintainer Dogfood Mode
+- [Built with AgToosa](built-with-agtoosa.md) — curated showcase and submission rules
 - [Contributing](https://github.com/sky2464/AgToosa/blob/main/CONTRIBUTING.md) — contribution process

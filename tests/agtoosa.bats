@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.18" ]]
+  [[ "$output" == "AgToosa v5.3.20" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1636,7 +1636,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.3.18" ]
+  [ "$ver" = "5.3.20" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1647,7 +1647,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.3.18"* ]]
+  [[ "$output" == *"5.3.20"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -3649,7 +3649,7 @@ PY
   grep -q "Claude Code Instructions" "$project/CLAUDE.md"
   ! grep -q "old claude block" "$project/CLAUDE.md"
   grep -q "AgToosa" "$project/.claude/commands/agtoosa-spec.md"
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.18" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.20" ]
 }
 
 @test "DEV-036 WP-002: Bash registry install normalizes top-level pack directory" {
@@ -7455,11 +7455,11 @@ JSON
   done
 }
 
-@test "DEV-089 SR-003: Master-Plan records v5.3.18 ship and v5.3.19 next milestone" {
+@test "DEV-089 SR-003: Master-Plan records v5.3.18 ship and v5.3.20 next milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   grep -q 'Ship complete — v5.3.18' "$mp"
   grep -q 'Release 5.3.18 shipped' "$mp"
-  grep -q 'v5.3.19 (next)' "$mp"
+  grep -q 'v5.3.20 (next)' "$mp"
   grep -q '| DEV-089 | Feature: Evidence-Profile Verifier Gates' "$mp"
   grep -q '| DEV-091 | Feature: Migration Wizard' "$mp"
   grep -q '| DEV-093 | Feature: Install State File' "$mp"
@@ -8599,6 +8599,8 @@ MET_CASE_MIRROR="$BATS_TEST_DIRNAME/../docs/AgToosa_CaseStudy.template.md"
 # ── DEV-080: Official Registry Pack Pilot (OPP-001–OPP-010) ───────────────────
 
 @test "DEV-080 @smoke OPP-001: Exactly Three Pilot Domains" {
+  # DEV-095 supersedes the three-pack inventory cap (Rev4 five-pack maximum).
+  # OPP-001 still asserts the original three domains remain present; ceiling is five.
   local inv="$BATS_TEST_DIRNAME/../docs/AgToosa_Registry.md"
   [ -f "$inv" ]
   grep -q "## Official Pack Pilot" "$inv"
@@ -8608,10 +8610,10 @@ MET_CASE_MIRROR="$BATS_TEST_DIRNAME/../docs/AgToosa_CaseStudy.template.md"
   grep -q "primary domain: web" "$inv"
   grep -q "primary domain: api" "$inv"
   grep -q "primary domain: infrastructure" "$inv"
-  # Exactly three pilot pack roots — no fourth official-* under packs/
+  # Five-pack ceiling (DEV-095); original three pilots remain required
   local count
   count=$(find "$BATS_TEST_DIRNAME/../packs" -maxdepth 1 -type d -name 'official-*' 2>/dev/null | wc -l | tr -d ' ')
-  [ "$count" -eq 3 ]
+  [ "$count" -eq 5 ]
 }
 
 @test "DEV-080 @smoke OPP-002: Catalog Manifest Conformance" {
@@ -8818,8 +8820,9 @@ PY
   [ -f "$checklist" ]
   grep -q "local candidate" "$inv"
   grep -q "not externally published" "$inv"
-  # Must not claim published/available in external registry for pilot packs
-  ! grep -E "official-(web|api|infra).*externally published" "$inv"
+  # Must not claim published without "not" qualifier (allow "not externally published")
+  run grep -E 'official-(web|api|infra).*\| (externally published|published|available) \|' "$inv"
+  [ "$status" -ne 0 ]
   ! grep -qi "marketplace" "$inv" || grep -qi "not a marketplace\|No.*marketplace" "$inv"
   grep -q "submitted" "$checklist"
   grep -q "published" "$checklist"
@@ -9618,7 +9621,7 @@ EOF
   run pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1" -Update -UpdatePath "$project"
   [ "$status" -eq 0 ]
   [ -f "$project/Docs/.agtoosa-version" ]
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.18" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.20" ]
 }
 
 @test "DEV-105 PSP-005: maintain switches require -UpdatePath" {
@@ -10040,7 +10043,7 @@ PY
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.18"
+    AGTOOSA_VERSION="5.3.20"
     PROJECT_PATH="'"$proj"'"
     apply_reset_summary
     apply_begin_staging "'"$proj"'"
@@ -10099,7 +10102,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.18"
+    AGTOOSA_VERSION="5.3.20"
     PROJECT_PATH="'"$proj"'"
     USE_CURSOR=true; USE_CLAUDE=true
     USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10117,7 +10120,7 @@ d = json.load(open(sys.argv[1]))
 plats = set(d.get("platforms") or [])
 assert "cursor" in plats and "claude" in plats, plats
 assert "gemini" not in plats, "stale platform should be reconciled out"
-assert d.get("agtoosa_version") == "5.3.18"
+assert d.get("agtoosa_version") == "5.3.20"
 PY
   [ "$status" -eq 0 ]
 }
@@ -10132,7 +10135,7 @@ PY
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.18"
+    AGTOOSA_VERSION="5.3.20"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10189,7 +10192,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.18"
+    AGTOOSA_VERSION="5.3.20"
     PROJECT_PATH="'"$proj"'"
     # Inject observed SHA that differs from lock pin
     AGTOOSA_PACK_OBSERVED_SHA_tampered_pack="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
@@ -10224,7 +10227,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.18"
+    AGTOOSA_VERSION="5.3.20"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10248,7 +10251,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.18"
+    AGTOOSA_VERSION="5.3.20"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10276,7 +10279,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.18"
+    AGTOOSA_VERSION="5.3.20"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -11088,4 +11091,1563 @@ _trust_registry_docs() {
     ! grep -qiE 'verified packs? (are|is) security certified' "$f"
     ! grep -qiE 'community packs? (are|is) (official|maintainer-approved|maintainer verified)' "$f"
   done < <(_trust_registry_docs)
+}
+
+# ── DEV-098: Navigation by User Job (NAV-001–NAV-*) ──────────────────────────
+
+# Extract markdown body for a ## Section heading until the next ## heading.
+nav098_section() {
+  local index="$1"
+  local heading="$2"
+  awk -v h="$heading" '
+    $0 == "## " h {grab=1; next}
+    grab && /^## / {exit}
+    grab {print}
+  ' "$index"
+}
+
+# Resolve a relative markdown link target under docs/ (strip anchors).
+nav098_link_exists() {
+  local docs_root="$1"
+  local target="$2"
+  target="${target%%#*}"
+  target="${target%%\?*}"
+  # Skip external / liquid / absolute URLs
+  case "$target" in
+    http://*|https://*|{{*|mailto:*|/*) return 0 ;;
+  esac
+  [ -f "$docs_root/$target" ] || [ -f "$docs_root/${target%.md}.md" ]
+}
+
+@test "DEV-098 @smoke NAV-001: Five Job Sections Present" {
+  local index="$BATS_TEST_DIRNAME/../docs/index.md"
+  [ -f "$index" ]
+
+  grep -qE '^## Start$' "$index"
+  grep -qE '^## Use$' "$index"
+  grep -qE '^## Trust$' "$index"
+  grep -qE '^## Adapt$' "$index"
+  grep -qE '^## Maintain$' "$index"
+
+  # Exact order: Start → Use → Trust → Adapt → Maintain
+  local order
+  order="$(grep -E '^## (Start|Use|Trust|Adapt|Maintain)$' "$index" | tr '\n' '|')"
+  [ "$order" = "## Start|## Use|## Trust|## Adapt|## Maintain|" ]
+}
+
+@test "DEV-098 @smoke NAV-002: Link-Only Landing Page" {
+  local index="$BATS_TEST_DIRNAME/../docs/index.md"
+  local agent="$BATS_TEST_DIRNAME/../docs/AgToosa_Agent.md"
+  local build="$BATS_TEST_DIRNAME/../docs/AgToosa_Build.md"
+  [ -f "$index" ]
+  [ -f "$agent" ]
+  [ -f "$build" ]
+
+  # Must link to canonical guides
+  grep -qE '\[.*\]\(AgToosa_Agent\.md\)' "$index"
+  grep -qE '\[.*\]\(examples/first-15-minutes\.md\)' "$index"
+
+  # Must not embed maintained duplicates of guide bodies
+  ! grep -q "Generated Project Mode" "$index"
+  ! grep -q "## 1. Start From A Clean Repo" "$index"
+  ! grep -q "Terminal Evidence Contract" "$index"
+  ! grep -q "### Wave Plan" "$index"
+  # Index should stay short — link list, not a second guide
+  local lines
+  lines="$(wc -l < "$index" | tr -d ' ')"
+  [ "$lines" -lt 80 ]
+}
+
+@test "DEV-098 NAV-003: Start Section Required Links" {
+  local docs="$BATS_TEST_DIRNAME/../docs"
+  local index="$docs/index.md"
+  local section
+  section="$(nav098_section "$index" "Start")"
+  [ -n "$section" ]
+
+  echo "$section" | grep -qE '\[.*\]\(examples/first-15-minutes\.md\)'
+  # install/update entry points
+  echo "$section" | grep -qE '\[.*\]\(AgToosa_Init\.md\)'
+  echo "$section" | grep -qE '\[.*\]\(AgToosa_Update\.md\)|\[.*\]\(AgToosa_Init\.md\)'
+  # agent operating context
+  echo "$section" | grep -qE '\[.*\]\(AgToosa_Agent\.md\)'
+
+  [ -f "$docs/examples/first-15-minutes.md" ]
+  [ -f "$docs/AgToosa_Init.md" ]
+  [ -f "$docs/AgToosa_Agent.md" ]
+}
+
+@test "DEV-098 NAV-004: Use Section Required Links" {
+  local docs="$BATS_TEST_DIRNAME/../docs"
+  local index="$docs/index.md"
+  local section
+  section="$(nav098_section "$index" "Use")"
+  [ -n "$section" ]
+
+  echo "$section" | grep -qE '\[.*\]\(AgToosa_Spec\.md\)'
+  echo "$section" | grep -qE '\[.*\]\(AgToosa_Build\.md\)'
+  echo "$section" | grep -qE '\[.*\]\(AgToosa_Review\.md\)'
+  echo "$section" | grep -qE '\[.*\]\(AgToosa_Ship\.md\)'
+  # verify lifecycle — script or agent verify pointer
+  echo "$section" | grep -qE '\[.*\]\(agtoosa-verify\.sh\)|\[.*\]\(AgToosa_Agent\.md\)|\[.*\]\(examples/verifier-ci-adoption\.md\)'
+
+  for f in AgToosa_Spec.md AgToosa_Build.md AgToosa_Review.md AgToosa_Ship.md; do
+    [ -f "$docs/$f" ]
+  done
+}
+
+@test "DEV-098 NAV-005: Trust Section Required Links" {
+  local docs="$BATS_TEST_DIRNAME/../docs"
+  local index="$docs/index.md"
+  local section
+  section="$(nav098_section "$index" "Trust")"
+  [ -n "$section" ]
+
+  # verification
+  echo "$section" | grep -qE '\[.*\]\(agtoosa-verify\.sh\)|\[.*\]\(AgToosa_Evidence\.md\)|\[.*\]\(AgToosa_Delivery_Evidence_Contract\.md\)|\[.*\]\(examples/verifier-ci-adoption\.md\)'
+  # registry trust boundary
+  echo "$section" | grep -qE '\[.*\]\(AgToosa_Registry\.md\)'
+  # evidence or security boundary
+  echo "$section" | grep -qE '\[.*\]\(AgToosa_Evidence\.md\)|\[.*\]\(security/README\.md\)|\[.*\]\(security/framework-supply-chain-threat-model\.md\)|\[.*\]\(guides/security-sensitive-projects\.md\)'
+
+  [ -f "$docs/AgToosa_Registry.md" ]
+}
+
+@test "DEV-098 NAV-006: Adapt Section Required Links" {
+  local docs="$BATS_TEST_DIRNAME/../docs"
+  local index="$docs/index.md"
+  local section
+  section="$(nav098_section "$index" "Adapt")"
+  [ -n "$section" ]
+
+  echo "$section" | grep -qE '\[.*\]\(AgToosa_Registry\.md\)|\[.*\]\(registry-pack-authoring\.md\)'
+  echo "$section" | grep -qE '\[.*\]\(AgToosa_Catalog\.md\)'
+  echo "$section" | grep -qE '\[.*\]\(registry-pack-authoring\.md\)|\[.*\]\(extension-authoring-guide\.md\)'
+
+  [ -f "$docs/registry-pack-authoring.md" ]
+  [ -f "$docs/AgToosa_Catalog.md" ]
+  [ -f "$docs/extension-authoring-guide.md" ]
+}
+
+@test "DEV-098 NAV-007: Maintain Section Required Links" {
+  local docs="$BATS_TEST_DIRNAME/../docs"
+  local index="$docs/index.md"
+  local section
+  section="$(nav098_section "$index" "Maintain")"
+  [ -n "$section" ]
+
+  echo "$section" | grep -qE '\[.*\]\(AgToosa_Update\.md\)'
+  # doctor
+  echo "$section" | grep -qE '\[.*\]\(AgToosa_Quickref\.md\)|doctor'
+  # uninstall/revert
+  echo "$section" | grep -qE '\[.*\]\(AgToosa_Revert\.md\)|\[.*\]\(AgToosa_Quickref\.md\)'
+  # contributing or maintainer
+  echo "$section" | grep -qE '\[.*\]\(agtoosa-maintainer\.md\)|\[.*\]\(\.\./CONTRIBUTING\.md\)|\[.*\]\(CONTRIBUTING\.md\)'
+
+  [ -f "$docs/AgToosa_Update.md" ]
+  [ -f "$docs/AgToosa_Revert.md" ]
+  [ -f "$docs/agtoosa-maintainer.md" ]
+}
+
+@test "DEV-098 @smoke NAV-008: Static Site Regression" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local docs="$root/docs"
+  local index="$docs/index.md"
+  local config="$docs/_config.yml"
+  [ -f "$index" ]
+  [ -f "$config" ]
+
+  grep -qE 'baseurl:[[:space:]]*"/AgToosa"' "$config"
+
+  # Every relative markdown link from the landing page must resolve under docs/
+  local target
+  while IFS= read -r target; do
+    nav098_link_exists "$docs" "$target"
+  done < <(grep -oE '\[[^]]+\]\([^)]+\)' "$index" | sed -E 's/.*\(([^)]+)\).*/\1/' | grep -vE '^\{\{|https?://|^#')
+
+  # SITE build + /AgToosa/ landing when jekyll/docker available
+  if site076_jekyll_bin >/dev/null 2>&1 || command -v docker >/dev/null 2>&1; then
+    local outdir
+    outdir="$(mktemp -d "${BATS_TEST_TMPDIR}/nav098-site.XXXXXX")"
+    run site076_jekyll_build "$root" "$outdir"
+    [ "$status" -eq 0 ]
+    [ -f "$outdir/index.html" ]
+    grep -q "/AgToosa/" "$outdir/index.html"
+    # Job section headings survive into HTML
+    grep -q "Start" "$outdir/index.html"
+    grep -q "Maintain" "$outdir/index.html"
+  else
+    # Grep-contract fallback when no builder is present
+    grep -qE '^## Start$' "$index"
+    grep -q "/AgToosa/" "$index"
+  fi
+}
+
+# ── DEV-099: Core vs Optional Pack Boundary (CORE-*) ─────────────────────────
+
+_core_contract_paths() {
+  local root="$1"
+  printf '%s\n' \
+    "$root/docs/AgToosa_Core_Contract.md" \
+    "$root/template/Docs/AgToosa_Core_Contract.md"
+}
+
+# Print sorted unique members of a named array from lib/config.sh.
+_core_config_array() {
+  local root="$1"
+  local name="$2"
+  # macOS ships Bash 3.2 — no nameref; use eval for indirect array expansion.
+  bash -c '
+    set -euo pipefail
+    source "'"$root"'/lib/config.sh"
+    eval "printf \"%s\\n\" \"\${'"$name"'[@]}\"" | LC_ALL=C sort -u
+  '
+}
+
+# Extract inventory paths from a fenced block under a section heading that
+# contains MARKER (e.g. DOCS_FILES).
+_core_doc_inventory() {
+  local file="$1"
+  local marker="$2"
+  awk -v marker="$marker" '
+    BEGIN { in_sec=0; in_fence=0 }
+    /^## / {
+      if (index($0, marker)) { in_sec=1; in_fence=0; next }
+      else if (in_sec) { exit }
+    }
+    in_sec && /^```/ {
+      if (!in_fence) { in_fence=1; next }
+      else { exit }
+    }
+    in_sec && in_fence && NF > 0 { print }
+  ' "$file" | LC_ALL=C sort -u
+}
+
+# Compare array list (stdin lines) to document inventory; print missing/orphan.
+_core_parity_diff() {
+  local doc="$1"
+  local marker="$2"
+  local tmp_cfg tmp_doc
+  tmp_cfg="$(mktemp)"
+  tmp_doc="$(mktemp)"
+  cat > "$tmp_cfg"
+  _core_doc_inventory "$doc" "$marker" > "$tmp_doc"
+  local missing orphan status=0
+  missing="$(comm -23 "$tmp_cfg" "$tmp_doc" || true)"
+  orphan="$(comm -13 "$tmp_cfg" "$tmp_doc" || true)"
+  if [ -n "$missing" ]; then
+    echo "missing from contract ($marker):"
+    echo "$missing"
+    status=1
+  fi
+  if [ -n "$orphan" ]; then
+    echo "orphan in contract ($marker):"
+    echo "$orphan"
+    status=1
+  fi
+  rm -f "$tmp_cfg" "$tmp_doc"
+  return "$status"
+}
+
+@test "DEV-099 @smoke CORE-001: Core Lifecycle Command Inventory" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    grep -qiE '\bInit\b' "$f"
+    grep -qiE '\bSpec\b' "$f"
+    grep -qiE '\bBuild\b' "$f"
+    grep -qiE '\bReview\b' "$f"
+    grep -qiE '\bShip\b' "$f"
+    grep -qiE '\bVerify\b' "$f"
+    grep -qiE '\bDoctor\b' "$f"
+    # Specialty behavior belongs in packs — not required for baseline
+    grep -qiE 'pack' "$f"
+    grep -qiE 'specialt|optional pack|belong(s)? in pack' "$f"
+    ! grep -qiE 'packs? are required for (baseline|core|basic)' "$f"
+  done < <(_core_contract_paths "$root")
+}
+
+@test "DEV-099 @smoke CORE-002: Docs Files Array Parity" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    run _core_parity_diff "$f" "DOCS_FILES" < <(_core_config_array "$root" "DOCS_FILES")
+    echo "$output"
+    [ "$status" -eq 0 ]
+  done < <(_core_contract_paths "$root")
+}
+
+@test "DEV-099 CORE-003: Optional Template Array Parity" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    run _core_parity_diff "$f" "OPTIONAL_TEMPLATE_FILES" < <(_core_config_array "$root" "OPTIONAL_TEMPLATE_FILES")
+    echo "$output"
+    [ "$status" -eq 0 ]
+  done < <(_core_contract_paths "$root")
+}
+
+@test "DEV-099 CORE-004: Context Files Array Parity" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    run _core_parity_diff "$f" "CONTEXT_FILES" < <(_core_config_array "$root" "CONTEXT_FILES")
+    echo "$output"
+    [ "$status" -eq 0 ]
+  done < <(_core_contract_paths "$root")
+}
+
+@test "DEV-099 @smoke CORE-005: Array Drift Fails Until Doc Update" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local doc="$root/docs/AgToosa_Core_Contract.md"
+  [ -f "$doc" ]
+  # Negative fixture: invent a DOCS_FILES path not listed in the contract.
+  local drift="Docs/AgToosa_CORE005_Drift_Probe.md"
+  local cfg
+  cfg="$(mktemp)"
+  {
+    _core_config_array "$root" "DOCS_FILES"
+    echo "$drift"
+  } | LC_ALL=C sort -u > "$cfg"
+  run _core_parity_diff "$doc" "DOCS_FILES" < "$cfg"
+  rm -f "$cfg"
+  echo "$output"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"$drift"* ]]
+  [[ "$output" == *"missing from contract"* ]]
+}
+
+@test "DEV-099 CORE-006: Enforcement Class Honesty" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    grep -qiE 'Claim Boundary|Enforcement' "$f"
+    # Four distinct classes
+    grep -qiE 'generator.?installed|core (Docs|file|install)' "$f"
+    grep -qiE 'optional (adapter|platform|template)' "$f"
+    grep -qiE 'registry|pack addition|pack content' "$f"
+    grep -qiE 'manual (maintainer|action|review)' "$f"
+    # Must not label optional adapters as core-enforced lifecycle
+    ! grep -qiE 'optional adapters? are (core-enforced|mandatory core)' "$f"
+    ! grep -qiE 'OPTIONAL_TEMPLATE_FILES are (core-enforced|mandatory)' "$f"
+  done < <(_core_contract_paths "$root")
+}
+
+@test "DEV-099 CORE-007: README Discovery Link" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local readme="$root/README.md"
+  grep -q 'docs/AgToosa_Core_Contract.md' "$readme"
+  # Discovery only — must not embed a full DOCS_FILES inventory copy
+  ! grep -q 'DOCS_FILES' "$readme"
+  ! grep -q 'Docs/agtoosa-tracker-sync.schema.json' "$readme"
+  ! grep -q 'Docs/AgToosa_GovernancePolicy.md' "$readme"
+  # Contract itself must exist for the link target
+  [ -f "$root/docs/AgToosa_Core_Contract.md" ]
+}
+# ── DEV-106: Built with AgToosa Showcase (SHOW-001–SHOW-007) ─────────────────
+
+_show106_page() {
+  printf '%s\n' "$BATS_TEST_DIRNAME/../docs/built-with-agtoosa.md"
+}
+
+@test "DEV-106 @smoke SHOW-001: Curated Not Certified Disclaimer" {
+  local f
+  f="$(_show106_page)"
+  [ -f "$f" ]
+  # Listings are curated examples — not paid placement or official certification
+  grep -qiE 'curated' "$f"
+  grep -qiE 'not.*(official|paid)|not paid placement|not.*certif' "$f"
+  grep -qiE 'certif|endorsement|official' "$f"
+  # Must not title the page as certified projects
+  ! grep -qiE '^#+[[:space:]]*AgToosa Certified Projects' "$f"
+}
+
+@test "DEV-106 @smoke SHOW-002: Submission Rules Completeness" {
+  local f
+  f="$(_show106_page)"
+  [ -f "$f" ]
+  grep -qiE 'submission|how to (submit|propose)|propose a listing' "$f"
+  # Required evidence fields
+  grep -qiE 'public (repository|repo)|repository link|repo (URL|link)' "$f"
+  grep -qiE 'short description|description' "$f"
+  grep -qiE 'AgToosa version|proof reference|AgToosa proof|version or proof' "$f"
+  grep -qiE 'contact|issue|pull request|PR|maintainer review' "$f"
+}
+
+@test "DEV-106 SHOW-003: Eligibility and Exclusion Criteria" {
+  local f
+  f="$(_show106_page)"
+  [ -f "$f" ]
+  grep -qiE 'eligib|inclusion' "$f"
+  grep -qiE 'exclusion|not eligible|do not list|reject' "$f"
+  # Inclusion signals
+  grep -qiE 'verifiable|public repo|AgToosa usage|uses AgToosa' "$f"
+  # Exclusion signals
+  grep -qiE 'misleading|malware|abuse|content farm|scraped' "$f"
+}
+
+@test "DEV-106 SHOW-004: Link-Out Listings Only" {
+  local f
+  f="$(_show106_page)"
+  [ -f "$f" ]
+  # Listing table / link-out fields present
+  grep -qiE 'listing|showcase' "$f"
+  grep -qiE 'Repository|repo|URL|link' "$f"
+  # Must not embed third-party README bodies (common drift failure)
+  ! grep -qiE '## Installation[[:space:]]*$' "$f"
+  ! grep -qiE 'npm install .*agtoosa' "$f"
+  ! grep -qiE 'cloned from .*README' "$f"
+  # Claim that content is link-out / external, not hosted inline
+  grep -qiE 'link(-| )out|external|links? (out|to)|does not host|not host' "$f"
+}
+
+@test "DEV-106 SHOW-005: Case Study Kit Cross-Link" {
+  local f
+  f="$(_show106_page)"
+  [ -f "$f" ]
+  # Points at the DEV-083 voluntary kit without pasting its body
+  grep -qE 'AgToosa_CaseStudy\.template\.md' "$f"
+  [ -f "$BATS_TEST_DIRNAME/../docs/AgToosa_CaseStudy.template.md" ]
+  # Must not duplicate case-study template sections
+  ! grep -qiE 'SYNTHETIC \| observed' "$f"
+  ! grep -qiE '## 8\. Consent and privacy review' "$f"
+  ! grep -qiE '## 9\. Claim / publication review' "$f"
+}
+
+@test "DEV-106 SHOW-006: Index Discovery Link" {
+  local index="$BATS_TEST_DIRNAME/../docs/index.md"
+  local page="$BATS_TEST_DIRNAME/../docs/built-with-agtoosa.md"
+  [ -f "$index" ]
+  [ -f "$page" ]
+  # Preserve DEV-098 five-job structure
+  grep -qE '^## Start$' "$index"
+  grep -qE '^## Use$' "$index"
+  grep -qE '^## Trust$' "$index"
+  grep -qE '^## Adapt$' "$index"
+  grep -qE '^## Maintain$' "$index"
+  # Discovery link in Maintain or Adapt
+  local section
+  section="$(awk '
+    $0 == "## Maintain" || $0 == "## Adapt" {grab=1}
+    grab && /^## / && $0 != "## Maintain" && $0 != "## Adapt" {exit}
+    grab {print}
+  ' "$index")"
+  echo "$section" | grep -qE '\[.*\]\(built-with-agtoosa\.md\)'
+  # Must not dump submission checklist into README
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  [ -f "$readme" ]
+  ! grep -qiE 'submission rules|how to submit.*showcase|eligibility criteria' "$readme"
+}
+
+@test "DEV-106 SHOW-007: Forbidden Endorsement Phrases" {
+  local f
+  f="$(_show106_page)"
+  [ -f "$f" ]
+  # Doc must call out forbidden endorsement / certification language
+  grep -qiE 'Forbidden|forbidden' "$f"
+  grep -qiE 'certified|approved|official endorsement|security (approved|certified)' "$f"
+  # Must not affirmatively claim listed projects ARE certified/approved
+  # (mentioning phrases inside a Forbidden list is allowed)
+  ! grep -qiE 'projects? (are|is) AgToosa (security )?(certified|approved)' "$f"
+  ! grep -qiE 'official(ly)? (certified|endorsed) by AgToosa' "$f"
+  ! grep -qiE '^#+[[:space:]]*AgToosa Certified' "$f"
+  ! grep -qiE 'listings? (are|is) AgToosa (security )?(certified|approved)' "$f"
+}
+# ── DEV-102: Offline and Network-Dependency Matrix (NET-*) ────────────────────
+
+_net_matrix_paths() {
+  local root="$BATS_TEST_DIRNAME/.."
+  printf '%s\n' \
+    "$root/docs/AgToosa_Network_Matrix.md" \
+    "$root/template/Docs/AgToosa_Network_Matrix.md"
+}
+
+_net_agent_paths() {
+  local root="$BATS_TEST_DIRNAME/.."
+  printf '%s\n' \
+    "$root/docs/AgToosa_Agent.md" \
+    "$root/template/Docs/AgToosa_Agent.md"
+}
+
+_net_registry_paths() {
+  local root="$BATS_TEST_DIRNAME/.."
+  printf '%s\n' \
+    "$root/docs/AgToosa_Registry.md" \
+    "$root/template/Docs/AgToosa_Registry.md"
+}
+
+# Extract markdown table data rows from the canonical matrix section.
+# Prints: command|class (normalized lowercase class token).
+_net_matrix_rows() {
+  local file="$1"
+  awk '
+    BEGIN { in_matrix=0 }
+    /^## / {
+      if ($0 ~ /[Mm]atrix/) { in_matrix=1; next }
+      else if (in_matrix) { exit }
+    }
+    in_matrix && /^\|/ {
+      line=$0
+      # Skip separator and header rows
+      if (line ~ /^\|[[:space:]]*[-:| ]+[[:space:]]*$/) next
+      if (line ~ /Command[[:space:]]*\/[[:space:]]*mode/) next
+      if (line ~ /Bash/ && line ~ /PowerShell/ && line ~ /Class/) next
+      n=split(line, cells, "|")
+      # cells[1] empty before first |; cells[2]=command; cells[5]=class (Command|Bash|PS|Class|Notes)
+      cmd=cells[2]; gsub(/^[[:space:]]+|[[:space:]]+$/, "", cmd)
+      cls=cells[5]; gsub(/^[[:space:]]+|[[:space:]]+$/, "", cls)
+      gsub(/`/, "", cls)
+      cls=tolower(cls)
+      if (cmd == "" || cls == "") next
+      print cmd "|" cls
+    }
+  ' "$file"
+}
+
+# Required command/mode needles (substring match against Command/mode column).
+_net_required_needles() {
+  printf '%s\n' \
+    "install" \
+    "update" \
+    "verify" \
+    "doctor" \
+    "registry list" \
+    "registry info" \
+    "registry install" \
+    "registry publish" \
+    "catalog validate" \
+    "launch-readiness" \
+    "private" \
+    "public"
+}
+
+@test "DEV-102 @smoke NET-001: Canonical Matrix Document Present" {
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    # Bash and PowerShell columns required
+    grep -qiE '\|[[:space:]]*Bash[[:space:]]*\|' "$f"
+    grep -qiE '\|[[:space:]]*PowerShell[[:space:]]*\|' "$f"
+    grep -qiE '\|[[:space:]]*Class[[:space:]]*\|' "$f"
+    grep -qiE 'Command[[:space:]]*/[[:space:]]*mode|Command / mode' "$f"
+  done < <(_net_matrix_paths)
+}
+
+@test "DEV-102 @smoke NET-002: Dependency Class Per Command" {
+  local f row cmd cls
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    local count=0
+    while IFS='|' read -r cmd cls; do
+      count=$((count + 1))
+      case "$cls" in
+        offline|network-required|network-optional) ;;
+        *)
+          echo "invalid class for '$cmd': '$cls'" >&2
+          return 1
+          ;;
+      esac
+      # Exactly one class token in the class cell
+      [[ "$cls" != *" "* ]]
+    done < <(_net_matrix_rows "$f")
+    [ "$count" -ge 8 ]
+
+    # verify must be offline (negative contract from test plan)
+    local verify_cls=""
+    while IFS='|' read -r cmd cls; do
+      case "$cmd" in
+        *[Vv]erify*) verify_cls="$cls" ;;
+      esac
+    done < <(_net_matrix_rows "$f")
+    [ -n "$verify_cls" ]
+    [ "$verify_cls" = "offline" ]
+  done < <(_net_matrix_paths)
+}
+
+@test "DEV-102 NET-003: Offline Fallback Documented" {
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    # Every network-optional data row must document a fallback in notes
+    awk '
+      BEGIN { in_matrix=0; fail=0 }
+      /^## / {
+        if ($0 ~ /[Mm]atrix/) { in_matrix=1; next }
+        else if (in_matrix) { exit }
+      }
+      in_matrix && /^\|/ {
+        line=$0
+        if (line ~ /^\|[[:space:]]*[-:| ]+[[:space:]]*$/) next
+        if (line ~ /Command[[:space:]]*\/[[:space:]]*mode/) next
+        if (line ~ /Bash/ && line ~ /PowerShell/ && line ~ /Class/) next
+        n=split(line, cells, "|")
+        cls=tolower(cells[5]); gsub(/^[[:space:]]+|[[:space:]]+$/, "", cls)
+        notes=tolower(cells[6]); gsub(/^[[:space:]]+|[[:space:]]+$/, "", notes)
+        if (cls == "network-optional") {
+          if (notes !~ /cache|local|private.?mode|AGTOOSA_REGISTRY_CACHE|pre-seed|offline|fallback/) {
+            print "network-optional row missing fallback notes: " line > "/dev/stderr"
+            fail=1
+          }
+        }
+        # registry install must not be plain offline without local-pack note
+        cmd=tolower(cells[2])
+        if (cmd ~ /registry[[:space:]]+install/ && cls == "offline") {
+          if (notes !~ /local/) {
+            print "registry install marked offline without local-pack note: " line > "/dev/stderr"
+            fail=1
+          }
+        }
+      }
+      END { exit fail }
+    ' "$f"
+  done < <(_net_matrix_paths)
+}
+
+@test "DEV-102 NET-004: Required Command Coverage" {
+  local f needle found row cmd cls
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    local rows
+    rows="$(_net_matrix_rows "$f")"
+    [ -n "$rows" ]
+
+    while IFS= read -r needle; do
+      found=0
+      while IFS='|' read -r cmd cls; do
+        case "$(echo "$cmd" | tr '[:upper:]' '[:lower:]')" in
+          *"$needle"*) found=1; break ;;
+        esac
+      done <<< "$rows"
+      # Also allow multi-row coverage: private/public may share launch-readiness wording
+      if [ "$found" -eq 0 ]; then
+        echo "$rows" | grep -qi "$needle" && found=1
+      fi
+      if [ "$found" -eq 0 ]; then
+        # Fall back to whole-file grep for mode labels that share a cell
+        grep -qi "$needle" "$f" && found=1
+      fi
+      [ "$found" -eq 1 ] || { echo "missing required coverage: $needle" >&2; return 1; }
+    done < <(_net_required_needles)
+
+    # Explicit registry subcommands
+    grep -qiE 'registry[[:space:]]+list' "$f"
+    grep -qiE 'registry[[:space:]]+info' "$f"
+    grep -qiE 'registry[[:space:]]+install' "$f"
+    grep -qiE 'registry[[:space:]]+publish' "$f"
+    grep -qiE 'catalog[[:space:]]+validate' "$f"
+    grep -qiE 'launch-readiness' "$f"
+    grep -qiE 'private' "$f"
+    grep -qiE 'public' "$f"
+  done < <(_net_matrix_paths)
+}
+
+@test "DEV-102 NET-005: Agent and Registry Cross-Links" {
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    grep -q 'AgToosa_Network_Matrix.md' "$f"
+  done < <(_net_agent_paths)
+
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    grep -q 'AgToosa_Network_Matrix.md' "$f"
+    # No competing Bash|PowerShell|Class dependency matrix in Registry body
+    ! grep -qiE '\|[[:space:]]*Bash[[:space:]]*\|[[:space:]]*PowerShell[[:space:]]*\|[[:space:]]*Class[[:space:]]*\|' "$f"
+    ! grep -qiE '\|[[:space:]]*Command[[:space:]]*/[[:space:]]*mode[[:space:]]*\|.*\|[[:space:]]*Class[[:space:]]*\|' "$f"
+  done < <(_net_registry_paths)
+
+  # Canonical targets exist
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/docs/AgToosa_Network_Matrix.md" ]
+  [ -f "$root/template/Docs/AgToosa_Network_Matrix.md" ]
+}
+
+@test "DEV-102 NET-006: Matrix Drift Detection" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local doc="$root/docs/AgToosa_Network_Matrix.md"
+  [ -f "$doc" ]
+
+  # Positive: all required needles present in live matrix
+  local needle found
+  while IFS= read -r needle; do
+    grep -qi "$needle" "$doc" || { echo "live matrix missing: $needle" >&2; return 1; }
+  done < <(_net_required_needles)
+
+  # Negative fixture: invent a CLI command not listed — coverage must fail
+  local probe="net006-drift-probe"
+  ! grep -qi "$probe" "$doc"
+
+  local tmp
+  tmp="$(mktemp)"
+  cp "$doc" "$tmp"
+  # Simulate required-needle expansion including the probe
+  {
+    _net_required_needles
+    echo "$probe"
+  } > "${tmp}.needles"
+
+  found=0
+  while IFS= read -r needle; do
+    if ! grep -qi "$needle" "$tmp"; then
+      found=1
+      echo "drift detected (expected): missing $needle"
+    fi
+  done < "${tmp}.needles"
+  rm -f "$tmp" "${tmp}.needles"
+  [ "$found" -eq 1 ]
+}
+
+# ── DEV-096: Pack Validation CI (PV-001–PV-*) ─────────────────────────────────
+
+pv096_validator() {
+  printf '%s' "$BATS_TEST_DIRNAME/../scripts/validate-official-packs.sh"
+}
+
+pv096_workflow() {
+  printf '%s' "$BATS_TEST_DIRNAME/../.github/workflows/pack-validate.yml"
+}
+
+# Copy a minimal sandbox with three pilots + validator dependencies for mutation tests.
+pv096_copy_sandbox() {
+  local dest="$1"
+  local root="$BATS_TEST_DIRNAME/.."
+  local pack
+  mkdir -p "$dest/packs" "$dest/tests/fixtures/registry-packs" "$dest/scripts" "$dest/lib"
+  cp "$root/agtoosa.sh" "$dest/"
+  cp -R "$root/lib/." "$dest/lib/"
+  if [ -f "$root/scripts/validate-official-packs.sh" ]; then
+    cp "$root/scripts/validate-official-packs.sh" "$dest/scripts/"
+    chmod +x "$dest/scripts/validate-official-packs.sh"
+  fi
+  for pack in official-web official-api official-infra; do
+    cp -R "$root/packs/$pack" "$dest/packs/"
+    cp -R "$root/tests/fixtures/registry-packs/$pack" "$dest/tests/fixtures/registry-packs/"
+  done
+}
+
+pv096_run() {
+  local root="$1"
+  shift
+  AGTOOSA_PACK_VALIDATE_ROOT="$root" bash "$root/scripts/validate-official-packs.sh" "$@"
+}
+
+@test "DEV-096 @smoke PV-001: Pack Validate Workflow Path Filters" {
+  local wf
+  wf="$(pv096_workflow)"
+  [ -f "$wf" ]
+  grep -q "pull_request" "$wf"
+  grep -qE 'packs/official-\*|packs/official-\*/\*\*' "$wf"
+  grep -qE 'tests/fixtures/registry-packs/official-\*|tests/fixtures/registry-packs/official-\*/\*\*' "$wf"
+  grep -q "scripts/validate-official-packs.sh" "$wf"
+}
+
+@test "DEV-096 @smoke PV-002: Manifest Validation Gate" {
+  local validator
+  validator="$(pv096_validator)"
+  [ -f "$validator" ]
+
+  # Live helper must invoke catalog validate (and succeed on current pilots).
+  run bash "$validator" --mode private
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Catalog valid"* ]] || [[ "$output" == *"manifest"* ]] || [[ "$output" == *"ok"* ]]
+
+  # Invalid isolated manifest must exit non-zero via --catalog validate and via helper.
+  local sandbox bad_manifest
+  sandbox="$TEST_PROJECT/pv002-sandbox"
+  pv096_copy_sandbox "$sandbox"
+  bad_manifest="$sandbox/packs/official-web/manifest.json"
+  python3 - "$bad_manifest" <<'PY'
+import json, sys
+p = sys.argv[1]
+d = json.load(open(p))
+d["entries"][0]["compatibility"]["agtoosa"] = ">=not-a-version"
+json.dump(d, open(p, "w"), indent=2)
+PY
+  run bash "$SCRIPT" --catalog validate "$bad_manifest"
+  [ "$status" -ne 0 ]
+
+  run pv096_run "$sandbox" --mode private
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"official-web"* ]]
+  [[ "$output" == *"manifest.json"* ]] || [[ "$output" == *"Catalog"* ]] || [[ "$output" == *"invalid"* ]]
+}
+
+@test "DEV-096 PV-003: Fixture SHA Drift Detection" {
+  local validator sandbox
+  validator="$(pv096_validator)"
+  [ -f "$validator" ]
+  sandbox="$TEST_PROJECT/pv003-sha-drift"
+  pv096_copy_sandbox "$sandbox"
+
+  local stale="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  python3 - "$sandbox/packs/official-web/manifest.json" "$stale" <<'PY'
+import json, sys
+p, stale = sys.argv[1], sys.argv[2]
+d = json.load(open(p))
+d["entries"][0]["provenance"]["sha256"] = stale
+json.dump(d, open(p, "w"), indent=2)
+PY
+
+  run pv096_run "$sandbox" --mode private
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"official-web"* ]]
+  [[ "$output" == *"sha256"* ]] || [[ "$output" == *"SHA"* ]] || [[ "$output" == *"Docs/"* ]]
+  [[ "$output" == *"$stale"* ]]
+  [[ "$output" == *"observed"* ]] || [[ "$output" == *"Observed"* ]] || [[ "$output" == *"Got"* ]]
+  [[ "$output" == *"expected"* ]] || [[ "$output" == *"Expected"* ]]
+}
+
+@test "DEV-096 PV-004: Fixture Tree Parity" {
+  local validator sandbox
+  validator="$(pv096_validator)"
+  [ -f "$validator" ]
+  sandbox="$TEST_PROJECT/pv004-tree-parity"
+  pv096_copy_sandbox "$sandbox"
+
+  rm -f "$sandbox/tests/fixtures/registry-packs/official-api/Docs/official-api-workflow.md"
+
+  run pv096_run "$sandbox" --mode private
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"official-api"* ]]
+  [[ "$output" == *"official-api-workflow.md"* ]]
+  [[ "$output" == *"missing"* ]] || [[ "$output" == *"Missing"* ]] || [[ "$output" == *"expected"* ]]
+}
+
+@test "DEV-096 @smoke PV-005: OPP Bats Invoked In Workflow" {
+  local wf
+  wf="$(pv096_workflow)"
+  [ -f "$wf" ]
+  grep -qE 'bats[[:space:]]+tests/agtoosa\.bats[[:space:]]+-f[[:space:]]+"OPP"' "$wf" \
+    || grep -qE "bats tests/agtoosa.bats -f \"OPP\"" "$wf" \
+    || grep -qE "bats tests/agtoosa.bats -f 'OPP'" "$wf"
+  ! grep -qE 'continue-on-error:[[:space:]]*true' "$wf"
+}
+
+@test "DEV-096 PV-006: Actionable Validation Failures" {
+  local validator sandbox
+  validator="$(pv096_validator)"
+  [ -f "$validator" ]
+  sandbox="$TEST_PROJECT/pv006-multi"
+  pv096_copy_sandbox "$sandbox"
+
+  local stale="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  python3 - "$sandbox/packs/official-web/manifest.json" "$stale" <<'PY'
+import json, sys
+p, stale = sys.argv[1], sys.argv[2]
+d = json.load(open(p))
+d["entries"][0]["provenance"]["sha256"] = stale
+json.dump(d, open(p, "w"), indent=2)
+PY
+  rm -f "$sandbox/tests/fixtures/registry-packs/official-infra/Docs/official-infra-workflow.md"
+  echo "extra" > "$sandbox/tests/fixtures/registry-packs/official-infra/Docs/extra-orphan.md"
+
+  run pv096_run "$sandbox" --mode private
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"official-web"* ]]
+  [[ "$output" == *"official-infra"* ]]
+  [[ "$output" == *"$stale"* ]]
+  [[ "$output" == *"official-infra-workflow.md"* ]] || [[ "$output" == *"extra-orphan.md"* ]]
+}
+
+@test "DEV-096 PV-007: Validation Mode Stays Offline-Safe" {
+  local validator curl_shim
+  validator="$(pv096_validator)"
+  [ -f "$validator" ]
+  curl_shim="$TEST_PROJECT/pv007-bin"
+  mkdir -p "$curl_shim"
+  cat > "$curl_shim/curl" <<'EOF'
+#!/usr/bin/env bash
+echo "curl shim invoked: $*" >&2
+exit 99
+EOF
+  chmod +x "$curl_shim/curl"
+  cat > "$curl_shim/wget" <<'EOF'
+#!/usr/bin/env bash
+echo "wget shim invoked: $*" >&2
+exit 99
+EOF
+  chmod +x "$curl_shim/wget"
+
+  run env PATH="$curl_shim:$PATH" bash "$validator" --mode private
+  [ "$status" -eq 0 ]
+  [[ "$output" != *"curl shim invoked"* ]]
+  [[ "$output" != *"wget shim invoked"* ]]
+
+  local wf
+  wf="$(pv096_workflow)"
+  [ -f "$wf" ]
+  # Workflow must not fetch external registry indexes for pack validation.
+  ! grep -qiE 'registry\.json|agtoosa-registry|raw\.githubusercontent\.com' "$wf"
+  grep -qE -- '--mode[[:space:]]+private|AGTOOSA_PACK_VALIDATE|validate-official-packs\.sh' "$wf"
+}
+
+@test "DEV-096 PV-008: Current Pilots Pass Validation" {
+  local validator checklist
+  validator="$(pv096_validator)"
+  checklist="$BATS_TEST_DIRNAME/../docs/official-pack-pilot-checklist.md"
+  [ -f "$validator" ]
+  [ -f "$checklist" ]
+
+  run bash "$validator" --mode private
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"official-web"* ]]
+  [[ "$output" == *"official-api"* ]]
+  [[ "$output" == *"official-infra"* ]]
+
+  grep -qiE 'pack.?validat|CI gate|validate-official-packs' "$checklist"
+  grep -qiE 'repair|SHA|drift|parity' "$checklist"
+}
+
+
+# ── DEV-104: --reinstall --clean (RCL-001–RCL-008) ───────────────────────────
+
+_rcl_fingerprint_tree() {
+  local root="$1"
+  (
+    cd "$root" || exit 1
+    find . -type f \
+      ! -path './.agtoosa/reinstall-archive/*' \
+      ! -path './.git/*' \
+      | LC_ALL=C sort \
+      | while IFS= read -r f; do
+          if command -v shasum >/dev/null 2>&1; then
+            shasum -a 256 "$f"
+          else
+            sha256sum "$f"
+          fi
+        done
+  )
+}
+
+@test "DEV-104 @smoke RCL-001: Confirmation Required" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
+
+  local before after
+  before="$(_rcl_fingerprint_tree "$TEST_PROJECT")"
+
+  # Non-interactive without --yes must refuse and leave files untouched
+  run bash "$SCRIPT" --reinstall --clean "$TEST_PROJECT" </dev/null
+  [ "$status" -ne 0 ]
+  # Must be an explicit confirmation gate (not merely "unknown option" + help listing --yes)
+  ! echo "$output" | grep -qi 'Unknown option'
+  echo "$output" | grep -qiE 'confirm|confirmation|Cancelled|requires? --yes|non-interactive'
+
+  after="$(_rcl_fingerprint_tree "$TEST_PROJECT")"
+  [ "$before" = "$after" ]
+}
+
+@test "DEV-104 RCL-002: Archive Manifest Written" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+
+  echo "custom-agent-body" > "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+
+  run bash "$SCRIPT" --reinstall --clean "$TEST_PROJECT" --yes
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"reinstall-archive"* || "$output" == *"archive"* ]]
+
+  local archive_root manifest
+  archive_root="$(find "$TEST_PROJECT/.agtoosa/reinstall-archive" -mindepth 1 -maxdepth 1 -type d | head -1)"
+  [ -n "$archive_root" ]
+  [ -d "$archive_root" ]
+
+  manifest=""
+  for candidate in "$archive_root/manifest.txt" "$archive_root/manifest.json" "$archive_root/MANIFEST"; do
+    if [ -f "$candidate" ]; then
+      manifest="$candidate"
+      break
+    fi
+  done
+  [ -n "$manifest" ]
+  [ -f "$manifest" ]
+  grep -q 'Docs/AgToosa_Agent.md' "$manifest"
+  [ -f "$archive_root/Docs/AgToosa_Agent.md" ]
+  grep -q 'custom-agent-body' "$archive_root/Docs/AgToosa_Agent.md"
+}
+
+@test "DEV-104 @smoke RCL-003: Fresh Regeneration" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+
+  echo "CORRUPTED_REINSTALL_MARKER" > "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+  echo "CORRUPTED_CMD" > "$TEST_PROJECT/.claude/commands/agtoosa-status.md"
+
+  run bash "$SCRIPT" --reinstall --clean "$TEST_PROJECT" --yes
+  [ "$status" -eq 0 ]
+
+  ! grep -q 'CORRUPTED_REINSTALL_MARKER' "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+  ! grep -q 'CORRUPTED_CMD' "$TEST_PROJECT/.claude/commands/agtoosa-status.md"
+  grep -q 'AgToosa' "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+  [ -f "$TEST_PROJECT/.claude/commands/agtoosa-status.md" ]
+
+  # Fresh install reference for same platforms should match regenerated Agent doc
+  local ref
+  ref="$(mktemp -d)"
+  run bash "$SCRIPT" --path "$ref" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  cmp -s "$TEST_PROJECT/Docs/AgToosa_Agent.md" "$ref/Docs/AgToosa_Agent.md"
+  rm -rf "$ref"
+}
+
+@test "DEV-104 @smoke RCL-004: Lock File Rewritten" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+
+  mkdir -p "$TEST_PROJECT/Docs"
+  printf '%s\n' '{
+  "agtoosa_version": "0.0.1",
+  "generated_at": "2000-01-01T00:00:00Z",
+  "platforms": ["claude"],
+  "packs": []
+}' > "$TEST_PROJECT/Docs/agtoosa-lock.json"
+
+  # Poison wrong path — must not be used as the lock surface
+  echo '{"agtoosa_version":"wrong"}' > "$TEST_PROJECT/.agtoosa-lock.json"
+
+  run bash "$SCRIPT" --reinstall --clean "$TEST_PROJECT" --yes
+  [ "$status" -eq 0 ]
+
+  [ -f "$TEST_PROJECT/Docs/agtoosa-lock.json" ]
+  ! grep -q '"agtoosa_version": "0.0.1"' "$TEST_PROJECT/Docs/agtoosa-lock.json"
+  grep -q "\"agtoosa_version\": \"$(bash "$SCRIPT" --version | sed 's/AgToosa v//')\"" "$TEST_PROJECT/Docs/agtoosa-lock.json"
+  grep -q 'claude' "$TEST_PROJECT/Docs/agtoosa-lock.json"
+  # Wrong-path poison file must not become the authoritative lock
+  [ "$(cat "$TEST_PROJECT/.agtoosa-lock.json")" = '{"agtoosa_version":"wrong"}' ]
+}
+
+@test "DEV-104 RCL-005: Unmarked Edit Warning" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+
+  # User content outside markers on the platform entry point
+  printf '\n# USER CUSTOM OUTSIDE MARKERS\n' >> "$TEST_PROJECT/CLAUDE.md"
+
+  run bash "$SCRIPT" --reinstall --clean "$TEST_PROJECT" --yes
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"outside"* || "$output" == *"marker"* ]]
+  [[ "$output" == *"not preserve"* || "$output" == *"may not preserve"* || "$output" == *"will not preserve"* || "$output" == *"not preserved"* ]]
+  # Must not claim clean reinstall preserves custom edits (negation phrases are OK)
+  ! echo "$output" | grep -qiE 'clean reinstall (preserves|will preserve)|preserves? (your )?custom'
+  ! echo "$output" | grep -qiE 'smart merge.*(preserve|custom)'
+}
+
+@test "DEV-104 RCL-006: Idempotent Second Run" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+
+  run bash "$SCRIPT" --reinstall --clean "$TEST_PROJECT" --yes
+  [ "$status" -eq 0 ]
+
+  local before after
+  before="$(_rcl_fingerprint_tree "$TEST_PROJECT")"
+
+  run bash "$SCRIPT" --reinstall --clean "$TEST_PROJECT" --yes
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"no effective change"* || "$output" == *"No effective change"* || "$output" == *"already clean"* || "$output" == *"unchanged"* ]]
+
+  after="$(_rcl_fingerprint_tree "$TEST_PROJECT")"
+  [ "$before" = "$after" ]
+}
+
+@test "DEV-104 RCL-007: PowerShell Parity" {
+  local ps1="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  [ -f "$ps1" ]
+
+  grep -qE '\[switch\]\$Reinstall' "$ps1"
+  grep -qE '\[switch\]\$Clean' "$ps1"
+  grep -qE -- '--reinstall' "$ps1"
+  grep -qE -- '--clean' "$ps1"
+  grep -qiE 'Reinstall|reinstall' "$ps1"
+
+  # Usage documents the switches
+  grep -qE -- '-Reinstall' "$ps1"
+  grep -qE -- '-Clean' "$ps1"
+
+  command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
+
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo "PS_CORRUPT" > "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+
+  run pwsh -NoProfile -File "$ps1" -Reinstall -Clean -UpdatePath "$TEST_PROJECT" -Yes
+  [ "$status" -eq 0 ]
+  ! grep -q 'PS_CORRUPT' "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+  [ -f "$TEST_PROJECT/Docs/agtoosa-lock.json" ]
+  local archive_root
+  archive_root="$(find "$TEST_PROJECT/.agtoosa/reinstall-archive" -mindepth 1 -maxdepth 1 -type d | head -1)"
+  [ -n "$archive_root" ]
+}
+
+@test "DEV-104 RCL-008: Update Docs Positioning" {
+  local f
+  for f in \
+    "$BATS_TEST_DIRNAME/../docs/AgToosa_Update.md" \
+    "$BATS_TEST_DIRNAME/../template/Docs/AgToosa_Update.md"; do
+    [ -f "$f" ]
+    grep -q -- '--update' "$f"
+    grep -qiE 'default.*(safe|upgrade|update)|--update.*default|default.*--update' "$f"
+    grep -q -- '--reinstall --clean' "$f"
+    grep -qiE 'optional|destructive|fresh (state|install)|Option C|ADR-004' "$f"
+    # Must not claim clean reinstall preserves custom edits like --update
+    ! grep -qiE 'reinstall --clean.*(preserves|preserve).*(custom|edit|marker)' "$f"
+  done
+
+  # Help surfaces the flag
+  run bash "$SCRIPT" --help
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"--reinstall"* ]]
+  [[ "$output" == *"--clean"* ]]
+}
+
+# ── DEV-095: Official Pack Expansion 5-pack max (OPE-001–OPE-010) ──────────────
+
+@test "DEV-095 @smoke OPE-001: Five-Pack Official Inventory" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local inv="$root/docs/AgToosa_Registry.md"
+  local checklist="$root/docs/official-pack-pilot-checklist.md"
+  [ -f "$inv" ]
+  [ -f "$checklist" ]
+  grep -q "## Official Pack Pilot" "$inv"
+  grep -q "official-web" "$inv"
+  grep -q "official-api" "$inv"
+  grep -q "official-infra" "$inv"
+  grep -q "official-react" "$inv"
+  grep -q "official-security" "$inv"
+  grep -q "primary domain: web" "$inv"
+  grep -q "primary domain: api" "$inv"
+  grep -q "primary domain: infrastructure" "$inv"
+  grep -q "primary domain: react" "$inv"
+  grep -q "primary domain: security" "$inv"
+  # Exactly five official pilot pack roots — Rev4 five-pack ceiling
+  local count
+  count=$(find "$root/packs" -maxdepth 1 -type d -name 'official-*' 2>/dev/null | wc -l | tr -d ' ')
+  [ "$count" -eq 5 ]
+  grep -qiE 'exactly five|five maintained|five-pack|five pack' "$inv"
+  grep -q "official-react" "$checklist"
+  grep -q "official-security" "$checklist"
+}
+
+@test "DEV-095 OPE-002: Web and React Domain Separation" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local web_compat="$root/packs/official-web/COMPATIBILITY.md"
+  local web_wf="$root/packs/official-web/Docs/official-web-workflow.md"
+  local react_compat="$root/packs/official-react/COMPATIBILITY.md"
+  local react_wf="$root/packs/official-react/Docs/official-react-workflow.md"
+  local inv="$root/docs/AgToosa_Registry.md"
+  [ -f "$web_compat" ]
+  [ -f "$web_wf" ]
+  [ -f "$react_compat" ]
+  [ -f "$react_wf" ]
+  # official-web remains stack-agnostic SPA — not React-primary
+  grep -qi "stack-agnostic" "$web_compat" || grep -qi "stack-agnostic" "$web_wf" || grep -qi "stack-agnostic" "$inv"
+  ! grep -qiE 'React/Next/Vite|primary.*(React|Next\.js|Vite)' "$web_wf"
+  ! grep -qiE 'React/Next/Vite as primary|React-specific' "$web_compat"
+  # official-react names React/Next/Vite explicitly
+  grep -qi "React" "$react_compat"
+  grep -qiE 'Next(\.js|/)|Vite' "$react_compat" || grep -qiE 'Next(\.js|/)|Vite' "$react_wf"
+  grep -qi "stack-agnostic" "$react_compat" || grep -qi "official-web" "$react_compat"
+  # Inventory must not treat web and react as the same domain row
+  ! grep -qiE 'official-web.*official-react.*(same|overlap|alias)|rename.*official-web.*official-react' "$inv"
+}
+
+@test "DEV-095 @smoke OPE-003: New Pack Manifest Conformance" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local pack
+  for pack in official-react official-security; do
+    [ -f "$root/packs/$pack/manifest.json" ]
+    run bash "$SCRIPT" --catalog validate "$root/packs/$pack/manifest.json"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"Catalog valid"* ]]
+    run python3 - "$root/packs/$pack/manifest.json" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1]))
+assert d.get("schema_version") == "1.0", d.get("schema_version")
+assert len(d.get("entries", [])) == 1
+e = d["entries"][0]
+for field in ("id", "kind", "name", "summary", "tags", "examples",
+              "maintainers", "support", "lifecycle", "reviewed_at",
+              "compatibility", "trust", "provenance"):
+    assert field in e, f"missing {field}"
+assert e["kind"] == "extension"
+assert e["lifecycle"] == "maintained"
+p = e["provenance"]
+for field in ("registry_name", "version", "source", "sha256", "signature"):
+    assert field in p, f"missing provenance.{field}"
+assert len(p["sha256"]) == 64
+c = e["compatibility"]
+for field in ("agtoosa", "platforms", "requires", "conflicts"):
+    assert field in c, f"missing compatibility.{field}"
+t = e["trust"]
+for field in ("curation_tier", "registry_verified_snapshot", "review_status"):
+    assert field in t, f"missing trust.{field}"
+assert t["review_status"] == "local-candidate"
+assert e["maintainers"][0]["name"] == "sky2464"
+PY
+    [ "$status" -eq 0 ]
+  done
+}
+
+@test "DEV-095 OPE-004: Per-Pack Example Repo Links" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local pack
+  for pack in official-react official-security; do
+    local ex="$root/packs/$pack/EXAMPLES.md"
+    [ -f "$ex" ]
+    grep -qi "Prerequisites" "$ex"
+    grep -qi "Intended use" "$ex"
+    grep -qi "Runnable example" "$ex"
+    grep -qi "Non-goals" "$ex"
+    grep -q "bash agtoosa.sh --registry install" "$ex"
+    # Per-pack example repository URL (not placeholder)
+    grep -qE 'https://github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+' "$ex"
+    ! grep -qiE 'TODO.*example.?repo|TBD.*example|example\.com|placeholder.*repo' "$ex"
+  done
+}
+
+@test "DEV-095 OPE-005: Security Pack Compatibility Honesty" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local compat="$root/packs/official-security/COMPATIBILITY.md"
+  local wf="$root/packs/official-security/Docs/official-security-workflow.md"
+  local ex="$root/packs/official-security/EXAMPLES.md"
+  [ -f "$compat" ]
+  [ -f "$wf" ]
+  [ -f "$ex" ]
+  grep -qi "AgToosa" "$compat"
+  grep -qiE 'platform|cursor|claude' "$compat"
+  grep -qiE 'evidence|threat.?model|STRIDE' "$compat" || grep -qiE 'evidence|threat.?model|STRIDE' "$wf"
+  # Must not claim deterministic CI-enforced SAST without command evidence
+  local f
+  for f in "$compat" "$wf" "$ex"; do
+    run grep -qiE 'CI-enforced SAST|deterministic SAST enforcement|enforces SAST' "$f"
+    [ "$status" -ne 0 ]
+  done
+}
+
+@test "DEV-095 @smoke OPE-006: React Pack Clean Install" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/registry-packs/official-react"
+  [ -d "$fixture" ]
+  [ -f "$fixture/Docs/official-react-workflow.md" ]
+  local queue_dir project_dir
+  queue_dir="$(mktemp -d)"
+  project_dir="$(mktemp -d)"
+
+  run env AGTOOSA_PACK_QUEUE_DIR="$queue_dir" bash -c "echo Y | bash '$SCRIPT' --registry install '$fixture'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Pack contents:"* ]]
+  [ -d "$queue_dir/official-react" ]
+  [ -f "$queue_dir/official-react/Docs/official-react-workflow.md" ]
+  [ -f "$queue_dir/official-react/.pack-meta.json" ]
+
+  PACK_QUEUE_DIR="$queue_dir"
+  PROJECT_PATH="$project_dir"
+  AGTOOSA_VERSION="5.3.20"
+  GREEN="" YELLOW="" NC=""
+  source "$BATS_TEST_DIRNAME/../lib/install.sh"
+  _merge_pack_queue
+  [ -f "$project_dir/Docs/official-react-workflow.md" ]
+  [ ! -d "$queue_dir/official-react" ]
+
+  rm -rf "$queue_dir" "$project_dir"
+}
+
+@test "DEV-095 @smoke OPE-007: Security Pack Safe Install" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/registry-packs/official-security"
+  [ -d "$fixture" ]
+  [ -f "$fixture/Docs/official-security-workflow.md" ]
+  local queue_dir project_dir
+  queue_dir="$(mktemp -d)"
+  project_dir="$(mktemp -d)"
+
+  run env AGTOOSA_PACK_QUEUE_DIR="$queue_dir" bash -c "echo Y | bash '$SCRIPT' --registry install '$fixture'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Pack contents:"* ]]
+  [[ "$output" == *"Continue?"* ]] || [[ "$output" == *"queued"* ]]
+  [ -f "$queue_dir/official-security/Docs/official-security-workflow.md" ]
+  # Must not stage denylisted destinations
+  [ ! -f "$queue_dir/official-security/.claude/settings.json" ]
+  [ ! -d "$queue_dir/official-security/.github/workflows" ]
+
+  PACK_QUEUE_DIR="$queue_dir"
+  PROJECT_PATH="$project_dir"
+  AGTOOSA_VERSION="5.3.20"
+  GREEN="" YELLOW="" NC=""
+  source "$BATS_TEST_DIRNAME/../lib/install.sh"
+  _merge_pack_queue
+  [ -f "$project_dir/Docs/official-security-workflow.md" ]
+  [ ! -f "$project_dir/.claude/settings.json" ]
+  [ ! -f "$project_dir/.github/workflows/pwn.yml" ]
+
+  rm -rf "$queue_dir" "$project_dir"
+}
+
+@test "DEV-095 OPE-008: Sixth Pack Rejected" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local inv="$root/docs/AgToosa_Registry.md"
+  local checklist="$root/docs/official-pack-pilot-checklist.md"
+  [ -f "$inv" ]
+  # Live inventory ceiling: exactly five official-* roots
+  local count
+  count=$(find "$root/packs" -maxdepth 1 -type d -name 'official-*' 2>/dev/null | wc -l | tr -d ' ')
+  [ "$count" -eq 5 ]
+  grep -qiE 'five.?pack|maximum.*five|exactly five|five maintained' "$inv"
+  grep -qiE 'five|DEV-095' "$checklist"
+  # Simulated sixth pack fails the same inventory assertion OPE-001 uses
+  local sandbox
+  sandbox="$(mktemp -d)"
+  mkdir -p "$sandbox/packs"
+  local p
+  for p in official-api official-web official-infra official-react official-security official-extra; do
+    mkdir -p "$sandbox/packs/$p"
+  done
+  local bad_count
+  bad_count=$(find "$sandbox/packs" -maxdepth 1 -type d -name 'official-*' 2>/dev/null | wc -l | tr -d ' ')
+  [ "$bad_count" -eq 6 ]
+  run bash -c "[ \"$bad_count\" -eq 5 ]"
+  [ "$status" -ne 0 ]
+  rm -rf "$sandbox"
+}
+
+@test "DEV-095 OPE-009: New Pack Maintenance Contract" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local pack
+  for pack in official-react official-security; do
+    local pol="$root/packs/$pack/MAINTENANCE.md"
+    [ -f "$pol" ]
+    grep -qi "Owner" "$pol"
+    grep -q "sky2464" "$pol"
+    grep -qi "Review cadence" "$pol"
+    grep -qi "Compatibility-update policy\|Compatibility update policy" "$pol"
+    grep -qi "Issue path" "$pol"
+    grep -qi "Deprecation" "$pol"
+  done
+}
+
+@test "DEV-095 OPE-010: External Publication State Honesty" {
+  local inv="$BATS_TEST_DIRNAME/../docs/AgToosa_Registry.md"
+  local checklist="$BATS_TEST_DIRNAME/../docs/official-pack-pilot-checklist.md"
+  [ -f "$inv" ]
+  [ -f "$checklist" ]
+  grep -q "local candidate" "$inv"
+  grep -q "not externally published" "$inv"
+  grep -q "official-react" "$inv"
+  grep -q "official-security" "$inv"
+  # Status cells must remain local-candidate honest (allow "not externally published")
+  grep -E '\| `official-react` \|' "$inv" | grep -q "local candidate"
+  grep -E '\| `official-security` \|' "$inv" | grep -q "local candidate"
+  ! grep -E '\| `official-react` \|.*\| (externally published|published|available) \|' "$inv"
+  ! grep -E '\| `official-security` \|.*\| (externally published|published|available) \|' "$inv"
+  ! grep -qiE 'official-(react|security).*(available in (the )?registry|published to)' "$inv"
+  grep -q "local candidate" "$checklist"
+  grep -q "official-react" "$checklist"
+  grep -q "official-security" "$checklist"
+  grep -E 'official-react|official-security' "$checklist" | grep -qi "local candidate"
+}
+
+# ── DEV-103: External Registry Publication Runbook (PUB-001–PUB-007) ──────────
+
+@test "DEV-103 @smoke PUB-001: Three Publication Phases Documented" {
+  local rb="$BATS_TEST_DIRNAME/../docs/registry-external-publication-runbook.md"
+  [ -f "$rb" ]
+  grep -qiE 'Pre-submit|pre-submit' "$rb"
+  grep -qiE 'Submit|submission' "$rb"
+  grep -qiE 'Confirm|confirmation' "$rb"
+}
+
+@test "DEV-103 @smoke PUB-002: Pre-Submit Checklist Completeness" {
+  local rb="$BATS_TEST_DIRNAME/../docs/registry-external-publication-runbook.md"
+  [ -f "$rb" ]
+  grep -qi 'Manifest' "$rb"
+  grep -qi 'OPP' "$rb"
+  grep -qiE 'Content-policy|content.policy|allowlist' "$rb"
+  grep -qiE 'ownership|MAINTENANCE|Owner' "$rb"
+  grep -qiE 'Compatibility' "$rb"
+}
+
+@test "DEV-103 PUB-003: Submission Steps Without Auto-Publish Claim" {
+  local rb="$BATS_TEST_DIRNAME/../docs/registry-external-publication-runbook.md"
+  [ -f "$rb" ]
+  grep -qiE 'Pack name|Version|Artifact|SHA-256|Manifest|Provenance|Reviewer' "$rb"
+  # Must not claim the system auto-publishes; Non-goals / "not automating" wording is OK
+  ! grep -qiE 'THE SYSTEM SHALL automatic(ally)? publish|will auto-publish|auto-publishes to the registry' "$rb"
+  grep -qiE 'Non-goals|does not|not.*automat' "$rb"
+}
+
+@test "DEV-103 PUB-004: Confirmation Requires External Record" {
+  local rb="$BATS_TEST_DIRNAME/../docs/registry-external-publication-runbook.md"
+  [ -f "$rb" ]
+  grep -qiE 'independently confirmed|independent(ly)? confirm|accepted external' "$rb"
+  grep -qiE 'published' "$rb"
+}
+
+@test "DEV-103 PUB-005: State Machine Alignment" {
+  local rb="$BATS_TEST_DIRNAME/../docs/registry-external-publication-runbook.md"
+  [ -f "$rb" ]
+  grep -q 'local candidate' "$rb"
+  grep -q 'submitted' "$rb"
+  grep -qiE 'published' "$rb"
+  grep -q 'local candidate → submitted → published' "$rb" || grep -qiE 'local candidate.*submitted.*published' "$rb"
+}
+
+@test "DEV-103 PUB-006: Pilot Checklist Discovery Link" {
+  local checklist="$BATS_TEST_DIRNAME/../docs/official-pack-pilot-checklist.md"
+  [ -f "$checklist" ]
+  grep -q 'registry-external-publication-runbook.md' "$checklist"
+}
+
+@test "DEV-103 PUB-007: Forbidden Publication Phrases" {
+  local rb="$BATS_TEST_DIRNAME/../docs/registry-external-publication-runbook.md"
+  [ -f "$rb" ]
+  # Honesty: opening a PR is not publication
+  grep -qiE 'Opening a PR does not|open PR.*(not|≠).*publish|PR alone is not' "$rb" || \
+    grep -qiE 'Opening a PR does \*\*not\*\* constitute' "$rb"
+  ! grep -qiE 'Open PR = published|locally published' "$rb"
+}
+
+# ── DEV-107: Agent-Instructed Orchestration Brain (ORB-001–ORB-008) ───────────
+
+@test "DEV-107 @smoke ORB-001: Orchestration contract exists with inventory algorithm merge fallbacks" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Orchestration.md" "$root/docs/AgToosa_Orchestration.md"; do
+    [ -f "$f" ]
+    grep -q "Capability Inventory" "$f"
+    grep -q "Lane plan algorithm" "$f"
+    grep -q "Merge rules" "$f"
+    grep -q "Capability lanes ran sequentially (platform does not support parallel subagents)." "$f"
+    grep -q "Claim Boundary" "$f"
+    grep -q "agent-instructed" "$f"
+    grep -q "generator-enforced" "$f"
+    grep -q "Master-Plan.md" "$f"
+    grep -q "source of truth" "$f"
+  done
+}
+
+@test "DEV-107 @smoke ORB-002: inventory names platforms skills specialists MCP plugins Work Package DAG" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Orchestration.md" "$root/docs/AgToosa_Orchestration.md"; do
+    grep -q "Platforms" "$f"
+    grep -q "Specialists" "$f"
+    grep -q "Project skills" "$f"
+    grep -q "MCP" "$f"
+    grep -q "Host plugins" "$f"
+    grep -q "Work Package" "$f"
+    grep -q "AgToosa_AgentCapability.md" "$f"
+  done
+}
+
+@test "DEV-107 @smoke ORB-003: Spec Build Review Ship reference Orchestration Brain step 0" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in \
+    "$root/template/Docs/AgToosa_Spec.md" "$root/docs/AgToosa_Spec.md" \
+    "$root/template/Docs/AgToosa_Build.md" "$root/docs/AgToosa_Build.md" \
+    "$root/template/Docs/AgToosa_Review.md" "$root/docs/AgToosa_Review.md" \
+    "$root/template/Docs/AgToosa_Ship.md" "$root/docs/AgToosa_Ship.md"
+  do
+    grep -q "AgToosa_Orchestration" "$f"
+    grep -q "Orchestration Brain step 0" "$f"
+  done
+}
+
+@test "DEV-107 ORB-004: Claim Boundary forbids runtime scheduler as shipped capability" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Orchestration.md" "$root/docs/AgToosa_Orchestration.md"; do
+    grep -q "roadmap / out of scope" "$f"
+    grep -q "runtime scheduler" "$f"
+    grep -q "hosted orchestrator" "$f"
+    grep -q "manual" "$f"
+    ! grep -q "generator-enforced.*runtime scheduler" "$f"
+  done
+}
+
+@test "DEV-107 ORB-005: Orchestration preserves disjoint ownership sequential fallback" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Orchestration.md" "$root/docs/AgToosa_Orchestration.md"; do
+    grep -q "owned_files" "$f"
+    grep -q "disjoint" "$f"
+    grep -q "sequential fallback" "$f"
+  done
+  for f in "$root/template/Docs/AgToosa_Build.md" "$root/docs/AgToosa_Build.md"; do
+    grep -q "AgToosa_Orchestration" "$f"
+  done
+}
+
+@test "DEV-107 ORB-006: orchestrator-only Master-Plan mutation and import gate" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Orchestration.md" "$root/docs/AgToosa_Orchestration.md"; do
+    grep -q "orchestrator" "$f"
+    grep -q "Master-Plan.md" "$f"
+    grep -q "agtoosa-import" "$f"
+    grep -q "Import gate" "$f"
+  done
+}
+
+@test "DEV-107 ORB-007: Agent Quickref and subagent guide reference Orchestration Brain" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in \
+    "$root/template/Docs/AgToosa_Agent.md" "$root/docs/AgToosa_Agent.md" \
+    "$root/template/Docs/AgToosa_Quickref.md" "$root/docs/AgToosa_Quickref.md" \
+    "$root/docs/guides/subagent-heavy-workflows.md"
+  do
+    grep -q "AgToosa_Orchestration" "$f"
+  done
+  grep -q "Orchestration Brain" "$root/docs/guides/subagent-heavy-workflows.md"
+}
+
+@test "DEV-107 @smoke ORB-008: config inventory registers AgToosa_Orchestration.md" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Orchestration.md"* ]]
+  run grep -F "Docs/AgToosa_Orchestration.md" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+}
+
+# -- Wave 3 ship regression v5.3.20 (SR-001–SR-003) ---------------------------
+
+@test "DEV-096 SR-001: v5.3.20 release pins are aligned" {
+  local root="$BATS_TEST_DIRNAME/.."
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -oE '"version": "[0-9]+\.[0-9]+\.[0-9]+"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.20" ]
+  [ "$ps_ver" = "5.3.20" ]
+  [ "$npm_ver" = "5.3.20" ]
+  grep -q '## \[5.3.20\]' "$root/CHANGELOG.md"
+  grep -q 'version-5.3.20' "$root/README.md"
+}
+
+@test "DEV-096 SR-002: v5.3.20 changelog and Wave 3 review/evidence/spec artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.20\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-096' "$root/CHANGELOG.md"
+  grep -q 'DEV-095' "$root/CHANGELOG.md"
+  grep -q 'DEV-104' "$root/CHANGELOG.md"
+  for id in 095 096 098 099 101 102 103 104 106; do
+    [ -f "$root/docs/archived/spec-DEV-${id}.md" ]
+    [ -f "$root/docs/archived/review-DEV-${id}.md" ]
+    [ -f "$root/docs/archived/evidence-DEV-${id}.md" ]
+    grep -q '| ship |' "$root/docs/archived/evidence-DEV-${id}.md"
+  done
+}
+
+@test "DEV-096 SR-003: Master-Plan records v5.3.20 ship and v5.3.21 next milestone" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  grep -q 'Ship complete — v5.3.20' "$mp"
+  grep -q 'Release 5.3.20 shipped' "$mp"
+  grep -q 'v5.3.21 (next)' "$mp"
+  grep -q 'DEV-096' "$mp"
+  grep -q 'Shipped — v5.3.20' "$mp"
 }

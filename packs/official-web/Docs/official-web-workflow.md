@@ -1,6 +1,6 @@
 # Official Web Pack — Workflow Starter
 
-Use this pack when the primary delivery surface is a **web application** (browser UI, SSR/SPA, or static front-end with API clients).
+Use this pack when the primary delivery surface is a **stack-agnostic web application** (browser UI, SSR/SPA, or static front-end with API clients). For React/Next/Vite-specific guidance, use `official-react` instead.
 
 ## Intended use
 
@@ -15,6 +15,7 @@ Use this pack when the primary delivery surface is a **web application** (browse
 
 ## Non-goals
 
+- React/Next/Vite-primary tooling hooks (see `official-react`)
 - Native mobile (use a mobile-focused pack instead)
 - Infrastructure/IaC hardening (see `official-infra`)
 - External marketplace publication or billing
