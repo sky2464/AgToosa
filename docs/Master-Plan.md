@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-12 (Ship v5.3.15 — Wave 1b DEV-087 · DEV-088)
+> **Last updated:** 2026-07-12 (Wave 1a Part 4 — Active Tasks + DAGs; parallel fan-out)
 
 ## Project Charter
 
@@ -46,9 +46,52 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 > Task breakdown for enrolled Active Cycle stories. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
-> Multiple Todos: pick one story for `/agtoosa-build`; expand its tree as In Progress.
+> Wave 1a build mode: **parallel fan-out** (DEV-086 · DEV-090 · DEV-105); file-disjoint across stories.
 
-_(Wave 1a task trees: promote from specs when `/agtoosa-build` starts DEV-086 / DEV-090 / DEV-105.)_
+### DEV-086 — Canonical Proof Product Experience (0/4)
+
+- [ ] **1.** Golden fixture RED coverage
+  - [ ] 1.1 Add `tests/fixtures/proof-journey/` manifests and stale/missing negative fixtures — _Requirements: AC-003, AC-005_
+  - [ ] 1.2 Add PRF bats for README CTA, verify step, and artifact markers — _Requirements: AC-001, AC-002, AC-003_
+  - [ ] 1.3 Add read-only and private no-network assertions — _Requirements: AC-006, AC-007_
+- [ ] **2.** Proof product surfaces
+  - [ ] 2.1 Restructure README with single primary proof CTA and labeled secondary paths — _Requirements: AC-001, AC-008_
+  - [ ] 2.2 Add verifier success step to first-15 walkthrough — _Requirements: AC-002, AC-007_
+- [ ] **3.** Extended maintenance gate
+  - [ ] 3.1 Extend `check-launch-readiness.sh` for proof-journey checks per rev4-conflict-resolutions — _Requirements: AC-004, AC-005, AC-006_
+  - [ ] 3.2 Align scoped pins and proof links found by RED tests — _Requirements: AC-004, AC-007_
+- [ ] **4.** Evidence
+  - [ ] 4.1 Record PRF RED/GREEN evidence in test plan — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007_
+
+### DEV-090 — Unified Install/Update Plan Engine (0/4)
+
+- [ ] **1.** Plan engine RED coverage
+  - [ ] 1.1 Add PLN bats for install/update dry-run parity and JSON parseability — _Requirements: AC-002, AC-003, AC-004, AC-009_
+  - [ ] 1.2 Add PLN bats for idempotent second dry-run and no-mutation guard — _Requirements: AC-005, AC-008, AC-009_
+  - [ ] 1.3 Add PLN doc grep bats for `Docs/agtoosa-lock.json` path — _Requirements: AC-006, AC-007, AC-009_
+- [ ] **2.** Unified plan implementation
+  - [ ] 2.1 Implement `lib/plan.sh` with shared categorization — _Requirements: AC-001, AC-002, AC-003_
+  - [ ] 2.2 Wire `lib/dryrun.sh` and `lib/update.sh` to plan engine — _Requirements: AC-002, AC-003, AC-008_
+  - [ ] 2.3 Add `--format json` to `agtoosa.sh` dry-run paths — _Requirements: AC-004, AC-008_
+- [ ] **3.** Documentation alignment
+  - [ ] 3.1 Fix lock file paths in Update and Init workflow docs — _Requirements: AC-006, AC-007_
+- [ ] **4.** Evidence
+  - [ ] 4.1 Record PLN RED/GREEN evidence — _Requirements: AC-001–AC-009_
+
+### DEV-105 — PowerShell Maintain + Update Parity (0/4)
+
+- [ ] **1.** Parity contract RED coverage
+  - [ ] 1.1 Add bats PSP greps for new switches and bash update dispatch — _Requirements: AC-004, AC-008, AC-009_
+  - [ ] 1.2 Add Pester skeleton tests failing before implementation — _Requirements: AC-007_
+- [ ] **2.** PowerShell maintain switches
+  - [ ] 2.1 Implement `-Verify`, `-Doctor`, `-Uninstall` dispatch — _Requirements: AC-001, AC-002, AC-003, AC-005_
+  - [ ] 2.2 Refactor `-Update` to delegate to bash `run_update` — _Requirements: AC-004, AC-006_
+  - [ ] 2.3 Update help text — _Requirements: AC-009_
+- [ ] **3.** Pester implementation
+  - [ ] 3.1 Complete Pester happy-path and validation tests — _Requirements: AC-007_
+- [ ] **4.** Evidence
+  - [ ] 4.1 Record PSP RED/GREEN evidence — _Requirements: AC-001–AC-009_
+
 _(DEV-091 blocked — see Blocked section. Wave 1b DEV-087 · DEV-088 shipped in v5.3.15.)_
 
 ## Manual / Deferred Tasks
@@ -451,3 +494,4 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
 | 2026-07-12 | 🔍 Review complete — Wave 1b DEV-087 · DEV-088 PASS (0 critical); next: `/agtoosa-ship` v5.3.15 | AgToosa |
 | 2026-07-12 | 🚀 Ship complete — v5.3.15 — Wave 1b DEV-087 · DEV-088; smoke PASS; cycle archived | AgToosa |
 | 2026-07-12 | 🚀 Release 5.3.15 shipped — v5.3.15; version parity bash/ps1/npm; Milestone v5.3.16 (next); Wave 1a remains active | AgToosa |
+| 2026-07-12 | ✏️ /agtoosa-spec — Wave 1a Part 4 — Active Tasks + Work Package DAGs for DEV-086 · DEV-090 · DEV-105; build mode parallel fan-out; AC-007 mapped in DEV-105 test plan | AgToosa |

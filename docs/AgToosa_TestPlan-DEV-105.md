@@ -18,6 +18,7 @@ PowerShell `-Verify`, `-Doctor`, `-Uninstall`, and bash-delegated `-Update` pari
 | AC-003 | PSP-003 | PS1 Uninstall preserves user data | Pester/integration | Master-Plan and Context remain; owned files removed | ⬜ Pending |
 | AC-004, AC-006 | PSP-004 | PS1 Update delegates to bash run_update | Pester/grep | Update invokes `agtoosa.sh --update`; lock/version updated | ⬜ Pending |
 | AC-005 | PSP-005 | Missing UpdatePath fails fast | Pester/negative | Non-zero error when path omitted | ⬜ Pending |
+| AC-007 | PSP-001–PSP-005 | Pester suite covers verify/doctor/uninstall/update + validation | Pester suite | `tests/pester/agtoosa-maintain.Tests.ps1` exercises AC-001–AC-006 paths in isolated temp dirs | ⬜ Pending |
 | AC-008 | PSP-006 | agtoosa.ps1 declares maintain switches | Grep contract | `-Verify`, `-Doctor`, `-Uninstall` in param block | ⬜ Pending |
 | AC-009 | PSP-007 | Help documents maintain switches | Docs/grep | Help text lists verify/doctor/uninstall/update parity | ⬜ Pending |
 | AC-004 | PSP-008 | Inline Install-Files-only update path removed | Grep contract | `-Update` block calls bash update engine | ⬜ Pending |

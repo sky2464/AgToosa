@@ -148,16 +148,33 @@ Out of scope        : new proof repo, video, browser tests, automatic rewrites, 
 
 ### 3.2 Wave Plan
 
-**Wave 1 (parallel):** 1.1, 1.2, 1.3
+**Wave 1 (sequential within story — shared bats file):** 1.1 → 1.2 → 1.3
 **Wave 2 (sequential after Wave 1):** 2.1, 2.2
 **Wave 3 (sequential after Wave 2):** 3.1, 3.2
 **Wave 4 (sequential after Wave 3):** 4.1
+
+> Cross-story: Wave 1a fan-out allows DEV-086 · DEV-090 · DEV-105 in parallel; owned files are disjoint across stories.
 
 ### 3.3 Test Plan
 
 Test plan: `docs/AgToosa_TestPlan-DEV-086.md`
 AC coverage: 8 ACs mapped to 9 PRF test IDs
 Smoke set: 3 tests tagged `@smoke`
+
+### 3.4 Work Package DAG
+
+| package_id | wave | depends_on | owned_files | inputs | outputs | merge_order | verification |
+|------------|------|------------|-------------|--------|---------|-------------|--------------|
+| PKG-1.1 | 1 | — | `tests/fixtures/proof-journey/` | — | `tests/fixtures/proof-journey/expected-manifest.json` | 1 | `test -f tests/fixtures/proof-journey/expected-manifest.json` |
+| PKG-1.2 | 1 | — | `tests/agtoosa.bats` (PRF section) | PKG-1.1 fixtures | PRF bats stubs | 2 | `bats tests/agtoosa.bats -f "DEV-086\|PRF-"` |
+| PKG-1.3 | 1 | — | `tests/agtoosa.bats` (PRF integrity) | — | AC-006/007 assertions | 3 | `bats tests/agtoosa.bats -f "PRF-008\|PRF-009"` |
+| PKG-2.1 | 2 | PKG-1.1, PKG-1.2 | `README.md` | Wave 1 RED | single primary CTA | 4 | `bats tests/agtoosa.bats -f "PRF-001\|PRF-002"` |
+| PKG-2.2 | 2 | PKG-1.2 | `docs/examples/first-15-minutes.md` | Wave 1 RED | verify success step | 5 | `bats tests/agtoosa.bats -f "PRF-003"` |
+| PKG-3.1 | 3 | PKG-2.1, PKG-2.2 | `scripts/check-launch-readiness.sh` | Wave 2 surfaces | proof-journey checks | 6 | `bats tests/agtoosa.bats -f "PRF-006\|PRF-007\|PRF-008"` |
+| PKG-3.2 | 3 | PKG-3.1 | `docs/examples/first-15-minutes.md`, `README.md` (pin align only) | PKG-3.1 findings | pin/link alignment | 7 | `bash scripts/check-launch-readiness.sh --mode private` |
+| PKG-4.1 | 4 | PKG-3.2 | `docs/AgToosa_TestPlan-DEV-086.md` | GREEN bats | RED/GREEN evidence | 8 | `grep -q GREEN docs/AgToosa_TestPlan-DEV-086.md` |
+
+> Wave 1 note: PKG-1.2 and PKG-1.3 both touch `tests/agtoosa.bats` — run **sequentially within Wave 1** (1.2 then 1.3) despite same wave label; do not parallel-edit the bats file.
 
 ## ✅ Spec Approved
 

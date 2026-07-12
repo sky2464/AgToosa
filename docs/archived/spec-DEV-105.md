@@ -145,15 +145,31 @@ Out of scope        : PS1 verifier port, plan JSON, npm wrapper, DEV-088 JSON fl
 ### 3.2 Wave Plan
 
 **Wave 1 (parallel):** 1.1, 1.2
-**Wave 2 (sequential after Wave 1):** 2.1, 2.2
-**Wave 3 (sequential after Wave 2):** 2.3, 3.1
+**Wave 2 (sequential within story — shared `agtoosa.ps1`):** 2.1 → 2.2
+**Wave 3 (parallel after Wave 2):** 2.3, 3.1
 **Wave 4 (sequential after Wave 3):** 4.1
+
+> Cross-story: Wave 1a fan-out allows DEV-086 · DEV-090 · DEV-105 in parallel; owned files are disjoint across stories.
 
 ### 3.3 Test Plan
 
 Test plan: `docs/AgToosa_TestPlan-DEV-105.md`
-AC coverage: 9 ACs mapped to 8 PSP test IDs
+AC coverage: 9 ACs mapped to 9 PSP test IDs (AC-007 → PSP-001–005 + suite file)
 Smoke set: 3 tests tagged `@smoke`
+
+### 3.4 Work Package DAG
+
+| package_id | wave | depends_on | owned_files | inputs | outputs | merge_order | verification |
+|------------|------|------------|-------------|--------|---------|-------------|--------------|
+| PKG-1.1 | 1 | — | `tests/agtoosa.bats` (PSP greps) | — | PSP-006–008 stubs | 1 | `bats tests/agtoosa.bats -f "DEV-105\|PSP-"` |
+| PKG-1.2 | 1 | — | `tests/pester/agtoosa-maintain.Tests.ps1` | — | failing Pester skeleton | 2 | `test -f tests/pester/agtoosa-maintain.Tests.ps1` |
+| PKG-2.1 | 2 | PKG-1.1, PKG-1.2 | `agtoosa.ps1` (maintain switches) | Wave 1 RED | `-Verify`/`-Doctor`/`-Uninstall` | 3 | `bats tests/agtoosa.bats -f "PSP-006"` |
+| PKG-2.2 | 2 | PKG-1.1 | `agtoosa.ps1` (Update path) | Wave 1 RED | bash `--update` delegation | 4 | `bats tests/agtoosa.bats -f "PSP-004\|PSP-008"` |
+| PKG-2.3 | 3 | PKG-2.1, PKG-2.2 | `agtoosa.ps1` (help text) | Wave 2 switches | documented maintain help | 5 | `bats tests/agtoosa.bats -f "PSP-007"` |
+| PKG-3.1 | 3 | PKG-2.1, PKG-2.2 | `tests/pester/agtoosa-maintain.Tests.ps1` | Wave 2 impl | Pester GREEN | 6 | `pwsh -Command "Invoke-Pester -Path tests/pester/agtoosa-maintain.Tests.ps1 -PassThru"` |
+| PKG-4.1 | 4 | PKG-2.3, PKG-3.1 | `docs/AgToosa_TestPlan-DEV-105.md` | GREEN evidence | RED/GREEN recorded | 7 | `grep -q GREEN docs/AgToosa_TestPlan-DEV-105.md` |
+
+> Wave 2 note: PKG-2.1 and PKG-2.2 both own `agtoosa.ps1` — run **sequentially** (2.1 then 2.2). Wave 1 PKG-1.1 / PKG-1.2 are file-disjoint and may run in parallel.
 
 ## ✅ Spec Approved
 

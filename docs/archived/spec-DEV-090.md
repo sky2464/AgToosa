@@ -148,17 +148,34 @@ Out of scope        : apply semantics rewrite, DEV-093 lock revalidation, PS1 pl
 
 ### 3.2 Wave Plan
 
-**Wave 1 (parallel):** 1.1, 1.2, 1.3
+**Wave 1 (sequential within story — shared bats file):** 1.1 → 1.2 → 1.3
 **Wave 2 (sequential after Wave 1):** 2.1
-**Wave 3 (sequential after Wave 2):** 2.2, 2.3
+**Wave 3 (parallel after Wave 2):** 2.2, 2.3
 **Wave 4 (sequential after Wave 3):** 3.1
 **Wave 5 (sequential after Wave 4):** 4.1
+
+> Cross-story: Wave 1a fan-out allows DEV-086 · DEV-090 · DEV-105 in parallel; owned files are disjoint across stories.
 
 ### 3.3 Test Plan
 
 Test plan: `docs/AgToosa_TestPlan-DEV-090.md`
 AC coverage: 9 ACs mapped to 9 PLN test IDs
 Smoke set: 3 tests tagged `@smoke`
+
+### 3.4 Work Package DAG
+
+| package_id | wave | depends_on | owned_files | inputs | outputs | merge_order | verification |
+|------------|------|------------|-------------|--------|---------|-------------|--------------|
+| PKG-1.1 | 1 | — | `tests/agtoosa.bats` (PLN parity/JSON) | — | PLN-002–004 stubs | 1 | `bats tests/agtoosa.bats -f "DEV-090\|PLN-"` |
+| PKG-1.2 | 1 | — | `tests/agtoosa.bats` (PLN idempotency) | — | PLN-005/008 stubs | 2 | `bats tests/agtoosa.bats -f "PLN-005\|PLN-008"` |
+| PKG-1.3 | 1 | — | `tests/agtoosa.bats` (PLN docs) | — | PLN-006/007 stubs | 3 | `bats tests/agtoosa.bats -f "PLN-006\|PLN-007"` |
+| PKG-2.1 | 2 | PKG-1.1, PKG-1.2, PKG-1.3 | `lib/plan.sh`, `docs/schemas/plan-result-v1.json` | Wave 1 RED | plan engine + schema | 4 | `test -f lib/plan.sh && bats tests/agtoosa.bats -f "PLN-001"` |
+| PKG-2.2 | 3 | PKG-2.1 | `lib/dryrun.sh`, `lib/update.sh` | `lib/plan.sh` | dry-run delegation | 5 | `bats tests/agtoosa.bats -f "PLN-002\|PLN-003\|PLN-008"` |
+| PKG-2.3 | 3 | PKG-2.1 | `agtoosa.sh` | `lib/plan.sh` | `--format json` dry-run | 6 | `bats tests/agtoosa.bats -f "PLN-004"` |
+| PKG-3.1 | 4 | PKG-2.2, PKG-2.3 | `template/Docs/AgToosa_Update.md`, `docs/AgToosa_Update.md`, `template/Docs/AgToosa_Init.md`, `docs/AgToosa_Init.md` | Wave 3 wiring | lock path docs | 7 | `bats tests/agtoosa.bats -f "PLN-006\|PLN-007"` |
+| PKG-4.1 | 5 | PKG-3.1 | `docs/AgToosa_TestPlan-DEV-090.md` | GREEN PLN | RED/GREEN evidence | 8 | `grep -q GREEN docs/AgToosa_TestPlan-DEV-090.md` |
+
+> Wave 1 note: PKG-1.1–1.3 share `tests/agtoosa.bats` — sequential within Wave 1. Wave 3: PKG-2.2 and PKG-2.3 are file-disjoint (`lib/*.sh` vs `agtoosa.sh`) and may run in parallel.
 
 ## ✅ Spec Approved
 
