@@ -7,20 +7,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [5.3.24] — 2026-07-12
 
-Patch release: DEV-112 — Smart Apply UX polish + `--cleanup`.
+Patch release: DEV-112 — Smart Apply UX polish + `--cleanup` + Cursor NL intent routing.
 
 ### Added
 
 - **DEV-112 — `--cleanup` housekeeping.** `lib/cleanup.sh` removes merge backups (`*.bak.*`), orphan workflow docs, and deselected platform files; `--dry-run`, `--format json` (`cleanup-result-v1`), `--yes`; post install/upgrade offer; `--doctor` `DR-stale-files` hint; PS1 `-Cleanup` parity; `vscode` platform modeling; CLN-001–CLN-011 bats; `AgToosa_Update.md` cleanup section.
 - **Smart Apply UX polish.** Quiet upgrade output (`APPLY_QUIET`); numbered platform legend with installed checkmarks; spaced `Found:` line; grouped Copilot agents line; summary pluralization; context-aware next steps; clearer merge labels; hash-aware `AgToosa_Claude.md` / `AgToosa_Gemini.md`; per-test `AGTOOSA_SHIP_DIR` for bats isolation.
-
-## [5.3.24] — 2026-07-12
-
-Patch release: DEV-112 `--cleanup` + Cursor NL intent routing + maintainer dogfood wiring.
-
-### Added
-
-- **DEV-112 — `--cleanup`.** Remove merge backups (`*.bak.*`), orphan workflow docs, and deselected platform outputs; `--dry-run` / `--format json` plan; `cleanup-result-v1` schema; PS1 `-Cleanup` parity; CLN-001–CLN-011 bats.
 - **Cursor NL intent map.** Natural-language routing for "plan and code" / "build it" in `AgToosa_Agent.md`, `agtoosa-core.mdc`, and `template/.cursorrules`; blocks Cursor native Plan mode for in-scope work.
 - **Maintainer Cursor dogfood.** `.cursor/rules/agtoosa-maintainer-core.mdc`, `/agtoosa-spec` + `/agtoosa-build` commands (`docs/` paths), `scripts/cursor-intake-fixture.sh`; FIX-001 + NLM-001–NLM-006 bats.
 
