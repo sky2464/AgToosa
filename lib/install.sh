@@ -168,7 +168,7 @@ _merge_pack() {
     cp "$f" "$dst"
     count=$((count + 1))
   done < <(find -L "$pack_dir" -type f -print0)
-  echo -e "  ${GREEN}✅${NC} Pack '${pack_name}': ${count} files merged"
+  apply_verbose_echo "  ${GREEN}✅${NC} Pack '${pack_name}': ${count} files merged"
 }
 
 # Merge all pack subdirectories under packs_root. When clear_after is true, remove each
@@ -308,7 +308,7 @@ install_files() {
         apply_copy_if_changed "${SHIP_DIR}/${file}" "${PROJECT_PATH}/${file}" "${file}"
       else
         cp "${SHIP_DIR}/${file}" "${PROJECT_PATH}/${file}"
-        echo -e "  ${GREEN}✅${NC} ${file}"
+        apply_verbose_echo "  ${GREEN}✅${NC} ${file}"
       fi
       COPIED=$((COPIED + 1))
     fi
@@ -328,12 +328,16 @@ install_files() {
       && merge_platform_file "${SHIP_DIR}/${mdfile}" "${PROJECT_PATH}/${mdfile}" "${mdfile}"
   done
 
-  # Pure AgToosa Docs — always overwrite
+  # Pure AgToosa Docs — hash-aware overwrite
   local pdoc
   for pdoc in Docs/AgToosa_Claude.md Docs/AgToosa_Gemini.md; do
     if [[ -f "${SHIP_DIR}/${pdoc}" ]]; then
-      cp "${SHIP_DIR}/${pdoc}" "${PROJECT_PATH}/${pdoc}"
-      echo -e "  ${GREEN}✅${NC} ${pdoc}"
+      if declare -F apply_copy_if_changed >/dev/null 2>&1; then
+        apply_copy_if_changed "${SHIP_DIR}/${pdoc}" "${PROJECT_PATH}/${pdoc}" "${pdoc}" || return 1
+      else
+        cp "${SHIP_DIR}/${pdoc}" "${PROJECT_PATH}/${pdoc}"
+        apply_verbose_echo "  ${GREEN}✅${NC} ${pdoc}"
+      fi
       COPIED=$((COPIED + 1))
     fi
   done
@@ -357,7 +361,7 @@ install_files() {
         COPIED=$((COPIED + 1))
       fi
     done
-    [[ $cinstr_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .github/instructions/ (${cinstr_count} scoped instruction files)"
+    [[ $cinstr_count -gt 0 ]] && apply_verbose_echo "  ${GREEN}✅${NC} .github/instructions/ (${cinstr_count} scoped instruction files)"
   fi
 
   # Context/ stubs — skip if exists (user may have filled them in)
@@ -378,7 +382,7 @@ install_files() {
       COPIED=$((COPIED + 1))
     fi
   done
-  [[ $agtoosa_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .agtoosa/ (${agtoosa_count} config index + evidence example)"
+  [[ $agtoosa_count -gt 0 ]] && apply_verbose_echo "  ${GREEN}✅${NC} .agtoosa/ (${agtoosa_count} config index + evidence example)"
 
   # Claude Code commands, hooks, and skills — always overwrite (AgToosa-owned)
   if [[ "$USE_CLAUDE" == true ]]; then
@@ -391,7 +395,7 @@ install_files() {
         COPIED=$((COPIED + 1))
       fi
     done
-    [[ $ccmd_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .claude/commands/ (${ccmd_count} slash commands)"
+    [[ $ccmd_count -gt 0 ]] && apply_verbose_echo "  ${GREEN}✅${NC} .claude/commands/ (${ccmd_count} slash commands)"
 
     [[ -f "${SHIP_DIR}/.claude/settings.json" ]] \
       && merge_settings_json "${SHIP_DIR}/.claude/settings.json" \
@@ -405,7 +409,7 @@ install_files() {
         COPIED=$((COPIED + 1))
       fi
     done
-    [[ $cskill_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .claude/skills/ (${cskill_count} project skill)"
+    [[ $cskill_count -gt 0 ]] && apply_verbose_echo "  ${GREEN}✅${NC} .claude/skills/ (${cskill_count} project skill)"
 
     for chook in "${CLAUDE_HOOK_FILES[@]}"; do
       if [[ -f "${SHIP_DIR}/${chook}" ]]; then
@@ -415,7 +419,7 @@ install_files() {
         COPIED=$((COPIED + 1))
       fi
     done
-    [[ $chook_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .claude/hooks/ (${chook_count} hook script)"
+    [[ $chook_count -gt 0 ]] && apply_verbose_echo "  ${GREEN}✅${NC} .claude/hooks/ (${chook_count} hook script)"
   fi
 
   # Cursor rules and commands — always overwrite (AgToosa-owned)
@@ -429,7 +433,7 @@ install_files() {
         COPIED=$((COPIED + 1))
       fi
     done
-    [[ $crule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .cursor/rules/ (${crule_count} MDX rules)"
+    [[ $crule_count -gt 0 ]] && apply_verbose_echo "  ${GREEN}✅${NC} .cursor/rules/ (${crule_count} MDX rules)"
 
     for ccmd in "${CURSOR_COMMAND_FILES[@]}"; do
       if [[ -f "${SHIP_DIR}/${ccmd}" ]]; then
@@ -438,7 +442,7 @@ install_files() {
         COPIED=$((COPIED + 1))
       fi
     done
-    [[ $ccmd_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .cursor/commands/ (${ccmd_count} slash commands)"
+    [[ $ccmd_count -gt 0 ]] && apply_verbose_echo "  ${GREEN}✅${NC} .cursor/commands/ (${ccmd_count} slash commands)"
   fi
 
   # Gemini CLI native commands — always overwrite (AgToosa-owned)
@@ -452,7 +456,7 @@ install_files() {
         COPIED=$((COPIED + 1))
       fi
     done
-    [[ $gcmd_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .gemini/commands/ (${gcmd_count} TOML commands)"
+    [[ $gcmd_count -gt 0 ]] && apply_verbose_echo "  ${GREEN}✅${NC} .gemini/commands/ (${gcmd_count} TOML commands)"
   fi
 
   # GitHub Copilot reusable prompts + custom agent — always overwrite (AgToosa-owned)
@@ -466,15 +470,16 @@ install_files() {
         COPIED=$((COPIED + 1))
       fi
     done
-    [[ $pprompt_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .github/prompts/ (${pprompt_count} reusable prompts)"
-    local pagent
+    [[ $pprompt_count -gt 0 ]] && apply_verbose_echo "  ${GREEN}✅${NC} .github/prompts/ (${pprompt_count} reusable prompts)"
+    local pagent pagent_count=0
     for pagent in "${COPILOT_AGENT_FILES[@]}"; do
       if [[ -f "${SHIP_DIR}/${pagent}" ]]; then
         cp "${SHIP_DIR}/${pagent}" "${PROJECT_PATH}/${pagent}"
+        pagent_count=$((pagent_count + 1))
         COPIED=$((COPIED + 1))
-        echo -e "  ${GREEN}✅${NC} .github/agents/agtoosa.agent.md"
       fi
     done
+    [[ $pagent_count -gt 0 ]] && apply_verbose_echo "  ${GREEN}✅${NC} .github/agents/ (${pagent_count} custom agents)"
   fi
 
   # VS Code generic prompts + custom agent — always overwrite (AgToosa-owned)
@@ -488,15 +493,16 @@ install_files() {
         COPIED=$((COPIED + 1))
       fi
     done
-    [[ $vprompt_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .github/prompts/ (${vprompt_count} reusable prompts)"
-    local vagent
+    [[ $vprompt_count -gt 0 ]] && apply_verbose_echo "  ${GREEN}✅${NC} .github/prompts/ (${vprompt_count} reusable prompts)"
+    local vagent vagent_count=0
     for vagent in "${COPILOT_AGENT_FILES[@]}"; do
       if [[ -f "${SHIP_DIR}/${vagent}" ]]; then
         cp "${SHIP_DIR}/${vagent}" "${PROJECT_PATH}/${vagent}"
+        vagent_count=$((vagent_count + 1))
         COPIED=$((COPIED + 1))
-        echo -e "  ${GREEN}✅${NC} .github/agents/agtoosa.agent.md"
       fi
     done
+    [[ $vagent_count -gt 0 ]] && apply_verbose_echo "  ${GREEN}✅${NC} .github/agents/ (${vagent_count} custom agents)"
   fi
 
   # Codex skills — always overwrite (AgToosa-owned)
@@ -511,7 +517,7 @@ install_files() {
         COPIED=$((COPIED + 1))
       fi
     done
-    [[ $codex_skill_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .codex/skills/ (${codex_skill_count} Codex skills)"
+    [[ $codex_skill_count -gt 0 ]] && apply_verbose_echo "  ${GREEN}✅${NC} .codex/skills/ (${codex_skill_count} Codex skills)"
 
     mkdir -p "${PROJECT_PATH}/.codex/prompts"
     local codex_prompt codex_prompt_count=0
@@ -523,7 +529,7 @@ install_files() {
         COPIED=$((COPIED + 1))
       fi
     done
-    [[ $codex_prompt_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .codex/prompts/ (${codex_prompt_count} Codex slash prompts)"
+    [[ $codex_prompt_count -gt 0 ]] && apply_verbose_echo "  ${GREEN}✅${NC} .codex/prompts/ (${codex_prompt_count} Codex slash prompts)"
   fi
 
   # Windsurf rules and workflows — always overwrite (AgToosa-owned)
@@ -537,7 +543,7 @@ install_files() {
         COPIED=$((COPIED + 1))
       fi
     done
-    [[ $wrule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .windsurf/rules/ (${wrule_count} rules)"
+    [[ $wrule_count -gt 0 ]] && apply_verbose_echo "  ${GREEN}✅${NC} .windsurf/rules/ (${wrule_count} rules)"
 
     for wflow in "${WINDSURF_WORKFLOW_FILES[@]}"; do
       if [[ -f "${SHIP_DIR}/${wflow}" ]]; then
@@ -546,7 +552,7 @@ install_files() {
         COPIED=$((COPIED + 1))
       fi
     done
-    [[ $wflow_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .windsurf/workflows/ (${wflow_count} workflows)"
+    [[ $wflow_count -gt 0 ]] && apply_verbose_echo "  ${GREEN}✅${NC} .windsurf/workflows/ (${wflow_count} workflows)"
   fi
 
 
@@ -563,7 +569,7 @@ install_files() {
   if [[ ${#_PACK_LOCK_ENTRIES[@]} -gt 0 ]]; then
     new_lock_entries+=("${_PACK_LOCK_ENTRIES[@]}")
   fi
-  [[ $pack_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} Packs merged: ${pack_count}"
+  [[ $pack_count -gt 0 ]] && apply_verbose_echo "  ${GREEN}✅${NC} Packs merged: ${pack_count}"
   # DEV-093: always reconcile lock (platforms + packs) on install; path Docs/agtoosa-lock.json.
   if declare -F lock_reconcile >/dev/null 2>&1; then
     if [[ ${#new_lock_entries[@]} -gt 0 ]]; then
@@ -591,7 +597,7 @@ install_files() {
     emit_apply_summary_human "$summary_verb"
   else
     echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
-    echo -e "  ${GREEN}Copied:  ${COPIED} files${NC}"
+    apply_verbose_echo "  ${GREEN}Copied:  ${COPIED} files${NC}"
     echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
     echo ""
     echo -e "${GREEN}${BOLD}✅ AgToosa v${AGTOOSA_VERSION} ${summary_verb} to ${PROJECT_PATH}${NC}"
@@ -600,12 +606,19 @@ install_files() {
   # Warn about .bak files when backups were created
   if [[ ${#BAK_FILES[@]} -gt 0 ]]; then
     echo ""
-    echo -e "${YELLOW}⚠️  Backup files created — add this to your .gitignore to avoid committing them:${NC}"
-    echo -e "    ${BOLD}*.bak.*${NC}"
-    local bak
-    for bak in "${BAK_FILES[@]}"; do
-      echo -e "    ${CYAN}${bak#"${PROJECT_PATH}/"}${NC}"
-    done
+    echo -e "${YELLOW}⚠️  Backup files created — add ${BOLD}*.bak.*${NC}${YELLOW} to your .gitignore${NC}"
+    if ((${#BAK_FILES[@]} <= 3)); then
+      local bak
+      for bak in "${BAK_FILES[@]}"; do
+        echo -e "    ${CYAN}${bak#"${PROJECT_PATH}/"}${NC}"
+      done
+    else
+      echo -e "    ${CYAN}${#BAK_FILES[@]} backup files in project root${NC}"
+    fi
+  fi
+
+  if declare -F offer_cleanup_after_apply >/dev/null 2>&1; then
+    offer_cleanup_after_apply "$PROJECT_PATH"
   fi
 
   echo ""
@@ -613,13 +626,31 @@ install_files() {
   echo ""
   echo -e "  ${CYAN}1.${NC} Open your AI assistant in ${BOLD}${PROJECT_PATH}${NC}"
   echo ""
-  echo -e "  ${CYAN}2.${NC} Run ${BOLD}/agtoosa-init${NC} to set up your project (one-time)"
-  echo ""
-  echo -e "  ${CYAN}3.${NC} Then use the 4-command workflow:"
-  echo -e "     ${BOLD}/agtoosa-spec${NC}    → Research, specify, and plan"
-  echo -e "     ${BOLD}/agtoosa-build${NC}   → TDD build and test"
-  echo -e "     ${BOLD}/agtoosa-review${NC}  → Multi-persona code review"
-  echo -e "     ${BOLD}/agtoosa-ship${NC}    → Deploy, archive, and suggest next"
+  if [[ "${SMART_UPGRADE_MODE:-false}" == true ]] \
+     && declare -F project_context_initialized >/dev/null 2>&1 \
+     && project_context_initialized; then
+    echo -e "  ${CYAN}2.${NC} Continue with the 4-command workflow:"
+    echo -e "     ${BOLD}/agtoosa-spec${NC}    → Research, specify, and plan"
+    echo -e "     ${BOLD}/agtoosa-build${NC}   → TDD build and test"
+    echo -e "     ${BOLD}/agtoosa-review${NC}  → Multi-persona code review"
+    echo -e "     ${BOLD}/agtoosa-ship${NC}    → Deploy, archive, and suggest next"
+  elif [[ "${SMART_UPGRADE_MODE:-false}" == true ]]; then
+    echo -e "  ${CYAN}2.${NC} Run ${BOLD}/agtoosa-init${NC} to finish Context setup"
+    echo ""
+    echo -e "  ${CYAN}3.${NC} Then use the 4-command workflow:"
+    echo -e "     ${BOLD}/agtoosa-spec${NC}    → Research, specify, and plan"
+    echo -e "     ${BOLD}/agtoosa-build${NC}   → TDD build and test"
+    echo -e "     ${BOLD}/agtoosa-review${NC}  → Multi-persona code review"
+    echo -e "     ${BOLD}/agtoosa-ship${NC}    → Deploy, archive, and suggest next"
+  else
+    echo -e "  ${CYAN}2.${NC} Run ${BOLD}/agtoosa-init${NC} to set up your project (one-time)"
+    echo ""
+    echo -e "  ${CYAN}3.${NC} Then use the 4-command workflow:"
+    echo -e "     ${BOLD}/agtoosa-spec${NC}    → Research, specify, and plan"
+    echo -e "     ${BOLD}/agtoosa-build${NC}   → TDD build and test"
+    echo -e "     ${BOLD}/agtoosa-review${NC}  → Multi-persona code review"
+    echo -e "     ${BOLD}/agtoosa-ship${NC}    → Deploy, archive, and suggest next"
+  fi
   echo ""
 }
 

@@ -80,6 +80,7 @@ Docs/agtoosa-policy-check.sh
 Docs/agtoosa-tracker-sync.schema.json
 Docs/agtoosa-verify.sh
 Docs/schemas/verify-result-v1.json
+Docs/schemas/cleanup-result-v1.json
 ```
 
 ## Optional Platform Surfaces (`OPTIONAL_TEMPLATE_FILES`)

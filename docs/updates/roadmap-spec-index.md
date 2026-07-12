@@ -90,6 +90,7 @@ Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
 | DEV-109 | Lifecycle Next-Step Sync + Multi-Spec Clarity | Feature | L | DEV-002 / DEV-001 | P0 | `docs/archived/spec-DEV-109.md` | `docs/AgToosa_TestPlan-DEV-109.md` | 🏁 Shipped v5.3.21 |
 | DEV-110 | AgToosa Project Intake | Feature | M | DEV-002 | P0 | `docs/archived/spec-DEV-110.md` | `docs/AgToosa_TestPlan-DEV-110.md` | 🏁 Shipped v5.3.22 |
 | DEV-111 | Smart One-Command Install UX | Feature | M | DEV-001 | P0 | `docs/archived/spec-DEV-111.md` | `docs/AgToosa_TestPlan-DEV-111.md` | 🏁 Shipped v5.3.23 |
+| DEV-112 | Smart Apply UX Polish + `--cleanup` | Feature | M | DEV-001 / DEV-111 | P0 | `docs/archived/spec-DEV-112.md` | `docs/AgToosa_TestPlan-DEV-112.md` | 🏁 Shipped v5.3.24 |
 
 > **Enrollment note (2026-07-12):** DEV-107 Spec Approved; remains Backlog until after Wave 1a capacity frees. Build must not displace DEV-086 / DEV-090 / DEV-105.
 >
@@ -98,6 +99,8 @@ Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
 > **Enrollment note (2026-07-12):** DEV-110 shipped v5.3.22 — dual-mode Project Intake + always-on core rule + Standing Corrections.
 >
 > **Enrollment note (2026-07-12):** DEV-111 shipped v5.3.23 — one-command smart apply; auto-detect upgrade; platform Found/add UX; summary buckets.
+>
+> **Enrollment note (2026-07-12):** DEV-112 shipped v5.3.24 — quiet upgrade UX; platform legend; context-aware next steps; `--cleanup` housekeeping.
 
 ## Recently shipped (v5.3.14 — 2026-07-11)
 

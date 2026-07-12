@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-12 (DEV-111 shipped — v5.3.23 Smart One-Command Install UX)
+> **Last updated:** 2026-07-12 (DEV-112 shipped — v5.3.24 Smart Apply UX + cleanup)
 
 ## Project Charter
 
@@ -9,8 +9,8 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | DEV-111 shipped — Smart One-Command Install UX; next enroll |
-| Milestone | `v5.3.24` (next) |
+| Current phase | DEV-112 shipped — Smart Apply UX + cleanup; next enroll |
+| Milestone | `v5.3.25` (next) |
 | Active cycle | _(none — enroll via `/agtoosa-spec`)_ |
 | Cycle capacity | `8 story points` |
 
@@ -22,6 +22,7 @@
 |----|-------|------|----------|--------|-----------|
 | — | _(no active story — run `/agtoosa-spec` to enroll)_ | — | — | — | — |
 
+<!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.24.md (DEV-112 v5.3.24) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.23.md (DEV-111 v5.3.23) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.22.md (DEV-110 v5.3.22) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.21.md (DEV-109 v5.3.21) -->
@@ -80,7 +81,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 |----|-------|-----------|-------|
 | — | (none) | — | — |
 
-Conflict playbook: _DEV-111 shipped v5.3.23 — next enroll via `/agtoosa-spec` (e.g. DEV-080 external publish follow-up or demand-gated DEV-057)._
+Conflict playbook: _DEV-112 shipped v5.3.24 — next enroll via `/agtoosa-spec` (e.g. DEV-080 external publish follow-up or demand-gated DEV-057)._
 
 ## Backlog
 
@@ -153,6 +154,7 @@ Conflict playbook: _DEV-111 shipped v5.3.23 — next enroll via `/agtoosa-spec` 
 | DEV-109 | Feature: Lifecycle Next-Step Sync + Multi-Spec Clarity | Feature | L | DEV-002 / DEV-001 | P0 | 🏁 Shipped — v5.3.21 |
 | DEV-110 | Feature: AgToosa Project Intake | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.22 |
 | DEV-111 | Feature: Smart One-Command Install UX | Feature | M | DEV-001 | P0 | 🏁 Shipped — v5.3.23 |
+| DEV-112 | Feature: Smart Apply UX Polish + `--cleanup` | Feature | M | DEV-001 / DEV-111 | P0 | 🏁 Shipped — v5.3.24 |
 
 ## Epics
 
@@ -558,6 +560,9 @@ Conflict playbook: _DEV-111 shipped v5.3.23 — next enroll via `/agtoosa-spec` 
 | 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — Wave 3 (095·096·098·099·101·102·103·104·106) + DEV-107 batched — smoke PASS; v5.3.20 | AgToosa |
 | 2026-07-12 | 🚀 Ship complete — v5.3.20 — Rev4 Wave 3 + DEV-107; smoke PASS; cycle archived | AgToosa |
 | 2026-07-12 | 🚀 Release 5.3.20 shipped — v5.3.20; version parity bash/ps1/npm; Milestone v5.3.21 (next) | AgToosa |
+| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-112 — smoke PASS; v5.3.24; spec archived | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v5.3.24 — DEV-112 Smart Apply UX + cleanup; smoke PASS; cycle archived | AgToosa |
+| 2026-07-12 | 🚀 Release 5.3.24 shipped — v5.3.24; version parity bash/ps1/npm; Milestone v5.3.25 (next) | AgToosa |
 | 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-111 — smoke PASS; v5.3.23; spec archived | AgToosa |
 | 2026-07-12 | 🚀 Ship complete — v5.3.23 — DEV-111 Smart One-Command Install UX; smoke PASS; cycle archived | AgToosa |
 | 2026-07-12 | 🚀 Release 5.3.23 shipped — v5.3.23; version parity bash/ps1/npm; Milestone v5.3.24 (next) | AgToosa |

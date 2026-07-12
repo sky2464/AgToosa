@@ -279,11 +279,21 @@ PY
     fi
   fi
 
-  # Stale backup files.
-  local baks
-  baks=$(find "$target" -maxdepth 2 -name '*.bak.*' 2>/dev/null | wc -l | tr -d ' ')
-  if [[ "$baks" -gt 0 && "$format" == "text" ]]; then
-    echo -e "  ${CYAN}ℹ️${NC}  ${baks} backup file(s) (*.bak.*) present — clean up and gitignore them"
+  # Stale unnecessary files (backups, orphan docs, deselected platforms).
+  if declare -F cleanup_collect_candidates >/dev/null 2>&1; then
+    cleanup_collect_candidates "$target"
+    if ((${#CLEANUP_CANDIDATES[@]} > 0)); then
+      _doc_finding warn "DR-stale-files" \
+        "${#CLEANUP_CANDIDATES[@]} unnecessary AgToosa-owned file(s) (backups, removed docs, or deselected platforms)" \
+        "Stale files clutter the repo and may be committed accidentally." \
+        "Run: bash agtoosa.sh --cleanup '${target}'" guided
+    fi
+  else
+    local baks
+    baks=$(find "$target" -name '*.bak.*' -type f 2>/dev/null | wc -l | tr -d ' ')
+    if [[ "$baks" -gt 0 && "$format" == "text" ]]; then
+      echo -e "  ${CYAN}ℹ️${NC}  ${baks} backup file(s) (*.bak.*) present — clean up and gitignore them"
+    fi
   fi
 
   local exit_code=0

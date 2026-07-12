@@ -41,7 +41,7 @@ copy_platform_file() {
     dst_hash="$(apply_content_sha256 "$dst")"
     if [[ "$src_hash" == "$dst_hash" ]]; then
       APPLY_UNCHANGED=$((APPLY_UNCHANGED + 1))
-      echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(unchanged)${NC}"
+      apply_verbose_echo "  ${GREEN}✅${NC} ${label} ${CYAN}(unchanged)${NC}"
       COPIED=$((COPIED + 1))
       return
     fi
@@ -116,15 +116,16 @@ merge_platform_file() {
   if [[ "$FORCE" == true ]]; then
     if [[ -n "$old_ver" ]] && ! version_lt "$old_ver" "$AGTOOSA_VERSION"; then
       APPLY_UNCHANGED=$((APPLY_UNCHANGED + 1))
-      echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(v${AGTOOSA_VERSION}, up to date)${NC}"
+      apply_verbose_echo "  ${GREEN}✅${NC} ${label} ${CYAN}(v${AGTOOSA_VERSION}, up to date)${NC}"
       COPIED=$((COPIED + 1))
       return
     fi
-    local bak
+    local bak from_ver
     bak="$(backup_file "$dst")"
     BAK_FILES+=("$bak")
     cp "$src" "$dst"
-    echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(v${old_ver:-unknown} → v${AGTOOSA_VERSION}, backup: $(basename "$bak"))${NC}"
+    from_ver="$(merge_display_from_version "$dst")"
+    echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(merged: project v${from_ver} → v${AGTOOSA_VERSION}, backup: $(basename "$bak"))${NC}"
     if declare -F apply_note_merged >/dev/null 2>&1; then
       apply_note_merged
     else
@@ -138,11 +139,11 @@ merge_platform_file() {
   if grep -qE 'AgToosa v[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]* START' "$dst" 2>/dev/null; then
     if [[ -n "$old_ver" ]] && ! version_lt "$old_ver" "$AGTOOSA_VERSION"; then
       APPLY_UNCHANGED=$((APPLY_UNCHANGED + 1))
-      echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(v${AGTOOSA_VERSION}, up to date)${NC}"
+      apply_verbose_echo "  ${GREEN}✅${NC} ${label} ${CYAN}(v${AGTOOSA_VERSION}, up to date)${NC}"
       COPIED=$((COPIED + 1))
       return
     fi
-    local bak tmp_out
+    local bak tmp_out from_ver
     bak="$(backup_file "$dst")"
     BAK_FILES+=("$bak")
     tmp_out="$(mktemp)"
@@ -158,7 +159,8 @@ merge_platform_file() {
       rm -f "$tmp_injected"
     fi
     mv "$tmp_out" "$dst"
-    echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(merged: v${old_ver:-unknown} → v${AGTOOSA_VERSION}, backup: $(basename "$bak"))${NC}"
+    from_ver="$(merge_display_from_version "$dst")"
+    echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(merged: project v${from_ver} → v${AGTOOSA_VERSION}, backup: $(basename "$bak"))${NC}"
     if declare -F apply_note_merged >/dev/null 2>&1; then
       apply_note_merged
     fi
@@ -170,15 +172,16 @@ merge_platform_file() {
   if [[ -n "$old_ver" ]]; then
     if ! version_lt "$old_ver" "$AGTOOSA_VERSION"; then
       APPLY_UNCHANGED=$((APPLY_UNCHANGED + 1))
-      echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(v${AGTOOSA_VERSION}, up to date)${NC}"
+      apply_verbose_echo "  ${GREEN}✅${NC} ${label} ${CYAN}(v${AGTOOSA_VERSION}, up to date)${NC}"
       COPIED=$((COPIED + 1))
       return
     fi
-    local bak
+    local bak from_ver
     bak="$(backup_file "$dst")"
     BAK_FILES+=("$bak")
     cp "$src" "$dst"
-    echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(v${old_ver} → v${AGTOOSA_VERSION}, backup: $(basename "$bak"))${NC}"
+    from_ver="$(merge_display_from_version "$dst")"
+    echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(merged: project v${from_ver} → v${AGTOOSA_VERSION}, backup: $(basename "$bak"))${NC}"
     if declare -F apply_note_merged >/dev/null 2>&1; then
       apply_note_merged
     fi

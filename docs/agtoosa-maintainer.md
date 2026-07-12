@@ -79,6 +79,7 @@ Inline comments in `lib/*.sh` and `agtoosa.sh` should describe behavior in plain
 - `.agtoosa/pack-queue/` is the durable staging area for `--registry install` packs until the next project install merges them.
 - The canonical version lives in `AGTOOSA_VERSION` at the top of `agtoosa.sh` and must match `agtoosa.ps1` and `npm/package.json`.
 - `lib/maintain.sh` owns `--verify`, `--doctor`, and `--uninstall` (sourced by `agtoosa.sh`).
+- `lib/cleanup.sh` owns `--cleanup` (merge backups, orphan docs, deselected platform files).
 - Proof-engine artifacts ship from `template/Docs/` into every install: `agtoosa-verify.sh`, `agtoosa-gate.yml.example`, and `agtoosa-events.jsonl` (seed file). The maintainer mirror is `docs/agtoosa-verify.sh` — keep both copies aligned when changing gate logic.
 - `docs/agtoosa-gate.yml.example` (and `template/Docs/agtoosa-gate.yml.example`) is the CI gate template — AgToosa never writes `.github/workflows/` automatically.
 
@@ -89,9 +90,10 @@ Beyond the interactive install wizard, `agtoosa.sh` exposes these maintainer-rel
 | Flag | Owning code | Purpose | Exit / notes |
 |------|-------------|---------|--------------|
 | `--verify [path]` | `lib/maintain.sh:run_verify` | Run the deterministic lifecycle verifier (prefers the target's installed `Docs/agtoosa-verify.sh` or `docs/agtoosa-verify.sh`, falls back to template copy) | Verifier exit code (0 pass, 1 findings, 2 usage) |
-| `--doctor [path]` | `lib/maintain.sh:run_doctor` | Report version skew (`Docs/.agtoosa-version` vs generator), missing workflow docs, platform wiring gaps, context placeholders, queued packs, stale `*.bak.*` files | 0 healthy, 1 issues found, 2 bad path |
+| `--doctor [path]` | `lib/maintain.sh:run_doctor` | Report version skew (`Docs/.agtoosa-version` vs generator), missing workflow docs, platform wiring gaps, context placeholders, queued packs, stale unnecessary files | 0 healthy, 1 issues found, 2 bad path |
 | `--status-line [path]` | `lib/maintain.sh:run_status_line` | Print one executive `SYNC:` pulse from Master-Plan (read-only) | 0 ok, 2 missing path or Master-Plan |
 | `--uninstall [path]` | `lib/maintain.sh:run_uninstall` | Remove AgToosa-owned files; preserves Master-Plan, Context/, archived/, and merged entry points | Blocks uninstall on the generator source tree; prompts unless `--yes` |
+| `--cleanup [path]` | `lib/cleanup.sh:run_cleanup` | Remove merge backups (`*.bak.*`), removed workflow docs, and deselected platform outputs | Plan with `--dry-run` or `--format json`; apply requires confirmation (`--yes` non-interactive) |
 | `--reinstall --clean [path]` | `lib/reinstall.sh:run_reinstall_clean` | ADR-004 Option C: archive generated files, regenerate fresh for platforms, rewrite `Docs/agtoosa-lock.json` | Destructive; requires confirmation (`--yes` non-interactive); default upgrade remains `bash agtoosa.sh` or `--update` |
 | `--force` | `agtoosa.sh` / `lib/copy.sh` | Advanced/CI: full replace on Context and platform entry points when version guard allows | Hidden from interactive UX; never overwrites Master-Plan, Changelog, or Master-Architecture |
 | `--path <dir>` | `agtoosa.sh` | Skip the interactive path prompt | Requires valid path |
@@ -224,6 +226,20 @@ Do **not** advance MINOR for every small story. Update Project Charter **Milesto
 - After changing `lib/maintain.sh` uninstall paths: run focused bats (`-f "DEV-073"` or `-f "UN"`) before the full suite.
 - For registry or bootstrap changes: exercise `--registry install` with a test pack and confirm tar-slip rejection, denylist blocking, and preview output.
 - For documentation-only or agent-config-only changes, verify that each native entry file points to this guide and that no frontmatter errors were introduced.
+- For Cursor Project Intake / NL intent verification on a downstream install: `bash scripts/cursor-intake-fixture.sh` then open the printed path in Cursor (do not install into this repo).
+
+## Cursor dogfood (generator repo)
+
+This repository commits maintainer Cursor wiring at the repo root using `docs/` paths (not `Docs/`):
+
+| Path | Role |
+|------|------|
+| `.cursor/rules/agtoosa-maintainer-core.mdc` | Always-on Project Intake + NL intent map for maintainer work |
+| `.cursor/commands/agtoosa-spec.md` | Slash command → `docs/AgToosa_Spec.md` |
+| `.cursor/commands/agtoosa-build.md` | Slash command → `docs/AgToosa_Build.md` |
+| `.cursorrules` | Short maintainer entry + intake pointer |
+
+Downstream installs receive the full pack from `template/.cursor/` via `agtoosa.sh`. Use `bash scripts/cursor-intake-fixture.sh` to create a disposable test project — never target the generator source tree.
 
 ## Expected Output
 

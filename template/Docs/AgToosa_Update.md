@@ -283,9 +283,37 @@ End with:
 
 Prefer `--update` unless you explicitly accept Option C trade-offs. Clean reinstall is not the default upgrade path.
 
+## Cleanup (housekeeping)
+
+After upgrades, projects may accumulate **unnecessary AgToosa-owned files** that `--update` does not remove:
+
+| Category | Examples |
+|----------|----------|
+| Merge backups | `*.bak.YYYYMMDD-HHMM` from smart merges |
+| Removed workflow docs | `Docs/AgToosa_*.md` no longer shipped in the template |
+| Deselected platforms | `.windsurf/`, `.codex/`, etc. when `Docs/agtoosa-lock.json` `platforms[]` no longer includes that platform. VS Code generic installs (platform 6) use `.github/prompts/` without `copilot-instructions.md`; cleanup infers `vscode` when those prompts are present so active VS Code-only installs are not misclassified. |
+
+**`--cleanup`** is opt-in housekeeping — not destructive full regen. It never touches `Docs/Context/`, `Docs/archived/`, Master-Plan, or user project specialist files.
+
+The install/upgrade wizard may offer cleanup when candidates exist. You can also run it directly:
+
+```bash
+bash agtoosa.sh --cleanup <project>              # interactive plan + confirm
+bash agtoosa.sh --cleanup <project> --dry-run    # plan only
+bash agtoosa.sh --cleanup <project> --format json
+bash agtoosa.sh --cleanup <project> --yes        # non-interactive apply
+```
+
+JSON conforms to `Docs/schemas/cleanup-result-v1.json` (`summary` + `candidates[]`).
+
+PowerShell: `.\agtoosa.ps1 -Cleanup -UpdatePath <project>`
+
+**`--doctor`** reports stale files as `DR-stale-files` and recommends `--cleanup`.
+
 ```bash
 bash agtoosa.sh --update <project>                    # default safe upgrade
 bash agtoosa.sh --reinstall --clean <project> --yes   # optional destructive fresh state
+bash agtoosa.sh --cleanup <project>                     # optional housekeeping
 ```
 
 PowerShell parity:
@@ -293,6 +321,7 @@ PowerShell parity:
 ```powershell
 .\agtoosa.ps1 -Update -UpdatePath <project>
 .\agtoosa.ps1 -Reinstall -Clean -UpdatePath <project> -Yes
+.\agtoosa.ps1 -Cleanup -UpdatePath <project>
 ```
 
 ## Output

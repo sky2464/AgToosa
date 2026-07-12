@@ -9,6 +9,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.24] — 2026-07-12
+
+Patch release: DEV-112 — Smart Apply UX Polish + `--cleanup`.
+
+### Added
+
+- **DEV-112 — Smart Apply UX Polish.** Quiet upgrade output; platform legend with checkmarks; context-aware next steps; SAU-011–SAU-017.
+- **DEV-112 — `--cleanup` housekeeping.** Opt-in removal of merge backups, orphan docs, and deselected platform files; CLN-001–CLN-011.
+
 ## [5.3.23] — 2026-07-12
 
 Patch release: DEV-111 — Smart One-Command Install UX.

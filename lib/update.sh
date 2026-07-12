@@ -153,6 +153,12 @@ run_update() {
   local detected_names=()
   local f src dst
 
+  if declare -F detect_existing_agtoosa >/dev/null 2>&1 && detect_existing_agtoosa "$PROJECT_PATH"; then
+    APPLY_QUIET=true
+    SMART_UPGRADE_MODE=true
+    OLD_INSTALLED_VERSION="${old_ver:-}"
+  fi
+
   COPIED=${COPIED:-0}
   SKIPPED=${SKIPPED:-0}
   BAK_FILES=("${BAK_FILES[@]+"${BAK_FILES[@]}"}")
@@ -331,6 +337,10 @@ print_update_summary() {
     for bak in "${BAK_FILES[@]}"; do
       echo -e "    ${CYAN}${bak#"${PROJECT_PATH}/"}${NC}"
     done
+  fi
+
+  if declare -F offer_cleanup_after_apply >/dev/null 2>&1; then
+    offer_cleanup_after_apply "$PROJECT_PATH"
   fi
 
   echo ""

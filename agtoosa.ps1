@@ -106,6 +106,7 @@ param(
     [switch]$Doctor,
     [switch]$StatusLine,
     [switch]$Uninstall,
+    [switch]$Cleanup,
     [switch]$Reinstall,
     [switch]$Clean,
     [string]$UpdatePath = "",
@@ -129,7 +130,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 # ── Version ───────────────────────────────────────────────────
-$AGTOOSA_VERSION = "5.3.23"
+$AGTOOSA_VERSION = "5.3.24"
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $TEMPLATE_DIR = Join-Path $SCRIPT_DIR "template"
 $SHIP_DIR = Join-Path $SCRIPT_DIR "ship"
@@ -204,6 +205,7 @@ ${BOLD}Options:${NC}
   -Doctor               Diagnose an AgToosa install (bash dispatch)
   -StatusLine            One-line executive SYNC pulse (bash --status-line)
   -Uninstall            Remove AgToosa-owned files (bash dispatch; preserves user data)
+  -Cleanup              Remove merge backups and orphan AgToosa files (bash dispatch)
   -Reinstall -Clean     Optional destructive fresh reinstall (ADR-004 Option C; bash dispatch)
   -UpdatePath <path>    Target project path (required for maintain switches)
   -Path <dir>           Target project directory (non-interactive)
@@ -262,7 +264,7 @@ function Get-AgToosaBash {
 
 function Invoke-AgToosaMaintain {
     param(
-        [ValidateSet('verify', 'doctor', 'uninstall', 'update', 'reinstall-clean')]
+        [ValidateSet('verify', 'doctor', 'uninstall', 'update', 'reinstall-clean', 'cleanup')]
         [string]$Operation,
         [string]$ProjectPath,
         [switch]$Yes
@@ -352,6 +354,52 @@ function Get-PlatformDisplayNames([string[]]$platforms) {
     }
     if ($names.Count -eq 0) { return "none" }
     return ($names -join ", ")
+}
+
+$script:ApplyQuiet = $false
+
+function Test-ApplyShouldEcho { -not $script:ApplyQuiet }
+
+function Write-ApplyVerbose([string]$Message) {
+    if (Test-ApplyShouldEcho) { Write-Color $Message }
+}
+
+function Test-AllPlatformsInstalled([string[]]$platforms) {
+    foreach ($key in @("cursor", "windsurf", "claude", "gemini", "copilot", "opencode")) {
+        if ($platforms -notcontains $key) { return $false }
+    }
+    return $true
+}
+
+function Write-PlatformLegend([string[]]$platforms) {
+    $mark = {
+        param([string]$key)
+        if ($platforms -contains $key) { return " ✓" }
+        return ""
+    }
+    Write-Color "${BOLD}Found:${NC} $(Get-PlatformDisplayNames $platforms)"
+    Write-Color ""
+    Write-Color "  1) Cursor$(& $mark 'cursor')"
+    Write-Color "  2) Windsurf$(& $mark 'windsurf')"
+    Write-Color "  3) Claude Code$(& $mark 'claude')"
+    Write-Color "  4) Gemini$(& $mark 'gemini')"
+    Write-Color "  5) GitHub Copilot$(& $mark 'copilot')"
+    Write-Color "  6) VS Code (generic)"
+    Write-Color "  7) Codex / OpenCode / Other$(& $mark 'opencode')"
+    Write-Color "  8) All of the above"
+    Write-Color ""
+}
+
+function Test-ProjectContextInitialized([string]$projectPath) {
+    $ctxDir = Join-Path $projectPath "Docs\Context"
+    if (-not (Test-Path $ctxDir)) { return $false }
+    $found = $false
+    foreach ($file in Get-ChildItem -Path $ctxDir -Filter "*.md" -File -ErrorAction SilentlyContinue) {
+        $found = $true
+        $content = Get-Content $file.FullName -Raw -ErrorAction SilentlyContinue
+        if ($content -match '\[name\]|\[url\]|\[e\.g\.') { return $false }
+    }
+    return $found
 }
 
 function Get-InstalledVersion([string]$projectPath) {
@@ -518,7 +566,7 @@ function Copy-StagedDirectory([string]$relativePath, [string]$projectPath, [stri
         $count++
     }
     if ($count -gt 0) {
-        Write-Color "  ${GREEN}✅${NC} $label ($count files)"
+        Write-ApplyVerbose "  ${GREEN}✅${NC} $label ($count files)"
     }
     return $count
 }
@@ -614,7 +662,7 @@ function Merge-PlatformFile([string]$src, [string]$dst, [string]$label) {
 function Copy-StageFiles([string[]]$platforms) {
     $docsCount = Copy-TemplateDirectory "Docs"
     if ($docsCount -gt 0) {
-        Write-Color "  ${GREEN}✅${NC} Docs\ ${CYAN}($docsCount workflow and context files)${NC}"
+        Write-ApplyVerbose "  ${GREEN}✅${NC} Docs\ ${CYAN}($docsCount workflow and context files)${NC}"
     }
 
     foreach ($p in $platforms) {
@@ -623,17 +671,17 @@ function Copy-StageFiles([string[]]$platforms) {
                 Copy-TemplateFile ".cursorrules" | Out-Null
                 $ruleCount = Copy-TemplateDirectory ".cursor/rules"
                 $commandCount = Copy-TemplateDirectory ".cursor/commands"
-                Write-Color "  ${GREEN}✅${NC} .cursorrules ${CYAN}(Cursor)${NC}"
-                if ($ruleCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .cursor/rules/ ${CYAN}($ruleCount rules)${NC}" }
-                if ($commandCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .cursor/commands/ ${CYAN}($commandCount commands)${NC}" }
+                Write-ApplyVerbose "  ${GREEN}✅${NC} .cursorrules ${CYAN}(Cursor)${NC}"
+                if ($ruleCount -gt 0) { Write-ApplyVerbose "  ${GREEN}✅${NC} .cursor/rules/ ${CYAN}($ruleCount rules)${NC}" }
+                if ($commandCount -gt 0) { Write-ApplyVerbose "  ${GREEN}✅${NC} .cursor/commands/ ${CYAN}($commandCount commands)${NC}" }
             }
             "windsurf" {
                 Copy-TemplateFile ".windsurfrules" | Out-Null
                 $ruleCount = Copy-TemplateDirectory ".windsurf/rules"
                 $workflowCount = Copy-TemplateDirectory ".windsurf/workflows"
-                Write-Color "  ${GREEN}✅${NC} .windsurfrules ${CYAN}(Windsurf)${NC}"
-                if ($ruleCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .windsurf/rules/ ${CYAN}($ruleCount rules)${NC}" }
-                if ($workflowCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .windsurf/workflows/ ${CYAN}($workflowCount workflows)${NC}" }
+                Write-ApplyVerbose "  ${GREEN}✅${NC} .windsurfrules ${CYAN}(Windsurf)${NC}"
+                if ($ruleCount -gt 0) { Write-ApplyVerbose "  ${GREEN}✅${NC} .windsurf/rules/ ${CYAN}($ruleCount rules)${NC}" }
+                if ($workflowCount -gt 0) { Write-ApplyVerbose "  ${GREEN}✅${NC} .windsurf/workflows/ ${CYAN}($workflowCount workflows)${NC}" }
             }
             "claude" {
                 Copy-TemplateFile "CLAUDE.md" | Out-Null
@@ -641,34 +689,34 @@ function Copy-StageFiles([string[]]$platforms) {
                 $skillCount = Copy-TemplateDirectory ".claude/skills"
                 $hookCount = Copy-TemplateDirectory ".claude/hooks"
                 Copy-TemplateFile ".claude/settings.json" | Out-Null
-                Write-Color "  ${GREEN}✅${NC} CLAUDE.md + Docs\AgToosa_Claude.md ${CYAN}(Claude Code)${NC}"
-                if ($commandCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .claude/commands/ ${CYAN}($commandCount commands)${NC}" }
-                if ($skillCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .claude/skills/ ${CYAN}($skillCount skills)${NC}" }
-                if ($hookCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .claude/hooks/ ${CYAN}($hookCount hooks)${NC}" }
+                Write-ApplyVerbose "  ${GREEN}✅${NC} CLAUDE.md + Docs\AgToosa_Claude.md ${CYAN}(Claude Code)${NC}"
+                if ($commandCount -gt 0) { Write-ApplyVerbose "  ${GREEN}✅${NC} .claude/commands/ ${CYAN}($commandCount commands)${NC}" }
+                if ($skillCount -gt 0) { Write-ApplyVerbose "  ${GREEN}✅${NC} .claude/skills/ ${CYAN}($skillCount skills)${NC}" }
+                if ($hookCount -gt 0) { Write-ApplyVerbose "  ${GREEN}✅${NC} .claude/hooks/ ${CYAN}($hookCount hooks)${NC}" }
             }
             "gemini" {
                 Copy-TemplateFile "AGENTS.md" | Out-Null
                 $commandCount = Copy-TemplateDirectory ".gemini/commands"
-                Write-Color "  ${GREEN}✅${NC} AGENTS.md + Docs\AgToosa_Gemini.md ${CYAN}(Gemini CLI / Jules)${NC}"
-                if ($commandCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .gemini/commands/ ${CYAN}($commandCount commands)${NC}" }
+                Write-ApplyVerbose "  ${GREEN}✅${NC} AGENTS.md + Docs\AgToosa_Gemini.md ${CYAN}(Gemini CLI / Jules)${NC}"
+                if ($commandCount -gt 0) { Write-ApplyVerbose "  ${GREEN}✅${NC} .gemini/commands/ ${CYAN}($commandCount commands)${NC}" }
             }
             "copilot" {
                 Copy-TemplateFile ".github/copilot-instructions.md" | Out-Null
                 $instructionCount = Copy-TemplateDirectory ".github/instructions"
                 $promptCount = Copy-TemplateDirectory ".github/prompts"
                 $agentCount = Copy-TemplateDirectory ".github/agents"
-                Write-Color "  ${GREEN}✅${NC} .github\copilot-instructions.md ${CYAN}(GitHub Copilot)${NC}"
-                if ($instructionCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .github/instructions/ ${CYAN}($instructionCount instructions)${NC}" }
-                if ($promptCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .github/prompts/ ${CYAN}($promptCount prompts)${NC}" }
-                if ($agentCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .github/agents/ ${CYAN}($agentCount agents)${NC}" }
+                Write-ApplyVerbose "  ${GREEN}✅${NC} .github\copilot-instructions.md ${CYAN}(GitHub Copilot)${NC}"
+                if ($instructionCount -gt 0) { Write-ApplyVerbose "  ${GREEN}✅${NC} .github/instructions/ ${CYAN}($instructionCount instructions)${NC}" }
+                if ($promptCount -gt 0) { Write-ApplyVerbose "  ${GREEN}✅${NC} .github/prompts/ ${CYAN}($promptCount prompts)${NC}" }
+                if ($agentCount -gt 0) { Write-ApplyVerbose "  ${GREEN}✅${NC} .github/agents/ ${CYAN}($agentCount agents)${NC}" }
             }
             "opencode" {
                 if (Copy-TemplateFile "OPENCODE.md") {
                     $skillCount = Copy-TemplateDirectory ".codex/skills"
                     $promptCount = Copy-TemplateDirectory ".codex/prompts"
-                    Write-Color "  ${GREEN}✅${NC} OPENCODE.md ${CYAN}(OpenCode)${NC}"
-                    if ($skillCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .codex/skills/ ${CYAN}($skillCount skills)${NC}" }
-                    if ($promptCount -gt 0) { Write-Color "  ${GREEN}✅${NC} .codex/prompts/ ${CYAN}($promptCount prompts)${NC}" }
+                    Write-ApplyVerbose "  ${GREEN}✅${NC} OPENCODE.md ${CYAN}(OpenCode)${NC}"
+                    if ($skillCount -gt 0) { Write-ApplyVerbose "  ${GREEN}✅${NC} .codex/skills/ ${CYAN}($skillCount skills)${NC}" }
+                    if ($promptCount -gt 0) { Write-ApplyVerbose "  ${GREEN}✅${NC} .codex/prompts/ ${CYAN}($promptCount prompts)${NC}" }
                 }
             }
         }
@@ -1310,6 +1358,10 @@ if ($Uninstall) {
     Invoke-AgToosaMaintain -Operation uninstall -ProjectPath $UpdatePath -Yes:$Yes
 }
 
+if ($Cleanup) {
+    Invoke-AgToosaMaintain -Operation cleanup -ProjectPath $UpdatePath -Yes:$Yes
+}
+
 if ($Reinstall -or $Clean) {
     if (-not $Reinstall -or -not $Clean) {
         Write-Color "${RED}❌ Error: -Reinstall and -Clean must be used together (ADR-004 Option C).${NC}"
@@ -1340,13 +1392,6 @@ Write-Color ""
 Write-Color "${CYAN}AgToosa is a spec-driven agentic AI framework that${NC}"
 Write-Color "${CYAN}understands your codebase and helps you develop with${NC}"
 Write-Color "${CYAN}a clean folder structure and structured workflow.${NC}"
-Write-Color ""
-Write-Color "${YELLOW}How it works:${NC}"
-Write-Color "  1. We detect which AI assistant(s) you use"
-Write-Color "  2. We generate ONLY the necessary config files"
-Write-Color "  3. We copy them directly to your project"
-Write-Color "  4. Run /agtoosa-init in your AI assistant (one-time)"
-Write-Color "  5. Then use: /agtoosa-spec → /agtoosa-build → /agtoosa-review → /agtoosa-ship"
 Write-Color ""
 Write-Color "${CYAN}Re-run on an existing project to upgrade — no -Force needed.${NC}"
 Write-Color ""
@@ -1382,8 +1427,17 @@ Write-Color ""
 $smartUpgradeMode = Test-ExistingAgToosa $projectPath
 $oldInstalledVersion = "unknown"
 if ($smartUpgradeMode) {
+    $script:ApplyQuiet = $true
     $oldInstalledVersion = Get-InstalledVersion $projectPath
     Write-Color "${PURPLE}${BOLD}Upgrading AgToosa v${oldInstalledVersion} → v${AGTOOSA_VERSION}${NC}"
+    Write-Color ""
+} else {
+    Write-Color "${YELLOW}How it works:${NC}"
+    Write-Color "  1. We detect which AI assistant(s) you use"
+    Write-Color "  2. We generate ONLY the necessary config files"
+    Write-Color "  3. We copy them directly to your project"
+    Write-Color "  4. Run /agtoosa-init in your AI assistant (one-time)"
+    Write-Color "  5. Then use: /agtoosa-spec → /agtoosa-build → /agtoosa-review → /agtoosa-ship"
     Write-Color ""
 }
 
@@ -1394,9 +1448,9 @@ if ($smartUpgradeMode -and [string]::IsNullOrWhiteSpace($cliPlatforms)) {
     foreach ($p in (Get-InstalledPlatforms $projectPath)) {
         if (-not $selectedPlatforms.Contains($p)) { [void]$selectedPlatforms.Add($p) }
     }
-    Write-Color "${BOLD}Found:${NC} $(Get-PlatformDisplayNames $selectedPlatforms.ToArray())"
-    if (-not $Yes) {
-        Write-Color "${CYAN}Add platforms? (Enter to keep, or numbers e.g. 3 5)${NC}"
+    Write-PlatformLegend $selectedPlatforms.ToArray()
+    if (-not $Yes -and -not (Test-AllPlatformsInstalled $selectedPlatforms.ToArray())) {
+        Write-Color "${CYAN}Add platforms? (Enter to keep, or enter numbers e.g. 2 6)${NC}"
         $addSelection = Read-Host "Add platforms"
         if (-not [string]::IsNullOrWhiteSpace($addSelection)) {
             if ($addSelection -match "8") {
@@ -1481,7 +1535,11 @@ try {
     Copy-StageFiles $selectedPlatforms.ToArray()
 
     Write-Color ""
-    Write-Color "${GREEN}${BOLD}Generated files staged.${NC}"
+    if ($smartUpgradeMode) {
+        Write-Color "${GREEN}${BOLD}Prepared files for upgrade.${NC}"
+    } else {
+        Write-Color "${GREEN}${BOLD}Generated files staged.${NC}"
+    }
     Write-Color "${YELLOW}────────────────────────────────────────────────────${NC}"
     Write-Color ""
     if ($smartUpgradeMode) {
@@ -1523,8 +1581,15 @@ try {
         Write-Color ""
         Write-Color "${YELLOW}Next steps:${NC}"
         Write-Color "  1. Open your AI assistant in your project"
-        Write-Color "  2. Run /agtoosa-init (one-time setup)"
-        Write-Color "  3. Run /agtoosa-spec to start your first feature"
+        if ($smartUpgradeMode -and (Test-ProjectContextInitialized $projectPath)) {
+            Write-Color "  2. Continue with /agtoosa-spec → /agtoosa-build → /agtoosa-review → /agtoosa-ship"
+        } elseif ($smartUpgradeMode) {
+            Write-Color "  2. Run /agtoosa-init to finish Context setup"
+            Write-Color "  3. Then use /agtoosa-spec → /agtoosa-build → /agtoosa-review → /agtoosa-ship"
+        } else {
+            Write-Color "  2. Run /agtoosa-init (one-time setup)"
+            Write-Color "  3. Run /agtoosa-spec to start your first feature"
+        }
     } else {
         Write-Color ""
         Write-Color "${YELLOW}Files are staged in: $SHIP_DIR${NC}"

@@ -8,12 +8,14 @@
 stage_files() {
   local file
 
+  _stage_echo() { apply_verbose_echo "$@"; }
+
   # Core workflow docs — always included
   for file in "${DOCS_FILES[@]}"; do
     if [[ -f "${TEMPLATE_DIR}/${file}" ]]; then
       mkdir -p "$(dirname "${SHIP_DIR}/${file}")"
       cp "${TEMPLATE_DIR}/${file}" "${SHIP_DIR}/${file}"
-      echo -e "  ${GREEN}✅${NC} ${file}"
+      _stage_echo "  ${GREEN}✅${NC} ${file}"
       GENERATED=$((GENERATED + 1))
     fi
   done
@@ -21,34 +23,34 @@ stage_files() {
   # Platform entry-point files — inject version marker
   if [[ "$USE_CURSOR" == true ]]; then
     inject_version "${TEMPLATE_DIR}/.cursorrules" "${SHIP_DIR}/.cursorrules"
-    echo -e "  ${GREEN}✅${NC} .cursorrules ${CYAN}(Cursor)${NC}"
+    _stage_echo "  ${GREEN}✅${NC} .cursorrules ${CYAN}(Cursor)${NC}"
     GENERATED=$((GENERATED + 1))
   fi
 
   if [[ "$USE_WINDSURF" == true ]]; then
     inject_version "${TEMPLATE_DIR}/.windsurfrules" "${SHIP_DIR}/.windsurfrules"
-    echo -e "  ${GREEN}✅${NC} .windsurfrules ${CYAN}(Windsurf)${NC}"
+    _stage_echo "  ${GREEN}✅${NC} .windsurfrules ${CYAN}(Windsurf)${NC}"
     GENERATED=$((GENERATED + 1))
   fi
 
   if [[ "$USE_CLAUDE" == true ]]; then
     inject_version "${TEMPLATE_DIR}/CLAUDE.md" "${SHIP_DIR}/CLAUDE.md"
     cp "${TEMPLATE_DIR}/Docs/AgToosa_Claude.md" "${SHIP_DIR}/Docs/AgToosa_Claude.md"
-    echo -e "  ${GREEN}✅${NC} CLAUDE.md + Docs/AgToosa_Claude.md ${CYAN}(Claude Code)${NC}"
+    _stage_echo "  ${GREEN}✅${NC} CLAUDE.md + Docs/AgToosa_Claude.md ${CYAN}(Claude Code)${NC}"
     GENERATED=$((GENERATED + 2))
   fi
 
   if [[ "$USE_GEMINI" == true ]]; then
     inject_version "${TEMPLATE_DIR}/AGENTS.md" "${SHIP_DIR}/AGENTS.md"
     cp "${TEMPLATE_DIR}/Docs/AgToosa_Gemini.md" "${SHIP_DIR}/Docs/AgToosa_Gemini.md"
-    echo -e "  ${GREEN}✅${NC} AGENTS.md + Docs/AgToosa_Gemini.md ${CYAN}(Gemini CLI / Jules)${NC}"
+    _stage_echo "  ${GREEN}✅${NC} AGENTS.md + Docs/AgToosa_Gemini.md ${CYAN}(Gemini CLI / Jules)${NC}"
     GENERATED=$((GENERATED + 2))
   fi
 
   if [[ "$USE_COPILOT" == true ]]; then
     mkdir -p "${SHIP_DIR}/.github" "${SHIP_DIR}/.github/instructions"
     inject_version "${TEMPLATE_DIR}/.github/copilot-instructions.md" "${SHIP_DIR}/.github/copilot-instructions.md"
-    echo -e "  ${GREEN}✅${NC} .github/copilot-instructions.md ${CYAN}(GitHub Copilot)${NC}"
+    _stage_echo "  ${GREEN}✅${NC} .github/copilot-instructions.md ${CYAN}(GitHub Copilot)${NC}"
     GENERATED=$((GENERATED + 1))
 
     local cinstr cinstr_count=0
@@ -59,7 +61,7 @@ stage_files() {
         GENERATED=$((GENERATED + 1))
       fi
     done
-    [[ $cinstr_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .github/instructions/ ${CYAN}(${cinstr_count} scoped instruction files)${NC}"
+    [[ $cinstr_count -gt 0 ]] && _stage_echo "  ${GREEN}✅${NC} .github/instructions/ ${CYAN}(${cinstr_count} scoped instruction files)${NC}"
   fi
 
   if [[ "$USE_OPENCODE" == true ]]; then
@@ -69,7 +71,7 @@ stage_files() {
       opencode_count=$((opencode_count + 1))
     fi
     if [[ $opencode_count -gt 0 ]]; then
-      echo -e "  ${GREEN}\u2705${NC} OPENCODE.md ${CYAN}(Codex / OpenCode / Other)${NC}"
+      _stage_echo "  ${GREEN}✅${NC} OPENCODE.md ${CYAN}(Codex / OpenCode / Other)${NC}"
       GENERATED=$((GENERATED + opencode_count))
     fi
 
@@ -82,7 +84,7 @@ stage_files() {
         GENERATED=$((GENERATED + 1))
       fi
     done
-    [[ $cskill_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .codex/skills/ ${CYAN}(${cskill_count} Codex skills — discoverable AgToosa workflows)${NC}"
+    [[ $cskill_count -gt 0 ]] && _stage_echo "  ${GREEN}✅${NC} .codex/skills/ ${CYAN}(${cskill_count} Codex skills — discoverable AgToosa workflows)${NC}"
 
     mkdir -p "${SHIP_DIR}/.codex/prompts"
     local cprompt cprompt_count=0
@@ -94,7 +96,7 @@ stage_files() {
         GENERATED=$((GENERATED + 1))
       fi
     done
-    [[ $cprompt_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .codex/prompts/ ${CYAN}(${cprompt_count} Codex slash prompts — native /agtoosa-* in Codex)${NC}"
+    [[ $cprompt_count -gt 0 ]] && _stage_echo "  ${GREEN}✅${NC} .codex/prompts/ ${CYAN}(${cprompt_count} Codex slash prompts — native /agtoosa-* in Codex)${NC}"
   fi
 
   # Context/ stubs — staged for skip-if-exists copy
@@ -107,7 +109,7 @@ stage_files() {
     fi
   done
   if [[ $context_staged -gt 0 ]]; then
-    echo -e "  ${GREEN}✅${NC} Docs/Context/ ${CYAN}(${context_staged} config stubs — fill in during /agtoosa-init)${NC}"
+    _stage_echo "  ${GREEN}✅${NC} Docs/Context/ ${CYAN}(${context_staged} config stubs — fill in during /agtoosa-init)${NC}"
   fi
 
   # .agtoosa/ config index + examples (DEV-087)
@@ -121,7 +123,7 @@ stage_files() {
     fi
   done
   if [[ $agtoosa_staged -gt 0 ]]; then
-    echo -e "  ${GREEN}✅${NC} .agtoosa/ ${CYAN}(${agtoosa_staged} config index + evidence example)${NC}"
+    _stage_echo "  ${GREEN}✅${NC} .agtoosa/ ${CYAN}(${agtoosa_staged} config index + evidence example)${NC}"
   fi
 
   # Claude Code native commands, hooks, and skills — staged when Claude selected
@@ -135,11 +137,11 @@ stage_files() {
         GENERATED=$((GENERATED + 1))
       fi
     done
-    [[ $cmd_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .claude/commands/ ${CYAN}(${cmd_count} slash commands — native /agtoosa-* in Claude Code)${NC}"
+    [[ $cmd_count -gt 0 ]] && _stage_echo "  ${GREEN}✅${NC} .claude/commands/ ${CYAN}(${cmd_count} slash commands — native /agtoosa-* in Claude Code)${NC}"
 
     if [[ -f "${TEMPLATE_DIR}/.claude/settings.json" ]]; then
       cp "${TEMPLATE_DIR}/.claude/settings.json" "${SHIP_DIR}/.claude/settings.json"
-      echo -e "  ${GREEN}✅${NC} .claude/settings.json ${CYAN}(hooks: Stop, PreToolUse, PostToolUse)${NC}"
+      _stage_echo "  ${GREEN}✅${NC} .claude/settings.json ${CYAN}(hooks: Stop, PreToolUse, PostToolUse)${NC}"
       GENERATED=$((GENERATED + 1))
     fi
 
@@ -150,7 +152,7 @@ stage_files() {
         GENERATED=$((GENERATED + 1))
       fi
     done
-    [[ $skill_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .claude/skills/ ${CYAN}(${skill_count} project skill — agtoosa-review)${NC}"
+    [[ $skill_count -gt 0 ]] && _stage_echo "  ${GREEN}✅${NC} .claude/skills/ ${CYAN}(${skill_count} project skill — agtoosa-review)${NC}"
 
     for hook in "${CLAUDE_HOOK_FILES[@]}"; do
       if [[ -f "${TEMPLATE_DIR}/${hook}" ]]; then
@@ -159,7 +161,7 @@ stage_files() {
         GENERATED=$((GENERATED + 1))
       fi
     done
-    [[ $hook_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .claude/hooks/ ${CYAN}(${hook_count} hook script)${NC}"
+    [[ $hook_count -gt 0 ]] && _stage_echo "  ${GREEN}✅${NC} .claude/hooks/ ${CYAN}(${hook_count} hook script)${NC}"
   fi
 
   # Cursor rules and commands — staged when Cursor selected
@@ -173,7 +175,7 @@ stage_files() {
         GENERATED=$((GENERATED + 1))
       fi
     done
-    [[ $rule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .cursor/rules/ ${CYAN}(${rule_count} MDX rules — native Cursor rule injection)${NC}"
+    [[ $rule_count -gt 0 ]] && _stage_echo "  ${GREEN}✅${NC} .cursor/rules/ ${CYAN}(${rule_count} MDX rules — native Cursor rule injection)${NC}"
 
     for ccmd in "${CURSOR_COMMAND_FILES[@]}"; do
       if [[ -f "${TEMPLATE_DIR}/${ccmd}" ]]; then
@@ -182,7 +184,7 @@ stage_files() {
         GENERATED=$((GENERATED + 1))
       fi
     done
-    [[ $ccmd_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .cursor/commands/ ${CYAN}(${ccmd_count} slash commands — native Cursor command picker)${NC}"
+    [[ $ccmd_count -gt 0 ]] && _stage_echo "  ${GREEN}✅${NC} .cursor/commands/ ${CYAN}(${ccmd_count} slash commands — native Cursor command picker)${NC}"
   fi
 
   # Gemini CLI native commands — staged when Gemini selected
@@ -196,7 +198,7 @@ stage_files() {
         GENERATED=$((GENERATED + 1))
       fi
     done
-    [[ $gcmd_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .gemini/commands/ ${CYAN}(${gcmd_count} TOML commands — native /agtoosa-* in Gemini CLI)${NC}"
+    [[ $gcmd_count -gt 0 ]] && _stage_echo "  ${GREEN}✅${NC} .gemini/commands/ ${CYAN}(${gcmd_count} TOML commands — native /agtoosa-* in Gemini CLI)${NC}"
   fi
 
   # GitHub Copilot reusable prompts + custom agent — staged when Copilot selected
@@ -210,22 +212,23 @@ stage_files() {
         GENERATED=$((GENERATED + 1))
       fi
     done
-    [[ $pprompt_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .github/prompts/ ${CYAN}(${pprompt_count} reusable prompts — native Copilot prompt files)${NC}"
-    local pagent
+    [[ $pprompt_count -gt 0 ]] && _stage_echo "  ${GREEN}✅${NC} .github/prompts/ ${CYAN}(${pprompt_count} reusable prompts — native Copilot prompt files)${NC}"
+    local pagent pagent_count=0
     for pagent in "${COPILOT_AGENT_FILES[@]}"; do
       if [[ -f "${TEMPLATE_DIR}/${pagent}" ]]; then
         cp "${TEMPLATE_DIR}/${pagent}" "${SHIP_DIR}/${pagent}"
+        pagent_count=$((pagent_count + 1))
         GENERATED=$((GENERATED + 1))
       fi
     done
-    echo -e "  ${GREEN}✅${NC} .github/agents/agtoosa.agent.md ${CYAN}(custom Copilot agent)${NC}"
+    [[ $pagent_count -gt 0 ]] && _stage_echo "  ${GREEN}✅${NC} .github/agents/ ${CYAN}(${pagent_count} custom agents)${NC}"
   fi
 
   # VS Code generic — staged when VS Code selected (skipped if Copilot already covers it)
   if [[ "$USE_VSCODE" == true && "$USE_COPILOT" != true ]]; then
     mkdir -p "${SHIP_DIR}/.github/prompts" "${SHIP_DIR}/.github/agents" "${SHIP_DIR}/.github/instructions"
     inject_version "${TEMPLATE_DIR}/.github/copilot-instructions.md" "${SHIP_DIR}/.github/copilot-instructions.md"
-    echo -e "  ${GREEN}✅${NC} .github/copilot-instructions.md ${CYAN}(VS Code)${NC}"
+    _stage_echo "  ${GREEN}✅${NC} .github/copilot-instructions.md ${CYAN}(VS Code)${NC}"
     GENERATED=$((GENERATED + 1))
 
     local vinstr vinstr_count=0
@@ -236,7 +239,7 @@ stage_files() {
         GENERATED=$((GENERATED + 1))
       fi
     done
-    [[ $vinstr_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .github/instructions/ ${CYAN}(${vinstr_count} scoped instruction files)${NC}"
+    [[ $vinstr_count -gt 0 ]] && _stage_echo "  ${GREEN}✅${NC} .github/instructions/ ${CYAN}(${vinstr_count} scoped instruction files)${NC}"
 
     local vprompt vprompt_count=0
     for vprompt in "${COPILOT_PROMPT_FILES[@]}"; do
@@ -246,15 +249,16 @@ stage_files() {
         GENERATED=$((GENERATED + 1))
       fi
     done
-    [[ $vprompt_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .github/prompts/ ${CYAN}(${vprompt_count} slash commands — /agtoosa-* in VS Code Copilot)${NC}"
-    local vagent
+    [[ $vprompt_count -gt 0 ]] && _stage_echo "  ${GREEN}✅${NC} .github/prompts/ ${CYAN}(${vprompt_count} slash commands — /agtoosa-* in VS Code Copilot)${NC}"
+    local vagent vagent_count=0
     for vagent in "${COPILOT_AGENT_FILES[@]}"; do
       if [[ -f "${TEMPLATE_DIR}/${vagent}" ]]; then
         cp "${TEMPLATE_DIR}/${vagent}" "${SHIP_DIR}/${vagent}"
+        vagent_count=$((vagent_count + 1))
         GENERATED=$((GENERATED + 1))
       fi
     done
-    echo -e "  ${GREEN}✅${NC} .github/agents/agtoosa.agent.md ${CYAN}(custom Copilot agent)${NC}"
+    [[ $vagent_count -gt 0 ]] && _stage_echo "  ${GREEN}✅${NC} .github/agents/ ${CYAN}(${vagent_count} custom agents)${NC}"
   fi
 
   # Windsurf rules and workflows — staged when Windsurf selected
@@ -268,7 +272,7 @@ stage_files() {
         GENERATED=$((GENERATED + 1))
       fi
     done
-    [[ $wrule_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .windsurf/rules/ ${CYAN}(${wrule_count} rules — native Windsurf rule injection)${NC}"
+    [[ $wrule_count -gt 0 ]] && _stage_echo "  ${GREEN}✅${NC} .windsurf/rules/ ${CYAN}(${wrule_count} rules — native Windsurf rule injection)${NC}"
 
     for wflow in "${WINDSURF_WORKFLOW_FILES[@]}"; do
       if [[ -f "${TEMPLATE_DIR}/${wflow}" ]]; then
@@ -277,6 +281,6 @@ stage_files() {
         GENERATED=$((GENERATED + 1))
       fi
     done
-    [[ $wflow_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} .windsurf/workflows/ ${CYAN}(${wflow_count} workflows — native Windsurf command picker)${NC}"
+    [[ $wflow_count -gt 0 ]] && _stage_echo "  ${GREEN}✅${NC} .windsurf/workflows/ ${CYAN}(${wflow_count} workflows — native Windsurf command picker)${NC}"
   fi
 }

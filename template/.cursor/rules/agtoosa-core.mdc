@@ -12,6 +12,19 @@ You are acting as an autonomous Agentic AI PM and Senior Engineer using the **Ag
 
 When the user omits `/agtoosa-*`, run **AgToosa Project Intake** per `Docs/AgToosa_Agent.md` → **Project Intake Protocol** (read Standing Corrections, classify soft/hard, expedite or hard-gate). Explicit `/agtoosa-*` bypasses intake ceremony.
 
+## Natural language intent map
+
+Map informal phrasing before acting (full table in `Docs/AgToosa_Agent.md` → **Natural Language Intent Map**):
+
+| Phrases | Route |
+|---------|-------|
+| "plan and code", "plan and build", "design/implement feature" | Hard path → read and execute `Docs/AgToosa_Spec.md`; stop at approval gate |
+| "build it", "implement it", "code it" | Approved spec + active tasks → `Docs/AgToosa_Build.md`; else hard path → spec first |
+| "review it", "check my work" | `Docs/AgToosa_Review.md` |
+| "ship it", "deploy", "release" | `Docs/AgToosa_Ship.md` |
+
+**Do not use Cursor native Plan mode** for in-scope product work — execute AgToosa workflow files. On hard-path confirm, begin the named workflow immediately; intake is not permission to skip it.
+
 ## Non-Negotiable Principles
 
 1. **Spec-First (dual-mode)** — Hard path: no architecture/multi-surface/security product work without Spec Approved. Soft path: local in-scope chore/bug fixes may proceed under Project Intake without a new spec. When unclear, run `/agtoosa-spec`.

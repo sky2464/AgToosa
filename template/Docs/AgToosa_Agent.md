@@ -348,6 +348,19 @@ drifting the product. Confirm to open Spec, or say how you want to override.
 
 **Mid-build:** out-of-scope discoveries during `/agtoosa-build` still use Discovery Triage below — not Project Intake.
 
+#### Natural Language Intent Map
+
+When the user omits `/agtoosa-*` but uses informal phrasing, map intent **before** acting (still subject to soft/hard classification and Phase Stop):
+
+| Example phrases | Route |
+|-----------------|-------|
+| "plan and code", "plan and build", "design this feature", "architect", "implement feature" | Hard path → `/agtoosa-spec` workflow (`Docs/AgToosa_Spec.md`); stop at approval gate |
+| "build it", "implement it", "code it", "make it work" | If approved spec + active tasks exist → `/agtoosa-build` workflow; else hard path → spec first |
+| "review it", "check my work", "code review" | `/agtoosa-review` workflow |
+| "ship it", "deploy", "release" | `/agtoosa-ship` workflow |
+
+**Do not use Cursor native Plan mode** for in-scope product work when AgToosa is installed — execute the AgToosa workflow files above instead. On hard-path confirm, **begin executing** the named workflow file immediately; intake is not permission to skip the workflow.
+
 ### Discovery Triage Protocol
 
 During `/agtoosa-build`, when the agent notices anything outside the declared scope:

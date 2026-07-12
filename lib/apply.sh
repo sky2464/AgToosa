@@ -14,6 +14,20 @@ APPLY_PRESERVED=0
 SMART_UPGRADE_MODE=false
 OLD_INSTALLED_VERSION=""
 SMART_APPLY_USE_UPDATE=false
+APPLY_QUIET=false
+
+apply_should_echo() {
+  [[ "${APPLY_QUIET:-false}" != true ]]
+}
+
+apply_verbose_echo() {
+  apply_should_echo || return 0
+  echo -e "$@"
+}
+
+_plural_word() {
+  [[ "$1" -eq 1 ]] && echo "$2" || echo "${2}s"
+}
 
 apply_reset_summary() {
   APPLY_WRITTEN=0
@@ -61,6 +75,7 @@ context_is_placeholder_file() {
 # Human-readable platform list from USE_* globals.
 platform_flags_to_names() {
   local -a names=()
+  local out="" n
   [[ "${USE_CURSOR:-false}" == true ]] && names+=("Cursor")
   [[ "${USE_WINDSURF:-false}" == true ]] && names+=("Windsurf")
   [[ "${USE_CLAUDE:-false}" == true ]] && names+=("Claude Code")
@@ -70,10 +85,70 @@ platform_flags_to_names() {
   [[ "${USE_OPENCODE:-false}" == true ]] && names+=("Codex/OpenCode")
   if ((${#names[@]} == 0)); then
     echo "none"
-  else
-    local IFS=', '
-    echo "${names[*]}"
+    return 0
   fi
+  for n in "${names[@]}"; do
+    [[ -n "$out" ]] && out+=", "
+    out+="$n"
+  done
+  echo "$out"
+}
+
+# True when every platform slot (1–7) is already selected.
+all_platforms_installed() {
+  [[ "${USE_CURSOR:-false}" == true ]] \
+    && [[ "${USE_WINDSURF:-false}" == true ]] \
+    && [[ "${USE_CLAUDE:-false}" == true ]] \
+    && [[ "${USE_GEMINI:-false}" == true ]] \
+    && [[ "${USE_COPILOT:-false}" == true ]] \
+    && [[ "${USE_VSCODE:-false}" == true ]] \
+    && [[ "${USE_OPENCODE:-false}" == true ]]
+}
+
+_platform_installed_mark() {
+  [[ "$1" == true ]] && echo " ✓" || echo ""
+}
+
+# Print numbered platform legend with checkmarks for installed platforms.
+print_platform_legend() {
+  echo -e "${BOLD}Found:${NC} $(platform_flags_to_names)"
+  echo ""
+  echo "  1) Cursor$(_platform_installed_mark "${USE_CURSOR:-false}")"
+  echo "  2) Windsurf$(_platform_installed_mark "${USE_WINDSURF:-false}")"
+  echo "  3) Claude Code$(_platform_installed_mark "${USE_CLAUDE:-false}")"
+  echo "  4) Gemini$(_platform_installed_mark "${USE_GEMINI:-false}")"
+  echo "  5) GitHub Copilot$(_platform_installed_mark "${USE_COPILOT:-false}")"
+  echo "  6) VS Code (generic)$(_platform_installed_mark "${USE_VSCODE:-false}")"
+  echo "  7) Codex / OpenCode / Other$(_platform_installed_mark "${USE_OPENCODE:-false}")"
+  echo "  8) All of the above"
+  echo ""
+}
+
+# True when Docs/Context/*.md exists and none are unfilled placeholders.
+project_context_initialized() {
+  local ctx_file found=false
+  local ctx_dir="${PROJECT_PATH}/Docs/Context"
+  [[ -d "$ctx_dir" ]] || return 1
+  for ctx_file in "${ctx_dir}"/*.md; do
+    [[ -f "$ctx_file" ]] || continue
+    found=true
+    if declare -F context_is_placeholder_file >/dev/null 2>&1; then
+      context_is_placeholder_file "$ctx_file" && return 1
+    elif grep -qE '\[name\]|\[url\]|\[e\.g\.' "$ctx_file" 2>/dev/null; then
+      return 1
+    fi
+  done
+  [[ "$found" == true ]]
+}
+
+# Project-level version for merge display (prefer installed pin over file body).
+merge_display_from_version() {
+  local dst="$1"
+  local v="${OLD_INSTALLED_VERSION:-}"
+  if [[ -z "$v" || "$v" == "unknown" ]]; then
+    v="$(extract_version "$dst")"
+  fi
+  echo "${v:-unknown}"
 }
 
 # Set USE_* from a space-separated selection string (digits 1-8).
@@ -118,7 +193,7 @@ emit_apply_summary_human() {
   echo ""
   echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
   [[ "${APPLY_WRITTEN:-0}" -gt 0 ]] \
-    && echo -e "  ${GREEN}Updated:${NC}    ${APPLY_WRITTEN} framework files"
+    && echo -e "  ${GREEN}Updated:${NC}    ${APPLY_WRITTEN} framework $(_plural_word "${APPLY_WRITTEN}" "file")"
   [[ "${APPLY_PRESERVED:-0}" -gt 0 ]] \
     && echo -e "  ${BLUE}Preserved:${NC}  ${APPLY_PRESERVED} project files (your plan, context, changelog)"
   [[ "${APPLY_UNCHANGED:-0}" -gt 0 ]] \
@@ -307,7 +382,7 @@ apply_copy_if_changed() {
     if [[ "$src_hash" == "$dst_hash" ]]; then
       APPLY_UNCHANGED=$((APPLY_UNCHANGED + 1))
       if [[ -n "$label" && -n "${GREEN:-}" ]]; then
-        echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(unchanged)${NC}"
+        apply_verbose_echo "  ${GREEN}✅${NC} ${label} ${CYAN}(unchanged)${NC}"
       fi
       return 0
     fi

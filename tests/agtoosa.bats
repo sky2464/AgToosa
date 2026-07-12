@@ -9,18 +9,19 @@ BOOTSTRAP_SCRIPT="$BATS_TEST_DIRNAME/../bootstrap.sh"
 setup() {
   # Create a fresh temp project dir for each test
   TEST_PROJECT="$(mktemp -d)"
+  AGTOOSA_SHIP_DIR="$(mktemp -d)"
+  export AGTOOSA_SHIP_DIR
 }
 teardown() {
   rm -rf "$TEST_PROJECT"
-  # Clean up any ship/ left by the generator (best-effort; parallel tests may race)
-  rm -rf "$BATS_TEST_DIRNAME/../ship" 2>/dev/null || true
+  rm -rf "${AGTOOSA_SHIP_DIR:-}" 2>/dev/null || true
 }
 # ── Flag tests ────────────────────────────────────────────────────────────────
 @test "--version prints version string" {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.23" ]]
+  [[ "$output" == "AgToosa v5.3.24" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1636,7 +1637,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.3.23" ]
+  [ "$ver" = "5.3.24" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1647,7 +1648,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.3.23"* ]]
+  [[ "$output" == *"5.3.24"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -3649,7 +3650,7 @@ PY
   grep -q "Claude Code Instructions" "$project/CLAUDE.md"
   ! grep -q "old claude block" "$project/CLAUDE.md"
   grep -q "AgToosa" "$project/.claude/commands/agtoosa-spec.md"
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.23" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.24" ]
 }
 
 @test "DEV-036 WP-002: Bash registry install normalizes top-level pack directory" {
@@ -9621,7 +9622,7 @@ EOF
   run pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1" -Update -UpdatePath "$project"
   [ "$status" -eq 0 ]
   [ -f "$project/Docs/.agtoosa-version" ]
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.23" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.24" ]
 }
 
 @test "DEV-105 PSP-005: maintain switches require -UpdatePath" {
@@ -10043,7 +10044,7 @@ PY
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.23"
+    AGTOOSA_VERSION="5.3.24"
     PROJECT_PATH="'"$proj"'"
     apply_reset_summary
     apply_begin_staging "'"$proj"'"
@@ -10102,7 +10103,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.23"
+    AGTOOSA_VERSION="5.3.24"
     PROJECT_PATH="'"$proj"'"
     USE_CURSOR=true; USE_CLAUDE=true
     USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10120,7 +10121,7 @@ d = json.load(open(sys.argv[1]))
 plats = set(d.get("platforms") or [])
 assert "cursor" in plats and "claude" in plats, plats
 assert "gemini" not in plats, "stale platform should be reconciled out"
-assert d.get("agtoosa_version") == "5.3.23"
+assert d.get("agtoosa_version") == "5.3.24"
 PY
   [ "$status" -eq 0 ]
 }
@@ -10135,7 +10136,7 @@ PY
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.23"
+    AGTOOSA_VERSION="5.3.24"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10192,7 +10193,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.23"
+    AGTOOSA_VERSION="5.3.24"
     PROJECT_PATH="'"$proj"'"
     # Inject observed SHA that differs from lock pin
     AGTOOSA_PACK_OBSERVED_SHA_tampered_pack="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
@@ -10227,7 +10228,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.23"
+    AGTOOSA_VERSION="5.3.24"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10251,7 +10252,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.23"
+    AGTOOSA_VERSION="5.3.24"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10279,7 +10280,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.23"
+    AGTOOSA_VERSION="5.3.24"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -12347,7 +12348,7 @@ PY
 
   PACK_QUEUE_DIR="$queue_dir"
   PROJECT_PATH="$project_dir"
-  AGTOOSA_VERSION="5.3.23"
+  AGTOOSA_VERSION="5.3.24"
   GREEN="" YELLOW="" NC=""
   source "$BATS_TEST_DIRNAME/../lib/install.sh"
   _merge_pack_queue
@@ -12376,7 +12377,7 @@ PY
 
   PACK_QUEUE_DIR="$queue_dir"
   PROJECT_PATH="$project_dir"
-  AGTOOSA_VERSION="5.3.23"
+  AGTOOSA_VERSION="5.3.24"
   GREEN="" YELLOW="" NC=""
   source "$BATS_TEST_DIRNAME/../lib/install.sh"
   _merge_pack_queue
@@ -12615,18 +12616,18 @@ PY
   [ "$status" -eq 0 ]
 }
 
-# -- Wave 3 ship regression v5.3.20 (SR-001–SR-003) + v5.3.23 current pins --------
+# -- Wave 3 ship regression v5.3.20 (SR-001–SR-003) + v5.3.24 current pins --------
 
-@test "DEV-096 SR-001: v5.3.23 release pins are aligned" {
+@test "DEV-096 SR-001: v5.3.24 release pins are aligned" {
   local root="$BATS_TEST_DIRNAME/.."
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -oE '"version": "[0-9]+\.[0-9]+\.[0-9]+"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "5.3.23" ]
-  [ "$ps_ver" = "5.3.23" ]
-  [ "$npm_ver" = "5.3.23" ]
-  grep -q '## \[5.3.23\]' "$root/CHANGELOG.md"
-  grep -q 'version-5.3.23' "$root/README.md"
+  [ "$bash_ver" = "5.3.24" ]
+  [ "$ps_ver" = "5.3.24" ]
+  [ "$npm_ver" = "5.3.24" ]
+  grep -q '## \[5.3.24\]' "$root/CHANGELOG.md"
+  grep -q 'version-5.3.24' "$root/README.md"
 }
 
 @test "DEV-096 SR-002: v5.3.20 changelog and Wave 3 review/evidence/spec artifacts exist" {
@@ -12643,13 +12644,13 @@ PY
   done
 }
 
-@test "DEV-096 SR-003: Master-Plan records v5.3.23 ship and v5.3.24 next milestone" {
+@test "DEV-096 SR-003: Master-Plan records v5.3.24 ship and v5.3.25 next milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v5.3.23' "$mp"
-  grep -q 'Release 5.3.23 shipped' "$mp"
-  grep -q 'v5.3.24 (next)' "$mp"
-  grep -q 'DEV-111' "$mp"
-  grep -q 'Shipped — v5.3.23' "$mp"
+  grep -q 'Ship complete — v5.3.24' "$mp"
+  grep -q 'Release 5.3.24 shipped' "$mp"
+  grep -q 'v5.3.25 (next)' "$mp"
+  grep -q 'DEV-112' "$mp"
+  grep -q 'Shipped — v5.3.24' "$mp"
 }
 
 # ── DEV-109: Lifecycle Next-Step Sync + Multi-Spec Clarity (LNS-001–LNS-010) ───
@@ -12860,6 +12861,65 @@ PY
   grep -q 'DEV-110' "$root/docs/adr/ADR-013-project-intake.md"
 }
 
+# ── Cursor intake fixture + NL intent map (FIX-001, NLM-001–NLM-006) ───────────
+
+@test "FIX-001: cursor-intake-fixture script installs Cursor wiring" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --yes
+  [ "$status" -eq 0 ]
+  [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-core.mdc" ]
+  [ -f "$TEST_PROJECT/.cursor/commands/agtoosa-spec.md" ]
+  [ -f "$TEST_PROJECT/.cursor/commands/agtoosa-build.md" ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
+  run grep -q 'alwaysApply: true' "$TEST_PROJECT/.cursor/rules/agtoosa-core.mdc"
+  [ "$status" -eq 0 ]
+  run grep -q 'Natural language intent map' "$TEST_PROJECT/.cursor/rules/agtoosa-core.mdc"
+  [ "$status" -eq 0 ]
+}
+
+@test "NLM-001: NL intent map in Agent mirrors" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '#### Natural Language Intent Map' "$root/template/Docs/AgToosa_Agent.md"
+  grep -q '#### Natural Language Intent Map' "$root/docs/AgToosa_Agent.md"
+  grep -q 'plan and code' "$root/template/Docs/AgToosa_Agent.md"
+  grep -q 'Do not use Cursor native Plan mode' "$root/docs/AgToosa_Agent.md"
+}
+
+@test "NLM-002: NL map in template agtoosa-core.mdc" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## Natural language intent map' "$root/template/.cursor/rules/agtoosa-core.mdc"
+  grep -q 'plan and code' "$root/template/.cursor/rules/agtoosa-core.mdc"
+  grep -q 'intake is not permission to skip' "$root/template/.cursor/rules/agtoosa-core.mdc"
+}
+
+@test "NLM-003: Project Intake in template .cursorrules" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Project Intake' "$root/template/.cursorrules"
+  grep -q 'Natural Language Intent Map' "$root/template/.cursorrules"
+}
+
+@test "NLM-004: maintainer agtoosa-maintainer-core.mdc alwaysApply" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/.cursor/rules/agtoosa-maintainer-core.mdc" ]
+  grep -q 'alwaysApply: true' "$root/.cursor/rules/agtoosa-maintainer-core.mdc"
+  grep -q 'Natural language intent map' "$root/.cursor/rules/agtoosa-maintainer-core.mdc"
+  grep -q 'cursor-intake-fixture' "$root/.cursor/rules/agtoosa-maintainer-core.mdc"
+}
+
+@test "NLM-005: maintainer commands reference docs workflow files" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/.cursor/commands/agtoosa-spec.md" ]
+  [ -f "$root/.cursor/commands/agtoosa-build.md" ]
+  grep -q 'docs/AgToosa_Spec.md' "$root/.cursor/commands/agtoosa-spec.md"
+  grep -q 'docs/AgToosa_Build.md' "$root/.cursor/commands/agtoosa-build.md"
+}
+
+@test "NLM-006: cursor-intake-fixture script exists and is executable" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -x "$root/scripts/cursor-intake-fixture.sh" ]
+  grep -q 'agtoosa.sh' "$root/scripts/cursor-intake-fixture.sh"
+  grep -q 'cursor-intake-fixture' "$root/docs/agtoosa-maintainer.md"
+}
+
 # ── Smart Apply UX (SAU-001–SAU-010) ─────────────────────────
 
 @test "SAU-001: re-run on existing install enters upgrade mode without full platform menu" {
@@ -12869,6 +12929,7 @@ PY
   [ "$status" -eq 0 ]
   [[ "$output" == *"Upgrading AgToosa"* ]]
   [[ "$output" == *"Found:"* ]]
+  [[ "$output" == *"1) Cursor"* ]]
   [[ "$output" != *"Which AI coding assistant(s) do you use?"* ]]
 }
 
@@ -12972,6 +13033,77 @@ PY
   [[ "$(cat "$TEST_PROJECT/Docs/.agtoosa-version")" == "$ver_before" ]]
 }
 
+@test "SAU-011: quiet upgrade omits per-file (unchanged) lines" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --yes < /dev/null
+  [ "$status" -eq 0 ]
+  run bash -c "printf '$TEST_PROJECT\n\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" != *"(unchanged)"* ]]
+  [[ "$output" == *"Prepared "*" files for upgrade"* ]]
+}
+
+@test "SAU-012: upgrade shows numbered platform legend with installed checkmarks" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --yes < /dev/null
+  [ "$status" -eq 0 ]
+  run bash -c "printf '$TEST_PROJECT\n\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"1) Cursor ✓"* ]]
+  [[ "$output" == *"8) All of the above"* ]]
+}
+
+@test "SAU-013: Found line uses comma-space between platform names" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms "cursor,claude" --yes < /dev/null
+  [ "$status" -eq 0 ]
+  run bash -c "printf '$TEST_PROJECT\n\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Cursor, Claude"* ]]
+}
+
+@test "SAU-014: staging output does not contain literal unicode escape for OPENCODE" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms opencode --yes < /dev/null
+  [ "$status" -eq 0 ]
+  [[ "$output" != *'\u2705'* ]]
+  [[ "$output" == *"OPENCODE.md"* ]]
+}
+
+@test "SAU-015: Copilot agents reported as grouped line not repeated filename" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms copilot --yes < /dev/null
+  [ "$status" -eq 0 ]
+  [[ "$output" == *".github/agents/"* ]]
+  [ "$(grep -c 'agtoosa\.agent\.md' <<< "$output" || true)" -le 1 ]
+}
+
+@test "SAU-016: initialized project upgrade omits /agtoosa-init in next steps" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --yes < /dev/null
+  [ "$status" -eq 0 ]
+  for f in workflow.md tech-stack.md product.md product-guidelines.md; do
+    echo "# Populated $f for SAU-016" > "$TEST_PROJECT/Docs/Context/$f"
+  done
+  run bash -c "printf '$TEST_PROJECT\n\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Continue with the 4-command workflow"* ]]
+  [[ "$output" != *"/agtoosa-init"* ]]
+}
+
+@test "SAU-017: summary uses singular framework file when count is 1" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash -c "
+    source '$root/lib/config.sh'
+    source '$root/lib/version.sh'
+    source '$root/lib/copy.sh'
+    source '$root/lib/apply.sh'
+    GREEN=1; YELLOW=1; CYAN=1; BLUE=1; RED=1; BOLD=1; NC=1
+    APPLY_WRITTEN=1
+    APPLY_PRESERVED=0
+    APPLY_UNCHANGED=0
+    APPLY_MERGED=0
+    emit_apply_summary_human applied
+  "
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"1 framework file"* ]]
+  [[ "$output" != *"1 framework files"* ]]
+}
+
 @test "DEV-111 SR-001: v5.3.23 changelog and DEV-111 review/evidence/spec artifacts exist" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q '## \[5.3.23\]' "$root/CHANGELOG.md"
@@ -12980,4 +13112,212 @@ PY
   [ -f "$root/docs/archived/review-DEV-111.md" ]
   [ -f "$root/docs/archived/evidence-DEV-111.md" ]
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-111.md"
+}
+
+# ── DEV-112: --cleanup (CLN-001–CLN-011) ─────────────────────────────────────
+
+_cln_gen_ver() {
+  bash "$SCRIPT" --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1
+}
+
+# Minimal installed-project fixture (avoids full install / ship/ races).
+_cln_seed_project() {
+  local platforms="${1:-claude}"
+  local proj="$TEST_PROJECT"
+  local root="$BATS_TEST_DIRNAME/.."
+  local gen f p
+  gen="$(_cln_gen_ver)"
+  mkdir -p "$proj/Docs"
+
+  IFS=',' read -ra plats <<< "$platforms"
+
+  local base
+  _cln_plat_selected() {
+    local want="$1"; shift
+    local x
+    for x in "$@"; do [[ "$x" == "$want" ]] && return 0; done
+    return 1
+  }
+
+  for f in "$root/template/Docs"/AgToosa_*.md; do
+    [[ -f "$f" ]] || continue
+    base="$(basename "$f")"
+    case "$base" in
+      AgToosa_Claude.md) _cln_plat_selected claude "${plats[@]}" || continue ;;
+      AgToosa_Gemini.md) _cln_plat_selected gemini "${plats[@]}" || continue ;;
+    esac
+    cp "$f" "$proj/Docs/"
+  done
+  printf '%s\n' "$gen" > "$proj/Docs/.agtoosa-version"
+
+  for p in "${plats[@]}"; do
+    p="${p// /}"
+    case "$p" in
+      claude)
+        [[ -f "$root/template/CLAUDE.md" ]] && cp "$root/template/CLAUDE.md" "$proj/CLAUDE.md"
+        [[ -f "$root/template/Docs/AgToosa_Claude.md" ]] \
+          && cp "$root/template/Docs/AgToosa_Claude.md" "$proj/Docs/"
+        mkdir -p "$proj/.claude"
+        cp -R "$root/template/.claude/." "$proj/.claude/" 2>/dev/null || true
+        ;;
+      cursor)
+        [[ -f "$root/template/.cursorrules" ]] && cp "$root/template/.cursorrules" "$proj/.cursorrules"
+        mkdir -p "$proj/.cursor"
+        cp -R "$root/template/.cursor/." "$proj/.cursor/" 2>/dev/null || true
+        ;;
+      windsurf)
+        [[ -f "$root/template/.windsurfrules" ]] && cp "$root/template/.windsurfrules" "$proj/.windsurfrules"
+        mkdir -p "$proj/.windsurf"
+        cp -R "$root/template/.windsurf/." "$proj/.windsurf/" 2>/dev/null || true
+        ;;
+      vscode)
+        mkdir -p "$proj/.github/prompts" "$proj/.github/agents"
+        cp "$root/template/.github/prompts"/agtoosa-*.prompt.md "$proj/.github/prompts/" 2>/dev/null || true
+        cp "$root/template/.github/agents"/agtoosa-*.agent.md "$proj/.github/agents/" 2>/dev/null || true
+        ;;
+    esac
+  done
+
+  local plats_json
+  plats_json=$(printf '%s\n' "${plats[@]}" | jq -R . | jq -s .)
+  jq -n --arg v "$gen" --argjson plats "$plats_json" \
+    '{agtoosa_version: $v, generated_at: "2026-01-01T00:00:00Z", platforms: $plats, packs: []}' \
+    > "$proj/Docs/agtoosa-lock.json"
+}
+
+@test "DEV-112 @smoke CLN-001: --cleanup --dry-run lists backups without deleting" {
+  _cln_seed_project claude
+  echo "backup-body" > "$TEST_PROJECT/CLAUDE.md.bak.20260712-1658"
+  run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --dry-run
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"CLAUDE.md.bak"* ]]
+  [ -f "$TEST_PROJECT/CLAUDE.md.bak.20260712-1658" ]
+}
+
+@test "DEV-112 CLN-002: orphan workflow doc appears in cleanup plan" {
+  _cln_seed_project claude
+  cp "$BATS_TEST_DIRNAME/fixtures/migration/orphan-AgToosa_LegacyRemoved.md" \
+    "$TEST_PROJECT/Docs/AgToosa_LegacyRemoved.md"
+  run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --dry-run
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"AgToosa_LegacyRemoved.md"* ]]
+  [[ "$output" == *"orphan_doc"* || "$output" == *"removed docs"* ]]
+}
+
+@test "DEV-112 CLN-003: deselected platform files appear when lock omits platform" {
+  _cln_seed_project cursor,claude,windsurf
+  command -v jq >/dev/null 2>&1 || skip "jq not installed"
+  jq '.platforms = ["cursor","claude"]' "$TEST_PROJECT/Docs/agtoosa-lock.json" \
+    > "$TEST_PROJECT/Docs/agtoosa-lock.json.tmp"
+  mv "$TEST_PROJECT/Docs/agtoosa-lock.json.tmp" "$TEST_PROJECT/Docs/agtoosa-lock.json"
+  run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --dry-run
+  [ "$status" -eq 0 ]
+  [[ "$output" == *".windsurf"* || "$output" == *"windsurfrules"* || "$output" == *"orphan_platform"* ]]
+}
+
+@test "DEV-112 CLN-004: preserved docs never in cleanup plan" {
+  _cln_seed_project claude
+  mkdir -p "$TEST_PROJECT/Docs/Context"
+  echo "# Plan" > "$TEST_PROJECT/Docs/Master-Plan.md"
+  echo "user context" > "$TEST_PROJECT/Docs/Context/product.md"
+  cp "$BATS_TEST_DIRNAME/fixtures/migration/orphan-AgToosa_LegacyRemoved.md" \
+    "$TEST_PROJECT/Docs/AgToosa_LegacyRemoved.md"
+  echo "backup" > "$TEST_PROJECT/CLAUDE.md.bak.20260712-1658"
+  run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --dry-run
+  [ "$status" -eq 0 ]
+  ! [[ "$output" == *"Master-Plan.md"* ]]
+  ! [[ "$output" == *"Context/product.md"* ]]
+}
+
+@test "DEV-112 @smoke CLN-005: --cleanup --yes removes confirmed candidates" {
+  _cln_seed_project claude
+  echo "backup-body" > "$TEST_PROJECT/CLAUDE.md.bak.20260712-1658"
+  cp "$BATS_TEST_DIRNAME/fixtures/migration/orphan-AgToosa_LegacyRemoved.md" \
+    "$TEST_PROJECT/Docs/AgToosa_LegacyRemoved.md"
+  [ -f "$TEST_PROJECT/CLAUDE.md.bak.20260712-1658" ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_LegacyRemoved.md" ]
+  run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --yes
+  [ "$status" -eq 0 ]
+  [ ! -f "$TEST_PROJECT/CLAUDE.md.bak.20260712-1658" ]
+  [ ! -f "$TEST_PROJECT/Docs/AgToosa_LegacyRemoved.md" ]
+  [ -f "$TEST_PROJECT/CLAUDE.md" ]
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
+}
+
+@test "DEV-112 CLN-006: non-TTY without --yes refuses apply" {
+  _cln_seed_project claude
+  echo "backup-body" > "$TEST_PROJECT/CLAUDE.md.bak.20260712-1658"
+  run bash "$SCRIPT" --cleanup "$TEST_PROJECT" </dev/null
+  [ "$status" -ne 0 ]
+  [ -f "$TEST_PROJECT/CLAUDE.md.bak.20260712-1658" ]
+  echo "$output" | grep -qiE 'confirm|requires? --yes|non-interactive'
+}
+
+@test "DEV-112 CLN-007: --format json emits cleanup-result-v1" {
+  _cln_seed_project claude
+  echo "backup-body" > "$TEST_PROJECT/CLAUDE.md.bak.20260712-1658"
+  run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --format json
+  [ "$status" -eq 0 ]
+  run python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["schema_version"]=="cleanup-result-v1"; assert d["summary"]["backup"]>=1' <<< "$output"
+}
+
+@test "DEV-112 CLN-008: PowerShell Cleanup parity" {
+  local ps1="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  [ -f "$ps1" ]
+  grep -qE '\[switch\]\$Cleanup' "$ps1"
+  grep -qE "'cleanup'" "$ps1"
+  grep -qE -- '-Cleanup' "$ps1"
+  grep -qE 'Operation cleanup' "$ps1"
+
+  command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
+
+  _cln_seed_project claude
+  echo "backup-body" > "$TEST_PROJECT/CLAUDE.md.bak.20260712-1658"
+  run pwsh -NoProfile -File "$ps1" -Cleanup -UpdatePath "$TEST_PROJECT" -Yes
+  [ "$status" -eq 0 ]
+  [ ! -f "$TEST_PROJECT/CLAUDE.md.bak.20260712-1658" ]
+}
+
+@test "DEV-112 CLN-009: help and Update docs document --cleanup" {
+  local f
+  run bash "$SCRIPT" --help
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"--cleanup"* ]]
+  for f in \
+    "$BATS_TEST_DIRNAME/../docs/AgToosa_Update.md" \
+    "$BATS_TEST_DIRNAME/../template/Docs/AgToosa_Update.md"; do
+    [ -f "$f" ]
+    grep -q -- '--cleanup' "$f"
+    grep -qiE 'housekeeping|merge backup|orphan' "$f"
+    grep -qiE 'vscode|VS Code' "$f"
+  done
+}
+
+@test "DEV-112 CLN-010: cleanup-result-v1 schema ships in template and docs" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/docs/schemas/cleanup-result-v1.json" ]
+  [ -f "$root/template/Docs/schemas/cleanup-result-v1.json" ]
+  diff -u "$root/docs/schemas/cleanup-result-v1.json" "$root/template/Docs/schemas/cleanup-result-v1.json"
+  grep -q 'Docs/schemas/cleanup-result-v1.json' "$root/lib/config.sh"
+  run bash "$SCRIPT" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/schemas/cleanup-result-v1.json"* ]]
+}
+
+@test "DEV-112 CLN-011: vscode-only install is not flagged as orphan platform" {
+  _cln_seed_project vscode
+  find "$TEST_PROJECT/.github/prompts" -maxdepth 1 -name 'agtoosa-*' | grep -q .
+  run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --dry-run
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"No unnecessary"* ]]
+}
+
+@test "DEV-112 SR-001: v5.3.24 changelog and DEV-112 review/evidence/spec artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.24\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-112' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-112.md" ]
+  [ -f "$root/docs/archived/review-DEV-112.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-112.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-112.md"
 }

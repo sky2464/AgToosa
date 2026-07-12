@@ -10,10 +10,10 @@ set -euo pipefail
 #   bash agtoosa.sh [--force] [--dry-run] [--version] [--help]
 # ──────────────────────────────────────────────────────────────
 
-AGTOOSA_VERSION="5.3.23"
+AGTOOSA_VERSION="5.3.24"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
-SHIP_DIR="${SCRIPT_DIR}/ship"
+SHIP_DIR="${AGTOOSA_SHIP_DIR:-${SCRIPT_DIR}/ship}"
 PACK_QUEUE_DIR="${AGTOOSA_PACK_QUEUE_DIR:-${SCRIPT_DIR}/.agtoosa/pack-queue}"
 
 # ── Early preflight (no colors yet) ──────────────────────────
@@ -29,7 +29,7 @@ if [[ ! -d "${SCRIPT_DIR}/lib" ]]; then
 fi
 
 # ── Source modular libraries ──────────────────────────────────
-for _lib in config version copy apply state lock generate plan dryrun install update migrate provenance registry catalog tracker maintain reinstall; do
+for _lib in config version copy apply state lock generate plan dryrun install update migrate provenance registry catalog tracker maintain reinstall cleanup; do
   # shellcheck source=/dev/null
   source "${SCRIPT_DIR}/lib/${_lib}.sh"
 done
@@ -91,6 +91,8 @@ UNINSTALL_PATH=""
 REINSTALL=false
 REINSTALL_PATH=""
 CLEAN=false
+CLEANUP=false
+CLEANUP_PATH=""
 OUTPUT_FORMAT=""
 VERIFY_STRICT=false
 STATUS_LINE=false
@@ -108,6 +110,7 @@ while [[ $# -gt 0 ]]; do
     --doctor)              DOCTOR=true ;;
     --status-line)         STATUS_LINE=true ;;
     --uninstall)           UNINSTALL=true ;;
+    --cleanup)             CLEANUP=true ;;
     --reinstall)           REINSTALL=true ;;
     --clean)               CLEAN=true ;;
     --force)               FORCE=true ;;
@@ -173,6 +176,8 @@ while [[ $# -gt 0 ]]; do
         STATUS_LINE_PATH="$arg"
       elif [[ "$UNINSTALL" == true && -z "$UNINSTALL_PATH" && "$arg" != --* ]]; then
         UNINSTALL_PATH="$arg"
+      elif [[ "$CLEANUP" == true && -z "$CLEANUP_PATH" && "$arg" != --* ]]; then
+        CLEANUP_PATH="$arg"
       elif [[ "$REINSTALL" == true && -z "$REINSTALL_PATH" && "$arg" != --* ]]; then
         REINSTALL_PATH="$arg"
       else
@@ -191,6 +196,9 @@ if [[ -n "$_PATH_ARG" ]]; then
     TRACKER_PATH="$_PATH_ARG"
   elif [[ "$REINSTALL" == true && -z "$REINSTALL_PATH" ]]; then
     REINSTALL_PATH="$_PATH_ARG"
+    CLI_PROJECT_PATH="$_PATH_ARG"
+  elif [[ "$CLEANUP" == true && -z "$CLEANUP_PATH" ]]; then
+    CLEANUP_PATH="$_PATH_ARG"
     CLI_PROJECT_PATH="$_PATH_ARG"
   else
     CLI_PROJECT_PATH="$_PATH_ARG"
@@ -216,8 +224,8 @@ fi
 # --json / --format json require a consumer mode (install dry-run, update, verify, …).
 if [[ "$OUTPUT_FORMAT" == "json" \
       && "$UPDATE" != true && "$DRY_RUN" != true && "$VERIFY" != true \
-      && "$DOCTOR" != true && "$STATUS_LINE" != true && "$CATALOG" != true && "$REGISTRY" != true \
-      && "$TRACKER" != true ]]; then
+      && "$DOCTOR" != true && "$CLEANUP" != true && "$STATUS_LINE" != true \
+      && "$CATALOG" != true && "$REGISTRY" != true && "$TRACKER" != true ]]; then
   echo -e "${RED}❌ Error: --json / --format json requires a command (--update, --dry-run, --verify, --doctor, --catalog, …).${NC}" >&2
   exit 1
 fi
@@ -257,6 +265,16 @@ fi
 # ── Uninstall mode ─────────────────────────────────────────────
 if [[ "$UNINSTALL" == true ]]; then
   run_uninstall "${UNINSTALL_PATH:-}"
+  exit $?
+fi
+
+# ── Cleanup mode (backups, orphan docs, deselected platforms) ──
+if [[ "$CLEANUP" == true ]]; then
+  if [[ "$DRY_RUN" == true || "$OUTPUT_FORMAT" == "json" ]]; then
+    run_cleanup_plan "${CLEANUP_PATH:-$PWD}" "${OUTPUT_FORMAT:-text}"
+  else
+    run_cleanup "${CLEANUP_PATH:-$PWD}"
+  fi
   exit $?
 fi
 
@@ -437,13 +455,6 @@ if [[ "$PLAN_JSON_MODE" != true ]]; then
   echo -e "${CYAN}understands your codebase and helps you develop with${NC}"
   echo -e "${CYAN}a clean folder structure and structured workflow.${NC}"
   echo ""
-  echo -e "${YELLOW}How it works:${NC}"
-  echo -e "  1. We detect which AI assistant(s) you use"
-  echo -e "  2. We generate ONLY the necessary config files"
-  echo -e "  3. We copy them directly to your project"
-  echo -e "  4. Run ${BOLD}/agtoosa-init${NC} in your AI assistant (one-time)"
-  echo -e "  5. Then use: ${BOLD}/agtoosa-spec → /agtoosa-build → /agtoosa-review → /agtoosa-ship${NC}"
-  echo ""
   echo -e "${CYAN}Re-run on an existing project to upgrade — no --force needed.${NC}"
   echo ""
   echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
@@ -488,9 +499,20 @@ SMART_UPGRADE_MODE=false
 OLD_INSTALLED_VERSION=""
 if detect_existing_agtoosa "$PROJECT_PATH"; then
   SMART_UPGRADE_MODE=true
+  APPLY_QUIET=true
   OLD_INSTALLED_VERSION="$(read_installed_version "$PROJECT_PATH")"
   if [[ "$PLAN_JSON_MODE" != true ]]; then
     echo -e "${PURPLE}${BOLD}Upgrading AgToosa v${OLD_INSTALLED_VERSION} → v${AGTOOSA_VERSION}${NC}"
+    echo ""
+  fi
+else
+  if [[ "$PLAN_JSON_MODE" != true ]]; then
+    echo -e "${YELLOW}How it works:${NC}"
+    echo -e "  1. We detect which AI assistant(s) you use"
+    echo -e "  2. We generate ONLY the necessary config files"
+    echo -e "  3. We copy them directly to your project"
+    echo -e "  4. Run ${BOLD}/agtoosa-init${NC} in your AI assistant (one-time)"
+    echo -e "  5. Then use: ${BOLD}/agtoosa-spec → /agtoosa-build → /agtoosa-review → /agtoosa-ship${NC}"
     echo ""
   fi
 fi
@@ -499,9 +521,9 @@ fi
 if [[ "$SMART_UPGRADE_MODE" == true && -z "$CLI_PLATFORMS" ]]; then
   detect_installed_platforms
   if [[ "$PLAN_JSON_MODE" != true ]]; then
-    echo -e "${BOLD}Found:${NC} $(platform_flags_to_names)"
-    if [[ "$ASSUME_YES" != true ]]; then
-      echo -e "${CYAN}Add platforms? (Enter to keep, or numbers e.g. 3 5)${NC}"
+    print_platform_legend
+    if [[ "$ASSUME_YES" != true ]] && ! all_platforms_installed; then
+      echo -e "${CYAN}Add platforms? (Enter to keep, or enter numbers e.g. 2 6)${NC}"
       echo ""
       read -rp "Add platforms: " ADD_PLATFORM_SELECTION
       ADD_PLATFORM_SELECTION="${ADD_PLATFORM_SELECTION//[[:space:]]/}"
@@ -606,7 +628,7 @@ mkdir -p "$SHIP_DIR/Docs/archived" "$SHIP_DIR/Docs/Context" \
            "$SHIP_DIR/.codex/skills" \
            "$SHIP_DIR/.windsurf/rules" "$SHIP_DIR/.windsurf/workflows"
 GENERATED=0
-if [[ "$PLAN_JSON_MODE" == true ]]; then
+if [[ "$PLAN_JSON_MODE" == true ]] || [[ "$SMART_UPGRADE_MODE" == true ]]; then
   stage_files >/dev/null
 else
   stage_files
@@ -614,7 +636,11 @@ fi
 
 if [[ "$PLAN_JSON_MODE" != true ]]; then
   echo ""
-  echo -e "${GREEN}${BOLD}Generated ${GENERATED} files.${NC}"
+  if [[ "$SMART_UPGRADE_MODE" == true ]]; then
+    echo -e "${GREEN}${BOLD}Prepared ${GENERATED} files for upgrade.${NC}"
+  else
+    echo -e "${GREEN}${BOLD}Generated ${GENERATED} files.${NC}"
+  fi
   echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
   echo ""
   if [[ "$SMART_UPGRADE_MODE" == true ]]; then

@@ -19,8 +19,11 @@ state_selected_platforms() {
   [[ "${USE_CLAUDE:-false}" == true ]] && names+=("claude")
   [[ "${USE_GEMINI:-false}" == true ]] && names+=("gemini")
   [[ "${USE_COPILOT:-false}" == true ]] && names+=("copilot")
+  [[ "${USE_VSCODE:-false}" == true ]] && names+=("vscode")
   [[ "${USE_OPENCODE:-false}" == true ]] && names+=("opencode")
-  printf '%s\n' "${names[@]}"
+  if ((${#names[@]} > 0)); then
+    printf '%s\n' "${names[@]}"
+  fi
 }
 
 # SHA-256 hex digest for a file (no sha256: prefix).

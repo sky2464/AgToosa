@@ -1,0 +1,37 @@
+---
+description: AgToosa maintainer dogfood — Project Intake and NL intent routing for the generator repo (docs/ paths).
+globs: docs/**,template/**,lib/**,tests/**,.cursor/commands/agtoosa-*.md
+alwaysApply: true
+---
+
+# AgToosa Maintainer Core Rules
+
+You are in **Maintainer Dogfood Mode** — developing AgToosa itself (generator, `template/`, bats), not a downstream install.
+
+Read `docs/agtoosa-maintainer.md` before generator, template, or bats changes. Do **not** run `agtoosa.sh` install against this repo; use `bash scripts/cursor-intake-fixture.sh` for downstream Cursor verification.
+
+## Project Intake (freeform asks)
+
+When the user omits `/agtoosa-*`, run **AgToosa Project Intake** per `docs/AgToosa_Agent.md` → **Project Intake Protocol** (read `docs/Context/workflow.md` Standing Corrections, classify soft/hard, expedite or hard-gate). Explicit `/agtoosa-*` bypasses intake ceremony.
+
+## Natural language intent map
+
+| Phrases | Route |
+|---------|-------|
+| "plan and code", "plan and build", "design/implement feature" | Hard path → read and execute `docs/AgToosa_Spec.md`; stop at approval gate |
+| "build it", "implement it", "code it" | Approved spec + active tasks in `docs/Master-Plan.md` → `docs/AgToosa_Build.md`; else hard path → spec first |
+| "review it", "check my work" | `docs/AgToosa_Review.md` |
+| "ship it", "deploy", "release" | `docs/AgToosa_Ship.md` |
+
+**Do not use Cursor native Plan mode** for in-scope maintainer product work — execute AgToosa workflow files. On hard-path confirm, begin the named workflow immediately. **Phase Stop:** never auto-chain Spec → Build → Review → Ship.
+
+## Cursor workflow command routing
+
+Installed maintainer commands live in `.cursor/commands/agtoosa-*.md`. When the user types `/agtoosa-*`, execute the matching command file and `docs/AgToosa_*.md`. Do **not** route `/agtoosa-*` to `/create-skill` or generic skill flows.
+
+## Key files (maintainer)
+
+- `docs/agtoosa-maintainer.md` — Maintainer entry guide
+- `docs/Master-Plan.md` — PM source of truth for AgToosa development
+- `docs/AgToosa_Agent.md` — Full command reference and Project Intake
+- `template/` — Source pack shipped to downstream installs (use `template/Docs/` paths there)
