@@ -15,17 +15,23 @@ Every actionable proposal in the update documents is represented by one of:
 
 Editing this index does not enroll a story. Backlog stories still require `/agtoosa-spec`, explicit approval, and a separate `/agtoosa-build` invocation.
 
-## Active Stories (post v5.3.12 — 2026-07-11)
+## Active Stories (post v5.3.13 — 2026-07-11)
 
-No enrolled stories. All unblocked executable backlog specs shipped through v5.3.12.
+No enrolled stories. All unblocked executable backlog specs shipped through v5.3.13.
 
 Parked demand-gated: **DEV-051**, **DEV-057**.
 
-## v5.3.13 prep (2026-07-11)
+## Recently shipped (v5.3.13 — 2026-07-11)
 
-| ID | Story | Type | Note |
+| ID | Story | Type | Spec |
 |---|---|---|---|
-| DEV-085 | Post-v5.3.12 release hygiene (bats restore + Master-Plan reconciliation) | Chore | Restores ship-regression bats coverage (commit `bb8a8bd`) and reconciles `docs/Master-Plan.md` Completed This Cycle / Update Log / Epics drift after v5.3.12 ship. Orchestrator owns version bump and CHANGELOG on release. |
+| DEV-085 | Post-v5.3.12 release hygiene (bats restore + Master-Plan reconciliation) | Chore | `docs/archived/spec-DEV-085.md` |
+
+## Recently shipped (v5.3.12 — 2026-07-11)
+
+| ID | Story | Epic | Spec |
+|---|---|---|---|
+| DEV-058 | Local Dashboard | DEV-004 | `docs/archived/spec-DEV-058.md` |
 
 ## Recently shipped (v5.3.9 — 2026-07-11)
 
