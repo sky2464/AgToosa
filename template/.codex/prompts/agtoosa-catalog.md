@@ -1,4 +1,6 @@
-# AgToosa Catalog
+## Codex prompt routing
+
+This file is the Codex project prompt for `/agtoosa-catalog`. When the user invokes `/agtoosa-catalog`, execute the AgToosa catalog workflow below — do **not** route to `/create-skill` or generate a project skill for AgToosa workflow names.
 
 Read `Docs/AgToosa_Catalog.md` and help the user list, search, inspect, validate, or plan catalog entries.
 

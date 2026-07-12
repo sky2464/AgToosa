@@ -13,10 +13,7 @@
 | 3. Review gate | `/agtoosa-review` | `Docs/AgToosa_Review.md` (`security` · `arch` · `debug` · `cross` · `cross-model` → `Docs/AgToosa_CrossModelReview.md`) |
 | 4. Ship & archive | `/agtoosa-ship` | `Docs/AgToosa_Ship.md` |
 
-Utilities (load on demand): `/agtoosa-status`, `/agtoosa-task`, `/agtoosa-qa`,
-`/agtoosa-goal`, `/agtoosa-update`, `/agtoosa-debug`, `/agtoosa-revert`,
-`/agtoosa-concise`, `/agtoosa-handoff`, `/agtoosa-import`, `/agtoosa-evidence`,
-`/agtoosa-help` — each maps to `Docs/AgToosa_<Name>.md`.
+Utilities (on demand): `/agtoosa-status`, `/agtoosa-task`, `/agtoosa-qa`, `/agtoosa-goal`, `/agtoosa-update`, `/agtoosa-debug`, `/agtoosa-revert`, `/agtoosa-concise`, `/agtoosa-handoff`, `/agtoosa-import`, `/agtoosa-evidence`, `/agtoosa-help`, `/agtoosa-catalog` — each maps to `Docs/AgToosa_<Name>.md`.
 
 ## Non-negotiables
 
@@ -32,15 +29,8 @@ Utilities (load on demand): `/agtoosa-status`, `/agtoosa-task`, `/agtoosa-qa`,
    unless they explicitly asked to chain phases.
 6. **Scope discipline.** Stay inside the spec's Build Scope; new ideas go to
    the Master-Plan Backlog, not into the current diff.
-7. **Work Package DAG (when present).** Specs may declare `### 3.4 Work Package
-   DAG` rows (`package_id`, `owned_files`, `depends_on`, `merge_order`,
-   `verification`). Build checks ownership before fan-out; Handoff exports
-   selected-wave packages; Import reports ownership gaps. Derivation and
-   checks are **agent-instructed**; schema copies are **generator-enforced**;
-   bats/CI when wired are **CI-enforced**; a runtime scheduler is **roadmap**.
-8. **Optional worktree isolation.** For M+ multi-package or risky lanes, see
-   `Docs/AgToosa_Worktree.md` — preferred path `../<repo>-<package_id>`;
-   Git commands are **manual**; automatic provisioning is **roadmap**.
+7. **Work Package DAG (when present).** Specs may declare `### 3.4 Work Package DAG` rows; Build checks ownership before fan-out; Handoff/Import report gaps. Agent-instructed derivation; generator-enforced schema copies; bats/CI when wired.
+8. **Optional worktree isolation.** See `Docs/AgToosa_Worktree.md` for M+ multi-package lanes; Git commands are **manual**.
 
 ## State files
 
@@ -76,7 +66,7 @@ bash Docs/agtoosa-dashboard.sh         # local Markdown/HTML state projection (s
 
 CI gate: `Docs/agtoosa-gate.yml.example` is a **template only** until you
 copy, review, push, and observe a run. Full sequence:
-[verifier CI adoption guide](https://github.com/sky2464/AgToosa/blob/main/docs/examples/verifier-ci-adoption.md).
+[Docs/examples/verifier-ci-adoption.md](examples/verifier-ci-adoption.md).
 
 ## Generator CLI (install/maintenance)
 

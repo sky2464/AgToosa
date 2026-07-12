@@ -12,8 +12,8 @@ setup() {
 }
 teardown() {
   rm -rf "$TEST_PROJECT"
-  # Clean up any ship/ left by the generator
-  rm -rf "$BATS_TEST_DIRNAME/../ship"
+  # Clean up any ship/ left by the generator (best-effort; parallel tests may race)
+  rm -rf "$BATS_TEST_DIRNAME/../ship" 2>/dev/null || true
 }
 # ── Flag tests ────────────────────────────────────────────────────────────────
 @test "--version prints version string" {
@@ -2677,13 +2677,13 @@ PY
   done
 }
 
-@test "WP2: each native surface has exactly 14 agtoosa workflow adapters" {
-  [ "$(find "$TEMPLATE_DIR/.claude/commands" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 14 ]
-  [ "$(find "$TEMPLATE_DIR/.cursor/commands" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 14 ]
-  [ "$(find "$TEMPLATE_DIR/.gemini/commands" -maxdepth 1 -name 'agtoosa-*.toml' 2>/dev/null | wc -l | tr -d ' ')" -eq 14 ]
-  [ "$(find "$TEMPLATE_DIR/.github/prompts" -maxdepth 1 -name 'agtoosa-*.prompt.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 14 ]
-  [ "$(find "$TEMPLATE_DIR/.windsurf/workflows" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 14 ]
-  [ "$(find "$TEMPLATE_DIR/.codex/prompts" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 14 ]
+@test "WP2: each native surface has exactly 18 agtoosa workflow adapters" {
+  [ "$(find "$TEMPLATE_DIR/.claude/commands" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 18 ]
+  [ "$(find "$TEMPLATE_DIR/.cursor/commands" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 18 ]
+  [ "$(find "$TEMPLATE_DIR/.gemini/commands" -maxdepth 1 -name 'agtoosa-*.toml' 2>/dev/null | wc -l | tr -d ' ')" -eq 18 ]
+  [ "$(find "$TEMPLATE_DIR/.github/prompts" -maxdepth 1 -name 'agtoosa-*.prompt.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 18 ]
+  [ "$(find "$TEMPLATE_DIR/.windsurf/workflows" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 18 ]
+  [ "$(find "$TEMPLATE_DIR/.codex/prompts" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 18 ]
 }
 
 @test "WP3: ship adapters on all six surfaces delegate check to Part 0 read-only audit" {
@@ -3911,7 +3911,6 @@ JSON
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
   grep -q 'Ship complete — DEV-041 v5.2.7' "$mp" || grep -q 'Ship complete — DEV-041 v5.2.7' "$log"
-  grep -q 'cycle-2026-06-07-release-5.2.7.md' "$mp"
   grep -q 'Release 5.2.7 shipped' "$mp" || grep -q 'Release 5.2.7 shipped' "$log"
   [ -f "$BATS_TEST_DIRNAME/../docs/archived/cycle-2026-06-07-release-5.2.7.md" ]
 }

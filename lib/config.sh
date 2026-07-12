@@ -152,6 +152,7 @@ OPTIONAL_TEMPLATE_FILES=(
   ".github/prompts/agtoosa-status.prompt.md"
   ".github/prompts/agtoosa-goal.prompt.md"
   ".github/prompts/agtoosa-help.prompt.md"
+  ".github/prompts/agtoosa-debug.prompt.md"
   ".github/agents/agtoosa.agent.md"
   ".github/agents/agtoosa-status-guide.agent.md"
   ".github/agents/agtoosa-cross-model-reviewer.agent.md"
