@@ -9,6 +9,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.11] — 2026-07-11
+
+Patch release: wave 3 (DEV-052, DEV-056).
+
+### Added
+
+- **DEV-052 — Hook Automation Pack.** `AgToosa_Hooks.md`, Init/Update preview+approval, secret-safe exemplar, HK-001–HK-007 bats. No silent hook install.
+- **DEV-056 — Retrospective Learning Loop.** `AgToosa_Retro.md` structured ship retro; proposal routing only via task/spec/amend; RL-001–RL-008 bats. No telemetry/ML/auto-enrollment.
+
 ## [5.3.10] — 2026-07-11
 
 Patch release: wave 2 dependents (DEV-046, DEV-059).

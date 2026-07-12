@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (/agtoosa-build — wave 3 DEV-052 · DEV-056 enrolled)
+> **Last updated:** 2026-07-11 (/agtoosa-ship — v5.3.11 wave 3 shipped)
 
 ## Project Charter
 
@@ -9,9 +9,9 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | 🔍 Wave 3 review — DEV-052 · DEV-056 |
-| Milestone | `v5.3.11` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | DEV-052 · DEV-056 |
+| Current phase | 🏁 v5.3.11 shipped — enroll DEV-058 next |
+| Milestone | `v5.3.12` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
+| Active cycle | — (wave 3 archived) |
 | Cycle capacity | `8 story points` |
 
 ## Active Cycle
@@ -20,8 +20,8 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-052 | Feature: Hook Automation Pack | Feature | M | 🔍 In Review | 4/4 |
-| DEV-056 | Feature: Retrospective Learning Loop | Feature | S | 🔍 In Review | 4/4 |
+
+<!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.11.md -->
 
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.10.md -->
@@ -34,19 +34,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-**DEV-052 — Hook Automation Pack** (spec: `docs/archived/spec-DEV-052.md`)
-
-- [ ] **1.** Hook pack contract + RED
-- [ ] **2.** Pack content + safety
-- [ ] **3.** Install/wiring
-- [ ] **4.** GREEN + evidence
-
-**DEV-056 — Retrospective Learning Loop** (spec: `docs/archived/spec-DEV-056.md`)
-
-- [ ] **1.** Retro contract + RED
-- [ ] **2.** Learning artifacts
-- [ ] **3.** Workflow wiring
-- [ ] **4.** GREEN + evidence
+<!-- Wave 3 shipped — see docs/archived/cycle-2026-07-11-release-5.3.11.md -->
 
 
 ## Manual / Deferred Tasks
@@ -90,13 +78,13 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-049 | Feature: Evidence Ledger | Feature | M | DEV-004 | P0 | 🏁 Shipped — v5.3.4 |
 | DEV-050 | Feature: Cross-Model Review Gate | Feature | S | DEV-002 | P1 | 🏁 Shipped — v5.3.6 |
 | DEV-051 | Feature: Tracker Sync Bridge | Feature | M | DEV-003 | P1 | ⬜ Backlog — executable spec ready; demand-gated, proposal import only |
-| DEV-052 | Feature: Hook Automation Pack | Feature | M | DEV-002 | P1 | 🟨 In Progress — wave 3 |
+| DEV-052 | Feature: Hook Automation Pack | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.11 |
 | DEV-053 | Feature: Extension and Preset Catalog | Feature | M | DEV-003 | P1 | 🏁 Shipped — v5.3.8 |
 | DEV-054 | Feature: Signed Registry Provenance | Feature | M | DEV-003 | P0 | 🏁 Shipped — v5.3.5 |
 | DEV-055 | Feature: Agent Capability Matrix | Feature | S | DEV-002 | P1 | 🏁 Shipped — v5.3.7 |
-| DEV-056 | Feature: Retrospective Learning Loop | Feature | S | DEV-002 | P2 | 🟨 In Progress — wave 3 |
+| DEV-056 | Feature: Retrospective Learning Loop | Feature | S | DEV-002 | P2 | 🏁 Shipped — v5.3.11 |
 | DEV-057 | Feature: Multi-Repo Story Overlay | Feature | L | DEV-002 | P2 | ⬜ Backlog — executable spec ready; demand-gated and requires DEV-045 shipped |
-| DEV-058 | Feature: Local Dashboard | Feature | M | DEV-004 | P2 | ⬜ Backlog — executable spec ready; read-only local scope |
+| DEV-058 | Feature: Local Dashboard | Feature | M | DEV-004 | P2 | ⬜ Backlog — unblocked after DEV-056 |
 | DEV-059 | Feature: Governance Policy-as-Code | Feature | M | DEV-004 | P1 | 🏁 Shipped — v5.3.10 |
 | DEV-060 | Docs: Public Benchmark Suite | Docs | M | DEV-004 | P2 | ✅ Done — suite + scoring + claim boundary in `docs/benchmarks/`; competitor runs manual-deferred |
 | DEV-075 | Docs: Subagent and Persona Guide Suite | Docs | M | DEV-002 | P1 | 🏁 Shipped — v5.3.8 |
@@ -376,3 +364,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-056 — Task 🟢 4/4 — RL-001–008 green; AgToosa_Retro.md + ship retro wiring | AgToosa |
 | 2026-07-11 | 🏗️ Build complete — wave 3 (DEV-052 · DEV-056); next: parallel /agtoosa-review | AgToosa |
 | 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — wave 3 DEV-052 · DEV-056 | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-056; 0 🔴 Critical; report: `docs/archived/review-DEV-056.md`; evidence: `docs/archived/evidence-DEV-056.md` | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-052; 0 🔴 Critical, 4 🟡 Warning accepted; report: `docs/archived/review-DEV-052.md`; evidence: `docs/archived/evidence-DEV-052.md` | AgToosa || DEV-052 | Feature: Hook Automation Pack | 2026-07-11 | [spec-DEV-052.md](archived/spec-DEV-052.md) · [review-DEV-052.md](archived/review-DEV-052.md) · [evidence-DEV-052.md](archived/evidence-DEV-052.md) |
+| DEV-056 | Feature: Retrospective Learning Loop | 2026-07-11 | [spec-DEV-056.md](archived/spec-DEV-056.md) · [review-DEV-056.md](archived/review-DEV-056.md) · [evidence-DEV-056.md](archived/evidence-DEV-056.md) |
+| 2026-07-11 | 🚀 Ship complete — v5.3.11 — wave 3 DEV-052 · DEV-056; smoke PASS; cycle archived | AgToosa |
+| 2026-07-11 | 🚀 Release 5.3.11 shipped — v5.3.11; version parity bash/ps1/npm; Milestone v5.3.12 (next) | AgToosa |
