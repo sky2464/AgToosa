@@ -193,6 +193,7 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
 | DEV-105 | Feature: PowerShell Maintain + Update Parity | Feature | M | DEV-001 | P0 | 🔍 In Review — Wave 1a |
 | DEV-106 | Docs: Built with AgToosa Showcase | Docs | XS | DEV-004 | P2 | ⬜ Backlog — spec approved; Wave 3 |
 | DEV-107 | Feature: Agent-Instructed Orchestration Brain | Feature | M | DEV-002 | P1 | ⬜ Backlog — Spec Approved; after Wave 1a |
+| DEV-109 | Feature: Lifecycle Next-Step Sync + Multi-Spec Clarity | Feature | L | DEV-002 / DEV-001 | P0 | ⬜ Backlog — spec draft; after last wave; awaiting Spec Approved |
 
 ## Epics
 
@@ -226,7 +227,7 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
     *   **Last shipped:** DEV-052 — Hook Automation Pack → `docs/archived/spec-DEV-052.md`
     *   **Last shipped:** DEV-056 — Retrospective Learning Loop → `docs/archived/spec-DEV-056.md`
     *   **Last shipped:** DEV-045 — Work Package Wave DAG → `docs/archived/spec-DEV-045.md`
-    *   **Current:** Rev4 wave — DEV-099, DEV-107 in backlog; DEV-107 Spec Approved (build after Wave 1a); DEV-087 shipped v5.3.15; demand-gated DEV-057 remains separate
+    *   **Current:** Rev4 wave — DEV-099, DEV-107, DEV-109 in backlog; DEV-107 Spec Approved (build after Wave 1a); DEV-109 lifecycle next-step sync + multi-spec clarity (spec draft); DEV-087 shipped v5.3.15; demand-gated DEV-057 remains separate
 
 *   **DEV-003 - Epic: Community Template Registry**
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
@@ -507,3 +508,5 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
 | 2026-07-12 | 🔍 Review ✅ Approved — DEV-090; 0 🔴 Critical, warnings accepted; report: `docs/archived/review-DEV-090.md`; evidence: `docs/archived/evidence-DEV-090.md` | AgToosa |
 | 2026-07-12 | 🔍 Review ✅ Approved — DEV-105; 0 🔴 Critical, warnings accepted; report: `docs/archived/review-DEV-105.md`; evidence: `docs/archived/evidence-DEV-105.md` | AgToosa |
 | 2026-07-12 | 🔍 Review complete — Wave 1a DEV-086 · DEV-090 · DEV-105 PASS (0 critical); next: `/agtoosa-ship` v5.3.16 | AgToosa |
+| 2026-07-12 | ✏️ /agtoosa-spec — DEV-109 draft — Lifecycle Next-Step Sync + Multi-Spec Clarity; ADR-012; test plan `docs/AgToosa_TestPlan-DEV-109.md`; backlog; awaiting Spec Approved | AgToosa |
+| 2026-07-12 | ✏️ /agtoosa-spec — DEV-109 estimate L; backlog only (after last wave); not enrolled in Active Cycle | AgToosa |

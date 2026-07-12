@@ -79,8 +79,11 @@ Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
 | ID | Story | Type | Est | Epic | Pri | Spec | Test plan |
 |---|---|---|---:|---|---:|---|---|
 | DEV-107 | Agent-Instructed Orchestration Brain | Feature | M | DEV-002 | P1 | `docs/archived/spec-DEV-107.md` | `docs/AgToosa_TestPlan-DEV-107.md` |
+| DEV-109 | Lifecycle Next-Step Sync + Multi-Spec Clarity | Feature | L | DEV-002 / DEV-001 | P0 | `docs/archived/spec-DEV-109.md` | `docs/AgToosa_TestPlan-DEV-109.md` |
 
 > **Enrollment note (2026-07-12):** DEV-107 Spec Approved; remains Backlog until after Wave 1a capacity frees. Build must not displace DEV-086 / DEV-090 / DEV-105.
+>
+> **Enrollment note (2026-07-12):** DEV-109 estimate L; backlog after last wave; spec draft awaiting approval; ID skips DEV-108 (roadmap-reserved voluntary scorecard).
 
 ## Recently shipped (v5.3.14 — 2026-07-11)
 
