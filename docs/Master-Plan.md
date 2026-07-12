@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (/agtoosa-build — remaining-specs fan-out wave 1 enrolled + approved)
+> **Last updated:** 2026-07-11 (/agtoosa-ship — v5.3.9 remaining-specs wave 1 shipped)
 
 ## Project Charter
 
@@ -9,9 +9,9 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | 🔍 Remaining-specs fan-out wave 1 — builds green; parallel review |
-| Milestone | `v5.3.9` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | DEV-045 · DEV-076 · DEV-077 · DEV-079 · DEV-080 · DEV-082 · DEV-083 · DEV-084 |
+| Current phase | 🏁 v5.3.9 shipped — wave 1 complete; dependents next |
+| Milestone | `v5.3.10` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
+| Active cycle | — (wave 1 archived; enroll DEV-046 · DEV-059 next) |
 | Cycle capacity | `8 story points` |
 
 ## Active Cycle
@@ -20,29 +20,9 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-045 | Feature: Work Package Wave DAG | Feature | M | 🔍 In Review | 4/4 |
-| DEV-076 | Spike: Static Documentation Site Proof | Spike | S | 🔍 In Review | 4/4 |
-| DEV-077 | Chore: Authoring Guide and Onboarding Surface | Chore | S | 🔍 In Review | 5/5 |
-| DEV-079 | Docs: Verifier and CI Adoption Examples | Docs | S | 🔍 In Review | 5/5 |
-| DEV-080 | Feature: Official Registry Pack Pilot | Feature | L | 🔍 In Review | 3/4 |
-| DEV-082 | Spike: High-Assurance Signature Mode Validation | Spike | S | 🔍 In Review | 4/4 |
-| DEV-083 | Docs: Voluntary Workflow Metrics and Case Study Kit | Docs | S | 🔍 In Review | 4/4 |
-| DEV-084 | Chore: Open-Source Sustainability and Support Boundary | Chore | XS | 🔍 In Review | 3/4 |
 
+<!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.9.md -->
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.8.md -->
-<!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.5.md -->
-<!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.4.md -->
-<!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.3.md -->
-<!-- DEV-074 shipped 2026-07-08 v5.3.2 — see Completed This Cycle -->
-
-<!-- Archived to docs/archived/cycle-2026-06-10-release-5.3.0.md -->
-<!-- Archived to docs/archived/cycle-2026-06-07-release-5.2.7.md -->
-<!-- Archived to docs/archived/cycle-2026-06-07-release-5.2.6.md -->
-<!-- Archived to docs/archived/cycle-2026-06-05-release-5.2.5.md -->
-<!-- Prior: docs/archived/cycle-2026-05-24-release-5.2.0.md -->
-<!-- Prior: docs/archived/cycle-2026-05-24-release-5.1.0.md (DEV-027) -->
-<!-- Prior: docs/archived/cycle-2026-05-24-release-5.0.1.md (DEV-026) -->
-
 Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blocked · 🔧 Awaiting Manual · 🏁 Shipped
 
 ## Active Tasks
@@ -50,369 +30,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-**DEV-045 — Work Package Wave DAG** (spec: `docs/archived/spec-DEV-045.md`)
-
-- [ ] **1.** Contract and RED coverage
-  - [ ] 1.1 Add failing `DAG-001`–`DAG-007` fixtures and assertions before implementation — _Requirements: AC-008_
-  - [ ] 1.2 Add the normative Work Package schema and examples to both SPEC-FORMAT copies — _Requirements: AC-001, AC-004, AC-007_
-- [ ] **2.** Package derivation and execution
-  - [ ] 2.1 Define Spec task-to-package derivation, dependency checks, and overlap fallback — _Requirements: AC-002, AC-003, AC-004_
-  - [ ] 2.2 Make Build consume ownership, dependencies, and package verification before fan-out — _Requirements: AC-003, AC-004, AC-007_
-- [ ] **3.** Async boundary
-  - [ ] 3.1 Add the selected-wave Work Packages section to Handoff — _Requirements: AC-005_
-  - [ ] 3.2 Add ownership-gap and merge-order reporting to Import — _Requirements: AC-006, AC-007_
-- [ ] **4.** Closure
-  - [ ] 4.1 Sync Quickref/Trust wording, run future GREEN validation, and record the two-parallel/one-dependent dogfood evidence — _Requirements: AC-007, AC-008_
-
-
-**DEV-076 — Static Documentation Site Proof** (spec: `docs/archived/spec-DEV-076.md`)
-
-- [ ] **1.** Site proof contract
-  - [ ] 1.1 RED SITE fixtures/assertions — _Requirements: AC-001–AC-006_
-  - [ ] 1.2 Pin site config + Pages workflow boundaries — _Requirements: AC-001, AC-003, AC-006_
-- [ ] **2.** Canonical markdown rendering
-  - [ ] 2.1 Landing/index links to canonical docs — _Requirements: AC-002, AC-004, AC-005_
-  - [ ] 2.2 Base-path proof for /AgToosa/ — _Requirements: AC-004_
-- [ ] **3.** CI proof
-  - [ ] 3.1 Workflow builds ephemeral artifact; no committed site output — _Requirements: AC-001, AC-003, AC-005_
-- [ ] **4.** Evidence
-  - [ ] 4.1 GREEN SITE bats + test-plan evidence — _Requirements: AC-001–AC-006_
-
-**DEV-077 — Authoring Guide and Onboarding Surface** (spec: `docs/archived/spec-DEV-077.md`)
-
-- [ ] **1.** Authoring discovery contract
-  - [ ] 1.1 RED AUTH checks — _Requirements: AC-002, AC-004, AC-005, AC-006_
-  - [ ] 1.2 Discovery copy + stable link policy — _Requirements: AC-003, AC-004, AC-005_
-- [ ] **2.** Canonical authoring content
-  - [ ] 2.1 Extension guide refresh — _Requirements: AC-001, AC-007_
-  - [ ] 2.2 Registry-pack handbook + checklist — _Requirements: AC-002, AC-007_
-- [ ] **3.** Registry and README discovery
-  - [ ] 3.1 Registry mirrors point to handbook — _Requirements: AC-003, AC-006_
-  - [ ] 3.2 README authoring links — _Requirements: AC-004, AC-006_
-- [ ] **4.** Help discovery parity
-  - [ ] 4.1 Help adapters authoring pointer — _Requirements: AC-005, AC-006_
-  - [ ] 4.2 Static help (no context read) — _Requirements: AC-005_
-- [ ] **5.** Evidence
-  - [ ] 5.1 GREEN AUTH evidence — _Requirements: AC-001–AC-007_
-
-**DEV-079 — Verifier and CI Adoption Examples** (spec: `docs/archived/spec-DEV-079.md`)
-
-- [ ] **1.** Adoption contract tests
-  - [ ] 1.1 RED VCA path/exit/copy/enforcement — _Requirements: AC-001–AC-003, AC-005_
-  - [ ] 1.2 Provider/gate/mirror/discovery tests — _Requirements: AC-004, AC-006, AC-007_
-- [ ] **2.** Canonical adoption guide
-  - [ ] 2.1 Local verifier examples — _Requirements: AC-001, AC-003, AC-005_
-  - [ ] 2.2 Safe GHA copy/review/push sequence — _Requirements: AC-002, AC-003_
-  - [ ] 2.3 Provider-neutral guidance — _Requirements: AC-004_
-- [ ] **3.** Gate and boundary surfaces
-  - [ ] 3.1 Gate example alignment — _Requirements: AC-002, AC-007_
-  - [ ] 3.2 Readiness label clarity — _Requirements: AC-003, AC-006_
-- [ ] **4.** Discovery
-  - [ ] 4.1 README/Quickref links — _Requirements: AC-005, AC-006_
-  - [ ] 4.2 No unmaintained copy-ready snippets — _Requirements: AC-004_
-- [ ] **5.** Evidence
-  - [ ] 5.1 GREEN VCA evidence — _Requirements: AC-001–AC-007_
-
-**DEV-080 — Official Registry Pack Pilot** (spec: `docs/archived/spec-DEV-080.md`)
-
-- [ ] **1.** Catalog gate and pilot contract
-  - [ ] 1.1 Confirm DEV-053 catalog contract version — _Requirements: AC-002, AC-004_
-  - [ ] 1.2 Pilot review/evidence checklist — _Requirements: AC-005–AC-007_
-- [ ] **2.** Author three maintained candidates
-  - [ ] 2.1 Web pack under `packs/official-web/` — _Requirements: AC-001–AC-004, AC-007_
-  - [ ] 2.2 API/service pack under `packs/official-api/` — _Requirements: AC-001–AC-004, AC-007_
-  - [ ] 2.3 Infra/security pack under `packs/official-infra/` — _Requirements: AC-001–AC-004, AC-006, AC-007_
-- [ ] **3.** Prove local install and safety
-  - [ ] 3.1 RED OPP fixtures — _Requirements: AC-002, AC-004–AC-006_
-  - [ ] 3.2 Isolated install/preview/queue/merge proofs — _Requirements: AC-005, AC-006_
-  - [ ] 3.3 Maintenance/deprecation records — _Requirements: AC-007_
-- [ ] **4.** Document and publish boundary
-  - [ ] 4.1 Local pilot inventory + evidence links — _Requirements: AC-001, AC-003, AC-005, AC-008_
-  - [ ] 4.2 External registry submission — _Requirements: AC-002, AC-008_ `[manual]`
-  - [ ] 4.3 Confirm external acceptance — _Requirements: AC-008_ `[manual-deferred]`
-
-**DEV-082 — High-Assurance Signature Mode Validation** (spec: `docs/archived/spec-DEV-082.md`)
-
-- [ ] **1.** Evidence contract
-  - [ ] 1.1 Spike structure + decision criteria — _Requirements: AC-001, AC-007, AC-008_
-  - [ ] 1.2 Demand/operability/security/rollback criteria — _Requirements: AC-001, AC-007, AC-008_
-- [ ] **2.** Gather findings (no production flags)
-  - [ ] 2.1 Demand scenarios without telemetry — _Requirements: AC-001, AC-008_
-  - [ ] 2.2 Key lifecycle + failure matrix + rollback tabletop — _Requirements: AC-003–AC-006_
-- [ ] **3.** Decide
-  - [ ] 3.1 Adopt/defer/reject with rationale — _Requirements: AC-001, AC-007_
-  - [ ] 3.2 Review findings — _Requirements: AC-001, AC-003–AC-006_
-- [ ] **4.** Boundary
-  - [ ] 4.1 No AGTOOSA_REQUIRE_SIGNATURES / production code — _Requirements: spike boundary_
-  - [ ] 4.2 GREEN HAS bats + evidence — _Requirements: AC-001–AC-008_
-
-**DEV-083 — Voluntary Workflow Metrics and Case Study Kit** (spec: `docs/archived/spec-DEV-083.md`)
-
-- [ ] **1.** Measurement contract
-  - [ ] 1.1 Opt-in/local/minimization/redaction rules — _Requirements: AC-001, AC-002_
-  - [ ] 1.2 Metric schema + synthetic labels — _Requirements: AC-002_
-- [ ] **2.** Six metric templates
-  - [ ] 2.1–2.6 Install/verifier/handoff/cross-model/cycle/pack metrics — _Requirements: AC-003–AC-008_
-- [ ] **3.** Kit docs
-  - [ ] 3.1 Case-study template — _Requirements: AC-001, AC-002_
-  - [ ] 3.2 Synthetic examples + mirrors — _Requirements: AC-002–AC-008_
-  - [ ] 3.3 Register kit files (no collection hooks) — _Requirements: AC-001_
-- [ ] **4.** Prove contract
-  - [ ] 4.1 RED MET tests — _Requirements: AC-001–AC-008_
-  - [ ] 4.2 GREEN + privacy-review evidence — _Requirements: AC-001, AC-002_
-
-**DEV-084 — Open-Source Sustainability and Support Boundary** (spec: `docs/archived/spec-DEV-084.md`)
-
-- [ ] **1.** Boundary contract
-  - [ ] 1.1 RED OSS wording checks — _Requirements: support/sponsor/security ACs_
-  - [ ] 1.2 Cross-surface disclosure map — _Requirements: consistency ACs_
-- [ ] **2.** Align public surfaces
-  - [ ] 2.1 SUPPORT/FUNDING/SECURITY/CONTRIBUTING/README — _Requirements: ACs_
-- [ ] **3.** Boundary proof
-  - [ ] 3.1 No SLA/feature-gate claims — _Requirements: ACs_
-  - [ ] 3.2 GREEN OSS bats + evidence — _Requirements: ACs_
-
-<!--
-**DEV-050 — Cross-Model Review Gate** (spec: `docs/archived/spec-DEV-050.md`) — shipped 2026-07-11 v5.3.6
-
-- [x] **1.** RED contract bats (CM-001–CM-006)
-- [x] **2.** Canonical `AgToosa_CrossModelReview.md` + maintainer mirror
-- [x] **3.** Wire Review Part 5 + `cross-model` sub-command; Specialists `review` hook
-- [x] **4.** Evidence doc row + GitHub agent + config registration + platform adapters
-- [x] **5.** GREEN bats + test-plan evidence + Agent/Skills/Quickref cross-links
--->
-
-<!--
-**DEV-075 — Subagent and Persona Guide Suite** (spec: `docs/archived/spec-DEV-075.md`) — shipped 2026-07-11 v5.3.8
-
-- [x] **1.** Contract tests and shared guide structure
-- [x] **2.** End-to-end walkthrough
-- [x] **3.** Audience guides
-- [x] **4.** Discovery without duplication
-- [x] **5.** Evidence
--->
-
-<!--
-**DEV-053 — Extension and Preset Catalog** (spec: `docs/archived/spec-DEV-053.md`) — shipped 2026-07-11 v5.3.8
-
-- [x] **1.** Contract and fixtures (PC RED)
-- [x] **2.** Catalog core (schema, list/search/info, plan)
-- [x] **3.** Production catalog and workflow docs
-- [x] **4.** Verification and evidence
--->
-
-<!--
-**DEV-078 — First-15-Minutes Maintenance Gate** (spec: `docs/archived/spec-DEV-078.md`) — shipped 2026-07-11 v5.3.8
-
-- [x] **1.** Fixture-based RED coverage
-- [x] **2.** Deterministic maintenance checks
-- [x] **3.** Repair current drift only
-- [x] **4.** Evidence
--->
-
-<!--
-**DEV-081 — Optional Local DX Add-on Validation** (spec: `docs/archived/spec-DEV-081.md`) — shipped 2026-07-11 v5.3.8
-
-- [x] **1.** Establish the evidence contract
-- [x] **2.** Evaluate candidates independently
-- [x] **3.** Decide and review
-- [x] **4.** Preserve the spike boundary
--->
-
-<!--
-**DEV-054 — Signed Registry Provenance** (spec: `docs/archived/spec-DEV-054.md`) — shipped 2026-07-08 v5.3.5
-
-- [x] **1.** RED contract bats (SP-001–SP-005)
-- [x] **2.** Provenance schema docs + ADR-011 + Trust/Readiness/Registry claim updates
-- [x] **3.** Optional soft-warn minisign verify in registry (+ bootstrap)
-- [x] **4.** Bundled pubkey path + config registration + fixture keys for tests
-- [x] **5.** GREEN bats + test-plan evidence; M-1 minisign keygen + release sidecars `[manual-done]`
--->
-
-<!--
-**DEV-049 — Evidence Ledger** (spec: `docs/archived/spec-DEV-049.md`) — shipped 2026-07-08 v5.3.4
-
-- [x] **1.** RED contract bats (EL-001–EL-005)
-- [x] **2.** Canonical Evidence doc + JSONL seed + maintainer mirrors
-- [x] **3.** Wire Review, Ship, Agent, Quickref, Readiness, Roadmap, Import pointer
-- [x] **4.** Register config + optional thin `/agtoosa-evidence` adapters
-- [x] **5.** GREEN bats + test-plan evidence
--->
-
-<!--
-**DEV-047 — Async Agent Handoff Packs** (spec: `docs/archived/spec-DEV-047.md`) — shipped 2026-07-08 v5.3.3
-
-- [x] **1.** RED contract bats (HO-001–HO-005)
-- [x] **2.** Canonical Handoff doc + maintainer mirror
-- [x] **3.** Wire Build, Agent, Quickref, Readiness, Roadmap
-- [x] **4.** Register config + platform adapters + entry points
-- [x] **5.** GREEN bats + test-plan evidence
-
-**DEV-048 — Agent Result Import Gate** (spec: `docs/archived/spec-DEV-048.md`) — shipped 2026-07-08 v5.3.3
-
-- [x] **1.** RED contract bats (IR-001–IR-005)
-- [x] **2.** Canonical Import doc + maintainer mirror
-- [x] **3.** Wire Build, Ship, Agent, Quickref, Readiness, Roadmap
-- [x] **4.** Register config + platform adapters + entry points
-- [x] **5.** GREEN bats + test-plan evidence
--->
-
-<!--
-**DEV-074 — PS1 non-interactive install parity + Pester suite** (spec: `docs/archived/spec-DEV-074.md`) — shipped 2026-07-08 v5.3.2
-
-- [x] **1.** RED contract tests
-- [x] **2.** Implement PS1 non-interactive install
-- [x] **3.** Docs sync
-- [x] **4.** GREEN Pester + evidence
-- [x] **5.** Verify
--->
-
-<!--
-**DEV-042 — Spec Quality Analyzer** (spec: `docs/archived/spec-DEV-042.md`) — shipped 2026-06-10 v5.3.0
-
-**DEV-043 — Brownfield Spec Drift Baseline** (spec: `docs/archived/spec-DEV-043.md`) — shipped 2026-06-10 v5.3.0
-
-<!--
-**DEV-029 — Stop branch-protection workflow failure emails** (spec: `docs/archived/spec-DEV-029.md`) — shipped 2026-05-25 v5.2.1
-
-- [x] **1.** Workflow push-safe + PR guards
-- [x] **2.** Regression coverage (DEV-029 T-001–T-005)
-- [x] **3.** Post-merge verification — run `26419089522` success on push (`PR Hygiene Checks`, 7s)
-  - [x] 3.1 Push to `main` yields successful run — _AC-001_
-  - [x] 3.2 `gh run list --workflow branch-protection.yml` shows success — _AC-001_
-- [x] **4.** PR path regression — PR #29 / run `27050231744` success (`require-labels`, `require-description`, `link-issue`, `all-checks-pass`; `push-main-ok` skipped)
-  - [x] 4.1 PR to `main` still runs label/description/issue checks — _AC-002_
--->
-
-<!--
-**DEV-032 — Patch-first release versioning** (spec: `docs/archived/spec-DEV-032.md`) — shipped 2026-05-25 v5.2.2
-
-- [x] **1.** Policy ADR and maintainer checklist — _AC-002, AC-006_
-  - [x] 1.1 Add `docs/adr/ADR-005-release-cadence.md` — _AC-006_
-  - [x] 1.2 Cross-link ADR-004 → ADR-005 — _AC-006_
-  - [x] 1.3 Extend `docs/agtoosa-maintainer.md` Release Checklist — _AC-002_
-- [x] **2.** Template + maintainer workflow mirrors — _AC-003, AC-004, AC-005_
-  - [x] 2.1 `template/Docs/AgToosa_Ship.md` version bump section — _AC-003_
-  - [x] 2.2 `docs/AgToosa_Ship.md` mirror — _AC-003_
-  - [x] 2.3 `template/Docs/AgToosa_Review.md` PATCH-first ship suggestion — _AC-004_
-  - [x] 2.4 `docs/AgToosa_Review.md` mirror — _AC-004_
-  - [x] 2.5 Readiness gate 7 wording (template + docs) — _AC-005_
-- [x] **3.** Master-Plan and regression tests — _AC-005, AC-007_
-  - [x] 3.1 Milestone + DEV-032 row — _AC-005_
-  - [x] 3.2 DEV-032 bats VP-001–VP-005 — _AC-007_
--->
-
-<!--
-**DEV-033 — agtoosa.ps1 PSScriptAnalyzer approved verbs** (spec: `docs/archived/spec-DEV-033.md`) — shipped 2026-06-05 v5.2.4
-
-- [x] **1.** Rename helpers in `agtoosa.ps1`
-  - [x] 1.1 `Stage-Files` → `Copy-StageFiles` — _AC-001, AC-003_
-  - [x] 1.2 `Ensure-PackQueueDir` → `Initialize-PackQueueDir` — _AC-001, AC-003_
-  - [x] 1.3 `Salvage-ShipPacksToQueue` → `Move-ShipPacksToQueue` — _AC-001, AC-003_
-- [x] **2.** Docs + tests
-  - [x] 2.1 Update audit doc reference — _AC-005_
-  - [x] 2.2 DEV-033 bats PV-001–PV-003 — _AC-004_
-- [x] **3.** Verify PSScriptAnalyzer + PK smoke — _AC-001, AC-002_
-  - [x] 3.1 Run `bats tests/agtoosa.bats -f "DEV-033"` and focused registry/install smoke — _AC-002, AC-004_
-  - [x] 3.2 Confirm PSScriptAnalyzer clean on `agtoosa.ps1` — _AC-001_
--->
-
-<!--
-**DEV-030 — Fix `/agtoosa-update` self-target uncertainty** (spec: `docs/archived/spec-DEV-030.md`) — shipped 2026-06-05 v5.2.4
-
-- [x] **1.** Canonical update workflow — operating context
-  - [x] 1.1 Add Stage 1a operating-context detection in `template/Docs/AgToosa_Update.md` — _AC-001, AC-002_
-  - [x] 1.2 Maintainer Dogfood stop + report (no Apply, no downstream path prompt) — _AC-003, AC-004_
-  - [x] 1.3 Preserve DEV-027 flow for Generated Project Mode — _AC-005_
-  - [x] 1.4 Mirror to `docs/AgToosa_Update.md` — _AC-001, AC-004, AC-005_
-- [x] **2.** CLI and PowerShell self-target guidance
-  - [x] 2.1 Extend `agtoosa.sh` self-target messages — _AC-006, AC-009_
-  - [x] 2.2 Extend `agtoosa.ps1` self-target messages — _AC-006, AC-010_
-- [x] **3.** Adapter spot-check (conditional)
-  - [x] 3.1 T-008 passed — no adapter edits required — _AC-007_
-- [x] **4.** Regression coverage
-  - [x] 4.1 DEV-030 bats doc assertions — _AC-001–AC-004, AC-008_
-  - [x] 4.2 Extended self-target guidance bats — _AC-006, AC-009, AC-010_
-  - [x] 4.3 Focused filter + DEV-027 T-001–T-009 regression — _AC-005, AC-007_
-- [x] **5.** Validation and bookkeeping
-  - [x] 5.1 Full bats when focused green — _AC-008_
-  - [x] 5.2 `docs/AgToosa_TestPlan-DEV-030.md` evidence — _AC-008_
-  - [x] 5.3 Master-Plan task progress — _AC-001_
--->
-
-<!--
-**DEV-034 — Maintainer release-state reconciliation** (spec: `docs/archived/spec-DEV-034.md`) — shipped 2026-06-05 v5.2.5
-
-- [x] **1.** Audit current release ledger
-- [x] **2.** Reconcile Master-Plan and changelog state
-- [x] **3.** Align version and release pins if shipping
-- [x] **4.** Add regression coverage (DEV-034 LR-001–LR-006)
-- [x] **5.** Review and handoff — review-DEV-034.md; shipped v5.2.5
--->
-
-<!--
-**DEV-031 — Project-specific specialist subagents** (spec: `docs/archived/spec-DEV-031.md`) — shipped 2026-05-25 v5.2.3
-
-- [x] **1.** Canonical specialist contract — _AC-001–AC-002_
-- [x] **2.** Init Phase E specialist discovery — _AC-003–AC-005_
-- [x] **3.** Update Specialist Compatibility Check — _AC-007–AC-008_
-- [x] **4.** Spec orchestration step 1a — _AC-009–AC-012_
-- [x] **5.** Agent + Skills + Codex adapters — _AC-014_
-- [x] **6.** Maintainer mirrors + DEV-031 bats T-001–T-015 — _AC-013, AC-015_
--->
-
-<!--
-**DEV-028 — Plan-mode spec interview** (spec: `docs/archived/spec-DEV-028.md`) — shipped 2026-05-24 v5.2.0
-
-<!--
-**DEV-027 — Agentic /agtoosa-update** (spec: `docs/archived/spec-DEV-027.md`) — shipped 2026-05-24 v5.1.0
-
-<!--
-**DEV-026 — Codex agent mode spec workflow execution** (spec: `docs/archived/spec-DEV-026.md`) — shipped 2026-05-24 v5.0.1
-
-<!--
-**DEV-025 — Maintainer docs path normalization** (spec: `docs/archived/spec-DEV-025.md`) — shipped 2026-05-24 v5.0.0
-
-<!--
-**DEV-024 — Maintainer status readiness doc parity** (spec: `docs/archived/spec-DEV-024.md`) — shipped 2026-05-24 v4.14.1
-
-<!--
-**DEV-019 — Master Architecture document** (spec: `docs/archived/spec-DEV-019.md`) — shipped 2026-05-24 v4.13.0
-
-<!--
-**DEV-018 — Registry pack queue** (spec: `docs/archived/spec-DEV-018.md`) — shipped 2026-05-24 v4.12.0
-
-**DEV-020 — Registry install version pinning** (spec: `docs/archived/spec-DEV-020.md`) — shipped 2026-05-24 v4.12.0
-
-**DEV-021 — E2E pinned registry install test (RV6)** (spec: `docs/archived/spec-DEV-021.md`) — shipped 2026-05-24 v4.12.1
--->
-
-<!--
-**DEV-016 — Gemini slash command routing** (spec: `docs/archived/spec-DEV-016.md`) — shipped 2026-05-24
-
-- [x] **1.** Gemini TOML routing guardrails (14 adapters)
-- [x] **2.** AGENTS.md + AgToosa_Gemini.md
-- [x] **3.** Skill synthesis collision guardrails
-- [x] **4.** GM1–GM5 bats; full suite 246/246 green
-
-<!--
-**DEV-003 — Registry prod-readiness (audit closure)** (spec: `docs/archived/spec-DEV-003.md`) — shipped 2026-05-24
-
-- [x] **1.** Case B merge fix
-  - [x] 1.1 Update `merge_platform_file` Case B to append via `inject_version` — _AC-001_
-  - [x] 1.2 Add RG3: Case B second `--update` leaves one START block — _AC-002, AC-007_
-- [x] **2.** Registry bash UX and safety
-  - [x] 2.1 `registry_info`: exit 1 when jq returns empty — _AC-003_
-  - [x] 2.2 `registry_search`: explicit no-results message — _AC-004_
-  - [x] 2.3 `registry_publish`: emit manifest with `jq -n` — _AC-005_
-  - [x] 2.4 Add RG2, RG4, RG5, RG8 — _AC-003, AC-004, AC-005, AC-007, AC-008_
-- [x] **3.** PowerShell registry hardening
-  - [x] 3.1 Wrap all registry `ConvertFrom-Json` results with `@()` — _AC-006_
-  - [x] 3.2 Add RG6: PS1 parses single-entry fixture array — _AC-006, AC-007_
-- [x] **4.** Verification
-  - [x] 4.1 Add RG1 (jq injection), RG7 (path traversal unchanged) — _AC-007, AC-008_
-  - [x] 4.2 Run RG filter + full bats; record evidence — _AC-007_
--->
+<!-- Wave 1 tasks shipped — see docs/archived/cycle-2026-07-11-release-5.3.9.md and archived specs -->
 
 ## Manual / Deferred Tasks
 
@@ -421,6 +39,9 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | Story | Task # | Deferred Since | Description |
 |-------|--------|----------------|-------------|
+| DEV-080 | 4.2 | 2026-07-11 | Submit three official packs to external agtoosa-registry `[manual-deferred]` |
+| DEV-080 | 4.3 | 2026-07-11 | Confirm accepted external registry records `[manual-deferred]` |
+| DEV-084 | M-1 | 2026-07-11 | Confirm GitHub Sponsors for @sky2464 is active (OSS-007) `[manual-deferred]` |
 | DEV-071 | M-1 | 2026-06-09 | Publish the npm wrapper: `cd npm && npm publish` (requires npm account/2FA) `[manual]` |
 | DEV-062 | M-1 | 2026-06-09 | Optional: publish the gate as a GitHub Marketplace Action for discoverability `[manual]` |
 | DEV-066 | M-1 | 2026-06-09 | Configure required reviewers on the `release` environment in repo settings `[manual]` |
@@ -445,8 +66,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | ID | Title | Type | Estimate | Epic | Priority | Status |
 |----|-------|------|----------|------|----------|--------|
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
-| DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🟨 In Progress — fan-out wave 1 |
-| DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | ⬜ Backlog — executable spec ready; depends DEV-045 |
+| DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
+| DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | ⬜ Backlog — unblocked after DEV-045 |
 | DEV-047 | Feature: Async Agent Handoff Packs | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.3 |
 | DEV-048 | Feature: Agent Result Import Gate | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.3 |
 | DEV-049 | Feature: Evidence Ledger | Feature | M | DEV-004 | P0 | 🏁 Shipped — v5.3.4 |
@@ -459,18 +80,18 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-056 | Feature: Retrospective Learning Loop | Feature | S | DEV-002 | P2 | ⬜ Backlog — executable spec ready; stable evidence inputs required |
 | DEV-057 | Feature: Multi-Repo Story Overlay | Feature | L | DEV-002 | P2 | ⬜ Backlog — executable spec ready; demand-gated and requires DEV-045 shipped |
 | DEV-058 | Feature: Local Dashboard | Feature | M | DEV-004 | P2 | ⬜ Backlog — executable spec ready; read-only local scope |
-| DEV-059 | Feature: Governance Policy-as-Code | Feature | M | DEV-004 | P1 | ⬜ Backlog — executable spec ready; honest enforcement classes required |
+| DEV-059 | Feature: Governance Policy-as-Code | Feature | M | DEV-004 | P1 | ⬜ Backlog — recommended next after DEV-045 |
 | DEV-060 | Docs: Public Benchmark Suite | Docs | M | DEV-004 | P2 | ✅ Done — suite + scoring + claim boundary in `docs/benchmarks/`; competitor runs manual-deferred |
 | DEV-075 | Docs: Subagent and Persona Guide Suite | Docs | M | DEV-002 | P1 | 🏁 Shipped — v5.3.8 |
-| DEV-076 | Spike: Static Documentation Site Proof | Spike | S | DEV-004 | P2 | 🟨 In Progress — fan-out wave 1 |
-| DEV-077 | Chore: Authoring Guide and Onboarding Surface | Chore | S | DEV-003 | P2 | 🟨 In Progress — fan-out wave 1 |
+| DEV-076 | Spike: Static Documentation Site Proof | Spike | S | DEV-004 | P2 | 🏁 Shipped — v5.3.9 |
+| DEV-077 | Chore: Authoring Guide and Onboarding Surface | Chore | S | DEV-003 | P2 | 🏁 Shipped — v5.3.9 |
 | DEV-078 | Chore: First-15-Minutes Maintenance Gate | Chore | XS | DEV-004 | P1 | 🏁 Shipped — v5.3.8 |
-| DEV-079 | Docs: Verifier and CI Adoption Examples | Docs | S | DEV-004 | P2 | 🟨 In Progress — fan-out wave 1 |
-| DEV-080 | Feature: Official Registry Pack Pilot | Feature | L | DEV-003 | P2 | 🟨 In Progress — fan-out wave 1; external publish manual |
+| DEV-079 | Docs: Verifier and CI Adoption Examples | Docs | S | DEV-004 | P2 | 🏁 Shipped — v5.3.9 |
+| DEV-080 | Feature: Official Registry Pack Pilot | Feature | L | DEV-003 | P2 | 🏁 Shipped — v5.3.9 (external publish manual) |
 | DEV-081 | Spike: Optional Local DX Add-on Validation | Spike | M | DEV-001 | P2 | 🏁 Shipped — v5.3.8 |
-| DEV-082 | Spike: High-Assurance Signature Mode Validation | Spike | S | DEV-003 | P2 | 🟨 In Progress — fan-out wave 1 |
-| DEV-083 | Docs: Voluntary Workflow Metrics and Case Study Kit | Docs | S | DEV-004 | P2 | 🟨 In Progress — fan-out wave 1 |
-| DEV-084 | Chore: Open-Source Sustainability and Support Boundary | Chore | XS | DEV-004 | P2 | 🟨 In Progress — fan-out wave 1 |
+| DEV-082 | Spike: High-Assurance Signature Mode Validation | Spike | S | DEV-003 | P2 | 🏁 Shipped — v5.3.9 (Defer) |
+| DEV-083 | Docs: Voluntary Workflow Metrics and Case Study Kit | Docs | S | DEV-004 | P2 | 🏁 Shipped — v5.3.9 |
+| DEV-084 | Chore: Open-Source Sustainability and Support Boundary | Chore | XS | DEV-004 | P2 | 🏁 Shipped — v5.3.9 (Sponsors manual) |
 | DEV-035 | Chore: Launch P0 publication and quickstart gate | Chore | M | DEV-004 | P0 | ✅ Done |
 | DEV-036 | Fix: Windows and registry parity | Fix | M | DEV-001 / DEV-003 | P1 | ✅ Done |
 | DEV-037 | Chore: Truthful launch documentation and positioning | Chore | M | DEV-002 | P1 | ✅ Done |
@@ -489,10 +110,10 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Stories | Status | Next spec |
 |----|-------|---------|--------|-----------|
-| DEV-001 | Epic: Core Generator Engine | 2 open / 2 total | 🟨 In Progress | DEV-046 after wave-1 DEV-045 |
-| DEV-002 | Epic: Workflow Templates | 9 open / 20 total | 🟨 In Progress | DEV-045 (building) |
-| DEV-003 | Epic: Community Template Registry | 7 open / 7 total | 🟨 In Progress | DEV-080 · DEV-077 · DEV-082 building |
-| DEV-004 | Epic: Testing & QA Harness | 10 open / 11 total | 🟨 In Progress | DEV-076 · DEV-079 · DEV-083 · DEV-084 building |
+| DEV-001 | Epic: Core Generator Engine | 1 open / 2 total | 🟨 In Progress | DEV-046 unblocked | 🟨 In Progress | DEV-046 after wave-1 DEV-045 |
+| DEV-002 | Epic: Workflow Templates | 8 open / 20 total | 🟨 In Progress | DEV-046/059 path; DEV-045 shipped | 🟨 In Progress | DEV-045 (building) |
+| DEV-003 | Epic: Community Template Registry | 4 open / 7 total | 🟨 In Progress | DEV-080 external publish manual | 🟨 In Progress | DEV-080 · DEV-077 · DEV-082 building |
+| DEV-004 | Epic: Testing & QA Harness | 6 open / 11 total | 🟨 In Progress | DEV-059 next | 🟨 In Progress | DEV-076 · DEV-079 · DEV-083 · DEV-084 building |
 
 ### Epic Charters
 
@@ -708,3 +329,16 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-082; 0 🔴 Critical, 5 🟡 Warning accepted; Defer preserved; report: `docs/archived/review-DEV-082.md`; evidence: `docs/archived/evidence-DEV-082.md` | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-079; 0 🔴 Critical; report: `docs/archived/review-DEV-079.md`; evidence: `docs/archived/evidence-DEV-079.md` | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-076; 0 🔴 Critical, 4 🟡 Warning accepted; report: `docs/archived/review-DEV-076.md`; evidence: `docs/archived/evidence-DEV-076.md` | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-083; 0 🔴 Critical, 4 🟡 Warning accepted; report: `docs/archived/review-DEV-083.md`; evidence: `docs/archived/evidence-DEV-083.md` | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-080; 0 🔴 Critical, 5 🟡 Warning accepted; 4.2/4.3 [manual-deferred]; report: `docs/archived/review-DEV-080.md`; evidence: `docs/archived/evidence-DEV-080.md` | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-045; 0 🔴 Critical, 6 🟡 Warning accepted; report: `docs/archived/review-DEV-045.md`; evidence: `docs/archived/evidence-DEV-045.md` | AgToosa |
+| 2026-07-11 | 🔍 Review complete — remaining-specs wave 1 all PASS (0 critical); next: `/agtoosa-ship` v5.3.9 | AgToosa || DEV-045 | Feature: Work Package Wave DAG | 2026-07-11 | [spec-DEV-045.md](archived/spec-DEV-045.md) · [review-DEV-045.md](archived/review-DEV-045.md) · [evidence-DEV-045.md](archived/evidence-DEV-045.md) |
+| DEV-076 | Spike: Static Documentation Site Proof | 2026-07-11 | [spec-DEV-076.md](archived/spec-DEV-076.md) · [review-DEV-076.md](archived/review-DEV-076.md) · [evidence-DEV-076.md](archived/evidence-DEV-076.md) |
+| DEV-077 | Chore: Authoring Guide and Onboarding Surface | 2026-07-11 | [spec-DEV-077.md](archived/spec-DEV-077.md) · [review-DEV-077.md](archived/review-DEV-077.md) · [evidence-DEV-077.md](archived/evidence-DEV-077.md) |
+| DEV-079 | Docs: Verifier and CI Adoption Examples | 2026-07-11 | [spec-DEV-079.md](archived/spec-DEV-079.md) · [review-DEV-079.md](archived/review-DEV-079.md) · [evidence-DEV-079.md](archived/evidence-DEV-079.md) |
+| DEV-080 | Feature: Official Registry Pack Pilot | 2026-07-11 | [spec-DEV-080.md](archived/spec-DEV-080.md) · [review-DEV-080.md](archived/review-DEV-080.md) · [evidence-DEV-080.md](archived/evidence-DEV-080.md) |
+| DEV-082 | Spike: High-Assurance Signature Mode Validation | 2026-07-11 | [spec-DEV-082.md](archived/spec-DEV-082.md) · [review-DEV-082.md](archived/review-DEV-082.md) · [evidence-DEV-082.md](archived/evidence-DEV-082.md) |
+| DEV-083 | Docs: Voluntary Workflow Metrics and Case Study Kit | 2026-07-11 | [spec-DEV-083.md](archived/spec-DEV-083.md) · [review-DEV-083.md](archived/review-DEV-083.md) · [evidence-DEV-083.md](archived/evidence-DEV-083.md) |
+| DEV-084 | Chore: Open-Source Sustainability and Support Boundary | 2026-07-11 | [spec-DEV-084.md](archived/spec-DEV-084.md) · [review-DEV-084.md](archived/review-DEV-084.md) · [evidence-DEV-084.md](archived/evidence-DEV-084.md) |
+| 2026-07-11 | 🚀 Ship complete — v5.3.9 — remaining-specs wave 1 (DEV-045/076/077/079/080/082/083/084); smoke PASS; cycle archived | AgToosa |
+| 2026-07-11 | 🚀 Release 5.3.9 shipped — v5.3.9; version parity bash/ps1/npm; Milestone v5.3.10 (next) | AgToosa |

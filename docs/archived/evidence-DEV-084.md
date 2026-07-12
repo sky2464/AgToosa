@@ -21,3 +21,9 @@
 | review | AC-001–AC-006 | review | `docs/archived/review-DEV-084.md` | 4 virtual personas; verdict PASS; 0 unresolved Critical | PASS | AgToosa | 2026-07-12T02:30:50Z |
 | review | AC-001–AC-006 | verifier | `docs/agtoosa-verify.sh` | `bash agtoosa.sh --verify .` — 0 fail; DEV-084 gates pass | 0 | AgToosa | 2026-07-12T02:30:50Z |
 | review | AC-001, AC-006 | other | OSS-007 manual | `curl -sI https://github.com/sponsors/sky2464` → 302 profile; deferred live enablement | deferred | AgToosa | 2026-07-12T02:30:50Z |
+
+## Ship finalize
+
+| ts | phase | event | notes |
+|----|-------|-------|-------|
+| 2026-07-12T02:32:57Z | ship | complete | v5.3.9 batched ship |

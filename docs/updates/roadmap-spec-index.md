@@ -15,20 +15,25 @@ Every actionable proposal in the update documents is represented by one of:
 
 Editing this index does not enroll a story. Backlog stories still require `/agtoosa-spec`, explicit approval, and a separate `/agtoosa-build` invocation.
 
-## Active Stories (remaining-specs fan-out wave 1 — 2026-07-11)
+## Active Stories (post v5.3.9 — 2026-07-11)
 
-| ID | Story | Epic | Spec | Role |
-|---|---|---|---|---|
-| DEV-045 | Work Package Wave DAG | DEV-002 | `docs/archived/spec-DEV-045.md` | Building — critical path |
-| DEV-076 | Static Documentation Site Proof | DEV-004 | `docs/archived/spec-DEV-076.md` | Building — independent |
-| DEV-077 | Authoring Guide and Onboarding Surface | DEV-003 | `docs/archived/spec-DEV-077.md` | Building — independent |
-| DEV-079 | Verifier and CI Adoption Examples | DEV-004 | `docs/archived/spec-DEV-079.md` | Building — independent |
-| DEV-080 | Official Registry Pack Pilot | DEV-003 | `docs/archived/spec-DEV-080.md` | Building — DEV-053 unblocked; external publish manual |
-| DEV-082 | High-Assurance Signature Mode Validation | DEV-003 | `docs/archived/spec-DEV-082.md` | Building — spike (no production flags) |
-| DEV-083 | Voluntary Workflow Metrics Kit | DEV-004 | `docs/archived/spec-DEV-083.md` | Building — independent |
-| DEV-084 | Open-Source Sustainability Boundary | DEV-004 | `docs/archived/spec-DEV-084.md` | Building — independent |
+Wave 1 shipped. Next enrollable: **DEV-046**, **DEV-059**.
 
-Parked demand-gated: DEV-051, DEV-057. Deferred dependents: DEV-046/059 (after 045), DEV-052/056 (after 059), DEV-058 (after 056).
+Parked demand-gated: DEV-051, DEV-057.  
+Deferred dependents: DEV-052/056 (after 059), DEV-058 (after 056).
+
+## Recently shipped (v5.3.9 — 2026-07-11)
+
+| ID | Story | Epic | Spec |
+|---|---|---|---|
+| DEV-045 | Work Package Wave DAG | DEV-002 | `docs/archived/spec-DEV-045.md` |
+| DEV-076 | Static Documentation Site Proof | DEV-004 | `docs/archived/spec-DEV-076.md` |
+| DEV-077 | Authoring Guide and Onboarding Surface | DEV-003 | `docs/archived/spec-DEV-077.md` |
+| DEV-079 | Verifier and CI Adoption Examples | DEV-004 | `docs/archived/spec-DEV-079.md` |
+| DEV-080 | Official Registry Pack Pilot | DEV-003 | `docs/archived/spec-DEV-080.md` |
+| DEV-082 | High-Assurance Signature Mode Validation | DEV-003 | `docs/archived/spec-DEV-082.md` |
+| DEV-083 | Voluntary Workflow Metrics Kit | DEV-004 | `docs/archived/spec-DEV-083.md` |
+| DEV-084 | Open-Source Sustainability Boundary | DEV-004 | `docs/archived/spec-DEV-084.md` |
 
 ## Recently shipped (v5.3.8 — 2026-07-11)
 

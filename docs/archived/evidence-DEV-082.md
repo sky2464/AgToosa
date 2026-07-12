@@ -24,3 +24,9 @@
 | review | AC-008 | test-log | `docs/AgToosa_TestPlan-DEV-082.md` HSV-009 | Confidence labels; no production-readiness claim | 0 | AgToosa | 2026-07-11 |
 | review | AC-001–AC-008 | review | `docs/archived/review-DEV-082.md` | 4 virtual personas; verdict PASS; 0 unresolved Critical; Defer preserved | PASS | AgToosa | 2026-07-11 |
 | review | AC-001–AC-008 | verifier | `docs/agtoosa-verify.sh` | `bash agtoosa.sh --verify .` — DEV-082 gates pass; WARNs accepted | 0 | AgToosa | 2026-07-11 |
+
+## Ship finalize
+
+| ts | phase | event | notes |
+|----|-------|-------|-------|
+| 2026-07-12T02:32:57Z | ship | complete | v5.3.9 batched ship |

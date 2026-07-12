@@ -15,3 +15,9 @@
 | review | AC-001–AC-007 | test-log | `docs/AgToosa_TestPlan-DEV-079.md#GREEN-Evidence` | `bats tests/agtoosa.bats -f "DEV-079"` exit 0, 9/9 | 0 | AgToosa | 2026-07-12T02:30:51Z |
 | review | AC-001–AC-007 | verifier | `docs/agtoosa-verify.sh` | `bash agtoosa.sh --verify .` — DEV-079 Gate 3 PASS; Wave Plan WARNs accepted | 0 | AgToosa | 2026-07-12T02:30:51Z |
 | review | AC-002, AC-003 | other | CI-enforced claim audit | Guide/gate/README/Readiness require observed run before CI-enforced | PASS | AgToosa | 2026-07-12T02:30:51Z |
+
+## Ship finalize
+
+| ts | phase | event | notes |
+|----|-------|-------|-------|
+| 2026-07-12T02:32:57Z | ship | complete | v5.3.9 batched ship |

@@ -5,6 +5,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.9] — 2026-07-11
+
+Patch release: remaining-specs fan-out wave 1 (DEV-045, DEV-076, DEV-077, DEV-079, DEV-080, DEV-082, DEV-083, DEV-084).
+
+### Added
+
+- **DEV-045 — Work Package Wave DAG.** Normative `### 3.4 Work Package DAG` schema; Spec/Build/Handoff/Import wiring; DAG-001–DAG-007 bats. Agent-instructed dispatch (no runtime scheduler).
+- **DEV-076 — Static Documentation Site Proof (spike).** Jekyll/Pages build-only proof from canonical `docs/`; SITE-001–SITE-008 bats; optional owner enablement.
+- **DEV-077 — Authoring Guide and Onboarding Surface.** Extension + registry-pack authoring guides; Registry/README/help discovery pointers; AUTH-001–AUTH-008 bats.
+- **DEV-079 — Verifier and CI Adoption Examples.** `docs/examples/verifier-ci-adoption.md`; gate/Quickref/Readiness alignment; VCA-001–VCA-009 bats.
+- **DEV-080 — Official Registry Pack Pilot.** Local candidates `packs/official-{web,api,infra}`; OPP-001–OPP-010 bats; external publish manual-deferred.
+- **DEV-082 — High-Assurance Signature Mode Validation (spike).** Decision **Defer**; HAS/HSV bats; no `AGTOOSA_REQUIRE_SIGNATURES`.
+- **DEV-083 — Voluntary Workflow Metrics Kit.** MetricsKit + CaseStudy template; MET-001–MET-010 bats; no telemetry.
+- **DEV-084 — Open-Source Sustainability Boundary.** Canonical SUPPORT.md boundary; OSS-001–OSS-007 bats; Sponsors live enablement manual-deferred.
+
 ## [5.3.8] — 2026-07-11
 
 Patch release: four-epic parallel cycle (DEV-075, DEV-053, DEV-078, DEV-081).
