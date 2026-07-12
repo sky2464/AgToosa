@@ -225,6 +225,10 @@ Any bug, edge case, or out-of-scope requirement discovered during the TDD cycle 
 
 Consult `Docs/AgToosa_GovernancePolicy.md` (checker: `Docs/agtoosa-policy-check.sh`) before actions covered by a declared rule. On a policy violation: identify the rule `id`, `enforcement_class`, and `on_violation`; follow that `on_violation` only (`warn` / `instruct_stop` / wired `block_generator`); never invent stronger enforcement; never echo secret values. Preserve `Docs/Master-Plan.md` as lifecycle authority — policy handling must not write story status or tasks.
 
+## Hook lifecycle pointers
+
+Consult `Docs/AgToosa_Hooks.md` for the single event/platform matrix. During Build, apply checklist (or proven native) steps for `task-start`, `pre-tool-use`, `pre-test`, and `post-test` as applicable. Do not duplicate the matrix here. Optional pack absence is not a health or verifier finding.
+
 ## Output
 *   Confirm build and test phases are complete and all tests pass.
 *   Present a summary of test results and any security findings.

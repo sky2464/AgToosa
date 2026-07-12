@@ -52,6 +52,7 @@ Utilities (load on demand): `/agtoosa-status`, `/agtoosa-task`, `/agtoosa-qa`,
 | `docs/archived/review-<id>.md` | Review verdicts |
 | `docs/agtoosa-events.jsonl` | Append-only phase-event log (one JSON line per transition) |
 | `docs/agtoosa-evidence.jsonl` | Optional JSONL mirror of per-story evidence ledger (non-authoritative; canonical is `docs/archived/evidence-<id>.md`) |
+| `docs/archived/retro-<YYYY-MM-DD>.md` | Structured `/agtoosa-ship retro` artifact (proposals only; see `docs/AgToosa_Retro.md`) |
 | `docs/Context/*.md` | Product, tech-stack, workflow context |
 
 ## Verification

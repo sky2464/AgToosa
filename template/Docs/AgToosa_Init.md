@@ -221,6 +221,18 @@ Use when the AI agent is focused on a specific file or function and needs broade
     *   On approval, create only valid Codex skill anatomy: `SKILL.md` with `name` and `description` frontmatter, concise body, and optional `references/`, `scripts/`, or `assets/` folders when justified. Do not add README, quick-reference, or other auxiliary docs unless the user explicitly requests supported UI metadata (see `Docs/AgToosa_Skills.md`).
     *   Record accepted and declined decisions in `Docs/Master-Plan.md` **Update Log** (include skill name and decision).
 
+### Phase G — Optional Hook Automation Pack
+
+15. **Optional Hook Automation Pack (preview + approval):**
+
+    After skill discovery (or when the user skips it), offer the optional Hook Automation Pack. See `Docs/AgToosa_Hooks.md` for the event catalog, platform matrix, secret-safe diagnostics, DEV-059 linkage, and removal path.
+
+    *   Present a **HookInstallPreview**: `affected_files`, `existing_entries_preserved`, `entries_added`, `entries_deduplicated`, and `removal_steps` (merge intent for Claude settings/scripts when Claude is installed; checklist-only mappings otherwise).
+    *   Require **explicit user approval** before any write. **No silent hook install.**
+    *   On **decline**: make **no write**; health and verifier stay unchanged (pack absence is not a finding).
+    *   On **approval**: install/merge only listed entries; preserve unrelated user settings; deduplicate AgToosa hook entries by command string.
+    *   Record Approve / Decline in `Docs/Master-Plan.md` **Update Log**.
+
 ## Output
 
 Present the approval gate:

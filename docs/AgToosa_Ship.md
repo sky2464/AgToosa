@@ -43,6 +43,10 @@ Before any deployment, verify all of the following. If **any** check fails, list
 
 **Evidence rules:** Report pass/fail summaries, command names, artifact paths, and test counts. When citing deploy or test logs, **redact** secrets, tokens, API keys, and private URLs before including evidence in chat or review artifacts.
 
+#### Hook lifecycle pointers (`pre-ship`, `secret-check`)
+
+Consult `docs/AgToosa_Hooks.md` for the single event/platform matrix. Before deploy approval, apply checklist (or proven native) steps for `pre-ship` and `secret-check`. Do not duplicate the matrix here. Optional Hook Automation Pack absence is not a readiness or verifier failure.
+
 #### Readiness failure output (both `check` and full flow)
 
 For each failed row, print:
@@ -161,16 +165,16 @@ Before changing version pins or CHANGELOG release headings, apply the **patch-fi
 ### Part 5 — Sprint Retrospective (`/agtoosa-ship retro`)
 
 Run this after shipping to close the feedback loop on the sprint.
+**Delegate to** `docs/AgToosa_Retro.md` for the full input, artifact schema, proposal, repetition, redaction, and mutation-boundary contract.
 
-7.  **Sprint Review:**
-    *   Read `docs/AgToosa_Changelog.md` and compare entries against the original spec acceptance criteria.
-    *   List: what was planned, what shipped, what was deferred — and why.
-    *   Scan `docs/archived/` for all specs closed this sprint.
+7.  **Sprint Review (structured):**
+    *   Follow `docs/AgToosa_Retro.md` Inputs — read only repo-local Master-Plan, changelog, archived spec/review/evidence, test plans, and `docs/agtoosa-events.jsonl`.
+    *   Mark missing optional sources `unavailable`; do not use network or hosted trackers.
+    *   Build Planned vs Shipped and Evidence Index for the cycle.
 
 8.  **Quality & Process Health:**
-    *   Did test coverage improve or regress vs. prior sprint?
-    *   How many 🔴 Critical findings appeared in `/agtoosa-review`? Trend improving?
-    *   Note phases that required re-runs (spec → build loopbacks) as friction signals.
+    *   Capture friction signals (coverage trend, 🔴 Critical review findings, phase re-runs) as evidence-linked observations for the retro artifact.
+    *   Classify repetition per `docs/AgToosa_Retro.md` (`repeated-pattern` needs two distinct pointers; otherwise `single-cycle`).
 
 9.  **Keep / Stop / Start:**
 
@@ -179,10 +183,15 @@ Run this after shipping to close the feedback loop on the sprint.
     2. What slowed us down that we should **stop** doing?
     3. What should we **start** trying next sprint?
 
-10. **Retro Output:**
-    *   Append a retro entry to `docs/AgToosa_Changelog.md` under a `## Retrospective — [date]` section.
-    *   Update `docs/Master-Plan.md` with process improvement action items from the retro.
-    *   If a process change was agreed (e.g., enabling TDD, adjusting the 500-line limit), update `docs/Context/workflow.md`.
+    Link each answer to an evidence pointer or label it as user judgment.
+
+10. **Retro Output (additive only):**
+    *   Create or update **one** idempotent artifact: `docs/archived/retro-[YYYY-MM-DD].md` with required sections from `docs/AgToosa_Retro.md` (metadata, Planned vs Shipped, Evidence Index, Keep, Stop, Start, Rejected Overreach, Proposals).
+    *   Optional: append a changelog pointer under `## Retrospective — [date]` that **links** to that artifact (pointer only; artifact is canonical).
+    *   Record proposals with `proposal_id`, `type`, `summary`, `evidence_pointer`, `status`, `next_command` (and `enforcement_class` for policy). Allowed types: task, spec, amend, policy, specialist, test, workflow.
+    *   **Leave targets unchanged** — do not edit Master-Plan, approved specs, policy, Context, tests, or specialists from retro. Present next commands only: `/agtoosa-task`, `/agtoosa-spec`, or `/agtoosa-spec amend`. Acceptance is manual; recording `accepted` does not apply the change.
+    *   Append phase event: `{"ts":"[ISO-8601 UTC]","phase":"ship","event":"retro-complete","story":"[cycle-date or story]","by":"AgToosa"}`
+    *   Redact credentials, private URLs, and unbounded logs; store `[REDACTED]` summaries and repo-relative pointers.
 
 ### Part 6 — Compact Master-Plan.md
 

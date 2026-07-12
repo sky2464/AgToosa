@@ -178,9 +178,16 @@ for event, handlers in new_cfg.get('hooks', {}).items():
         for h in entry.get('hooks', [])
     }
     for handler in handlers:
-        new_cmds = {h.get('command', '') for h in handler.get('hooks', [])}
-        if not new_cmds.issubset(existing_cmds):
-            existing['hooks'][event].append(handler)
+        # Deduplicate by command string: append only novel commands
+        novel = [h for h in handler.get('hooks', [])
+                 if h.get('command', '') not in existing_cmds]
+        if not novel:
+            continue
+        entry = {k: v for k, v in handler.items() if k != 'hooks'}
+        entry['hooks'] = novel
+        existing['hooks'][event].append(entry)
+        for h in novel:
+            existing_cmds.add(h.get('command', ''))
 
 with open(out_path, 'w') as f:
     json.dump(existing, f, indent=2)

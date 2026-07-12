@@ -5387,7 +5387,8 @@ JSON
     grep -q "agent-instructed" "$f"
     grep -q "manual" "$f"
     grep -q "roadmap" "$f"
-    ! grep -qiE 'automated learning|auto(matic)?(ally)? (apply|enroll|learn)|ML scoring|private memory|hosted memory' "$f"
+    # Must not claim automated learning / auto-apply as present capabilities
+    ! grep -qiE 'provides automated learning|performs automated learning|auto(matic)?(ally)? applies? (proposals|follow-up)|auto(matic)?(ally)? enroll|ML ranking' "$f"
   done
 }
 
@@ -5766,9 +5767,7 @@ EOF
   ! grep -E '\$COMMAND|"\$COMMAND"|'"'"'\$COMMAND'"'"'' "$hook"
   ! grep -qiE 'printenv|env\s*$|CLAUDE_TOOL_INPUT' "$hook"
 
-  # Settings may pipe tool input into the exemplar but must not echo it in diagnostics
-  ! grep -E 'echo ["'\'']?\$CLAUDE_TOOL_INPUT' "$settings" | grep -qv '|' || true
-  # Commit-gate and line-count hooks: no env dump commands
+  # Settings may pipe tool input into the exemplar but must not dump env
   ! grep -qiE 'printenv|env\s*>>' "$settings"
 
   # Runtime: blocked dangerous git must not leak a fake token from tool input

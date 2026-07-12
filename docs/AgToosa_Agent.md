@@ -82,7 +82,7 @@ Your core principles are:
 | `/agtoosa-ship` | **Full flow:** readiness gate → WIP squash → deploy → archive specs → changelog → suggest next story |
 | `/agtoosa-ship check` | **Readiness gate only:** verify all pre-ship conditions without deploying |
 | `/agtoosa-ship docs` | **Docs only:** archive completed specs, update changelog and Master-Plan |
-| `/agtoosa-ship retro` | **Retrospective:** sprint review — what shipped vs. planned, quality trends, keep/stop/start |
+| `/agtoosa-ship retro` | **Retrospective:** structured cycle retro artifact (`docs/AgToosa_Retro.md`) — Planned vs Shipped, evidence index, Keep/Stop/Start, proposals with next commands |
 
 ### Utility Commands
 | Command | Workflow File | Description |

@@ -154,6 +154,16 @@ After Stage 4 Verify succeeds on the **full** or **`apply`** flow (Generated Pro
 
 Maintainer Dogfood Mode: skip specialist materialization; CLI update is unavailable for the generator repo anyway.
 
+### Stage 4c — Optional Hook Automation Pack (preview + approval)
+
+Separate from baseline CLI update. See `docs/AgToosa_Hooks.md`.
+
+1. Prepare a **HookInstallPreview** listing `affected_files`, merge intent, `existing_entries_preserved`, `entries_added`, `entries_deduplicated`, and `removal_steps`.
+2. Require **explicit user approval** before any hook-related write. **No silent hook install.**
+3. On **decline**: **does not write**; pack absence leaves `/agtoosa-status` and verifier health unchanged.
+4. On **approval**: preserve unrelated settings; deduplicate AgToosa hook entries by command string via CLI `merge_settings_json` behavior when Claude settings are in scope.
+5. Documented **removal** path lives in `docs/AgToosa_Hooks.md` (remove listed AgToosa commands; leave unrelated settings intact).
+
 ## Specialist Compatibility Check (read-only)
 
 Run during **`check`**, **`plan`**, and Stage 4 Verify summary. Follow `docs/AgToosa_Specialists.md`.
