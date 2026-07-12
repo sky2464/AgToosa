@@ -1,8 +1,9 @@
 # Test Plan: DEV-076 — Static Documentation Site Proof
 
 > **Spec:** `docs/archived/spec-DEV-076.md`
-> **Status:** ⬜ Backlog — Not executed
+> **Status:** ✅ Executed — SITE GREEN
 > **Created:** 2026-07-11
+> **Executed:** 2026-07-11
 > **Test prefix:** `SITE`
 
 ## Scope
@@ -13,14 +14,14 @@ Build and repository-contract proof for a GitHub Pages-compatible artifact sourc
 
 | AC | Test ID | Named test | Type | Expected result | Status |
 |----|---------|------------|------|-----------------|--------|
-| AC-001 | SITE-001 | Pages build reads canonical docs directly | Integration | Builder source is `docs/`; output is temporary and no copied markdown tree exists | ⬜ Not run |
-| AC-001, AC-002 | SITE-002 | Site navigation links instead of cloning prose | Docs/source contract | Landing content points to canonical paths and contains no maintained guide copy | ⬜ Not run |
-| AC-003 | SITE-003 | Pull-request workflow fails closed on build error | Workflow contract | Matching docs/config changes invoke the build and preserve its non-zero exit | ⬜ Not run |
-| AC-004 | SITE-004 | Project Pages base path resolves | Build/link | Representative navigation and assets resolve below `/AgToosa/` | ⬜ Not run |
-| AC-005 | SITE-005 | Representative canonical pages render | Build | Entry content, Agent guide, and first-15 walkthrough appear in output | ⬜ Not run |
-| AC-005 | SITE-006 | Artifact identifies its source revision | Provenance | Workflow logs or metadata contain the checked-out commit SHA | ⬜ Not run |
-| AC-006 | SITE-007 | Proof has no runtime service or tracking | Security/source | Scoped files contain no backend, database, auth, analytics, or runtime secret requirement | ⬜ Not run |
-| AC-003, AC-006 | SITE-008 | Docs workflow is pinned and least privilege | Security/workflow | Third-party actions are immutable-pinned and workflow permissions are read-only for build | ⬜ Not run |
+| AC-001 | SITE-001 | Pages build reads canonical docs directly | Integration | Builder source is `docs/`; output is temporary and no copied markdown tree exists | ✅ Pass |
+| AC-001, AC-002 | SITE-002 | Site navigation links instead of cloning prose | Docs/source contract | Landing content points to canonical paths and contains no maintained guide copy | ✅ Pass |
+| AC-003 | SITE-003 | Pull-request workflow fails closed on build error | Workflow contract | Matching docs/config changes invoke the build and preserve its non-zero exit | ✅ Pass |
+| AC-004 | SITE-004 | Project Pages base path resolves | Build/link | Representative navigation and assets resolve below `/AgToosa/` | ✅ Pass |
+| AC-005 | SITE-005 | Representative canonical pages render | Build | Entry content, Agent guide, and first-15 walkthrough appear in output | ✅ Pass |
+| AC-005 | SITE-006 | Artifact identifies its source revision | Provenance | Workflow logs or metadata contain the checked-out commit SHA | ✅ Pass |
+| AC-006 | SITE-007 | Proof has no runtime service or tracking | Security/source | Scoped files contain no backend, database, auth, analytics, or runtime secret requirement | ✅ Pass |
+| AC-003, AC-006 | SITE-008 | Docs workflow is pinned and least privilege | Security/workflow | Third-party actions are immutable-pinned and workflow permissions are read-only for build | ✅ Pass |
 
 ## Negative and Edge Scenarios
 
@@ -39,26 +40,43 @@ Build and repository-contract proof for a GitHub Pages-compatible artifact sourc
 - `@smoke SITE-003` — pull-request build fails closed.
 - `@smoke SITE-005` — representative pages render.
 
-Planned smoke command: `bats tests/agtoosa.bats -f "DEV-076|SITE-"`
+Smoke command: `bats tests/agtoosa.bats -f "DEV-076|SITE-"`
 
-## RED Evidence — Unexecuted Placeholders
+## RED Evidence
 
-| Task group | Planned command | Exit code | Failure excerpt |
-|------------|-----------------|-----------|-----------------|
-| 1. Define the proof contract | `bats tests/agtoosa.bats -f "DEV-076|SITE-"` | Not recorded | Not run; site proof files do not yet exist |
-| 2. Configure the static source | `bats tests/agtoosa.bats -f "SITE-001|SITE-002|SITE-004"` | Not recorded | Not run; source configuration and landing page are pending |
-| 3. Add the build-only workflow | `bats tests/agtoosa.bats -f "SITE-003|SITE-006|SITE-008"` | Not recorded | Not run; workflow is pending |
-| 4. Prove representative rendering | `bats tests/agtoosa.bats -f "SITE-004|SITE-005|SITE-007"` | Not recorded | Not run; no static artifact has been built |
-| 5. Record spike evidence | `bats tests/agtoosa.bats -f "DEV-076|SITE-"` | Not recorded | Not run; recommendation pending |
+### RED evidence — 1.1 / Wave 1 (proof contract)
 
-## GREEN Evidence — Unexecuted Placeholders
+```
+Command: bats tests/agtoosa.bats -f "DEV-076|SITE-"
+Exit code: 1
+Failure excerpt:
+  not ok 1 DEV-076 @smoke SITE-001: ... `[ -f "$config" ]' failed
+  not ok 2 DEV-076 SITE-002: ... `[ -f "$index" ]' failed
+  not ok 3 DEV-076 @smoke SITE-003: ... `[ -f "$wf" ]' failed
+  (8/8 SITE tests failed before implementation)
+```
 
-| Task group | Planned command | Exit code | Pass excerpt |
-|------------|-----------------|-----------|--------------|
-| 1. Define the proof contract | `bats tests/agtoosa.bats -f "DEV-076|SITE-"` | Not recorded | Not run |
-| 2. Configure the static source | `bats tests/agtoosa.bats -f "SITE-001|SITE-002|SITE-004"` | Not recorded | Not run |
-| 3. Add the build-only workflow | `bats tests/agtoosa.bats -f "SITE-003|SITE-006|SITE-008"` | Not recorded | Not run |
-| 4. Prove representative rendering | `bats tests/agtoosa.bats -f "SITE-004|SITE-005|SITE-007"` | Not recorded | Not run |
-| 5. Record spike evidence | `bats tests/agtoosa.bats -f "DEV-076|SITE-"` | Not recorded | Not run |
+## GREEN Evidence
 
-No test or GitHub Pages deployment has been executed for this backlog spike.
+### GREEN evidence — 1–5 (full SITE suite)
+
+```
+Command: bats tests/agtoosa.bats -f "DEV-076|SITE-"
+Exit code: 0
+Pass excerpt:
+  ok 1 DEV-076 @smoke SITE-001: Pages build reads canonical docs directly
+  ok 2 DEV-076 SITE-002: Site navigation links instead of cloning prose
+  ok 3 DEV-076 @smoke SITE-003: Pull-request workflow fails closed on build error
+  ok 4 DEV-076 SITE-004: Project Pages base path resolves
+  ok 5 DEV-076 @smoke SITE-005: Representative canonical pages render
+  ok 6 DEV-076 SITE-006: Artifact identifies its source revision
+  ok 7 DEV-076 SITE-007: Proof has no runtime service or tracking
+  ok 8 DEV-076 SITE-008: Docs workflow is pinned and least privilege
+  1..8
+```
+
+## Spike Recommendation
+
+**Proceed (optional owner enablement) — do not launch a production docs platform yet.**
+
+Evidence shows a pinned, least-privilege, build-only workflow can render canonical `docs/` under `/AgToosa/` into an ephemeral artifact without a second source tree, backend, or analytics. Repository owners may later enable GitHub Pages deployment as a separate decision; this spike does not require or automate production deploy.

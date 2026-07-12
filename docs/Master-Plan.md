@@ -20,7 +20,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-045 | Feature: Work Package Wave DAG | Feature | M | 🟨 In Progress | 0/4 |
+| DEV-045 | Feature: Work Package Wave DAG | Feature | M | 🟨 In Progress | 4/4 |
 | DEV-076 | Spike: Static Documentation Site Proof | Spike | S | 🟨 In Progress | 0/4 |
 | DEV-077 | Chore: Authoring Guide and Onboarding Surface | Chore | S | 🟨 In Progress | 5/5 |
 | DEV-079 | Docs: Verifier and CI Adoption Examples | Docs | S | 🟨 In Progress | 5/5 |
@@ -699,3 +699,4 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-079 — Task 🟢 5/5 — VCA-001–009 green; verifier-ci-adoption guide + gate/Quickref/Readiness alignment | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-084 — Task 🟢 3/4 automated (OSS-001–007); Sponsors live enablement [manual-deferred]; SUPPORT boundary aligned | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-077 — Task 🟢 5/5 — AUTH-001–008 green; authoring guides + Registry/README/help discovery | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-045 — Task 🟢 4/4 — DAG-001–007 green; Work Package schema + Spec/Build/Handoff/Import wiring | AgToosa |

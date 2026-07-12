@@ -124,20 +124,20 @@ Out of scope        : canonical guide rewrites, generated HTML commits, backend 
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Define the proof contract
-  - [ ] 1.1 Add RED SITE tests for direct source, no duplicate tree, base path, representative pages, and workflow permissions — _Requirements: AC-001, AC-002, AC-004, AC-005, AC-006_
-  - [ ] 1.2 Record the exact build and artifact assertions in the test plan — _Requirements: AC-003, AC-005_
-- [ ] **2.** Configure the static source
-  - [ ] 2.1 Add minimal Pages configuration rooted at `docs/` — _Requirements: AC-001, AC-004, AC-006_
-  - [ ] 2.2 Add a link-only landing page that points to canonical guides — _Requirements: AC-002, AC-005_
-- [ ] **3.** Add the build-only workflow
-  - [ ] 3.1 Add a pinned, least-privilege pull-request build and artifact upload — _Requirements: AC-003, AC-005, AC-006_
-  - [ ] 3.2 Ensure local output is isolated and ignored — _Requirements: AC-001_
-- [ ] **4.** Prove representative rendering
-  - [ ] 4.1 Build and inspect the entry page, Agent guide, and first-15 walkthrough under the project base path — _Requirements: AC-004, AC-005_
-  - [ ] 4.2 Confirm no copied markdown, backend, analytics, or deploy requirement entered scope — _Requirements: AC-001, AC-002, AC-006_
-- [ ] **5.** Record spike evidence
-  - [ ] 5.1 Capture RED/GREEN SITE results and a proceed/change/stop recommendation without launching a production site — _Requirements: AC-001, AC-003, AC-004, AC-005, AC-006_
+- [x] **1.** Define the proof contract
+  - [x] 1.1 Add RED SITE tests for direct source, no duplicate tree, base path, representative pages, and workflow permissions — _Requirements: AC-001, AC-002, AC-004, AC-005, AC-006_
+  - [x] 1.2 Record the exact build and artifact assertions in the test plan — _Requirements: AC-003, AC-005_
+- [x] **2.** Configure the static source
+  - [x] 2.1 Add minimal Pages configuration rooted at `docs/` — _Requirements: AC-001, AC-004, AC-006_
+  - [x] 2.2 Add a link-only landing page that points to canonical guides — _Requirements: AC-002, AC-005_
+- [x] **3.** Add the build-only workflow
+  - [x] 3.1 Add a pinned, least-privilege pull-request build and artifact upload — _Requirements: AC-003, AC-005, AC-006_
+  - [x] 3.2 Ensure local output is isolated and ignored — _Requirements: AC-001_
+- [x] **4.** Prove representative rendering
+  - [x] 4.1 Build and inspect the entry page, Agent guide, and first-15 walkthrough under the project base path — _Requirements: AC-004, AC-005_
+  - [x] 4.2 Confirm no copied markdown, backend, analytics, or deploy requirement entered scope — _Requirements: AC-001, AC-002, AC-006_
+- [x] **5.** Record spike evidence
+  - [x] 5.1 Capture RED/GREEN SITE results and a proceed/change/stop recommendation without launching a production site — _Requirements: AC-001, AC-003, AC-004, AC-005, AC-006_
 
 ### 3.2 Wave Plan
 
