@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (/agtoosa-build — DEV-055 complete)
+> **Last updated:** 2026-07-11 (/agtoosa-review — DEV-055 approved)
 
 ## Project Charter
 
@@ -9,7 +9,7 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | 🏗️ DEV-055 build complete — ready for `/agtoosa-review` |
+| Current phase | 🔍 DEV-055 review approved — ready for `/agtoosa-ship` |
 | Milestone | `v5.3.7` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
 | Active cycle | DEV-055 |
 | Cycle capacity | `8 story points` |
@@ -20,7 +20,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-055 | Feature: Agent Capability Matrix | Feature | S | 🟨 In Progress | 5/5 |
+| DEV-055 | Feature: Agent Capability Matrix | Feature | S | 🔍 In Review | 5/5 |
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.6.md -->
 <!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.5.md -->
@@ -297,7 +297,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-052 | Feature: Hook Automation Pack | Feature | M | DEV-002 | P1 | ⬜ Backlog — executable spec ready; depends DEV-059 |
 | DEV-053 | Feature: Extension and Preset Catalog | Feature | M | DEV-003 | P1 | ⬜ Backlog — executable spec ready; catalog contract before DEV-080 |
 | DEV-054 | Feature: Signed Registry Provenance | Feature | M | DEV-003 | P0 | 🏁 Shipped — v5.3.5 |
-| DEV-055 | Feature: Agent Capability Matrix | Feature | S | DEV-002 | P1 | 🟨 In Progress — Active Cycle |
+| DEV-055 | Feature: Agent Capability Matrix | Feature | S | DEV-002 | P1 | 🔍 In Review — Active Cycle |
 | DEV-056 | Feature: Retrospective Learning Loop | Feature | S | DEV-002 | P2 | ⬜ Backlog — executable spec ready; stable evidence inputs required |
 | DEV-057 | Feature: Multi-Repo Story Overlay | Feature | L | DEV-002 | P2 | ⬜ Backlog — executable spec ready; demand-gated and requires DEV-045 shipped |
 | DEV-058 | Feature: Local Dashboard | Feature | M | DEV-004 | P2 | ⬜ Backlog — executable spec ready; read-only local scope |
@@ -509,3 +509,5 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-055 — Task 🟢 4/5 — Wave 2 complete: Handoff/Review/Build/Help + CrossModelReview + Specialists + config; AM-001–AM-007 green | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-055 — Task 🟢 5/5 — Wave 3 complete: GREEN evidence in test plan; DEV-055 filter 8/8 green; build complete — next: `/agtoosa-review` | AgToosa |
 | 2026-07-11 | ✏️ Roadmap intake split complete — DEV-045/046/051/052/053/056/057/058/059 deepened to executable backlog specs; DEV-075–DEV-084 specs and test plans added; coverage index: `docs/updates/roadmap-spec-index.md`; no stories enrolled or approved | AgToosa |
+| 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-055 — 4-persona review running | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-055; 0 🔴 Critical, 3 🟡 Warning (2 accepted, 1 fixed); report: `docs/archived/review-DEV-055.md`; evidence: `docs/archived/evidence-DEV-055.md` | AgToosa |

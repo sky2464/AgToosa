@@ -1,8 +1,14 @@
-# Evidence: DEV-055 — Agent Capability Matrix
+# Evidence Ledger — DEV-055
 
-| Phase | Date | Command / note | Result |
-|-------|------|----------------|--------|
-| build | 2026-07-11 | Wave 1: `bats tests/agtoosa.bats -f "DEV-055"` | RED — 3 pass / 5 fail (AM-002–AM-006); AM-001/AM-007 + CW-018 green |
-| build | 2026-07-11 | Created `template/Docs/AgToosa_AgentCapability.md` + `docs/` mirror | Task 1–2 complete |
-| build | 2026-07-11 | Wave 2: Handoff/Review/Build/CrossModelReview/Specialists + help adapters + `lib/config.sh` | Task 3–4 complete |
-| build | 2026-07-11 | Wave 3: `bats tests/agtoosa.bats -f "DEV-055"` | GREEN — 8/8; Task 5 complete |
+> **Story:** DEV-055 — Agent Capability Matrix  
+> **Claim Boundary:** agent-instructed index; Master-Plan remains SoT  
+> **Updated:** 2026-07-11 16:20 (review)
+
+| Phase | AC | Artifact | Pointer | Verification | Exit | Reviewer | ts |
+|-------|-----|----------|---------|--------------|------|----------|-----|
+| build | AC-001–AC-010 | test-log | `docs/AgToosa_TestPlan-DEV-055.md#Wave-1-RED` | `bats tests/agtoosa.bats -f "DEV-055"` RED 3 pass / 5 fail | 1 | AgToosa | 2026-07-11 |
+| build | AC-009 | test-log | `docs/AgToosa_TestPlan-DEV-055.md#Wave-2–3-GREEN` | `bats tests/agtoosa.bats -f "DEV-055"` exit 0, 8/8 | 0 | AgToosa | 2026-07-11 |
+| build | AC-001–AC-008 | spec | `docs/archived/spec-DEV-055.md` | AM-001–AM-007 grep contract | PASS | AgToosa | 2026-07-11 |
+| review | cross-model | cross-model | `docs/archived/review-DEV-055.md## Cross-Model Review` | Standard tier; outcome skipped; virtual personas sufficient | PASS | AgToosa | 2026-07-11 |
+| review | AC-001–AC-010 | review | `docs/archived/review-DEV-055.md` | 4 virtual personas; verdict PASS; 0 unresolved Critical | PASS | AgToosa | 2026-07-11 |
+| review | AC-009 | verifier | `docs/agtoosa-verify.sh` | Gate 3 PASS; 2 WARN accepted | 0 | AgToosa | 2026-07-11 |

@@ -137,7 +137,7 @@ AgToosa_AgentCapability.md (canonical matrix)
 | Threat | Risk | Mitigation |
 |--------|------|------------|
 | Spoofing | Matrix claims platform installed when sentinel missing | Detection rules reference concrete paths only |
-| Tampering | Stale matrix after new platform wiring | AM-009 parity bats vs `lib/config.sh` |
+| Tampering | Stale matrix after new platform wiring | AM-007 parity bats vs `lib/config.sh` |
 | Repudiation | No record of routing recommendation | Handoff/review artifacts cite matrix row used |
 | Information Disclosure | Matrix embeds secrets | Paths and commands only |
 | Denial of Service | Mandatory platform blocks workflow | Fallback chain always documented |
