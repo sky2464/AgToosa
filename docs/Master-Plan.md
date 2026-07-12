@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (/agtoosa-ship — v5.3.10 wave 2 shipped)
+> **Last updated:** 2026-07-11 (/agtoosa-build — wave 3 DEV-052 · DEV-056 enrolled)
 
 ## Project Charter
 
@@ -9,9 +9,9 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | 🏁 v5.3.10 shipped — wave 2; enroll DEV-052 · DEV-056 next |
+| Current phase | 🟨 Wave 3 building — DEV-052 · DEV-056 |
 | Milestone | `v5.3.11` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | — (wave 2 archived) |
+| Active cycle | DEV-052 · DEV-056 |
 | Cycle capacity | `8 story points` |
 
 ## Active Cycle
@@ -20,6 +20,9 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
+| DEV-052 | Feature: Hook Automation Pack | Feature | M | 🟨 In Progress | 0/4 |
+| DEV-056 | Feature: Retrospective Learning Loop | Feature | S | 🟨 In Progress | 0/4 |
+
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.10.md -->
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.9.md -->
@@ -31,7 +34,19 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-<!-- Wave 2 shipped — see docs/archived/cycle-2026-07-11-release-5.3.10.md -->
+**DEV-052 — Hook Automation Pack** (spec: `docs/archived/spec-DEV-052.md`)
+
+- [ ] **1.** Hook pack contract + RED
+- [ ] **2.** Pack content + safety
+- [ ] **3.** Install/wiring
+- [ ] **4.** GREEN + evidence
+
+**DEV-056 — Retrospective Learning Loop** (spec: `docs/archived/spec-DEV-056.md`)
+
+- [ ] **1.** Retro contract + RED
+- [ ] **2.** Learning artifacts
+- [ ] **3.** Workflow wiring
+- [ ] **4.** GREEN + evidence
 
 
 ## Manual / Deferred Tasks
@@ -75,11 +90,11 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-049 | Feature: Evidence Ledger | Feature | M | DEV-004 | P0 | 🏁 Shipped — v5.3.4 |
 | DEV-050 | Feature: Cross-Model Review Gate | Feature | S | DEV-002 | P1 | 🏁 Shipped — v5.3.6 |
 | DEV-051 | Feature: Tracker Sync Bridge | Feature | M | DEV-003 | P1 | ⬜ Backlog — executable spec ready; demand-gated, proposal import only |
-| DEV-052 | Feature: Hook Automation Pack | Feature | M | DEV-002 | P1 | ⬜ Backlog — unblocked after DEV-059 |
+| DEV-052 | Feature: Hook Automation Pack | Feature | M | DEV-002 | P1 | 🟨 In Progress — wave 3 |
 | DEV-053 | Feature: Extension and Preset Catalog | Feature | M | DEV-003 | P1 | 🏁 Shipped — v5.3.8 |
 | DEV-054 | Feature: Signed Registry Provenance | Feature | M | DEV-003 | P0 | 🏁 Shipped — v5.3.5 |
 | DEV-055 | Feature: Agent Capability Matrix | Feature | S | DEV-002 | P1 | 🏁 Shipped — v5.3.7 |
-| DEV-056 | Feature: Retrospective Learning Loop | Feature | S | DEV-002 | P2 | ⬜ Backlog — unblocked after DEV-059 |
+| DEV-056 | Feature: Retrospective Learning Loop | Feature | S | DEV-002 | P2 | 🟨 In Progress — wave 3 |
 | DEV-057 | Feature: Multi-Repo Story Overlay | Feature | L | DEV-002 | P2 | ⬜ Backlog — executable spec ready; demand-gated and requires DEV-045 shipped |
 | DEV-058 | Feature: Local Dashboard | Feature | M | DEV-004 | P2 | ⬜ Backlog — executable spec ready; read-only local scope |
 | DEV-059 | Feature: Governance Policy-as-Code | Feature | M | DEV-004 | P1 | 🏁 Shipped — v5.3.10 |
@@ -355,3 +370,5 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-059 | Feature: Governance Policy-as-Code | 2026-07-11 | [spec-DEV-059.md](archived/spec-DEV-059.md) · [review-DEV-059.md](archived/review-DEV-059.md) · [evidence-DEV-059.md](archived/evidence-DEV-059.md) |
 | 2026-07-11 | 🚀 Ship complete — v5.3.10 — wave 2 DEV-046 · DEV-059; smoke PASS; cycle archived | AgToosa |
 | 2026-07-11 | 🚀 Release 5.3.10 shipped — v5.3.10; version parity bash/ps1/npm; Milestone v5.3.11 (next) | AgToosa |
+| 2026-07-11 | ✅ /agtoosa-spec — Spec ✅ Approved — wave 3: DEV-052 · DEV-056 | AgToosa |
+| 2026-07-11 | 🏗️ Build 🏗️ Started — wave 3 — DEV-052 · DEV-056 parallel subagents | AgToosa |

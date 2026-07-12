@@ -190,3 +190,8 @@ AC coverage: 7 of 7 ACs mapped to RL-001–RL-007
 Must coverage: 7 of 7 Must ACs mapped
 Smoke set: 7 planned tests tagged `@smoke`
 Execution state: not run; this story is Backlog
+
+## ✅ Spec Approved
+
+Approved: 2026-07-11 21:50
+Enrollment: remaining-specs fan-out wave 3 (post v5.3.10)

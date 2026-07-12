@@ -182,3 +182,8 @@ Test plan: `docs/AgToosa_TestPlan-DEV-052.md`
 AC coverage: 8 ACs mapped to 7 test IDs (`HK-001`–`HK-007`)
 
 Smoke set: 5 tests tagged `@smoke` (`HK-001`, `HK-002`, `HK-003`, `HK-006`, `HK-007`)
+
+## ✅ Spec Approved
+
+Approved: 2026-07-11 21:50
+Enrollment: remaining-specs fan-out wave 3 (post v5.3.10)

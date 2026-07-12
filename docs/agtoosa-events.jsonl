@@ -93,3 +93,7 @@
 {"ts":"2026-07-12T02:44:39Z","phase":"evidence","event":"update","story":"DEV-046","by":"AgToosa"}
 {"ts":"2026-07-12T02:45:22Z","phase":"ship","event":"complete","story":"DEV-046","by":"AgToosa","version":"5.3.10"}
 {"ts":"2026-07-12T02:45:22Z","phase":"ship","event":"complete","story":"DEV-059","by":"AgToosa","version":"5.3.10"}
+{"ts":"2026-07-12T02:47:40Z","phase":"spec","event":"approved","story":"DEV-052","by":"AgToosa"}
+{"ts":"2026-07-12T02:47:40Z","phase":"build","event":"start","story":"DEV-052","by":"AgToosa"}
+{"ts":"2026-07-12T02:47:40Z","phase":"spec","event":"approved","story":"DEV-056","by":"AgToosa"}
+{"ts":"2026-07-12T02:47:40Z","phase":"build","event":"start","story":"DEV-056","by":"AgToosa"}
