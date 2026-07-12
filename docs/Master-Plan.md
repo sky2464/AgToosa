@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (/agtoosa-ship — v5.3.12 wave 4 shipped; remaining demand-gated parked)
+> **Last updated:** 2026-07-11 (DEV-085 — post-v5.3.12 Master-Plan reconciliation; demand-gated DEV-051/057 parked)
 
 ## Project Charter
 
@@ -20,6 +20,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
+| DEV-085 | Chore: Post-v5.3.12 release hygiene (bats restore + Master-Plan reconciliation) | Chore | XS | ✅ Done | 1/1 |
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.12.md -->
 
@@ -110,6 +111,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-030 | Fix: `/agtoosa-update` self-target uncertainty | Fix | S | DEV-002 | High | 🏁 Shipped |
 | DEV-033 | Fix: agtoosa.ps1 PSScriptAnalyzer approved verbs | Fix | XS | DEV-001 | Medium | 🏁 Shipped |
 | DEV-034 | Chore: Maintainer release-state reconciliation | Chore | S | DEV-004 | High | 🏁 Shipped |
+| DEV-085 | Chore: Post-v5.3.12 release hygiene (bats restore + Master-Plan reconciliation) | Chore | XS | DEV-004 | High | ✅ Done — v5.3.13 prep |
 
 ## Epics
 
@@ -117,10 +119,10 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Stories | Status | Next spec |
 |----|-------|---------|--------|-----------|
-| DEV-001 | Epic: Core Generator Engine | 1 open / 2 total | 🟨 In Progress | DEV-046 unblocked | 🟨 In Progress | DEV-046 after wave-1 DEV-045 |
-| DEV-002 | Epic: Workflow Templates | 8 open / 20 total | 🟨 In Progress | DEV-046/059 path; DEV-045 shipped | 🟨 In Progress | DEV-045 (building) |
-| DEV-003 | Epic: Community Template Registry | 4 open / 7 total | 🟨 In Progress | DEV-080 external publish manual | 🟨 In Progress | DEV-080 · DEV-077 · DEV-082 building |
-| DEV-004 | Epic: Testing & QA Harness | 6 open / 11 total | 🟨 In Progress | DEV-059 next | 🟨 In Progress | DEV-076 · DEV-079 · DEV-083 · DEV-084 building |
+| DEV-001 | Epic: Core Generator Engine | 0 open / 5 total | 🏁 Complete | — |
+| DEV-002 | Epic: Workflow Templates | 2 open / 14 total | 🟨 Demand-gated | DEV-051 · DEV-057 (demand-gated) |
+| DEV-003 | Epic: Community Template Registry | 0 open / 6 total | 🏁 Complete | DEV-080 external publish [manual-deferred] |
+| DEV-004 | Epic: Testing & QA Harness | 0 open / 11 total | 🏁 Complete | — |
 
 ### Epic Charters
 
@@ -128,8 +130,9 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Goal:** Core interactive CLI generator providing project scaffolding, version-pin checks, deep copy/merge paths, backups, and dry-run execution.
     *   **Scope:** `agtoosa.sh`, `agtoosa.ps1`, and all `lib/*.sh` core modules.
     *   **Success Criteria:** Zero-friction installation and error-free multi-platform scaffolding on clean or existing directories.
+    *   **Last shipped:** DEV-046 — Optional Worktree Isolation → `docs/archived/spec-DEV-046.md`
     *   **Last shipped:** DEV-081 — Optional Local DX spike (defer all three options) → `docs/archived/spec-DEV-081.md`
-    *   **Current:** DEV-046 blocked on DEV-045
+    *   **Current:** All epic stories shipped — no open generator work
 
 *   **DEV-002 - Epic: Workflow Templates**
     *   **Goal:** Comprehensive AI-native rule files, prompts, skills, and templates keeping AI agents fully aligned with the four-phase lifecycle.
@@ -138,7 +141,10 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Last shipped:** DEV-055 — Agent Capability Matrix → `docs/archived/spec-DEV-055.md`
     *   **Last shipped:** DEV-050 — Cross-Model Review Gate → `docs/archived/spec-DEV-050.md`
     *   **Last shipped:** DEV-075 — Subagent and Persona Guide Suite → `docs/archived/spec-DEV-075.md`
-    *   **Current:** DEV-045 critical path — `docs/archived/spec-DEV-045.md`
+    *   **Last shipped:** DEV-052 — Hook Automation Pack → `docs/archived/spec-DEV-052.md`
+    *   **Last shipped:** DEV-056 — Retrospective Learning Loop → `docs/archived/spec-DEV-056.md`
+    *   **Last shipped:** DEV-045 — Work Package Wave DAG → `docs/archived/spec-DEV-045.md`
+    *   **Current:** Wave stories shipped; demand-gated DEV-051 · DEV-057 remain in backlog
 
 *   **DEV-003 - Epic: Community Template Registry**
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
@@ -147,7 +153,10 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Last shipped:** DEV-054 — Signed Registry Provenance → `docs/archived/spec-DEV-054.md`
     *   **Last shipped:** DEV-022 — publish PS1 + offline cache → `docs/archived/spec-DEV-022.md`
     *   **Last shipped:** DEV-053 — Extension and Preset Catalog → `docs/archived/spec-DEV-053.md`
-    *   **Current:** DEV-080 unblocked — `docs/archived/spec-DEV-080.md`
+    *   **Last shipped:** DEV-077 — Authoring Guide and Onboarding Surface → `docs/archived/spec-DEV-077.md`
+    *   **Last shipped:** DEV-080 — Official Registry Pack Pilot → `docs/archived/spec-DEV-080.md`
+    *   **Last shipped:** DEV-082 — High-Assurance Signature Mode Validation → `docs/archived/spec-DEV-082.md`
+    *   **Current:** All epic stories shipped; DEV-080 external registry publish remains [manual-deferred]
 
 *   **DEV-004 - Epic: Testing & QA Harness**
     *   **Goal:** Comprehensive end-to-end integration and version verification suites validating the robustness of the entire framework.
@@ -155,7 +164,13 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Success Criteria:** 100% green coverage on 340+ bats scenarios and version checks on every release step.
     *   **Last shipped:** DEV-005 — M1–M4 bats + CHANGELOG hygiene → `docs/archived/spec-DEV-005.md`
     *   **Last shipped:** DEV-078 — First-15-Minutes Maintenance Gate → `docs/archived/spec-DEV-078.md`
-    *   **Current:** DEV-059 or DEV-079 next
+    *   **Last shipped:** DEV-058 — Local Dashboard → `docs/archived/spec-DEV-058.md`
+    *   **Last shipped:** DEV-059 — Governance Policy-as-Code → `docs/archived/spec-DEV-059.md`
+    *   **Last shipped:** DEV-076 — Static Documentation Site Proof → `docs/archived/spec-DEV-076.md`
+    *   **Last shipped:** DEV-079 — Verifier and CI Adoption Examples → `docs/archived/spec-DEV-079.md`
+    *   **Last shipped:** DEV-083 — Voluntary Workflow Metrics and Case Study Kit → `docs/archived/spec-DEV-083.md`
+    *   **Last shipped:** DEV-084 — Open-Source Sustainability and Support Boundary → `docs/archived/spec-DEV-084.md`
+    *   **Current:** All epic stories shipped — no open harness work
 
 ## Completed This Cycle
 
@@ -164,6 +179,19 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-058 | Feature: Local Dashboard | 2026-07-11 | [spec-DEV-058.md](archived/spec-DEV-058.md) · [review-DEV-058.md](archived/review-DEV-058.md) · [evidence-DEV-058.md](archived/evidence-DEV-058.md) |
+| DEV-052 | Feature: Hook Automation Pack | 2026-07-11 | [spec-DEV-052.md](archived/spec-DEV-052.md) · [review-DEV-052.md](archived/review-DEV-052.md) · [evidence-DEV-052.md](archived/evidence-DEV-052.md) |
+| DEV-056 | Feature: Retrospective Learning Loop | 2026-07-11 | [spec-DEV-056.md](archived/spec-DEV-056.md) · [review-DEV-056.md](archived/review-DEV-056.md) · [evidence-DEV-056.md](archived/evidence-DEV-056.md) |
+| DEV-046 | Feature: Optional Worktree Isolation | 2026-07-11 | [spec-DEV-046.md](archived/spec-DEV-046.md) · [review-DEV-046.md](archived/review-DEV-046.md) · [evidence-DEV-046.md](archived/evidence-DEV-046.md) |
+| DEV-059 | Feature: Governance Policy-as-Code | 2026-07-11 | [spec-DEV-059.md](archived/spec-DEV-059.md) · [review-DEV-059.md](archived/review-DEV-059.md) · [evidence-DEV-059.md](archived/evidence-DEV-059.md) |
+| DEV-045 | Feature: Work Package Wave DAG | 2026-07-11 | [spec-DEV-045.md](archived/spec-DEV-045.md) · [review-DEV-045.md](archived/review-DEV-045.md) · [evidence-DEV-045.md](archived/evidence-DEV-045.md) |
+| DEV-076 | Spike: Static Documentation Site Proof | 2026-07-11 | [spec-DEV-076.md](archived/spec-DEV-076.md) · [review-DEV-076.md](archived/review-DEV-076.md) · [evidence-DEV-076.md](archived/evidence-DEV-076.md) |
+| DEV-077 | Chore: Authoring Guide and Onboarding Surface | 2026-07-11 | [spec-DEV-077.md](archived/spec-DEV-077.md) · [review-DEV-077.md](archived/review-DEV-077.md) · [evidence-DEV-077.md](archived/evidence-DEV-077.md) |
+| DEV-079 | Docs: Verifier and CI Adoption Examples | 2026-07-11 | [spec-DEV-079.md](archived/spec-DEV-079.md) · [review-DEV-079.md](archived/review-DEV-079.md) · [evidence-DEV-079.md](archived/evidence-DEV-079.md) |
+| DEV-080 | Feature: Official Registry Pack Pilot | 2026-07-11 | [spec-DEV-080.md](archived/spec-DEV-080.md) · [review-DEV-080.md](archived/review-DEV-080.md) · [evidence-DEV-080.md](archived/evidence-DEV-080.md) |
+| DEV-082 | Spike: High-Assurance Signature Mode Validation | 2026-07-11 | [spec-DEV-082.md](archived/spec-DEV-082.md) · [review-DEV-082.md](archived/review-DEV-082.md) · [evidence-DEV-082.md](archived/evidence-DEV-082.md) |
+| DEV-083 | Docs: Voluntary Workflow Metrics and Case Study Kit | 2026-07-11 | [spec-DEV-083.md](archived/spec-DEV-083.md) · [review-DEV-083.md](archived/review-DEV-083.md) · [evidence-DEV-083.md](archived/evidence-DEV-083.md) |
+| DEV-084 | Chore: Open-Source Sustainability and Support Boundary | 2026-07-11 | [spec-DEV-084.md](archived/spec-DEV-084.md) · [review-DEV-084.md](archived/review-DEV-084.md) · [evidence-DEV-084.md](archived/evidence-DEV-084.md) |
 | DEV-075 | Docs: Subagent and Persona Guide Suite | 2026-07-11 | [spec-DEV-075.md](archived/spec-DEV-075.md) · [review-DEV-075.md](archived/review-DEV-075.md) · [evidence-DEV-075.md](archived/evidence-DEV-075.md) |
 | DEV-053 | Feature: Extension and Preset Catalog | 2026-07-11 | [spec-DEV-053.md](archived/spec-DEV-053.md) · [review-DEV-053.md](archived/review-DEV-053.md) · [evidence-DEV-053.md](archived/evidence-DEV-053.md) |
 | DEV-078 | Chore: First-15-Minutes Maintenance Gate | 2026-07-11 | [spec-DEV-078.md](archived/spec-DEV-078.md) · [review-DEV-078.md](archived/review-DEV-078.md) · [evidence-DEV-078.md](archived/evidence-DEV-078.md) |
@@ -339,14 +367,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-083; 0 🔴 Critical, 4 🟡 Warning accepted; report: `docs/archived/review-DEV-083.md`; evidence: `docs/archived/evidence-DEV-083.md` | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-080; 0 🔴 Critical, 5 🟡 Warning accepted; 4.2/4.3 [manual-deferred]; report: `docs/archived/review-DEV-080.md`; evidence: `docs/archived/evidence-DEV-080.md` | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-045; 0 🔴 Critical, 6 🟡 Warning accepted; report: `docs/archived/review-DEV-045.md`; evidence: `docs/archived/evidence-DEV-045.md` | AgToosa |
-| 2026-07-11 | 🔍 Review complete — remaining-specs wave 1 all PASS (0 critical); next: `/agtoosa-ship` v5.3.9 | AgToosa || DEV-045 | Feature: Work Package Wave DAG | 2026-07-11 | [spec-DEV-045.md](archived/spec-DEV-045.md) · [review-DEV-045.md](archived/review-DEV-045.md) · [evidence-DEV-045.md](archived/evidence-DEV-045.md) |
-| DEV-076 | Spike: Static Documentation Site Proof | 2026-07-11 | [spec-DEV-076.md](archived/spec-DEV-076.md) · [review-DEV-076.md](archived/review-DEV-076.md) · [evidence-DEV-076.md](archived/evidence-DEV-076.md) |
-| DEV-077 | Chore: Authoring Guide and Onboarding Surface | 2026-07-11 | [spec-DEV-077.md](archived/spec-DEV-077.md) · [review-DEV-077.md](archived/review-DEV-077.md) · [evidence-DEV-077.md](archived/evidence-DEV-077.md) |
-| DEV-079 | Docs: Verifier and CI Adoption Examples | 2026-07-11 | [spec-DEV-079.md](archived/spec-DEV-079.md) · [review-DEV-079.md](archived/review-DEV-079.md) · [evidence-DEV-079.md](archived/evidence-DEV-079.md) |
-| DEV-080 | Feature: Official Registry Pack Pilot | 2026-07-11 | [spec-DEV-080.md](archived/spec-DEV-080.md) · [review-DEV-080.md](archived/review-DEV-080.md) · [evidence-DEV-080.md](archived/evidence-DEV-080.md) |
-| DEV-082 | Spike: High-Assurance Signature Mode Validation | 2026-07-11 | [spec-DEV-082.md](archived/spec-DEV-082.md) · [review-DEV-082.md](archived/review-DEV-082.md) · [evidence-DEV-082.md](archived/evidence-DEV-082.md) |
-| DEV-083 | Docs: Voluntary Workflow Metrics and Case Study Kit | 2026-07-11 | [spec-DEV-083.md](archived/spec-DEV-083.md) · [review-DEV-083.md](archived/review-DEV-083.md) · [evidence-DEV-083.md](archived/evidence-DEV-083.md) |
-| DEV-084 | Chore: Open-Source Sustainability and Support Boundary | 2026-07-11 | [spec-DEV-084.md](archived/spec-DEV-084.md) · [review-DEV-084.md](archived/review-DEV-084.md) · [evidence-DEV-084.md](archived/evidence-DEV-084.md) |
+| 2026-07-11 | 🔍 Review complete — remaining-specs wave 1 all PASS (0 critical); next: `/agtoosa-ship` v5.3.9 | AgToosa |
 | 2026-07-11 | 🚀 Ship complete — v5.3.9 — remaining-specs wave 1 (DEV-045/076/077/079/080/082/083/084); smoke PASS; cycle archived | AgToosa |
 | 2026-07-11 | 🚀 Release 5.3.9 shipped — v5.3.9; version parity bash/ps1/npm; Milestone v5.3.10 (next) | AgToosa |
 | 2026-07-11 | ✅ /agtoosa-spec — Spec ✅ Approved — wave 2: DEV-046 · DEV-059; enrolled post v5.3.9 | AgToosa |
@@ -356,8 +377,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🏗️ Build complete — wave 2 (DEV-046 · DEV-059); next: parallel /agtoosa-review | AgToosa |
 | 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — wave 2 DEV-046 · DEV-059 | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-059; 0 🔴 Critical, 4 🟡 Warning accepted; report: `docs/archived/review-DEV-059.md`; evidence: `docs/archived/evidence-DEV-059.md` | AgToosa |
-| 2026-07-11 | 🔍 Review ✅ Approved — DEV-046; 0 🔴 Critical, 4 🟡 Warning accepted; report: `docs/archived/review-DEV-046.md`; evidence: `docs/archived/evidence-DEV-046.md` | AgToosa || DEV-046 | Feature: Optional Worktree Isolation | 2026-07-11 | [spec-DEV-046.md](archived/spec-DEV-046.md) · [review-DEV-046.md](archived/review-DEV-046.md) · [evidence-DEV-046.md](archived/evidence-DEV-046.md) |
-| DEV-059 | Feature: Governance Policy-as-Code | 2026-07-11 | [spec-DEV-059.md](archived/spec-DEV-059.md) · [review-DEV-059.md](archived/review-DEV-059.md) · [evidence-DEV-059.md](archived/evidence-DEV-059.md) |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-046; 0 🔴 Critical, 4 🟡 Warning accepted; report: `docs/archived/review-DEV-046.md`; evidence: `docs/archived/evidence-DEV-046.md` | AgToosa |
 | 2026-07-11 | 🚀 Ship complete — v5.3.10 — wave 2 DEV-046 · DEV-059; smoke PASS; cycle archived | AgToosa |
 | 2026-07-11 | 🚀 Release 5.3.10 shipped — v5.3.10; version parity bash/ps1/npm; Milestone v5.3.11 (next) | AgToosa |
 | 2026-07-11 | ✅ /agtoosa-spec — Spec ✅ Approved — wave 3: DEV-052 · DEV-056 | AgToosa |
@@ -367,8 +387,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🏗️ Build complete — wave 3 (DEV-052 · DEV-056); next: parallel /agtoosa-review | AgToosa |
 | 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — wave 3 DEV-052 · DEV-056 | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-056; 0 🔴 Critical; report: `docs/archived/review-DEV-056.md`; evidence: `docs/archived/evidence-DEV-056.md` | AgToosa |
-| 2026-07-11 | 🔍 Review ✅ Approved — DEV-052; 0 🔴 Critical, 4 🟡 Warning accepted; report: `docs/archived/review-DEV-052.md`; evidence: `docs/archived/evidence-DEV-052.md` | AgToosa || DEV-052 | Feature: Hook Automation Pack | 2026-07-11 | [spec-DEV-052.md](archived/spec-DEV-052.md) · [review-DEV-052.md](archived/review-DEV-052.md) · [evidence-DEV-052.md](archived/evidence-DEV-052.md) |
-| DEV-056 | Feature: Retrospective Learning Loop | 2026-07-11 | [spec-DEV-056.md](archived/spec-DEV-056.md) · [review-DEV-056.md](archived/review-DEV-056.md) · [evidence-DEV-056.md](archived/evidence-DEV-056.md) |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-052; 0 🔴 Critical, 4 🟡 Warning accepted; report: `docs/archived/review-DEV-052.md`; evidence: `docs/archived/evidence-DEV-052.md` | AgToosa |
 | 2026-07-11 | 🚀 Ship complete — v5.3.11 — wave 3 DEV-052 · DEV-056; smoke PASS; cycle archived | AgToosa |
 | 2026-07-11 | 🚀 Release 5.3.11 shipped — v5.3.11; version parity bash/ps1/npm; Milestone v5.3.12 (next) | AgToosa |
 | 2026-07-11 | ✅ /agtoosa-spec — Spec ✅ Approved — wave 4: DEV-058 | AgToosa |
@@ -376,6 +395,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-058 — Task 🟢 4/4 — DB-001–008 green; agtoosa-dashboard.sh Markdown/HTML stdout-only | AgToosa |
 | 2026-07-11 | 🏗️ Build complete — wave 4 (DEV-058); next: /agtoosa-review | AgToosa |
 | 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — wave 4 DEV-058 | AgToosa |
-| 2026-07-11 | 🔍 Review ✅ Approved — DEV-058; 0 🔴 Critical, 3 🟡 Warning accepted; report: `docs/archived/review-DEV-058.md`; evidence: `docs/archived/evidence-DEV-058.md` | AgToosa || DEV-058 | Feature: Local Dashboard | 2026-07-11 | [spec-DEV-058.md](archived/spec-DEV-058.md) · [review-DEV-058.md](archived/review-DEV-058.md) · [evidence-DEV-058.md](archived/evidence-DEV-058.md) |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-058; 0 🔴 Critical, 3 🟡 Warning accepted; report: `docs/archived/review-DEV-058.md`; evidence: `docs/archived/evidence-DEV-058.md` | AgToosa |
 | 2026-07-11 | 🚀 Ship complete — v5.3.12 — wave 4 DEV-058; smoke PASS; cycle archived | AgToosa |
 | 2026-07-11 | 🚀 Release 5.3.12 shipped — v5.3.12; version parity bash/ps1/npm; Milestone v5.3.13 (next); all unblocked remaining specs complete | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-085 — Task 🟢 1/1 — bats restore (bb8a8bd) + Master-Plan reconciliation after v5.3.12 ship drift | AgToosa |
+| 2026-07-11 | ✏️ DEV-085 — Master-Plan Update Log / Completed This Cycle / Epics reconciled; roadmap-spec-index note added | AgToosa |

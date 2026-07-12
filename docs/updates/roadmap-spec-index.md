@@ -21,6 +21,12 @@ No enrolled stories. All unblocked executable backlog specs shipped through v5.3
 
 Parked demand-gated: **DEV-051**, **DEV-057**.
 
+## v5.3.13 prep (2026-07-11)
+
+| ID | Story | Type | Note |
+|---|---|---|---|
+| DEV-085 | Post-v5.3.12 release hygiene (bats restore + Master-Plan reconciliation) | Chore | Restores ship-regression bats coverage (commit `bb8a8bd`) and reconciles `docs/Master-Plan.md` Completed This Cycle / Update Log / Epics drift after v5.3.12 ship. Orchestrator owns version bump and CHANGELOG on release. |
+
 ## Recently shipped (v5.3.9 — 2026-07-11)
 
 | ID | Story | Epic | Spec |
