@@ -9,6 +9,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.12] — 2026-07-11
+
+Patch release: wave 4 (DEV-058).
+
+### Added
+
+- **DEV-058 — Local Dashboard.** `agtoosa-dashboard.sh` Markdown/HTML stdout-only projection; `AgToosa_Dashboard.md`; DB-001–DB-008 bats. Read-only local; no hosted/CDN/telemetry.
+
 ## [5.3.11] — 2026-07-11
 
 Patch release: wave 3 (DEV-052, DEV-056).

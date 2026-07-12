@@ -15,12 +15,11 @@ Every actionable proposal in the update documents is represented by one of:
 
 Editing this index does not enroll a story. Backlog stories still require `/agtoosa-spec`, explicit approval, and a separate `/agtoosa-build` invocation.
 
-## Active Stories (post v5.3.9 — 2026-07-11)
+## Active Stories (post v5.3.12 — 2026-07-11)
 
-Wave 1 shipped. Next enrollable: **DEV-046**, **DEV-059**.
+No enrolled stories. All unblocked executable backlog specs shipped through v5.3.12.
 
-Parked demand-gated: DEV-051, DEV-057.  
-Deferred dependents: DEV-052/056 (after 059), DEV-058 (after 056).
+Parked demand-gated: **DEV-051**, **DEV-057**.
 
 ## Recently shipped (v5.3.9 — 2026-07-11)
 

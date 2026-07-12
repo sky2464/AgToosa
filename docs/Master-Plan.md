@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (/agtoosa-build — wave 4 DEV-058 enrolled)
+> **Last updated:** 2026-07-11 (/agtoosa-ship — v5.3.12 wave 4 shipped; remaining demand-gated parked)
 
 ## Project Charter
 
@@ -9,9 +9,9 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | 🔍 Wave 4 review — DEV-058 |
-| Milestone | `v5.3.12` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | DEV-058 |
+| Current phase | 🏁 v5.3.12 shipped — all unblocked specs done; DEV-051/057 demand-gated |
+| Milestone | `v5.3.13` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
+| Active cycle | — |
 | Cycle capacity | `8 story points` |
 
 ## Active Cycle
@@ -20,7 +20,8 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-058 | Feature: Local Dashboard | Feature | M | 🔍 In Review | 4/4 |
+
+<!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.12.md -->
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.11.md -->
 
@@ -35,12 +36,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-**DEV-058 — Local Dashboard** (spec: `docs/archived/spec-DEV-058.md`)
-
-- [ ] **1.** Dashboard contract + RED
-- [ ] **2.** Local read-only rendering
-- [ ] **3.** Wiring/discovery
-- [ ] **4.** GREEN + evidence
+<!-- Wave 4 shipped — see docs/archived/cycle-2026-07-11-release-5.3.12.md -->
 
 
 ## Manual / Deferred Tasks
@@ -83,14 +79,14 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-048 | Feature: Agent Result Import Gate | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.3 |
 | DEV-049 | Feature: Evidence Ledger | Feature | M | DEV-004 | P0 | 🏁 Shipped — v5.3.4 |
 | DEV-050 | Feature: Cross-Model Review Gate | Feature | S | DEV-002 | P1 | 🏁 Shipped — v5.3.6 |
-| DEV-051 | Feature: Tracker Sync Bridge | Feature | M | DEV-003 | P1 | ⬜ Backlog — executable spec ready; demand-gated, proposal import only |
+| DEV-051 | Feature: Tracker Sync Bridge | Feature | M | DEV-003 | P1 | ⬜ Backlog — demand-gated |
 | DEV-052 | Feature: Hook Automation Pack | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.11 |
 | DEV-053 | Feature: Extension and Preset Catalog | Feature | M | DEV-003 | P1 | 🏁 Shipped — v5.3.8 |
 | DEV-054 | Feature: Signed Registry Provenance | Feature | M | DEV-003 | P0 | 🏁 Shipped — v5.3.5 |
 | DEV-055 | Feature: Agent Capability Matrix | Feature | S | DEV-002 | P1 | 🏁 Shipped — v5.3.7 |
 | DEV-056 | Feature: Retrospective Learning Loop | Feature | S | DEV-002 | P2 | 🏁 Shipped — v5.3.11 |
-| DEV-057 | Feature: Multi-Repo Story Overlay | Feature | L | DEV-002 | P2 | ⬜ Backlog — executable spec ready; demand-gated and requires DEV-045 shipped |
-| DEV-058 | Feature: Local Dashboard | Feature | M | DEV-004 | P2 | 🟨 In Progress — wave 4 |
+| DEV-057 | Feature: Multi-Repo Story Overlay | Feature | L | DEV-002 | P2 | ⬜ Backlog — demand-gated + DEV-045 |
+| DEV-058 | Feature: Local Dashboard | Feature | M | DEV-004 | P2 | 🏁 Shipped — v5.3.12 |
 | DEV-059 | Feature: Governance Policy-as-Code | Feature | M | DEV-004 | P1 | 🏁 Shipped — v5.3.10 |
 | DEV-060 | Docs: Public Benchmark Suite | Docs | M | DEV-004 | P2 | ✅ Done — suite + scoring + claim boundary in `docs/benchmarks/`; competitor runs manual-deferred |
 | DEV-075 | Docs: Subagent and Persona Guide Suite | Docs | M | DEV-002 | P1 | 🏁 Shipped — v5.3.8 |
@@ -380,3 +376,6 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-058 — Task 🟢 4/4 — DB-001–008 green; agtoosa-dashboard.sh Markdown/HTML stdout-only | AgToosa |
 | 2026-07-11 | 🏗️ Build complete — wave 4 (DEV-058); next: /agtoosa-review | AgToosa |
 | 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — wave 4 DEV-058 | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-058; 0 🔴 Critical, 3 🟡 Warning accepted; report: `docs/archived/review-DEV-058.md`; evidence: `docs/archived/evidence-DEV-058.md` | AgToosa || DEV-058 | Feature: Local Dashboard | 2026-07-11 | [spec-DEV-058.md](archived/spec-DEV-058.md) · [review-DEV-058.md](archived/review-DEV-058.md) · [evidence-DEV-058.md](archived/evidence-DEV-058.md) |
+| 2026-07-11 | 🚀 Ship complete — v5.3.12 — wave 4 DEV-058; smoke PASS; cycle archived | AgToosa |
+| 2026-07-11 | 🚀 Release 5.3.12 shipped — v5.3.12; version parity bash/ps1/npm; Milestone v5.3.13 (next); all unblocked remaining specs complete | AgToosa |

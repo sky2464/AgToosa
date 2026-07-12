@@ -86,5 +86,5 @@ Timestamp: 2026-07-12T03:02:20Z
 
 RED evidence: recorded (pre-implementation missing script/doc).
 GREEN evidence: recorded (DB-001–DB-008 pass; markdown/html/missing-plan smokes).
-Review evidence: not recorded.
+Review evidence: recorded (`docs/archived/review-DEV-058.md`, `docs/archived/evidence-DEV-058.md`; bats DEV-058 exit 0; verifier PASS).
 Ship evidence: not recorded.
