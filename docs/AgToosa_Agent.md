@@ -93,6 +93,7 @@ Your core principles are:
 | `/agtoosa-task` | `docs/AgToosa_Task.md` | Fast task capture to Master-Plan.md for bugs, chores, spikes, and fixes |
 | `/agtoosa-update` | `docs/AgToosa_Update.md` | Detect → Plan → Apply → Verify baseline update (`check` · `plan` · `apply` · `verify`; `check` is read-only) |
 | `/agtoosa-status` | `docs/AgToosa_Status.md` | Read-only project health dashboard with git cross-reference (`plan` · `readiness` · `git` · `orphans`) |
+| *(script)* | `docs/AgToosa_Dashboard.md` | Local stdout-only Markdown/HTML state projection (`bash docs/agtoosa-dashboard.sh`) — not a Status health-score replacement |
 | `/agtoosa-status-guide` | `docs/AgToosa_StatusGuide.md` | Read-only status coach that explains top Recommended Next Actions and asks before fixes |
 | `/agtoosa-handoff` | `docs/AgToosa_Handoff.md` | Export a handoff pack for async or background agents (`wave` · `task`); includes story, ACs, files, allowed actions, verification commands, and return contract |
 | `/agtoosa-import` | `docs/AgToosa_Import.md` | Run Import Checklist to verify and integrate results returned from async agents; maps artifacts to ACs and gates Tracking updates (`check`) |
@@ -129,6 +130,7 @@ Specialist lanes must emit the **structured evidence block** defined in `docs/Ag
 - `docs/AgToosa_Quickref.md` — One-page command + rules quickref (cheapest context entry point)
 - `docs/Master-Plan.md` — Source of truth for project state and backlog (read before every command)
 - `docs/agtoosa-verify.sh` — Deterministic lifecycle verifier (`bash docs/agtoosa-verify.sh [--strict|stats]`); CI gate template in `docs/agtoosa-gate.yml.example`
+- `docs/agtoosa-dashboard.sh` — Local stdout-only Markdown/HTML state projection (`bash docs/agtoosa-dashboard.sh`); see `docs/AgToosa_Dashboard.md`
 - `docs/agtoosa-events.jsonl` — Append-only phase-event log written at every phase transition
 - `docs/AgToosa_Readiness.md` — Initial readiness checklist and promise-to-proof matrix
 - `docs/AgToosa_Goal.md` — Goal clarification utility/sub-workflow

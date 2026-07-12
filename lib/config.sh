@@ -28,6 +28,8 @@ DOCS_FILES=(
   "Docs/AgToosa_CaseStudy.template.md"
   "Docs/AgToosa_Status.md"
   "Docs/AgToosa_StatusGuide.md"
+  "Docs/AgToosa_Dashboard.md"
+  "Docs/agtoosa-dashboard.sh"
   "Docs/AgToosa_Readiness.md"
   "Docs/AgToosa_Goal.md"
   "Docs/AgToosa_Debug.md"

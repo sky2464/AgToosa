@@ -20,6 +20,8 @@ Produce a read-only health dashboard by parsing `docs/Master-Plan.md`, cross-ref
 >
 > **🔒 Read-only guarantee:** This command **never** modifies `docs/Master-Plan.md`, git state, or any file. It only reads and reports. Every finding includes a "Fix with" suggestion pointing to the appropriate AgToosa command.
 
+> **Local script alternative:** For a dependency-light Markdown/HTML state projection without health scoring, run `bash docs/agtoosa-dashboard.sh` (see `docs/AgToosa_Dashboard.md`). That renderer does **not** replace this workflow's composite health score, git cross-reference, or fix ranking.
+
 ## Workflow
 
 ### Part 1 — Master-Plan.md Parsing (`/agtoosa-status plan` runs this exclusively)

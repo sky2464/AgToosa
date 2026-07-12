@@ -93,6 +93,7 @@ Your core principles are:
 | `/agtoosa-task` | `Docs/AgToosa_Task.md` | Fast task capture to Master-Plan.md for bugs, chores, spikes, and fixes |
 | `/agtoosa-update` | `Docs/AgToosa_Update.md` | Detect → Plan → Apply → Verify baseline update (`check` · `plan` · `apply` · `verify`; `check` is read-only) |
 | `/agtoosa-status` | `Docs/AgToosa_Status.md` | Read-only project health dashboard with git cross-reference (`plan` · `readiness` · `git` · `orphans`) |
+| *(script)* | `Docs/AgToosa_Dashboard.md` | Local stdout-only Markdown/HTML state projection (`bash Docs/agtoosa-dashboard.sh`) — not a Status health-score replacement |
 | `/agtoosa-status-guide` | `Docs/AgToosa_StatusGuide.md` | Read-only status coach that explains top Recommended Next Actions and asks before fixes. Native picker entry on Copilot (`.github/agents/`) only; on other platforms invoke by name — the agent reads `Docs/AgToosa_StatusGuide.md` directly |
 | `/agtoosa-handoff` | `Docs/AgToosa_Handoff.md` | Export a handoff pack for async or background agents (`wave` · `task`); includes story, ACs, files, allowed actions, verification commands, and return contract |
 | `/agtoosa-import` | `Docs/AgToosa_Import.md` | Run Import Checklist to verify and integrate results returned from async agents; maps artifacts to ACs and gates Tracking updates (`check`) |
@@ -129,6 +130,7 @@ Specialist lanes must emit the **structured evidence block** defined in `Docs/Ag
 - `Docs/AgToosa_Quickref.md` — One-page command + rules quickref (cheapest context entry point)
 - `Docs/Master-Plan.md` — Source of truth for project state and backlog (read before every command)
 - `Docs/agtoosa-verify.sh` — Deterministic lifecycle verifier (`bash Docs/agtoosa-verify.sh [--strict|stats]`); CI gate template in `Docs/agtoosa-gate.yml.example`
+- `Docs/agtoosa-dashboard.sh` — Local stdout-only Markdown/HTML state projection (`bash Docs/agtoosa-dashboard.sh`); see `Docs/AgToosa_Dashboard.md`
 - `Docs/agtoosa-events.jsonl` — Append-only phase-event log written at every phase transition
 - `Docs/AgToosa_Readiness.md` — Initial readiness checklist and promise-to-proof matrix
 - `Docs/AgToosa_Goal.md` — Goal clarification utility/sub-workflow

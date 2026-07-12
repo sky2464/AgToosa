@@ -63,6 +63,7 @@ Deterministic, no-AI gate — run any time, and in CI:
 bash Docs/agtoosa-verify.sh            # gates: context, specs, ACs, evidence
 bash Docs/agtoosa-verify.sh --strict   # warnings fail too
 bash Docs/agtoosa-verify.sh stats      # cycle analytics
+bash Docs/agtoosa-dashboard.sh         # local Markdown/HTML state projection (see AgToosa_Dashboard.md)
 ```
 
 | Gate | Checks |

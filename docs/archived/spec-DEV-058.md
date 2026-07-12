@@ -202,3 +202,8 @@ AC coverage: 8 of 8 ACs mapped to DB-001–DB-008
 Must coverage: 8 of 8 Must ACs mapped
 Smoke set: 8 planned tests tagged `@smoke`
 Execution state: not run; this story is Backlog
+
+## ✅ Spec Approved
+
+Approved: 2026-07-11 22:00
+Enrollment: remaining-specs fan-out wave 4 (post v5.3.11)

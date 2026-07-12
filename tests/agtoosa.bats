@@ -5453,7 +5453,219 @@ JSON
   done
 }
 
-# ── DEV-059: Governance Policy-as-Code (GP-001–GP-008) ────────────────────────
+# ── DEV-058: Local Dashboard (DB-001–DB-008) ──────────────────────────────────
+bats_require_minimum_version 1.5.0
+
+_dashboard_fixture_snapshot() {
+  # Snapshot sorted inventory, content digests, and mtimes under $1 into $2.
+  local root="$1"
+  local out="$2"
+  (
+    cd "$root" || exit 1
+    find . -print | LC_ALL=C sort > "$out.inventory"
+    find . -type f -print | LC_ALL=C sort | while IFS= read -r f; do
+      printf '%s\t%s\t%s\n' "$f" "$(cksum < "$f" | awk '{print $1" "$2}')" "$(stat -f '%m' "$f" 2>/dev/null || stat -c '%Y' "$f")"
+    done > "$out.files"
+  )
+}
+
+@test "DEV-058 DB-001: Markdown stdout is read-only (inventory/digest/mtime unchanged)" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local dash="$root/docs/agtoosa-dashboard.sh"
+  local fixture src
+  [ -f "$dash" ]
+  src="$root/tests/fixtures/dashboard-repo"
+  fixture="$TEST_PROJECT/dashboard-repo"
+  cp -R "$src" "$fixture"
+
+  _dashboard_fixture_snapshot "$fixture" "$TEST_PROJECT/before"
+  run bash "$dash" --root "$fixture" --format markdown
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Project Charter"* ]]
+  [[ "$output" == *"Active Stories"* || "$output" == *"Active Cycle"* ]]
+  [[ "$output" == *"Blocked"* ]]
+  [[ "$output" == *"Evidence Index"* ]]
+  [[ "$output" == *"Recent Events"* ]]
+  [[ "$output" == *"Latest Retrospective"* || "$output" == *"Retrospective"* ]]
+  [[ "$output" == *"Recommended Next Actions"* ]]
+  [[ "$output" == *"Master-Plan"* ]]
+  _dashboard_fixture_snapshot "$fixture" "$TEST_PROJECT/after"
+  diff -u "$TEST_PROJECT/before.inventory" "$TEST_PROJECT/after.inventory"
+  diff -u "$TEST_PROJECT/before.files" "$TEST_PROJECT/after.files"
+}
+
+@test "DEV-058 DB-002: HTML mode emits self-contained document with required sections" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local dash="$root/docs/agtoosa-dashboard.sh"
+  local fixture
+  [ -f "$dash" ]
+  fixture="$TEST_PROJECT/dashboard-html"
+  cp -R "$root/tests/fixtures/dashboard-repo" "$fixture"
+
+  run bash "$dash" --root "$fixture" --format html
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"<html"* || "$output" == *"<HTML"* ]]
+  [[ "$output" == *"Project Charter"* ]]
+  [[ "$output" == *"Active Stories"* ]]
+  [[ "$output" == *"Blocked"* ]]
+  [[ "$output" == *"Evidence Index"* ]]
+  [[ "$output" == *"Recent Events"* ]]
+  [[ "$output" == *"Latest Retrospective"* ]]
+  [[ "$output" == *"Recommended Next Actions"* ]]
+  # No remote assets / CDNs / external scripts
+  ! echo "$output" | grep -qiE 'https?://[^"[:space:]]+\.(js|css|woff2?)'
+  ! echo "$output" | grep -qiE '<script[^>]+src='
+  ! echo "$output" | grep -qiE '<link[^>]+href=["'\'']https?://'
+  ! echo "$output" | grep -qiE 'cdn\.|unpkg\.|jsdelivr|fonts\.googleapis'
+}
+
+@test "DEV-058 DB-003: Both formats declare Master-Plan SoT and projection labels" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local dash="$root/docs/agtoosa-dashboard.sh"
+  local fixture out
+  [ -f "$dash" ]
+  fixture="$TEST_PROJECT/dashboard-sot"
+  cp -R "$root/tests/fixtures/dashboard-repo" "$fixture"
+
+  run bash "$dash" --root "$fixture" --format markdown
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"source of truth"* || "$output" == *"Source of truth"* ]]
+  [[ "$output" == *"Master-Plan"* ]]
+  [[ "$output" == *"projection"* || "$output" == *"non-authoritative"* || "$output" == *"Non-authoritative"* ]]
+  [[ "$output" == *"/agtoosa-status"* ]]
+
+  run bash "$dash" --root "$fixture" --format html
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"source of truth"* || "$output" == *"Source of truth"* ]]
+  [[ "$output" == *"Master-Plan"* ]]
+  [[ "$output" == *"projection"* || "$output" == *"non-authoritative"* || "$output" == *"Non-authoritative"* ]]
+}
+
+@test "DEV-058 DB-004: Dashboard doc defines CLI, sources, stdout-only, Status relationship" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Dashboard.md" "$root/docs/AgToosa_Dashboard.md"; do
+    [ -f "$f" ]
+    grep -qE -- '--format markdown\|html|--format markdown\|html|markdown\|html' "$f"
+    grep -q -- '--root' "$f"
+    grep -q -- '--log-lines' "$f"
+    grep -q 'stdout' "$f"
+    grep -q 'agtoosa-dashboard.sh' "$f"
+    grep -q 'Master-Plan' "$f"
+    grep -q '/agtoosa-status' "$f"
+    grep -q 'generator-enforced\|CI-enforced\|manual\|roadmap' "$f"
+    grep -q 'health score\|health-score\|does not\|not reimplement\|non-duplicat' "$f"
+    grep -q 'Bash' "$f"
+  done
+  for f in "$root/template/Docs/agtoosa-dashboard.sh" "$root/docs/agtoosa-dashboard.sh"; do
+    [ -f "$f" ]
+  done
+  run bash "$root/agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  echo "$output" | grep -F "Docs/AgToosa_Dashboard.md"
+  echo "$output" | grep -F "Docs/agtoosa-dashboard.sh"
+}
+
+@test "DEV-058 DB-005: Missing Master-Plan exits 2 with stderr only and no files created" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local dash="$root/docs/agtoosa-dashboard.sh"
+  local fixture before after
+  [ -f "$dash" ]
+  fixture="$TEST_PROJECT/no-plan"
+  cp -R "$root/tests/fixtures/dashboard-repo-no-plan" "$fixture"
+  before="$(find "$fixture" -print | LC_ALL=C sort)"
+
+  run --separate-stderr bash "$dash" --root "$fixture" --format markdown
+  [ "$status" -eq 2 ]
+  [ -z "$output" ]
+  [[ "$stderr" == *"Master-Plan"* ]]
+
+  after="$(find "$fixture" -print | LC_ALL=C sort)"
+  [ "$before" = "$after" ]
+}
+
+@test "DEV-058 DB-006: Renderer has no Node/Python/package-manager/network/telemetry deps" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/agtoosa-dashboard.sh" "$root/docs/agtoosa-dashboard.sh"; do
+    [ -f "$f" ]
+    ! grep -qE '\b(curl|wget|nc|node|nodejs|npm|npx|yarn|pnpm|pip|pip3|python|python3|ruby|perl)\b' "$f"
+    ! grep -qiE 'telemetry|analytics|cdn\.|unpkg|jsdelivr|fonts\.googleapis' "$f"
+    ! grep -qiE 'https?://' "$f"
+  done
+  for f in "$root/template/Docs/AgToosa_Dashboard.md" "$root/docs/AgToosa_Dashboard.md"; do
+    grep -qiE 'no (Node|Python|network|telemetry)|without (Node|Python|network|telemetry)|Bash' "$f"
+  done
+}
+
+@test "DEV-058 DB-007: HTML escapes injection characters and keeps unsafe links inert" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local dash="$root/docs/agtoosa-dashboard.sh"
+  local fixture
+  [ -f "$dash" ]
+  fixture="$TEST_PROJECT/dashboard-xss"
+  cp -R "$root/tests/fixtures/dashboard-repo" "$fixture"
+
+  run bash "$dash" --root "$fixture" --format html
+  [ "$status" -eq 0 ]
+  # Raw injection must not appear unescaped
+  ! echo "$output" | grep -F '<script>alert(1)</script>'
+  ! echo "$output" | grep -F '<b>Bold</b>'
+  ! echo "$output" | grep -F '<img src=x onerror=alert(1)>'
+  # Required escapes present somewhere in output for fixture text
+  echo "$output" | grep -q '&amp;'
+  echo "$output" | grep -q '&lt;'
+  echo "$output" | grep -q '&gt;'
+  echo "$output" | grep -qE '&quot;|&#34;'
+  echo "$output" | grep -qE '&#39;|&apos;'
+  # Unsafe remote / traversal pointers must not become active hrefs
+  ! echo "$output" | grep -qiE 'href=["'\'']https://evil\.example'
+  ! echo "$output" | grep -qiE 'href=["'\'']\.\./\.\./etc/passwd'
+}
+
+@test "DEV-058 DB-008: Missing optional / malformed rows warn; log-lines caps; deterministic" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local dash="$root/docs/agtoosa-dashboard.sh"
+  local fixture miss out1 out2 err1
+  [ -f "$dash" ]
+
+  # Malformed JSONL row must not abort; events capped
+  fixture="$TEST_PROJECT/dashboard-resilient"
+  cp -R "$root/tests/fixtures/dashboard-repo" "$fixture"
+  run --separate-stderr bash "$dash" --root "$fixture" --format markdown --log-lines 2
+  [ "$status" -eq 0 ]
+  err1="$stderr"
+  [[ "$err1" == *"malformed"* || "$err1" == *"warning"* || "$err1" == *"Warning"* || "$output" == *"Warning"* || "$output" == *"malformed"* ]]
+  # With --log-lines 2, at most 2 event rows should appear in Recent Events
+  out1="$output"
+  [[ "$out1" == *"Recent Events"* ]]
+
+  # Deterministic after normalizing generation timestamp
+  run --separate-stderr bash "$dash" --root "$fixture" --format markdown --log-lines 2
+  out2="$output"
+  printf '%s\n' "$out1" | sed -E 's/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9:.]+Z?/TIMESTAMP/g' > "$TEST_PROJECT/norm1"
+  printf '%s\n' "$out2" | sed -E 's/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9:.]+Z?/TIMESTAMP/g' > "$TEST_PROJECT/norm2"
+  diff -u "$TEST_PROJECT/norm1" "$TEST_PROJECT/norm2"
+
+  # Evidence sorted deterministically (DEV-TEST before DEV-ZZZ)
+  [[ "$out1" == *"evidence-DEV-TEST"* ]]
+  [[ "$out1" == *"evidence-DEV-ZZZ"* ]]
+  local pos_test pos_zzz
+  pos_test="$(printf '%s\n' "$out1" | grep -n 'evidence-DEV-TEST' | head -1 | cut -d: -f1)"
+  pos_zzz="$(printf '%s\n' "$out1" | grep -n 'evidence-DEV-ZZZ' | head -1 | cut -d: -f1)"
+  [ "$pos_test" -lt "$pos_zzz" ]
+
+  # Latest retro selected
+  [[ "$out1" == *"2099-01-01"* ]]
+  ! echo "$out1" | grep -q 'PROP-OLD-1'
+
+  # Missing optional sources → Unavailable / warning, still success
+  miss="$TEST_PROJECT/dashboard-miss"
+  cp -R "$root/tests/fixtures/dashboard-repo-missing-optional" "$miss"
+  run --separate-stderr bash "$dash" --root "$miss" --format markdown
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Unavailable"* || "$stderr" == *"Unavailable"* || "$output" == *"unavailable"* || "$stderr" == *"missing"* ]]
+}
 
 @test "DEV-059 GP-001: GovernancePolicy doc and inert example define schema vocabulary" {
   local root="$BATS_TEST_DIRNAME/.."

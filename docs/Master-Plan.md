@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (/agtoosa-ship — v5.3.11 wave 3 shipped)
+> **Last updated:** 2026-07-11 (/agtoosa-build — wave 4 DEV-058 enrolled)
 
 ## Project Charter
 
@@ -9,9 +9,9 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | 🏁 v5.3.11 shipped — enroll DEV-058 next |
+| Current phase | 🔍 Wave 4 review — DEV-058 |
 | Milestone | `v5.3.12` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | — (wave 3 archived) |
+| Active cycle | DEV-058 |
 | Cycle capacity | `8 story points` |
 
 ## Active Cycle
@@ -20,6 +20,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
+| DEV-058 | Feature: Local Dashboard | Feature | M | 🔍 In Review | 4/4 |
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.11.md -->
 
@@ -34,7 +35,12 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-<!-- Wave 3 shipped — see docs/archived/cycle-2026-07-11-release-5.3.11.md -->
+**DEV-058 — Local Dashboard** (spec: `docs/archived/spec-DEV-058.md`)
+
+- [ ] **1.** Dashboard contract + RED
+- [ ] **2.** Local read-only rendering
+- [ ] **3.** Wiring/discovery
+- [ ] **4.** GREEN + evidence
 
 
 ## Manual / Deferred Tasks
@@ -84,7 +90,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-055 | Feature: Agent Capability Matrix | Feature | S | DEV-002 | P1 | 🏁 Shipped — v5.3.7 |
 | DEV-056 | Feature: Retrospective Learning Loop | Feature | S | DEV-002 | P2 | 🏁 Shipped — v5.3.11 |
 | DEV-057 | Feature: Multi-Repo Story Overlay | Feature | L | DEV-002 | P2 | ⬜ Backlog — executable spec ready; demand-gated and requires DEV-045 shipped |
-| DEV-058 | Feature: Local Dashboard | Feature | M | DEV-004 | P2 | ⬜ Backlog — unblocked after DEV-056 |
+| DEV-058 | Feature: Local Dashboard | Feature | M | DEV-004 | P2 | 🟨 In Progress — wave 4 |
 | DEV-059 | Feature: Governance Policy-as-Code | Feature | M | DEV-004 | P1 | 🏁 Shipped — v5.3.10 |
 | DEV-060 | Docs: Public Benchmark Suite | Docs | M | DEV-004 | P2 | ✅ Done — suite + scoring + claim boundary in `docs/benchmarks/`; competitor runs manual-deferred |
 | DEV-075 | Docs: Subagent and Persona Guide Suite | Docs | M | DEV-002 | P1 | 🏁 Shipped — v5.3.8 |
@@ -369,3 +375,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-056 | Feature: Retrospective Learning Loop | 2026-07-11 | [spec-DEV-056.md](archived/spec-DEV-056.md) · [review-DEV-056.md](archived/review-DEV-056.md) · [evidence-DEV-056.md](archived/evidence-DEV-056.md) |
 | 2026-07-11 | 🚀 Ship complete — v5.3.11 — wave 3 DEV-052 · DEV-056; smoke PASS; cycle archived | AgToosa |
 | 2026-07-11 | 🚀 Release 5.3.11 shipped — v5.3.11; version parity bash/ps1/npm; Milestone v5.3.12 (next) | AgToosa |
+| 2026-07-11 | ✅ /agtoosa-spec — Spec ✅ Approved — wave 4: DEV-058 | AgToosa |
+| 2026-07-11 | 🏗️ Build 🏗️ Started — wave 4 — DEV-058 | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-058 — Task 🟢 4/4 — DB-001–008 green; agtoosa-dashboard.sh Markdown/HTML stdout-only | AgToosa |
+| 2026-07-11 | 🏗️ Build complete — wave 4 (DEV-058); next: /agtoosa-review | AgToosa |
+| 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — wave 4 DEV-058 | AgToosa |

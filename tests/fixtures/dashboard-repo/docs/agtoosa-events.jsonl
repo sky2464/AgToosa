@@ -1,0 +1,5 @@
+{"ts":"2099-01-01T09:00:00Z","phase":"spec","event":"complete","story":"DEV-TEST","by":"AgToosa"}
+this is not json at all
+{"ts":"2099-01-01T10:00:00Z","phase":"build","event":"start","story":"DEV-TEST","by":"AgToosa"}
+{"ts":"2099-01-01T11:00:00Z","phase":"build","event":"complete","story":"DEV-TEST","by":"AgToosa"}
+{"ts":"2099-01-02T08:00:00Z","phase":"review","event":"start","story":"DEV-TEST","by":"AgToosa"}
