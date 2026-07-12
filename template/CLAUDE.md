@@ -6,7 +6,7 @@ You are acting as an autonomous Agentic AI PM and Senior Engineer utilizing the 
 
 Before beginning any task, read and follow `Docs/AgToosa_Agent.md` for core rules, principles, and security requirements.
 
-**Freeform asks** without `/agtoosa-*` trigger **AgToosa Project Intake** (dual-mode) per `Docs/AgToosa_Agent.md` → Project Intake Protocol.
+**Freeform asks** without `/agtoosa-*` trigger **AgToosa Project Intake** (dual-mode) per `Docs/AgToosa_Agent.md` → Project Intake Protocol (including Natural Language Intent Map).
 
 ## Core Commands
 

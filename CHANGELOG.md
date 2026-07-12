@@ -5,6 +5,22 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.26] — 2026-07-12
+
+Patch release: DEV-113 — Cursor intake hardening + fixture parity.
+
+### Changed
+
+- **DEV-113 — Cursor intake hardening.** FIX-001 exercises `scripts/cursor-intake-fixture.sh`; CIT-002–CIT-004 bats; `template/CLAUDE.md` NL Intent Map parity; install bats use `$AGTOOSA_SHIP_DIR` for ship isolation.
+
+## [5.3.25] — 2026-07-12
+
+Patch release: DEV-114 — `--cleanup` false-positive hotfix.
+
+### Fixed
+
+- **DEV-114 — `--cleanup` false positives.** Symmetric Copilot/VS Code shared-path guard (`.github/prompts`, `.github/agents`); preserve `Docs/AgToosa_TestPlan-*` story test plans; CLN-012–CLN-014 bats; `AgToosa_Update.md` cleanup guidance.
+
 ## [5.3.24] — 2026-07-12
 
 Patch release: DEV-112 — Smart Apply UX polish + `--cleanup` + Cursor NL intent routing.

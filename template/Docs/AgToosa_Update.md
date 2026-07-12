@@ -290,10 +290,12 @@ After upgrades, projects may accumulate **unnecessary AgToosa-owned files** that
 | Category | Examples |
 |----------|----------|
 | Merge backups | `*.bak.YYYYMMDD-HHMM` from smart merges |
-| Removed workflow docs | `Docs/AgToosa_*.md` no longer shipped in the template |
-| Deselected platforms | `.windsurf/`, `.codex/`, etc. when `Docs/agtoosa-lock.json` `platforms[]` no longer includes that platform. VS Code generic installs (platform 6) use `.github/prompts/` without `copilot-instructions.md`; cleanup infers `vscode` when those prompts are present so active VS Code-only installs are not misclassified. |
+| Removed workflow docs | Framework `Docs/AgToosa_*.md` files no longer shipped in the template — **not** per-story test plans (`Docs/AgToosa_TestPlan-*`) |
+| Deselected platforms | `.windsurf/`, `.codex/`, etc. when `Docs/agtoosa-lock.json` `platforms[]` no longer includes that platform. GitHub Copilot and VS Code (generic) **share** `.github/prompts/` and `.github/agents/`; cleanup skips those shared paths when **either** `copilot` or `vscode` is in `platforms[]`. VS Code-only installs (platform 6) without `copilot-instructions.md` infer `vscode` when `agtoosa-*` prompts are present. |
 
-**`--cleanup`** is opt-in housekeeping — not destructive full regen. It never touches `Docs/Context/`, `Docs/archived/`, Master-Plan, or user project specialist files.
+**`--cleanup`** is opt-in housekeeping — not destructive full regen. It never touches `Docs/Context/`, `Docs/archived/`, `Docs/AgToosa_TestPlan-*`, Master-Plan, or user project specialist files.
+
+**Always run `--dry-run` first** on production repos. `--yes` applies all listed categories without further confirmation.
 
 The install/upgrade wizard may offer cleanup when candidates exist. You can also run it directly:
 

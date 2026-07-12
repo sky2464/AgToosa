@@ -226,7 +226,7 @@ Do **not** advance MINOR for every small story. Update Project Charter **Milesto
 - After changing `lib/maintain.sh` uninstall paths: run focused bats (`-f "DEV-073"` or `-f "UN"`) before the full suite.
 - For registry or bootstrap changes: exercise `--registry install` with a test pack and confirm tar-slip rejection, denylist blocking, and preview output.
 - For documentation-only or agent-config-only changes, verify that each native entry file points to this guide and that no frontmatter errors were introduced.
-- For Cursor Project Intake / NL intent verification on a downstream install: `bash scripts/cursor-intake-fixture.sh` then open the printed path in Cursor (do not install into this repo).
+- For Cursor Project Intake / NL intent verification on a downstream install: `bash scripts/cursor-intake-fixture.sh` then open the printed path in Cursor (do not install into this repo). CI exercises the same path via bats **FIX-001** (`bats -f FIX-001`).
 
 ## Cursor dogfood (generator repo)
 

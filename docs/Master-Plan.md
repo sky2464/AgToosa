@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-12 (DEV-112 shipped — v5.3.24 Smart Apply UX + cleanup)
+> **Last updated:** 2026-07-12 (DEV-113 shipped — v5.3.26 cursor intake hardening)
 
 ## Project Charter
 
@@ -9,8 +9,8 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | DEV-112 shipped — Smart Apply UX + cleanup; next enroll |
-| Milestone | `v5.3.25` (next) |
+| Current phase | DEV-113 shipped — next enroll via `/agtoosa-spec` |
+| Milestone | `v5.3.27` (next) |
 | Active cycle | _(none — enroll via `/agtoosa-spec`)_ |
 | Cycle capacity | `8 story points` |
 
@@ -22,7 +22,7 @@
 |----|-------|------|----------|--------|-----------|
 | — | _(no active story — run `/agtoosa-spec` to enroll)_ | — | — | — | — |
 
-<!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.24.md (DEV-112 v5.3.24) -->
+<!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.26.md (DEV-113 v5.3.26) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.23.md (DEV-111 v5.3.23) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.22.md (DEV-110 v5.3.22) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.21.md (DEV-109 v5.3.21) -->
@@ -81,7 +81,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 |----|-------|-----------|-------|
 | — | (none) | — | — |
 
-Conflict playbook: _DEV-112 shipped v5.3.24 — next enroll via `/agtoosa-spec` (e.g. DEV-080 external publish follow-up or demand-gated DEV-057)._
+Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` (e.g. DEV-080 external publish or demand-gated DEV-057)._
 
 ## Backlog
 
@@ -155,6 +155,8 @@ Conflict playbook: _DEV-112 shipped v5.3.24 — next enroll via `/agtoosa-spec` 
 | DEV-110 | Feature: AgToosa Project Intake | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.22 |
 | DEV-111 | Feature: Smart One-Command Install UX | Feature | M | DEV-001 | P0 | 🏁 Shipped — v5.3.23 |
 | DEV-112 | Feature: Smart Apply UX Polish + `--cleanup` | Feature | M | DEV-001 / DEV-111 | P0 | 🏁 Shipped — v5.3.24 |
+| DEV-113 | Chore: Cursor Intake Hardening + Fixture Parity | Chore | S | DEV-002 | P1 | 🏁 Shipped — v5.3.26 |
+| DEV-114 | Fix: `--cleanup` false positives | Fix | S | DEV-112 | P0 | 🏁 Shipped — v5.3.25 |
 
 ## Epics
 
@@ -226,6 +228,8 @@ Conflict playbook: _DEV-112 shipped v5.3.24 — next enroll via `/agtoosa-spec` 
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-113 | Chore: Cursor Intake Hardening + Fixture Parity | 2026-07-12 | [spec-DEV-113.md](archived/spec-DEV-113.md) · [review-DEV-113.md](archived/review-DEV-113.md) · [evidence-DEV-113.md](archived/evidence-DEV-113.md) |
+| DEV-114 | Fix: `--cleanup` false positives | 2026-07-12 | [spec-DEV-114.md](archived/spec-DEV-114.md) · [review-DEV-114.md](archived/review-DEV-114.md) · [evidence-DEV-114.md](archived/evidence-DEV-114.md) |
 | DEV-110 | Feature: AgToosa Project Intake | 2026-07-12 | [spec-DEV-110.md](archived/spec-DEV-110.md) · [review-DEV-110.md](archived/review-DEV-110.md) · [evidence-DEV-110.md](archived/evidence-DEV-110.md) |
 | DEV-109 | Feature: Lifecycle Next-Step Sync + Multi-Spec Clarity | 2026-07-12 | [spec-DEV-109.md](archived/spec-DEV-109.md) · [review-DEV-109.md](archived/review-DEV-109.md) · [evidence-DEV-109.md](archived/evidence-DEV-109.md) |
 | DEV-096 | Chore: Pack Validation CI | 2026-07-12 | [spec-DEV-096.md](archived/spec-DEV-096.md) · [review-DEV-096.md](archived/review-DEV-096.md) · [evidence-DEV-096.md](archived/evidence-DEV-096.md) |
@@ -560,6 +564,8 @@ Conflict playbook: _DEV-112 shipped v5.3.24 — next enroll via `/agtoosa-spec` 
 | 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — Wave 3 (095·096·098·099·101·102·103·104·106) + DEV-107 batched — smoke PASS; v5.3.20 | AgToosa |
 | 2026-07-12 | 🚀 Ship complete — v5.3.20 — Rev4 Wave 3 + DEV-107; smoke PASS; cycle archived | AgToosa |
 | 2026-07-12 | 🚀 Release 5.3.20 shipped — v5.3.20; version parity bash/ps1/npm; Milestone v5.3.21 (next) | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v5.3.25 — DEV-114 cleanup false-positive hotfix; CLN-012–014 PASS | AgToosa |
+| 2026-07-12 | 🚀 Release 5.3.25 shipped — v5.3.25; version parity bash/ps1/npm; Milestone v5.3.26 (next) | AgToosa |
 | 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-112 — smoke PASS; v5.3.24; spec archived | AgToosa |
 | 2026-07-12 | 🚀 Ship complete — v5.3.24 — DEV-112 Smart Apply UX + cleanup; smoke PASS; cycle archived | AgToosa |
 | 2026-07-12 | 🚀 Release 5.3.24 shipped — v5.3.24; version parity bash/ps1/npm; Milestone v5.3.25 (next) | AgToosa |
@@ -569,3 +575,12 @@ Conflict playbook: _DEV-112 shipped v5.3.24 — next enroll via `/agtoosa-spec` 
 | 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-110 — smoke PASS; v5.3.22; spec archived | AgToosa |
 | 2026-07-12 | 🚀 Ship complete — v5.3.22 — DEV-110 Project Intake; smoke PASS; cycle archived | AgToosa |
 | 2026-07-12 | 🚀 Release 5.3.22 shipped — v5.3.22; version parity bash/ps1/npm; Milestone v5.3.23 (next) | AgToosa |
+| 2026-07-12 | ✏️ /agtoosa-spec — DEV-113 enrolled — Cursor Intake Hardening + Fixture Parity; spec `docs/archived/spec-DEV-113.md`; test plan `docs/AgToosa_TestPlan-DEV-113.md`; estimate S; Active Cycle Todo; awaiting Spec Approved | AgToosa |
+| 2026-07-12 | /agtoosa-spec — Spec ✅ Approved — DEV-113 | AgToosa |
+| 2026-07-12 | 🏗️ Build 🏗️ Started — DEV-113 — Cursor intake hardening; 10 tasks; FIX-001→fixture, CIT-*, CLAUDE.md parity, AGTOOSA_SHIP_DIR ship tests | AgToosa |
+| 2026-07-12 | 🏗️ /agtoosa-build DEV-113 — Task 🟢 10/10 — FIX/CIT/NLM green; full bats 950×3; next: `/agtoosa-review` | AgToosa |
+| 2026-07-12 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-113 — 4-persona review running | AgToosa |
+| 2026-07-12 | 🔍 Review ✅ Approved — DEV-113; 0 🔴 Critical, 3 🟡 Warning accepted; report: `docs/archived/review-DEV-113.md`; evidence: `docs/archived/evidence-DEV-113.md`; next: `/agtoosa-ship` | AgToosa |
+| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-113 — smoke PASS; v5.3.26; spec archived | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v5.3.26 — DEV-113 Cursor intake hardening; smoke PASS; cycle archived | AgToosa |
+| 2026-07-12 | 🚀 Release 5.3.26 shipped — v5.3.26; version parity bash/ps1/npm; Milestone v5.3.27 (next) | AgToosa |

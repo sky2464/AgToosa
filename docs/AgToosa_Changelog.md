@@ -9,6 +9,26 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.26] — 2026-07-12
+
+Patch release: DEV-113 — Cursor intake hardening + fixture parity.
+
+### Changed
+
+- **DEV-113 — Cursor intake hardening.** FIX-001 exercises `cursor-intake-fixture.sh`; CIT-002–CIT-004; CLAUDE.md NL map parity; `AGTOOSA_SHIP_DIR` ship test isolation.
+
+---
+
+## [5.3.25] — 2026-07-12
+
+Patch release: DEV-114 — `--cleanup` false-positive hotfix.
+
+### Fixed
+
+- **DEV-114 — `--cleanup` false positives.** Copilot/VS Code shared prompts no longer misclassified; `Docs/AgToosa_TestPlan-*` preserved; CLN-012–CLN-014.
+
+---
+
 ## [5.3.24] — 2026-07-12
 
 Patch release: DEV-112 — Smart Apply UX Polish + `--cleanup`.

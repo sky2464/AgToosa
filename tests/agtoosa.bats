@@ -21,7 +21,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.24" ]]
+  [[ "$output" == "AgToosa v5.3.26" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -158,13 +158,13 @@ EOF
 @test "declining copy keeps ship/ intact" {
   run bash -c "printf '$TEST_PROJECT\n1\nn\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
-  [ -d "$BATS_TEST_DIRNAME/../ship" ]
-  [ -f "$BATS_TEST_DIRNAME/../ship/Docs/AgToosa_Agent.md" ]
+  [ -d "$AGTOOSA_SHIP_DIR" ]
+  [ -f "$AGTOOSA_SHIP_DIR/Docs/AgToosa_Agent.md" ]
 }
 @test "ship/ is cleaned up after successful auto-copy" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
-  [ ! -d "$BATS_TEST_DIRNAME/../ship" ]
+  [ ! -d "$AGTOOSA_SHIP_DIR" ]
 }
 @test "ship/ is cleaned up after unexpected EOF (forced failure scenario)" {
   # Provide project path and platform but no answer to copy prompt.
@@ -172,7 +172,7 @@ EOF
   # The EXIT trap must remove ship/ regardless.
   run bash -c "printf '$TEST_PROJECT\n1\n' | bash '$SCRIPT'"
   # ship/ must be absent whether the script succeeded or failed
-  [ ! -d "$BATS_TEST_DIRNAME/../ship" ]
+  [ ! -d "$AGTOOSA_SHIP_DIR" ]
 }
 # ── Platform coverage ────────────────────────────────
 @test "platform selection 2 copies .windsurfrules" {
@@ -1130,7 +1130,7 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
 }
 @test "lock file is written when packs are staged and merged" {
   # Stage a minimal mock pack into ship/packs/
-  local ship_dir="$BATS_TEST_DIRNAME/../ship"
+  local ship_dir="$AGTOOSA_SHIP_DIR"
   local pack_dir="$ship_dir/packs/test-pack"
   mkdir -p "$pack_dir"
   echo "# Test workflow" > "$pack_dir/workflow.md"
@@ -1196,7 +1196,7 @@ PY
   [ "$status" -eq 0 ]
   [ -d "$queue_dir/mock-pack" ]
   [ -f "$queue_dir/mock-pack/workflow.md" ]
-  [ ! -f "$BATS_TEST_DIRNAME/../ship/packs/mock-pack/workflow.md" ]
+  [ ! -f "$AGTOOSA_SHIP_DIR/packs/mock-pack/workflow.md" ]
 
   rm -rf "$queue_dir"
 }
@@ -1637,7 +1637,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.3.24" ]
+  [ "$ver" = "5.3.26" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1648,7 +1648,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.3.24"* ]]
+  [[ "$output" == *"5.3.26"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -3650,7 +3650,7 @@ PY
   grep -q "Claude Code Instructions" "$project/CLAUDE.md"
   ! grep -q "old claude block" "$project/CLAUDE.md"
   grep -q "AgToosa" "$project/.claude/commands/agtoosa-spec.md"
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.24" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.26" ]
 }
 
 @test "DEV-036 WP-002: Bash registry install normalizes top-level pack directory" {
@@ -9622,7 +9622,7 @@ EOF
   run pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1" -Update -UpdatePath "$project"
   [ "$status" -eq 0 ]
   [ -f "$project/Docs/.agtoosa-version" ]
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.24" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.26" ]
 }
 
 @test "DEV-105 PSP-005: maintain switches require -UpdatePath" {
@@ -10044,7 +10044,7 @@ PY
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.24"
+    AGTOOSA_VERSION="5.3.26"
     PROJECT_PATH="'"$proj"'"
     apply_reset_summary
     apply_begin_staging "'"$proj"'"
@@ -10103,7 +10103,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.24"
+    AGTOOSA_VERSION="5.3.26"
     PROJECT_PATH="'"$proj"'"
     USE_CURSOR=true; USE_CLAUDE=true
     USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10121,7 +10121,7 @@ d = json.load(open(sys.argv[1]))
 plats = set(d.get("platforms") or [])
 assert "cursor" in plats and "claude" in plats, plats
 assert "gemini" not in plats, "stale platform should be reconciled out"
-assert d.get("agtoosa_version") == "5.3.24"
+assert d.get("agtoosa_version") == "5.3.26"
 PY
   [ "$status" -eq 0 ]
 }
@@ -10136,7 +10136,7 @@ PY
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.24"
+    AGTOOSA_VERSION="5.3.26"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10193,7 +10193,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.24"
+    AGTOOSA_VERSION="5.3.26"
     PROJECT_PATH="'"$proj"'"
     # Inject observed SHA that differs from lock pin
     AGTOOSA_PACK_OBSERVED_SHA_tampered_pack="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
@@ -10228,7 +10228,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.24"
+    AGTOOSA_VERSION="5.3.26"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10252,7 +10252,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.24"
+    AGTOOSA_VERSION="5.3.26"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10280,7 +10280,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.24"
+    AGTOOSA_VERSION="5.3.26"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -12348,7 +12348,7 @@ PY
 
   PACK_QUEUE_DIR="$queue_dir"
   PROJECT_PATH="$project_dir"
-  AGTOOSA_VERSION="5.3.24"
+  AGTOOSA_VERSION="5.3.26"
   GREEN="" YELLOW="" NC=""
   source "$BATS_TEST_DIRNAME/../lib/install.sh"
   _merge_pack_queue
@@ -12377,7 +12377,7 @@ PY
 
   PACK_QUEUE_DIR="$queue_dir"
   PROJECT_PATH="$project_dir"
-  AGTOOSA_VERSION="5.3.24"
+  AGTOOSA_VERSION="5.3.26"
   GREEN="" YELLOW="" NC=""
   source "$BATS_TEST_DIRNAME/../lib/install.sh"
   _merge_pack_queue
@@ -12616,18 +12616,18 @@ PY
   [ "$status" -eq 0 ]
 }
 
-# -- Wave 3 ship regression v5.3.20 (SR-001–SR-003) + v5.3.24 current pins --------
+# -- Wave 3 ship regression v5.3.20 (SR-001–SR-003) + v5.3.26 current pins --------
 
-@test "DEV-096 SR-001: v5.3.24 release pins are aligned" {
+@test "DEV-096 SR-001: v5.3.26 release pins are aligned" {
   local root="$BATS_TEST_DIRNAME/.."
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -oE '"version": "[0-9]+\.[0-9]+\.[0-9]+"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "5.3.24" ]
-  [ "$ps_ver" = "5.3.24" ]
-  [ "$npm_ver" = "5.3.24" ]
-  grep -q '## \[5.3.24\]' "$root/CHANGELOG.md"
-  grep -q 'version-5.3.24' "$root/README.md"
+  [ "$bash_ver" = "5.3.26" ]
+  [ "$ps_ver" = "5.3.26" ]
+  [ "$npm_ver" = "5.3.26" ]
+  grep -q '## \[5.3.26\]' "$root/CHANGELOG.md"
+  grep -q 'version-5.3.26' "$root/README.md"
 }
 
 @test "DEV-096 SR-002: v5.3.20 changelog and Wave 3 review/evidence/spec artifacts exist" {
@@ -12644,13 +12644,13 @@ PY
   done
 }
 
-@test "DEV-096 SR-003: Master-Plan records v5.3.24 ship and v5.3.25 next milestone" {
+@test "DEV-096 SR-003: Master-Plan records v5.3.26 ship and v5.3.27 next milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v5.3.24' "$mp"
-  grep -q 'Release 5.3.24 shipped' "$mp"
-  grep -q 'v5.3.25 (next)' "$mp"
-  grep -q 'DEV-112' "$mp"
-  grep -q 'Shipped — v5.3.24' "$mp"
+  grep -q 'Ship complete — v5.3.26' "$mp"
+  grep -q 'Release 5.3.26 shipped' "$mp"
+  grep -q 'v5.3.27 (next)' "$mp"
+  grep -q 'DEV-113' "$mp"
+  grep -q 'Shipped — v5.3.26' "$mp"
 }
 
 # ── DEV-109: Lifecycle Next-Step Sync + Multi-Spec Clarity (LNS-001–LNS-010) ───
@@ -12861,10 +12861,11 @@ PY
   grep -q 'DEV-110' "$root/docs/adr/ADR-013-project-intake.md"
 }
 
-# ── Cursor intake fixture + NL intent map (FIX-001, NLM-001–NLM-006) ───────────
+# ── Cursor intake fixture + NL intent map (FIX-001, NLM-001–NLM-006, CIT-002–CIT-004) ──
 
 @test "FIX-001: cursor-intake-fixture script installs Cursor wiring" {
-  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --yes
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/scripts/cursor-intake-fixture.sh" "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/.cursor/rules/agtoosa-core.mdc" ]
   [ -f "$TEST_PROJECT/.cursor/commands/agtoosa-spec.md" ]
@@ -12874,6 +12875,27 @@ PY
   [ "$status" -eq 0 ]
   run grep -q 'Natural language intent map' "$TEST_PROJECT/.cursor/rules/agtoosa-core.mdc"
   [ "$status" -eq 0 ]
+  run grep -q 'Project Intake' "$TEST_PROJECT/.cursor/rules/agtoosa-core.mdc"
+  [ "$status" -eq 0 ]
+}
+
+@test "CIT-002: cursor-intake-fixture rejects generator self-target" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/scripts/cursor-intake-fixture.sh" "$root"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"cannot be the AgToosa source directory"* ]]
+}
+
+@test "CIT-003: cursor-intake-fixture script asserts Project Intake in core" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "grep -q 'Project Intake'" "$root/scripts/cursor-intake-fixture.sh"
+}
+
+@test "CIT-004: CLAUDE.md NL Intent Map parity with .cursorrules" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Natural Language Intent Map' "$root/template/CLAUDE.md"
+  grep -q 'Natural Language Intent Map' "$root/template/.cursorrules"
+  grep -q 'Project Intake' "$root/template/CLAUDE.md"
 }
 
 @test "NLM-001: NL intent map in Agent mirrors" {
@@ -13175,6 +13197,13 @@ _cln_seed_project() {
         cp "$root/template/.github/prompts"/agtoosa-*.prompt.md "$proj/.github/prompts/" 2>/dev/null || true
         cp "$root/template/.github/agents"/agtoosa-*.agent.md "$proj/.github/agents/" 2>/dev/null || true
         ;;
+      copilot)
+        mkdir -p "$proj/.github/prompts" "$proj/.github/agents"
+        [[ -f "$root/template/.github/copilot-instructions.md" ]] \
+          && cp "$root/template/.github/copilot-instructions.md" "$proj/.github/"
+        cp "$root/template/.github/prompts"/agtoosa-*.prompt.md "$proj/.github/prompts/" 2>/dev/null || true
+        cp "$root/template/.github/agents"/agtoosa-*.agent.md "$proj/.github/agents/" 2>/dev/null || true
+        ;;
     esac
   done
 
@@ -13290,6 +13319,7 @@ _cln_seed_project() {
     grep -q -- '--cleanup' "$f"
     grep -qiE 'housekeeping|merge backup|orphan' "$f"
     grep -qiE 'vscode|VS Code' "$f"
+    grep -qiE 'AgToosa_TestPlan|dry-run' "$f"
   done
 }
 
@@ -13310,6 +13340,57 @@ _cln_seed_project() {
   run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --dry-run
   [ "$status" -eq 0 ]
   [[ "$output" == *"No unnecessary"* ]]
+}
+
+@test "DEV-114 CLN-012: copilot-selected prompts are not flagged as vscode orphans" {
+  _cln_seed_project copilot
+  find "$TEST_PROJECT/.github/prompts" -maxdepth 1 -name 'agtoosa-*' | grep -q .
+  [ -f "$TEST_PROJECT/.github/copilot-instructions.md" ]
+  run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --dry-run
+  [ "$status" -eq 0 ]
+  ! [[ "$output" == *"orphan_platform"* ]]
+  ! [[ "$output" == *"agtoosa-spec.prompt"* ]]
+  [[ "$output" == *"No unnecessary"* ]]
+}
+
+@test "DEV-114 CLN-013: project story test plans are never orphan_doc" {
+  _cln_seed_project claude
+  echo "# Test Plan BL-25" > "$TEST_PROJECT/Docs/AgToosa_TestPlan-BL-25.md"
+  cp "$BATS_TEST_DIRNAME/fixtures/migration/orphan-AgToosa_LegacyRemoved.md" \
+    "$TEST_PROJECT/Docs/AgToosa_LegacyRemoved.md"
+  run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --dry-run
+  [ "$status" -eq 0 ]
+  ! [[ "$output" == *"AgToosa_TestPlan-BL-25"* ]]
+  [[ "$output" == *"AgToosa_LegacyRemoved.md"* ]]
+}
+
+@test "DEV-114 CLN-014: copilot and vscode both selected — shared prompts not orphans" {
+  _cln_seed_project copilot,vscode
+  find "$TEST_PROJECT/.github/prompts" -maxdepth 1 -name 'agtoosa-*' | grep -q .
+  run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --dry-run
+  [ "$status" -eq 0 ]
+  ! [[ "$output" == *"orphan_platform"* ]]
+  [[ "$output" == *"No unnecessary"* ]]
+}
+
+@test "DEV-114 SR-001: v5.3.25 changelog and DEV-114 review/evidence/spec artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.25\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-114' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-114.md" ]
+  [ -f "$root/docs/archived/review-DEV-114.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-114.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-114.md"
+}
+
+@test "DEV-113 SR-001: v5.3.26 changelog and DEV-113 review/evidence/spec artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.26\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-113' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-113.md" ]
+  [ -f "$root/docs/archived/review-DEV-113.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-113.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-113.md"
 }
 
 @test "DEV-112 SR-001: v5.3.24 changelog and DEV-112 review/evidence/spec artifacts exist" {

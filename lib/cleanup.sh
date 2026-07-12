@@ -81,6 +81,12 @@ _cleanup_platform_selected() {
   return 1
 }
 
+# Copilot and VS Code share .github/prompts and .github/agents (see lib/generate.sh).
+_cleanup_github_prompts_owner_selected() {
+  _cleanup_platform_selected "copilot" "$@" \
+    || _cleanup_platform_selected "vscode" "$@"
+}
+
 # Known AgToosa-owned relative paths for one platform id.
 _cleanup_paths_for_platform() {
   local plat="$1"
@@ -168,6 +174,7 @@ _cleanup_collect_orphan_docs() {
     base="$(basename "$f")"
     case "$base" in
       AgToosa_Changelog.md) continue ;;
+      AgToosa_TestPlan-*) continue ;;
     esac
     rel="Docs/${base}"
     [[ -f "${TEMPLATE_DIR}/${rel}" ]] && continue
@@ -186,9 +193,10 @@ _cleanup_collect_orphan_platforms() {
 
   for plat in "${all_plats[@]}"; do
     _cleanup_platform_selected "$plat" "${selected[@]+"${selected[@]}"}" && continue
-    # VS Code generic shares .github/prompts with copilot; vscode bucket owns them when active.
-    [[ "$plat" == copilot ]] \
-      && _cleanup_platform_selected "vscode" "${selected[@]+"${selected[@]}"}" && continue
+    # Copilot and VS Code share .github/prompts; skip both buckets when either is active.
+    [[ "$plat" == "copilot" || "$plat" == "vscode" ]] \
+      && _cleanup_github_prompts_owner_selected "${selected[@]+"${selected[@]}"}" \
+      && continue
     while IFS= read -r rel; do
       [[ -n "$rel" ]] || continue
       [[ -f "${project_path}/${rel}" ]] \
