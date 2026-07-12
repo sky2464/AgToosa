@@ -151,3 +151,8 @@ Out of scope        : canonical guide rewrites, generated HTML commits, backend 
 Test plan: `docs/AgToosa_TestPlan-DEV-076.md`
 AC coverage: 6 ACs mapped to 8 SITE test IDs
 Smoke set: 3 tests tagged `@smoke`
+
+## ✅ Spec Approved
+
+Approved: 2026-07-11 21:25
+Enrollment: remaining-specs fan-out wave 1 (build/review/ship)

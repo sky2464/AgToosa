@@ -172,3 +172,8 @@ Test plan: `docs/AgToosa_TestPlan-DEV-084.md`
 AC coverage: 6 ACs mapped to 7 planned OSS test IDs
 Smoke set: 4 planned tests tagged `@smoke`
 Evidence state: RED and GREEN are unexecuted placeholders; no support or sponsorship evidence is claimed.
+
+## ✅ Spec Approved
+
+Approved: 2026-07-11 21:25
+Enrollment: remaining-specs fan-out wave 1 (build/review/ship)

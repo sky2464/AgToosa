@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (/agtoosa-spec — DEV-045 enrolled; awaiting Spec Approved)
+> **Last updated:** 2026-07-11 (/agtoosa-build — remaining-specs fan-out wave 1 enrolled + approved)
 
 ## Project Charter
 
@@ -9,9 +9,9 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | 🟦 DEV-045 enrolled — Work Package Wave DAG (post v5.3.8 ship) |
+| Current phase | 🟨 Remaining-specs fan-out wave 1 — 8 stories build/review/ship |
 | Milestone | `v5.3.9` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | DEV-045 |
+| Active cycle | DEV-045 · DEV-076 · DEV-077 · DEV-079 · DEV-080 · DEV-082 · DEV-083 · DEV-084 |
 | Cycle capacity | `8 story points` |
 
 ## Active Cycle
@@ -20,7 +20,14 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-045 | Feature: Work Package Wave DAG | Feature | M | 🟦 Todo | 0/4 |
+| DEV-045 | Feature: Work Package Wave DAG | Feature | M | 🟨 In Progress | 0/4 |
+| DEV-076 | Spike: Static Documentation Site Proof | Spike | S | 🟨 In Progress | 0/4 |
+| DEV-077 | Chore: Authoring Guide and Onboarding Surface | Chore | S | 🟨 In Progress | 0/5 |
+| DEV-079 | Docs: Verifier and CI Adoption Examples | Docs | S | 🟨 In Progress | 0/5 |
+| DEV-080 | Feature: Official Registry Pack Pilot | Feature | L | 🟨 In Progress | 0/4 |
+| DEV-082 | Spike: High-Assurance Signature Mode Validation | Spike | S | 🟨 In Progress | 0/4 |
+| DEV-083 | Docs: Voluntary Workflow Metrics and Case Study Kit | Docs | S | 🟨 In Progress | 0/4 |
+| DEV-084 | Chore: Open-Source Sustainability and Support Boundary | Chore | XS | 🟨 In Progress | 0/4 |
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.8.md -->
 <!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.5.md -->
@@ -56,6 +63,114 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
   - [ ] 3.2 Add ownership-gap and merge-order reporting to Import — _Requirements: AC-006, AC-007_
 - [ ] **4.** Closure
   - [ ] 4.1 Sync Quickref/Trust wording, run future GREEN validation, and record the two-parallel/one-dependent dogfood evidence — _Requirements: AC-007, AC-008_
+
+
+**DEV-076 — Static Documentation Site Proof** (spec: `docs/archived/spec-DEV-076.md`)
+
+- [ ] **1.** Site proof contract
+  - [ ] 1.1 RED SITE fixtures/assertions — _Requirements: AC-001–AC-006_
+  - [ ] 1.2 Pin site config + Pages workflow boundaries — _Requirements: AC-001, AC-003, AC-006_
+- [ ] **2.** Canonical markdown rendering
+  - [ ] 2.1 Landing/index links to canonical docs — _Requirements: AC-002, AC-004, AC-005_
+  - [ ] 2.2 Base-path proof for /AgToosa/ — _Requirements: AC-004_
+- [ ] **3.** CI proof
+  - [ ] 3.1 Workflow builds ephemeral artifact; no committed site output — _Requirements: AC-001, AC-003, AC-005_
+- [ ] **4.** Evidence
+  - [ ] 4.1 GREEN SITE bats + test-plan evidence — _Requirements: AC-001–AC-006_
+
+**DEV-077 — Authoring Guide and Onboarding Surface** (spec: `docs/archived/spec-DEV-077.md`)
+
+- [ ] **1.** Authoring discovery contract
+  - [ ] 1.1 RED AUTH checks — _Requirements: AC-002, AC-004, AC-005, AC-006_
+  - [ ] 1.2 Discovery copy + stable link policy — _Requirements: AC-003, AC-004, AC-005_
+- [ ] **2.** Canonical authoring content
+  - [ ] 2.1 Extension guide refresh — _Requirements: AC-001, AC-007_
+  - [ ] 2.2 Registry-pack handbook + checklist — _Requirements: AC-002, AC-007_
+- [ ] **3.** Registry and README discovery
+  - [ ] 3.1 Registry mirrors point to handbook — _Requirements: AC-003, AC-006_
+  - [ ] 3.2 README authoring links — _Requirements: AC-004, AC-006_
+- [ ] **4.** Help discovery parity
+  - [ ] 4.1 Help adapters authoring pointer — _Requirements: AC-005, AC-006_
+  - [ ] 4.2 Static help (no context read) — _Requirements: AC-005_
+- [ ] **5.** Evidence
+  - [ ] 5.1 GREEN AUTH evidence — _Requirements: AC-001–AC-007_
+
+**DEV-079 — Verifier and CI Adoption Examples** (spec: `docs/archived/spec-DEV-079.md`)
+
+- [ ] **1.** Adoption contract tests
+  - [ ] 1.1 RED VCA path/exit/copy/enforcement — _Requirements: AC-001–AC-003, AC-005_
+  - [ ] 1.2 Provider/gate/mirror/discovery tests — _Requirements: AC-004, AC-006, AC-007_
+- [ ] **2.** Canonical adoption guide
+  - [ ] 2.1 Local verifier examples — _Requirements: AC-001, AC-003, AC-005_
+  - [ ] 2.2 Safe GHA copy/review/push sequence — _Requirements: AC-002, AC-003_
+  - [ ] 2.3 Provider-neutral guidance — _Requirements: AC-004_
+- [ ] **3.** Gate and boundary surfaces
+  - [ ] 3.1 Gate example alignment — _Requirements: AC-002, AC-007_
+  - [ ] 3.2 Readiness label clarity — _Requirements: AC-003, AC-006_
+- [ ] **4.** Discovery
+  - [ ] 4.1 README/Quickref links — _Requirements: AC-005, AC-006_
+  - [ ] 4.2 No unmaintained copy-ready snippets — _Requirements: AC-004_
+- [ ] **5.** Evidence
+  - [ ] 5.1 GREEN VCA evidence — _Requirements: AC-001–AC-007_
+
+**DEV-080 — Official Registry Pack Pilot** (spec: `docs/archived/spec-DEV-080.md`)
+
+- [ ] **1.** Catalog gate and pilot contract
+  - [ ] 1.1 Confirm DEV-053 catalog contract version — _Requirements: AC-002, AC-004_
+  - [ ] 1.2 Pilot review/evidence checklist — _Requirements: AC-005–AC-007_
+- [ ] **2.** Author three maintained candidates
+  - [ ] 2.1 Web pack under `packs/official-web/` — _Requirements: AC-001–AC-004, AC-007_
+  - [ ] 2.2 API/service pack under `packs/official-api/` — _Requirements: AC-001–AC-004, AC-007_
+  - [ ] 2.3 Infra/security pack under `packs/official-infra/` — _Requirements: AC-001–AC-004, AC-006, AC-007_
+- [ ] **3.** Prove local install and safety
+  - [ ] 3.1 RED OPP fixtures — _Requirements: AC-002, AC-004–AC-006_
+  - [ ] 3.2 Isolated install/preview/queue/merge proofs — _Requirements: AC-005, AC-006_
+  - [ ] 3.3 Maintenance/deprecation records — _Requirements: AC-007_
+- [ ] **4.** Document and publish boundary
+  - [ ] 4.1 Local pilot inventory + evidence links — _Requirements: AC-001, AC-003, AC-005, AC-008_
+  - [ ] 4.2 External registry submission — _Requirements: AC-002, AC-008_ `[manual]`
+  - [ ] 4.3 Confirm external acceptance — _Requirements: AC-008_ `[manual-deferred]`
+
+**DEV-082 — High-Assurance Signature Mode Validation** (spec: `docs/archived/spec-DEV-082.md`)
+
+- [ ] **1.** Evidence contract
+  - [ ] 1.1 Spike structure + decision criteria — _Requirements: AC-001, AC-007, AC-008_
+  - [ ] 1.2 Demand/operability/security/rollback criteria — _Requirements: AC-001, AC-007, AC-008_
+- [ ] **2.** Gather findings (no production flags)
+  - [ ] 2.1 Demand scenarios without telemetry — _Requirements: AC-001, AC-008_
+  - [ ] 2.2 Key lifecycle + failure matrix + rollback tabletop — _Requirements: AC-003–AC-006_
+- [ ] **3.** Decide
+  - [ ] 3.1 Adopt/defer/reject with rationale — _Requirements: AC-001, AC-007_
+  - [ ] 3.2 Review findings — _Requirements: AC-001, AC-003–AC-006_
+- [ ] **4.** Boundary
+  - [ ] 4.1 No AGTOOSA_REQUIRE_SIGNATURES / production code — _Requirements: spike boundary_
+  - [ ] 4.2 GREEN HAS bats + evidence — _Requirements: AC-001–AC-008_
+
+**DEV-083 — Voluntary Workflow Metrics and Case Study Kit** (spec: `docs/archived/spec-DEV-083.md`)
+
+- [ ] **1.** Measurement contract
+  - [ ] 1.1 Opt-in/local/minimization/redaction rules — _Requirements: AC-001, AC-002_
+  - [ ] 1.2 Metric schema + synthetic labels — _Requirements: AC-002_
+- [ ] **2.** Six metric templates
+  - [ ] 2.1–2.6 Install/verifier/handoff/cross-model/cycle/pack metrics — _Requirements: AC-003–AC-008_
+- [ ] **3.** Kit docs
+  - [ ] 3.1 Case-study template — _Requirements: AC-001, AC-002_
+  - [ ] 3.2 Synthetic examples + mirrors — _Requirements: AC-002–AC-008_
+  - [ ] 3.3 Register kit files (no collection hooks) — _Requirements: AC-001_
+- [ ] **4.** Prove contract
+  - [ ] 4.1 RED MET tests — _Requirements: AC-001–AC-008_
+  - [ ] 4.2 GREEN + privacy-review evidence — _Requirements: AC-001, AC-002_
+
+**DEV-084 — Open-Source Sustainability and Support Boundary** (spec: `docs/archived/spec-DEV-084.md`)
+
+- [ ] **1.** Boundary contract
+  - [ ] 1.1 RED OSS wording checks — _Requirements: support/sponsor/security ACs_
+  - [ ] 1.2 Cross-surface disclosure map — _Requirements: consistency ACs_
+- [ ] **2.** Align public surfaces
+  - [ ] 2.1 SUPPORT/FUNDING/SECURITY/CONTRIBUTING/README — _Requirements: ACs_
+- [ ] **3.** Boundary proof
+  - [ ] 3.1 No SLA/feature-gate claims — _Requirements: ACs_
+  - [ ] 3.2 GREEN OSS bats + evidence — _Requirements: ACs_
 
 <!--
 **DEV-050 — Cross-Model Review Gate** (spec: `docs/archived/spec-DEV-050.md`) — shipped 2026-07-11 v5.3.6
@@ -330,7 +445,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | ID | Title | Type | Estimate | Epic | Priority | Status |
 |----|-------|------|----------|------|----------|--------|
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
-| DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🟦 Todo — Active Cycle |
+| DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🟨 In Progress — fan-out wave 1 |
 | DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | ⬜ Backlog — executable spec ready; depends DEV-045 |
 | DEV-047 | Feature: Async Agent Handoff Packs | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.3 |
 | DEV-048 | Feature: Agent Result Import Gate | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.3 |
@@ -347,15 +462,15 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-059 | Feature: Governance Policy-as-Code | Feature | M | DEV-004 | P1 | ⬜ Backlog — executable spec ready; honest enforcement classes required |
 | DEV-060 | Docs: Public Benchmark Suite | Docs | M | DEV-004 | P2 | ✅ Done — suite + scoring + claim boundary in `docs/benchmarks/`; competitor runs manual-deferred |
 | DEV-075 | Docs: Subagent and Persona Guide Suite | Docs | M | DEV-002 | P1 | 🏁 Shipped — v5.3.8 |
-| DEV-076 | Spike: Static Documentation Site Proof | Spike | S | DEV-004 | P2 | ⬜ Backlog — executable spec ready; no backend or second docs source |
-| DEV-077 | Chore: Authoring Guide and Onboarding Surface | Chore | S | DEV-003 | P2 | ⬜ Backlog — executable spec ready; canonical links, no duplicated contracts |
+| DEV-076 | Spike: Static Documentation Site Proof | Spike | S | DEV-004 | P2 | 🟨 In Progress — fan-out wave 1 |
+| DEV-077 | Chore: Authoring Guide and Onboarding Surface | Chore | S | DEV-003 | P2 | 🟨 In Progress — fan-out wave 1 |
 | DEV-078 | Chore: First-15-Minutes Maintenance Gate | Chore | XS | DEV-004 | P1 | 🏁 Shipped — v5.3.8 |
-| DEV-079 | Docs: Verifier and CI Adoption Examples | Docs | S | DEV-004 | P2 | ⬜ Backlog — executable spec ready; copy-in CI boundary |
-| DEV-080 | Feature: Official Registry Pack Pilot | Feature | L | DEV-003 | P2 | ⬜ Backlog — executable spec ready; depends DEV-053 (shipped); external publish manual |
+| DEV-079 | Docs: Verifier and CI Adoption Examples | Docs | S | DEV-004 | P2 | 🟨 In Progress — fan-out wave 1 |
+| DEV-080 | Feature: Official Registry Pack Pilot | Feature | L | DEV-003 | P2 | 🟨 In Progress — fan-out wave 1; external publish manual |
 | DEV-081 | Spike: Optional Local DX Add-on Validation | Spike | M | DEV-001 | P2 | 🏁 Shipped — v5.3.8 |
-| DEV-082 | Spike: High-Assurance Signature Mode Validation | Spike | S | DEV-003 | P2 | ⬜ Backlog — executable spec ready; precedes fail-closed implementation |
-| DEV-083 | Docs: Voluntary Workflow Metrics and Case Study Kit | Docs | S | DEV-004 | P2 | ⬜ Backlog — executable spec ready; no telemetry |
-| DEV-084 | Chore: Open-Source Sustainability and Support Boundary | Chore | XS | DEV-004 | P2 | ⬜ Backlog — executable spec ready; no feature gates or SLA claim |
+| DEV-082 | Spike: High-Assurance Signature Mode Validation | Spike | S | DEV-003 | P2 | 🟨 In Progress — fan-out wave 1 |
+| DEV-083 | Docs: Voluntary Workflow Metrics and Case Study Kit | Docs | S | DEV-004 | P2 | 🟨 In Progress — fan-out wave 1 |
+| DEV-084 | Chore: Open-Source Sustainability and Support Boundary | Chore | XS | DEV-004 | P2 | 🟨 In Progress — fan-out wave 1 |
 | DEV-035 | Chore: Launch P0 publication and quickstart gate | Chore | M | DEV-004 | P0 | ✅ Done |
 | DEV-036 | Fix: Windows and registry parity | Fix | M | DEV-001 / DEV-003 | P1 | ✅ Done |
 | DEV-037 | Chore: Truthful launch documentation and positioning | Chore | M | DEV-002 | P1 | ✅ Done |
@@ -374,10 +489,10 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Stories | Status | Next spec |
 |----|-------|---------|--------|-----------|
-| DEV-001 | Epic: Core Generator Engine | 2 open / 2 total | 🟨 In Progress | DEV-046 after DEV-045 |
-| DEV-002 | Epic: Workflow Templates | 9 open / 20 total | 🟨 In Progress | DEV-045 (enrolled Todo) |
-| DEV-003 | Epic: Community Template Registry | 7 open / 7 total | 🟨 In Progress | DEV-080 after DEV-053 |
-| DEV-004 | Epic: Testing & QA Harness | 10 open / 11 total | 🟨 In Progress | DEV-059 · DEV-079 |
+| DEV-001 | Epic: Core Generator Engine | 2 open / 2 total | 🟨 In Progress | DEV-046 after wave-1 DEV-045 |
+| DEV-002 | Epic: Workflow Templates | 9 open / 20 total | 🟨 In Progress | DEV-045 (building) |
+| DEV-003 | Epic: Community Template Registry | 7 open / 7 total | 🟨 In Progress | DEV-080 · DEV-077 · DEV-082 building |
+| DEV-004 | Epic: Testing & QA Harness | 10 open / 11 total | 🟨 In Progress | DEV-076 · DEV-079 · DEV-083 · DEV-084 building |
 
 ### Epic Charters
 
@@ -576,3 +691,5 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🚀 Ship complete — v5.3.8 — DEV-075 + DEV-053 + DEV-078 + DEV-081 batched; bats ADP/PC/F15/DXV + SR green; smoke PASS | AgToosa |
 | 2026-07-11 | 🚀 Release 5.3.8 shipped — v5.3.8; version parity bash/ps1/npm; Milestone v5.3.9 (next); active cycle archived | AgToosa |
 | 2026-07-11 | ✏️ /agtoosa-spec DEV-045 enrolled — Work Package Wave DAG deepened (schema + Spec/Build/Handoff/Import wiring); spec `docs/archived/spec-DEV-045.md`; test plan `docs/AgToosa_TestPlan-DEV-045.md`; estimate M; Active Cycle Todo; awaiting Spec Approved | AgToosa |
+| 2026-07-11 | ✅ /agtoosa-spec — Spec ✅ Approved — remaining-specs fan-out wave 1: DEV-045/076/077/079/080/082/083/084; demand-gated DEV-051/057 parked; dependents DEV-046/059/052/056/058 deferred to later waves | AgToosa |
+| 2026-07-11 | 🏗️ Build 🏗️ Started — remaining-specs fan-out wave 1 — 8 parallel subagents; orchestrator owns Master-Plan | AgToosa |

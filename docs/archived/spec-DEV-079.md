@@ -159,3 +159,8 @@ Out of scope        : verifier behavior, automatic workflow writes, branch prote
 Test plan: `docs/AgToosa_TestPlan-DEV-079.md`
 AC coverage: 7 ACs mapped to 9 VCA test IDs
 Smoke set: 3 tests tagged `@smoke`
+
+## ✅ Spec Approved
+
+Approved: 2026-07-11 21:25
+Enrollment: remaining-specs fan-out wave 1 (build/review/ship)
