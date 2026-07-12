@@ -25,7 +25,7 @@ non_goals:
   - "A general-purpose application build tool (relies on target platforms for build steps)"
 
 ## Current Milestone
-current_milestone: "v5.3.6"
+current_milestone: "v5.3.7"
 
 ## Success Metrics
 success_metrics:

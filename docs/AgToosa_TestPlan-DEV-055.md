@@ -2,7 +2,7 @@
 
 > **Spec:** `docs/archived/spec-DEV-055.md`
 > **Smoke filter:** `bats tests/agtoosa.bats -f "DEV-055"`
-> **Status:** 🔍 In Review — review approved (awaiting ship)
+> **Status:** ✅ Done (shipped v5.3.7)
 
 ## Coverage Target
 

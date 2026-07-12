@@ -9,6 +9,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.7] — 2026-07-11
+
+### Added
+
+- 2026-07-11 — feature — DEV-055 Agent Capability Matrix (`AgToosa_AgentCapability.md`, Handoff/Review/Build/Help hooks, Specialists cross-link, config registration, AM bats); agent-instructed — `docs/archived/spec-DEV-055.md` · `docs/archived/review-DEV-055.md`
+
+---
+
 ## [5.3.6] — 2026-07-11
 
 ### Added

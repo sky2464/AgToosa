@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.7] — 2026-07-11
+
+Patch release: Agent Capability Matrix (DEV-055).
+
+### Added
+
+- **DEV-055 — Agent Capability Matrix.** Canonical `AgToosa_AgentCapability.md` lifecycle routing matrix; Handoff/Review/Build/Help workflow hooks; Specialists cross-link; `lib/config.sh` registration; AM-001–AM-007 bats. Agent-instructed (not runtime-enforced).
+
+---
+
 ## [5.3.6] — 2026-07-11
 
 Patch release: Cross-Model Review Gate (DEV-050).
