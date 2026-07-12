@@ -53,7 +53,7 @@ GREEN evidence — 5.1 / DEV-056
 Command: bats tests/agtoosa.bats -f "DEV-056"
 Exit code: 0
 Pass/fail: PASS — 9/9 (CW-019 + RL-001–RL-008)
-Timestamp: 2026-07-12T02:52:52Z (re-verified after RL-007 fixture marker fix)
+Timestamp: 2026-07-12T02:53:59Z
 
 GREEN evidence — RL namespace
 Command: bats tests/agtoosa.bats -f "RL-"

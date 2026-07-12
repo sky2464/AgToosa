@@ -9,7 +9,7 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | 🟨 Wave 3 building — DEV-052 · DEV-056 |
+| Current phase | 🔍 Wave 3 review — DEV-052 · DEV-056 |
 | Milestone | `v5.3.11` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
 | Active cycle | DEV-052 · DEV-056 |
 | Cycle capacity | `8 story points` |
@@ -20,8 +20,8 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-052 | Feature: Hook Automation Pack | Feature | M | 🟨 In Progress | 4/4 |
-| DEV-056 | Feature: Retrospective Learning Loop | Feature | S | 🟨 In Progress | 0/4 |
+| DEV-052 | Feature: Hook Automation Pack | Feature | M | 🔍 In Review | 4/4 |
+| DEV-056 | Feature: Retrospective Learning Loop | Feature | S | 🔍 In Review | 4/4 |
 
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.10.md -->
@@ -373,3 +373,6 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | ✅ /agtoosa-spec — Spec ✅ Approved — wave 3: DEV-052 · DEV-056 | AgToosa |
 | 2026-07-11 | 🏗️ Build 🏗️ Started — wave 3 — DEV-052 · DEV-056 parallel subagents | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-052 — Task 🟢 4/4 — HK-001–007 green; Hooks pack + Init/Update preview; no silent install | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-056 — Task 🟢 4/4 — RL-001–008 green; AgToosa_Retro.md + ship retro wiring | AgToosa |
+| 2026-07-11 | 🏗️ Build complete — wave 3 (DEV-052 · DEV-056); next: parallel /agtoosa-review | AgToosa |
+| 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — wave 3 DEV-052 · DEV-056 | AgToosa |
