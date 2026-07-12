@@ -17,17 +17,18 @@ Contract tests for shared JSON output: DEV-090 plan schema on catalog plan and d
 | AC-002 | JIO-002 | Dry-run plan matches catalog plan schema shape | Contract | Same top-level keys and action row shape as JIO-001 | ⬜ Planned `@smoke` |
 | AC-003 | JIO-003 | Catalog info JSON includes metadata fields | Integration | `id`, `name`, `version`, `platforms`, `sha256` when in catalog | ⬜ Planned |
 | AC-004 | JIO-004 | JSON stdout contains no ANSI escapes | Regression | No `\x1b[` sequences in stdout | ⬜ Planned `@smoke` |
-| AC-005 | JIO-005 | Default output remains human tables | Regression | Without `--json`, output lacks leading `{` JSON document | ⬜ Planned |
-| AC-006 | JIO-006 | Plan JSON includes schema_version | Contract | Field present and numeric/string per DEV-090 | ⬜ Planned |
+| AC-005 | JIO-005 | Default output remains human tables | Regression | Without `--format json`, output lacks leading `{` JSON document | ⬜ Planned |
+| AC-006 | JIO-006 | Plan JSON includes schema_version | Contract | Field present (`plan-result-v1`) per DEV-090 | ⬜ Planned |
 | AC-007 | JIO-007 | DEV-100 filter documents evidence | Meta | Bats filter `DEV-100` exists | ⬜ Planned |
 
 ## Negative and Edge Scenarios
 
 | Scenario | Test ID | Expected result |
 |----------|---------|-----------------|
-| Unknown catalog entry with --json | JIO-003 | Non-zero exit; stderr message; no partial JSON |
+| Unknown catalog entry with `--format json` | JIO-003 | Non-zero exit; stderr message; no partial JSON |
 | Empty preset plan | JIO-001 | Valid JSON with empty `actions` array |
-| Combined --json and --dry-run on update | JIO-002 | Plan only; no apply |
+| Combined `--format json` and `--dry-run` on update | JIO-002 | Plan only; no apply |
+| Legacy `--json` flag alone | JIO-005 | Unrecognized or unused — Must path is `--format json` (R1) |
 
 ## Smoke Set
 
@@ -41,7 +42,7 @@ Planned smoke command: `bats tests/agtoosa.bats -f "DEV-100|JIO-"`
 
 | Task group | Planned command | Exit code | Failure excerpt |
 |------------|-----------------|-----------|-----------------|
-| 1. RED JSON contract | `bats tests/agtoosa.bats -f "DEV-100\|JIO-"` | 1 | `not ok JIO-001: jq parse error`; `--json` flag unrecognized |
+| 1. RED JSON contract | `bats tests/agtoosa.bats -f "DEV-100\|JIO-"` | 1 | `not ok JIO-001: catalog plan missing --format json`; info JSON incomplete |
 
 ## GREEN Evidence
 

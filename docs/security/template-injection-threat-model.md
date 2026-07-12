@@ -3,7 +3,8 @@
 **Status:** Partially mitigated (v5.3.0 — DEV-064/065)  
 **Date:** 2026-05-04 (updated 2026-06-15)  
 **Component:** AgToosa Community Registry (`--registry install`)  
-**Affected versions:** v3.1.0+ (registry packs first available in v3.0.0)
+**Affected versions:** v3.1.0+ (registry packs first available in v3.0.0)  
+**Companion:** Framework-level supply chain (install chain, releases, CI) → [`framework-supply-chain-threat-model.md`](framework-supply-chain-threat-model.md)
 
 ---
 

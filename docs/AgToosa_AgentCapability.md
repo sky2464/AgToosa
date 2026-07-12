@@ -6,6 +6,8 @@ Detect which **agent surfaces** are installed in a project and recommend the bes
 
 > **Distinction:** `docs/AgToosa_Specialists.md` → **Platform Capability Matrix** = specialist **native file targets**. This document = **lifecycle routing** (commands, handoff, review, cross-model, specialists orchestration, fallbacks).
 >
+> **Compatibility tiers** live in `docs/AgToosa_Compatibility_Contract.md` — do not merge that tier table here.
+>
 > **Claim Boundary:** Routing recommendations are **agent-instructed**. Installing this doc via `agtoosa.sh --update` is **generator-enforced**. AgToosa does **not** auto-launch agents or probe remote APIs.
 >
 > **Source of truth:** `docs/Master-Plan.md` remains the repo-local source of truth. External agents and dashboards are integrations, not authorities.
@@ -100,6 +102,7 @@ When the preferred surface is missing or cannot run the phase natively, try in o
 ## Related Docs
 
 - Specialist native targets — `docs/AgToosa_Specialists.md`
+- Assistant compatibility tiers — `docs/AgToosa_Compatibility_Contract.md`
 - Handoff packs — `docs/AgToosa_Handoff.md`
 - Cross-model gate — `docs/AgToosa_CrossModelReview.md`
 - Review personas — `docs/AgToosa_Review.md`

@@ -3,7 +3,7 @@
 > **Story ID:** DEV-092
 > **Type:** Chore
 > **Epic:** DEV-001 — Core Generator & Install
-> **Status:** 🟦 Todo — Rev4 Wave 2 (approved)
+> **Status:** 🏁 Shipped (v5.3.16)
 > **Estimate:** M
 > **Priority:** P1
 > **Depends on:** DEV-090 (install/update plan schema)
@@ -126,15 +126,15 @@ Out of scope        : DEV-091 wizard, DEV-093 state, PS1 full parity, Master-Pla
 
 ### 3.1 Task Tree
 
-- [ ] **1.** RED fixtures
-  - [ ] 1.1 Fail-mid-apply leaves tree unchanged — _Requirements: AC-001, AC-002_
-  - [ ] 1.2 Hash-compare skip and second-run-zero-delta — _Requirements: AC-003, AC-004_
-  - [ ] 1.3 Dry-run no staging — _Requirements: AC-006_
-- [ ] **2.** Transactional apply
-  - [ ] 2.1 Implement `lib/apply.sh` stage/commit — _Requirements: AC-001, AC-002, AC-007_
-  - [ ] 2.2 Wire hash-compare and summary — _Requirements: AC-003, AC-005_
-- [ ] **3.** Evidence
-  - [ ] 3.1 Record TAP RED/GREEN — _Requirements: AC-008_
+- [x] **1.** RED fixtures
+  - [x] 1.1 Fail-mid-apply leaves tree unchanged — _Requirements: AC-001, AC-002_
+  - [x] 1.2 Hash-compare skip and second-run-zero-delta — _Requirements: AC-003, AC-004_
+  - [x] 1.3 Dry-run no staging — _Requirements: AC-006_
+- [x] **2.** Transactional apply
+  - [x] 2.1 Implement `lib/apply.sh` stage/commit — _Requirements: AC-001, AC-002, AC-007_
+  - [x] 2.2 Wire hash-compare and summary — _Requirements: AC-003, AC-005_
+- [x] **3.** Evidence
+  - [x] 3.1 Record TAP RED/GREEN — _Requirements: AC-008_
 
 ### 3.2 Wave Plan
 
@@ -155,4 +155,4 @@ Smoke set: 3 tests tagged `@smoke`
 ## ✅ Spec Approved
 
 Approved: 2026-07-12 09:56
-Enrollment: Rev4 Wave 2 (DEV-001 transactional apply)
+Enrollment: Rev4 Wave 2 Active Cycle (2026-07-12) — build after Wave 1a ship; parallel with DEV-094 · DEV-097

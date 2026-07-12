@@ -3,7 +3,7 @@
 > **Story ID:** DEV-094
 > **Type:** Feature
 > **Epic:** DEV-004 — Delivery, Quality & Operations
-> **Status:** 🟦 Todo — Rev4 Wave 2 (approved)
+> **Status:** 🏁 Shipped (v5.3.16)
 > **Estimate:** M
 > **Priority:** P1
 > **Extends:** DEV-055 (Agent Capability Matrix) — **does not merge**
@@ -128,15 +128,15 @@ Out of scope        : DEV-055 matrix merge, runtime probing, Master-Plan edits, 
 
 ### 3.1 Task Tree
 
-- [ ] **1.** RED contract tests
-  - [ ] 1.1 Tier definitions and platform row coverage — _Requirements: AC-001, AC-002, AC-007_
-  - [ ] 1.2 No false Scenario claims and DEV-055 boundary — _Requirements: AC-003, AC-004, AC-005_
-- [ ] **2.** Documentation kit
-  - [ ] 2.1 Author compatibility contract + mirrors — _Requirements: AC-001, AC-002, AC-003_
-  - [ ] 2.2 Additive AgentCapability cross-link — _Requirements: AC-004, AC-005_
-  - [ ] 2.3 Register in `lib/config.sh` — _Requirements: AC-006_
-- [ ] **3.** Evidence
-  - [ ] 3.1 ACC RED/GREEN — _Requirements: AC-008_
+- [x] **1.** RED contract tests
+  - [x] 1.1 Tier definitions and platform row coverage — _Requirements: AC-001, AC-002, AC-007_
+  - [x] 1.2 No false Scenario claims and DEV-055 boundary — _Requirements: AC-003, AC-004, AC-005_
+- [x] **2.** Documentation kit
+  - [x] 2.1 Author compatibility contract + mirrors — _Requirements: AC-001, AC-002, AC-003_
+  - [x] 2.2 Additive AgentCapability cross-link — _Requirements: AC-004, AC-005_
+  - [x] 2.3 Register in `lib/config.sh` — _Requirements: AC-006_
+- [x] **3.** Evidence
+  - [x] 3.1 ACC RED/GREEN — _Requirements: AC-008_
 
 ### 3.2 Wave Plan
 
@@ -159,4 +159,4 @@ Smoke set: 4 tests tagged `@smoke`
 ## ✅ Spec Approved
 
 Approved: 2026-07-12 09:56
-Enrollment: Rev4 Wave 2 (DEV-004 assistant compatibility contract)
+Enrollment: Rev4 Wave 2 Active Cycle (2026-07-12) — parallel with DEV-092 · DEV-097 after Wave 1a ship

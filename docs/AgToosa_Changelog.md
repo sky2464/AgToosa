@@ -9,6 +9,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.16] — 2026-07-12
+
+Patch release: Rev4 Wave 2 (DEV-092, DEV-094, DEV-097).
+
+### Added
+
+- **DEV-092 — Transactional Apply + Idempotency.** `lib/apply.sh` staging/hash-skip/summary helpers; install/update Docs path uses `apply_copy_if_changed`; TAP-001–008 bats.
+- **DEV-094 — Assistant Compatibility Contract.** `AgToosa_Compatibility_Contract.md` Install/Render/Scenario tiers; AgentCapability cross-link (no matrix merge); ACC-001–008 bats.
+- **DEV-097 — Framework Supply-Chain Threat Model.** `docs/security/framework-supply-chain-threat-model.md` + security README index; honest soft-warn signing boundary; FST-001–006 bats.
+
 ## [5.3.15] — 2026-07-12
 
 Patch release: Rev4 Wave 1b (DEV-087, DEV-088).

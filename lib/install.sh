@@ -275,9 +275,13 @@ _write_lock_file() {
 # Copy all staged files from ship/ into PROJECT_PATH, then print summary + next steps.
 install_files() {
   mkdir -p "${PROJECT_PATH}/Docs/archived" "${PROJECT_PATH}/Docs/Context"
+  if declare -F apply_reset_summary >/dev/null 2>&1; then
+    apply_reset_summary
+  fi
 
   # Docs/ workflow files overwrite on install except project-owned state
   # (Master-Plan, Changelog, Master-Architecture — same boundaries as --update).
+  # DEV-092: hash-aware apply for Docs overwrites (shared with update via apply_*).
   local file
   for file in "${DOCS_FILES[@]}"; do
     if [[ -f "${SHIP_DIR}/${file}" ]]; then
@@ -294,8 +298,12 @@ install_files() {
         fi
       fi
       mkdir -p "$(dirname "${PROJECT_PATH}/${file}")"
-      cp "${SHIP_DIR}/${file}" "${PROJECT_PATH}/${file}"
-      echo -e "  ${GREEN}✅${NC} ${file}"
+      if declare -F apply_copy_if_changed >/dev/null 2>&1; then
+        apply_copy_if_changed "${SHIP_DIR}/${file}" "${PROJECT_PATH}/${file}" "${file}"
+      else
+        cp "${SHIP_DIR}/${file}" "${PROJECT_PATH}/${file}"
+        echo -e "  ${GREEN}✅${NC} ${file}"
+      fi
       COPIED=$((COPIED + 1))
     fi
   done
@@ -562,6 +570,9 @@ install_files() {
   echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
   echo -e "  ${GREEN}Copied:  ${COPIED} files${NC}"
   [[ $SKIPPED -gt 0 ]] && echo -e "  ${YELLOW}Skipped: ${SKIPPED} files (use --force to overwrite)${NC}"
+  if declare -F apply_print_summary >/dev/null 2>&1; then
+    apply_print_summary
+  fi
   echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
   echo ""
   echo -e "${GREEN}${BOLD}✅ AgToosa v${AGTOOSA_VERSION} installed to ${PROJECT_PATH}${NC}"

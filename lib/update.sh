@@ -156,18 +156,29 @@ run_update() {
   COPIED=${COPIED:-0}
   SKIPPED=${SKIPPED:-0}
   BAK_FILES=("${BAK_FILES[@]+"${BAK_FILES[@]}"}")
+  if declare -F apply_reset_summary >/dev/null 2>&1; then
+    apply_reset_summary
+  fi
 
   echo -e "${YELLOW}Updating workflow files...${NC}"
 
-  # Step 1: Workflow files — plain overwrite (never touch project-owned state)
+  # Step 1: Workflow files — hash-aware overwrite (DEV-092 shared apply helper)
   for f in "${DOCS_FILES[@]}"; do
     [[ "$f" == "Docs/Master-Plan.md" || "$f" == "Docs/AgToosa_Changelog.md" || "$f" == "Docs/Master-Architecture.md" ]] && continue
     src="${TEMPLATE_DIR}/${f}"; dst="${PROJECT_PATH}/${f}"
     [[ ! -f "$src" ]] && continue
     mkdir -p "$(dirname "$dst")"
-    cp "$src" "$dst"
-    echo -e "  ${GREEN}✅${NC} ${f}"
-    docs_updated=$((docs_updated + 1))
+    if declare -F apply_copy_if_changed >/dev/null 2>&1; then
+      local before_u="${APPLY_UNCHANGED:-0}"
+      apply_copy_if_changed "$src" "$dst" "$f"
+      if [[ "${APPLY_UNCHANGED:-0}" -eq "$before_u" ]]; then
+        docs_updated=$((docs_updated + 1))
+      fi
+    else
+      cp "$src" "$dst"
+      echo -e "  ${GREEN}✅${NC} ${f}"
+      docs_updated=$((docs_updated + 1))
+    fi
   done
 
   echo ""
@@ -279,6 +290,9 @@ print_update_summary() {
   echo -e "  Platform files merged  : ${platforms_merged}  (${platform_str})"
   echo -e "  Platform dirs updated  : ${dirs_updated}"
   echo -e "  Context/ preserved     : ${GREEN}✅${NC} (${#CONTEXT_FILES[@]} files untouched)"
+  if declare -F apply_print_summary >/dev/null 2>&1; then
+    apply_print_summary
+  fi
 
   if [[ ${#BAK_FILES[@]} -gt 0 ]]; then
     echo ""

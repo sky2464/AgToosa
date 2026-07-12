@@ -3,7 +3,7 @@
 > **Story ID:** DEV-097
 > **Type:** Docs
 > **Epic:** DEV-004 — Delivery, Quality & Operations
-> **Status:** 🟦 Todo — Rev4 Wave 2 (approved)
+> **Status:** 🏁 Shipped (v5.3.16)
 > **Estimate:** S
 > **Priority:** P1
 > **Spec created:** 2026-07-12
@@ -114,14 +114,14 @@ Out of scope        : generator changes, new signing modes, Master-Plan edits
 
 ### 3.1 Task Tree
 
-- [ ] **1.** RED doc contract tests
-  - [ ] 1.1 FST bats for required sections and cross-links — _Requirements: AC-001, AC-003, AC-005_
-  - [ ] 1.2 Forbidden enforcement claim grep — _Requirements: AC-004_
-- [ ] **2.** Author threat model
-  - [ ] 2.1 Write framework STRIDE doc with surfaces and residual risks — _Requirements: AC-001, AC-002_
-  - [ ] 2.2 Update README index and pack doc cross-link — _Requirements: AC-003, AC-005_
-- [ ] **3.** Evidence
-  - [ ] 3.1 FST GREEN + security review pointer — _Requirements: AC-006_
+- [x] **1.** RED doc contract tests
+  - [x] 1.1 FST bats for required sections and cross-links — _Requirements: AC-001, AC-003, AC-005_
+  - [x] 1.2 Forbidden enforcement claim grep — _Requirements: AC-004_
+- [x] **2.** Author threat model
+  - [x] 2.1 Write framework STRIDE doc with surfaces and residual risks — _Requirements: AC-001, AC-002_
+  - [x] 2.2 Update README index and pack doc cross-link — _Requirements: AC-003, AC-005_
+- [x] **3.** Evidence
+  - [x] 3.1 FST GREEN + security review pointer — _Requirements: AC-006_
 
 ### 3.2 Wave Plan
 
@@ -142,4 +142,4 @@ Smoke set: 3 tests tagged `@smoke`
 ## ✅ Spec Approved
 
 Approved: 2026-07-12 09:56
-Enrollment: Rev4 Wave 2 (DEV-004 security documentation)
+Enrollment: Rev4 Wave 2 Active Cycle (2026-07-12) — parallel with DEV-092 · DEV-094 after Wave 1a ship

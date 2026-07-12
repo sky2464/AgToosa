@@ -18,15 +18,33 @@ backup_file() {
 
 # Copy a file to dst, respecting --force and version guards.
 # Used for Context/ stubs and other skip-if-exists files.
+# DEV-092: hash-identical content is skipped (unchanged) for idempotent re-runs.
 copy_platform_file() {
   local src="$1" dst="$2" label="$3"
   mkdir -p "$(dirname "$dst")"
 
   if [[ ! -f "$dst" ]]; then
-    cp "$src" "$dst"
-    echo -e "  ${GREEN}✅${NC} ${label}"
+    if declare -F apply_copy_if_changed >/dev/null 2>&1; then
+      apply_copy_if_changed "$src" "$dst" "$label" || return 1
+    else
+      cp "$src" "$dst"
+      echo -e "  ${GREEN}✅${NC} ${label}"
+    fi
     COPIED=$((COPIED + 1))
     return
+  fi
+
+  # Hash-identical → unchanged (idempotent), regardless of --force.
+  if declare -F apply_content_sha256 >/dev/null 2>&1; then
+    local src_hash dst_hash
+    src_hash="$(apply_content_sha256 "$src")"
+    dst_hash="$(apply_content_sha256 "$dst")"
+    if [[ "$src_hash" == "$dst_hash" ]]; then
+      APPLY_UNCHANGED=$((APPLY_UNCHANGED + 1))
+      echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(unchanged)${NC}"
+      COPIED=$((COPIED + 1))
+      return
+    fi
   fi
 
   if [[ "$FORCE" == false ]]; then
@@ -46,8 +64,12 @@ copy_platform_file() {
   local bak
   bak="$(backup_file "$dst")"
   BAK_FILES+=("$bak")
-  cp "$src" "$dst"
-  echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(v${old_ver:-unknown} → v${AGTOOSA_VERSION}, backup: $(basename "$bak"))${NC}"
+  if declare -F apply_copy_if_changed >/dev/null 2>&1; then
+    apply_copy_if_changed "$src" "$dst" "$label" || return 1
+  else
+    cp "$src" "$dst"
+    echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(v${old_ver:-unknown} → v${AGTOOSA_VERSION}, backup: $(basename "$bak"))${NC}"
+  fi
   COPIED=$((COPIED + 1))
 }
 

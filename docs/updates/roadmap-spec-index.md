@@ -19,13 +19,13 @@ Editing this index does not enroll a story. Backlog stories still require `/agto
 
 | ID | Story | Wave | Status |
 |---|---|---|---|
-| DEV-086 | Canonical Proof Product Experience | 1a | 🟦 Todo — active cycle |
-| DEV-090 | Unified Install/Update Plan Engine | 1a | 🟦 Todo — active cycle |
-| DEV-105 | PowerShell Maintain + Update Parity | 1a | 🟦 Todo — active cycle |
-| DEV-087 | Delivery Evidence Contract + Profiles | 1b partial | 🟦 Todo — active cycle |
-| DEV-088 | Verifier and Doctor Machine Output | 1b partial | 🟦 Todo — active cycle |
+| DEV-086 | Canonical Proof Product Experience | 1a | 🔍 In Review — ship next (v5.3.17) |
+| DEV-090 | Unified Install/Update Plan Engine | 1a | 🔍 In Review — ship next (v5.3.17) |
+| DEV-105 | PowerShell Maintain + Update Parity | 1a | 🔍 In Review — ship next (v5.3.17) |
+| DEV-093 | Install State File + Lock Reconciliation | 2 | 🟦 Todo — ready (DEV-092 shipped v5.3.16) |
+| DEV-100 | Shared JSON Output for Install/Registry | 2 | 🟦 Todo — R1 amend pending |
 
-Deferred to Cycle C (hard dep DEV-090): **DEV-091**. Demand-gated: **DEV-057**.
+Shipped in v5.3.16: **DEV-092 · DEV-094 · DEV-097**. Deferred to Cycle C (hard dep DEV-090 ship): **DEV-091**. Wave 1b remainder: **DEV-089**. Demand-gated: **DEV-057**.
 
 ## Rev4 Wave — Spec Approved (2026-07-12)
 
@@ -60,6 +60,8 @@ Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
 | DEV-097 | Framework Supply-Chain Threat Model | Docs | S | DEV-004 | P1 | `docs/archived/spec-DEV-097.md` | `docs/AgToosa_TestPlan-DEV-097.md` |
 | DEV-100 | Shared JSON Output for Install/Registry | Feature | S | DEV-001 | P2 | `docs/archived/spec-DEV-100.md` | `docs/AgToosa_TestPlan-DEV-100.md` |
 
+> **Enrollment note (2026-07-12):** Wave 2 A+B enroll — all five into Active Cycle; Wave 1a retained through ship. Build after Wave 1a ship: parallel **092 · 094 · 097**; **100** sequential vs 092 (shared dry-run/CLI); **093** blocked until 092 GREEN. DEV-100 R1 amend aligns Must ACs to `--format json` (pending amendment approval). Capacity soft overrun accepted.
+
 ### Wave 3
 
 | ID | Story | Type | Est | Epic | Pri | Spec | Test plan |
@@ -80,10 +82,13 @@ Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
 |---|---|---|---:|---|---:|---|---|
 | DEV-107 | Agent-Instructed Orchestration Brain | Feature | M | DEV-002 | P1 | `docs/archived/spec-DEV-107.md` | `docs/AgToosa_TestPlan-DEV-107.md` |
 | DEV-109 | Lifecycle Next-Step Sync + Multi-Spec Clarity | Feature | L | DEV-002 / DEV-001 | P0 | `docs/archived/spec-DEV-109.md` | `docs/AgToosa_TestPlan-DEV-109.md` |
+| DEV-110 | AgToosa Project Intake | Feature | M | DEV-002 | P0 | `docs/archived/spec-DEV-110.md` | `docs/AgToosa_TestPlan-DEV-110.md` |
 
 > **Enrollment note (2026-07-12):** DEV-107 Spec Approved; remains Backlog until after Wave 1a capacity frees. Build must not displace DEV-086 / DEV-090 / DEV-105.
 >
 > **Enrollment note (2026-07-12):** DEV-109 estimate L; backlog after last wave; spec draft awaiting approval; ID skips DEV-108 (roadmap-reserved voluntary scorecard).
+>
+> **Enrollment note (2026-07-12):** DEV-110 estimate M; backlog immediately after planned specs (after DEV-109); expedite build when capacity frees; dual-mode freeform Project Intake (not merged into DEV-109); spec draft awaiting approval.
 
 ## Recently shipped (v5.3.14 — 2026-07-11)
 

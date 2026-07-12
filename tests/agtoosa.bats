@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.15" ]]
+  [[ "$output" == "AgToosa v5.3.16" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1636,7 +1636,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.3.15" ]
+  [ "$ver" = "5.3.16" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1647,7 +1647,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.3.15"* ]]
+  [[ "$output" == *"5.3.16"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -3649,7 +3649,7 @@ PY
   grep -q "Claude Code Instructions" "$project/CLAUDE.md"
   ! grep -q "old claude block" "$project/CLAUDE.md"
   grep -q "AgToosa" "$project/.claude/commands/agtoosa-spec.md"
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.15" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.16" ]
 }
 
 @test "DEV-036 WP-002: Bash registry install normalizes top-level pack directory" {
@@ -7305,7 +7305,6 @@ JSON
   npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   grep -q '## \[5.3.15\]' "$root/CHANGELOG.md"
   grep -q 'Release 5.3.15 shipped' "$root/docs/Master-Plan.md"
-  [ "$bash_ver" = "5.3.15" ]
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
   grep -qE "version-${bash_ver}" "$root/README.md"
@@ -7334,6 +7333,52 @@ JSON
   grep -q 'v5.3.16 (next)' "$mp"
   grep -q '| DEV-087 | Feature: Delivery Evidence Contract' "$mp"
   grep -q '| DEV-088 | Feature: Verifier and Doctor Machine Output' "$mp"
+}
+
+# -- Wave 2 ship regression v5.3.16 (SR-001–SR-003) ----------------------------
+
+@test "DEV-092 SR-001: v5.3.16 release pins are aligned" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  grep -q '## \[5.3.16\]' "$root/CHANGELOG.md"
+  grep -q 'Release 5.3.16 shipped' "$root/docs/Master-Plan.md"
+  [ "$bash_ver" = "$ps_ver" ]
+  [ "$bash_ver" = "$npm_ver" ]
+  grep -qE "version-${bash_ver}" "$root/README.md"
+  grep -qE -- "--ref v${bash_ver}" "$root/README.md"
+}
+
+@test "DEV-092 SR-002: v5.3.16 changelog and Wave 2 review/evidence/spec artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.16\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-092' "$root/CHANGELOG.md"
+  grep -q 'DEV-094' "$root/CHANGELOG.md"
+  grep -q 'DEV-097' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/review-DEV-092.md" ]
+  [ -f "$root/docs/archived/spec-DEV-092.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-092.md" ]
+  [ -f "$root/docs/archived/review-DEV-094.md" ]
+  [ -f "$root/docs/archived/spec-DEV-094.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-094.md" ]
+  [ -f "$root/docs/archived/review-DEV-097.md" ]
+  [ -f "$root/docs/archived/spec-DEV-097.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-097.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-092.md"
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-094.md"
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-097.md"
+}
+
+@test "DEV-092 SR-003: Master-Plan records v5.3.16 ship and v5.3.17 next milestone" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  grep -q 'Ship complete — v5.3.16' "$mp"
+  grep -q 'Release 5.3.16 shipped' "$mp"
+  grep -q 'v5.3.17 (next)' "$mp"
+  grep -q '| DEV-092 | Chore: Transactional Apply' "$mp"
+  grep -q '| DEV-094 | Feature: Assistant Compatibility Contract' "$mp"
+  grep -q '| DEV-097 | Docs: Framework Supply-Chain Threat Model' "$mp"
 }
 
 # ── DEV-081: Optional Local DX Add-on Validation (DXV-001–DXV-008) ───────────
@@ -9488,7 +9533,7 @@ EOF
   run pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1" -Update -UpdatePath "$project"
   [ "$status" -eq 0 ]
   [ -f "$project/Docs/.agtoosa-version" ]
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.15" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.16" ]
 }
 
 @test "DEV-105 PSP-005: maintain switches require -UpdatePath" {
@@ -9634,4 +9679,264 @@ if mismatch:
         print(f"mismatch {p}: install={ic} update={uc}", file=sys.stderr)
     sys.exit(1)
 PY
+}
+
+# ── DEV-097: Framework supply-chain threat model (FST-001–FST-006) ────────────
+
+@test "DEV-097 @smoke FST-001: Framework doc lists required attack surfaces" {
+  local f="$BATS_TEST_DIRNAME/../docs/security/framework-supply-chain-threat-model.md"
+  [ -f "$f" ]
+  grep -qiE 'pinned install|bootstrap|install chain' "$f"
+  grep -qiE 'release artifact|SHA256SUMS|release' "$f"
+  grep -qiE 'catalog|registry' "$f"
+  grep -qiE 'generator|template output' "$f"
+  grep -qiE 'CI|publish|maintainer CI' "$f"
+}
+
+@test "DEV-097 FST-002: STRIDE table maps mitigations and residual risk" {
+  local f="$BATS_TEST_DIRNAME/../docs/security/framework-supply-chain-threat-model.md"
+  [ -f "$f" ]
+  grep -q "STRIDE" "$f"
+  grep -qi "Spoofing\|Tampering\|Repudiation\|Information Disclosure\|Denial of Service\|Elevation of Privilege" "$f"
+  grep -qiE 'mitigation|residual' "$f"
+}
+
+@test "DEV-097 @smoke FST-003: Pack injection cross-link without full duplicate" {
+  local f="$BATS_TEST_DIRNAME/../docs/security/framework-supply-chain-threat-model.md"
+  local pack="$BATS_TEST_DIRNAME/../docs/security/template-injection-threat-model.md"
+  [ -f "$f" ]
+  [ -f "$pack" ]
+  grep -q "template-injection-threat-model.md" "$f"
+  ! grep -q "### AV-1:" "$f"
+  ! grep -q "### AV-2:" "$f"
+  grep -q "framework-supply-chain-threat-model.md" "$pack"
+}
+
+@test "DEV-097 @smoke FST-004: Signing described as optional soft-warn only" {
+  local f="$BATS_TEST_DIRNAME/../docs/security/framework-supply-chain-threat-model.md"
+  [ -f "$f" ]
+  grep -qiE 'soft-warn|optional.*minisign|minisign.*optional|DEV-054' "$f"
+  ! grep -qiE 'fail-closed|blocks install|cosign enforcement|require.?signature.*block' "$f"
+}
+
+@test "DEV-097 FST-005: Security README indexes both models" {
+  local f="$BATS_TEST_DIRNAME/../docs/security/README.md"
+  [ -f "$f" ]
+  grep -q "framework-supply-chain-threat-model.md" "$f"
+  grep -q "template-injection-threat-model.md" "$f"
+  grep -qiE 'pack|injection' "$f"
+  grep -qiE 'framework|install.chain|supply.chain' "$f"
+}
+
+@test "DEV-097 FST-006: DEV-097 filter and review pointer" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "DEV-097" "$root/tests/agtoosa.bats"
+  grep -qiE 'security.?doc.?review|manual.*security|review pointer' "$root/docs/archived/spec-DEV-097.md"
+  grep -q "FST-" "$root/docs/AgToosa_TestPlan-DEV-097.md"
+}
+
+# ── DEV-094: Assistant Compatibility Contract (ACC-001–ACC-008) ───────────────
+
+@test "DEV-094 @smoke ACC-001: Tier definitions are present and distinct" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_Compatibility_Contract.md" "$root/docs/AgToosa_Compatibility_Contract.md"; do
+    [ -f "$f" ]
+    grep -q "Install-tested" "$f"
+    grep -q "Render-tested" "$f"
+    grep -q "Scenario-tested" "$f"
+    grep -qiE 'evidence' "$f"
+  done
+}
+
+@test "DEV-094 @smoke ACC-002: Every config platform has a compatibility row" {
+  local f="$BATS_TEST_DIRNAME/../docs/AgToosa_Compatibility_Contract.md"
+  [ -f "$f" ]
+  for plat in "Cursor" "Claude Code" "Codex" "GitHub Copilot" "VS Code" "Windsurf" "Gemini"; do
+    grep -q "$plat" "$f"
+  done
+  grep -qiE 'last_evidence|evidence date|Last evidence' "$f"
+  grep -qiE 'gaps?|pointer|proof' "$f"
+}
+
+@test "DEV-094 @smoke ACC-003: No Scenario label without Scenario evidence" {
+  local f="$BATS_TEST_DIRNAME/../docs/AgToosa_Compatibility_Contract.md"
+  [ -f "$f" ]
+  ! grep -qiE 'fully supported' "$f"
+  # Platforms without scenario pointer must not be labeled Scenario-tested in their row
+  # Contract must require scenario pointer for Scenario-tested tier
+  grep -qiE 'scenario.*(pointer|evidence|fixture)|pointer.*scenario' "$f"
+}
+
+@test "DEV-094 ACC-004: AgentCapability cross-links without duplicating table" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/AgToosa_AgentCapability.md" "$root/docs/AgToosa_AgentCapability.md"; do
+    grep -q "AgToosa_Compatibility_Contract.md" "$f"
+    ! grep -q "Install-tested" "$f"
+    ! grep -q "Scenario-tested" "$f"
+  done
+}
+
+@test "DEV-094 ACC-005: Contract states DEV-055 routing authority" {
+  local f="$BATS_TEST_DIRNAME/../docs/AgToosa_Compatibility_Contract.md"
+  [ -f "$f" ]
+  grep -q "AgToosa_AgentCapability.md" "$f"
+  grep -qiE 'lifecycle routing|DEV-055|routing remains' "$f"
+  grep -qiE 'compatibility' "$f"
+}
+
+@test "DEV-094 @smoke ACC-006: Compatibility doc in template inventory" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Compatibility_Contract.md"* ]]
+  run grep -F "Docs/AgToosa_Compatibility_Contract.md" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-094 ACC-007: DEV-055 AM tests still pass unchanged" {
+  # Structural: AgentCapability matrix header intact (not replaced by compatibility table)
+  local f="$BATS_TEST_DIRNAME/../docs/AgToosa_AgentCapability.md"
+  grep -q "Lifecycle Capability Matrix" "$f"
+  grep -q "Installed-Surface Detection" "$f"
+  grep -q "Routing Recommendation Algorithm" "$f"
+}
+
+@test "DEV-094 ACC-008: DEV-094 filter and evidence boundary" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "DEV-094" "$root/tests/agtoosa.bats"
+  grep -q "ACC-" "$root/docs/AgToosa_TestPlan-DEV-094.md"
+  local f="$root/docs/AgToosa_Compatibility_Contract.md"
+  [ -f "$f" ]
+  ! grep -qiE 'all platforms are Scenario-tested|every platform.*Scenario-tested' "$f"
+}
+
+# ── DEV-092: Transactional Apply + Idempotency (TAP-001–TAP-008) ──────────────
+
+@test "DEV-092 TAP-001: Apply stages before project mutation" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/lib/apply.sh" ]
+  run bash -c 'source "'"$root"'/lib/apply.sh"; declare -f apply_begin_staging apply_stage_file apply_commit_staging apply_abort_staging'
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"apply_begin_staging"* ]]
+  [[ "$output" == *"apply_stage_file"* ]]
+  [[ "$output" == *"apply_commit_staging"* ]]
+}
+
+@test "DEV-092 @smoke TAP-002: Mid-apply failure leaves tree unchanged" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/lib/apply.sh" ]
+  local proj="$TEST_PROJECT"
+  mkdir -p "$proj/Docs"
+  echo "KEEP-ME" > "$proj/Docs/keep.txt"
+  local before
+  before="$(shasum -a 256 "$proj/Docs/keep.txt" | awk '{print $1}')"
+
+  run bash -c '
+    set -euo pipefail
+    source "'"$root"'/lib/apply.sh"
+    apply_reset_summary
+    apply_begin_staging "'"$proj"'"
+    mkdir -p "$APPLY_STAGING_ROOT/Docs"
+    echo "new-a" > "$APPLY_STAGING_ROOT/Docs/a.md"
+    echo "new-b" > "$APPLY_STAGING_ROOT/Docs/b.md"
+    AGTOOSA_APPLY_FAIL_ON="Docs/b.md" apply_commit_staging "'"$proj"'"
+  '
+  [ "$status" -ne 0 ]
+  [ "$(shasum -a 256 "$proj/Docs/keep.txt" | awk '{print $1}')" = "$before" ]
+  [ ! -f "$proj/Docs/a.md" ]
+  [ ! -f "$proj/Docs/b.md" ]
+}
+
+@test "DEV-092 @smoke TAP-003: Identical content hash skips write" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local proj="$TEST_PROJECT"
+  mkdir -p "$proj/Docs"
+  echo "same-content" > "$proj/Docs/x.md"
+  local mtime_before
+  mtime_before="$(stat -f %m "$proj/Docs/x.md" 2>/dev/null || stat -c %Y "$proj/Docs/x.md")"
+
+  run bash -c '
+    set -euo pipefail
+    source "'"$root"'/lib/apply.sh"
+    apply_reset_summary
+    apply_begin_staging "'"$proj"'"
+    mkdir -p "$APPLY_STAGING_ROOT/Docs"
+    echo "same-content" > "$APPLY_STAGING_ROOT/Docs/x.md"
+    apply_commit_staging "'"$proj"'"
+    apply_print_summary
+  '
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"unchanged"* ]]
+  [ "$(cat "$proj/Docs/x.md")" = "same-content" ]
+}
+
+@test "DEV-092 @smoke TAP-004: Second identical apply zero delta" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local proj="$TEST_PROJECT"
+  mkdir -p "$proj/Docs"
+  echo "payload" > "$proj/Docs/y.md"
+
+  run bash -c '
+    set -euo pipefail
+    source "'"$root"'/lib/apply.sh"
+    apply_reset_summary
+    apply_begin_staging "'"$proj"'"
+    mkdir -p "$APPLY_STAGING_ROOT/Docs"
+    echo "payload" > "$APPLY_STAGING_ROOT/Docs/y.md"
+    apply_commit_staging "'"$proj"'"
+    apply_reset_summary
+    apply_begin_staging "'"$proj"'"
+    mkdir -p "$APPLY_STAGING_ROOT/Docs"
+    echo "payload" > "$APPLY_STAGING_ROOT/Docs/y.md"
+    apply_commit_staging "'"$proj"'"
+    apply_print_summary
+  '
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"written=0"* ]]
+  [[ "$output" == *"unchanged="* ]]
+}
+
+@test "DEV-092 TAP-005: Apply summary reports action counts" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash -c '
+    source "'"$root"'/lib/apply.sh"
+    APPLY_WRITTEN=1; APPLY_MERGED=2; APPLY_UNCHANGED=3; APPLY_FAILED=0
+    apply_print_summary
+  '
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"written"* ]]
+  [[ "$output" == *"merged"* ]]
+  [[ "$output" == *"unchanged"* ]]
+  [[ "$output" == *"failed"* ]]
+}
+
+@test "DEV-092 TAP-006: Dry-run creates no staging in project" {
+  local root="$BATS_TEST_DIRNAME/.."
+  mkdir -p "$TEST_PROJECT"
+  local before after
+  before="$(find "$TEST_PROJECT" -type f -print0 2>/dev/null | sort -z | xargs -0 shasum 2>/dev/null | shasum | awk '{print $1}')"
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes --dry-run
+  [ "$status" -eq 0 ]
+  after="$(find "$TEST_PROJECT" -type f -print0 2>/dev/null | sort -z | xargs -0 shasum 2>/dev/null | shasum | awk '{print $1}')"
+  [ "$before" = "$after" ]
+  ! find "$TEST_PROJECT" -path '*/.agtoosa/staging*' 2>/dev/null | grep -q .
+  ! find "$TEST_PROJECT" -name '.agtoosa-apply-*' 2>/dev/null | grep -q .
+}
+
+@test "DEV-092 TAP-007: Install and update share apply helper" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/lib/apply.sh" ]
+  grep -q 'apply' "$root/agtoosa.sh"
+  # apply.sh must be in the sourced lib list
+  grep -E 'for _lib in .*apply' "$root/agtoosa.sh"
+  grep -q 'apply_' "$root/lib/install.sh" || grep -q 'apply.sh\|apply_' "$root/lib/copy.sh"
+  grep -q 'apply_' "$root/lib/update.sh" || grep -q 'apply_' "$root/lib/copy.sh"
+}
+
+@test "DEV-092 TAP-008: DEV-092 filter documents evidence" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "DEV-092" "$root/tests/agtoosa.bats"
+  grep -q "TAP-" "$root/docs/AgToosa_TestPlan-DEV-092.md"
 }

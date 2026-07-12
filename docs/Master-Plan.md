@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-12 (Wave 1a review approved — DEV-086 · DEV-090 · DEV-105)
+> **Last updated:** 2026-07-12 (Ship complete — v5.3.16 Wave 2)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | v5.3.15 shipped — Wave 1a built; awaiting review |
-| Milestone | `v5.3.16` (next) — PATCH train after Wave 1a ship; then Cycle C DEV-091 |
-| Active cycle | Rev4 Wave 1a (086 / 090 / 105) — built |
-| Cycle capacity | `8 story points` |
+| Current phase | v5.3.16 shipped — Wave 2 (092 · 094 · 097); Wave 1a still In Review; 093/100 remain |
+| Milestone | `v5.3.17` (next) — Wave 1a ship; then DEV-093 / DEV-100; Cycle C DEV-091 after |
+| Active cycle | Rev4 Wave 1a (ship) + Wave 2 remainder (093 · 100) |
+| Cycle capacity | `8 story points` (Wave 2 over capacity — A+B enrollment accepted) |
 
 ## Active Cycle
 
@@ -23,8 +23,13 @@
 | DEV-086 | Chore: Canonical Proof Product Experience | Chore | S | 🔍 In Review | 4/4 |
 | DEV-090 | Feature: Unified Install/Update Plan Engine | Feature | M | 🔍 In Review | 4/4 |
 | DEV-105 | Feature: PowerShell Maintain + Update Parity | Feature | M | 🔍 In Review | 4/4 |
+| DEV-093 | Feature: Install State File + Lock Reconciliation | Feature | M | 🟦 Todo | 0/3 |
+| DEV-100 | Feature: Shared JSON Output for Install/Registry | Feature | S | 🟦 Todo | 0/3 |
 
-<!-- Rev4 Cycle C (after DEV-090): DEV-091; Wave 1b remainder: DEV-089 -->
+<!-- Rev4 Cycle C (after DEV-090 ship): DEV-091; Wave 1b remainder: DEV-089 -->
+<!-- Wave 2 remainder: DEV-093 after 092 shipped; DEV-100 sequential vs 092 (R1 amend pending) -->
+
+<!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.16.md -->
 
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.15.md -->
 
@@ -46,7 +51,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 > Task breakdown for enrolled Active Cycle stories. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
-> Wave 1a build mode: **parallel fan-out** (DEV-086 · DEV-090 · DEV-105); file-disjoint across stories.
+> Wave 1a: **review complete** — ship next (v5.3.17).
+> Wave 2: **092 · 094 · 097 shipped** in v5.3.16; **093** ready to build; **100** R1 amend pending.
 
 ### DEV-086 — Canonical Proof Product Experience (4/4)
 
@@ -92,7 +98,32 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 - [x] **4.** Evidence
   - [x] 4.1 Record PSP RED/GREEN evidence — _Requirements: AC-001–AC-009_
 
-_(DEV-091 blocked — see Blocked section. Wave 1b DEV-087 · DEV-088 shipped in v5.3.15.)_
+_(DEV-091 blocked — see Blocked section. Wave 1b DEV-087 · DEV-088 shipped in v5.3.15. Wave 2 DEV-092 · DEV-094 · DEV-097 shipped in v5.3.16.)_
+
+### DEV-093 — Install State File + Lock Reconciliation (0/3) — ready (DEV-092 shipped)
+
+- [ ] **1.** RED fixtures
+  - [ ] 1.1 State write and gitignore contract — _Requirements: AC-001, AC-002_
+  - [ ] 1.2 Lock reconcile and path — _Requirements: AC-003, AC-004_
+  - [ ] 1.3 Pack SHA failure abort — _Requirements: AC-005_
+- [ ] **2.** State and lock implementation
+  - [ ] 2.1 `lib/state.sh` writer hooked to apply — _Requirements: AC-001, AC-006_
+  - [ ] 2.2 Lock reconcile + SHA revalidation — _Requirements: AC-003, AC-004, AC-005, AC-007_
+- [ ] **3.** Docs and evidence
+  - [ ] 3.1 Authority table in Update doc — _Requirements: AC-008_
+  - [ ] 3.2 STF RED/GREEN — _Requirements: AC-008_
+
+### DEV-100 — Shared JSON Output for Install/Registry (0/3) — R1 amend pending; sequential vs DEV-092
+
+- [ ] **1.** RED JSON contract tests
+  - [ ] 1.1 Plan JSON schema parity catalog vs dry-run (`--format json`) — _Requirements: AC-001, AC-002, AC-006_
+  - [ ] 1.2 Info JSON fields and no ANSI — _Requirements: AC-003, AC-004_
+  - [ ] 1.3 Default output unchanged without `--format json` — _Requirements: AC-005_
+- [ ] **2.** Implementation
+  - [ ] 2.1 Reuse `emit_plan_json` + catalog plan/info `--format json` branches — _Requirements: AC-001, AC-002, AC-003_
+  - [ ] 2.2 Flag plumbing and Catalog docs — _Requirements: AC-004, AC-005_
+- [ ] **3.** Evidence
+  - [ ] 3.1 JIO RED/GREEN — _Requirements: AC-007_
 
 ## Manual / Deferred Tasks
 
@@ -121,9 +152,9 @@ _(DEV-091 blocked — see Blocked section. Wave 1b DEV-087 · DEV-088 shipped in
 
 | ID | Title | Blocked by | Since |
 |----|-------|-----------|-------|
-| DEV-091 | Feature: Migration Wizard + Rollback Manifest | DEV-090 (plan engine not shipped; `lib/plan.sh` absent) | 2026-07-12 |
+| DEV-091 | Feature: Migration Wizard + Rollback Manifest | DEV-090 (Wave 1a not shipped yet; Cycle C after ship) | 2026-07-12 |
 
-Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll Active Cycle only after DEV-090 GREEN.
+Conflict playbook: DEV-093 ready (DEV-092 shipped v5.3.16). Do not parallel-build DEV-100 with remaining apply/CLI work until R1 amend lands. Ship Wave 1a next (v5.3.17).
 
 ## Backlog
 
@@ -177,15 +208,15 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
 | DEV-089 | Feature: Evidence-Profile Verifier Gates | Feature | M | DEV-004 | P1 | ⬜ Backlog — spec approved; after DEV-087 |
 | DEV-090 | Feature: Unified Install/Update Plan Engine | Feature | M | DEV-001 | P0 | 🔍 In Review — Wave 1a |
 | DEV-091 | Feature: Migration Wizard + Rollback Manifest | Feature | L | DEV-001 | P0 | ⬜ Backlog — Cycle C after DEV-090 (hard dep) |
-| DEV-092 | Chore: Transactional Apply + Idempotency | Chore | M | DEV-001 | P1 | ⬜ Backlog — spec approved; Wave 2 |
-| DEV-093 | Feature: Install State File + Lock Reconciliation | Feature | M | DEV-001 | P1 | ⬜ Backlog — spec approved; Wave 2 |
-| DEV-094 | Feature: Assistant Compatibility Contract | Feature | M | DEV-004 | P1 | ⬜ Backlog — spec approved; Wave 2 |
+| DEV-092 | Chore: Transactional Apply + Idempotency | Chore | M | DEV-001 | P1 | 🏁 Shipped — v5.3.16 |
+| DEV-093 | Feature: Install State File + Lock Reconciliation | Feature | M | DEV-001 | P1 | 🟦 Todo — Wave 2; ready (DEV-092 shipped) |
+| DEV-094 | Feature: Assistant Compatibility Contract | Feature | M | DEV-004 | P1 | 🏁 Shipped — v5.3.16 |
 | DEV-095 | Feature: Official Pack Expansion (5-pack max) | Feature | M | DEV-003 | P1 | ⬜ Backlog — spec approved; Wave 3; after DEV-096 |
 | DEV-096 | Chore: Pack Validation CI | Chore | S | DEV-003 | P1 | ⬜ Backlog — spec approved; Wave 3 |
-| DEV-097 | Docs: Framework Supply-Chain Threat Model | Docs | S | DEV-004 | P1 | ⬜ Backlog — spec approved; Wave 2 |
+| DEV-097 | Docs: Framework Supply-Chain Threat Model | Docs | S | DEV-004 | P1 | 🏁 Shipped — v5.3.16 |
 | DEV-098 | Docs: Navigation by User Job | Docs | XS | DEV-004 | P2 | ⬜ Backlog — spec approved; Wave 3 |
 | DEV-099 | Docs: Core vs Optional Pack Boundary | Docs | XS | DEV-002 | P2 | ⬜ Backlog — spec approved; Wave 3 |
-| DEV-100 | Feature: Shared JSON Output for Install/Registry | Feature | S | DEV-001 | P2 | ⬜ Backlog — spec approved; Wave 2 |
+| DEV-100 | Feature: Shared JSON Output for Install/Registry | Feature | S | DEV-001 | P2 | 🟦 Todo — Wave 2 enrolled; R1 `--format json` amend pending; sequential vs DEV-092 |
 | DEV-101 | Docs: Verified vs Community Pack Labeling | Docs | XS | DEV-003 | P2 | ⬜ Backlog — spec approved; Wave 3 |
 | DEV-102 | Docs: Offline and Network-Dependency Matrix | Docs | XS | DEV-001 | P2 | ⬜ Backlog — spec approved; Wave 3 |
 | DEV-103 | Chore: External Registry Publication Runbook | Chore | S | DEV-003 | P2 | ⬜ Backlog — spec approved; Wave 3 |
@@ -194,6 +225,7 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
 | DEV-106 | Docs: Built with AgToosa Showcase | Docs | XS | DEV-004 | P2 | ⬜ Backlog — spec approved; Wave 3 |
 | DEV-107 | Feature: Agent-Instructed Orchestration Brain | Feature | M | DEV-002 | P1 | ⬜ Backlog — Spec Approved; after Wave 1a |
 | DEV-109 | Feature: Lifecycle Next-Step Sync + Multi-Spec Clarity | Feature | L | DEV-002 / DEV-001 | P0 | ⬜ Backlog — spec draft; after last wave; awaiting Spec Approved |
+| DEV-110 | Feature: AgToosa Project Intake | Feature | M | DEV-002 | P0 | ⬜ Backlog — spec draft; after planned specs (after DEV-109); expedite when capacity frees; awaiting Spec Approved |
 
 ## Epics
 
@@ -214,7 +246,7 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
     *   **Success Criteria:** Zero-friction installation and error-free multi-platform scaffolding on clean or existing directories.
     *   **Last shipped:** DEV-046 — Optional Worktree Isolation → `docs/archived/spec-DEV-046.md`
     *   **Last shipped:** DEV-081 — Optional Local DX spike (defer all three options) → `docs/archived/spec-DEV-081.md`
-    *   **Current:** Rev4 wave — DEV-090, DEV-091, DEV-092, DEV-093, DEV-100, DEV-104, DEV-105, DEV-102 in backlog; DEV-090 + DEV-105 in Wave 1a active cycle
+    *   **Current:** Rev4 wave — DEV-090 · DEV-105 In Review (Wave 1a); DEV-091 Cycle C; DEV-093 · DEV-100 Wave 2 remainder; DEV-092 shipped v5.3.16; DEV-104 · DEV-102 backlog
 
 *   **DEV-002 - Epic: Workflow Templates**
     *   **Goal:** Comprehensive AI-native rule files, prompts, skills, and templates keeping AI agents fully aligned with the four-phase lifecycle.
@@ -227,7 +259,7 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
     *   **Last shipped:** DEV-052 — Hook Automation Pack → `docs/archived/spec-DEV-052.md`
     *   **Last shipped:** DEV-056 — Retrospective Learning Loop → `docs/archived/spec-DEV-056.md`
     *   **Last shipped:** DEV-045 — Work Package Wave DAG → `docs/archived/spec-DEV-045.md`
-    *   **Current:** Rev4 wave — DEV-099, DEV-107, DEV-109 in backlog; DEV-107 Spec Approved (build after Wave 1a); DEV-109 lifecycle next-step sync + multi-spec clarity (spec draft); DEV-087 shipped v5.3.15; demand-gated DEV-057 remains separate
+    *   **Current:** Rev4 wave — DEV-099, DEV-107, DEV-109, DEV-110 in backlog; DEV-107 Spec Approved (build after Wave 1a); DEV-109 lifecycle next-step sync + multi-spec clarity (spec draft); DEV-110 Project Intake (spec draft; after DEV-109; expedite when free); DEV-087 shipped v5.3.15; demand-gated DEV-057 remains separate
 
 *   **DEV-003 - Epic: Community Template Registry**
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
@@ -255,7 +287,7 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
     *   **Last shipped:** DEV-083 — Voluntary Workflow Metrics and Case Study Kit → `docs/archived/spec-DEV-083.md`
     *   **Last shipped:** DEV-084 — Open-Source Sustainability and Support Boundary → `docs/archived/spec-DEV-084.md`
     *   **Last shipped:** DEV-088 — Verifier and Doctor Machine Output → `docs/archived/spec-DEV-088.md`
-    *   **Current:** Rev4 wave — DEV-086, DEV-089, DEV-094, DEV-097, DEV-098, DEV-106 in backlog; DEV-086 in Wave 1a active cycle
+    *   **Current:** Rev4 wave — DEV-086 In Review (Wave 1a); DEV-089 backlog; DEV-094 · DEV-097 shipped v5.3.16; DEV-098 · DEV-106 backlog
 
 ## Completed This Cycle
 
@@ -264,6 +296,9 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-092 | Chore: Transactional Apply + Idempotency | 2026-07-12 | [spec-DEV-092.md](archived/spec-DEV-092.md) · [review-DEV-092.md](archived/review-DEV-092.md) · [evidence-DEV-092.md](archived/evidence-DEV-092.md) |
+| DEV-094 | Feature: Assistant Compatibility Contract | 2026-07-12 | [spec-DEV-094.md](archived/spec-DEV-094.md) · [review-DEV-094.md](archived/review-DEV-094.md) · [evidence-DEV-094.md](archived/evidence-DEV-094.md) |
+| DEV-097 | Docs: Framework Supply-Chain Threat Model | 2026-07-12 | [spec-DEV-097.md](archived/spec-DEV-097.md) · [review-DEV-097.md](archived/review-DEV-097.md) · [evidence-DEV-097.md](archived/evidence-DEV-097.md) |
 | DEV-087 | Feature: Delivery Evidence Contract + Profiles | 2026-07-12 | [spec-DEV-087.md](archived/spec-DEV-087.md) · [review-DEV-087.md](archived/review-DEV-087.md) · [evidence-DEV-087.md](archived/evidence-DEV-087.md) |
 | DEV-088 | Feature: Verifier and Doctor Machine Output | 2026-07-12 | [spec-DEV-088.md](archived/spec-DEV-088.md) · [review-DEV-088.md](archived/review-DEV-088.md) · [evidence-DEV-088.md](archived/evidence-DEV-088.md) |
 | DEV-051 | Feature: Tracker Sync Bridge | 2026-07-11 | [spec-DEV-051.md](archived/spec-DEV-051.md) · [review-DEV-051.md](archived/review-DEV-051.md) · [evidence-DEV-051.md](archived/evidence-DEV-051.md) |
@@ -510,3 +545,15 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
 | 2026-07-12 | 🔍 Review complete — Wave 1a DEV-086 · DEV-090 · DEV-105 PASS (0 critical); next: `/agtoosa-ship` v5.3.16 | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — DEV-109 draft — Lifecycle Next-Step Sync + Multi-Spec Clarity; ADR-012; test plan `docs/AgToosa_TestPlan-DEV-109.md`; backlog; awaiting Spec Approved | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — DEV-109 estimate L; backlog only (after last wave); not enrolled in Active Cycle | AgToosa |
+| 2026-07-12 | ✏️ /agtoosa-spec — DEV-110 draft — AgToosa Project Intake; ADR-013; test plan `docs/AgToosa_TestPlan-DEV-110.md`; backlog after DEV-109; expedite when capacity frees; awaiting Spec Approved | AgToosa |
+| 2026-07-12 | ✏️ /agtoosa-spec — Wave 2 A+B enroll — DEV-092 · DEV-093 · DEV-094 · DEV-097 · DEV-100 into Active Cycle; Wave 1a retained through ship; DEV-093 blocked on 092; DEV-100 R1 amend `--format json` pending; capacity soft overrun | AgToosa |
+| 2026-07-12 | 🏗️ Build 🏗️ Started — Wave 2 parallel — DEV-092 · DEV-094 · DEV-097; DEV-093 blocked; DEV-100 skipped (R1 amend pending); no worktree (sequential stories, clean tree between) | AgToosa |
+| 2026-07-12 | 🏗️ /agtoosa-build Wave 2 — DEV-092 · DEV-094 · DEV-097 Task 🟢 complete — TAP/ACC/FST green; DEV-093 blocked; DEV-100 R1 pending | AgToosa |
+| 2026-07-12 | 🏗️ Build complete — Wave 2 slice (DEV-092 · DEV-094 · DEV-097); next: `/agtoosa-review` | AgToosa |
+| 2026-07-12 | 🔍 /agtoosa-review — Review 🔍 Started — Wave 2 DEV-092 · DEV-094 · DEV-097 — 4-persona + cross-model review running | AgToosa |
+| 2026-07-12 | 🔍 Review ✅ Approved — DEV-092; 0 🔴 Critical, warnings accepted; report: `docs/archived/review-DEV-092.md`; evidence: `docs/archived/evidence-DEV-092.md` | AgToosa |
+| 2026-07-12 | 🔍 Review ✅ Approved — DEV-094; 0 🔴 Critical, warnings accepted; report: `docs/archived/review-DEV-094.md`; evidence: `docs/archived/evidence-DEV-094.md` | AgToosa |
+| 2026-07-12 | 🔍 Review ✅ Approved — DEV-097; 0 🔴 Critical, warnings accepted; report: `docs/archived/review-DEV-097.md`; evidence: `docs/archived/evidence-DEV-097.md` | AgToosa |
+| 2026-07-12 | 🔍 Review complete — Wave 2 DEV-092 · DEV-094 · DEV-097 PASS (0 critical); next: `/agtoosa-ship` | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v5.3.16 — Wave 2 DEV-092 · DEV-094 · DEV-097; smoke PASS; cycle archived | AgToosa |
+| 2026-07-12 | 🚀 Release 5.3.16 shipped — v5.3.16; version parity bash/ps1/npm; Milestone v5.3.17 (next); Wave 1a remains active | AgToosa |

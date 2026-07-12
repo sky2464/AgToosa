@@ -3,7 +3,7 @@
 > **Story ID:** DEV-093
 > **Type:** Feature
 > **Epic:** DEV-001 — Core Generator & Install
-> **Status:** 🟦 Todo — Rev4 Wave 2 (approved)
+> **Status:** 🚫 Blocked — Rev4 Wave 2 enrolled (hard-dep DEV-092)
 > **Estimate:** M
 > **Priority:** P1
 > **Depends on:** DEV-092 (transactional apply)
@@ -167,4 +167,4 @@ Smoke set: 4 tests tagged `@smoke`
 ## ✅ Spec Approved
 
 Approved: 2026-07-12 09:56
-Enrollment: Rev4 Wave 2 (DEV-001 provenance surfaces — conflict resolution §5)
+Enrollment: Rev4 Wave 2 Active Cycle (2026-07-12) — blocked until DEV-092 GREEN
