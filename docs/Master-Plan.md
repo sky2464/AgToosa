@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (/agtoosa-spec — four-epic parallel enrollment)
+> **Last updated:** 2026-07-11 (/agtoosa-review — four-epic parallel review started)
 
 ## Project Charter
 
@@ -9,7 +9,7 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | 🏗️ Four-epic parallel build complete — ready for `/agtoosa-review` |
+| Current phase | 🚀 Four-epic parallel ship — DEV-075 · DEV-053 · DEV-078 · DEV-081 (all review approved) |
 | Milestone | `v5.3.8` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
 | Active cycle | DEV-075 · DEV-053 · DEV-078 · DEV-081 |
 | Cycle capacity | `8 story points` |
@@ -20,10 +20,10 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-075 | Docs: Subagent and Persona Guide Suite | Docs | M | 🟨 In Progress | 5/5 |
-| DEV-053 | Feature: Extension and Preset Catalog | Feature | M | 🟨 In Progress | 4/4 |
-| DEV-078 | Chore: First-15-Minutes Maintenance Gate | Chore | XS | 🟨 In Progress | 4/4 |
-| DEV-081 | Spike: Optional Local DX Add-on Validation | Spike | M | 🟨 In Progress | 4/4 |
+| DEV-075 | Docs: Subagent and Persona Guide Suite | Docs | M | 🔍 In Review | 5/5 |
+| DEV-053 | Feature: Extension and Preset Catalog | Feature | M | 🔍 In Review | 4/4 |
+| DEV-078 | Chore: First-15-Minutes Maintenance Gate | Chore | XS | 🔍 In Review | 4/4 |
+| DEV-081 | Spike: Optional Local DX Add-on Validation | Spike | M | 🔍 In Review | 4/4 |
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.7.md -->
 <!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.5.md -->
@@ -541,3 +541,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-081 — Task 🟢 4/4 — DXV-001–DXV-008 green; spike evidence doc (no production code) | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-053 — Task 🟡 1/4 — PC-001–PC-008 RED; `lib/catalog.sh` + fixtures; GREEN pending | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-053 — Task 🟢 4/4 — PC-001–PC-008 green; `--catalog` CLI + 3 entries + adapters | AgToosa |
+| 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-075 + DEV-053 + DEV-078 + DEV-081 — 4-persona parallel review via subagents | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-075; 0 🔴 Critical, 2 🟡 Warning accepted; report: `docs/archived/review-DEV-075.md`; evidence: `docs/archived/evidence-DEV-075.md` | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-078; 0 🔴 Critical; report: `docs/archived/review-DEV-078.md`; evidence: `docs/archived/evidence-DEV-078.md` | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-081; 0 🔴 Critical; report: `docs/archived/review-DEV-081.md`; evidence: `docs/archived/evidence-DEV-081.md` | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-053; 0 🔴 Critical, 8 🟡 Warning accepted; cross-model Recommended tier; report: `docs/archived/review-DEV-053.md`; evidence: `docs/archived/evidence-DEV-053.md` | AgToosa |
