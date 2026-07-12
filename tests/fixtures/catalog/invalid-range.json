@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "entries": [
+    {
+      "id": "bad-range",
+      "kind": "extension",
+      "name": "Bad Range",
+      "summary": "Invalid semver range",
+      "tags": ["bad"],
+      "examples": ["Bad range"],
+      "maintainers": [{ "name": "tester", "contact": "https://example.com" }],
+      "support": "https://example.com/support",
+      "lifecycle": "experimental",
+      "reviewed_at": "2026-07-11",
+      "compatibility": {
+        "agtoosa": ">=not-a-version",
+        "platforms": [],
+        "requires": [],
+        "conflicts": []
+      },
+      "trust": {
+        "curation_tier": "experimental",
+        "registry_verified_snapshot": false,
+        "review_status": "not-reviewed"
+      },
+      "provenance": {
+        "registry_name": "ml-pipeline",
+        "version": "1.2.0",
+        "source": "https://github.com/sky2464/agtoosa-ml-pipeline/archive/refs/tags/v1.2.0.tar.gz",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "signature": "not-present"
+      }
+    }
+  ]
+}

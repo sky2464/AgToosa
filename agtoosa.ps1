@@ -33,6 +33,18 @@
 .PARAMETER RegistryArg
     Argument for the registry sub-command (keyword for search, pack name for info/install).
 
+.PARAMETER Catalog
+    Discover extensions and presets (read-only; installs use -Registry).
+
+.PARAMETER CatalogCommand
+    Catalog sub-command: list, search, info, validate, or plan.
+
+.PARAMETER CatalogArg
+    Argument for the catalog sub-command (keyword, entry id, catalog path, or preset id).
+
+.PARAMETER CatalogPath
+    Optional catalog JSON path (sets AGTOOSA_CATALOG_PATH for the Bash catalog implementation).
+
 .PARAMETER Path
     Target project directory (skips the interactive path prompt).
 
@@ -68,7 +80,11 @@ param(
     [switch]$Yes,
     [switch]$Registry,
     [string]$RegistryCommand = "",
-    [string]$RegistryArg = ""
+    [string]$RegistryArg = "",
+    [switch]$Catalog,
+    [string]$CatalogCommand = "",
+    [string]$CatalogArg = "",
+    [string]$CatalogPath = ""
 )
 
 Set-StrictMode -Version Latest
@@ -156,6 +172,14 @@ ${BOLD}Registry:${NC}
   -Registry -RegistryCommand info -RegistryArg <name>  Show pack details
   -Registry -RegistryCommand install -RegistryArg <name>  Install a pack
   -Registry -RegistryCommand publish            Print Bash/WSL/Git Bash publish guidance
+
+${BOLD}Catalog:${NC}
+  -Catalog -CatalogCommand list                 List catalog entries
+  -Catalog -CatalogCommand search -CatalogArg <kw>  Search catalog
+  -Catalog -CatalogCommand info -CatalogArg <id>    Show entry details
+  -Catalog -CatalogCommand validate -CatalogArg <path>  Validate catalog JSON
+  -Catalog -CatalogCommand plan -CatalogArg <preset>    Non-executing install plan
+  -CatalogPath <path>                           Optional catalog JSON override
 
 ${BOLD}Examples:${NC}
   .\agtoosa.ps1
@@ -1027,6 +1051,22 @@ if ($Version) {
 if ($Help) {
     Show-Usage
     exit 0
+}
+
+# ── --catalog (delegates to Bash implementation) ──────────────
+if ($Catalog) {
+    $bash = Get-Command bash -ErrorAction SilentlyContinue
+    if (-not $bash) {
+        Write-Color "${RED}❌ Catalog commands require Bash (Git Bash or WSL).${NC}"
+        Write-Color "Example: bash agtoosa.sh --catalog list"
+        exit 1
+    }
+    $args = @("$SCRIPT_DIR/agtoosa.sh", "--catalog")
+    if ($CatalogCommand) { $args += $CatalogCommand }
+    if ($CatalogArg) { $args += $CatalogArg }
+    if ($CatalogPath) { $env:AGTOOSA_CATALOG_PATH = $CatalogPath }
+    & $bash.Source @args
+    exit $LASTEXITCODE
 }
 
 # ── --registry ────────────────────────────────────────────────

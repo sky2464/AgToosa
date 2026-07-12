@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "entries": [
+    {
+      "id": "dup-entry",
+      "kind": "extension",
+      "name": "One",
+      "summary": "First duplicate id",
+      "tags": ["dup"],
+      "examples": ["Dup one"],
+      "maintainers": [{ "name": "a", "contact": "https://example.com" }],
+      "support": "https://example.com",
+      "lifecycle": "experimental",
+      "reviewed_at": "2026-07-11",
+      "compatibility": {
+        "agtoosa": ">=5.0.0 <6.0.0",
+        "platforms": [],
+        "requires": [],
+        "conflicts": []
+      },
+      "trust": {
+        "curation_tier": "experimental",
+        "registry_verified_snapshot": false,
+        "review_status": "not-reviewed"
+      },
+      "provenance": {
+        "registry_name": "ml-pipeline",
+        "version": "1.2.0",
+        "source": "https://github.com/sky2464/agtoosa-ml-pipeline/archive/refs/tags/v1.2.0.tar.gz",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "signature": "not-present"
+      }
+    },
+    {
+      "id": "dup-entry",
+      "kind": "extension",
+      "name": "Two",
+      "summary": "Second duplicate id",
+      "tags": ["dup"],
+      "examples": ["Dup two"],
+      "maintainers": [{ "name": "b", "contact": "https://example.com" }],
+      "support": "https://example.com",
+      "lifecycle": "experimental",
+      "reviewed_at": "2026-07-11",
+      "compatibility": {
+        "agtoosa": ">=5.0.0 <6.0.0",
+        "platforms": [],
+        "requires": [],
+        "conflicts": []
+      },
+      "trust": {
+        "curation_tier": "experimental",
+        "registry_verified_snapshot": false,
+        "review_status": "not-reviewed"
+      },
+      "provenance": {
+        "registry_name": "react-native",
+        "version": "0.9.1",
+        "source": "https://github.com/communitydev/agtoosa-react-native/archive/refs/tags/v0.9.1.tar.gz",
+        "sha256": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+        "signature": "not-present"
+      }
+    }
+  ]
+}

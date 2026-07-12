@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0",
+  "entries": [
+    {
+      "id": "ext-ml-pipeline",
+      "kind": "extension",
+      "name": "ML Pipeline",
+      "summary": "Machine learning project workflow templates for data science teams",
+      "tags": ["ml", "data-science", "pipeline"],
+      "examples": [
+        "Run /agtoosa-spec for an ML feature with experiment tracking gates",
+        "Install ml-pipeline pack then merge with bash agtoosa.sh --registry install ml-pipeline@1.2.0"
+      ],
+      "maintainers": [
+        { "name": "sky2464", "contact": "https://github.com/sky2464" }
+      ],
+      "support": "https://github.com/sky2464/agtoosa-ml-pipeline/issues",
+      "lifecycle": "maintained",
+      "reviewed_at": "2026-07-11",
+      "compatibility": {
+        "agtoosa": ">=5.0.0 <6.0.0",
+        "platforms": ["cursor", "claude"],
+        "requires": [],
+        "conflicts": []
+      },
+      "trust": {
+        "curation_tier": "community-reviewed",
+        "registry_verified_snapshot": true,
+        "review_status": "reviewed"
+      },
+      "provenance": {
+        "registry_name": "ml-pipeline",
+        "version": "1.2.0",
+        "source": "https://github.com/sky2464/agtoosa-ml-pipeline/archive/refs/tags/v1.2.0.tar.gz",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "signature": "not-present"
+      }
+    },
+    {
+      "id": "ext-react-native",
+      "kind": "extension",
+      "name": "React Native",
+      "summary": "React Native mobile app development workflows",
+      "tags": ["mobile", "react-native", "frontend"],
+      "examples": [
+        "Ship a mobile feature with platform-specific QA gates",
+        "Pair with ext-ml-pipeline via preset-fullstack-ml for fullstack teams"
+      ],
+      "maintainers": [
+        { "name": "communitydev", "contact": "https://github.com/communitydev" }
+      ],
+      "support": "https://github.com/communitydev/agtoosa-react-native/issues",
+      "lifecycle": "maintained",
+      "reviewed_at": "2026-07-11",
+      "compatibility": {
+        "agtoosa": ">=5.0.0 <6.0.0",
+        "platforms": ["cursor", "claude"],
+        "requires": [],
+        "conflicts": []
+      },
+      "trust": {
+        "curation_tier": "community-reviewed",
+        "registry_verified_snapshot": true,
+        "review_status": "reviewed"
+      },
+      "provenance": {
+        "registry_name": "react-native",
+        "version": "0.9.1",
+        "source": "https://github.com/communitydev/agtoosa-react-native/archive/refs/tags/v0.9.1.tar.gz",
+        "sha256": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+        "signature": "not-present"
+      }
+    },
+    {
+      "id": "preset-fullstack-ml",
+      "kind": "preset",
+      "name": "Fullstack ML Starter",
+      "summary": "Pinned ML pipeline and React Native extensions for teams building data + mobile products",
+      "tags": ["preset", "ml", "mobile", "fullstack"],
+      "examples": [
+        "Generate an install plan with bash agtoosa.sh --catalog plan preset-fullstack-ml",
+        "Review trust fields separately from registry verification before each install"
+      ],
+      "maintainers": [
+        { "name": "AgToosa Maintainers", "contact": "https://github.com/sky2464/AgToosa/issues" }
+      ],
+      "support": "https://github.com/sky2464/AgToosa/issues",
+      "lifecycle": "maintained",
+      "reviewed_at": "2026-07-11",
+      "compatibility": {
+        "agtoosa": ">=5.0.0 <6.0.0",
+        "platforms": ["cursor", "claude"],
+        "requires": [],
+        "conflicts": []
+      },
+      "trust": {
+        "curation_tier": "official",
+        "registry_verified_snapshot": true,
+        "review_status": "reviewed"
+      },
+      "members": [
+        { "extension_id": "ext-ml-pipeline", "rationale": "Data/ML delivery workflows and experiment gates" },
+        { "extension_id": "ext-react-native", "rationale": "Mobile client workflows and release gates" }
+      ]
+    }
+  ]
+}

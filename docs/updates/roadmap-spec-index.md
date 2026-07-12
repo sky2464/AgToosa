@@ -15,11 +15,20 @@ Every actionable proposal in the update documents is represented by one of:
 
 Editing this index does not enroll a story. Backlog stories still require `/agtoosa-spec`, explicit approval, and a separate `/agtoosa-build` invocation.
 
-## Active Story
+## Active Stories (four-epic parallel build — 2026-07-11)
+
+| ID | Story | Epic | Spec | Role |
+|---|---|---|---|---|
+| DEV-075 | Subagent and Persona Guide Suite | DEV-002 | `docs/archived/spec-DEV-075.md` | Active — workflow adoption docs |
+| DEV-053 | Extension and Preset Catalog | DEV-003 | `docs/archived/spec-DEV-053.md` | Active — registry catalog layer |
+| DEV-078 | First-15-Minutes Maintenance Gate | DEV-004 | `docs/archived/spec-DEV-078.md` | Active — release-pin drift gate |
+| DEV-081 | Optional Local DX Add-on Validation | DEV-001 | `docs/archived/spec-DEV-081.md` | Active — spike evidence only |
+
+## Shipped prerequisite
 
 | ID | Story | Spec | Role |
 |---|---|---|---|
-| DEV-055 | Agent Capability Matrix | `docs/archived/spec-DEV-055.md` | Active lifecycle-routing prerequisite for the subagent roadmap |
+| DEV-055 | Agent Capability Matrix | `docs/archived/spec-DEV-055.md` | Shipped v5.3.7 — lifecycle routing prerequisite |
 
 ## Existing Future Stories — Deepened
 

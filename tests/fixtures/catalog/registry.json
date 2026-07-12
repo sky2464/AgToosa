@@ -1,0 +1,32 @@
+[
+  {
+    "name": "ml-pipeline",
+    "description": "Machine learning project workflow templates for data science teams",
+    "author": "sky2464",
+    "version": "1.2.0",
+    "url": "https://github.com/sky2464/agtoosa-ml-pipeline/archive/refs/tags/v1.2.0.tar.gz",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "verified": true,
+    "signature": "not-present"
+  },
+  {
+    "name": "react-native",
+    "description": "React Native mobile app development workflows",
+    "author": "communitydev",
+    "version": "0.9.1",
+    "url": "https://github.com/communitydev/agtoosa-react-native/archive/refs/tags/v0.9.1.tar.gz",
+    "sha256": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+    "verified": true,
+    "signature": "not-present"
+  },
+  {
+    "name": "embedded",
+    "description": "Embedded systems and firmware development workflows",
+    "author": "hardwareteam",
+    "version": "2.0.0",
+    "url": "https://github.com/hardwareteam/agtoosa-embedded/archive/refs/tags/v2.0.0.tar.gz",
+    "sha256": "b3a8e0967d99ac3dce56166adaf902e06b91d36babe1623cd89e51371e573186",
+    "verified": false,
+    "signature": "not-present"
+  }
+]

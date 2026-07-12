@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0",
+  "entries": [
+    {
+      "id": "ext-alpha",
+      "kind": "extension",
+      "name": "Alpha",
+      "summary": "Declares capability alpha",
+      "tags": ["alpha"],
+      "examples": ["Alpha capability"],
+      "maintainers": [{ "name": "alpha", "contact": "https://example.com/a" }],
+      "support": "https://example.com/a",
+      "lifecycle": "maintained",
+      "reviewed_at": "2026-07-11",
+      "compatibility": {
+        "agtoosa": ">=5.0.0 <6.0.0",
+        "platforms": ["cursor"],
+        "requires": [],
+        "conflicts": ["shared-dest"]
+      },
+      "trust": {
+        "curation_tier": "experimental",
+        "registry_verified_snapshot": true,
+        "review_status": "reviewed"
+      },
+      "provenance": {
+        "registry_name": "ml-pipeline",
+        "version": "1.2.0",
+        "source": "https://github.com/sky2464/agtoosa-ml-pipeline/archive/refs/tags/v1.2.0.tar.gz",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "signature": "not-present"
+      }
+    },
+    {
+      "id": "ext-beta",
+      "kind": "extension",
+      "name": "Beta",
+      "summary": "Also targets shared-dest capability",
+      "tags": ["beta"],
+      "examples": ["Beta capability"],
+      "maintainers": [{ "name": "beta", "contact": "https://example.com/b" }],
+      "support": "https://example.com/b",
+      "lifecycle": "maintained",
+      "reviewed_at": "2026-07-11",
+      "compatibility": {
+        "agtoosa": ">=5.0.0 <6.0.0",
+        "platforms": ["cursor"],
+        "requires": [],
+        "conflicts": ["shared-dest"]
+      },
+      "trust": {
+        "curation_tier": "experimental",
+        "registry_verified_snapshot": true,
+        "review_status": "reviewed"
+      },
+      "provenance": {
+        "registry_name": "react-native",
+        "version": "0.9.1",
+        "source": "https://github.com/communitydev/agtoosa-react-native/archive/refs/tags/v0.9.1.tar.gz",
+        "sha256": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+        "signature": "not-present"
+      }
+    },
+    {
+      "id": "conflicting-preset",
+      "kind": "preset",
+      "name": "Conflicting Preset",
+      "summary": "Members declare overlapping capability conflicts",
+      "tags": ["conflict"],
+      "examples": ["Conflict demonstration"],
+      "maintainers": [{ "name": "tester", "contact": "https://example.com" }],
+      "support": "https://example.com/support",
+      "lifecycle": "experimental",
+      "reviewed_at": "2026-07-11",
+      "compatibility": {
+        "agtoosa": ">=5.0.0 <6.0.0",
+        "platforms": ["cursor"],
+        "requires": [],
+        "conflicts": []
+      },
+      "trust": {
+        "curation_tier": "experimental",
+        "registry_verified_snapshot": true,
+        "review_status": "not-reviewed"
+      },
+      "members": [
+        { "extension_id": "ext-alpha", "rationale": "Alpha workflows" },
+        { "extension_id": "ext-beta", "rationale": "Beta workflows" }
+      ]
+    }
+  ]
+}

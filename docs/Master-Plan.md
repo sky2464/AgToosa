@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (/agtoosa-ship — DEV-055 v5.3.7)
+> **Last updated:** 2026-07-11 (/agtoosa-spec — four-epic parallel enrollment)
 
 ## Project Charter
 
@@ -9,9 +9,9 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | 🏁 v5.3.7 shipped — DEV-055 complete |
+| Current phase | 🏗️ Four-epic parallel build complete — ready for `/agtoosa-review` |
 | Milestone | `v5.3.8` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | — |
+| Active cycle | DEV-075 · DEV-053 · DEV-078 · DEV-081 |
 | Cycle capacity | `8 story points` |
 
 ## Active Cycle
@@ -20,7 +20,10 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| — | — | — | — | — | — |
+| DEV-075 | Docs: Subagent and Persona Guide Suite | Docs | M | 🟨 In Progress | 5/5 |
+| DEV-053 | Feature: Extension and Preset Catalog | Feature | M | 🟨 In Progress | 4/4 |
+| DEV-078 | Chore: First-15-Minutes Maintenance Gate | Chore | XS | 🟨 In Progress | 4/4 |
+| DEV-081 | Spike: Optional Local DX Add-on Validation | Spike | M | 🟨 In Progress | 4/4 |
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.7.md -->
 <!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.5.md -->
@@ -53,15 +56,34 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 - [x] **5.** GREEN bats + test-plan evidence + Agent/Skills/Quickref cross-links
 -->
 
-<!--
-**DEV-055 — Agent Capability Matrix** (spec: `docs/archived/spec-DEV-055.md`) — shipped 2026-07-11 v5.3.7
+**DEV-075 — Subagent and Persona Guide Suite** (spec: `docs/archived/spec-DEV-075.md`)
 
-- [x] **1.** RED contract bats (AM-001–AM-007)
-- [x] **2.** Canonical `AgToosa_AgentCapability.md` + maintainer mirror
-- [x] **3.** Wire Handoff, Review, Build, Help cross-links
-- [x] **4.** Register `lib/config.sh` + Specialists cross-link
-- [x] **5.** GREEN bats + test-plan evidence
--->
+- [x] **1.** Contract tests and shared guide structure
+- [x] **2.** End-to-end walkthrough
+- [x] **3.** Audience guides
+- [x] **4.** Discovery without duplication
+- [x] **5.** Evidence
+
+**DEV-053 — Extension and Preset Catalog** (spec: `docs/archived/spec-DEV-053.md`)
+
+- [x] **1.** Contract and fixtures (PC RED)
+- [x] **2.** Catalog core (schema, list/search/info, plan)
+- [x] **3.** Production catalog and workflow docs
+- [x] **4.** Verification and evidence
+
+**DEV-078 — First-15-Minutes Maintenance Gate** (spec: `docs/archived/spec-DEV-078.md`)
+
+- [x] **1.** Fixture-based RED coverage
+- [x] **2.** Deterministic maintenance checks
+- [x] **3.** Repair current drift only
+- [x] **4.** Evidence
+
+**DEV-081 — Optional Local DX Add-on Validation** (spec: `docs/archived/spec-DEV-081.md`)
+
+- [x] **1.** Establish the evidence contract
+- [x] **2.** Evaluate candidates independently
+- [x] **3.** Decide and review
+- [x] **4.** Preserve the spike boundary
 
 <!--
 **DEV-054 — Signed Registry Provenance** (spec: `docs/archived/spec-DEV-054.md`) — shipped 2026-07-08 v5.3.5
@@ -297,7 +319,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-050 | Feature: Cross-Model Review Gate | Feature | S | DEV-002 | P1 | 🏁 Shipped — v5.3.6 |
 | DEV-051 | Feature: Tracker Sync Bridge | Feature | M | DEV-003 | P1 | ⬜ Backlog — executable spec ready; demand-gated, proposal import only |
 | DEV-052 | Feature: Hook Automation Pack | Feature | M | DEV-002 | P1 | ⬜ Backlog — executable spec ready; depends DEV-059 |
-| DEV-053 | Feature: Extension and Preset Catalog | Feature | M | DEV-003 | P1 | ⬜ Backlog — executable spec ready; catalog contract before DEV-080 |
+| DEV-053 | Feature: Extension and Preset Catalog | Feature | M | DEV-003 | P1 | 🟨 In Progress — Active Cycle |
 | DEV-054 | Feature: Signed Registry Provenance | Feature | M | DEV-003 | P0 | 🏁 Shipped — v5.3.5 |
 | DEV-055 | Feature: Agent Capability Matrix | Feature | S | DEV-002 | P1 | 🏁 Shipped — v5.3.7 |
 | DEV-056 | Feature: Retrospective Learning Loop | Feature | S | DEV-002 | P2 | ⬜ Backlog — executable spec ready; stable evidence inputs required |
@@ -305,13 +327,13 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-058 | Feature: Local Dashboard | Feature | M | DEV-004 | P2 | ⬜ Backlog — executable spec ready; read-only local scope |
 | DEV-059 | Feature: Governance Policy-as-Code | Feature | M | DEV-004 | P1 | ⬜ Backlog — executable spec ready; honest enforcement classes required |
 | DEV-060 | Docs: Public Benchmark Suite | Docs | M | DEV-004 | P2 | ✅ Done — suite + scoring + claim boundary in `docs/benchmarks/`; competitor runs manual-deferred |
-| DEV-075 | Docs: Subagent and Persona Guide Suite | Docs | M | DEV-002 | P1 | ⬜ Backlog — executable spec ready |
+| DEV-075 | Docs: Subagent and Persona Guide Suite | Docs | M | DEV-002 | P1 | 🟨 In Progress — Active Cycle |
 | DEV-076 | Spike: Static Documentation Site Proof | Spike | S | DEV-004 | P2 | ⬜ Backlog — executable spec ready; no backend or second docs source |
 | DEV-077 | Chore: Authoring Guide and Onboarding Surface | Chore | S | DEV-003 | P2 | ⬜ Backlog — executable spec ready; canonical links, no duplicated contracts |
-| DEV-078 | Chore: First-15-Minutes Maintenance Gate | Chore | XS | DEV-004 | P1 | ⬜ Backlog — executable spec ready; release-pin and proof-link drift |
+| DEV-078 | Chore: First-15-Minutes Maintenance Gate | Chore | XS | DEV-004 | P1 | 🟨 In Progress — Active Cycle |
 | DEV-079 | Docs: Verifier and CI Adoption Examples | Docs | S | DEV-004 | P2 | ⬜ Backlog — executable spec ready; copy-in CI boundary |
 | DEV-080 | Feature: Official Registry Pack Pilot | Feature | L | DEV-003 | P2 | ⬜ Backlog — executable spec ready; depends DEV-053; external publish manual |
-| DEV-081 | Spike: Optional Local DX Add-on Validation | Spike | M | DEV-001 | P2 | ⬜ Backlog — executable spec ready; validation only, no implementation |
+| DEV-081 | Spike: Optional Local DX Add-on Validation | Spike | M | DEV-001 | P2 | 🟨 In Progress — Active Cycle |
 | DEV-082 | Spike: High-Assurance Signature Mode Validation | Spike | S | DEV-003 | P2 | ⬜ Backlog — executable spec ready; precedes fail-closed implementation |
 | DEV-083 | Docs: Voluntary Workflow Metrics and Case Study Kit | Docs | S | DEV-004 | P2 | ⬜ Backlog — executable spec ready; no telemetry |
 | DEV-084 | Chore: Open-Source Sustainability and Support Boundary | Chore | XS | DEV-004 | P2 | ⬜ Backlog — executable spec ready; no feature gates or SLA claim |
@@ -331,12 +353,12 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 > Created at `/agtoosa-init`. One row per product area. Changes rarely — see Active Cycle for what's in flight.
 
-| ID | Title | Stories | Status |
-|----|-------|---------|--------|
-| DEV-001 | Epic: Core Generator Engine | 2 open / 2 total | ⬜ Backlog |
-| DEV-002 | Epic: Workflow Templates | 10 open / 20 total | 🟦 Todo |
-| DEV-003 | Epic: Community Template Registry | 7 open / 7 total | ⬜ Backlog |
-| DEV-004 | Epic: Testing & QA Harness | 10 open / 11 total | ⬜ Backlog |
+| ID | Title | Stories | Status | Next spec |
+|----|-------|---------|--------|-----------|
+| DEV-001 | Epic: Core Generator Engine | 2 open / 2 total | 🟨 In Progress | DEV-081 (active) · DEV-046 after DEV-045 |
+| DEV-002 | Epic: Workflow Templates | 10 open / 20 total | 🟨 In Progress | DEV-075 (active) · DEV-045 critical path |
+| DEV-003 | Epic: Community Template Registry | 7 open / 7 total | 🟨 In Progress | DEV-053 (active) |
+| DEV-004 | Epic: Testing & QA Harness | 10 open / 11 total | 🟨 In Progress | DEV-078 (active) |
 
 ### Epic Charters
 
@@ -344,33 +366,30 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Goal:** Core interactive CLI generator providing project scaffolding, version-pin checks, deep copy/merge paths, backups, and dry-run execution.
     *   **Scope:** `agtoosa.sh`, `agtoosa.ps1`, and all `lib/*.sh` core modules.
     *   **Success Criteria:** Zero-friction installation and error-free multi-platform scaffolding on clean or existing directories.
+    *   **Current:** DEV-081 enrolled (spike) — `docs/archived/spec-DEV-081.md`; DEV-046 blocked on DEV-045
 
 *   **DEV-002 - Epic: Workflow Templates**
     *   **Goal:** Comprehensive AI-native rule files, prompts, skills, and templates keeping AI agents fully aligned with the four-phase lifecycle.
     *   **Scope:** Markdown specifications and rules files across Claude, Gemini, Cursor, Windsurf, Copilot, and OpenCode under `template/`.
     *   **Success Criteria:** Perfect parity of phase commands and zero-drift version badges across all platform templates.
-
-    *   **Last shipped:** DEV-025 — Maintainer docs path normalization → `docs/archived/spec-DEV-025.md`
-    *   **Last shipped:** DEV-024 — Maintainer status readiness doc parity → `docs/archived/spec-DEV-024.md`
-    *   **Last shipped:** DEV-023 — Workflow Template Native Slash Parity Audit → `docs/archived/spec-DEV-023.md`
-    *   **Last shipped:** DEV-027 — Agentic `/agtoosa-update` → `docs/archived/spec-DEV-027.md`
-    *   **Current:** _(shipped DEV-028 v5.2.0 — see `docs/archived/spec-DEV-028.md`)_
+    *   **Last shipped:** DEV-055 — Agent Capability Matrix → `docs/archived/spec-DEV-055.md`
+    *   **Last shipped:** DEV-050 — Cross-Model Review Gate → `docs/archived/spec-DEV-050.md`
+    *   **Current:** DEV-075 enrolled — `docs/archived/spec-DEV-075.md`; critical path next: DEV-045
 
 *   **DEV-003 - Epic: Community Template Registry**
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
     *   **Scope:** Pack registry parsing, cached JSON validation, SHA-256 integrity rules, and command staging wrappers in `lib/registry.sh`.
     *   **Success Criteria:** Secure Offline/Online installation of approved community templates with zero path-traversal risk.
+    *   **Last shipped:** DEV-054 — Signed Registry Provenance → `docs/archived/spec-DEV-054.md`
     *   **Last shipped:** DEV-022 — publish PS1 + offline cache → `docs/archived/spec-DEV-022.md`
-    *   **Last shipped:** DEV-021 — E2E pinned install test (RV6) → `docs/archived/spec-DEV-021.md`
-    *   **Last shipped:** DEV-020 — registry `@version` install enforcement → `docs/archived/spec-DEV-020.md`
-    *   **Last shipped:** DEV-018 — durable pack queue → `docs/archived/spec-DEV-018.md`
-    *   **Current:** _(pick next story via `/agtoosa-spec`)_
+    *   **Current:** DEV-053 enrolled — `docs/archived/spec-DEV-053.md`
 
 *   **DEV-004 - Epic: Testing & QA Harness**
     *   **Goal:** Comprehensive end-to-end integration and version verification suites validating the robustness of the entire framework.
     *   **Scope:** `tests/agtoosa.bats` and CI regression pipelines.
     *   **Success Criteria:** 100% green coverage on 340+ bats scenarios and version checks on every release step.
     *   **Last shipped:** DEV-005 — M1–M4 bats + CHANGELOG hygiene → `docs/archived/spec-DEV-005.md`
+    *   **Current:** DEV-078 enrolled — `docs/archived/spec-DEV-078.md`
 
 ## Completed This Cycle
 
@@ -516,3 +535,9 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-055; 0 🔴 Critical, 3 🟡 Warning (2 accepted, 1 fixed); report: `docs/archived/review-DEV-055.md`; evidence: `docs/archived/evidence-DEV-055.md` | AgToosa |
 | 2026-07-11 | 🚀 Ship complete — v5.3.7 — DEV-055 Agent Capability Matrix; bats DEV-055 AM/SR green; smoke PASS | AgToosa |
 | 2026-07-11 | 🚀 Release 5.3.7 shipped — v5.3.7; version parity bash/ps1/npm; Milestone v5.3.8 (next) | AgToosa |
+| 2026-07-11 | ✏️ /agtoosa-spec — Four-epic parallel enrollment — DEV-075 (DEV-002), DEV-053 (DEV-003), DEV-078 (DEV-004), DEV-081 (DEV-001); specs approved; parallel `/agtoosa-build` via subagents | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-075 — Task 🟢 5/5 — ADP-001–ADP-009 green; guide suite + README links | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-078 — Task 🟢 4/4 — F15-001–F15-008 green; launch-readiness maintenance gate | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-081 — Task 🟢 4/4 — DXV-001–DXV-008 green; spike evidence doc (no production code) | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-053 — Task 🟡 1/4 — PC-001–PC-008 RED; `lib/catalog.sh` + fixtures; GREEN pending | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-053 — Task 🟢 4/4 — PC-001–PC-008 green; `--catalog` CLI + 3 entries + adapters | AgToosa |

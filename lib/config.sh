@@ -30,6 +30,7 @@ DOCS_FILES=(
   "Docs/AgToosa_Concise.md"
   "Docs/AgToosa_Update.md"
   "Docs/AgToosa_Registry.md"
+  "Docs/AgToosa_Catalog.md"
   "Docs/AgToosa_Skills.md"
   "Docs/AgToosa_Specialists.md"
   "Docs/CONTEXT-FORMAT.md"
@@ -71,7 +72,7 @@ OPTIONAL_TEMPLATE_FILES=(
   ".claude/hooks/block-dangerous-git.sh"
   ".claude/commands/agtoosa-debug.md"
   ".claude/commands/agtoosa-concise.md"
-  ".claude/skills/agtoosa-debug.md"
+  ".claude/commands/agtoosa-catalog.md"
   ".cursor/commands/agtoosa-init.md"
   ".cursor/commands/agtoosa-spec.md"
   ".cursor/commands/agtoosa-build.md"
@@ -89,15 +90,15 @@ OPTIONAL_TEMPLATE_FILES=(
   ".cursor/commands/agtoosa-help.md"
   ".cursor/commands/agtoosa-debug.md"
   ".cursor/commands/agtoosa-concise.md"
-  ".cursor/rules/agtoosa-debug.mdc"
+  ".cursor/commands/agtoosa-catalog.md"
   ".cursor/rules/agtoosa-concise.mdc"
   ".windsurf/rules/agtoosa-debug.md"
   ".windsurf/rules/agtoosa-concise.md"
   ".gemini/commands/agtoosa-debug.toml"
   ".gemini/commands/agtoosa-concise.toml"
-  ".github/prompts/agtoosa-debug.prompt.md"
+  ".gemini/commands/agtoosa-catalog.toml"
   ".github/prompts/agtoosa-concise.prompt.md"
-  ".claude/skills/agtoosa-review.md"
+  ".github/prompts/agtoosa-catalog.prompt.md"
   ".cursor/rules/agtoosa-core.mdc"
   ".cursor/rules/agtoosa-spec.mdc"
   ".cursor/rules/agtoosa-build.mdc"
@@ -183,7 +184,7 @@ OPTIONAL_TEMPLATE_FILES=(
   ".codex/prompts/agtoosa-help.md"
   ".codex/prompts/agtoosa-debug.md"
   ".codex/prompts/agtoosa-concise.md"
-  ".windsurf/rules/agtoosa-core.md"
+  ".codex/prompts/agtoosa-catalog.md"
   ".windsurf/rules/agtoosa-spec.md"
   ".windsurf/rules/agtoosa-build.md"
   ".windsurf/rules/agtoosa-qa.md"
@@ -214,6 +215,7 @@ OPTIONAL_TEMPLATE_FILES=(
   ".windsurf/workflows/agtoosa-help.md"
   ".windsurf/workflows/agtoosa-debug.md"
   ".windsurf/workflows/agtoosa-concise.md"
+  ".windsurf/workflows/agtoosa-catalog.md"
 )
 
 CONTEXT_FILES=(
@@ -241,6 +243,7 @@ CLAUDE_COMMAND_FILES=(
   ".claude/commands/agtoosa-help.md"
   ".claude/commands/agtoosa-debug.md"
   ".claude/commands/agtoosa-concise.md"
+  ".claude/commands/agtoosa-catalog.md"
 )
 
 CLAUDE_SKILL_FILES=(
@@ -289,6 +292,7 @@ CURSOR_COMMAND_FILES=(
   ".cursor/commands/agtoosa-help.md"
   ".cursor/commands/agtoosa-debug.md"
   ".cursor/commands/agtoosa-concise.md"
+  ".cursor/commands/agtoosa-catalog.md"
 )
 
 GEMINI_COMMAND_FILES=(
@@ -309,6 +313,7 @@ GEMINI_COMMAND_FILES=(
   ".gemini/commands/agtoosa-help.toml"
   ".gemini/commands/agtoosa-debug.toml"
   ".gemini/commands/agtoosa-concise.toml"
+  ".gemini/commands/agtoosa-catalog.toml"
 )
 
 COPILOT_PROMPT_FILES=(
@@ -329,6 +334,7 @@ COPILOT_PROMPT_FILES=(
   ".github/prompts/agtoosa-help.prompt.md"
   ".github/prompts/agtoosa-debug.prompt.md"
   ".github/prompts/agtoosa-concise.prompt.md"
+  ".github/prompts/agtoosa-catalog.prompt.md"
 )
 
 COPILOT_AGENT_FILES=(
@@ -381,6 +387,7 @@ WINDSURF_WORKFLOW_FILES=(
   ".windsurf/workflows/agtoosa-help.md"
   ".windsurf/workflows/agtoosa-debug.md"
   ".windsurf/workflows/agtoosa-concise.md"
+  ".windsurf/workflows/agtoosa-catalog.md"
 )
 
 CODEX_SKILL_FILES=(
@@ -421,6 +428,7 @@ CODEX_PROMPT_FILES=(
   ".codex/prompts/agtoosa-help.md"
   ".codex/prompts/agtoosa-debug.md"
   ".codex/prompts/agtoosa-concise.md"
+  ".codex/prompts/agtoosa-catalog.md"
 )
 
 print_usage() {
@@ -435,6 +443,12 @@ print_usage() {
   echo "                           info <name>       — Show pack details"
   echo "                           install <name>    — Download and install a pack"
   echo "                           publish           — Contribution wizard for pack authors"
+  echo "  --catalog <cmd> [arg]  Discover extensions/presets (read-only; installs use --registry)"
+  echo "                           list              — List catalog entries"
+  echo "                           search <keyword>  — Search by tag, name, or summary"
+  echo "                           info <id>         — Show entry details and compatibility"
+  echo "                           validate <path>   — Validate a catalog JSON file"
+  echo "                           plan <preset-id>  — Emit non-executing registry install plan"
   echo "  --update [path]        Update an existing AgToosa install (skips interactive wizard)"
   echo "  --verify [path]        Run the deterministic AgToosa lifecycle verifier (read-only)"
   echo "  --doctor [path]        Diagnose an AgToosa install (versions, wiring, context health)"

@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "entries": [
+    {
+      "id": "preset-a",
+      "kind": "preset",
+      "name": "Preset A",
+      "summary": "Cycle leg A",
+      "tags": ["cycle"],
+      "examples": ["Cycle test A"],
+      "maintainers": [{ "name": "tester", "contact": "https://example.com" }],
+      "support": "https://example.com/support",
+      "lifecycle": "experimental",
+      "reviewed_at": "2026-07-11",
+      "compatibility": {
+        "agtoosa": ">=5.0.0 <6.0.0",
+        "platforms": [],
+        "requires": [],
+        "conflicts": []
+      },
+      "trust": {
+        "curation_tier": "experimental",
+        "registry_verified_snapshot": false,
+        "review_status": "not-reviewed"
+      },
+      "members": [
+        { "extension_id": "preset-b", "rationale": "Depends on preset B" }
+      ]
+    },
+    {
+      "id": "preset-b",
+      "kind": "preset",
+      "name": "Preset B",
+      "summary": "Cycle leg B",
+      "tags": ["cycle"],
+      "examples": ["Cycle test B"],
+      "maintainers": [{ "name": "tester", "contact": "https://example.com" }],
+      "support": "https://example.com/support",
+      "lifecycle": "experimental",
+      "reviewed_at": "2026-07-11",
+      "compatibility": {
+        "agtoosa": ">=5.0.0 <6.0.0",
+        "platforms": [],
+        "requires": [],
+        "conflicts": []
+      },
+      "trust": {
+        "curation_tier": "experimental",
+        "registry_verified_snapshot": false,
+        "review_status": "not-reviewed"
+      },
+      "members": [
+        { "extension_id": "preset-a", "rationale": "Depends on preset A" }
+      ]
+    }
+  ]
+}

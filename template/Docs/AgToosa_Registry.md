@@ -198,6 +198,12 @@ AgToosa caches `registry.json` locally so list/search/info work when the network
 
 ---
 
+## Extension and Preset Catalog
+
+For curated discovery by use case (extensions and team presets), use the **Catalog** workflow — it lists, searches, and plans installs but always delegates to `--registry install` for the actual merge. See `Docs/AgToosa_Catalog.md` for compatibility, trust boundaries, and planning commands. Install safety rules remain in this Registry document only.
+
+---
+
 ## Next Steps
 
 1. **Discover packs** — `bash agtoosa.sh --registry list`

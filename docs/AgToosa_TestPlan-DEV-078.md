@@ -1,7 +1,7 @@
 # Test Plan: DEV-078 — First-15-Minutes Maintenance Gate
 
 > **Spec:** `docs/archived/spec-DEV-078.md`
-> **Status:** ⬜ Backlog — Not executed
+> **Status:** ✅ Executed — GREEN
 > **Created:** 2026-07-11
 > **Test prefix:** `F15`
 
@@ -13,14 +13,14 @@ Deterministic, fixture-based coverage for scoped release pins, local proof links
 
 | AC | Test ID | Named test | Type | Expected result | Status |
 |----|---------|------------|------|-----------------|--------|
-| AC-001 | F15-001 | Current first-15 pins match the canonical version | Integration | Scoped tags equal `v${AGTOOSA_VERSION}` | ⬜ Not run |
-| AC-001, AC-004 | F15-002 | A stale release pin fails with exact diagnostics | Negative fixture | Non-zero exit names file, stale tag, and expected tag | ⬜ Not run |
-| AC-002 | F15-003 | Relative proof links resolve from their documents | Integration/fixture | Every scoped relative target exists; a missing fixture target fails | ⬜ Not run |
-| AC-003 | F15-004 | First-15 proof repository URL is canonical | Consistency | README, proof docs, and checker contain one normalized URL | ⬜ Not run |
-| AC-004 | F15-005 | Multiple maintenance findings remain actionable | Negative fixture | Accumulated output identifies each file and observed/expected value | ⬜ Not run |
-| AC-005 | F15-006 | Private maintenance mode is offline | Security/regression | Network shim is never invoked in private mode | ⬜ Not run |
-| AC-005 | F15-007 | Public mode retains availability checks | Regression | Existing anonymous URL checks run only after deterministic checks pass | ⬜ Not run |
-| AC-006 | F15-008 | Maintenance gate is read-only and flow-neutral | Integrity | Scoped file hashes and onboarding step order are unchanged after the check | ⬜ Not run |
+| AC-001 | F15-001 | Current first-15 pins match the canonical version | Integration | Scoped tags equal `v${AGTOOSA_VERSION}` | ✅ Pass |
+| AC-001, AC-004 | F15-002 | A stale release pin fails with exact diagnostics | Negative fixture | Non-zero exit names file, stale tag, and expected tag | ✅ Pass |
+| AC-002 | F15-003 | Relative proof links resolve from their documents | Integration/fixture | Every scoped relative target exists; a missing fixture target fails | ✅ Pass |
+| AC-003 | F15-004 | First-15 proof repository URL is canonical | Consistency | README, proof docs, and checker contain one normalized URL | ✅ Pass |
+| AC-004 | F15-005 | Multiple maintenance findings remain actionable | Negative fixture | Accumulated output identifies each file and observed/expected value | ✅ Pass |
+| AC-005 | F15-006 | Private maintenance mode is offline | Security/regression | Network shim is never invoked in private mode | ✅ Pass |
+| AC-005 | F15-007 | Public mode retains availability checks | Regression | Existing anonymous URL checks run only after deterministic checks pass | ✅ Pass |
+| AC-006 | F15-008 | Maintenance gate is read-only and flow-neutral | Integrity | Scoped file hashes and onboarding step order are unchanged after the check | ✅ Pass |
 
 ## Negative and Edge Scenarios
 
@@ -41,22 +41,19 @@ Deterministic, fixture-based coverage for scoped release pins, local proof links
 
 Planned smoke command: `bats tests/agtoosa.bats -f "DEV-078|F15-"`
 
-## RED Evidence — Unexecuted Placeholders
+## RED Evidence
 
 | Task group | Planned command | Exit code | Failure excerpt |
 |------------|-----------------|-----------|-----------------|
-| 1. Fixture-based RED coverage | `bats tests/agtoosa.bats -f "DEV-078|F15-"` | Not recorded | Not run; deterministic maintenance assertions are pending |
-| 2. Deterministic maintenance checks | `bats tests/agtoosa.bats -f "F15-001|F15-002|F15-003|F15-004|F15-005|F15-006|F15-007|F15-008"` | Not recorded | Not run; checker behavior is pending |
-| 3. Repair current drift only | `bats tests/agtoosa.bats -f "F15-001|F15-003|F15-004|F15-008"` | Not recorded | Not run; scoped documentation drift is not yet repaired |
-| 4. Evidence | `bats tests/agtoosa.bats -f "DEV-078|F15-"` | Not recorded | Not run; final evidence pending |
+| 1. Fixture-based RED coverage | `bats tests/agtoosa.bats -f "DEV-078\|F15-"` | 1 | `not ok 1 F15-001: grep --ref v5.3.7 failed (docs still pinned v5.2.7)`; `not ok 2 F15-002: [ "$status" -ne 0 ] failed` (no maintenance gate yet); 6/8 failed before implementation |
+| 2. Deterministic maintenance checks | `bats tests/agtoosa.bats -f "F15-001\|F15-002\|F15-003\|F15-004\|F15-005\|F15-006\|F15-007\|F15-008"` | 1 | `grep: unrecognized option '--ref'`; `unexpected EOF while looking for matching backtick` during checker bring-up |
+| 3. Repair current drift only | `bats tests/agtoosa.bats -f "F15-001\|F15-003\|F15-004\|F15-008"` | 1 | Scoped docs repaired to v5.3.7; checker syntax/unbound-array fixes required before GREEN |
 
-## GREEN Evidence — Unexecuted Placeholders
+## GREEN Evidence
 
 | Task group | Planned command | Exit code | Pass excerpt |
 |------------|-----------------|-----------|--------------|
-| 1. Fixture-based RED coverage | `bats tests/agtoosa.bats -f "DEV-078|F15-"` | Not recorded | Not run |
-| 2. Deterministic maintenance checks | `bats tests/agtoosa.bats -f "F15-001|F15-002|F15-003|F15-004|F15-005|F15-006|F15-007|F15-008"` | Not recorded | Not run |
-| 3. Repair current drift only | `bats tests/agtoosa.bats -f "F15-001|F15-003|F15-004|F15-008"` | Not recorded | Not run |
-| 4. Evidence | `bats tests/agtoosa.bats -f "DEV-078|F15-"` | Not recorded | Not run |
-
-No test or network check has been executed for this backlog story.
+| 1. Fixture-based RED coverage | `bats tests/agtoosa.bats -f "DEV-078\|F15-"` | 0 | `ok 1` through `ok 8` — all F15 tests pass |
+| 2. Deterministic maintenance checks | `bats tests/agtoosa.bats -f "F15-001\|F15-002\|F15-003\|F15-004\|F15-005\|F15-006\|F15-007\|F15-008"` | 0 | `ok - scoped release pins match v5.3.7`; stale/missing fixtures exit non-zero with file + observed + expected |
+| 3. Repair current drift only | `bats tests/agtoosa.bats -f "F15-001\|F15-003\|F15-004\|F15-008"` | 0 | `first-15-minutes.md` and `public-launch-proof.md` pins aligned to `v5.3.7` |
+| 4. Evidence | `bats tests/agtoosa.bats -f "DEV-078\|F15-"` | 0 | `1..8` all `ok`; private mode prints `Skipping anonymous public URL checks` with no `curl` shim invocation |

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT_DIR="${AGTOOSA_LAUNCH_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 MODE="${AGTOOSA_LAUNCH_MODE:-private}"
 
 usage() {
@@ -19,6 +19,7 @@ Examples:
 
 Environment:
   AGTOOSA_LAUNCH_MODE=private|public
+  AGTOOSA_LAUNCH_ROOT=/path/to/repo   Override repository root for isolated fixtures.
 EOF
 }
 
@@ -65,6 +66,125 @@ record_fail() {
   FAILURES=$((FAILURES + 1))
 }
 
+normalize_proof_repo_url() {
+  local url="$1"
+  url="${url%/}"
+  url="${url%.git}"
+  printf '%s' "$url"
+}
+
+canonical_version="$(grep -m1 '^AGTOOSA_VERSION=' "$ROOT_DIR/agtoosa.sh" | sed -E 's/^AGTOOSA_VERSION="?([^"]+)"?/\1/')"
+EXPECTED_TAG="v${canonical_version}"
+PROOF_REPO_CANONICAL="https://github.com/sky2464/agtoosa-first-15-proof"
+
+FIRST15_DOC="docs/examples/first-15-minutes.md"
+PUBLIC_PROOF_DOC="docs/examples/public-launch-proof.md"
+
+check_scoped_release_pin() {
+  local file="$1"
+  local label="$2"
+  local pattern="$3"
+  local path="$ROOT_DIR/$file"
+  [[ -f "$path" ]] || {
+    record_fail "$file missing for scoped release-pin check"
+    return
+  }
+  local matches=()
+  while IFS= read -r line; do
+    matches+=("$line")
+  done < <(grep -nEe "$pattern" "$path" || true)
+  if [[ "${#matches[@]}" -eq 0 ]]; then
+    record_fail "$file: no scoped release pin found (expected $EXPECTED_TAG)"
+    return
+  fi
+  local entry line_no observed
+  for entry in "${matches[@]}"; do
+    line_no="${entry%%:*}"
+    observed="$(printf '%s' "$entry" | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"
+    if [[ "$observed" != "$EXPECTED_TAG" ]]; then
+      record_fail "$file:$line_no release pin '$observed' does not match expected '$EXPECTED_TAG'"
+    fi
+  done
+}
+
+check_relative_proof_links() {
+  local file="$1"
+  local path="$ROOT_DIR/$file"
+  [[ -f "$path" ]] || {
+    record_fail "$file missing for relative proof-link check"
+    return
+  }
+  local base_dir
+  base_dir="$(cd "$(dirname "$path")" && pwd)"
+  local link target
+  while IFS= read -r link; do
+    [[ "$link" =~ ^https?:// ]] && continue
+    [[ "$link" =~ ^# ]] && continue
+    target="$base_dir/$link"
+    if [[ ! -e "$target" ]]; then
+      record_fail "$file: relative proof link '$link' resolves to missing target '$target'"
+    fi
+  done < <(grep -oE '\]\([^)]+\)' "$path" | sed -E 's/^\]\((.*)\)$/\1/' || true)
+}
+
+check_proof_repo_url_consistency() {
+  local file url normalized seen=()
+  local -a sources=("README.md" "$FIRST15_DOC" "$PUBLIC_PROOF_DOC" "scripts/check-launch-readiness.sh")
+  local canonical_norm
+  canonical_norm="$(normalize_proof_repo_url "$PROOF_REPO_CANONICAL")"
+  local mismatches=()
+  for file in "${sources[@]}"; do
+    local path="$ROOT_DIR/$file"
+    [[ -f "$path" ]] || {
+      record_fail "$file missing for first-15 proof repository URL check"
+      continue
+    }
+    local found=0
+    while IFS= read -r url; do
+      [[ -n "$url" ]] || continue
+      found=1
+      url="$(printf '%s' "$url" | sed 's/`*$//')"
+      normalized="$(normalize_proof_repo_url "$url")"
+      if [[ "$normalized" != "$canonical_norm" ]]; then
+        mismatches+=("$file observed '$normalized' expected '$canonical_norm'")
+      fi
+    done < <(grep -oE 'https://github\.com/sky2464/agtoosa-first-15-proof[^ )`"]*' "$path" | sed 's/[`]$//' || true)
+    if [[ "$found" -eq 0 ]]; then
+      record_fail "$file missing first-15 proof repository URL (expected '$PROOF_REPO_CANONICAL')"
+    fi
+  done
+  if [[ "${#mismatches[@]}" -gt 0 ]]; then
+    local mismatch
+    for mismatch in "${mismatches[@]}"; do
+      record_fail "$mismatch"
+    done
+  fi
+}
+
+run_first15_maintenance_gate() {
+  printf 'first-15 maintenance gate: validating scoped pins, proof links, and proof repository URL\n'
+
+  check_scoped_release_pin "$FIRST15_DOC" "first-15 walkthrough install command" '--ref v[0-9]+\.[0-9]+\.[0-9]+'
+  check_scoped_release_pin "$PUBLIC_PROOF_DOC" "public launch proof release tag" 'releases/tag/v[0-9]+\.[0-9]+\.[0-9]+'
+  check_scoped_release_pin "$PUBLIC_PROOF_DOC" "public launch proof pinned bootstrap" '/AgToosa/v[0-9]+\.[0-9]+\.[0-9]+/bootstrap\.sh'
+  check_scoped_release_pin "$PUBLIC_PROOF_DOC" "public launch proof bootstrap artifact" 'agtoosa-bootstrap-v[0-9]+\.[0-9]+\.[0-9]+\.sh'
+  if ! grep -qEe '/AgToosa/\$\{EXPECTED_TAG\}/bootstrap\.sh' "$ROOT_DIR/scripts/check-launch-readiness.sh"; then
+    record_fail "scripts/check-launch-readiness.sh: pinned bootstrap URL must use \${EXPECTED_TAG} derived from AGTOOSA_VERSION"
+  fi
+
+  check_relative_proof_links "$FIRST15_DOC"
+  check_relative_proof_links "$PUBLIC_PROOF_DOC"
+  check_proof_repo_url_consistency
+
+  if [[ "$FAILURES" -eq 0 ]]; then
+    pass "scoped release pins match $EXPECTED_TAG"
+    pass "relative proof links resolve"
+    pass "first-15 proof repository URL is canonical"
+  fi
+
+  printf 'first-15 maintenance gate complete\n'
+}
+
 require_file() {
   local path="$1"
   [[ -f "$ROOT_DIR/$path" ]] || fail "missing required file: $path"
@@ -96,6 +216,13 @@ check_url() {
 
 printf 'AgToosa launch readiness mode: %s\n' "$MODE"
 
+run_first15_maintenance_gate
+
+if [[ "$FAILURES" -gt 0 ]]; then
+  printf 'Launch readiness failed: %s first-15 maintenance finding(s).\n' "$FAILURES" >&2
+  exit 1
+fi
+
 require_file "README.md"
 require_file ".github/SUPPORT.md"
 require_file ".github/DISCUSSIONS.md"
@@ -122,7 +249,7 @@ check_url "https://github.com/sky2464/AgToosa/releases" "GitHub releases"
 check_url "https://github.com/sky2464/AgToosa/actions/workflows/ci.yml/badge.svg" "CI badge"
 check_url "https://github.com/sky2464/AgToosa/actions/workflows/security-scan.yml/badge.svg" "security scan badge"
 check_url "https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh" "raw bootstrap.sh on main"
-check_url "https://raw.githubusercontent.com/sky2464/AgToosa/v5.3.7/bootstrap.sh" "raw bootstrap.sh on pinned release"
+check_url "https://raw.githubusercontent.com/sky2464/AgToosa/${EXPECTED_TAG}/bootstrap.sh" "raw bootstrap.sh on pinned release"
 check_url "https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.ps1" "raw bootstrap.ps1 on main"
 check_url "https://raw.githubusercontent.com/sky2464/agtoosa-registry/main/registry.json" "registry index"
 check_url "https://github.com/sky2464/AgToosa/issues" "GitHub issues"

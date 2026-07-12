@@ -32,6 +32,8 @@ See the [first 15 minutes proof](docs/examples/first-15-minutes.md) for a clean-
 
 Before public announcement or a future release, run the [public launch proof checklist](docs/examples/public-launch-proof.md) and keep public-facing claims tied to passing checks.
 
+For subagent delegation, handoff/import boundaries, and cross-model review, see the [subagent handoff walkthrough](docs/examples/subagent-handoff-review.md) and audience guides for [subagent-heavy workflows](docs/guides/subagent-heavy-workflows.md), [security-sensitive projects](docs/guides/security-sensitive-projects.md), and [solo-developer workflows](docs/guides/solo-developer-workflows.md). Canonical command contracts live in `docs/AgToosa_Handoff.md`, `docs/AgToosa_Import.md`, `docs/AgToosa_CrossModelReview.md`, and `docs/AgToosa_AgentCapability.md` — guides link rather than duplicate them.
+
 For teams evaluating assurance boundaries, see the [team trust roadmap](docs/AgToosa_Team_Trust_Roadmap.md).
 
 </div>

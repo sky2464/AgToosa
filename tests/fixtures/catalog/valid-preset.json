@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0",
+  "entries": [
+    {
+      "id": "valid-extension",
+      "kind": "extension",
+      "name": "ML Pipeline",
+      "summary": "Machine learning workflow templates",
+      "tags": ["ml"],
+      "examples": ["ML feature delivery"],
+      "maintainers": [{ "name": "sky2464", "contact": "https://github.com/sky2464" }],
+      "support": "https://github.com/sky2464/agtoosa-ml-pipeline/issues",
+      "lifecycle": "maintained",
+      "reviewed_at": "2026-07-11",
+      "compatibility": {
+        "agtoosa": ">=5.0.0 <6.0.0",
+        "platforms": ["cursor", "claude"],
+        "requires": [],
+        "conflicts": []
+      },
+      "trust": {
+        "curation_tier": "community-reviewed",
+        "registry_verified_snapshot": true,
+        "review_status": "reviewed"
+      },
+      "provenance": {
+        "registry_name": "ml-pipeline",
+        "version": "1.2.0",
+        "source": "https://github.com/sky2464/agtoosa-ml-pipeline/archive/refs/tags/v1.2.0.tar.gz",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "signature": "not-present"
+      }
+    },
+    {
+      "id": "valid-extension-b",
+      "kind": "extension",
+      "name": "React Native",
+      "summary": "Mobile app workflow templates",
+      "tags": ["mobile", "react-native"],
+      "examples": ["Ship a React Native feature"],
+      "maintainers": [{ "name": "communitydev", "contact": "https://github.com/communitydev" }],
+      "support": "https://github.com/communitydev/agtoosa-react-native/issues",
+      "lifecycle": "maintained",
+      "reviewed_at": "2026-07-11",
+      "compatibility": {
+        "agtoosa": ">=5.0.0 <6.0.0",
+        "platforms": ["cursor", "claude"],
+        "requires": [],
+        "conflicts": []
+      },
+      "trust": {
+        "curation_tier": "community-reviewed",
+        "registry_verified_snapshot": true,
+        "review_status": "reviewed"
+      },
+      "provenance": {
+        "registry_name": "react-native",
+        "version": "0.9.1",
+        "source": "https://github.com/communitydev/agtoosa-react-native/archive/refs/tags/v0.9.1.tar.gz",
+        "sha256": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+        "signature": "not-present"
+      }
+    },
+    {
+      "id": "valid-preset",
+      "kind": "preset",
+      "name": "ML + Mobile Starter",
+      "summary": "Pinned ML pipeline and React Native extensions for fullstack teams",
+      "tags": ["preset", "ml", "mobile"],
+      "examples": ["Evaluate both data and mobile workflow packs together"],
+      "maintainers": [{ "name": "AgToosa Maintainers", "contact": "https://github.com/sky2464/AgToosa/issues" }],
+      "support": "https://github.com/sky2464/AgToosa/issues",
+      "lifecycle": "maintained",
+      "reviewed_at": "2026-07-11",
+      "compatibility": {
+        "agtoosa": ">=5.0.0 <6.0.0",
+        "platforms": ["cursor", "claude"],
+        "requires": [],
+        "conflicts": []
+      },
+      "trust": {
+        "curation_tier": "official",
+        "registry_verified_snapshot": true,
+        "review_status": "reviewed"
+      },
+      "members": [
+        { "extension_id": "valid-extension", "rationale": "Core ML delivery workflows" },
+        { "extension_id": "valid-extension-b", "rationale": "Mobile client workflows" }
+      ]
+    }
+  ]
+}

@@ -29,7 +29,7 @@ if [[ ! -d "${SCRIPT_DIR}/lib" ]]; then
 fi
 
 # ── Source modular libraries ──────────────────────────────────
-for _lib in config version copy generate dryrun install update provenance registry maintain; do
+for _lib in config version copy generate dryrun install update provenance registry catalog maintain; do
   # shellcheck source=/dev/null
   source "${SCRIPT_DIR}/lib/${_lib}.sh"
 done
@@ -68,6 +68,10 @@ UPDATE_PATH=""
 REGISTRY=false
 REGISTRY_COMMAND=""
 REGISTRY_ARG=""
+CATALOG=false
+CATALOG_COMMAND=""
+CATALOG_ARG=""
+CATALOG_PATH=""
 ALLOW_UNVERIFIED=false
 ASSUME_YES=false
 CLI_PROJECT_PATH=""
@@ -82,6 +86,7 @@ while [[ $# -gt 0 ]]; do
   arg="$1"
   case "$arg" in
     --registry)            REGISTRY=true ;;
+    --catalog)             CATALOG=true ;;
     --update)              UPDATE=true ;;
     --verify)              VERIFY=true ;;
     --doctor)              DOCTOR=true ;;
@@ -108,6 +113,10 @@ while [[ $# -gt 0 ]]; do
         REGISTRY_COMMAND="$arg"
       elif [[ "$REGISTRY" == true && -n "$REGISTRY_COMMAND" && -z "$REGISTRY_ARG" && "$arg" != --* ]]; then
         REGISTRY_ARG="$arg"
+      elif [[ "$CATALOG" == true && -z "$CATALOG_COMMAND" && "$arg" != --* ]]; then
+        CATALOG_COMMAND="$arg"
+      elif [[ "$CATALOG" == true && -n "$CATALOG_COMMAND" && -z "$CATALOG_ARG" && "$arg" != --* ]]; then
+        CATALOG_ARG="$arg"
       elif [[ "$UPDATE" == true && -z "$UPDATE_PATH" && "$arg" != --* ]]; then
         UPDATE_PATH="$arg"
       elif [[ "$VERIFY" == true && -z "$VERIFY_PATH" && "$arg" != --* ]]; then
@@ -159,6 +168,52 @@ if [[ "$REGISTRY" == true ]]; then
     *)
       echo -e "${RED}❌ Error: Unknown registry command '${REGISTRY_COMMAND}'.${NC}" >&2
       echo "Available commands: list, search, info, install, publish" >&2
+      exit 1
+      ;;
+  esac
+fi
+
+# ── Catalog mode (read-only discovery + non-executing plans) ───
+if [[ "$CATALOG" == true ]]; then
+  case "$CATALOG_COMMAND" in
+    list)
+      if [[ -n "$CATALOG_ARG" ]]; then
+        AGTOOSA_CATALOG_PATH="$CATALOG_ARG" catalog_list
+      else
+        catalog_list
+      fi
+      exit $? ;;
+    search)
+      if [[ -z "$CATALOG_ARG" ]]; then
+        echo -e "${RED}❌ Error: --catalog search requires a keyword.${NC}" >&2
+        exit 1
+      fi
+      catalog_search "$CATALOG_ARG"
+      exit $? ;;
+    info)
+      if [[ -z "$CATALOG_ARG" ]]; then
+        echo -e "${RED}❌ Error: --catalog info requires an entry id.${NC}" >&2
+        exit 1
+      fi
+      catalog_info "$CATALOG_ARG"
+      exit $? ;;
+    validate)
+      if [[ -z "$CATALOG_ARG" ]]; then
+        echo -e "${RED}❌ Error: --catalog validate requires a catalog file path.${NC}" >&2
+        exit 1
+      fi
+      catalog_validate "$CATALOG_ARG"
+      exit $? ;;
+    plan)
+      if [[ -z "$CATALOG_ARG" ]]; then
+        echo -e "${RED}❌ Error: --catalog plan requires a preset id.${NC}" >&2
+        exit 1
+      fi
+      catalog_plan "$CATALOG_ARG"
+      exit $? ;;
+    *)
+      echo -e "${RED}❌ Error: Unknown catalog command '${CATALOG_COMMAND}'.${NC}" >&2
+      echo "Available commands: list, search, info, validate, plan" >&2
       exit 1
       ;;
   esac

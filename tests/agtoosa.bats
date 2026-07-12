@@ -3600,7 +3600,7 @@ PY
   grep -q "https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh" "$checker"
   local script_ver
   script_ver="$(grep -m1 'AGTOOSA_VERSION=' "$SCRIPT" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  grep -q "https://raw.githubusercontent.com/sky2464/AgToosa/v${script_ver}/bootstrap.sh" "$checker"
+  grep -qE '/AgToosa/\$\{EXPECTED_TAG\}/bootstrap\.sh' "$checker"
   grep -q "https://raw.githubusercontent.com/sky2464/agtoosa-registry/main/registry.json" "$checker"
   grep -q "https://github.com/sky2464/AgToosa/issues" "$checker"
   grep -q "https://github.com/sky2464/AgToosa/discussions" "$checker"
@@ -4482,6 +4482,212 @@ assert_competitive_story_artifacts() {
 
 @test "DEV-053 CW-016: Extension and Preset Catalog backlog artifacts exist" {
   assert_competitive_story_artifacts "DEV-053"
+}
+
+# ── DEV-053: Extension and Preset Catalog (PC-001–PC-008) ────────────────────
+
+@test "DEV-053 PC-001: catalog schema validates extensions and presets" {
+  local fixtures="$BATS_TEST_DIRNAME/fixtures/catalog"
+  run bash "$SCRIPT" --catalog validate "$fixtures/valid-extension.json"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Catalog valid"* ]]
+  run bash "$SCRIPT" --catalog validate "$fixtures/valid-preset.json"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --catalog validate catalog/catalog.json
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --catalog validate "$fixtures/duplicate-ids.json"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"Duplicate catalog entry id"* ]]
+  local missing="$TEST_PROJECT/missing-fields.json"
+  printf '%s\n' '{"schema_version":"1.0","entries":[{"id":"x","kind":"extension"}]}' > "$missing"
+  run bash "$SCRIPT" --catalog validate "$missing"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"missing required fields"* ]]
+}
+
+@test "DEV-053 PC-002: catalog compatibility reports compatible incompatible unknown" {
+  local fixtures="$BATS_TEST_DIRNAME/fixtures/catalog"
+  local registry
+  registry="$(cat "$fixtures/registry.json")"
+  mkdir -p "$TEST_PROJECT/.cursor" "$TEST_PROJECT/.claude"
+  run env AGTOOSA_CATALOG_PATH="$fixtures/valid-extension.json" \
+    AGTOOSA_CATALOG_REGISTRY_JSON="$registry" \
+    AGTOOSA_CATALOG_PLATFORMS="cursor,claude" \
+    AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+    bash "$SCRIPT" --catalog info valid-extension
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Compatibility: compatible"* ]]
+  run env AGTOOSA_CATALOG_PATH="$fixtures/incompatible-platform.json" \
+    AGTOOSA_CATALOG_REGISTRY_JSON="$registry" \
+    AGTOOSA_CATALOG_PLATFORMS="cursor,claude" \
+    AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+    bash "$SCRIPT" --catalog info incompatible-extension
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Compatibility: incompatible"* ]]
+  [[ "$output" == *"missing platform: windsurf"* ]]
+  run env AGTOOSA_CATALOG_PATH="$fixtures/unknown-version.json" \
+    AGTOOSA_CATALOG_VERSION="not-a-version" \
+    bash "$SCRIPT" --catalog info unknown-version-extension
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Compatibility: unknown"* ]]
+}
+
+@test "DEV-053 PC-003: catalog trust fields render separately without security guarantees" {
+  local fixtures="$BATS_TEST_DIRNAME/fixtures/catalog"
+  run env AGTOOSA_CATALOG_PATH="$fixtures/valid-extension.json" \
+    bash "$SCRIPT" --catalog info valid-extension
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Curation tier:"* ]]
+  [[ "$output" == *"Registry verified (catalog snapshot):"* ]]
+  [[ "$output" == *"Checksum (catalog snapshot):"* ]]
+  [[ "$output" == *"not a security guarantee"* ]]
+  run grep -i "marketplace" "$BATS_TEST_DIRNAME/../docs/AgToosa_Catalog.md"
+  [ "$status" -ne 0 ] || [[ "$output" == *"No hosted marketplace"* ]]
+  run grep "security guarantee" "$BATS_TEST_DIRNAME/../docs/AgToosa_Catalog.md"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-053 PC-004: registry drift marks catalog stale and withholds ready plan" {
+  local fixtures="$BATS_TEST_DIRNAME/fixtures/catalog"
+  local registry
+  registry="$(cat "$fixtures/registry.json")"
+  mkdir -p "$TEST_PROJECT/.cursor" "$TEST_PROJECT/.claude"
+  run env AGTOOSA_CATALOG_PATH="$fixtures/stale-provenance.json" \
+    AGTOOSA_CATALOG_REGISTRY_JSON="$registry" \
+    AGTOOSA_CATALOG_PLATFORMS="cursor" \
+    AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+    bash "$SCRIPT" --catalog info stale-extension
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Registry reconciliation: stale"* ]]
+  run env AGTOOSA_CATALOG_PATH="$fixtures/valid-preset.json" \
+    AGTOOSA_CATALOG_REGISTRY_JSON="$registry" \
+    AGTOOSA_CATALOG_PLATFORMS="cursor,claude" \
+    AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+    bash "$SCRIPT" --catalog plan valid-preset
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Status: ready"* ]]
+  [[ "$output" == *"--registry install ml-pipeline@1.2.0"* ]]
+  run env AGTOOSA_CATALOG_PATH="$fixtures/valid-preset.json" \
+    AGTOOSA_CATALOG_PLATFORMS="cursor,claude" \
+    AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+    AGTOOSA_REGISTRY_URL="file://$TEST_PROJECT/no-registry.json" \
+    AGTOOSA_REGISTRY_CACHE_DIR="$TEST_PROJECT/empty-cache" \
+    bash "$SCRIPT" --catalog plan valid-preset
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Status: not-ready"* ]]
+  [[ "$output" == *"registry cache unavailable"* ]]
+}
+
+@test "DEV-053 PC-005: catalog list search info plan are read-only and deterministic" {
+  local fixtures="$BATS_TEST_DIRNAME/fixtures/catalog"
+  local registry queue_before queue_after
+  registry="$(cat "$fixtures/registry.json")"
+  queue_before="$(find "$BATS_TEST_DIRNAME/../.agtoosa/pack-queue" -type f 2>/dev/null | wc -l | tr -d ' ')"
+  mkdir -p "$TEST_PROJECT/.cursor" "$TEST_PROJECT/.claude"
+  run env AGTOOSA_CATALOG_PATH="$fixtures/valid-preset.json" \
+    AGTOOSA_CATALOG_REGISTRY_JSON="$registry" \
+    AGTOOSA_CATALOG_PLATFORMS="cursor,claude" \
+    AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+    bash "$SCRIPT" --catalog list
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"valid-extension"* ]]
+  run env AGTOOSA_CATALOG_PATH="$fixtures/valid-preset.json" \
+    bash "$SCRIPT" --catalog search ml
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"valid-extension"* ]]
+  run env AGTOOSA_CATALOG_PATH="$fixtures/valid-preset.json" \
+    AGTOOSA_CATALOG_REGISTRY_JSON="$registry" \
+    AGTOOSA_CATALOG_PLATFORMS="cursor,claude" \
+    AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+    bash "$SCRIPT" --catalog plan valid-preset
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Install commands (non-executing plan):"* ]]
+  [[ "$output" != *"Queued"* ]]
+  queue_after="$(find "$BATS_TEST_DIRNAME/../.agtoosa/pack-queue" -type f 2>/dev/null | wc -l | tr -d ' ')"
+  [ "$queue_before" -eq "$queue_after" ]
+  local out1 out2
+  out1="$(env AGTOOSA_CATALOG_PATH="$fixtures/valid-preset.json" bash "$SCRIPT" --catalog list)"
+  out2="$(env AGTOOSA_CATALOG_PATH="$fixtures/valid-preset.json" bash "$SCRIPT" --catalog list)"
+  [ "$out1" = "$out2" ]
+}
+
+@test "DEV-053 PC-006: three production catalog entries pass maintained-entry gate" {
+  local fixtures="$BATS_TEST_DIRNAME/fixtures/catalog"
+  local registry
+  registry="$(cat "$fixtures/registry.json")"
+  mkdir -p "$TEST_PROJECT/.cursor" "$TEST_PROJECT/.claude"
+  run bash "$SCRIPT" --catalog validate catalog/catalog.json
+  [ "$status" -eq 0 ]
+  local entry
+  for entry in ext-ml-pipeline ext-react-native preset-fullstack-ml; do
+    run env AGTOOSA_CATALOG_REGISTRY_JSON="$registry" \
+      AGTOOSA_CATALOG_PLATFORMS="cursor,claude" \
+      AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+      bash "$SCRIPT" --catalog info "$entry"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"maintainer"* ]] || [[ "$output" == *"Maintainers"* ]] || [[ "$output" == *"sky2464"* ]] || [[ "$output" == *"communitydev"* ]]
+    [[ "$output" == *"Compatibility: compatible"* ]] || [[ "$output" == *"Registry reconciliation: current"* ]]
+  done
+  run env AGTOOSA_CATALOG_REGISTRY_JSON="$registry" \
+    AGTOOSA_CATALOG_PLATFORMS="cursor,claude" \
+    AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+    bash "$SCRIPT" --catalog plan preset-fullstack-ml
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Status: ready"* ]]
+  [[ "$output" == *"ml-pipeline@1.2.0"* ]]
+  [[ "$output" == *"react-native@0.9.1"* ]]
+}
+
+@test "DEV-053 PC-007: catalog rejects injection cycles conflicts and oversized text" {
+  local fixtures="$BATS_TEST_DIRNAME/fixtures/catalog"
+  run bash "$SCRIPT" --catalog validate "$fixtures/injection-entry.json"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"forbidden executable field"* ]] || [[ "$output" == *"traversal"* ]]
+  run bash "$SCRIPT" --catalog validate "$fixtures/oversized-entry.json"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"exceeds text bound"* ]]
+  run bash "$SCRIPT" --catalog validate "$fixtures/invalid-range.json"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"invalid semantic-version range"* ]]
+  run env AGTOOSA_CATALOG_PATH="$fixtures/cyclic-preset.json" \
+    bash "$SCRIPT" --catalog plan preset-a
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"dependency cycle"* ]]
+  local registry
+  registry="$(cat "$fixtures/registry.json")"
+  mkdir -p "$TEST_PROJECT/.cursor"
+  run env AGTOOSA_CATALOG_PATH="$fixtures/conflicting-preset.json" \
+    AGTOOSA_CATALOG_REGISTRY_JSON="$registry" \
+    AGTOOSA_CATALOG_PLATFORMS="cursor" \
+    AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+    bash "$SCRIPT" --catalog plan conflicting-preset
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Status: not-ready"* ]]
+  [[ "$output" == *"overlapping conflict"* ]]
+}
+
+@test "DEV-053 PC-008: catalog docs adapters and registry cross-link registered" {
+  [ -f "$TEMPLATE_DIR/Docs/AgToosa_Catalog.md" ]
+  [ -f "$BATS_TEST_DIRNAME/../docs/AgToosa_Catalog.md" ]
+  run bash "$SCRIPT" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Catalog.md"* ]]
+  [[ "$output" == *"agtoosa-catalog"* ]]
+  run grep "AgToosa_Catalog.md" "$BATS_TEST_DIRNAME/../docs/AgToosa_Registry.md"
+  [ "$status" -eq 0 ]
+  run grep "AgToosa_Registry.md" "$BATS_TEST_DIRNAME/../docs/AgToosa_Catalog.md"
+  [ "$status" -eq 0 ]
+  run grep -E "tar-slip|denylist|allowlist" "$BATS_TEST_DIRNAME/../docs/AgToosa_Catalog.md"
+  [ "$status" -ne 0 ]
+  [ -f "$TEMPLATE_DIR/.cursor/commands/agtoosa-catalog.md" ]
+  [ -f "$TEMPLATE_DIR/.claude/commands/agtoosa-catalog.md" ]
+  [ -f "$TEMPLATE_DIR/.windsurf/workflows/agtoosa-catalog.md" ]
+  [ -f "$TEMPLATE_DIR/.gemini/commands/agtoosa-catalog.toml" ]
+  [ -f "$TEMPLATE_DIR/.github/prompts/agtoosa-catalog.prompt.md" ]
+  [ -f "$TEMPLATE_DIR/.codex/prompts/agtoosa-catalog.md" ]
+  run bash "$SCRIPT" --help
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"--catalog"* ]]
 }
 
 @test "DEV-054 CW-017: Signed Registry Provenance backlog artifacts exist" {
@@ -5488,4 +5694,377 @@ JSON
   grep -q 'Release 5.3.7 shipped' "$mp"
   grep -q 'v5.3.8 (next)' "$mp"
   grep -q '| DEV-055 | Feature: Agent Capability Matrix | 2026-07-11 |' "$mp"
+}
+
+# ── DEV-081: Optional Local DX Add-on Validation (DXV-001–DXV-008) ───────────
+
+SPIKE_DEV081="$BATS_TEST_DIRNAME/../docs/spikes/DEV-081-local-dx-validation.md"
+
+@test "DEV-081 DXV-001: shared baseline rubric completeness" {
+  [ -f "$SPIKE_DEV081" ]
+  local f="$SPIKE_DEV081"
+  grep -qi 'user value' "$f"
+  grep -qi 'setup friction' "$f"
+  grep -qi 'portability' "$f"
+  grep -qi 'security' "$f"
+  grep -qi 'maintenance' "$f"
+  grep -qi 'accessibility' "$f"
+  grep -qi 'failure recovery' "$f"
+  grep -qi 'no-add-on fallback' "$f"
+}
+
+@test "DEV-081 DXV-002: thin wrapper delegation boundary @smoke" {
+  [ -f "$SPIKE_DEV081" ]
+  local f="$SPIKE_DEV081"
+  grep -qi 'thin native wrapper' "$f"
+  grep -qi 'delegat' "$f"
+  grep -qi 'distribution' "$f"
+  grep -qi 'update' "$f"
+  grep -qi 'platform.parity\|platform parity' "$f"
+  grep -qi 'error.propagation\|error propagation' "$f"
+  grep -qi 'second core' "$f"
+}
+
+@test "DEV-081 DXV-003: editor extension trust and fallback review @smoke" {
+  [ -f "$SPIKE_DEV081" ]
+  local f="$SPIKE_DEV081"
+  grep -qi 'editor extension' "$f"
+  grep -qi 'command discovery' "$f"
+  grep -qi 'workspace trust' "$f"
+  grep -qi 'permission' "$f"
+  grep -qi 'update.channel\|update channel' "$f"
+  grep -qi 'accessibility' "$f"
+  grep -qi 'offline' "$f"
+  grep -qi 'uninstall' "$f"
+  grep -qi 'CLI fallback' "$f"
+}
+
+@test "DEV-081 DXV-004: CI template gap evidence @smoke" {
+  [ -f "$SPIKE_DEV081" ]
+  local f="$SPIKE_DEV081"
+  grep -qi 'CI template' "$f"
+  grep -qi 'provider' "$f"
+  grep -qi 'permission' "$f"
+  grep -qi 'duplication risk' "$f"
+  grep -qi 'maintenance owner' "$f"
+  grep -qi 'copy-only\|copy only' "$f"
+}
+
+@test "DEV-081 DXV-005: three independent DX decisions @smoke" {
+  [ -f "$SPIKE_DEV081" ]
+  local f="$SPIKE_DEV081"
+  grep -qE '(?i)thin native wrapper.*\*\*(adopt|defer|reject)\*\*' "$f"
+  grep -qE '(?i)editor extension.*\*\*(adopt|defer|reject)\*\*' "$f"
+  grep -qE '(?i)CI template.*\*\*(adopt|defer|reject)\*\*' "$f"
+}
+
+@test "DEV-081 DXV-006: decision evidence and trigger traceability" {
+  [ -f "$SPIKE_DEV081" ]
+  local f="$SPIKE_DEV081"
+  grep -qi 'confidence' "$f"
+  grep -qi 'reconsideration trigger' "$f"
+  grep -qi 'observation' "$f"
+  grep -qi 'cost' "$f"
+  grep -qi 'risk' "$f"
+}
+
+@test "DEV-081 DXV-007: spike has no production implementation" {
+  [ -f "$SPIKE_DEV081" ]
+  local f="$SPIKE_DEV081"
+  grep -qi 'no production implementation' "$f"
+  grep -qi 'spike evidence only' "$f"
+  ! grep -qE 'agtoosa\.sh|lib/|template/' "$f" || grep -qi 'no changes to' "$f"
+}
+
+@test "DEV-081 DXV-008: evidence assumption claim separation" {
+  [ -f "$SPIKE_DEV081" ]
+  local f="$SPIKE_DEV081"
+  grep -qi 'observed' "$f"
+  grep -qi 'assumption' "$f"
+  grep -qi 'untested' "$f"
+  grep -qi 'not shipped' "$f"
+}
+
+# -- DEV-078 First-15-Minutes Maintenance Gate (F15-001-F15-008) --------------
+
+f15_copy_launch_fixture_base() {
+  local dest="$1"
+  local root="$BATS_TEST_DIRNAME/.."
+  mkdir -p "$dest/docs/examples" "$dest/scripts" "$dest/.github/ISSUE_TEMPLATE"
+  cp "$root/agtoosa.sh" "$dest/"
+  cp "$root/scripts/check-launch-readiness.sh" "$dest/scripts/"
+  chmod +x "$dest/scripts/check-launch-readiness.sh"
+  cp "$root/docs/examples/first-15-minutes.md" "$dest/docs/examples/"
+  cp "$root/docs/examples/public-launch-proof.md" "$dest/docs/examples/"
+  cp "$root/README.md" "$dest/"
+  cp "$root/.github/SUPPORT.md" "$dest/.github/"
+  cp "$root/.github/DISCUSSIONS.md" "$dest/.github/"
+  cp "$root/.github/ISSUE_TEMPLATE/bug.yml" "$dest/.github/ISSUE_TEMPLATE/"
+  cp "$root/.github/ISSUE_TEMPLATE/feature.yml" "$dest/.github/ISSUE_TEMPLATE/"
+  cp "$root/bootstrap.sh" "$dest/"
+  cp "$root/bootstrap.ps1" "$dest/"
+}
+
+f15_run_checker() {
+  local root="$1"
+  shift
+  AGTOOSA_LAUNCH_ROOT="$root" bash "$root/scripts/check-launch-readiness.sh" "$@"
+}
+
+@test "DEV-078 @smoke F15-001: current first-15 pins match the canonical version" {
+  local script_ver
+  script_ver="$(grep -m1 'AGTOOSA_VERSION=' "$SCRIPT" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  local first15="$BATS_TEST_DIRNAME/../docs/examples/first-15-minutes.md"
+  local proof="$BATS_TEST_DIRNAME/../docs/examples/public-launch-proof.md"
+  local checker="$BATS_TEST_DIRNAME/../scripts/check-launch-readiness.sh"
+
+  grep -qE -- "--ref v${script_ver}" "$first15"
+  grep -qE "releases/tag/v${script_ver}" "$proof"
+  grep -qE "/AgToosa/v${script_ver}/bootstrap.sh" "$proof"
+  grep -qE '/AgToosa/\$\{EXPECTED_TAG\}/bootstrap\.sh' "$checker"
+
+  run f15_run_checker "$BATS_TEST_DIRNAME/.." --mode private
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"first-15 maintenance"* ]]
+  [[ "$output" == *"ok - scoped release pins match v${script_ver}"* ]]
+}
+
+@test "DEV-078 F15-002: a stale release pin fails with exact diagnostics" {
+  local fixture="$TEST_PROJECT/f15-stale-pin"
+  local script_ver stale_ver
+  script_ver="$(grep -m1 'AGTOOSA_VERSION=' "$SCRIPT" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  stale_ver="5.0.0"
+  [[ "$stale_ver" != "$script_ver" ]]
+
+  f15_copy_launch_fixture_base "$fixture"
+  sed -i.bak "s/--ref v${script_ver}/--ref v${stale_ver}/" "$fixture/docs/examples/first-15-minutes.md"
+  rm -f "$fixture/docs/examples/first-15-minutes.md.bak"
+
+  run f15_run_checker "$fixture" --mode private
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"docs/examples/first-15-minutes.md"* ]]
+  [[ "$output" == *"v${stale_ver}"* ]]
+  [[ "$output" == *"v${script_ver}"* ]]
+}
+
+@test "DEV-078 @smoke F15-003: relative proof links resolve from their documents" {
+  local fixture="$TEST_PROJECT/f15-relative-link"
+  f15_copy_launch_fixture_base "$fixture"
+
+  run f15_run_checker "$fixture" --mode private
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"ok - relative proof links resolve"* ]]
+
+  sed -i.bak 's|(public-launch-proof.md)|(missing-proof-target.md)|' "$fixture/docs/examples/first-15-minutes.md"
+  rm -f "$fixture/docs/examples/first-15-minutes.md.bak"
+
+  run f15_run_checker "$fixture" --mode private
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"docs/examples/first-15-minutes.md"* ]]
+  [[ "$output" == *"missing-proof-target.md"* ]]
+}
+
+@test "DEV-078 F15-004: first-15 proof repository URL is canonical" {
+  local fixture="$TEST_PROJECT/f15-proof-url"
+  local canonical="https://github.com/sky2464/agtoosa-first-15-proof"
+  f15_copy_launch_fixture_base "$fixture"
+
+  run f15_run_checker "$fixture" --mode private
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"ok - first-15 proof repository URL is canonical"* ]]
+
+  sed -i.bak "s|${canonical}|https://github.com/sky2464/wrong-first-15-proof|" "$fixture/README.md"
+  rm -f "$fixture/README.md.bak"
+
+  run f15_run_checker "$fixture" --mode private
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"README.md"* ]]
+  [[ "$output" == *"wrong-first-15-proof"* ]]
+  [[ "$output" == *"agtoosa-first-15-proof"* ]]
+}
+
+@test "DEV-078 F15-005: multiple maintenance findings remain actionable" {
+  local fixture="$TEST_PROJECT/f15-multi-fail"
+  local script_ver stale_ver
+  script_ver="$(grep -m1 'AGTOOSA_VERSION=' "$SCRIPT" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  stale_ver="5.0.0"
+  f15_copy_launch_fixture_base "$fixture"
+  sed -i.bak "s|--ref v${script_ver}|--ref v${stale_ver}|" "$fixture/docs/examples/first-15-minutes.md"
+  sed -i.bak "s|/v${script_ver}/bootstrap.sh|/v${stale_ver}/bootstrap.sh|g" "$fixture/docs/examples/public-launch-proof.md"
+  rm -f "$fixture/docs/examples/first-15-minutes.md.bak" "$fixture/docs/examples/public-launch-proof.md.bak"
+
+  run f15_run_checker "$fixture" --mode private
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"docs/examples/first-15-minutes.md"* ]]
+  [[ "$output" == *"docs/examples/public-launch-proof.md"* ]]
+  [[ "$output" == *"v${stale_ver}"* ]]
+  [[ "$output" == *"v${script_ver}"* ]]
+}
+
+@test "DEV-078 @smoke F15-006: private maintenance mode is offline" {
+  local fixture="$TEST_PROJECT/f15-offline"
+  local curl_shim="$TEST_PROJECT/bin"
+  f15_copy_launch_fixture_base "$fixture"
+  mkdir -p "$curl_shim"
+  cat > "$curl_shim/curl" <<'EOF'
+#!/usr/bin/env bash
+echo "curl shim invoked: $*" >&2
+exit 99
+EOF
+  chmod +x "$curl_shim/curl"
+
+  run env PATH="$curl_shim:$PATH" bash "$fixture/scripts/check-launch-readiness.sh" --mode private
+  [ "$status" -eq 0 ]
+  [[ "$output" != *"curl shim invoked"* ]]
+  [[ "$output" == *"Skipping anonymous public URL checks"* ]]
+}
+
+@test "DEV-078 F15-007: public mode retains availability checks" {
+  local checker="$BATS_TEST_DIRNAME/../scripts/check-launch-readiness.sh"
+  local maint_end public_start
+  maint_end="$(grep -n 'first-15 maintenance gate complete' "$checker" | head -n1 | cut -d: -f1)"
+  public_start="$(grep -n 'if \[\[ "$MODE" == "private" \]\]; then' "$checker" | head -n1 | cut -d: -f1)"
+  local check_url_line
+  check_url_line="$(grep -n '^check_url ' "$checker" | head -n1 | cut -d: -f1)"
+  [[ -n "$maint_end" ]]
+  [[ -n "$public_start" ]]
+  [[ -n "$check_url_line" ]]
+  [[ "$maint_end" -lt "$public_start" ]]
+  [[ "$check_url_line" -gt "$public_start" ]]
+  grep -q 'check_url "https://github.com/sky2464/agtoosa-first-15-proof"' "$checker"
+}
+
+@test "DEV-078 F15-008: maintenance gate is read-only and flow-neutral" {
+  local fixture="$TEST_PROJECT/f15-readonly"
+  local first15 proof
+  f15_copy_launch_fixture_base "$fixture"
+  first15="$fixture/docs/examples/first-15-minutes.md"
+  proof="$fixture/docs/examples/public-launch-proof.md"
+  local hash_before_first15 hash_before_proof step_sig_before
+  hash_before_first15="$(shasum -a 256 "$first15" | awk '{print $1}')"
+  hash_before_proof="$(shasum -a 256 "$proof" | awk '{print $1}')"
+  step_sig_before="$(grep -E '^## [0-9]+\.' "$first15" | tr '\n' '|')"
+
+  run f15_run_checker "$fixture" --mode private
+  [ "$status" -eq 0 ]
+
+  [ "$(shasum -a 256 "$first15" | awk '{print $1}')" = "$hash_before_first15" ]
+  [ "$(shasum -a 256 "$proof" | awk '{print $1}')" = "$hash_before_proof" ]
+  [ "$(grep -E '^## [0-9]+\.' "$first15" | tr '\n' '|')" = "$step_sig_before" ]
+}
+
+# ── DEV-075: Subagent and Persona Guide Suite (ADP-001–ADP-009) ───────────────
+
+@test "DEV-075 @smoke ADP-001: walkthrough preserves end-to-end lane sequence" {
+  local walkthrough="$BATS_TEST_DIRNAME/../docs/examples/subagent-handoff-review.md"
+  [ -f "$walkthrough" ]
+  grep -q "## 1. Start From An Approved Spec" "$walkthrough"
+  grep -q "## 2. Partition Into Two Bounded Lanes" "$walkthrough"
+  grep -q "## 3. Export Handoff Packs" "$walkthrough"
+  grep -q "## 4. Import And Verify Locally" "$walkthrough"
+  grep -q "## 5. Cross-Model Review" "$walkthrough"
+  local s1 s2 s3 s4 s5
+  s1="$(grep -n "## 1. Start From An Approved Spec" "$walkthrough" | head -1 | cut -d: -f1)"
+  s2="$(grep -n "## 2. Partition Into Two Bounded Lanes" "$walkthrough" | head -1 | cut -d: -f1)"
+  s3="$(grep -n "## 3. Export Handoff Packs" "$walkthrough" | head -1 | cut -d: -f1)"
+  s4="$(grep -n "## 4. Import And Verify Locally" "$walkthrough" | head -1 | cut -d: -f1)"
+  s5="$(grep -n "## 5. Cross-Model Review" "$walkthrough" | head -1 | cut -d: -f1)"
+  [ "$s1" -lt "$s2" ]
+  [ "$s2" -lt "$s3" ]
+  [ "$s3" -lt "$s4" ]
+  [ "$s4" -lt "$s5" ]
+}
+
+@test "DEV-075 ADP-002: each lane is bounded and merge-safe" {
+  local walkthrough="$BATS_TEST_DIRNAME/../docs/examples/subagent-handoff-review.md"
+  [ -f "$walkthrough" ]
+  grep -q "### Lane A" "$walkthrough"
+  grep -q "### Lane B" "$walkthrough"
+  for marker in "Mapped ACs" "Files in scope" "Allowed actions" "Verification commands" "Return contract" "Overlap resolution"; do
+    grep -q "$marker" "$walkthrough"
+    local count
+    count="$(grep -c "$marker" "$walkthrough")"
+    [ "$count" -ge 2 ]
+  done
+}
+
+@test "DEV-075 @smoke ADP-003: imported evidence gates closure" {
+  local walkthrough="$BATS_TEST_DIRNAME/../docs/examples/subagent-handoff-review.md"
+  [ -f "$walkthrough" ]
+  grep -q "Imported claims are not evidence until repo-local verification passes" "$walkthrough"
+  grep -q "/agtoosa-import" "$walkthrough"
+  grep -q "Do not mark" "$walkthrough"
+  grep -q "before import mapping" "$walkthrough"
+}
+
+@test "DEV-075 ADP-004: review path is independent or honestly downgraded" {
+  local walkthrough="$BATS_TEST_DIRNAME/../docs/examples/subagent-handoff-review.md"
+  [ -f "$walkthrough" ]
+  grep -q "Writer" "$walkthrough"
+  grep -q "Independent reviewer" "$walkthrough"
+  grep -q "Sequential fallback" "$walkthrough"
+  grep -q "Skip rationale" "$walkthrough"
+  grep -q "read-only" "$walkthrough"
+}
+
+@test "DEV-075 ADP-005: audience guide inventory is complete" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/docs/guides/subagent-heavy-workflows.md" ]
+  [ -f "$root/docs/guides/security-sensitive-projects.md" ]
+  [ -f "$root/docs/guides/solo-developer-workflows.md" ]
+}
+
+@test "DEV-075 ADP-006: guides route to canonical workflow owners" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in \
+    "$root/docs/guides/subagent-heavy-workflows.md" \
+    "$root/docs/guides/security-sensitive-projects.md" \
+    "$root/docs/guides/solo-developer-workflows.md" \
+    "$root/docs/examples/subagent-handoff-review.md"; do
+    [ -f "$f" ]
+    grep -q "AgToosa_Handoff.md" "$f"
+    grep -q "AgToosa_Import.md" "$f"
+    grep -q "AgToosa_CrossModelReview.md" "$f"
+    grep -q "AgToosa_AgentCapability.md" "$f"
+  done
+}
+
+@test "DEV-075 @smoke ADP-007: security guide enforces least-privilege documentation" {
+  local guide="$BATS_TEST_DIRNAME/../docs/guides/security-sensitive-projects.md"
+  [ -f "$guide" ]
+  grep -q "redact" "$guide"
+  grep -q "STRIDE" "$guide"
+  grep -q "least-privilege" "$guide"
+  grep -q "explicit authorization" "$guide"
+  grep -q ".github/workflows" "$guide"
+  grep -q "credentials" "$guide"
+  grep -q "agent settings" "$guide"
+}
+
+@test "DEV-075 ADP-008: README exposes every guide" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  grep -q "docs/examples/subagent-handoff-review.md" "$readme"
+  grep -q "docs/guides/subagent-heavy-workflows.md" "$readme"
+  grep -q "docs/guides/security-sensitive-projects.md" "$readme"
+  grep -q "docs/guides/solo-developer-workflows.md" "$readme"
+}
+
+@test "DEV-075 ADP-009: navigation does not fork canonical contracts" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local readme="$root/README.md"
+  local f
+  for f in \
+    "$root/docs/guides/subagent-heavy-workflows.md" \
+    "$root/docs/guides/security-sensitive-projects.md" \
+    "$root/docs/guides/solo-developer-workflows.md" \
+    "$root/docs/examples/subagent-handoff-review.md"; do
+    [ -f "$f" ]
+    ! grep -q "## Pack Template" "$f"
+    ! grep -q "## Import Checklist" "$f"
+    ! grep -q "## Structured Evidence Block" "$f"
+    grep -q "canonical" "$f"
+  done
+  ! grep -q "## Pack Template" "$readme"
+  ! grep -q "## Import Checklist" "$readme"
 }

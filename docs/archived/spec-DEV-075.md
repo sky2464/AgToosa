@@ -3,7 +3,7 @@
 > **Story ID:** DEV-075
 > **Type:** Docs
 > **Epic:** DEV-002 — Workflow Templates
-> **Status:** ⬜ Backlog
+> **Status:** 🟨 In Progress
 > **Estimate:** M
 > **Priority:** P1
 > **Spec created:** 2026-07-11
@@ -165,3 +165,14 @@ Out of scope        : workflow behavior, template adapters, generator logic, ver
 Test plan: `docs/AgToosa_TestPlan-DEV-075.md`
 AC coverage: 7 ACs mapped to 9 ADP test IDs
 Smoke set: 3 tests tagged `@smoke`
+
+## Spec Quality Analyzer
+
+- Must ACs unambiguous and testable: yes
+- Enforcement classified: yes
+- SoT preserved: yes
+
+## ✅ Spec Approved
+
+Approved: 2026-07-11 20:30
+Enrollment: four-epic parallel build (DEV-002 next spec)

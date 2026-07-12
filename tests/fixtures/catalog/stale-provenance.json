@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "entries": [
+    {
+      "id": "stale-extension",
+      "kind": "extension",
+      "name": "ML Pipeline",
+      "summary": "Stale provenance snapshot",
+      "tags": ["ml"],
+      "examples": ["Example"],
+      "maintainers": [{ "name": "sky2464", "contact": "https://github.com/sky2464" }],
+      "support": "https://github.com/sky2464/agtoosa-ml-pipeline/issues",
+      "lifecycle": "maintained",
+      "reviewed_at": "2026-07-11",
+      "compatibility": {
+        "agtoosa": ">=5.0.0 <6.0.0",
+        "platforms": ["cursor"],
+        "requires": [],
+        "conflicts": []
+      },
+      "trust": {
+        "curation_tier": "community-reviewed",
+        "registry_verified_snapshot": true,
+        "review_status": "reviewed"
+      },
+      "provenance": {
+        "registry_name": "ml-pipeline",
+        "version": "1.2.0",
+        "source": "https://github.com/sky2464/agtoosa-ml-pipeline/archive/refs/tags/v1.2.0.tar.gz",
+        "sha256": "deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
+        "signature": "not-present"
+      }
+    }
+  ]
+}
