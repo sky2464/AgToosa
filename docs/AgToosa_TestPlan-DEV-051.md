@@ -2,7 +2,7 @@
 
 > **Spec:** `docs/archived/spec-DEV-051.md`
 > **Future smoke filter:** `bats tests/agtoosa.bats -f "DEV-051"`
-> **Status:** ⬜ Backlog
+> **Status:** 🟦 Todo (enrolled v5.3.14)
 > **Evidence state:** Not executed
 
 ## Coverage Target

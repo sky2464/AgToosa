@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-051
 > **Epic:** DEV-003
-> **Status:** ⬜ Backlog
+> **Status:** 🟦 Todo (enrolled v5.3.14 — 2026-07-11)
 > **Estimate:** M
 > **Spec created:** 2026-06-08
 > **Spec deepened:** 2026-07-11
@@ -18,7 +18,39 @@ DEV-051 therefore defines a narrow v1 bridge:
 2. **Proposal import** from a provider-neutral return envelope into a human-readable proposal artifact.
 3. **No automatic apply.** Accepted changes re-enter AgToosa through `/agtoosa-task`, `/agtoosa-spec amend`, or an explicit human edit; `Master-Plan.md` wins every conflict.
 
-The bridge does not call provider APIs in v1. Provider adapters, MCP tools, or humans may transport the envelopes, but they are integrations rather than authorities. This document remains a backlog contract until the story is explicitly enrolled; none of the described runtime surfaces exist merely because this spec exists.
+The bridge does not call provider APIs in v1. Provider adapters, MCP tools, or humans may transport the envelopes, but they are integrations rather than authorities. Enrollment occurred on 2026-07-11 after explicit maintainer demand to un-gate the story for v5.3.14.
+
+### Demand un-gate (2026-07-11)
+
+| Field | Record |
+|-------|--------|
+| Sponsor | Maintainer dogfood — user authorized enrollment ("do it") |
+| Demand signal | Teams need GitHub Issues visibility while `Master-Plan.md` remains authoritative; proposal-import only |
+| First provider adapter | **GitHub Issues** (maintainer repo host; mapping validated in v1 docs) |
+| Authority model | Master-Plan wins; no live API sync; no silent apply |
+
+### Smart interview findings (2026-07-11 enrollment)
+
+| Checklist area | Finding |
+|----------------|---------|
+| Status quo | No `--tracker` CLI or canonical Tracker Sync doc; per-repo PM is Master-Plan only |
+| Narrowest v1 | Local export + proposal import envelopes; transport is manual or external adapter |
+| Urgency | v5.3.14 cycle open; only demand-gated backlog remained; user authorized DEV-051 enrollment |
+| Failure modes | Stale proposals, secret export, silent Master-Plan mutation, false two-way-sync claims |
+| Security | Untrusted return envelopes; redact credentials and paths; proposal-only writes |
+| Test evidence | TS-001–TS-008 RED/GREEN contract bats + mutation guard on Master-Plan |
+| Rollout | Bash/PS1 parity, thin platform adapters, maintainer/template doc mirrors |
+
+### Spec Quality Analyzer (2026-07-11)
+
+| Check | Result |
+|-------|--------|
+| Must ACs testable and unambiguous | Pass — 11 Must; each has failure mode |
+| Goal / scope / AC / task / test-plan alignment | Pass |
+| Must AC → test-plan mapping | Pass — AC-001–AC-011 mapped to TS-001–TS-008 |
+| Claim Boundary classified | Pass — §1.6 table complete |
+| Master-Plan source of truth preserved | Pass |
+| TBD / placeholder requirements | Pass |
 
 ## 1. Requirements
 
@@ -33,7 +65,7 @@ The bridge does not call provider APIs in v1. Provider adapters, MCP tools, or h
 | Non-goals | Live provider API clients, OAuth/token storage, webhooks, polling, automatic two-way synchronization, or making any external tracker authoritative. |
 | Assumptions | Story IDs are stable; `Master-Plan.md` and referenced spec files are readable; provider adapters can map the neutral envelope outside the core bridge; SHA-256 is available for source snapshots. |
 | Risks | Field-loss across providers, stale proposals, accidental secret export, misleading “sync” claims, nondeterministic Markdown parsing, and adapters treating external status as canonical. |
-| Unresolved questions | Which provider adapter should be validated first is deferred until enrollment; it does not change the provider-neutral v1 contract. |
+| Unresolved questions | **Resolved at enrollment:** GitHub Issues is the first provider mapping validated in v1 docs; envelope contract remains provider-neutral. |
 
 ### 1.2 User Stories
 
@@ -201,4 +233,23 @@ No build task may broaden this boundary to live provider writes without a spec a
 - Test plan: `docs/AgToosa_TestPlan-DEV-051.md`
 - AC coverage: 11 ACs mapped to 8 planned test IDs (TS-001–TS-008)
 - Smoke set: 6 planned tests
-- Evidence state: unexecuted backlog placeholders only
+- Evidence state: unexecuted — awaiting `/agtoosa-build` RED phase
+
+### 3.4 Work Package DAG
+
+| package_id | wave | depends_on | owned_files | inputs | outputs | merge_order | verification |
+|------------|------|------------|-------------|--------|---------|-------------|--------------|
+| PKG-1.1 | 1 | — | `tests/agtoosa.bats`, `tests/fixtures/tracker-sync/` | — | RED TS-001–TS-008 fixtures | 1 | `bats tests/agtoosa.bats -f "DEV-051\|TS-"` |
+| PKG-1.2 | 1 | — | `tests/fixtures/tracker-sync/returns/` | — | unsafe-input fixtures | 2 | `test -d tests/fixtures/tracker-sync/returns` |
+| PKG-3.1 | 1 | — | `template/Docs/AgToosa_TrackerSync.md`, `docs/AgToosa_TrackerSync.md`, `template/Docs/agtoosa-tracker-sync.schema.json`, `docs/agtoosa-tracker-sync.schema.json` | — | canonical doc + schema | 3 | `test -s template/Docs/AgToosa_TrackerSync.md` |
+| PKG-2.1 | 2 | PKG-1.1, PKG-1.2 | `lib/tracker.sh` | Wave 1 fixtures | export normalization | 1 | `bats tests/agtoosa.bats -f "TS-001\|TS-002"` |
+| PKG-2.2 | 2 | PKG-1.1, PKG-1.2 | `lib/tracker.sh` | Wave 1 fixtures | proposal validation | 2 | `bats tests/agtoosa.bats -f "TS-003\|TS-004"` |
+| PKG-3.2 | 2 | PKG-3.1 | `lib/config.sh`, `template/.cursor/commands/`, `template/.claude/commands/`, `template/.github/prompts/`, `template/.gemini/commands/`, `template/.windsurf/workflows/`, `template/.codex/` | PKG-3.1 outputs | thin adapters | 3 | `bats tests/agtoosa.bats -f "TS-007"` |
+| PKG-2.3 | 3 | PKG-2.1, PKG-2.2 | `agtoosa.sh`, `agtoosa.ps1` | `lib/tracker.sh` | CLI `--tracker` routes | 1 | `bash agtoosa.sh --help \| grep -q tracker` |
+| PKG-3.3 | 3 | PKG-3.2 | `template/Docs/AgToosa_Agent.md`, `template/Docs/AgToosa_Quickref.md`, `docs/AgToosa_Agent.md`, `docs/AgToosa_Quickref.md` | PKG-3.2 outputs | discoverability | 2 | `grep -q TrackerSync docs/AgToosa_Quickref.md` |
+| PKG-4.1 | 4 | PKG-2.3, PKG-3.3 | `tests/agtoosa.bats` | Wave 2–3 outputs | GREEN TS suite | 1 | `bats tests/agtoosa.bats -f "DEV-051"` |
+| PKG-4.2 | 4 | PKG-4.1 | `docs/AgToosa_TestPlan-DEV-051.md` | PKG-4.1 evidence | RED/GREEN evidence rows | 2 | `grep -q GREEN docs/AgToosa_TestPlan-DEV-051.md` |
+
+## ✅ Spec Approved
+
+Approved: 2026-07-11 22:35

@@ -15,11 +15,13 @@ Every actionable proposal in the update documents is represented by one of:
 
 Editing this index does not enroll a story. Backlog stories still require `/agtoosa-spec`, explicit approval, and a separate `/agtoosa-build` invocation.
 
-## Active Stories (post v5.3.13 — 2026-07-11)
+## Active Stories (v5.3.14 — 2026-07-11)
 
-No enrolled stories. All unblocked executable backlog specs shipped through v5.3.13.
+| ID | Story | Estimate | Spec | Test plan | Status |
+|---|---|---|---|---|---|
+| DEV-051 | Tracker Sync Bridge | M | `docs/archived/spec-DEV-051.md` | `docs/AgToosa_TestPlan-DEV-051.md` | 🟦 Todo — Spec ✅ Approved |
 
-Parked demand-gated: **DEV-051**, **DEV-057**.
+Parked demand-gated: **DEV-057**.
 
 ## Recently shipped (v5.3.13 — 2026-07-11)
 
