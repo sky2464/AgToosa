@@ -543,6 +543,7 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guid
 
 - [Platform extension authoring](docs/extension-authoring-guide.md) — wire a new AI platform into the generator
 - [Registry pack authoring](docs/registry-pack-authoring.md) — readiness checklist before registry review
+- [Core vs optional pack boundary](docs/AgToosa_Core_Contract.md) — core lifecycle vs optional adapters vs packs (inventory from `lib/config.sh`)
 
 ## Support and sponsorship
 

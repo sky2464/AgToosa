@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-12 (Ship complete — v5.3.18 Wave 1b/2 remainder)
+> **Last updated:** 2026-07-12 (Wave 3 build started)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | v5.3.18 shipped — Waves 1a/1b/2 complete (089 · 091 · 093 · 100) |
-| Milestone | `v5.3.19` (next) — Wave 3 / post-Rev4 backlog |
-| Active cycle | _(empty)_ — enroll next from backlog |
-| Cycle capacity | `8 story points` (Wave 2 over capacity — A+B enrollment accepted) |
+| Current phase | v5.3.18 shipped — Wave 3 enrolled (095–106); capacity soft overrun |
+| Milestone | `v5.3.19` (next) — Wave 3 build |
+| Active cycle | Rev4 Wave 3 (095–106) — capacity soft overrun |
+| Cycle capacity | `8 story points` (Wave 3 ~14 SP — soft overrun accepted; sequence 096→095) |
 
 ## Active Cycle
 
@@ -20,12 +20,19 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| — | _(empty — Wave 1a/1b/2 remainder shipped)_ | — | — | — | — |
+| DEV-096 | Chore: Pack Validation CI | Chore | S | 🟨 In Progress | 0/3 |
+| DEV-095 | Feature: Official Pack Expansion (5-pack max) | Feature | M | 🚫 Blocked | 0/4 |
+| DEV-098 | Docs: Navigation by User Job | Docs | XS | 🟨 In Progress | 3/3 |
+| DEV-099 | Docs: Core vs Optional Pack Boundary | Docs | XS | 🟨 In Progress | 0/3 |
+| DEV-101 | Docs: Verified vs Community Pack Labeling | Docs | XS | 🟨 In Progress | 3/3 |
+| DEV-102 | Docs: Offline and Network-Dependency Matrix | Docs | XS | 🟨 In Progress | 0/3 |
+| DEV-103 | Chore: External Registry Publication Runbook | Chore | S | 🟨 In Progress | 0/3 |
+| DEV-104 | Feature: `--reinstall --clean` (ADR-004 Option C) | Feature | S | 🟨 In Progress | 0/3 |
+| DEV-106 | Docs: Built with AgToosa Showcase | Docs | XS | 🟨 In Progress | 0/3 |
 
-
+<!-- Wave 3 build order: parallel docs 098·099·101·102·103·106 (file soft-locks); 096 then 095; 104 ready (090 shipped) -->
 <!-- Wave 1a archived to docs/archived/cycle-2026-07-12-release-5.3.17.md -->
-<!-- Wave 1b: DEV-089 In Progress; DEV-091 enrolled after Wave 1a ship -->
-<!-- Wave 2 remainder: DEV-093 In Progress; DEV-100 R1 approved -->
+<!-- Wave 1b/2 remainder archived via v5.3.18 ship -->
 
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.16.md -->
 
@@ -49,67 +56,120 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 > Task breakdown for enrolled Active Cycle stories. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
-> Wave 1a: **shipped** in v5.3.17.
-> Wave 2 remainder: **093** In Progress; **100** R1 approved — ready to build.
-> Wave 1b: **089** In Progress; **091** enrolled (Cycle C after DEV-090 ship).
+> Wave 3: **build started** — soft capacity overrun (~14 SP vs 8). Build mode: **parallel** docs + 096 + 104; **095** blocked until 096 GREEN. Soft file locks: Registry/checklist (101·103·095), `docs/index.md` (098→106), `DOCS_FILES` (099·102).
 
-_(Wave 1a DEV-086 · DEV-090 · DEV-105 shipped v5.3.17. Wave 1b DEV-087 · DEV-088 shipped v5.3.15; DEV-089 In Progress; DEV-091 enrolled. Wave 2 DEV-092 · DEV-094 · DEV-097 shipped v5.3.16.)_
+### DEV-096 — Pack Validation CI (3/3) — enroll; unlocks DEV-095
 
-### DEV-093 — Install State File + Lock Reconciliation (3/3) — In Progress (build GREEN)
 
-- [x] **1.** RED fixtures
-  - [x] 1.1 State write and gitignore contract — _Requirements: AC-001, AC-002_
-  - [x] 1.2 Lock reconcile and path — _Requirements: AC-003, AC-004_
-  - [x] 1.3 Pack SHA failure abort — _Requirements: AC-005_
-- [x] **2.** State and lock implementation
-  - [x] 2.1 `lib/state.sh` writer hooked to apply — _Requirements: AC-001, AC-006_
-  - [x] 2.2 Lock reconcile + SHA revalidation — _Requirements: AC-003, AC-004, AC-005, AC-007_
-- [x] **3.** Docs and evidence
-  - [x] 3.1 Authority table in Update doc — _Requirements: AC-008_
-  - [x] 3.2 STF RED/GREEN — _Requirements: AC-008_
+- [ ] **1.** Fixture-based RED coverage
+  - [ ] 1.1 Add SHA drift and manifest failure fixtures — _Requirements: AC-002, AC-003, AC-006_
+  - [ ] 1.2 Add fixture parity mismatch and actionable-error fixtures — _Requirements: AC-004, AC-006_
+- [ ] **2.** Validation helper and workflow
+  - [ ] 2.1 Implement deterministic SHA and tree parity checks — _Requirements: AC-003, AC-004, AC-006_
+  - [ ] 2.2 Add `pack-validate.yml` with path filters and OPP bats step — _Requirements: AC-001, AC-005, AC-007_
+- [ ] **3.** Evidence
+  - [ ] 3.1 Record RED/GREEN PV evidence and verify green OPP baseline — _Requirements: AC-001–AC-007_
 
-### DEV-089 — Evidence-Profile Verifier Gates (4/4) — In Progress
+### DEV-095 — Official Pack Expansion (4/4) — blocked on DEV-096
 
-- [x] **1.** Fixture-based RED coverage
-  - [x] 1.1 Add no-profile healthy and gate-order fixtures — _Requirements: AC-001, AC-002_
-  - [x] 1.2 Add valid profile presence checks and invalid-YAML WARN fixtures — _Requirements: AC-003, AC-007_
-  - [x] 1.3 Add SAST no-false-claim and ledger WARN fixtures — _Requirements: AC-005, AC-006_
-- [x] **2.** Implement Gate 7
-  - [x] 2.1 Insert Gate 7 after Gate 6 with profile resolver — _Requirements: AC-001, AC-002, AC-007_
-  - [x] 2.2 Wire deterministic required-entry checks per contract classifications — _Requirements: AC-003, AC-004_
-  - [x] 2.3 Add ledger WARN integration and strict-mode promotion — _Requirements: AC-006, AC-008_
-- [x] **3.** Sync mirrors and contract cross-links
-  - [x] 3.1 Mirror verifier to maintainer `docs/` and update `.agtoosa/README.md` index — _Requirements: AC-002, AC-005_
-- [x] **4.** Evidence
-  - [x] 4.1 Record EPV RED/GREEN in test plan — _Requirements: AC-009_
 
-### DEV-100 — Shared JSON Output for Install/Registry (3/3) — R1 approved; built
+- [ ] **1.** Expansion contract and RED coverage
+  - [ ] 1.1 Add OPE inventory and manifest fixtures for five-pack ceiling — _Requirements: AC-001, AC-002_
+  - [ ] 1.2 Add negative fixtures for web/react domain overlap and sixth-pack rejection — _Requirements: AC-001, AC-004_
+- [ ] **2.** Author `official-react`
+  - [ ] 2.1 Author manifest, examples with example-repo link, compatibility, and ownership — _Requirements: AC-002, AC-003, AC-004, AC-008_
+  - [ ] 2.2 Add fixture and isolated install/preview/queue/merge proof — _Requirements: AC-006, AC-007_
+- [ ] **3.** Author `official-security`
+  - [ ] 3.1 Author manifest, examples with example-repo link, compatibility, and ownership — _Requirements: AC-002, AC-003, AC-005, AC-008_
+  - [ ] 3.2 Add fixture and isolated install/preview/queue/merge proof — _Requirements: AC-006, AC-007_
+- [ ] **4.** Inventory and evidence
+  - [ ] 4.1 Update registry docs and checklist to five-pack inventory with honest publication state — _Requirements: AC-001, AC-009_
+  - [ ] 4.2 Record RED/GREEN OPE evidence — _Requirements: AC-001–AC-009_
 
-- [x] **1.** RED JSON contract tests
-  - [x] 1.1 Plan JSON schema parity catalog vs dry-run (`--format json`) — _Requirements: AC-001, AC-002, AC-006_
-  - [x] 1.2 Info JSON fields and no ANSI — _Requirements: AC-003, AC-004_
-  - [x] 1.3 Default output unchanged without `--format json` — _Requirements: AC-005_
-- [x] **2.** Implementation
-  - [x] 2.1 Reuse `emit_plan_json` + catalog plan/info `--format json` branches — _Requirements: AC-001, AC-002, AC-003_
-  - [x] 2.2 Flag plumbing and Catalog docs — _Requirements: AC-004, AC-005_
+### DEV-098 — Navigation by User Job (3/3)
+
+
+- [x] **1.** RED navigation contract
+  - [x] 1.1 Add NAV section inventory and required-link fixtures — _Requirements: AC-001, AC-003–AC-007_
+  - [x] 1.2 Add non-duplication and broken-link negative fixtures — _Requirements: AC-002, AC-005_
+- [x] **2.** Landing page update
+  - [x] 2.1 Restructure `docs/index.md` into five job sections with canonical links — _Requirements: AC-001–AC-007_
+- [x] **3.** Static site regression
+  - [x] 3.1 Confirm SITE build and `/AgToosa/` link checks still pass — _Requirements: AC-008_
+  - [x] 3.2 Record RED/GREEN NAV evidence — _Requirements: AC-001–AC-008_
+
+### DEV-099 — Core vs Optional Pack Boundary (3/3)
+
+
+- [ ] **1.** RED parity contract
+  - [ ] 1.1 Add CORE document presence and array parity fixtures — _Requirements: AC-002–AC-005_
+  - [ ] 1.2 Add core-command inventory and enforcement-class fixtures — _Requirements: AC-001, AC-006_
+- [ ] **2.** Author core contract
+  - [ ] 2.1 Write `AgToosa_Core_Contract.md` and template mirror from config arrays — _Requirements: AC-001–AC-004, AC-006_
+  - [ ] 2.2 Register doc in `DOCS_FILES` and add README discovery link — _Requirements: AC-007_
+- [ ] **3.** Evidence
+  - [ ] 3.1 Record RED/GREEN CORE evidence — _Requirements: AC-001–AC-007_
+
+### DEV-101 — Verified vs Community Pack Labeling (3/3)
+
+
+- [x] **1.** RED trust vocabulary
+  - [x] 1.1 Add TRUST label inventory and forbidden-claim fixtures — _Requirements: AC-001, AC-002, AC-006_
+  - [x] 1.2 Add manifest mapping and publication-state fixtures — _Requirements: AC-003, AC-004, AC-005_
+- [x] **2.** Registry documentation
+  - [x] 2.1 Author trust surface section in registry docs and template mirror — _Requirements: AC-001–AC-005_
 - [x] **3.** Evidence
-  - [x] 3.1 JIO RED/GREEN — _Requirements: AC-007_
+  - [x] 3.1 Record RED/GREEN TRUST evidence — _Requirements: AC-001–AC-006_
+
+### DEV-102 — Offline and Network-Dependency Matrix (3/3)
 
 
-### DEV-091 — Migration Wizard + Rollback Manifest (4/4) — enrolled after Wave 1a ship
+- [ ] **1.** RED matrix contract
+  - [ ] 1.1 Add NET required-row and dependency-class fixtures — _Requirements: AC-002, AC-004, AC-006_
+  - [ ] 1.2 Add cross-link and non-duplication fixtures — _Requirements: AC-005_
+- [ ] **2.** Author matrix
+  - [ ] 2.1 Write `AgToosa_Network_Matrix.md` and template mirror — _Requirements: AC-001–AC-004_
+  - [ ] 2.2 Add Agent/Registry discovery links; register in `DOCS_FILES` if applicable — _Requirements: AC-005_
+- [ ] **3.** Evidence
+  - [ ] 3.1 Record RED/GREEN NET evidence — _Requirements: AC-001–AC-006_
 
-- [x] **1.** RED fixtures
-  - [x] 1.1 MAJOR gate blocks without `--accept-breaking` — _Requirements: AC-001, AC-008_
-  - [x] 1.2 Dry-run plan schema and no-write assertions — _Requirements: AC-002, AC-006, AC-007_
-  - [x] 1.3 Rollback manifest and preserve-outside-markers — _Requirements: AC-003, AC-004_
-- [x] **2.** Migration wizard implementation
-  - [x] 2.1 `lib/migrate.sh` plan builder on DEV-090 schema — _Requirements: AC-002, AC-007_
-  - [x] 2.2 MAJOR gate, confirm, and `--accept-breaking` — _Requirements: AC-001, AC-005_
-  - [x] 2.3 Backup + manifest writer — _Requirements: AC-003, AC-004_
-- [x] **3.** Documentation
-  - [x] 3.1 Update `AgToosa_Update.md` MAJOR flow — _Requirements: AC-009_
-- [x] **4.** Evidence
-  - [x] 4.1 Record MWZ RED/GREEN — _Requirements: AC-009_
+### DEV-103 — External Registry Publication Runbook (3/3)
+
+
+- [ ] **1.** RED runbook contract
+  - [ ] 1.1 Add PUB phase and checklist completeness fixtures — _Requirements: AC-001, AC-002, AC-006_
+  - [ ] 1.2 Add state-machine and forbidden-claim fixtures — _Requirements: AC-004, AC-005, AC-007_
+- [ ] **2.** Author runbook
+  - [ ] 2.1 Write `registry-external-publication-runbook.md` with pre-submit, submit, confirm sections — _Requirements: AC-001–AC-005_
+  - [ ] 2.2 Link from pilot checklist and registry inventory — _Requirements: AC-006_
+- [ ] **3.** Evidence
+  - [ ] 3.1 Record RED/GREEN PUB evidence — _Requirements: AC-001–AC-007_
+
+### DEV-104 — `--reinstall --clean` (3/3) — ready (DEV-090 shipped)
+
+
+- [ ] **1.** RED reinstall contract
+  - [ ] 1.1 Add RCL confirmation, archive, and warning fixtures — _Requirements: AC-001, AC-002, AC-005_
+  - [ ] 1.2 Add regeneration, lock rewrite, and idempotency fixtures — _Requirements: AC-003, AC-004, AC-006_
+- [ ] **2.** Implement clean reinstall
+  - [ ] 2.1 Bash archive + regenerate + lock rewrite — _Requirements: AC-001–AC-006_
+  - [ ] 2.2 PowerShell parity — _Requirements: AC-007_
+- [ ] **3.** Documentation and evidence
+  - [ ] 3.1 Update AgToosa_Update docs for ADR-004 Option C positioning — _Requirements: AC-008_
+  - [ ] 3.2 Record RED/GREEN RCL evidence — _Requirements: AC-001–AC-008_
+
+### DEV-106 — Built with AgToosa Showcase (3/3)
+
+
+- [ ] **1.** RED showcase contract
+  - [ ] 1.1 Add SHOW page presence and submission-rule fixtures — _Requirements: AC-001, AC-002, AC-003_
+  - [ ] 1.2 Add link-only, case-study cross-link, and forbidden-claim fixtures — _Requirements: AC-004, AC-005, AC-007_
+- [ ] **2.** Author showcase
+  - [ ] 2.1 Write `built-with-agtoosa.md` with rules and listing table — _Requirements: AC-001–AC-005_
+  - [ ] 2.2 Add `docs/index.md` discovery link — _Requirements: AC-006_
+- [ ] **3.** Evidence
+  - [ ] 3.1 Record RED/GREEN SHOW evidence — _Requirements: AC-001–AC-007_
+
 
 ## Manual / Deferred Tasks
 
@@ -133,14 +193,14 @@ _(Wave 1a DEV-086 · DEV-090 · DEV-105 shipped v5.3.17. Wave 1b DEV-087 · DEV-
 
 ## Blocked
 
-> **Status:** 🟢 Clear — no blockers
+> **Status:** 🟡 DEV-095 blocked on DEV-096
 > Update this section and change status pill if an issue is blocked during `/agtoosa-build`.
 
 | ID | Title | Blocked by | Since |
 |----|-------|-----------|-------|
-| — | — | — | — |
+| DEV-095 | Feature: Official Pack Expansion (5-pack max) | DEV-096 (pack validation CI not GREEN) | 2026-07-12 |
 
-Conflict playbook: Wave 1a shipped v5.3.17. Build DEV-093 · DEV-089 · DEV-100 · DEV-091. Prefer sequential ownership on shared CLI/apply files (`agtoosa.sh`, `lib/update.sh`, `lib/apply.sh`).
+Conflict playbook: Do not start DEV-095 until DEV-096 GREEN on existing pilots. Soft-serialize Registry/checklist edits (101 → 103 → 095). Prefer 098 before 106 for `docs/index.md`. DEV-104 ready (DEV-090 shipped).
 
 ## Backlog
 
@@ -197,18 +257,18 @@ Conflict playbook: Wave 1a shipped v5.3.17. Build DEV-093 · DEV-089 · DEV-100 
 | DEV-092 | Chore: Transactional Apply + Idempotency | Chore | M | DEV-001 | P1 | 🏁 Shipped — v5.3.16 |
 | DEV-093 | Feature: Install State File + Lock Reconciliation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v5.3.18 |
 | DEV-094 | Feature: Assistant Compatibility Contract | Feature | M | DEV-004 | P1 | 🏁 Shipped — v5.3.16 |
-| DEV-095 | Feature: Official Pack Expansion (5-pack max) | Feature | M | DEV-003 | P1 | ⬜ Backlog — spec approved; Wave 3; after DEV-096 |
-| DEV-096 | Chore: Pack Validation CI | Chore | S | DEV-003 | P1 | ⬜ Backlog — spec approved; Wave 3 |
+| DEV-095 | Feature: Official Pack Expansion (5-pack max) | Feature | M | DEV-003 | P1 | 🚫 Blocked — Wave 3 enrolled; wait DEV-096 GREEN |
+| DEV-096 | Chore: Pack Validation CI | Chore | S | DEV-003 | P1 | 🟦 Todo — Wave 3 enrolled |
 | DEV-097 | Docs: Framework Supply-Chain Threat Model | Docs | S | DEV-004 | P1 | 🏁 Shipped — v5.3.16 |
-| DEV-098 | Docs: Navigation by User Job | Docs | XS | DEV-004 | P2 | ⬜ Backlog — spec approved; Wave 3 |
-| DEV-099 | Docs: Core vs Optional Pack Boundary | Docs | XS | DEV-002 | P2 | ⬜ Backlog — spec approved; Wave 3 |
+| DEV-098 | Docs: Navigation by User Job | Docs | XS | DEV-004 | P2 | 🟦 Todo — Wave 3 enrolled |
+| DEV-099 | Docs: Core vs Optional Pack Boundary | Docs | XS | DEV-002 | P2 | 🟦 Todo — Wave 3 enrolled |
 | DEV-100 | Feature: Shared JSON Output for Install/Registry | Feature | S | DEV-001 | P2 | 🏁 Shipped — v5.3.18 |
-| DEV-101 | Docs: Verified vs Community Pack Labeling | Docs | XS | DEV-003 | P2 | ⬜ Backlog — spec approved; Wave 3 |
-| DEV-102 | Docs: Offline and Network-Dependency Matrix | Docs | XS | DEV-001 | P2 | ⬜ Backlog — spec approved; Wave 3 |
-| DEV-103 | Chore: External Registry Publication Runbook | Chore | S | DEV-003 | P2 | ⬜ Backlog — spec approved; Wave 3 |
-| DEV-104 | Feature: `--reinstall --clean` (ADR-004 Option C) | Feature | S | DEV-001 | P2 | ⬜ Backlog — spec approved; Wave 3 |
+| DEV-101 | Docs: Verified vs Community Pack Labeling | Docs | XS | DEV-003 | P2 | 🟨 In Progress — Wave 3 build |
+| DEV-102 | Docs: Offline and Network-Dependency Matrix | Docs | XS | DEV-001 | P2 | 🟦 Todo — Wave 3 enrolled |
+| DEV-103 | Chore: External Registry Publication Runbook | Chore | S | DEV-003 | P2 | 🟦 Todo — Wave 3 enrolled |
+| DEV-104 | Feature: `--reinstall --clean` (ADR-004 Option C) | Feature | S | DEV-001 | P2 | 🟦 Todo — Wave 3 enrolled |
 | DEV-105 | Feature: PowerShell Maintain + Update Parity | Feature | M | DEV-001 | P0 | 🏁 Shipped — v5.3.17 |
-| DEV-106 | Docs: Built with AgToosa Showcase | Docs | XS | DEV-004 | P2 | ⬜ Backlog — spec approved; Wave 3 |
+| DEV-106 | Docs: Built with AgToosa Showcase | Docs | XS | DEV-004 | P2 | 🟦 Todo — Wave 3 enrolled |
 | DEV-107 | Feature: Agent-Instructed Orchestration Brain | Feature | M | DEV-002 | P1 | ⬜ Backlog — Spec Approved; after Wave 1a |
 | DEV-109 | Feature: Lifecycle Next-Step Sync + Multi-Spec Clarity | Feature | L | DEV-002 / DEV-001 | P0 | ⬜ Backlog — spec draft; after last wave; awaiting Spec Approved |
 | DEV-110 | Feature: AgToosa Project Intake | Feature | M | DEV-002 | P0 | ⬜ Backlog — spec draft; after planned specs (after DEV-109); expedite when capacity frees; awaiting Spec Approved |
@@ -565,3 +625,5 @@ Conflict playbook: Wave 1a shipped v5.3.17. Build DEV-093 · DEV-089 · DEV-100 
 | 2026-07-12 | 🔍 Review ✅ Approved — DEV-089 · DEV-091 · DEV-093 · DEV-100; 0 🔴 Critical | AgToosa |
 | 2026-07-12 | 🚀 Ship complete — v5.3.18 — Wave 1b/2 remainder DEV-089 · DEV-091 · DEV-093 · DEV-100; smoke PASS | AgToosa |
 | 2026-07-12 | 🚀 Release 5.3.18 shipped — v5.3.18; version parity bash/ps1/npm; Milestone v5.3.19 (next); Waves 1a/1b/2 complete | AgToosa |
+| 2026-07-12 | ✏️ /agtoosa-spec — Wave 3 enroll — DEV-096 · DEV-095 (blocked) · DEV-098 · DEV-099 · DEV-101 · DEV-102 · DEV-103 · DEV-104 · DEV-106 into Active Cycle; ~14 SP soft overrun; sequence 096→095; docs parallel with soft file locks | AgToosa |
+| 2026-07-12 | 🏗️ Build 🏗️ Started — Wave 3 parallel — DEV-096 · DEV-098 · DEV-099 · DEV-101 · DEV-102 · DEV-103 · DEV-104 · DEV-106; DEV-095 blocked on 096; no worktree (sequential packages within story, clean tree between) | AgToosa |

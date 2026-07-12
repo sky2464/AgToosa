@@ -3,7 +3,7 @@
 > **Story ID:** DEV-096
 > **Type:** Chore
 > **Epic:** DEV-003 — Community Template Registry
-> **Status:** ⬜ Backlog
+> **Status:** 🟦 Todo — Rev4 Wave 3 (enrolled)
 > **Estimate:** S
 > **Priority:** P1
 > **Spec created:** 2026-07-12

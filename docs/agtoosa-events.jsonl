@@ -171,3 +171,5 @@
 {"ts":"2026-07-12T18:32:07Z","phase":"ship","event":"complete","story":"DEV-091","by":"AgToosa","release":"5.3.18"}
 {"ts":"2026-07-12T18:32:07Z","phase":"ship","event":"complete","story":"DEV-093","by":"AgToosa","release":"5.3.18"}
 {"ts":"2026-07-12T18:32:07Z","phase":"ship","event":"complete","story":"DEV-100","by":"AgToosa","release":"5.3.18"}
+{"ts":"2026-07-12T18:50:00Z","phase":"spec","event":"enrolled","story":"Wave-3","by":"AgToosa","stories":["DEV-095","DEV-096","DEV-098","DEV-099","DEV-101","DEV-102","DEV-103","DEV-104","DEV-106"]}
+{"ts":"2026-07-12T19:00:00Z","phase":"build","event":"start","story":"Wave-3","by":"AgToosa","stories":["DEV-096","DEV-098","DEV-099","DEV-101","DEV-102","DEV-103","DEV-104","DEV-106"],"blocked":["DEV-095"]}

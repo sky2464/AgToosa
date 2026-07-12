@@ -3,7 +3,7 @@
 > **Story ID:** DEV-095
 > **Type:** Feature
 > **Epic:** DEV-003 — Community Template Registry
-> **Status:** ⬜ Backlog
+> **Status:** 🚫 Blocked — Wave 3 enrolled (wait DEV-096 GREEN)
 > **Estimate:** M
 > **Priority:** P1
 > **Spec created:** 2026-07-12

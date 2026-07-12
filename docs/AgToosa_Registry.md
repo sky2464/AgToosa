@@ -203,6 +203,58 @@ AgToosa caches `registry.json` locally so list/search/info work when the network
 
 ---
 
+## Trust surface
+
+Registry packs are labeled so readers can tell **who reviewed** a pack before queueing install instructions. Labels are a documentation and metadata contract — they do **not** replace install safety controls.
+
+### Pack classes
+
+| Class | Meaning | Typical signals |
+|-------|---------|-----------------|
+| **Verified** | Maintainer-reviewed for registry publication (`verified: true` in the index after manual approval) | Registry index `verified: true`; catalog trust may show `registry_verified_snapshot: true` when the index check is recorded |
+| **Community** | Submitted by a third party; **not** maintainer-verified until review completes | Registry index `verified: false` (requires `--allow-unverified`); catalog `review_status` not a maintainer-accepted verified state |
+| **Official pilot** | Maintained local candidate under the DEV-080/DEV-095 inventory (see [Official Pack Pilot](#official-pack-pilot)) | Manifest `trust.curation_tier: official-pilot`, `review_status: local-candidate` until external acceptance |
+
+### Allowed and forbidden claims
+
+| Class | Allowed claims | Forbidden claims |
+|-------|----------------|------------------|
+| **Verified** | “Maintainer-reviewed”; “approved for the registry index (`verified: true`)”; “passed registry review” | “Security certified”; “deterministic security enforcement”; “guaranteed safe”; “bypasses preview/consent” |
+| **Community** | “Community submission”; “not maintainer-verified”; “install only with `--allow-unverified` after preview” | “Official”; “maintainer-approved”; “maintainer verified”; “verified pack” |
+| **Official pilot** | “Official pilot”; “local candidate”; “not externally published” (until confirmation) | “Available in the registry” / “published” without independent confirmation; “marketplace listing” |
+
+### Manifest field mapping (DEV-053)
+
+Labels map to **existing** catalog/manifest keys only — do not invent schema fields:
+
+| Label concern | Manifest / metadata field | Notes |
+|---------------|---------------------------|-------|
+| Curation class | `trust.curation_tier` | e.g. `official-pilot` for maintained pilots |
+| Registry verified snapshot | `trust.registry_verified_snapshot` | Catalog display of a checked index snapshot — not a new verification pipeline |
+| Review / publication honesty | `trust.review_status` | e.g. `local-candidate` until external acceptance |
+| Ownership | `maintainers[]` | Named maintainer records (DEV-053 ownership block) |
+| Index gate (install) | Registry JSON `verified` | Enforced by `--registry install` / `--allow-unverified` |
+
+Unknown keys such as `verified_by_agtoosa_cloud` are **not** part of the contract.
+
+### Publication state machine (DEV-080)
+
+Official pilots and other inventory rows use the same honesty rules:
+
+| State | Meaning | Allowed claim |
+|-------|---------|---------------|
+| **local candidate** | Authored and proven in this repo only | “local candidate” / “not externally published” |
+| **submitted** | PR or submission opened against `agtoosa-registry` | “submitted” — **not** published, **not** “available in the registry” |
+| **published** | Accepted external registry record **independently confirmed** | “externally published” / “available” in registry |
+
+Do not report a pack as published or available until that independent confirmation exists. External publication procedure ownership remains with the pilot checklist today; a dedicated runbook may be linked here when authored (DEV-103) — this section does not claim that runbook exists yet.
+
+### Install safety reminder
+
+**Labeling does not bypass** preview, consent, integrity (SHA-256), tar-slip pre-scan, file allowlist, or sensitive-path denylist. Verified and community packs both run the same generator-enforced install gates; `--allow-unverified` only opts into installing `verified: false` index rows after those gates still apply.
+
+---
+
 ## Official Pack Pilot
 
 DEV-080 maintains exactly three **local candidate** packs (not a marketplace; **not externally published**). Catalog contract: DEV-053 `schema_version` 1.0. Maintainer: sky2464.

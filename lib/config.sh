@@ -16,6 +16,7 @@ DOCS_FILES=(
   "Docs/AgToosa_CrossModelReview.md"
   "Docs/AgToosa_AgentCapability.md"
   "Docs/AgToosa_Compatibility_Contract.md"
+  "Docs/AgToosa_Core_Contract.md"
   "Docs/AgToosa_Ship.md"
   "Docs/AgToosa_QA.md"
   "Docs/AgToosa_Revert.md"

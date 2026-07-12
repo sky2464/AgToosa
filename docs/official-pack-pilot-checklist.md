@@ -5,6 +5,8 @@
 > **Maintainer:** sky2464  
 > **Publication status (all three):** **local candidate** — not externally published
 
+Trust label vocabulary (verified / community / official pilot): see `docs/AgToosa_Registry.md` → **Trust surface**.
+
 ## Pilot inventory (three shipped; five maximum under DEV-095)
 
 | Pack root | Primary domain | Manifest | Fixture | Status |

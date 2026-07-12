@@ -3,7 +3,7 @@
 > **Story ID:** DEV-101
 > **Type:** Docs
 > **Epic:** DEV-003 — Community Template Registry
-> **Status:** ⬜ Backlog
+> **Status:** 🟨 In Progress — Rev4 Wave 3 (build)
 > **Estimate:** XS
 > **Priority:** P2
 > **Spec created:** 2026-07-12
@@ -113,13 +113,13 @@ Out of scope        : registry command changes, automatic verification, manifest
 
 ### 3.1 Task Tree
 
-- [ ] **1.** RED trust vocabulary
-  - [ ] 1.1 Add TRUST label inventory and forbidden-claim fixtures — _Requirements: AC-001, AC-002, AC-006_
-  - [ ] 1.2 Add manifest mapping and publication-state fixtures — _Requirements: AC-003, AC-004, AC-005_
-- [ ] **2.** Registry documentation
-  - [ ] 2.1 Author trust surface section in registry docs and template mirror — _Requirements: AC-001–AC-005_
-- [ ] **3.** Evidence
-  - [ ] 3.1 Record RED/GREEN TRUST evidence — _Requirements: AC-001–AC-006_
+- [x] **1.** RED trust vocabulary
+  - [x] 1.1 Add TRUST label inventory and forbidden-claim fixtures — _Requirements: AC-001, AC-002, AC-006_
+  - [x] 1.2 Add manifest mapping and publication-state fixtures — _Requirements: AC-003, AC-004, AC-005_
+- [x] **2.** Registry documentation
+  - [x] 2.1 Author trust surface section in registry docs and template mirror — _Requirements: AC-001–AC-005_
+- [x] **3.** Evidence
+  - [x] 3.1 Record RED/GREEN TRUST evidence — _Requirements: AC-001–AC-006_
 
 ### 3.2 Wave Plan
 

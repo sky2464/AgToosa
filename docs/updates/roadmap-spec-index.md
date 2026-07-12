@@ -19,9 +19,17 @@ Editing this index does not enroll a story. Backlog stories still require `/agto
 
 | ID | Story | Wave | Status |
 |---|---|---|---|
-| — | _(Waves 1a/1b/2 complete through v5.3.18)_ | — | — |
+| DEV-096 | Pack Validation CI | 3 | 🟦 Todo — enrolled; unlocks 095 |
+| DEV-095 | Official Pack Expansion (5-pack max) | 3 | 🚫 Blocked on DEV-096 |
+| DEV-098 | Navigation by User Job | 3 | 🟦 Todo — enrolled |
+| DEV-099 | Core vs Optional Pack Boundary | 3 | 🟦 Todo — enrolled |
+| DEV-101 | Verified vs Community Pack Labeling | 3 | 🟦 Todo — enrolled |
+| DEV-102 | Offline and Network-Dependency Matrix | 3 | 🟦 Todo — enrolled |
+| DEV-103 | External Registry Publication Runbook | 3 | 🟦 Todo — enrolled |
+| DEV-104 | `--reinstall --clean` (ADR-004 Option C) | 3 | 🟦 Todo — enrolled (DEV-090 shipped) |
+| DEV-106 | Built with AgToosa Showcase | 3 | 🟦 Todo — enrolled |
 
-Shipped through v5.3.18: Waves **1a** (086·090·105), **1b** (087·088·089·091), **2** (092·093·094·097·100). Next: Wave 3 / post-Rev4. Demand-gated: **DEV-057**.
+> **Enrollment note (2026-07-12):** Wave 3 enrolled after v5.3.18. Soft capacity overrun (~14 SP vs 8). Build: parallel docs **098 · 099 · 101 · 102 · 103 · 106** (soft file locks); **096 → 095**; **104** ready. Shipped through v5.3.18: Waves 1a/1b/2. Demand-gated: **DEV-057**. Post-Rev4 drafts (not enrolled): **DEV-109 · DEV-110**. Spec Approved backlog: **DEV-107**.
 
 ## Rev4 Wave — Spec Approved (2026-07-12)
 
@@ -71,6 +79,8 @@ Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
 | DEV-103 | External Registry Publication Runbook | Chore | S | DEV-003 | P2 | `docs/archived/spec-DEV-103.md` | `docs/AgToosa_TestPlan-DEV-103.md` |
 | DEV-104 | `--reinstall --clean` (ADR-004 Option C) | Feature | S | DEV-001 | P2 | `docs/archived/spec-DEV-104.md` | `docs/AgToosa_TestPlan-DEV-104.md` |
 | DEV-106 | Built with AgToosa Showcase | Docs | XS | DEV-004 | P2 | `docs/archived/spec-DEV-106.md` | `docs/AgToosa_TestPlan-DEV-106.md` |
+
+> **Enrollment note (2026-07-12):** Wave 3 A enroll after v5.3.18 — all nine into Active Cycle; **095** blocked on **096**; soft capacity overrun (~14 SP); docs parallel with soft file locks; **104** ready (090 shipped).
 
 ### Post-Rev4 enrollments (Spec Approved)
 

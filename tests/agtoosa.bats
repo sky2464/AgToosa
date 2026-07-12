@@ -10993,3 +10993,99 @@ _mwz_seed_major() {
   jq -e 'has("schema_version") and has("agtoosa_from") and has("agtoosa_to") and has("created_at") and has("entries")' "$manifest" >/dev/null
   jq -e '.entries[0] | has("path") and has("action") and has("backup")' "$manifest" >/dev/null
 }
+
+# ── DEV-101: Verified vs Community Pack Labeling (TRUST-*) ────────────────────
+
+_trust_registry_docs() {
+  local root="$BATS_TEST_DIRNAME/.."
+  printf '%s\n' \
+    "$root/docs/AgToosa_Registry.md" \
+    "$root/template/Docs/AgToosa_Registry.md"
+}
+
+@test "DEV-101 @smoke TRUST-001: Pack Class Definitions Present" {
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    grep -q "## Trust surface" "$f"
+    grep -qiE 'verified.*(maintainer-reviewed|maintainer reviewed)' "$f"
+    grep -qiE 'community.*(not maintainer-verified|not maintainer verified|submitted)' "$f"
+    grep -qiE 'official pilot|official-pilot' "$f"
+    grep -qiE 'local candidate' "$f"
+  done < <(_trust_registry_docs)
+}
+
+@test "DEV-101 TRUST-002: Allowed and Forbidden Claims" {
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    grep -q "## Trust surface" "$f"
+    # Each class must document allowed and forbidden claims
+    grep -qiE 'Allowed claim|Allowed claims' "$f"
+    grep -qiE 'Forbidden claim|Forbidden claims' "$f"
+    # Verified: maintainer review language allowed; security-certification forbidden in claims table
+    grep -qiE 'maintainer.reviewed|maintainer reviewed' "$f"
+    # Community must not be allowed to claim official / maintainer-approved
+    grep -qiE 'community' "$f"
+    grep -qiE 'maintainer-approved|official|maintainer verified' "$f"
+  done < <(_trust_registry_docs)
+}
+
+@test "DEV-101 @smoke TRUST-003: Manifest Field Mapping" {
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    grep -q "## Trust surface" "$f"
+    # Map labels to existing DEV-053 trust fields only (no invented keys)
+    grep -q 'review_status' "$f"
+    grep -q 'registry_verified_snapshot' "$f"
+    grep -q 'curation_tier' "$f"
+    grep -qiE 'maintainers|maintainer' "$f"
+    # Invented schema keys must not appear as authoritative mapping rows
+    ! grep -E '^\|[^|]*verified_by_agtoosa_cloud' "$f"
+    if grep -q 'verified_by_agtoosa_cloud' "$f"; then
+      grep -qiE 'Unknown keys.*verified_by_agtoosa_cloud|verified_by_agtoosa_cloud.*(not|unknown)' "$f"
+    fi
+  done < <(_trust_registry_docs)
+}
+
+@test "DEV-101 TRUST-004: Publication State Machine Preserved" {
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    grep -q "## Trust surface" "$f"
+    grep -q 'local candidate' "$f"
+    grep -q 'submitted' "$f"
+    grep -qiE 'published|externally published' "$f"
+    # Honesty: published/available requires independent confirmation
+    grep -qiE 'independent(ly)? confirm|confirmed external|independently confirmed' "$f"
+    # Must not equate submitted with available/published (negated wording is OK)
+    ! grep -qiE 'submitted[[:space:]]+(packs?[[:space:]]+)?(are|is|means|=)[[:space:]]+(available|published|externally published)' "$f"
+  done < <(_trust_registry_docs)
+}
+
+@test "DEV-101 TRUST-005: Install Safety Reminder" {
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    grep -q "## Trust surface" "$f"
+    grep -qiE 'does not bypass|do not bypass|labeling does not' "$f"
+    grep -qi 'preview' "$f"
+    grep -qi 'consent' "$f"
+    grep -qiE 'integrity|SHA-256|sha256|allowlist|denylist' "$f"
+  done < <(_trust_registry_docs)
+}
+
+@test "DEV-101 TRUST-006: Forbidden Marketing Phrases" {
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    grep -q "## Trust surface" "$f"
+    # Doc must list these as forbidden (negative contract)
+    grep -qiE 'security certified|security.?certif' "$f"
+    grep -qiE 'Forbidden|forbidden' "$f"
+    # Must not assert verified packs ARE security certified (claim language)
+    ! grep -qiE 'verified packs? (are|is) security certified' "$f"
+    ! grep -qiE 'community packs? (are|is) (official|maintainer-approved|maintainer verified)' "$f"
+  done < <(_trust_registry_docs)
+}

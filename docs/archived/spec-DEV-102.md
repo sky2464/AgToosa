@@ -3,7 +3,7 @@
 > **Story ID:** DEV-102
 > **Type:** Docs
 > **Epic:** DEV-001 — Core Generator & CLI
-> **Status:** ⬜ Backlog
+> **Status:** 🟦 Todo — Rev4 Wave 3 (enrolled)
 > **Estimate:** XS
 > **Priority:** P2
 > **Spec created:** 2026-07-12

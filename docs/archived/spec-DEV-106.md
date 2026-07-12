@@ -3,7 +3,7 @@
 > **Story ID:** DEV-106
 > **Type:** Docs
 > **Epic:** DEV-004 — Delivery, Quality & Operations
-> **Status:** ⬜ Backlog
+> **Status:** 🟦 Todo — Rev4 Wave 3 (enrolled)
 > **Estimate:** XS
 > **Priority:** P2
 > **Spec created:** 2026-07-12

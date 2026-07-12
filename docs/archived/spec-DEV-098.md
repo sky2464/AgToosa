@@ -3,7 +3,7 @@
 > **Story ID:** DEV-098
 > **Type:** Docs
 > **Epic:** DEV-004 — Delivery, Quality & Operations
-> **Status:** ⬜ Backlog
+> **Status:** 🟦 Todo — Rev4 Wave 3 (enrolled)
 > **Estimate:** XS
 > **Priority:** P2
 > **Spec created:** 2026-07-12
@@ -125,14 +125,14 @@ Out of scope        : guide rewrites, search platform, analytics, committed site
 
 ### 3.1 Task Tree
 
-- [ ] **1.** RED navigation contract
-  - [ ] 1.1 Add NAV section inventory and required-link fixtures — _Requirements: AC-001, AC-003–AC-007_
-  - [ ] 1.2 Add non-duplication and broken-link negative fixtures — _Requirements: AC-002, AC-005_
-- [ ] **2.** Landing page update
-  - [ ] 2.1 Restructure `docs/index.md` into five job sections with canonical links — _Requirements: AC-001–AC-007_
-- [ ] **3.** Static site regression
-  - [ ] 3.1 Confirm SITE build and `/AgToosa/` link checks still pass — _Requirements: AC-008_
-  - [ ] 3.2 Record RED/GREEN NAV evidence — _Requirements: AC-001–AC-008_
+- [x] **1.** RED navigation contract
+  - [x] 1.1 Add NAV section inventory and required-link fixtures — _Requirements: AC-001, AC-003–AC-007_
+  - [x] 1.2 Add non-duplication and broken-link negative fixtures — _Requirements: AC-002, AC-005_
+- [x] **2.** Landing page update
+  - [x] 2.1 Restructure `docs/index.md` into five job sections with canonical links — _Requirements: AC-001–AC-007_
+- [x] **3.** Static site regression
+  - [x] 3.1 Confirm SITE build and `/AgToosa/` link checks still pass — _Requirements: AC-008_
+  - [x] 3.2 Record RED/GREEN NAV evidence — _Requirements: AC-001–AC-008_
 
 ### 3.2 Wave Plan
 
