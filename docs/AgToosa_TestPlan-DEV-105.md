@@ -1,7 +1,7 @@
 # Test Plan: DEV-105 — PowerShell Maintain + Update Parity
 
 > **Spec:** `docs/archived/spec-DEV-105.md`
-> **Status:** 🟦 Todo — spec approved; build not started
+> **Status:** 🟩 Done — GREEN evidence recorded 2026-07-12
 > **Created:** 2026-07-12
 > **Test prefix:** `PSP`
 
@@ -13,15 +13,15 @@ PowerShell `-Verify`, `-Doctor`, `-Uninstall`, and bash-delegated `-Update` pari
 
 | AC | Test ID | Named test | Type | Expected result | Status |
 |----|---------|------------|------|-----------------|--------|
-| AC-001 | PSP-001 | PS1 Verify dispatches repo verifier | Pester/integration | `-Verify -UpdatePath` runs verifier; exit code preserved | ⬜ Pending |
-| AC-002 | PSP-002 | PS1 Doctor matches bash doctor | Pester/integration | Doctor output includes version/lock/context signals | ⬜ Pending |
-| AC-003 | PSP-003 | PS1 Uninstall preserves user data | Pester/integration | Master-Plan and Context remain; owned files removed | ⬜ Pending |
-| AC-004, AC-006 | PSP-004 | PS1 Update delegates to bash run_update | Pester/grep | Update invokes `agtoosa.sh --update`; lock/version updated | ⬜ Pending |
-| AC-005 | PSP-005 | Missing UpdatePath fails fast | Pester/negative | Non-zero error when path omitted | ⬜ Pending |
-| AC-007 | PSP-001–PSP-005 | Pester suite covers verify/doctor/uninstall/update + validation | Pester suite | `tests/pester/agtoosa-maintain.Tests.ps1` exercises AC-001–AC-006 paths in isolated temp dirs | ⬜ Pending |
-| AC-008 | PSP-006 | agtoosa.ps1 declares maintain switches | Grep contract | `-Verify`, `-Doctor`, `-Uninstall` in param block | ⬜ Pending |
-| AC-009 | PSP-007 | Help documents maintain switches | Docs/grep | Help text lists verify/doctor/uninstall/update parity | ⬜ Pending |
-| AC-004 | PSP-008 | Inline Install-Files-only update path removed | Grep contract | `-Update` block calls bash update engine | ⬜ Pending |
+| AC-001 | PSP-001 | PS1 Verify dispatches repo verifier | Pester/integration | `-Verify -UpdatePath` runs verifier; exit code preserved | 🟩 GREEN |
+| AC-002 | PSP-002 | PS1 Doctor matches bash doctor | Pester/integration | Doctor output includes version/lock/context signals | 🟩 GREEN |
+| AC-003 | PSP-003 | PS1 Uninstall preserves user data | Pester/integration | Master-Plan and Context remain; owned files removed | 🟩 GREEN |
+| AC-004, AC-006 | PSP-004 | PS1 Update delegates to bash run_update | Pester/grep | Update invokes `agtoosa.sh --update`; lock/version updated | 🟩 GREEN |
+| AC-005 | PSP-005 | Missing UpdatePath fails fast | Pester/negative | Non-zero error when path omitted | 🟩 GREEN |
+| AC-007 | PSP-001–PSP-005 | Pester suite covers verify/doctor/uninstall/update + validation | Pester suite | `tests/pester/agtoosa-maintain.Tests.ps1` exercises AC-001–AC-006 paths in isolated temp dirs | 🟩 GREEN |
+| AC-008 | PSP-006 | agtoosa.ps1 declares maintain switches | Grep contract | `-Verify`, `-Doctor`, `-Uninstall` in param block | 🟩 GREEN |
+| AC-009 | PSP-007 | Help documents maintain switches | Docs/grep | Help text lists verify/doctor/uninstall/update parity | 🟩 GREEN |
+| AC-004 | PSP-008 | Inline Install-Files-only update path removed | Grep contract | `-Update` block calls bash update engine | 🟩 GREEN |
 
 ## Negative and Edge Scenarios
 
@@ -47,17 +47,17 @@ Pester command (when pwsh available): `Invoke-Pester -Path tests/pester/agtoosa-
 
 | Task group | Planned command | Exit code | Failure excerpt |
 |------------|-----------------|-----------|-----------------|
-| 1. Parity contract RED coverage | `bats tests/agtoosa.bats -f "DEV-105\|PSP-"` | — | _Pending — record during `/agtoosa-build`_ |
-| 1. Parity contract RED coverage | `Invoke-Pester -Path tests/pester/agtoosa-maintain.Tests.ps1` | — | _Pending — record during `/agtoosa-build`_ |
-| 2. PowerShell maintain switches | `bats tests/agtoosa.bats -f "PSP-006\|PSP-007\|PSP-008"` | — | _Pending — record during `/agtoosa-build`_ |
-| 3. Pester implementation | `Invoke-Pester -Path tests/pester/agtoosa-maintain.Tests.ps1` | — | _Pending — record during `/agtoosa-build`_ |
-| 4. Evidence | `bats tests/agtoosa.bats -f "DEV-105\|PSP-"` | — | _Pending — record during `/agtoosa-build`_ |
+| 1. Parity contract RED coverage | `bats tests/agtoosa.bats -f "DEV-105\|PSP-"` | 1 | `grep -q '\[switch\]\$Verify'` / `Invoke-AgToosaMaintain` not found (pre-impl) |
+| 1. Parity contract RED coverage | `Invoke-Pester -Path tests/pester/agtoosa-maintain.Tests.ps1` | 1 | File not found / switches missing (pre-impl) |
+| 2. PowerShell maintain switches | `bats tests/agtoosa.bats -f "PSP-006\|PSP-007\|PSP-008"` | 1 | PSP-006–008 grep failures before `agtoosa.ps1` changes |
+| 3. Pester implementation | `Invoke-Pester -Path tests/pester/agtoosa-maintain.Tests.ps1` | 1 | Missing `-Verify`/dispatch helpers (pre-impl) |
+| 4. Evidence | `bats tests/agtoosa.bats -f "DEV-105\|PSP-"` | 1 | PSP-004 bash install failed without `mkdir -p` nested fixture |
 
 ## GREEN Evidence
 
 | Task group | Planned command | Exit code | Pass excerpt |
 |------------|-----------------|-----------|--------------|
-| 1. Parity contract RED coverage | `bats tests/agtoosa.bats -f "DEV-105\|PSP-"` | — | _Pending — record during `/agtoosa-build`_ |
-| 2. PowerShell maintain switches | `bats tests/agtoosa.bats -f "PSP-006\|PSP-007\|PSP-008"` | — | _Pending — record during `/agtoosa-build`_ |
-| 3. Pester implementation | `Invoke-Pester -Path tests/pester/agtoosa-maintain.Tests.ps1` | — | _Pending — record during `/agtoosa-build`_ |
-| 4. Evidence | `bats tests/agtoosa.bats -f "DEV-105\|PSP-"` | — | _Pending — record during `/agtoosa-build`_ |
+| 1. Parity contract RED coverage | `bats tests/agtoosa.bats -f "DEV-105\|PSP-"` | 0 | `ok 1..5` DEV-105 section |
+| 2. PowerShell maintain switches | `bats tests/agtoosa.bats -f "PSP-006\|PSP-007\|PSP-008"` | 0 | PSP-006–008 grep + PSP-004 integration |
+| 3. Pester implementation | `Invoke-Pester -Path tests/pester/agtoosa-maintain.Tests.ps1` | 0 | `Passed 6, Failed 0` |
+| 4. Evidence | `bats tests/agtoosa.bats -f "DEV-105\|PSP-"` | 0 | All PSP bats + Pester GREEN |

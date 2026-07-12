@@ -3,7 +3,7 @@
 > **Story ID:** DEV-090
 > **Type:** Feature
 > **Epic:** DEV-001 — Core Generator Engine
-> **Status:** 🟦 Todo
+> **Status:** 🟩 Built
 > **Estimate:** M
 > **Priority:** P0
 > **Spec created:** 2026-07-12
@@ -133,20 +133,22 @@ Out of scope        : apply semantics rewrite, DEV-093 lock revalidation, PS1 pl
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Plan engine RED coverage
+- [x] **1.** Plan engine RED coverage
   - [ ] 1.1 Add PLN bats for install/update dry-run parity and JSON parseability — _Requirements: AC-002, AC-003, AC-004, AC-009_
   - [ ] 1.2 Add PLN bats for idempotent second dry-run and no-mutation guard — _Requirements: AC-005, AC-008, AC-009_
   - [ ] 1.3 Add PLN doc grep bats for `Docs/agtoosa-lock.json` path — _Requirements: AC-006, AC-007, AC-009_
-- [ ] **2.** Unified plan implementation
+- [x] **2.** Unified plan implementation
   - [ ] 2.1 Implement `lib/plan.sh` with shared categorization — _Requirements: AC-001, AC-002, AC-003_
   - [ ] 2.2 Wire `lib/dryrun.sh` and `lib/update.sh` to plan engine — _Requirements: AC-002, AC-003, AC-008_
   - [ ] 2.3 Add `--format json` to `agtoosa.sh` dry-run paths — _Requirements: AC-004, AC-008_
-- [ ] **3.** Documentation alignment
+- [x] **3.** Documentation alignment
   - [ ] 3.1 Fix lock file paths in Update and Init workflow docs — _Requirements: AC-006, AC-007_
-- [ ] **4.** Evidence
+- [x] **4.** Evidence
   - [ ] 4.1 Record PLN RED/GREEN evidence — _Requirements: AC-001–AC-009_
 
-### 3.2 Wave Plan
+### Wave Plan
+
+### 3.2 Wave Plan detail
 
 **Wave 1 (sequential within story — shared bats file):** 1.1 → 1.2 → 1.3
 **Wave 2 (sequential after Wave 1):** 2.1

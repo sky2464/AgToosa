@@ -29,7 +29,7 @@ if [[ ! -d "${SCRIPT_DIR}/lib" ]]; then
 fi
 
 # ── Source modular libraries ──────────────────────────────────
-for _lib in config version copy generate dryrun install update provenance registry catalog tracker maintain; do
+for _lib in config version copy generate plan dryrun install update provenance registry catalog tracker maintain; do
   # shellcheck source=/dev/null
   source "${SCRIPT_DIR}/lib/${_lib}.sh"
 done
@@ -90,6 +90,7 @@ UNINSTALL=false
 UNINSTALL_PATH=""
 OUTPUT_FORMAT=""
 VERIFY_STRICT=false
+PLAN_JSON_MODE=false
 while [[ $# -gt 0 ]]; do
   arg="$1"
   case "$arg" in
@@ -177,6 +178,10 @@ if [[ -n "$_PATH_ARG" ]]; then
   fi
 fi
 unset _PATH_ARG
+
+if [[ "$DRY_RUN" == true && "$OUTPUT_FORMAT" == "json" ]]; then
+  PLAN_JSON_MODE=true
+fi
 
 # ── Source guard (allows sourcing for unit tests) ─────────────
 [[ "${BASH_SOURCE[0]}" == "${0}" ]] || return 0
@@ -329,20 +334,7 @@ if [[ "$UPDATE" == true ]]; then
   fi
 
   if [[ "$DRY_RUN" == true ]]; then
-    detect_installed_platforms
-    _dnames=()
-    [[ "$USE_CURSOR"   == true ]] && _dnames+=("cursor")
-    [[ "$USE_WINDSURF" == true ]] && _dnames+=("windsurf")
-    [[ "$USE_CLAUDE"   == true ]] && _dnames+=("claude")
-    [[ "$USE_GEMINI"   == true ]] && _dnames+=("gemini")
-    [[ "$USE_COPILOT"  == true ]] && _dnames+=("copilot")
-    [[ "$USE_OPENCODE" == true ]] && _dnames+=("opencode")
-    echo -e "${YELLOW}[DRY RUN] Would update AgToosa in '${PROJECT_PATH}'${NC}"
-    echo -e "  Would overwrite: all Docs/AgToosa_*.md (except Master-Plan.md, Master-Architecture.md, and AgToosa_Changelog.md)"
-    echo -e "  Would merge platform entry-points: ${_dnames[*]:-none detected}"
-    echo -e "  Would preserve: Docs/Context/, Docs/Master-Plan.md, Docs/Master-Architecture.md, Docs/AgToosa_Changelog.md"
-    echo ""
-    echo -e "${YELLOW}[DRY RUN] No changes made. Remove --dry-run to apply.${NC}"
+    run_update_dryrun "${OUTPUT_FORMAT:-text}"
     exit 0
   fi
 
@@ -371,26 +363,28 @@ if ! command -v git &>/dev/null; then
 fi
 
 # ── Welcome ───────────────────────────────────────────────────
-clear 2>/dev/null || true
-echo ""
-echo -e "${PURPLE}${BOLD}╔══════════════════════════════════════════════════════╗${NC}"
-echo -e "${PURPLE}${BOLD}║          🤖 AgToosa v${AGTOOSA_VERSION} — Local Generator         ║${NC}"
-echo -e "${PURPLE}${BOLD}╚══════════════════════════════════════════════════════╝${NC}"
-echo ""
-echo -e "${CYAN}AgToosa is a spec-driven agentic AI framework that${NC}"
-echo -e "${CYAN}understands your codebase and helps you develop with${NC}"
-echo -e "${CYAN}a clean folder structure and structured workflow.${NC}"
-echo ""
-echo -e "${YELLOW}How it works:${NC}"
-echo -e "  1. We detect which AI assistant(s) you use"
-echo -e "  2. We generate ONLY the necessary config files"
-echo -e "  3. We copy them directly to your project"
-echo -e "  4. Run ${BOLD}/agtoosa-init${NC} in your AI assistant (one-time)"
-echo -e "  5. Then use: ${BOLD}/agtoosa-spec → /agtoosa-build → /agtoosa-review → /agtoosa-ship${NC}"
-echo ""
-echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
-echo ""
-[[ "$DRY_RUN" == true ]] && { echo -e "${YELLOW}${BOLD}[DRY RUN] No files will be written.${NC}"; echo ""; }
+if [[ "$PLAN_JSON_MODE" != true ]]; then
+  clear 2>/dev/null || true
+  echo ""
+  echo -e "${PURPLE}${BOLD}╔══════════════════════════════════════════════════════╗${NC}"
+  echo -e "${PURPLE}${BOLD}║          🤖 AgToosa v${AGTOOSA_VERSION} — Local Generator         ║${NC}"
+  echo -e "${PURPLE}${BOLD}╚══════════════════════════════════════════════════════╝${NC}"
+  echo ""
+  echo -e "${CYAN}AgToosa is a spec-driven agentic AI framework that${NC}"
+  echo -e "${CYAN}understands your codebase and helps you develop with${NC}"
+  echo -e "${CYAN}a clean folder structure and structured workflow.${NC}"
+  echo ""
+  echo -e "${YELLOW}How it works:${NC}"
+  echo -e "  1. We detect which AI assistant(s) you use"
+  echo -e "  2. We generate ONLY the necessary config files"
+  echo -e "  3. We copy them directly to your project"
+  echo -e "  4. Run ${BOLD}/agtoosa-init${NC} in your AI assistant (one-time)"
+  echo -e "  5. Then use: ${BOLD}/agtoosa-spec → /agtoosa-build → /agtoosa-review → /agtoosa-ship${NC}"
+  echo ""
+  echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
+  echo ""
+  [[ "$DRY_RUN" == true ]] && { echo -e "${YELLOW}${BOLD}[DRY RUN] No files will be written.${NC}"; echo ""; }
+fi
 
 # ── Project path ──────────────────────────────────────────────
 if [[ -n "$CLI_PROJECT_PATH" ]]; then
@@ -418,9 +412,11 @@ if [[ "$_rp_project" == "$_rp_script" ]]; then
   exit 1
 fi
 
-echo ""
-echo -e "${GREEN}✅ Project found: ${PROJECT_PATH}${NC}"
-echo ""
+if [[ "$PLAN_JSON_MODE" != true ]]; then
+  echo ""
+  echo -e "${GREEN}✅ Project found: ${PROJECT_PATH}${NC}"
+  echo ""
+fi
 
 # ── Platform selection ────────────────────────────────────────
 if [[ -n "$CLI_PLATFORMS" ]]; then
@@ -446,7 +442,7 @@ if [[ -n "$CLI_PLATFORMS" ]]; then
     esac
   done < <(tr ',' '\n' <<< "$CLI_PLATFORMS")
   SELECTION="${SELECTION# }"
-  echo -e "${BOLD}Platforms (from --platforms):${NC} ${CLI_PLATFORMS}"
+  [[ "$PLAN_JSON_MODE" != true ]] && echo -e "${BOLD}Platforms (from --platforms):${NC} ${CLI_PLATFORMS}"
 else
   echo -e "${BOLD}Which AI coding assistant(s) do you use?${NC}"
   echo -e "${CYAN}(Enter numbers separated by spaces, e.g., '1 3 5')${NC}"
@@ -527,29 +523,39 @@ mkdir -p "$SHIP_DIR/Docs/archived" "$SHIP_DIR/Docs/Context" \
            "$SHIP_DIR/.github/prompts" "$SHIP_DIR/.github/agents" \
            "$SHIP_DIR/.codex/skills" \
            "$SHIP_DIR/.windsurf/rules" "$SHIP_DIR/.windsurf/workflows"
-echo ""
 GENERATED=0
-stage_files
+if [[ "$PLAN_JSON_MODE" == true ]]; then
+  stage_files >/dev/null
+else
+  stage_files
+fi
 
-echo ""
-echo -e "${GREEN}${BOLD}Generated ${GENERATED} files.${NC}"
-echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
-echo ""
-echo -e "${BOLD}Ready to copy AgToosa files to:${NC}"
-echo -e "  ${CYAN}${PROJECT_PATH}${NC}"
-echo ""
+if [[ "$PLAN_JSON_MODE" != true ]]; then
+  echo ""
+  echo -e "${GREEN}${BOLD}Generated ${GENERATED} files.${NC}"
+  echo -e "${YELLOW}────────────────────────────────────────────────────${NC}"
+  echo ""
+  echo -e "${BOLD}Ready to copy AgToosa files to:${NC}"
+  echo -e "  ${CYAN}${PROJECT_PATH}${NC}"
+  echo ""
+fi
 
 # ── Existing file count + hint ────────────────────────────────
 EXISTING_FILES=0
 count_existing_files
-if [[ $EXISTING_FILES -gt 0 ]]; then
+if [[ "$PLAN_JSON_MODE" != true && $EXISTING_FILES -gt 0 ]]; then
   echo -e "${CYAN}ℹ️  ${EXISTING_FILES} file(s) already exist — platform configs will be merged, Context/ files preserved.${NC}"
   echo ""
 fi
 
 # ── Dry-run preview or confirm + install ─────────────────────
 if [[ "$DRY_RUN" == true ]]; then
-  print_dryrun_preview
+  compute_agtoosa_plan "$PROJECT_PATH" "install"
+  if [[ "$OUTPUT_FORMAT" == "json" ]]; then
+    emit_plan_json
+  else
+    emit_plan_human
+  fi
   exit 0
 fi
 

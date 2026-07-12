@@ -16,19 +16,11 @@
 
 **Public launch status:** AgToosa is public. The repository, release tag, raw bootstrap files, registry index, Homebrew tap, support links, and proof project are anonymously accessible.
 
-**Public launch: pinned release**
+**Primary: 15-minute proof journey**
 
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.15
-```
+Follow one path to see AgToosa value: install → open the [proof repository](https://github.com/sky2464/agtoosa-first-15-proof) → init → spec → build → verify.
 
-**Private collaborator path: clone and run**
-
-```bash
-git clone https://github.com/sky2464/AgToosa.git && cd AgToosa && bash agtoosa.sh
-```
-
-See the [first 15 minutes proof](docs/examples/first-15-minutes.md) for a clean-repo walkthrough that shows generated workflow files and expected spec/test-plan/review/ship-check artifacts. The public proof repository is [sky2464/agtoosa-first-15-proof](https://github.com/sky2464/agtoosa-first-15-proof).
+[Start the 15-minute proof walkthrough](docs/examples/first-15-minutes.md) for a clean-repo guide with expected spec, test-plan, review, and ship-check artifacts.
 
 Before public announcement or a future release, run the [public launch proof checklist](docs/examples/public-launch-proof.md) and keep public-facing claims tied to passing checks.
 
@@ -55,22 +47,28 @@ If any are missing, the bootstrap script will tell you how to install them. Inst
 
 ### Quick Start
 
+Start with the [15-minute proof walkthrough](docs/examples/first-15-minutes.md) above if you want the full install → proof repo → init → spec → build → verify path.
+
+### Alternative install paths
+
+Use these when you already know AgToosa and only need an install command.
+
 **macOS & Linux:**
 
 ```bash
-# Public launch: pinned release.
+# Public launch: pinned release (alternative to the proof walkthrough).
 bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.15
 
-# Persistent install via Homebrew (formula pinned to the tagged release tarball)
+# Homebrew alternative (formula pinned to the tagged release tarball)
 brew install sky2464/agtoosa/agtoosa
 
-# npm wrapper (downloads the release pinned to the package version)
+# npm alternative (downloads the release pinned to the package version)
 npx agtoosa
 
 # Non-interactive (CI, devcontainers, scripted rollouts)
 bash agtoosa.sh --path /path/to/project --platforms cursor,claude --yes
 
-# Manual verification path for local source checkouts:
+# Clone-and-run alternative for local source checkouts:
 git clone https://github.com/sky2464/AgToosa.git
 cd AgToosa
 bash agtoosa.sh --version
@@ -114,7 +112,7 @@ cd AgToosa
 > **Windows tip:** For full feature parity including `--registry publish`, use WSL2 or Git Bash instead of native PowerShell.
 > Windows tip: For full feature parity including registry publish, use WSL2 or Git Bash instead of native PowerShell.
 
-**Or clone and run:**
+**Clone-and-run alternative:**
 ```bash
 git clone https://github.com/sky2464/AgToosa.git && cd AgToosa && bash agtoosa.sh
 ```

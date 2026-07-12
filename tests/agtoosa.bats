@@ -9214,3 +9214,424 @@ _vfj_assert_schema_fields() {
   [[ "$output" == *"Docs/schemas/verify-result-v1.json"* ]]
   grep -q 'Docs/schemas/verify-result-v1.json' "$root/lib/config.sh"
 }
+
+# -- DEV-086 Canonical Proof Product Experience (PRF-001-PRF-009) --------------
+
+prf_fixture_root() {
+  printf '%s/fixtures/proof-journey' "$BATS_TEST_DIRNAME"
+}
+
+prf_manifest() {
+  printf '%s/expected-manifest.json' "$(prf_fixture_root)"
+}
+
+prf_manifest_field() {
+  local field="$1"
+  jq -r ".$field" "$(prf_manifest)"
+}
+
+prf_copy_launch_fixture_base() {
+  f15_copy_launch_fixture_base "$1"
+}
+
+prf_run_checker() {
+  f15_run_checker "$@"
+}
+
+prf_readme_above_fold() {
+  local readme="$1"
+  awk '/^---$/{exit} {print}' "$readme"
+}
+
+prf_assert_manifest_markers_in_file() {
+  local file="$1"
+  local marker
+  while IFS= read -r marker; do
+    [[ -n "$marker" ]] || continue
+    grep -qF -- "$marker" "$file"
+  done < <(jq -r '.workflow_commands[], .artifact_markers[]' "$(prf_manifest)")
+}
+
+@test "DEV-086 @smoke PRF-001: README has one primary proof CTA" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  local marker fold
+  marker="$(prf_manifest_field readme_primary_cta_marker)"
+  fold="$(prf_readme_above_fold "$readme")"
+
+  [[ "$fold" == *"$marker"* ]]
+  [[ "$(printf '%s' "$fold" | grep -cF -- "$marker")" -eq 1 ]]
+  [[ "$fold" == *"$(prf_manifest_field readme_walkthrough_link)"* ]]
+  [[ "$fold" == *"$(prf_manifest_field canonical_proof_repo_url)"* ]]
+
+  local competing
+  while IFS= read -r competing; do
+    [[ -n "$competing" ]] || continue
+    [[ "$fold" != *"$competing"* ]]
+  done < <(jq -r '.competing_primary_markers[]' "$(prf_manifest)")
+
+  run prf_run_checker "$BATS_TEST_DIRNAME/.." --mode private
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"ok - README primary proof CTA is present"* ]]
+}
+
+@test "DEV-086 PRF-002: Secondary install paths are labeled alternatives" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  local section_marker
+  section_marker="$(prf_manifest_field readme_secondary_section_marker)"
+
+  grep -qF -- "$section_marker" "$readme"
+  local section_line
+  section_line="$(grep -nF -- "$section_marker" "$readme" | head -n1 | cut -d: -f1)"
+  [[ -n "$section_line" ]]
+
+  local section_tail
+  section_tail="$(tail -n +"$section_line" "$readme")"
+  [[ "$section_tail" == *"brew install"* ]]
+  [[ "$section_tail" == *"npx agtoosa"* ]]
+  [[ "$section_tail" == *"git clone https://github.com/sky2464/AgToosa.git"* ]]
+
+  local fold competing
+  fold="$(prf_readme_above_fold "$readme")"
+  while IFS= read -r competing; do
+    [[ -n "$competing" ]] || continue
+    [[ "$fold" != *"$competing"* ]]
+  done < <(jq -r '.competing_primary_markers[]' "$(prf_manifest)")
+}
+
+@test "DEV-086 @smoke PRF-003: First-15 walkthrough ends on verifier success" {
+  local first15="$BATS_TEST_DIRNAME/../docs/examples/first-15-minutes.md"
+  local heading success_cmd
+  heading="$(prf_manifest_field first15_verify_heading)"
+  success_cmd="$(jq -r '.first15_success_condition' "$(prf_manifest)")"
+
+  grep -qF -- "$heading" "$first15"
+  grep -qF -- "$success_cmd" "$first15"
+
+  local cmd
+  while IFS= read -r cmd; do
+    [[ -n "$cmd" ]] || continue
+    grep -qF -- "$cmd" "$first15"
+  done < <(jq -r '.first15_verify_commands[]' "$(prf_manifest)")
+
+  local verify_line last_step_line
+  verify_line="$(grep -nF -- "$heading" "$first15" | head -n1 | cut -d: -f1)"
+  last_step_line="$(grep -nE '^## [0-9]+\.' "$first15" | tail -n1 | cut -d: -f1)"
+  [[ "$verify_line" -le "$last_step_line" ]]
+  [[ "$heading" == *"Verify"* ]]
+}
+
+@test "DEV-086 PRF-004: Golden proof-journey fixtures match expected markers" {
+  local manifest golden_dir="$BATS_TEST_DIRNAME/fixtures/proof-journey/golden"
+  [ -f "$(prf_manifest)" ]
+  [ -f "$golden_dir/readme-hero-snippet.md" ]
+  [ -f "$golden_dir/first15-verify-snippet.md" ]
+  [ -f "$golden_dir/first15-artifacts-snippet.md" ]
+
+  local marker
+  marker="$(prf_manifest_field readme_primary_cta_marker)"
+  grep -qF -- "$marker" "$golden_dir/readme-hero-snippet.md"
+  grep -qF -- "$(prf_manifest_field canonical_proof_repo_url)" "$golden_dir/readme-hero-snippet.md"
+
+  marker="$(prf_manifest_field first15_verify_heading)"
+  grep -qF -- "$marker" "$golden_dir/first15-verify-snippet.md"
+  grep -qF -- "$(prf_manifest_field first15_success_condition)" "$golden_dir/first15-verify-snippet.md"
+
+  local artifact
+  while IFS= read -r artifact; do
+    [[ -n "$artifact" ]] || continue
+    grep -qF -- "$artifact" "$golden_dir/first15-artifacts-snippet.md"
+  done < <(jq -r '.artifact_markers[]' "$(prf_manifest)")
+
+  local workflow
+  while IFS= read -r workflow; do
+    [[ -n "$workflow" ]] || continue
+    grep -qF -- "$workflow" "$BATS_TEST_DIRNAME/../docs/examples/first-15-minutes.md"
+  done < <(jq -r '.workflow_commands[]' "$(prf_manifest)")
+
+  local cmd
+  while IFS= read -r cmd; do
+    [[ -n "$cmd" ]] || continue
+    grep -qF -- "$cmd" "$golden_dir/first15-verify-snippet.md"
+  done < <(jq -r '.first15_verify_commands[]' "$(prf_manifest)")
+}
+
+@test "DEV-086 PRF-005: Stale proof-journey fixture fails with diagnostics" {
+  local fixture="$TEST_PROJECT/prf-stale-fixture"
+  local stale_readme stale_first15
+  stale_readme="$(prf_fixture_root)/negative/stale-readme-missing-cta.md"
+  stale_first15="$(prf_fixture_root)/negative/stale-first15-no-verify.md"
+  prf_copy_launch_fixture_base "$fixture"
+  cp "$stale_readme" "$fixture/README.md"
+  cp "$stale_first15" "$fixture/docs/examples/first-15-minutes.md"
+
+  run prf_run_checker "$fixture" --mode private
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"README.md"* ]]
+  [[ "$output" == *"$(prf_manifest_field readme_primary_cta_marker)"* ]]
+  [[ "$output" == *"docs/examples/first-15-minutes.md"* ]]
+  [[ "$output" == *"$(prf_manifest_field first15_verify_heading)"* ]]
+}
+
+@test "DEV-086 @smoke PRF-006: Launch gate extends proof-journey checks" {
+  local checker="$BATS_TEST_DIRNAME/../scripts/check-launch-readiness.sh"
+  grep -q 'check_proof_journey_consistency' "$checker"
+
+  run prf_run_checker "$BATS_TEST_DIRNAME/.." --mode private
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"proof-journey maintenance"* ]]
+  [[ "$output" == *"ok - README primary proof CTA is present"* ]]
+  [[ "$output" == *"ok - first-15 verify success step is present"* ]]
+  [[ "$output" == *"ok - proof-journey surfaces are consistent"* ]]
+
+  local fixture="$TEST_PROJECT/prf-proof-url-suffix"
+  prf_copy_launch_fixture_base "$fixture"
+  sed -i.bak 's|agtoosa-first-15-proof)|agtoosa-first-15-proof/)|' "$fixture/README.md"
+  rm -f "$fixture/README.md.bak"
+
+  run prf_run_checker "$fixture" --mode private
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-086 PRF-007: Multiple proof findings remain actionable" {
+  local fixture="$TEST_PROJECT/prf-multi-fail"
+  local stale_readme stale_first15 marker heading
+  stale_readme="$(prf_fixture_root)/negative/stale-readme-missing-cta.md"
+  stale_first15="$(prf_fixture_root)/negative/stale-first15-no-verify.md"
+  marker="$(prf_manifest_field readme_primary_cta_marker)"
+  heading="$(prf_manifest_field first15_verify_heading)"
+  prf_copy_launch_fixture_base "$fixture"
+  cp "$stale_readme" "$fixture/README.md"
+  cp "$stale_first15" "$fixture/docs/examples/first-15-minutes.md"
+
+  run prf_run_checker "$fixture" --mode private
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"README.md"* ]]
+  [[ "$output" == *"docs/examples/first-15-minutes.md"* ]]
+  [[ "$output" == *"$marker"* ]]
+  [[ "$output" == *"$heading"* ]]
+}
+
+@test "DEV-086 PRF-008: Private proof maintenance is offline" {
+  local fixture="$TEST_PROJECT/prf-offline"
+  local curl_shim="$TEST_PROJECT/bin"
+  prf_copy_launch_fixture_base "$fixture"
+  mkdir -p "$curl_shim"
+  cat > "$curl_shim/curl" <<'EOF'
+#!/usr/bin/env bash
+echo "curl shim invoked: $*" >&2
+exit 99
+EOF
+  chmod +x "$curl_shim/curl"
+
+  run env PATH="$curl_shim:$PATH" bash "$fixture/scripts/check-launch-readiness.sh" --mode private
+  [ "$status" -eq 0 ]
+  [[ "$output" != *"curl shim invoked"* ]]
+  [[ "$output" == *"proof-journey maintenance"* ]]
+  [[ "$output" == *"Skipping anonymous public URL checks"* ]]
+}
+
+@test "DEV-086 PRF-009: Proof maintenance is read-only and flow-neutral" {
+  local fixture="$TEST_PROJECT/prf-readonly"
+  local readme first15
+  prf_copy_launch_fixture_base "$fixture"
+  readme="$fixture/README.md"
+  first15="$fixture/docs/examples/first-15-minutes.md"
+  local hash_before_readme hash_before_first15 step_sig_before
+  hash_before_readme="$(shasum -a 256 "$readme" | awk '{print $1}')"
+  hash_before_first15="$(shasum -a 256 "$first15" | awk '{print $1}')"
+  step_sig_before="$(grep -E '^## [0-9]+\.' "$first15" | tr '\n' '|')"
+
+  run prf_run_checker "$fixture" --mode private
+  [ "$status" -eq 0 ]
+
+  [ "$(shasum -a 256 "$readme" | awk '{print $1}')" = "$hash_before_readme" ]
+  [ "$(shasum -a 256 "$first15" | awk '{print $1}')" = "$hash_before_first15" ]
+  [ "$(grep -E '^## [0-9]+\.' "$first15" | tr '\n' '|')" = "$step_sig_before" ]
+}
+
+# ── DEV-105: PowerShell maintain + update parity (PSP-001–PSP-008) ───────────
+
+@test "DEV-105 @smoke PSP-006: agtoosa.ps1 declares maintain switches" {
+  local f="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  grep -q '\[switch\]\$Verify' "$f"
+  grep -q '\[switch\]\$Doctor' "$f"
+  grep -q '\[switch\]\$Uninstall' "$f"
+  grep -q 'function Invoke-AgToosaMaintain' "$f"
+}
+
+@test "DEV-105 PSP-007: Show-Usage documents maintain switches" {
+  local f="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  grep -q -- '-Verify' "$f"
+  grep -q -- '-Doctor' "$f"
+  grep -q -- '-Uninstall' "$f"
+  grep -q -- '-UpdatePath <path>' "$f"
+  grep -q 'Git Bash' "$f"
+}
+
+@test "DEV-105 @smoke PSP-008: -Update delegates to bash run_update" {
+  local f="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  grep -q 'function Invoke-AgToosaMaintain' "$f"
+  grep -q 'agtoosa.sh.*--update' "$f"
+  ! grep -A 40 'if \(\$Update\)' "$f" | grep -q 'Copy-StageFiles'
+  ! grep -A 40 'if \(\$Update\)' "$f" | grep -q 'Install-Files \$UpdatePath'
+}
+
+@test "DEV-105 @smoke PSP-004: PS1 update dispatches bash and bumps version marker" {
+  command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
+
+  local project="$TEST_PROJECT/ps-maintain-update"
+  mkdir -p "$project"
+  run bash "$SCRIPT" --path "$project" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo "5.0.0" > "$project/Docs/.agtoosa-version"
+
+  run pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1" -Update -UpdatePath "$project"
+  [ "$status" -eq 0 ]
+  [ -f "$project/Docs/.agtoosa-version" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.15" ]
+}
+
+@test "DEV-105 PSP-005: maintain switches require -UpdatePath" {
+  command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
+
+  local ps="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  run pwsh -NoProfile -File "$ps" -Verify
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"UpdatePath"* ]]
+
+  run pwsh -NoProfile -File "$ps" -Doctor
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"UpdatePath"* ]]
+
+  run pwsh -NoProfile -File "$ps" -Uninstall
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"UpdatePath"* ]]
+
+  run pwsh -NoProfile -File "$ps" -Update
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"UpdatePath"* ]]
+}
+
+# ── DEV-090: Unified plan engine (PLN-001–PLN-009) ───────────────────────────
+
+_pln_install_json_plan() {
+  bash "$SCRIPT" --path "$1" --platforms "${2:-claude}" --yes --dry-run --format json
+}
+
+_pln_plan_actions_by_path() {
+  local json="$1"
+  python3 - <<'PY' "$json"
+import json, sys
+doc = json.loads(sys.argv[1])
+for item in sorted(doc.get("actions", []), key=lambda x: x["path"]):
+    print(f"{item['path']}\t{item['category']}\t{item['detail']}")
+PY
+}
+
+@test "DEV-090 PLN-001: plan.sh exposes compute_agtoosa_plan" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/lib/plan.sh" ]
+  run bash -c 'source "'"$root"'/lib/config.sh"; source "'"$root"'/lib/version.sh"; source "'"$root"'/lib/plan.sh"; declare -f compute_agtoosa_plan emit_plan_human emit_plan_json'
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"compute_agtoosa_plan"* ]]
+  [[ "$output" == *"emit_plan_human"* ]]
+  [[ "$output" == *"emit_plan_json"* ]]
+}
+
+@test "DEV-090 @smoke PLN-002: Install dry-run uses plan engine categories" {
+  mkdir -p "$TEST_PROJECT"
+  printf 'user-only content no agtoosa markers\n' > "$TEST_PROJECT/CLAUDE.md"
+  run bash -c "printf '$TEST_PROJECT\n3\n' | bash '$SCRIPT' --dry-run"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"[DRY RUN]"* ]]
+  [[ "$output" == *"Would backup + append AgToosa block"* ]]
+  [[ "$output" == *"New file"* ]]
+  [[ "$output" == *"No changes made"* ]]
+  grep -q 'user-only content' "$TEST_PROJECT/CLAUDE.md"
+}
+
+@test "DEV-090 PLN-003: Update dry-run uses same categorization rules" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  echo "STALE" > "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+  run bash "$SCRIPT" --update --dry-run "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"[DRY RUN]"* ]]
+  [[ "$output" == *"Docs/AgToosa_Agent.md"* ]]
+  [[ "$output" == *"Would overwrite (workflow file, always updated)"* ]]
+  grep -q "STALE" "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+}
+
+@test "DEV-090 @smoke PLN-004: JSON dry-run emits parseable plan document" {
+  local json_out
+  json_out="$(_pln_install_json_plan "$TEST_PROJECT" claude)"
+  echo "$json_out" | jq -e '.schema_version == "plan-result-v1" and .operation == "install" and (.actions | type == "array") and (.actions | length) > 0' >/dev/null
+  echo "$json_out" | jq -e '.project_path and .generator_version and .actions[0].path and .actions[0].category and .actions[0].detail' >/dev/null
+
+  run bash "$SCRIPT" --update --dry-run --format json /tmp/does-not-exist-agtoosa-pln
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"does not exist"* ]]
+
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes --dry-run --format xml
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"invalid --format"* ]]
+}
+
+@test "DEV-090 PLN-005: Second identical dry-run is idempotent" {
+  local first second
+  first="$(_pln_install_json_plan "$TEST_PROJECT" claude)"
+  second="$(_pln_install_json_plan "$TEST_PROJECT" claude)"
+  [ "$(_pln_plan_actions_by_path "$first")" = "$(_pln_plan_actions_by_path "$second")" ]
+}
+
+@test "DEV-090 @smoke PLN-006: Update doc uses Docs/agtoosa-lock.json only" {
+  local root="$BATS_TEST_DIRNAME/.."
+  for f in "$root/template/Docs/AgToosa_Update.md" "$root/docs/AgToosa_Update.md"; do
+    grep -q 'Docs/agtoosa-lock.json' "$f"
+    ! grep -q '\.agtoosa-lock\.json' "$f"
+  done
+}
+
+@test "DEV-090 PLN-007: Init doc uses Docs/agtoosa-lock.json in detection prose" {
+  local root="$BATS_TEST_DIRNAME/.."
+  for f in "$root/template/Docs/AgToosa_Init.md" "$root/docs/AgToosa_Init.md"; do
+    grep -q 'Docs/agtoosa-lock.json' "$f"
+    ! grep -q '\.agtoosa-lock\.json' "$f"
+  done
+}
+
+@test "DEV-090 PLN-008: JSON dry-run performs no file writes" {
+  local before after
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  echo "STALE-PLN8" > "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+  before="$(find "$TEST_PROJECT" -type f -print0 | sort -z | xargs -0 shasum | shasum | awk '{print $1}')"
+  _pln_install_json_plan "$TEST_PROJECT" claude >/dev/null
+  run bash "$SCRIPT" --update --dry-run --format json "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  after="$(find "$TEST_PROJECT" -type f -print0 | sort -z | xargs -0 shasum | shasum | awk '{print $1}')"
+  [ "$before" = "$after" ]
+  grep -q "STALE-PLN8" "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+}
+
+@test "DEV-090 PLN-009: Install and update plan parity on overlapping paths" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+
+  local install_json update_json
+  install_json="$(_pln_install_json_plan "$TEST_PROJECT" claude)"
+  update_json="$(bash "$SCRIPT" --update --dry-run --format json "$TEST_PROJECT")"
+
+  python3 - <<'PY' "$install_json" "$update_json"
+import json, sys
+install = {a["path"]: a["category"] for a in json.loads(sys.argv[1])["actions"]}
+update = {a["path"]: a["category"] for a in json.loads(sys.argv[2])["actions"]}
+overlap = sorted(set(install) & set(update))
+assert overlap, "expected overlapping plan paths"
+mismatch = [(p, install[p], update[p]) for p in overlap if install[p] != update[p]]
+if mismatch:
+    for p, ic, uc in mismatch:
+        print(f"mismatch {p}: install={ic} update={uc}", file=sys.stderr)
+    sys.exit(1)
+PY
+}

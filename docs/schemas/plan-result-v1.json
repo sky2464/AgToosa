@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agtoosa.dev/schemas/plan-result-v1.json",
+  "title": "AgToosa plan-result-v1",
+  "description": "Machine-readable dry-run plan for agtoosa.sh --dry-run --format json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "operation", "project_path", "generator_version", "actions"],
+  "properties": {
+    "schema_version": {
+      "const": "plan-result-v1",
+      "description": "Document version pin for consumers."
+    },
+    "operation": {
+      "type": "string",
+      "enum": ["install", "update"]
+    },
+    "project_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generator_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "category", "detail"],
+        "properties": {
+          "path": { "type": "string", "minLength": 1 },
+          "category": {
+            "type": "string",
+            "enum": ["new", "overwrite", "merge", "backup_replace", "skip", "up_to_date", "manual"]
+          },
+          "detail": { "type": "string" }
+        }
+      }
+    }
+  }
+}

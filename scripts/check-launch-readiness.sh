@@ -161,6 +161,104 @@ check_proof_repo_url_consistency() {
   fi
 }
 
+README_PRIMARY_CTA_MARKER='**Primary: 15-minute proof journey**'
+README_SECONDARY_SECTION_MARKER='### Alternative install paths'
+FIRST15_VERIFY_HEADING='## 5. Verify (success condition)'
+FIRST15_WALKTHROUGH_LINK='docs/examples/first-15-minutes.md'
+
+readme_above_fold() {
+  local path="$1"
+  awk '/^---$/{exit} {print}' "$path"
+}
+
+check_readme_primary_proof_cta() {
+  local path="$ROOT_DIR/README.md"
+  [[ -f "$path" ]] || {
+    record_fail "README.md missing for primary proof CTA check"
+    return
+  }
+  local fold count
+  fold="$(readme_above_fold "$path")"
+  count="$(printf '%s' "$fold" | grep -cF -- "$README_PRIMARY_CTA_MARKER" || true)"
+  if [[ "$count" -ne 1 ]]; then
+    record_fail "README.md: expected exactly one primary proof CTA marker '$README_PRIMARY_CTA_MARKER' above the fold (observed count $count)"
+    return
+  fi
+  if [[ "$fold" != *"$FIRST15_WALKTHROUGH_LINK"* ]]; then
+    record_fail "README.md: primary proof CTA missing walkthrough link (observed above fold without '$FIRST15_WALKTHROUGH_LINK', expected link present)"
+  fi
+  if [[ "$fold" != *"$PROOF_REPO_CANONICAL"* ]]; then
+    record_fail "README.md: primary proof CTA missing canonical proof repository URL (expected '$PROOF_REPO_CANONICAL')"
+  fi
+  local competing
+  for competing in "**Public launch: pinned release**" "**Private collaborator path:"; do
+    if [[ "$fold" == *"$competing"* ]]; then
+      record_fail "README.md: competing primary marker '$competing' must not appear above the fold (observed above fold, expected secondary section only)"
+    fi
+  done
+}
+
+check_readme_secondary_install_paths() {
+  local path="$ROOT_DIR/README.md"
+  [[ -f "$path" ]] || {
+    record_fail "README.md missing for secondary install path check"
+    return
+  }
+  if ! grep -qF -- "$README_SECONDARY_SECTION_MARKER" "$path"; then
+    record_fail "README.md missing secondary install section marker (expected '$README_SECONDARY_SECTION_MARKER')"
+    return
+  fi
+  local section_line section_tail
+  section_line="$(grep -nF -- "$README_SECONDARY_SECTION_MARKER" "$path" | head -n1 | cut -d: -f1)"
+  section_tail="$(tail -n +"$section_line" "$path")"
+  if [[ "$section_tail" != *"brew install"* ]]; then
+    record_fail "README.md: secondary install section missing Homebrew alternative (expected 'brew install' after '$README_SECONDARY_SECTION_MARKER')"
+  fi
+  if [[ "$section_tail" != *"npx agtoosa"* ]]; then
+    record_fail "README.md: secondary install section missing npm alternative (expected 'npx agtoosa' after '$README_SECONDARY_SECTION_MARKER')"
+  fi
+  if [[ "$section_tail" != *"git clone https://github.com/sky2464/AgToosa.git"* ]]; then
+    record_fail "README.md: secondary install section missing clone alternative (expected git clone command after '$README_SECONDARY_SECTION_MARKER')"
+  fi
+}
+
+check_first15_verify_success_step() {
+  local path="$ROOT_DIR/$FIRST15_DOC"
+  [[ -f "$path" ]] || {
+    record_fail "$FIRST15_DOC missing for verify success step check"
+    return
+  }
+  if ! grep -qF -- "$FIRST15_VERIFY_HEADING" "$path"; then
+    record_fail "$FIRST15_DOC missing verify heading (expected '$FIRST15_VERIFY_HEADING')"
+    return
+  fi
+  if ! grep -qF 'bash agtoosa.sh --verify .' "$path"; then
+    record_fail "$FIRST15_DOC missing verifier command (expected 'bash agtoosa.sh --verify .')"
+  fi
+  if ! grep -qi 'exit code 0' "$path"; then
+    record_fail "$FIRST15_DOC missing success condition (expected 'exit code 0')"
+  fi
+}
+
+check_proof_journey_consistency() {
+  local journey_failures_before="$FAILURES"
+  printf 'proof-journey maintenance: validating README CTA, verify step, and canonical proof URL\n'
+
+  check_readme_primary_proof_cta
+  check_readme_secondary_install_paths
+  check_first15_verify_success_step
+  check_proof_repo_url_consistency
+
+  if [[ "$FAILURES" -eq "$journey_failures_before" ]]; then
+    pass "README primary proof CTA is present"
+    pass "first-15 verify success step is present"
+    pass "proof-journey surfaces are consistent"
+    pass "first-15 proof repository URL is canonical"
+  fi
+
+  printf 'proof-journey maintenance complete\n'
+}
+
 run_first15_maintenance_gate() {
   printf 'first-15 maintenance gate: validating scoped pins, proof links, and proof repository URL\n'
 
@@ -174,12 +272,11 @@ run_first15_maintenance_gate() {
 
   check_relative_proof_links "$FIRST15_DOC"
   check_relative_proof_links "$PUBLIC_PROOF_DOC"
-  check_proof_repo_url_consistency
+  check_proof_journey_consistency
 
   if [[ "$FAILURES" -eq 0 ]]; then
     pass "scoped release pins match $EXPECTED_TAG"
     pass "relative proof links resolve"
-    pass "first-15 proof repository URL is canonical"
   fi
 
   printf 'first-15 maintenance gate complete\n'

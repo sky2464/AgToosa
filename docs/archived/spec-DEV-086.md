@@ -3,7 +3,7 @@
 > **Story ID:** DEV-086
 > **Type:** Chore
 > **Epic:** DEV-004 — Delivery, Quality & Operations
-> **Status:** 🟦 Todo
+> **Status:** 🟩 Built
 > **Estimate:** S
 > **Priority:** P0
 > **Spec created:** 2026-07-12
@@ -133,20 +133,22 @@ Out of scope        : new proof repo, video, browser tests, automatic rewrites, 
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Golden fixture RED coverage
+- [x] **1.** Golden fixture RED coverage
   - [ ] 1.1 Add `tests/fixtures/proof-journey/` manifests and stale/missing negative fixtures — _Requirements: AC-003, AC-005_
   - [ ] 1.2 Add PRF bats for README CTA, verify step, and artifact markers — _Requirements: AC-001, AC-002, AC-003_
   - [ ] 1.3 Add read-only and private no-network assertions — _Requirements: AC-006, AC-007_
-- [ ] **2.** Proof product surfaces
+- [x] **2.** Proof product surfaces
   - [ ] 2.1 Restructure README with single primary proof CTA and labeled secondary paths — _Requirements: AC-001, AC-008_
   - [ ] 2.2 Add verifier success step to first-15 walkthrough — _Requirements: AC-002, AC-007_
-- [ ] **3.** Extended maintenance gate
+- [x] **3.** Extended maintenance gate
   - [ ] 3.1 Extend `check-launch-readiness.sh` for proof-journey checks per rev4-conflict-resolutions — _Requirements: AC-004, AC-005, AC-006_
   - [ ] 3.2 Align scoped pins and proof links found by RED tests — _Requirements: AC-004, AC-007_
-- [ ] **4.** Evidence
+- [x] **4.** Evidence
   - [ ] 4.1 Record PRF RED/GREEN evidence in test plan — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007_
 
-### 3.2 Wave Plan
+### Wave Plan
+
+### 3.2 Wave Plan detail
 
 **Wave 1 (sequential within story — shared bats file):** 1.1 → 1.2 → 1.3
 **Wave 2 (sequential after Wave 1):** 2.1, 2.2

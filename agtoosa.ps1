@@ -19,10 +19,19 @@
     Show this help message and exit.
 
 .PARAMETER Update
-    Update an existing AgToosa install in the specified project path.
+    Update an existing AgToosa install in the specified project path (delegates to bash run_update).
 
 .PARAMETER UpdatePath
-    Path to the project to update (used with -Update).
+    Path to the target project (required with -Update, -Verify, -Doctor, and -Uninstall).
+
+.PARAMETER Verify
+    Run the lifecycle verifier for the target project (delegates to bash; preserves exit codes).
+
+.PARAMETER Doctor
+    Diagnose an existing AgToosa install (delegates to bash --doctor).
+
+.PARAMETER Uninstall
+    Remove AgToosa-owned files while preserving Master-Plan, Context, and archived content (delegates to bash).
 
 .PARAMETER Registry
     Access the AgToosa Community Template Registry.
@@ -71,6 +80,9 @@
     .\agtoosa.ps1 -Force
     .\agtoosa.ps1 -DryRun
     .\agtoosa.ps1 -Update -UpdatePath C:\Projects\MyApp
+    .\agtoosa.ps1 -Verify -UpdatePath C:\Projects\MyApp
+    .\agtoosa.ps1 -Doctor -UpdatePath C:\Projects\MyApp
+    .\agtoosa.ps1 -Uninstall -UpdatePath C:\Projects\MyApp
     .\agtoosa.ps1 -Path C:\Projects\MyApp -Platforms cursor,claude -Yes
     .\agtoosa.ps1 -Version
     .\agtoosa.ps1 -Registry -RegistryCommand list
@@ -86,6 +98,9 @@ param(
     [switch]$Version,
     [switch]$Help,
     [switch]$Update,
+    [switch]$Verify,
+    [switch]$Doctor,
+    [switch]$Uninstall,
     [string]$UpdatePath = "",
     [string]$Path = "",
     [string]$Platforms = "",
@@ -176,8 +191,11 @@ ${BOLD}Options:${NC}
   -DryRun               Preview changes without applying them
   -Version              Print version and exit
   -Help                 Show this help
-  -Update               Update an existing AgToosa install
-  -UpdatePath <path>    Project path to update (used with -Update)
+  -Update               Update an existing AgToosa install (bash run_update)
+  -Verify               Run lifecycle verifier for a project (bash dispatch)
+  -Doctor               Diagnose an AgToosa install (bash dispatch)
+  -Uninstall            Remove AgToosa-owned files (bash dispatch; preserves user data)
+  -UpdatePath <path>    Target project path (required for maintain switches)
   -Path <dir>           Target project directory (non-interactive)
   -Platforms <list>    Comma-separated platforms (e.g. cursor,claude)
   -Yes                  Non-interactive consent (requires -Path)
@@ -205,12 +223,67 @@ ${BOLD}Examples:${NC}
   .\agtoosa.ps1
   .\agtoosa.ps1 -Force
   .\agtoosa.ps1 -Update -UpdatePath C:\Projects\MyApp
+  .\agtoosa.ps1 -Verify -UpdatePath C:\Projects\MyApp
+  .\agtoosa.ps1 -Doctor -UpdatePath C:\Projects\MyApp
   .\agtoosa.ps1 -Path C:\Projects\MyApp -Platforms claude -Yes
+  Maintain commands require Bash (Git Bash or WSL) on Windows.
   .\agtoosa.ps1 -DryRun
   .\agtoosa.ps1 -Registry -RegistryCommand list
   .\agtoosa.ps1 -Registry -RegistryCommand search -RegistryArg react
   .\agtoosa.ps1 -Registry -RegistryCommand install -RegistryArg my-pack
 "@
+}
+
+function Get-AgToosaBash {
+    if ($env:AGTOOSA_BASH -and (Test-Path $env:AGTOOSA_BASH)) {
+        return $env:AGTOOSA_BASH
+    }
+    $bash = Get-Command bash -ErrorAction SilentlyContinue
+    if ($bash) { return $bash.Source }
+    foreach ($candidate in @(
+            "${env:ProgramFiles}\Git\bin\bash.exe",
+            "${env:ProgramFiles(x86)}\Git\bin\bash.exe",
+            "${env:LocalAppData}\Programs\Git\bin\bash.exe"
+        )) {
+        if ($candidate -and (Test-Path $candidate)) { return $candidate }
+    }
+    return $null
+}
+
+function Invoke-AgToosaMaintain {
+    param(
+        [ValidateSet('verify', 'doctor', 'uninstall', 'update')]
+        [string]$Operation,
+        [string]$ProjectPath
+    )
+    $switchLabel = $Operation.Substring(0, 1).ToUpper() + $Operation.Substring(1)
+    if ([string]::IsNullOrWhiteSpace($ProjectPath)) {
+        Write-Color "${RED}❌ Error: -UpdatePath requires a project directory path.${NC}"
+        Write-Color "Example: .\agtoosa.ps1 -${switchLabel} -UpdatePath C:\Projects\MyApp"
+        exit 1
+    }
+
+    $ProjectPath = $ProjectPath -replace '^~', $(if ($env:USERPROFILE) { $env:USERPROFILE } else { $env:HOME })
+    $ProjectPath = $ProjectPath.TrimEnd('\', '/')
+
+    if (-not (Test-Path $ProjectPath -PathType Container)) {
+        Write-Color "${RED}❌ Error: Directory '$ProjectPath' does not exist.${NC}"
+        exit 1
+    }
+
+    $bash = Get-AgToosaBash
+    if (-not $bash) {
+        Write-Color "${RED}❌ Maintain commands require Bash (Git Bash or WSL).${NC}"
+        Write-Color "Install Git for Windows: https://git-scm.com/download/win"
+        Write-Color "Example: bash agtoosa.sh --$Operation `"$ProjectPath`""
+        exit 1
+    }
+
+    $agtoosaSh = Join-Path $SCRIPT_DIR 'agtoosa.sh'
+    # Parity dispatch: bash agtoosa.sh --update <path> (also verify, doctor, uninstall)
+    $args = @($agtoosaSh, "--$Operation", $ProjectPath)
+    & $bash @args
+    exit $LASTEXITCODE
 }
 
 function Test-Prerequisites {
@@ -1133,54 +1206,21 @@ if ($Registry) {
     }
 }
 
-# ── --update ──────────────────────────────────────────────────
+# ── Maintain switches (delegate to bash run_update / maintain.sh) ─
+if ($Verify) {
+    Invoke-AgToosaMaintain -Operation verify -ProjectPath $UpdatePath
+}
+
+if ($Doctor) {
+    Invoke-AgToosaMaintain -Operation doctor -ProjectPath $UpdatePath
+}
+
+if ($Uninstall) {
+    Invoke-AgToosaMaintain -Operation uninstall -ProjectPath $UpdatePath
+}
+
 if ($Update) {
-    if ([string]::IsNullOrEmpty($UpdatePath)) {
-        $UpdatePath = Read-Host "Project path to update"
-    }
-    $UpdatePath = $UpdatePath.TrimEnd('\', '/')
-
-    if (-not (Test-Path $UpdatePath -PathType Container)) {
-        Write-Color "${RED}❌ Error: Directory '$UpdatePath' does not exist.${NC}"
-        exit 1
-    }
-
-    $resolvedProject = Resolve-Path $UpdatePath
-    $resolvedScript  = Resolve-Path $SCRIPT_DIR
-    if ($resolvedProject.Path -eq $resolvedScript.Path) {
-        Write-Color "${RED}❌ Error: Target path cannot be the AgToosa source directory itself.${NC}"
-        Write-SelfTargetGuidance
-        exit 1
-    }
-
-    if (-not (Test-Path (Join-Path $UpdatePath "Docs"))) {
-        Write-Color "${RED}❌ Error: No Docs\ directory found in '$UpdatePath'.${NC}"
-        Write-Color "${YELLOW}Run the full install first: .\agtoosa.ps1${NC}"
-        exit 1
-    }
-
-    $oldVersion = Get-InstalledVersion $UpdatePath
-    Write-Color ""
-    Write-Color "${PURPLE}${BOLD}Updating AgToosa v${oldVersion} → v${AGTOOSA_VERSION}${NC}"
-    Write-Color "${PURPLE}${BOLD}Project: ${UpdatePath}${NC}"
-    Write-Color ""
-
-    try {
-        Move-ShipPacksToQueue
-        if (Test-Path $SHIP_DIR) { Remove-Item -Recurse -Force $SHIP_DIR }
-        New-Item -ItemType Directory -Path (Join-Path $SHIP_DIR "Docs\archived") -Force | Out-Null
-        New-Item -ItemType Directory -Path (Join-Path $SHIP_DIR "Docs\Context") -Force | Out-Null
-        $platforms = Get-InstalledPlatforms $UpdatePath
-        Copy-StageFiles $platforms
-        Install-Files $UpdatePath $platforms
-        $verFile = Join-Path $UpdatePath "Docs\.agtoosa-version"
-        Set-Content -Path $verFile -Value $AGTOOSA_VERSION -Encoding UTF8
-        Write-Color ""
-        Write-Color "${GREEN}${BOLD}✅ AgToosa updated to v${AGTOOSA_VERSION} in '${UpdatePath}'${NC}"
-    } finally {
-        Remove-ShipDir
-    }
-    exit 0
+    Invoke-AgToosaMaintain -Operation update -ProjectPath $UpdatePath
 }
 
 if ($Yes -and [string]::IsNullOrWhiteSpace($Path)) {

@@ -3,7 +3,7 @@
 > **Story ID:** DEV-105
 > **Type:** Feature
 > **Epic:** DEV-001 — Core Generator Engine
-> **Status:** 🟦 Todo
+> **Status:** 🟩 Built
 > **Estimate:** M
 > **Priority:** P0
 > **Spec created:** 2026-07-12
@@ -130,19 +130,21 @@ Out of scope        : PS1 verifier port, plan JSON, npm wrapper, DEV-088 JSON fl
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Parity contract RED coverage
+- [x] **1.** Parity contract RED coverage
   - [ ] 1.1 Add bats PSP greps for new switches and bash update dispatch — _Requirements: AC-004, AC-008, AC-009_
   - [ ] 1.2 Add Pester skeleton tests failing before implementation — _Requirements: AC-007_
-- [ ] **2.** PowerShell maintain switches
+- [x] **2.** PowerShell maintain switches
   - [ ] 2.1 Implement `-Verify`, `-Doctor`, `-Uninstall` dispatch — _Requirements: AC-001, AC-002, AC-003, AC-005_
   - [ ] 2.2 Refactor `-Update` to delegate to bash `run_update` — _Requirements: AC-004, AC-006_
   - [ ] 2.3 Update help text — _Requirements: AC-009_
-- [ ] **3.** Pester implementation
+- [x] **3.** Pester implementation
   - [ ] 3.1 Complete Pester happy-path and validation tests — _Requirements: AC-007_
-- [ ] **4.** Evidence
+- [x] **4.** Evidence
   - [ ] 4.1 Record PSP RED/GREEN evidence — _Requirements: AC-001–AC-009_
 
-### 3.2 Wave Plan
+### Wave Plan
+
+### 3.2 Wave Plan detail
 
 **Wave 1 (parallel):** 1.1, 1.2
 **Wave 2 (sequential within story — shared `agtoosa.ps1`):** 2.1 → 2.2

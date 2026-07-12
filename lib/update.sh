@@ -251,6 +251,17 @@ run_update() {
     "${detected_names[@]+"${detected_names[@]}"}"
 }
 
+# Dry-run preview for --update via unified plan engine (read-only).
+run_update_dryrun() {
+  local format="${1:-text}"
+  compute_agtoosa_plan "$PROJECT_PATH" "update"
+  if [[ "$format" == "json" ]]; then
+    emit_plan_json
+  else
+    emit_plan_human
+  fi
+}
+
 # Print the update summary report to stdout.
 print_update_summary() {
   local old_ver="$1" docs_updated="$2" platforms_merged="$3" dirs_updated="$4"

@@ -1,0 +1,34 @@
+{
+  "canonical_proof_repo_url": "https://github.com/sky2464/agtoosa-first-15-proof",
+  "readme_primary_cta_marker": "**Primary: 15-minute proof journey**",
+  "readme_secondary_section_marker": "### Alternative install paths",
+  "readme_walkthrough_link": "docs/examples/first-15-minutes.md",
+  "first15_verify_heading": "## 5. Verify (success condition)",
+  "first15_verify_commands": [
+    "bash agtoosa.sh --verify .",
+    "bash Docs/agtoosa-verify.sh"
+  ],
+  "first15_success_condition": "exit code 0",
+  "workflow_commands": [
+    "/agtoosa-init",
+    "/agtoosa-spec",
+    "/agtoosa-build",
+    "/agtoosa-review",
+    "/agtoosa-ship check"
+  ],
+  "artifact_markers": [
+    "Docs/archived/spec-",
+    "Docs/AgToosa_TestPlan-",
+    "Docs/archived/review-",
+    "Docs/archived/ship-check-"
+  ],
+  "competing_primary_markers": [
+    "**Public launch: pinned release**",
+    "**Private collaborator path:"
+  ],
+  "checker_pass_messages": [
+    "ok - README primary proof CTA is present",
+    "ok - first-15 verify success step is present",
+    "ok - proof-journey surfaces are consistent"
+  ]
+}

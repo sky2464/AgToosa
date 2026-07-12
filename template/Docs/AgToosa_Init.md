@@ -196,7 +196,7 @@ Use when the AI agent is focused on a specific file or function and needs broade
     After context files and Epics are established, identify **reusable project-specific specialist subagents** — not a default generic roster. Follow `Docs/AgToosa_Specialists.md` for the full contract.
 
     *   Read `Docs/Context/product.md`, `tech-stack.md`, `workflow.md`, `Docs/Context/CONTEXT.md`, and `Docs/Master-Architecture.md` when present.
-    *   **Detect installed platforms** from `Docs/.agtoosa-version`, `.agtoosa-lock.json`, and sentinels (`.codex/`, `.claude/`, `.cursor/`, `.windsurf/`, `.gemini/`, `.github/agents/`, entry points).
+    *   **Detect installed platforms** from `Docs/.agtoosa-version`, `Docs/agtoosa-lock.json`, and sentinels (`.codex/`, `.claude/`, `.cursor/`, `.windsurf/`, `.gemini/`, `.github/agents/`, entry points).
     *   Prefer reusing existing AgToosa workflow adapters (`.codex/skills/agtoosa-*`, platform commands) and any approved entries in `Docs/Context/specialists.md` before proposing new specialists.
     *   **Reserved names:** reject specialist ids `agtoosa-*` and triggers `/agtoosa-*`; reject one-off story tasks, duplicates, and candidates without validation.
     *   **Secret safety:** never copy credentials, private keys, tokens, or sensitive config values into specialist bodies or `specialists.md`. Reference paths only; use **safety_notes** and **tools/MCP needs** fields per `Docs/AgToosa_Specialists.md`.
