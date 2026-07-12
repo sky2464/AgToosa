@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-12 (Wave 1a Part 4 — Active Tasks + DAGs; parallel fan-out)
+> **Last updated:** 2026-07-12 (DEV-107 Orchestration Brain enrolled — Spec Approved; Backlog)
 
 ## Project Charter
 
@@ -192,6 +192,7 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
 | DEV-104 | Feature: `--reinstall --clean` (ADR-004 Option C) | Feature | S | DEV-001 | P2 | ⬜ Backlog — spec approved; Wave 3 |
 | DEV-105 | Feature: PowerShell Maintain + Update Parity | Feature | M | DEV-001 | P0 | 🟦 Todo — Wave 1a active cycle |
 | DEV-106 | Docs: Built with AgToosa Showcase | Docs | XS | DEV-004 | P2 | ⬜ Backlog — spec approved; Wave 3 |
+| DEV-107 | Feature: Agent-Instructed Orchestration Brain | Feature | M | DEV-002 | P1 | ⬜ Backlog — Spec Approved; after Wave 1a |
 
 ## Epics
 
@@ -200,7 +201,7 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
 | ID | Title | Stories | Status | Next spec |
 |----|-------|---------|--------|-----------|
 | DEV-001 | Epic: Core Generator Engine | 7 open / 12 total | 🟨 Active | DEV-090 (Wave 1a) |
-| DEV-002 | Epic: Workflow Templates | 2 open / 16 total | 🟨 Active | DEV-089 (after DEV-087) |
+| DEV-002 | Epic: Workflow Templates | 3 open / 17 total | 🟨 Active | DEV-107 (after Wave 1a); DEV-089 (after DEV-087) |
 | DEV-003 | Epic: Community Template Registry | 4 open / 11 total | 🟨 Active | DEV-096 (Wave 3) |
 | DEV-004 | Epic: Testing & QA Harness | 6 open / 18 total | 🟨 Active | DEV-086 (Wave 1a) |
 
@@ -225,7 +226,7 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
     *   **Last shipped:** DEV-052 — Hook Automation Pack → `docs/archived/spec-DEV-052.md`
     *   **Last shipped:** DEV-056 — Retrospective Learning Loop → `docs/archived/spec-DEV-056.md`
     *   **Last shipped:** DEV-045 — Work Package Wave DAG → `docs/archived/spec-DEV-045.md`
-    *   **Current:** Rev4 wave — DEV-099 in backlog; DEV-087 shipped v5.3.15; demand-gated DEV-057 remains separate
+    *   **Current:** Rev4 wave — DEV-099, DEV-107 in backlog; DEV-107 Spec Approved (build after Wave 1a); DEV-087 shipped v5.3.15; demand-gated DEV-057 remains separate
 
 *   **DEV-003 - Epic: Community Template Registry**
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
@@ -495,3 +496,4 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
 | 2026-07-12 | 🚀 Ship complete — v5.3.15 — Wave 1b DEV-087 · DEV-088; smoke PASS; cycle archived | AgToosa |
 | 2026-07-12 | 🚀 Release 5.3.15 shipped — v5.3.15; version parity bash/ps1/npm; Milestone v5.3.16 (next); Wave 1a remains active | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — Wave 1a Part 4 — Active Tasks + Work Package DAGs for DEV-086 · DEV-090 · DEV-105; build mode parallel fan-out; AC-007 mapped in DEV-105 test plan | AgToosa |
+| 2026-07-12 | ✏️ /agtoosa-spec — DEV-107 enrolled — Agent-Instructed Orchestration Brain; Spec Approved; Backlog (build after Wave 1a); epic DEV-002; estimate M | AgToosa |

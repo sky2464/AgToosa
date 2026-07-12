@@ -26,6 +26,16 @@ The current implementation (v3.0.0) uses **persona-based dispatch via slash comm
 
 Orchestration is intentionally kept at the markdown/file layer rather than in a process supervisor or workflow engine. The AI assistant itself is the orchestrator. Commands are composable sub-commands (e.g., `/agtoosa-spec research` for Part 1 only) rather than a monolithic pipeline. State synchronization happens through explicit file writes and Linear issue updates, not in-memory state.
 
+### Amendment — DEV-107 (2026-07-12)
+
+**Status:** Accepted amendment (spec approved; implementation after Wave 1a)
+
+Parallel execution is **no longer Review-only**. When the host supports native subagent delegation (per `Docs/AgToosa_AgentCapability.md`) and lane ownership is safe (Work Package DAG / disjoint files), orchestrators **default to parallel fan-out** across Spec, Build, Review, Ship, and related sync/task read-only lanes.
+
+Canonical algorithm: `Docs/AgToosa_Orchestration.md` (Orchestration Brain) — inventory platforms, skills, specialists, MCP needs, host plugins/tools, and Wave packages → lane plan → parallel or sequential fallback → orchestrator merge. The assistant remains the orchestrator; AgToosa still does **not** ship a process supervisor, hosted swarm, or auto-launch runtime (Rev4 “Do Not Build Yet”).
+
+See: `docs/archived/spec-DEV-107.md`, `docs/AgToosa_TestPlan-DEV-107.md`.
+
 ---
 
 ## Options Considered

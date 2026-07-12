@@ -74,6 +74,14 @@ Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
 | DEV-104 | `--reinstall --clean` (ADR-004 Option C) | Feature | S | DEV-001 | P2 | `docs/archived/spec-DEV-104.md` | `docs/AgToosa_TestPlan-DEV-104.md` |
 | DEV-106 | Built with AgToosa Showcase | Docs | XS | DEV-004 | P2 | `docs/archived/spec-DEV-106.md` | `docs/AgToosa_TestPlan-DEV-106.md` |
 
+### Post-Rev4 enrollments (Spec Approved)
+
+| ID | Story | Type | Est | Epic | Pri | Spec | Test plan |
+|---|---|---|---:|---|---:|---|---|
+| DEV-107 | Agent-Instructed Orchestration Brain | Feature | M | DEV-002 | P1 | `docs/archived/spec-DEV-107.md` | `docs/AgToosa_TestPlan-DEV-107.md` |
+
+> **Enrollment note (2026-07-12):** DEV-107 Spec Approved; remains Backlog until after Wave 1a capacity frees. Build must not displace DEV-086 / DEV-090 / DEV-105.
+
 ## Recently shipped (v5.3.14 — 2026-07-11)
 
 | ID | Story | Type | Spec |
@@ -272,6 +280,7 @@ If evidence appears, start with `/agtoosa-spec research`; do not promote directl
 | External registry runbook | DEV-103 (+ DEV-080 manual) |
 | `--reinstall --clean` | DEV-104 |
 | Community showcase | DEV-106 |
+| Orchestration Brain (agent-instructed fan-out) | DEV-107 |
 | Safe subagent routing and fan-out | DEV-055, DEV-045, DEV-046 (shipped) |
 | Policy, hooks, and learning | DEV-059, DEV-052, DEV-056 (shipped) |
 | Visibility and integrations | DEV-058, DEV-051, DEV-057 (demand-gated) |
