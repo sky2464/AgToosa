@@ -2,7 +2,7 @@
 
 > **Story:** DEV-081 — Optional Local DX Add-on Validation  
 > **Claim Boundary:** agent-instructed index; Master-Plan remains SoT  
-> **Updated:** 2026-07-11 21:00 (review)
+> **Updated:** 2026-07-11 (ship)
 
 | Phase | AC | Artifact | Pointer | Verification | Exit | Reviewer | ts |
 |-------|-----|----------|---------|--------------|------|----------|-----|
@@ -21,3 +21,4 @@
 | review | AC-007 | test-log | `docs/AgToosa_TestPlan-DEV-081.md` DXV-008 | Evidence/assumption/untested separation grep contract | 0 | AgToosa | 2026-07-11 |
 | review | AC-001–AC-007 | review | `docs/archived/review-DEV-081.md` | 4 virtual personas; verdict PASS; 0 unresolved Critical | PASS | AgToosa | 2026-07-11 |
 | review | AC-001–AC-007 | verifier | `docs/agtoosa-verify.sh` | `bash agtoosa.sh --verify .` — DEV-081 gates pass; 2 WARN accepted | 0 | AgToosa | 2026-07-11 |
+| ship | AC-001–AC-007 | changelog | `CHANGELOG.md##[5.3.8]` | grep '## \[5.3.8\]' CHANGELOG.md; spike boundary preserved; DXV bats green | 0 | AgToosa | 2026-07-11 |

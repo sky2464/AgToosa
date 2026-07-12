@@ -4,7 +4,7 @@
 > **Epic:** DEV-001 — Core Generator Engine
 > **Type:** Spike
 > **Priority:** P2
-> **Status:** 🟨 In Progress
+> **Status:** 🏁 Shipped (v5.3.8)
 > **Estimate:** M
 > **Spec created:** 2026-07-11
 > **Spec deepened:** 2026-07-11

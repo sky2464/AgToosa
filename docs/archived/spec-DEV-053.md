@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-053
 > **Epic:** DEV-003
-> **Status:** 🟨 In Progress
+> **Status:** 🏁 Shipped (v5.3.8)
 > **Estimate:** M
 > **Spec created:** 2026-06-08
 > **Spec deepened:** 2026-07-11

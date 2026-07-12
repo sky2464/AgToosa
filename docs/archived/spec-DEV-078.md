@@ -3,7 +3,7 @@
 > **Story ID:** DEV-078
 > **Type:** Chore
 > **Epic:** DEV-004 — Delivery, Quality & Operations
-> **Status:** 🟨 In Progress
+> **Status:** 🏁 Shipped (v5.3.8)
 > **Estimate:** XS
 > **Priority:** P1
 > **Spec created:** 2026-07-11

@@ -1,7 +1,7 @@
 # Test Plan: DEV-075 — Subagent and Persona Guide Suite
 
 > **Spec:** `docs/archived/spec-DEV-075.md`
-> **Status:** ⬜ Backlog — Not executed
+> **Status:** ✅ Done (shipped v5.3.8)
 > **Created:** 2026-07-11
 > **Test prefix:** `ADP`
 

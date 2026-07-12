@@ -2,7 +2,7 @@
 
 > **Story:** DEV-075 — Subagent and Persona Guide Suite  
 > **Claim Boundary:** agent-instructed index; Master-Plan remains SoT  
-> **Updated:** 2026-07-11 20:55 (review)
+> **Updated:** 2026-07-11 (ship)
 
 | Phase | AC | Artifact | Pointer | Verification | Exit | Reviewer | ts |
 |-------|-----|----------|---------|--------------|------|----------|-----|
@@ -20,3 +20,4 @@
 | review | AC-007 | test-log | `docs/AgToosa_TestPlan-DEV-075.md#AC-007` | `bats tests/agtoosa.bats -f "ADP-008|ADP-009"` README discovery + non-duplication | 0 | AgToosa | 2026-07-11T20:55:00-05:00 |
 | review | AC-001–AC-007 | review | `docs/archived/review-DEV-075.md` | 4 virtual personas; verdict PASS; 0 unresolved Critical | PASS | AgToosa | 2026-07-11T20:55:00-05:00 |
 | review | AC-001–AC-007 | verifier | `docs/agtoosa-verify.sh` | Gate 3 DEV-075 PASS; 1 WARN wave-plan pattern accepted | 0 | AgToosa | 2026-07-11T20:55:00-05:00 |
+| ship | AC-001–AC-007 | changelog | `CHANGELOG.md##[5.3.8]` | grep '## \[5.3.8\]' CHANGELOG.md; version parity bash/ps1/npm | 0 | AgToosa | 2026-07-11 |

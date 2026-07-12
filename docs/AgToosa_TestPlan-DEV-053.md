@@ -2,7 +2,7 @@
 
 > **Spec:** `docs/archived/spec-DEV-053.md`
 > **Future smoke filter:** `bats tests/agtoosa.bats -f "DEV-053"`
-> **Status:** Done
+> **Status:** ✅ Done (shipped v5.3.8)
 > **Evidence state:** GREEN captured 2026-07-11
 
 ## Coverage Target

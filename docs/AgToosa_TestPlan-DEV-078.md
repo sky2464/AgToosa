@@ -1,7 +1,7 @@
 # Test Plan: DEV-078 — First-15-Minutes Maintenance Gate
 
 > **Spec:** `docs/archived/spec-DEV-078.md`
-> **Status:** ✅ Executed — GREEN
+> **Status:** ✅ Done (shipped v5.3.8)
 > **Created:** 2026-07-11
 > **Test prefix:** `F15`
 

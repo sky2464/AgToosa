@@ -2,7 +2,7 @@
 
 > **Story:** DEV-053 — Extension and Preset Catalog  
 > **Claim Boundary:** agent-instructed index; Master-Plan remains SoT  
-> **Updated:** 2026-07-11 20:55 (review)
+> **Updated:** 2026-07-11 (ship)
 
 | Phase | AC | Artifact | Pointer | Verification | Exit | Reviewer | ts |
 |-------|----|----------|---------|--------------|------|----------|-----|
@@ -20,3 +20,4 @@
 | review | AC-009 | test-log | `docs/AgToosa_TestPlan-DEV-053.md` | PC-007 injection/cycles/conflicts/oversized | 0 | AgToosa | 2026-07-11T20:55:00Z |
 | review | AC-010, AC-011, AC-012 | test-log | `docs/AgToosa_TestPlan-DEV-053.md` | PC-008 docs/adapters/registry cross-link | 0 | AgToosa | 2026-07-11T20:55:00Z |
 | review | AC-012 | verifier | `docs/agtoosa-verify.sh` | Gate 3 DEV-053 PASS; 5 WARN (parallel-cycle stories) | 0 | AgToosa | 2026-07-11T20:55:00Z |
+| ship | AC-001–AC-012 | changelog | `CHANGELOG.md##[5.3.8]` | grep '## \[5.3.8\]' CHANGELOG.md; version parity bash/ps1/npm | 0 | AgToosa | 2026-07-11 |

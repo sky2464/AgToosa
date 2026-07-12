@@ -2,7 +2,7 @@
 
 > **Story:** DEV-078 — First-15-Minutes Maintenance Gate  
 > **Claim Boundary:** agent-instructed index; Master-Plan remains SoT  
-> **Updated:** 2026-07-11 20:55 (review)
+> **Updated:** 2026-07-11 (ship)
 
 | Phase | AC | Artifact | Pointer | Verification | Exit | Reviewer | ts |
 |-------|-----|----------|---------|--------------|------|----------|-----|
@@ -15,3 +15,4 @@
 | review | AC-001–AC-006 | review | `docs/archived/review-DEV-078.md` | 4 virtual personas; verdict PASS; 0 unresolved Critical | PASS | AgToosa | 2026-07-11 |
 | review | AC-001–AC-006 | test-log | `docs/AgToosa_TestPlan-DEV-078.md#GREEN-Evidence` | `bats tests/agtoosa.bats -f "DEV-078"` exit 0, 8/8 | 0 | AgToosa | 2026-07-11 |
 | review | AC-001–AC-006 | verifier | `docs/agtoosa-verify.sh` | `bash agtoosa.sh --verify .` — DEV-078 Gate 3 PASS; 5 WARN accepted | 0 | AgToosa | 2026-07-11 |
+| ship | AC-001–AC-006 | changelog | `CHANGELOG.md##[5.3.8]` | grep '## \[5.3.8\]' CHANGELOG.md; scoped pins v5.3.8; F15 bats green | 0 | AgToosa | 2026-07-11 |

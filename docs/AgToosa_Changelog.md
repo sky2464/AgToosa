@@ -9,6 +9,17 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.8] — 2026-07-11
+
+### Added
+
+- 2026-07-11 — docs — DEV-075 Subagent and Persona Guide Suite (walkthrough + three audience guides, README discovery, ADP bats); agent-instructed — `docs/archived/spec-DEV-075.md` · `docs/archived/review-DEV-075.md`
+- 2026-07-11 — feature — DEV-053 Extension and Preset Catalog (`lib/catalog.sh`, `--catalog` CLI, curated entries, PC bats); agent-instructed — `docs/archived/spec-DEV-053.md` · `docs/archived/review-DEV-053.md`
+- 2026-07-11 — chore — DEV-078 First-15-Minutes Maintenance Gate (`check-launch-readiness.sh` pin drift checks, F15 bats) — `docs/archived/spec-DEV-078.md` · `docs/archived/review-DEV-078.md`
+- 2026-07-11 — spike — DEV-081 Optional Local DX Add-on Validation (three defer decisions, spike evidence only, DXV bats) — `docs/archived/spec-DEV-081.md` · `docs/archived/review-DEV-081.md`
+
+---
+
 ## [5.3.7] — 2026-07-11
 
 ### Added

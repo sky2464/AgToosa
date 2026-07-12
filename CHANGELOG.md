@@ -5,6 +5,19 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.8] — 2026-07-11
+
+Patch release: four-epic parallel cycle (DEV-075, DEV-053, DEV-078, DEV-081).
+
+### Added
+
+- **DEV-075 — Subagent and Persona Guide Suite.** Walkthrough plus three audience guides (`docs/guides/`, `docs/examples/subagent-handoff-review.md`); README discovery; ADP-001–ADP-009 bats. Agent-instructed (not runtime-enforced).
+- **DEV-053 — Extension and Preset Catalog.** `lib/catalog.sh`, `catalog/`, `--catalog` CLI, `AgToosa_Catalog.md`, three curated entries, platform adapters; PC-001–PC-008 bats.
+- **DEV-078 — First-15-Minutes Maintenance Gate.** `scripts/check-launch-readiness.sh` deterministic release-pin drift checks; scoped doc pin repairs; F15-001–F15-008 bats.
+- **DEV-081 — Optional Local DX Add-on Validation (spike).** `docs/spikes/DEV-081-local-dx-validation.md`; all three DX options deferred; DXV-001–DXV-008 bats; no production code.
+
+---
+
 ## [5.3.7] — 2026-07-11
 
 Patch release: Agent Capability Matrix (DEV-055).

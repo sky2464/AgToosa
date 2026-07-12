@@ -1,7 +1,7 @@
 # Test Plan: DEV-081 — Optional Local DX Add-on Validation
 
 > **Spec:** `docs/archived/spec-DEV-081.md`
-> **Status:** ⬜ Backlog
+> **Status:** ✅ Done (shipped v5.3.8)
 > **Test prefix:** DXV
 > **Created:** 2026-07-11
 > **Deepened:** 2026-07-11
