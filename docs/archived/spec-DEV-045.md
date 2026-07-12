@@ -2,17 +2,52 @@
 
 > **Story ID:** DEV-045
 > **Epic:** DEV-002 — Workflow Templates
-> **Status:** ⬜ Backlog
+> **Status:** 🟦 Todo
 > **Estimate:** M
 > **Spec created:** 2026-06-08
 > **Spec deepened:** 2026-07-11
-> **Prerequisite gate:** DEV-055 must ship before DEV-045 enrollment
+> **Enrolled:** 2026-07-11 — prerequisite DEV-055 shipped v5.3.7; awaiting Spec Approved
 
 ## Context
 
 DEV-067 shipped wave-by-wave TDD execution, and `docs/SPEC-FORMAT.md` defines a task tree plus a Wave Plan. Those waves currently identify task IDs only; they do not declare package ownership, dependencies, inputs, outputs, integration order, or package-specific verification. DEV-047 and DEV-048 provide bounded handoff and import workflows, but their packs do not yet carry a shared work-package schema.
 
-DEV-045 closes only that schema and workflow-wiring gap. It adds dependency-aware work packages to the existing markdown lifecycle; it does not add a runtime scheduler or agent launcher. DEV-055 owns lifecycle routing and must ship first. This story must not reopen `AgToosa_AgentCapability.md`, its AM tests, or its active build artifacts.
+DEV-045 closes only that schema and workflow-wiring gap. It adds dependency-aware work packages to the existing markdown lifecycle; it does not add a runtime scheduler or agent launcher. DEV-055 owns lifecycle routing and shipped v5.3.7. This story must not reopen `AgToosa_AgentCapability.md`, its AM tests, or its active build artifacts.
+
+### Brownfield Spec Drift Baseline
+
+| Field | Value |
+|-------|-------|
+| User outcome / proof | Orchestrators can declare auditable parallel lanes with explicit file ownership, dependencies, and verification; bats `DAG-001`–`DAG-007` green; dogfood two-parallel/one-dependent case recorded |
+| Repo evidence inventory | `docs/SPEC-FORMAT.md` §3.2 Wave Plan (task IDs only); `docs/AgToosa_Handoff.md` (`wave` sub-command, no Work Packages section); `docs/AgToosa_Import.md` (AC mapping, no ownership-gap gate); `docs/AgToosa_Build.md` (wave TDD, no package fan-out gate); DEV-047/048 shipped handoff/import; DEV-055 shipped routing matrix; `tests/agtoosa.bats` `DEV-045 CW-008` artifact check only |
+| Current-state baseline | Wave Plan lists sub-task IDs without `owned_files`, `depends_on`, or `merge_order`; Handoff exports wave context but not package rows; Import maps artifacts to tasks/ACs without comparing changed paths to package ownership; no `### 3.4 Work Package DAG` in SPEC-FORMAT |
+| Intended change deltas | Add normative `### 3.4 Work Package DAG` schema; wire Spec/Build/Handoff/Import to consume the same eight columns; add `DAG-001`–`DAG-007` contract bats; document honest Claim Boundary (agent-instructed dispatch, manual integration) |
+| Drift evidence | Roadmap placeholder (2026-06) deepened to functional EARS on 2026-07-11; prerequisite gate cleared when DEV-055 shipped v5.3.7; implementation intentionally deferred until enrollment |
+| Claim Boundary | Schema copy = **generator-enforced**; DAG bats when run in CI = **CI-enforced**; package derivation and fan-out checks = **agent-instructed**; agent selection and branch integration = **manual**; runtime scheduler = **roadmap** |
+| Source of truth | `docs/Master-Plan.md` remains the repo-local source of truth |
+
+### Smart interview findings (2026-07-11 enrollment)
+
+| Checklist area | Finding |
+|----------------|---------|
+| Status quo | Wave Plan + TDD waves exist; parallel subagent fan-out is possible via DEV-055 routing but lacks file-ownership contracts |
+| Narrowest v1 | Markdown schema + workflow wiring + bats; no scheduler, worktrees (DEV-046), or verifier hard-fail |
+| Urgency | Critical path after DEV-055 per DEV-002 epic charter and roadmap dependency graph; blocks DEV-046/057 |
+| Failure modes | Overlapping same-wave ownership; missing dependencies; handoff scope creep; import accepting out-of-scope edits; false runtime-enforcement claims |
+| Security | Package rows may reference paths and verification commands only — no secret values in handoff/import evidence |
+| Test evidence | RED/GREEN `DAG-001`–`DAG-007` + dogfood table in test plan |
+| Rollout | Template + maintainer mirrors; XS stories may keep sequential Wave Plan without full DAG ceremony |
+
+### Spec Quality Analyzer (2026-07-11)
+
+| Check | Result |
+|-------|--------|
+| Must ACs testable and unambiguous | Pass — 7 Must, 1 Should; each Must has failure mode |
+| Goal / scope / AC / task / test-plan alignment | Pass — no contradictions |
+| Must AC → test-plan mapping | Pass — AC-001–AC-008 mapped to DAG-001–DAG-007 |
+| Claim Boundary classified | Pass — §1.6 table complete |
+| Master-Plan source of truth preserved | Pass |
+| TBD / placeholder requirements | Pass — none in Must ACs |
 
 ## 1. Requirements
 

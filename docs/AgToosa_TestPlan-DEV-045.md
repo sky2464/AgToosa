@@ -2,8 +2,8 @@
 
 > **Spec:** `docs/archived/spec-DEV-045.md`
 > **Smoke filter:** `bats tests/agtoosa.bats -f "DAG-001|DAG-002|DAG-003|DAG-005|DAG-007"`
-> **Status:** ⬜ Backlog
-> **Prerequisite gate:** DEV-055 must ship before DEV-045 enrollment
+> **Status:** 🟦 Todo
+> **Prerequisite gate:** DEV-055 shipped v5.3.7 — cleared 2026-07-11
 > **Execution state:** Planned only — no DEV-045 validation command has been executed
 
 ## Coverage Target
