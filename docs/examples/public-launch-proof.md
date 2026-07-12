@@ -7,10 +7,10 @@ Use this checklist after `sky2464/AgToosa` is made public. It turns DEV-041 into
 | Surface | Expected proof |
 |---------|----------------|
 | Repository | `https://github.com/sky2464/AgToosa` opens without authentication |
-| Release | `https://github.com/sky2464/AgToosa/releases/tag/v5.3.14` opens without authentication |
+| Release | `https://github.com/sky2464/AgToosa/releases/tag/v5.3.15` opens without authentication |
 | Bash bootstrap on `main` | `https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh` returns HTTP 200 |
 | PowerShell bootstrap on `main` | `https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.ps1` returns HTTP 200 |
-| Pinned Bash bootstrap | `https://raw.githubusercontent.com/sky2464/AgToosa/v5.3.14/bootstrap.sh` returns HTTP 200 |
+| Pinned Bash bootstrap | `https://raw.githubusercontent.com/sky2464/AgToosa/v5.3.15/bootstrap.sh` returns HTTP 200 |
 | Registry | `https://raw.githubusercontent.com/sky2464/agtoosa-registry/main/registry.json` returns valid JSON |
 | Homebrew | `https://github.com/sky2464/homebrew-agtoosa` opens without authentication |
 | Support | issues, discussions, security policy, CI badge, and security badge open without authentication |
@@ -23,7 +23,7 @@ bash scripts/check-launch-readiness.sh --mode public
 
 curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh >/tmp/agtoosa-bootstrap.sh
 curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.ps1 >/tmp/agtoosa-bootstrap.ps1
-curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/v5.3.14/bootstrap.sh >/tmp/agtoosa-bootstrap-v5.3.14.sh
+curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/v5.3.15/bootstrap.sh >/tmp/agtoosa-bootstrap-v5.3.15.sh
 curl -fsSL https://raw.githubusercontent.com/sky2464/agtoosa-registry/main/registry.json | jq .
 git ls-remote https://github.com/sky2464/homebrew-agtoosa.git
 git ls-remote https://github.com/sky2464/agtoosa-first-15-proof.git

@@ -3,7 +3,7 @@
 > **Story ID:** DEV-088
 > **Type:** Feature
 > **Epic:** DEV-004 — Delivery, Quality & Operations
-> **Status:** 🟦 Todo
+> **Status:** 🏁 Shipped (v5.3.15)
 > **Estimate:** M
 > **Priority:** P0
 > **Spec created:** 2026-07-12

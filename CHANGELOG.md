@@ -5,6 +5,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.15] — 2026-07-12
+
+Patch release: Rev4 Wave 1b (DEV-087, DEV-088).
+
+### Added
+
+- **DEV-087 — Delivery Evidence Contract + Profiles.** `AgToosa_Delivery_Evidence_Contract.md`; `.agtoosa/evidence.yml.example` + config index README; schema-only `agtoosa-evidence-profile-check.sh`; DEC-001–009 bats. Full profile gate enforcement remains DEV-089.
+- **DEV-088 — Verifier and Doctor Machine Output.** `verify-result-v1` JSON schema; `agtoosa-verify.sh` / doctor `--format json`; Problem/Impact/Fix human findings; gate JSON step; VFJ-001–010 bats. VF-001/002 regression retained.
+
 ## [5.3.14] — 2026-07-11
 
 Patch release: DEV-051 Tracker Sync Bridge.

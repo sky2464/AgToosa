@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-12 (Wave 1b review approved — DEV-087 · DEV-088)
+> **Last updated:** 2026-07-12 (Ship v5.3.15 — Wave 1b DEV-087 · DEV-088)
 
 ## Project Charter
 
@@ -9,9 +9,9 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | v5.3.14 shipped — Rev4 Wave 1a + Wave 1b partial |
-| Milestone | `v5.3.15` (next) — PATCH train; `v5.4.0` target if Wave 1b ships migration wizard per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | Rev4 Wave 1a + Wave 1b partial (087/088) — capacity soft overrun |
+| Current phase | v5.3.15 shipped — Rev4 Wave 1a remains |
+| Milestone | `v5.3.16` (next) — PATCH train; Wave 1a (086/090/105) then Cycle C DEV-091 |
+| Active cycle | Rev4 Wave 1a (086 / 090 / 105) |
 | Cycle capacity | `8 story points` |
 
 ## Active Cycle
@@ -23,10 +23,10 @@
 | DEV-086 | Chore: Canonical Proof Product Experience | Chore | S | 🟦 Todo | 0/4 |
 | DEV-090 | Feature: Unified Install/Update Plan Engine | Feature | M | 🟦 Todo | 0/5 |
 | DEV-105 | Feature: PowerShell Maintain + Update Parity | Feature | M | 🟦 Todo | 0/5 |
-| DEV-087 | Feature: Delivery Evidence Contract + Profiles | Feature | M | 🔍 In Review | 8/8 |
-| DEV-088 | Feature: Verifier and Doctor Machine Output | Feature | M | 🔍 In Review | 9/9 |
 
 <!-- Rev4 Cycle C (after DEV-090): DEV-091; Wave 1b remainder: DEV-089 -->
+
+<!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.15.md -->
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.14.md -->
 
@@ -48,39 +48,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 > Multiple Todos: pick one story for `/agtoosa-build`; expand its tree as In Progress.
 
-### DEV-087 — Delivery Evidence Contract + Profiles (8/8)
-
-- [x] **1.** Contract and schema RED coverage
-  - [x] 1.1 Add DEC bats for doc title, taxonomy, profiles, and cross-links — _Requirements: AC-001, AC-002, AC-006, AC-009_
-  - [x] 1.2 Add DEC bats for example YAML, config index, and schema checker invalid fixtures — _Requirements: AC-003, AC-004, AC-005, AC-009_
-- [x] **2.** Delivery Evidence Contract surfaces
-  - [x] 2.1 Author `AgToosa_Delivery_Evidence_Contract.md` with profiles and assurance levels — _Requirements: AC-001, AC-002, AC-007_
-  - [x] 2.2 Ship `evidence.yml.example` and `.agtoosa/README.md` config index — _Requirements: AC-003, AC-004_
-  - [x] 2.3 Implement `agtoosa-evidence-profile-check.sh` schema-only validation — _Requirements: AC-005, AC-007_
-- [x] **3.** Wiring and registration
-  - [x] 3.1 Register files in `lib/config.sh` and add Agent/Evidence cross-links — _Requirements: AC-006, AC-008_
-  - [x] 3.2 Mirror maintainer `docs/` copies — _Requirements: AC-008_
-- [x] **4.** Evidence
-  - [x] 4.1 Record DEC RED/GREEN evidence in test plan — _Requirements: AC-001–AC-009_
-
-### DEV-088 — Verifier and Doctor Machine Output (9/9)
-
-- [x] **1.** Schema and contract RED coverage
-  - [x] 1.1 Add `verify-result-v1.json` and VFJ bats for JSON validity on pass/fail fixtures — _Requirements: AC-001, AC-003, AC-009_
-  - [x] 1.2 Add VFJ bats for Problem/Impact/Fix human format — _Requirements: AC-002, AC-007, AC-009_
-- [x] **2.** Verifier machine output
-  - [x] 2.1 Implement `--format json` emitter and assurance metadata in `agtoosa-verify.sh` — _Requirements: AC-001, AC-005, AC-007_
-  - [x] 2.2 Enrich human findings with Problem/Impact/Fix — _Requirements: AC-002, AC-007_
-- [x] **3.** Doctor machine output
-  - [x] 3.1 Add doctor JSON mode with provenance surface labels — _Requirements: AC-004, AC-005_
-  - [x] 3.2 Wire `agtoosa.sh` and `lib/maintain.sh` flag passthrough — _Requirements: AC-008_
-- [x] **4.** CI adoption
-  - [x] 4.1 Update gate example and adoption doc with JSON step — _Requirements: AC-006_
-- [x] **5.** Evidence
-  - [x] 5.1 Record VFJ RED/GREEN evidence — _Requirements: AC-001–AC-009_
-
 _(Wave 1a task trees: promote from specs when `/agtoosa-build` starts DEV-086 / DEV-090 / DEV-105.)_
-_(DEV-091 blocked — see Blocked section.)_
+_(DEV-091 blocked — see Blocked section. Wave 1b DEV-087 · DEV-088 shipped in v5.3.15.)_
 
 ## Manual / Deferred Tasks
 
@@ -160,8 +129,8 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
 | DEV-034 | Chore: Maintainer release-state reconciliation | Chore | S | DEV-004 | High | 🏁 Shipped |
 | DEV-085 | Chore: Post-v5.3.12 release hygiene (bats restore + Master-Plan reconciliation) | Chore | XS | DEV-004 | High | 🏁 Shipped — v5.3.13 |
 | DEV-086 | Chore: Canonical Proof Product Experience | Chore | S | DEV-004 | P0 | 🟦 Todo — Wave 1a active cycle |
-| DEV-087 | Feature: Delivery Evidence Contract + Profiles | Feature | M | DEV-002 | P0 | 🔍 In Review — Wave 1b |
-| DEV-088 | Feature: Verifier and Doctor Machine Output | Feature | M | DEV-004 | P0 | 🔍 In Review — Wave 1b |
+| DEV-087 | Feature: Delivery Evidence Contract + Profiles | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.15 |
+| DEV-088 | Feature: Verifier and Doctor Machine Output | Feature | M | DEV-004 | P0 | 🏁 Shipped — v5.3.15 |
 | DEV-089 | Feature: Evidence-Profile Verifier Gates | Feature | M | DEV-004 | P1 | ⬜ Backlog — spec approved; after DEV-087 |
 | DEV-090 | Feature: Unified Install/Update Plan Engine | Feature | M | DEV-001 | P0 | 🟦 Todo — Wave 1a active cycle |
 | DEV-091 | Feature: Migration Wizard + Rollback Manifest | Feature | L | DEV-001 | P0 | ⬜ Backlog — Cycle C after DEV-090 (hard dep) |
@@ -188,9 +157,9 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
 | ID | Title | Stories | Status | Next spec |
 |----|-------|---------|--------|-----------|
 | DEV-001 | Epic: Core Generator Engine | 7 open / 12 total | 🟨 Active | DEV-090 (Wave 1a) |
-| DEV-002 | Epic: Workflow Templates | 3 open / 16 total | 🟨 Active | DEV-087 (Wave 1b partial) |
+| DEV-002 | Epic: Workflow Templates | 2 open / 16 total | 🟨 Active | DEV-089 (after DEV-087) |
 | DEV-003 | Epic: Community Template Registry | 4 open / 11 total | 🟨 Active | DEV-096 (Wave 3) |
-| DEV-004 | Epic: Testing & QA Harness | 7 open / 18 total | 🟨 Active | DEV-086 (Wave 1a) |
+| DEV-004 | Epic: Testing & QA Harness | 6 open / 18 total | 🟨 Active | DEV-086 (Wave 1a) |
 
 ### Epic Charters
 
@@ -208,11 +177,12 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
     *   **Success Criteria:** Perfect parity of phase commands and zero-drift version badges across all platform templates.
     *   **Last shipped:** DEV-055 — Agent Capability Matrix → `docs/archived/spec-DEV-055.md`
     *   **Last shipped:** DEV-050 — Cross-Model Review Gate → `docs/archived/spec-DEV-050.md`
+    *   **Last shipped:** DEV-087 — Delivery Evidence Contract + Profiles → `docs/archived/spec-DEV-087.md`
     *   **Last shipped:** DEV-075 — Subagent and Persona Guide Suite → `docs/archived/spec-DEV-075.md`
     *   **Last shipped:** DEV-052 — Hook Automation Pack → `docs/archived/spec-DEV-052.md`
     *   **Last shipped:** DEV-056 — Retrospective Learning Loop → `docs/archived/spec-DEV-056.md`
     *   **Last shipped:** DEV-045 — Work Package Wave DAG → `docs/archived/spec-DEV-045.md`
-    *   **Current:** Rev4 wave — DEV-087, DEV-099 in backlog; demand-gated DEV-057 remains separate
+    *   **Current:** Rev4 wave — DEV-099 in backlog; DEV-087 shipped v5.3.15; demand-gated DEV-057 remains separate
 
 *   **DEV-003 - Epic: Community Template Registry**
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
@@ -239,8 +209,8 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
     *   **Last shipped:** DEV-079 — Verifier and CI Adoption Examples → `docs/archived/spec-DEV-079.md`
     *   **Last shipped:** DEV-083 — Voluntary Workflow Metrics and Case Study Kit → `docs/archived/spec-DEV-083.md`
     *   **Last shipped:** DEV-084 — Open-Source Sustainability and Support Boundary → `docs/archived/spec-DEV-084.md`
-    *   **Last shipped:** DEV-085 — Post-v5.3.12 release hygiene → `docs/archived/spec-DEV-085.md`
-    *   **Current:** Rev4 wave — DEV-086, DEV-088, DEV-089, DEV-094, DEV-097, DEV-098, DEV-106 in backlog; DEV-086 in Wave 1a active cycle
+    *   **Last shipped:** DEV-088 — Verifier and Doctor Machine Output → `docs/archived/spec-DEV-088.md`
+    *   **Current:** Rev4 wave — DEV-086, DEV-089, DEV-094, DEV-097, DEV-098, DEV-106 in backlog; DEV-086 in Wave 1a active cycle
 
 ## Completed This Cycle
 
@@ -249,6 +219,8 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-087 | Feature: Delivery Evidence Contract + Profiles | 2026-07-12 | [spec-DEV-087.md](archived/spec-DEV-087.md) · [review-DEV-087.md](archived/review-DEV-087.md) · [evidence-DEV-087.md](archived/evidence-DEV-087.md) |
+| DEV-088 | Feature: Verifier and Doctor Machine Output | 2026-07-12 | [spec-DEV-088.md](archived/spec-DEV-088.md) · [review-DEV-088.md](archived/review-DEV-088.md) · [evidence-DEV-088.md](archived/evidence-DEV-088.md) |
 | DEV-051 | Feature: Tracker Sync Bridge | 2026-07-11 | [spec-DEV-051.md](archived/spec-DEV-051.md) · [review-DEV-051.md](archived/review-DEV-051.md) · [evidence-DEV-051.md](archived/evidence-DEV-051.md) |
 | DEV-085 | Chore: Post-v5.3.12 release hygiene (bats restore + Master-Plan reconciliation) | 2026-07-11 | [spec-DEV-085.md](archived/spec-DEV-085.md) · [review-DEV-085.md](archived/review-DEV-085.md) · [evidence-DEV-085.md](archived/evidence-DEV-085.md) |
 | DEV-058 | Feature: Local Dashboard | 2026-07-11 | [spec-DEV-058.md](archived/spec-DEV-058.md) · [review-DEV-058.md](archived/review-DEV-058.md) · [evidence-DEV-058.md](archived/evidence-DEV-058.md) |
@@ -477,3 +449,5 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
 | 2026-07-12 | 🔍 Review ✅ Approved — DEV-087; 0 🔴 Critical, 6 🟡 Warning accepted; report: `docs/archived/review-DEV-087.md`; evidence: `docs/archived/evidence-DEV-087.md` | AgToosa |
 | 2026-07-12 | 🔍 Review ✅ Approved — DEV-088; 0 🔴 Critical, 7 🟡 Warning accepted; report: `docs/archived/review-DEV-088.md`; evidence: `docs/archived/evidence-DEV-088.md` | AgToosa |
 | 2026-07-12 | 🔍 Review complete — Wave 1b DEV-087 · DEV-088 PASS (0 critical); next: `/agtoosa-ship` v5.3.15 | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v5.3.15 — Wave 1b DEV-087 · DEV-088; smoke PASS; cycle archived | AgToosa |
+| 2026-07-12 | 🚀 Release 5.3.15 shipped — v5.3.15; version parity bash/ps1/npm; Milestone v5.3.16 (next); Wave 1a remains active | AgToosa |

@@ -123,3 +123,5 @@
 {"ts":"2026-07-12T15:25:00Z","phase":"review","event":"start","story":"DEV-088","by":"AgToosa"}
 {"ts":"2026-07-12T15:35:00Z","phase":"review","event":"approved","story":"DEV-087","by":"AgToosa","critical":0}
 {"ts":"2026-07-12T15:35:00Z","phase":"review","event":"approved","story":"DEV-088","by":"AgToosa","critical":0}
+{"ts":"2026-07-12T15:40:00Z","phase":"ship","event":"complete","story":"DEV-087","by":"AgToosa","release":"5.3.15"}
+{"ts":"2026-07-12T15:40:00Z","phase":"ship","event":"complete","story":"DEV-088","by":"AgToosa","release":"5.3.15"}

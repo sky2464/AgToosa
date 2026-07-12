@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.14" ]]
+  [[ "$output" == "AgToosa v5.3.15" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1636,7 +1636,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.3.14" ]
+  [ "$ver" = "5.3.15" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1647,7 +1647,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.3.14"* ]]
+  [[ "$output" == *"5.3.15"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -3649,7 +3649,7 @@ PY
   grep -q "Claude Code Instructions" "$project/CLAUDE.md"
   ! grep -q "old claude block" "$project/CLAUDE.md"
   grep -q "AgToosa" "$project/.claude/commands/agtoosa-spec.md"
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.14" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.15" ]
 }
 
 @test "DEV-036 WP-002: Bash registry install normalizes top-level pack directory" {
@@ -7201,11 +7201,12 @@ JSON
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "5.3.12" ]
+  grep -q '## \[5.3.12\]' "$root/CHANGELOG.md"
+  grep -q 'Release 5.3.12 shipped' "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
-  grep -q "version-5.3.12" "$root/README.md"
-  grep -qE -- '--ref v5\.3\.12' "$root/README.md"
+  grep -qE "version-${bash_ver}" "$root/README.md"
+  grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
 @test "DEV-058 SR-002: v5.3.12 changelog and review/evidence artifacts exist" {
@@ -7234,11 +7235,12 @@ JSON
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "5.3.13" ]
+  grep -q '## \[5.3.13\]' "$root/CHANGELOG.md"
+  grep -q 'Release 5.3.13 shipped' "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
-  grep -q "version-5.3.13" "$root/README.md"
-  grep -qE -- '--ref v5\.3\.13' "$root/README.md"
+  grep -qE "version-${bash_ver}" "$root/README.md"
+  grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
 @test "DEV-085 SR-002: v5.3.13 changelog and review/evidence/spec artifacts exist" {
@@ -7267,11 +7269,12 @@ JSON
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "5.3.14" ]
+  grep -q '## \[5.3.14\]' "$root/CHANGELOG.md"
+  grep -q 'Release 5.3.14 shipped' "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
-  grep -q "version-5.3.14" "$root/README.md"
-  grep -qE -- '--ref v5\.3\.14' "$root/README.md"
+  grep -qE "version-${bash_ver}" "$root/README.md"
+  grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
 @test "DEV-051 SR-002: v5.3.14 changelog and review/evidence/spec artifacts exist" {
@@ -7290,6 +7293,47 @@ JSON
   grep -q 'Release 5.3.14 shipped' "$mp"
   grep -q 'v5.3.15 (next)' "$mp"
   grep -q '| DEV-051 | Feature: Tracker Sync Bridge' "$mp"
+}
+
+# -- Wave 1b ship regression v5.3.15 (SR-001–SR-003) ----------------------------
+
+@test "DEV-087 SR-001: v5.3.15 release pins are aligned" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  grep -q '## \[5.3.15\]' "$root/CHANGELOG.md"
+  grep -q 'Release 5.3.15 shipped' "$root/docs/Master-Plan.md"
+  [ "$bash_ver" = "5.3.15" ]
+  [ "$bash_ver" = "$ps_ver" ]
+  [ "$bash_ver" = "$npm_ver" ]
+  grep -qE "version-${bash_ver}" "$root/README.md"
+  grep -qE -- "--ref v${bash_ver}" "$root/README.md"
+}
+
+@test "DEV-087 SR-002: v5.3.15 changelog and Wave 1b review/evidence/spec artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.15\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-087' "$root/CHANGELOG.md"
+  grep -q 'DEV-088' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/review-DEV-087.md" ]
+  [ -f "$root/docs/archived/spec-DEV-087.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-087.md" ]
+  [ -f "$root/docs/archived/review-DEV-088.md" ]
+  [ -f "$root/docs/archived/spec-DEV-088.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-088.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-087.md"
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-088.md"
+}
+
+@test "DEV-087 SR-003: Master-Plan records v5.3.15 ship and v5.3.16 next milestone" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  grep -q 'Ship complete — v5.3.15' "$mp"
+  grep -q 'Release 5.3.15 shipped' "$mp"
+  grep -q 'v5.3.16 (next)' "$mp"
+  grep -q '| DEV-087 | Feature: Delivery Evidence Contract' "$mp"
+  grep -q '| DEV-088 | Feature: Verifier and Doctor Machine Output' "$mp"
 }
 
 # ── DEV-081: Optional Local DX Add-on Validation (DXV-001–DXV-008) ───────────
