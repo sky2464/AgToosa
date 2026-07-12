@@ -14,6 +14,10 @@
 
 **Help-next**: The `/agtoosa-help next` sub-command that reads current project state read-only and recommends exactly one next AgToosa command. Context: spec DEV-007. Not: "auto-run", "Status Guide replacement".
 
+**Project Intake**: Dual-mode freeform PM classifier that runs when the user omits `/agtoosa-*`: soft-expedite small asks; hard-gate Claim-Boundary-sized work with benefit-framed confirmation; persist Standing Corrections in `Docs/Context/workflow.md`. Context: DEV-110, ADR-013. Not: "new slash command", "runtime orchestrator", "Discovery Triage" (mid-build only), "help-next".
+
+**Standing Corrections**: Dated, deduped always/never lessons in `Docs/Context/workflow.md` written by Project Intake so agents re-read them before repeating mistakes (e.g. inventing dependency versions from memory). Context: DEV-110. Not: "retro proposals only", "Update Log spam".
+
 **Assistance-only command**: A command that explains or recommends workflow actions without mutating files, git state, or Master-Plan state. Context: `/agtoosa-help`, `/agtoosa-help next`. Not: "build step", "ship gate".
 
 **Workflow skill**: An AgToosa-managed skill file, currently under `.codex/skills/agtoosa-*/SKILL.md`, that activates a canonical AgToosa workflow and preserves that workflow's gates. Context: DEV-008. Not: "thin dispatcher", "standalone replacement for Docs/AgToosa_*.md".
