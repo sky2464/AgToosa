@@ -9,7 +9,7 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | 🟨 Remaining-specs fan-out wave 1 — 8 stories build/review/ship |
+| Current phase | 🔍 Remaining-specs fan-out wave 1 — builds green; parallel review |
 | Milestone | `v5.3.9` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
 | Active cycle | DEV-045 · DEV-076 · DEV-077 · DEV-079 · DEV-080 · DEV-082 · DEV-083 · DEV-084 |
 | Cycle capacity | `8 story points` |
@@ -20,14 +20,14 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-045 | Feature: Work Package Wave DAG | Feature | M | 🟨 In Progress | 4/4 |
-| DEV-076 | Spike: Static Documentation Site Proof | Spike | S | 🟨 In Progress | 0/4 |
-| DEV-077 | Chore: Authoring Guide and Onboarding Surface | Chore | S | 🟨 In Progress | 5/5 |
-| DEV-079 | Docs: Verifier and CI Adoption Examples | Docs | S | 🟨 In Progress | 5/5 |
-| DEV-080 | Feature: Official Registry Pack Pilot | Feature | L | 🔧 Awaiting Manual | 3/4 |
-| DEV-082 | Spike: High-Assurance Signature Mode Validation | Spike | S | 🟨 In Progress | 4/4 |
-| DEV-083 | Docs: Voluntary Workflow Metrics and Case Study Kit | Docs | S | 🟨 In Progress | 4/4 |
-| DEV-084 | Chore: Open-Source Sustainability and Support Boundary | Chore | XS | 🔧 Awaiting Manual | 3/4 |
+| DEV-045 | Feature: Work Package Wave DAG | Feature | M | 🔍 In Review | 4/4 |
+| DEV-076 | Spike: Static Documentation Site Proof | Spike | S | 🔍 In Review | 4/4 |
+| DEV-077 | Chore: Authoring Guide and Onboarding Surface | Chore | S | 🔍 In Review | 5/5 |
+| DEV-079 | Docs: Verifier and CI Adoption Examples | Docs | S | 🔍 In Review | 5/5 |
+| DEV-080 | Feature: Official Registry Pack Pilot | Feature | L | 🔍 In Review | 3/4 |
+| DEV-082 | Spike: High-Assurance Signature Mode Validation | Spike | S | 🔍 In Review | 4/4 |
+| DEV-083 | Docs: Voluntary Workflow Metrics and Case Study Kit | Docs | S | 🔍 In Review | 4/4 |
+| DEV-084 | Chore: Open-Source Sustainability and Support Boundary | Chore | XS | 🔍 In Review | 3/4 |
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.8.md -->
 <!-- Archived to docs/archived/cycle-2026-07-08-release-5.3.5.md -->
@@ -700,3 +700,11 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-084 — Task 🟢 3/4 automated (OSS-001–007); Sponsors live enablement [manual-deferred]; SUPPORT boundary aligned | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-077 — Task 🟢 5/5 — AUTH-001–008 green; authoring guides + Registry/README/help discovery | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-045 — Task 🟢 4/4 — DAG-001–007 green; Work Package schema + Spec/Build/Handoff/Import wiring | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-076 — Task 🟢 4/4 — SITE-001–008 green; Pages build-only proof; optional owner enablement | AgToosa |
+| 2026-07-11 | 🏗️ Build complete — wave 1 (DEV-045/076/077/079/080/082/083/084); next: parallel /agtoosa-review | AgToosa |
+| 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — remaining-specs wave 1 — 8-story parallel review via subagents | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-077; 0 🔴 Critical, 4 🟡 Warning accepted; report: `docs/archived/review-DEV-077.md`; evidence: `docs/archived/evidence-DEV-077.md` | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-084; 0 🔴 Critical, 5 🟡 Warning accepted; Sponsors live [manual-deferred]; report: `docs/archived/review-DEV-084.md`; evidence: `docs/archived/evidence-DEV-084.md` | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-082; 0 🔴 Critical, 5 🟡 Warning accepted; Defer preserved; report: `docs/archived/review-DEV-082.md`; evidence: `docs/archived/evidence-DEV-082.md` | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-079; 0 🔴 Critical; report: `docs/archived/review-DEV-079.md`; evidence: `docs/archived/evidence-DEV-079.md` | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-076; 0 🔴 Critical, 4 🟡 Warning accepted; report: `docs/archived/review-DEV-076.md`; evidence: `docs/archived/evidence-DEV-076.md` | AgToosa |

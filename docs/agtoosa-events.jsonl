@@ -61,3 +61,13 @@
 {"ts":"2026-07-12T02:21:19Z","phase":"build","event":"start","story":"DEV-084","by":"AgToosa"}
 {"ts":"2026-07-12T02:24:58Z","phase":"build","event":"complete","story":"DEV-083","by":"AgToosa"}
 {"ts":"2026-07-12T02:30:00Z","phase":"build","event":"complete","story":"DEV-080","by":"AgToosa","note":"automated tasks green; 4.2/4.3 manual-deferred; local candidate only"}
+{"ts":"2026-07-12T02:31:05Z","phase":"evidence","event":"update","story":"DEV-077","by":"AgToosa"}
+{"ts":"2026-07-12T02:31:05Z","phase":"review","event":"approved","story":"DEV-077","by":"AgToosa","verdict":"PASS","critical":0}
+{"ts":"2026-07-12T02:30:51Z","phase":"review","event":"start","story":"DEV-079","by":"AgToosa"}
+{"ts":"2026-07-12T02:30:51Z","phase":"review","event":"complete","story":"DEV-079","by":"AgToosa","verdict":"PASS","critical":0}
+{"ts":"2026-07-12T02:30:51Z","phase":"evidence","event":"update","story":"DEV-079","by":"AgToosa"}
+{"ts":"2026-07-12T02:30:50Z","phase":"evidence","event":"update","story":"DEV-084","by":"AgToosa"}
+{"ts":"2026-07-12T02:30:50Z","phase":"review","event":"approved","story":"DEV-084","by":"AgToosa","verdict":"PASS","critical":0}
+{"ts":"2026-07-12T02:30:00Z","phase":"evidence","event":"update","story":"DEV-082","by":"AgToosa"}
+{"ts":"2026-07-12T02:31:00Z","phase":"evidence","event":"update","story":"DEV-076","by":"AgToosa"}
+{"ts":"2026-07-12T02:31:05Z","phase":"review","event":"approved","story":"DEV-076","by":"AgToosa","verdict":"PASS","critical":0}
