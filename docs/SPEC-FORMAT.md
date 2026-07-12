@@ -41,6 +41,7 @@ Every spec file opens with a metadata block:
 > **Epic:** [Epic name or ID]
 > **Status:** ⬜ Backlog | 🟦 Todo | 🟨 In Progress | ✅ Done | 🏁 Shipped
 > **Estimate:** XS | S | M | L | XL
+> **Clarity:** `ready` · `sa-ready` · `needs-interview` (aliases `Ready` · `SA-R` · `N-CI`; combinable; optional)
 > **Spec created:** [YYYY-MM-DD]
 ```
 

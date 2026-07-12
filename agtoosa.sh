@@ -10,7 +10,7 @@ set -euo pipefail
 #   bash agtoosa.sh [--force] [--dry-run] [--version] [--help]
 # ──────────────────────────────────────────────────────────────
 
-AGTOOSA_VERSION="5.3.20"
+AGTOOSA_VERSION="5.3.22"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
 SHIP_DIR="${SCRIPT_DIR}/ship"
@@ -93,6 +93,8 @@ REINSTALL_PATH=""
 CLEAN=false
 OUTPUT_FORMAT=""
 VERIFY_STRICT=false
+STATUS_LINE=false
+STATUS_LINE_PATH=""
 PLAN_JSON_MODE=false
 ACCEPT_BREAKING=false
 while [[ $# -gt 0 ]]; do
@@ -104,6 +106,7 @@ while [[ $# -gt 0 ]]; do
     --update)              UPDATE=true ;;
     --verify)              VERIFY=true ;;
     --doctor)              DOCTOR=true ;;
+    --status-line)         STATUS_LINE=true ;;
     --uninstall)           UNINSTALL=true ;;
     --reinstall)           REINSTALL=true ;;
     --clean)               CLEAN=true ;;
@@ -166,6 +169,8 @@ while [[ $# -gt 0 ]]; do
         VERIFY_PATH="$arg"
       elif [[ "$DOCTOR" == true && -z "$DOCTOR_PATH" && "$arg" != --* ]]; then
         DOCTOR_PATH="$arg"
+      elif [[ "$STATUS_LINE" == true && -z "$STATUS_LINE_PATH" && "$arg" != --* ]]; then
+        STATUS_LINE_PATH="$arg"
       elif [[ "$UNINSTALL" == true && -z "$UNINSTALL_PATH" && "$arg" != --* ]]; then
         UNINSTALL_PATH="$arg"
       elif [[ "$REINSTALL" == true && -z "$REINSTALL_PATH" && "$arg" != --* ]]; then
@@ -211,7 +216,7 @@ fi
 # --json / --format json require a consumer mode (install dry-run, update, verify, …).
 if [[ "$OUTPUT_FORMAT" == "json" \
       && "$UPDATE" != true && "$DRY_RUN" != true && "$VERIFY" != true \
-      && "$DOCTOR" != true && "$CATALOG" != true && "$REGISTRY" != true \
+      && "$DOCTOR" != true && "$STATUS_LINE" != true && "$CATALOG" != true && "$REGISTRY" != true \
       && "$TRACKER" != true ]]; then
   echo -e "${RED}❌ Error: --json / --format json requires a command (--update, --dry-run, --verify, --doctor, --catalog, …).${NC}" >&2
   exit 1
@@ -241,6 +246,11 @@ if [[ "$DOCTOR" == true ]]; then
   else
     run_doctor "${DOCTOR_PATH:-$PWD}"
   fi
+  exit $?
+fi
+
+if [[ "$STATUS_LINE" == true ]]; then
+  run_status_line "${STATUS_LINE_PATH:-$PWD}"
   exit $?
 fi
 

@@ -11,4 +11,4 @@ Use when the user asks for `/agtoosa-import`, `$agtoosa-import`, or wants to rev
 
 1. Read `Docs/AgToosa_Import.md` in full and **run** its workflow precisely.
 2. **Dispatch** `check` when provided (report gaps only, do not update Master-Plan or test plan); otherwise run the full import flow.
-3. On successful completion, print verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+3. On successful completion, print verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

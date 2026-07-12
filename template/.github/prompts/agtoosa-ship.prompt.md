@@ -13,4 +13,4 @@ Sub-command dispatch:
 - `docs` → archive spec + update changelog + update Master-Plan.md
 - `retro` → retrospective summary + suggest next story
 
-On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+On successful completion, print this line verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

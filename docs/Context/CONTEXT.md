@@ -18,6 +18,14 @@
 
 **Standing Corrections**: Dated, deduped always/never lessons in `Docs/Context/workflow.md` written by Project Intake so agents re-read them before repeating mistakes (e.g. inventing dependency versions from memory). Context: DEV-110. Not: "retro proposals only", "Update Log spam".
 
+**Phase pulse / SYNC line**: One executive line after lifecycle phases and from `agtoosa.sh --status-line` / `agtoosa.ps1 -StatusLine`. Context: ADR-012, DEV-109. Not: full `/agtoosa-status` dashboard.
+
+**Lifecycle next-step**: Primary post-phase recommendation following Spec → Build → Review → Ship. Context: ADR-012. Not: universal “run `/agtoosa-status`” as headline.
+
+**Clarity tags**: Combinable markers on Master-Plan / spec header: `ready` (`Ready`), `sa-ready` (`SA-R`), `needs-interview` (`N-CI`). Context: DEV-109 multi-spec intake. Not: story Status pills.
+
+**Multi-spec intake**: Map confirmed objectives into child stories; interview per child (`sa-ready` parallel when allowed) or defer with `needs-interview`. Context: `AgToosa_Spec.md`. Not: `/agtoosa-spec to-issues` alone.
+
 **Assistance-only command**: A command that explains or recommends workflow actions without mutating files, git state, or Master-Plan state. Context: `/agtoosa-help`, `/agtoosa-help next`. Not: "build step", "ship gate".
 
 **Workflow skill**: An AgToosa-managed skill file, currently under `.codex/skills/agtoosa-*/SKILL.md`, that activates a canonical AgToosa workflow and preserves that workflow's gates. Context: DEV-008. Not: "thin dispatcher", "standalone replacement for Docs/AgToosa_*.md".

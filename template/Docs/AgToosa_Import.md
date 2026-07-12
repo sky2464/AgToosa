@@ -103,7 +103,7 @@ Consult `Docs/AgToosa_GovernancePolicy.md` (checker: `Docs/agtoosa-policy-check.
 ## Output
 
 * Print the Evidence Mapping table and any gaps.
-* On success, print verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+* On success, print the dual-line phase close per Docs/AgToosa_Agent.md → Lifecycle Next-Step Contract
 * If gaps remain, list them with *Fix with:* re-run verification or `/agtoosa-handoff` for a clearer pack.
 
 ## Rules

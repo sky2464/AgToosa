@@ -302,6 +302,52 @@ Wait for the user's explicit approval before starting the next phase or writing 
 | `/agtoosa-ship` | 0 | Execution phase — deploy approval gate only |
 | `/agtoosa-status` | 0 | Read-only — no interaction needed |
 
+### Project Intake Protocol
+
+> **Claim Boundary:** agent-instructed (docs + always-on rules). Not a runtime orchestrator.
+
+When the user sends a **freeform** request without an explicit `/agtoosa-*` (or named `agtoosa-*`) command, run **AgToosa Project Intake** before product changes:
+
+1. **Read** `docs/Context/workflow.md` → `## Standing Corrections` (if present).
+2. **Classify** soft vs hard using Claim-Boundary triggers below.
+3. **Route** to exactly one primary destination; **expedite** the user's ask once soft-routed or hard-confirmed.
+4. **Never** auto-chain Spec → Build → Review → Ship (Phase Stop preserved).
+
+**Slash wins:** explicit `/agtoosa-*` bypasses intake ceremony; run the named workflow (Standing Corrections still apply as project memory).
+
+**Soft path** (quiet one-liner, e.g. `Intake: soft → /agtoosa-task — expediting.`):
+
+- Local bug/chore/debug cleanup, &lt;15 min, single-file or clearly local
+- In-scope incomplete Active Task → continue under `/agtoosa-build`
+- Tiny regression owned by current In Review story → review finding or Active Tasks sub-task for next `/agtoosa-review`
+
+**Hard path** — do **not** modify product/implementation code until the user confirms. Present benefit-framed copy:
+
+```text
+**AgToosa Project Intake** — This change is bigger than a quick fix.
+Routing it through /agtoosa-spec keeps it on the Master Plan, captures
+Standing Corrections when needed, and prevents an untracked AI edit from
+drifting the product. Confirm to open Spec, or say how you want to override.
+```
+
+**Hard-gate triggers (Claim-Boundary sized):** new feature/architecture; multi-primary-surface coordinated change; security/trust boundary; Active Cycle conflict; scope expand without Spec Approved.
+
+**Destination map (pick one):**
+
+| Signal | Destination |
+|--------|-------------|
+| Local bug/chore/debug | Expedite now; `/agtoosa-task` if tracking needed |
+| Regression from current cycle | Review finding or sub-task for `/agtoosa-review` |
+| In-scope Active Task | `/agtoosa-build` rules for that story |
+| New feature / architecture / security / cycle conflict | Stop → `/agtoosa-spec` (or `quick`) after confirm |
+| Out of charter / noise | Factor out or Backlog spike — confirm if unsure |
+
+**Standing Corrections:** when the user states an always/never rule or confirms a hard-gate lesson, append a dated deduped row under `## Standing Corrections` in `docs/Context/workflow.md`.
+
+**Tiered logging:** soft path — response one-liner only; write Master-Plan/Update Log only if `/agtoosa-task` or Backlog entry created. Hard path — record confirmed decision (task, scope note, Update Log, or deferred-to-spec) after user confirm.
+
+**Mid-build:** out-of-scope discoveries during `/agtoosa-build` still use Discovery Triage below — not Project Intake.
+
 ### Discovery Triage Protocol
 
 During `/agtoosa-build`, when the agent notices anything outside the declared scope:
@@ -313,6 +359,30 @@ During `/agtoosa-build`, when the agent notices anything outside the declared sc
 5. **If B** — update the Scope Boundary in the active spec; create a new Task sub-issue under the Story; continue TDD cycle.
 
 Never silently fix or drop an out-of-scope discovery.
+
+### Lifecycle Next-Step Contract
+
+After **successful** completion of `/agtoosa-spec` (post-approval tasks slice), `/agtoosa-build`, `/agtoosa-review`, or `/agtoosa-ship`:
+
+1. Print a **primary lifecycle next-step** line — **not** `/agtoosa-status` as the headline:
+
+    ```
+    ✅ Done. Next: /agtoosa-<command> — <one-line rationale>
+    ```
+
+    Order: Spec approved → `/agtoosa-build`; build complete → `/agtoosa-review`; review approved → `/agtoosa-ship`; ship / no active work → `/agtoosa-spec` for the next story.
+
+2. Print an automatic **executive SYNC pulse** (same format as CLI):
+
+    ```
+    SYNC: <story-id|none> · <status> · tasks N/M · clarity <tags|—> · next </agtoosa-command>
+    ```
+
+    Prefer `bash agtoosa.sh --status-line [path]` (or `agtoosa.ps1 -StatusLine`) when available; otherwise read `docs/Master-Plan.md` read-only.
+
+3. Optional tertiary only when useful: `Optional: /agtoosa-status for full health findings.`
+
+**Interview soft cap (Plan-Mode Spec Interview):** default **8**, then **+4**; when the user types new free-text directions, **+4 may repeat** until Decision-complete — not a hard stop at 8.
 
 ### Phase Stop Contract
 

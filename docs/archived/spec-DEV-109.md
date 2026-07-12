@@ -239,20 +239,20 @@ Out of scope        : Part 5.5 ranking rewrite, DEV-107/108, version bump, auto-
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Contract docs + ADR
-  - [ ] 1.1 Finalize ADR-012 Accepted on build start; sync CONTEXT terms — _Requirements: AC-005, AC-008, AC-009_
-  - [ ] 1.2 Update Spec.md: dual-line output, multi-spec intake, soft-cap repeat, clarity tags — _Requirements: AC-001, AC-002, AC-006, AC-007, AC-008, AC-009_
-  - [ ] 1.3 Update Build/Review/Ship Output sections + Agent Smart Interview notes — _Requirements: AC-001, AC-002, AC-008, AC-009_
-  - [ ] 1.4 SPEC-FORMAT + Master-Plan template Clarity column; Status/help Should copy — _Requirements: AC-005, AC-010_
-- [ ] **2.** Status-line CLI
-  - [ ] 2.1 Implement `run_status_line` in `lib/maintain.sh` — _Requirements: AC-002, AC-003_
-  - [ ] 2.2 Wire `agtoosa.sh --status-line` + help/maintainer docs — _Requirements: AC-003_
-  - [ ] 2.3 Wire `agtoosa.ps1 -StatusLine` parity + help — _Requirements: AC-004_
-- [ ] **3.** Adapter parity
-  - [ ] 3.1 Update platform commands/skills/prompts that hardcode old status-only closure — _Requirements: AC-001, AC-009_
-- [ ] **4.** Tests + evidence
-  - [ ] 4.1 Add LNS bats (docs + CLI + PS1 greps) — _Requirements: AC-011_
-  - [ ] 4.2 Record RED/GREEN in test plan — _Requirements: AC-012_
+- [x] **1.** Contract docs + ADR
+  - [x] 1.1 Finalize ADR-012 Accepted on build start; sync CONTEXT terms — _Requirements: AC-005, AC-008, AC-009_
+  - [x] 1.2 Update Spec.md: dual-line output, multi-spec intake, soft-cap repeat, clarity tags — _Requirements: AC-001, AC-002, AC-006, AC-007, AC-008, AC-009_
+  - [x] 1.3 Update Build/Review/Ship Output sections + Agent Smart Interview notes — _Requirements: AC-001, AC-002, AC-008, AC-009_
+  - [x] 1.4 SPEC-FORMAT + Master-Plan template Clarity column; Status/help Should copy — _Requirements: AC-005, AC-010_
+- [x] **2.** Status-line CLI
+  - [x] 2.1 Implement `run_status_line` in `lib/maintain.sh` — _Requirements: AC-002, AC-003_
+  - [x] 2.2 Wire `agtoosa.sh --status-line` + help/maintainer docs — _Requirements: AC-003_
+  - [x] 2.3 Wire `agtoosa.ps1 -StatusLine` parity + help — _Requirements: AC-004_
+- [x] **3.** Adapter parity
+  - [x] 3.1 Update platform commands/skills/prompts that hardcode old status-only closure — _Requirements: AC-001, AC-009_
+- [x] **4.** Tests + evidence
+  - [x] 4.1 Add LNS bats (docs + CLI + PS1 greps) — _Requirements: AC-011_
+  - [x] 4.2 Record RED/GREEN in test plan — _Requirements: AC-012_
 
 ### 3.2 Wave Plan
 

@@ -30,6 +30,9 @@
 .PARAMETER Doctor
     Diagnose an existing AgToosa install (delegates to bash --doctor).
 
+.PARAMETER StatusLine
+    Print one-line executive SYNC pulse from Master-Plan (delegates to bash --status-line).
+
 .PARAMETER Uninstall
     Remove AgToosa-owned files while preserving Master-Plan, Context, and archived content (delegates to bash).
 
@@ -82,6 +85,7 @@
     .\agtoosa.ps1 -Update -UpdatePath C:\Projects\MyApp
     .\agtoosa.ps1 -Verify -UpdatePath C:\Projects\MyApp
     .\agtoosa.ps1 -Doctor -UpdatePath C:\Projects\MyApp
+    .\agtoosa.ps1 -StatusLine -UpdatePath C:\Projects\MyApp
     .\agtoosa.ps1 -Uninstall -UpdatePath C:\Projects\MyApp
     .\agtoosa.ps1 -Path C:\Projects\MyApp -Platforms cursor,claude -Yes
     .\agtoosa.ps1 -Version
@@ -100,6 +104,7 @@ param(
     [switch]$Update,
     [switch]$Verify,
     [switch]$Doctor,
+    [switch]$StatusLine,
     [switch]$Uninstall,
     [switch]$Reinstall,
     [switch]$Clean,
@@ -124,7 +129,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 # ── Version ───────────────────────────────────────────────────
-$AGTOOSA_VERSION = "5.3.20"
+$AGTOOSA_VERSION = "5.3.22"
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $TEMPLATE_DIR = Join-Path $SCRIPT_DIR "template"
 $SHIP_DIR = Join-Path $SCRIPT_DIR "ship"
@@ -196,6 +201,7 @@ ${BOLD}Options:${NC}
   -Update               Update an existing AgToosa install (bash run_update)
   -Verify               Run lifecycle verifier for a project (bash dispatch)
   -Doctor               Diagnose an AgToosa install (bash dispatch)
+  -StatusLine            One-line executive SYNC pulse (bash --status-line)
   -Uninstall            Remove AgToosa-owned files (bash dispatch; preserves user data)
   -Reinstall -Clean     Optional destructive fresh reinstall (ADR-004 Option C; bash dispatch)
   -UpdatePath <path>    Target project path (required for maintain switches)
@@ -1228,6 +1234,20 @@ if ($Verify) {
 
 if ($Doctor) {
     Invoke-AgToosaMaintain -Operation doctor -ProjectPath $UpdatePath
+}
+
+if ($StatusLine) {
+    $slTarget = $UpdatePath
+    if ([string]::IsNullOrWhiteSpace($slTarget)) { $slTarget = $Path }
+    if ([string]::IsNullOrWhiteSpace($slTarget)) { $slTarget = (Get-Location).Path }
+    $bash = Get-AgToosaBash
+    if (-not $bash) {
+        Write-Color "${RED}❌ StatusLine requires Bash (Git Bash or WSL).${NC}"
+        exit 1
+    }
+    $agtoosaSh = Join-Path $SCRIPT_DIR 'agtoosa.sh'
+    & $bash @($agtoosaSh, '--status-line', $slTarget)
+    exit $LASTEXITCODE
 }
 
 if ($Uninstall) {

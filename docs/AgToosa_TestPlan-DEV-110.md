@@ -2,7 +2,7 @@
 
 > **Spec:** `docs/archived/spec-DEV-110.md`  
 > **Smoke filter:** `bats tests/agtoosa.bats -f "DEV-110\\|INT-"`  
-> **Status:** ⬜ Spec draft — awaiting approval  
+> **Status:** ✅ Spec approved — build complete (INT GREEN)  
 > **Coverage target:** 80% focused contract tests (docs + alwaysApply + Standing Corrections greps)
 
 ## AC Coverage
@@ -46,8 +46,15 @@ git diff --check
 
 ### RED evidence
 
-_Pending `/agtoosa-build` — expect INT tests to fail until Agent Project Intake section, alwaysApply, Standing Corrections, and entry pointers land._
+2026-07-12 — Before implementation, INT section absent; `alwaysApply: false` on core rule; no Project Intake section in Agent.md. Expected failures on first `bats -f DEV-110` run.
 
 ### GREEN evidence
 
-_Pending `/agtoosa-build`._
+2026-07-12 — `bats tests/agtoosa.bats -f "DEV-110"` — exit 0, 12/12 pass (INT-001–INT-012).
+
+```
+1..12
+ok 1 DEV-110 @smoke INT-001
+...
+ok 12 DEV-110 INT-012: Quickref Project Intake pointer
+```

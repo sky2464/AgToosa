@@ -16,12 +16,12 @@
 
 Approved specs are contracts; silent edits destroy their audit value. When requirements change after `## ✅ Spec Approved`:
 
-1. Read the active spec (`Docs/archived/spec-[story-id].md`) and present a concise diff of the proposed change (sections touched, ACs added/modified/removed).
-2. Append a row to the spec's `## Spec Revision Log` (create the section before the approval marker if missing — format in `Docs/SPEC-FORMAT.md`):
+1. Read the active spec (`docs/archived/spec-[story-id].md`) and present a concise diff of the proposed change (sections touched, ACs added/modified/removed).
+2. Append a row to the spec's `## Spec Revision Log` (create the section before the approval marker if missing — format in `docs/SPEC-FORMAT.md`):
    `| R[N] | [YYYY-MM-DD] | [what changed] | [why] | [approved-by or pending] |`
 3. Mark changed acceptance criteria inline: new rows get `(added R[N])`, edited rows get `(modified R[N])`, dropped rows are struck through with `(removed R[N])` — never silently deleted.
 4. **Re-approval gate:** if any **Must**-priority AC was added, modified, or removed, the amendment requires explicit user approval before `/agtoosa-build` may continue; append `## ✅ Amendment R[N] Approved` under the revision log when granted.
-5. Sync downstream artifacts: update the task tree (spec §3.1 + Master-Plan `## Active Tasks`) and the story test plan for any AC changes, and add an Update Log entry to `Docs/Master-Plan.md`.
+5. Sync downstream artifacts: update the task tree (spec §3.1 + Master-Plan `## Active Tasks`) and the story test plan for any AC changes, and add an Update Log entry to `docs/Master-Plan.md`.
 
 ## Optional Sub-Commands
 
@@ -31,24 +31,24 @@ Break the active spec (or a provided PRD or plan) into independently-grabbable G
 
 **Vertical slice rule:** Each issue must deliver one complete user-facing behaviour change — never a horizontal slice ("write the tests" or "add the migration" are not valid issues on their own).
 
-1. Read the active spec (`Docs/archived/spec-[story-id].md`, or the provided description if no spec file exists).
+1. Read the active spec (`docs/archived/spec-[story-id].md`, or the provided description if no spec file exists).
 2. Identify all user-facing behaviour changes. For each, create one GitHub issue with:
    - **Title:** `[Area] Short description of user-facing change`
    - **Acceptance criteria:** up to 5 AC items in checkbox format
    - **Story points:** 1 / 2 / 3 / 5 (Fibonacci)
    - **Labels:** feature / bug / chore / spike as appropriate
    - **Dependencies:** list any issues that must complete first
-3. If no GitHub remote is configured, write issues to `Docs/issues/` as individual markdown files.
-4. Update `Docs/Master-Plan.md` with all issue IDs under `## Active Tasks`.
+3. If no GitHub remote is configured, write issues to `docs/issues/` as individual markdown files.
+4. Update `docs/Master-Plan.md` with all issue IDs under `## Active Tasks`.
 
 ## Objective
 Transform a raw idea, feature, chore, or bug into a researched Specification with an architectural blueprint.
 
-> **Generated Project Mode:** Specs describe work on **the project** or **the product** (`Docs/Master-Plan.md` → `## Project Charter`), not the AgToosa framework. Story entries and tasks belong in **this repository's** `Docs/Master-Plan.md`. See `Docs/AgToosa_Agent.md` → **Operating Contexts**.
+> **Generated Project Mode:** Specs describe work on **the project** or **the product** (`docs/Master-Plan.md` → `## Project Charter`), not the AgToosa framework. Story entries and tasks belong in **this repository's** `docs/Master-Plan.md`. See `docs/AgToosa_Agent.md` → **Operating Contexts**.
 
 ## Phase Stop Contract
 
-> See `Docs/AgToosa_Agent.md` → **Phase Stop Contract** for the full rules.
+> See `docs/AgToosa_Agent.md` → **Phase Stop Contract** for the full rules.
 
 - `/agtoosa-spec` may run through Parts 1–4 (spec, architecture, tasks, test plan) but **must stop** at the approval gate below.
 - Do **not** run `/agtoosa-build` automatically after the approval gate — wait for the user to invoke `/agtoosa-build` explicitly.
@@ -60,14 +60,14 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 
 Before writing or finalizing the spec file, run a **Plan-Mode Spec Interview**:
 
-1. **Research first** — Read `Docs/Context/`, `Docs/Master-Plan.md`, active `Docs/archived/spec-*.md`, `Docs/Master-Architecture.md`, and scan the codebase; use external research when platform or dependency behavior matters.
+1. **Research first** — Read `docs/Context/`, `docs/Master-Plan.md`, active `docs/archived/spec-*.md`, `docs/Master-Architecture.md`, and scan the codebase; use external research when platform or dependency behavior matters.
 2. **Gap list** — Compare findings against the **Decision-complete checklist** below. Ask only about genuine gaps.
 3. **Infer, don't re-ask** — If an answer is inferable with high confidence (≥80%), state it as a **finding** and do not ask that question.
 4. **One question at a time** — Wait for each answer before the next question.
-5. **Contextual options** — Derive 2–3 concrete options from repo/research when possible; mark one **recommended** default; always allow free-text override (see **Question Format** in `Docs/AgToosa_Agent.md` → Smart Interview Protocol).
+5. **Contextual options** — Derive 2–3 concrete options from repo/research when possible; mark one **recommended** default; always allow free-text override (see **Question Format** in `docs/AgToosa_Agent.md` → Smart Interview Protocol).
 6. **Adaptive sequencing** — Let each answer shape the next question; use the six forcing questions (Part 1 step 4) as a **candidate pool**, not a mandatory script.
 7. **Adaptive cap** — Full flow: at most **8 core interview questions**. `/agtoosa-spec quick`: at most **2** questions.
-8. **Budget exhaustion** — If decision-complete clarity is still missing after 8 core questions, stop and ask:
+8. **Budget exhaustion** — Default soft cap: **8** core questions, then offer **+4** continuation. If the user answers with **new free-text directions** (not a menu pick), the **+4 extension may repeat** until Decision-complete or explicit assumption acceptance. After 8 questions without resolution, ask:
 
     ```
     ❓ Interview budget reached (8 questions). How should we proceed?
@@ -76,7 +76,20 @@ Before writing or finalizing the spec file, run a **Plan-Mode Spec Interview**:
       Or type your own answer.
     ```
 
-9. **Write gate** — Do **not** generate the final spec file until the Decision-complete checklist is satisfied **or** the user explicitly accepts documented assumptions under `### 1.1 Goal Contract` → Assumptions / Unresolved questions.
+    **Not a hard stop:** keep interviewing when free-text answers open new gaps until the Decision-complete checklist passes or assumptions are explicitly accepted. Never auto-write a detailed spec while a child story carries `needs-interview` / `N-CI` or Must clarity gaps remain.
+
+### Multi-spec intake
+
+When the user asks to learn objectives and split work into **multiple specs**:
+
+1. **Detect** multi-objective / “break into specs” intent.
+2. **Propose** a story map (IDs, titles, non-goals, suggested clarity tags, default `intake:small` vs `intake:large`).
+3. **Confirm** the map with the user.
+4. **Small agenda (`intake:small`):** run Plan-Mode Spec Interview now (parallel child interviews when host supports subagents and row carries `sa-ready` / `SA-R`).
+5. **Large agenda (`intake:large`):** capture portfolio-level clarity only; enroll children with `needs-interview` / `N-CI`; do **not** write detailed child specs until each is interviewed.
+6. **Write gate:** never finalize a detailed spec file for a story tagged `needs-interview` / `N-CI` without completing Plan-Mode Spec Interview (or explicit `/agtoosa-spec quick` only when the user chooses quick).
+
+**Clarity tags** (combinable on Master-Plan `Clarity` column and spec header): canonical `ready` · `sa-ready` · `needs-interview` (aliases `Ready` · `SA-R` · `N-CI`). See `docs/adr/ADR-012-lifecycle-next-step-sync.md`.
 
 ### Decision-complete checklist
 
@@ -99,25 +112,25 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
 
 ### Part 1 — Research & Specification
 
-**Orchestration Brain step 0:** Before fan-out (specialist lanes, parallel research), read `Docs/AgToosa_Orchestration.md` and run Capability Inventory → lane plan → parallel or sequential dispatch → orchestrator merge. Consult `Docs/AgToosa_AgentCapability.md` for parallel vs sequential; do not duplicate routing tables here.
+**Orchestration Brain step 0:** Before fan-out (specialist lanes, parallel research), read `docs/AgToosa_Orchestration.md` and run Capability Inventory → lane plan → parallel or sequential dispatch → orchestrator merge. Consult `docs/AgToosa_AgentCapability.md` for parallel vs sequential; do not duplicate routing tables here.
 
 1.  **Context Gathering & Domain Language Alignment:**
-    *   Read `Docs/Context/product.md`, `tech-stack.md`, and `workflow.md` to align with project goals.
-    *   Read `Docs/Master-Architecture.md` as the current solution architecture before proposing architecture changes. If it is missing or stale, record that as a context gap and include an update task when architecture is in scope.
+    *   Read `docs/Context/product.md`, `tech-stack.md`, and `workflow.md` to align with project goals.
+    *   Read `docs/Master-Architecture.md` as the current solution architecture before proposing architecture changes. If it is missing or stale, record that as a context gap and include an update task when architecture is in scope.
     *   Scan the existing codebase to fully understand the impact surface of the proposed work.
-    *   **Domain Language Alignment:** Read `Docs/Context/CONTEXT.md` (create it if missing using `Docs/CONTEXT-FORMAT.md` as a guide). For each key concept in the proposed feature:
+    *   **Domain Language Alignment:** Read `docs/Context/CONTEXT.md` (create it if missing using `docs/CONTEXT-FORMAT.md` as a guide). For each key concept in the proposed feature:
         - "Is this the right term? What does the domain call this?"
         - "Is this a new concept or an existing one we're renaming?"
         - "Where does this term appear in the codebase today?"
-    *   Update `Docs/Context/CONTEXT.md` with any new or corrected terms.
-    *   Identify 2–3 architectural decisions implied by the feature; document each as a new ADR in `Docs/adr/` using `Docs/ADR-FORMAT.md`.
+    *   Update `docs/Context/CONTEXT.md` with any new or corrected terms.
+    *   Identify 2–3 architectural decisions implied by the feature; document each as a new ADR in `docs/adr/` using `docs/ADR-FORMAT.md`.
 1a. **Spec Specialist Orchestration:**
 
-    > Canonical contract: `Docs/AgToosa_Specialists.md`. Run after context scan, before external research when a roster exists or specialists were approved during init.
+    > Canonical contract: `docs/AgToosa_Specialists.md`. Run after context scan, before external research when a roster exists or specialists were approved during init.
 
-    *   If `Docs/Context/specialists.md` is missing, skip this step (record "no approved specialists").
+    *   If `docs/Context/specialists.md` is missing, skip this step (record "no approved specialists").
     *   Load the roster; select specialists where `phase_hooks` includes **`spec`** and **trigger** matches the active story (title, paths, epic, or user-stated scope).
-    *   For each selected specialist, run a lane that reads declared **inputs** and returns the **structured evidence block** from `Docs/AgToosa_Specialists.md` (`Findings:`, `Files read:`, `Commands:`, `Warnings/errors:`, `Recommendations:`, `Spec sections affected:`).
+    *   For each selected specialist, run a lane that reads declared **inputs** and returns the **structured evidence block** from `docs/AgToosa_Specialists.md` (`Findings:`, `Files read:`, `Commands:`, `Warnings/errors:`, `Recommendations:`, `Spec sections affected:`).
     *   **Parallel:** when the host supports native subagent delegation (e.g. Claude Code Agent tool), run matching lanes in parallel.
     *   **Sequential fallback:** otherwise run the same lanes one at a time and print an explicit note: `Specialist lanes ran sequentially (platform does not support parallel subagents).`
     *   **Merge** evidence into draft Goal Contract, ACs, architecture notes, STRIDE inputs, task tree hints, and test plan skeleton **before** finalizing Part 1 executable spec and Part 2 threat model.
@@ -129,15 +142,15 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
 
     Before asking forcing questions, verify that the story goal is clear enough to build, review, and ship against.
 
-    *   Read the project Goal Contract in `Docs/Master-Plan.md` `## Project Charter`.
-    *   Infer the story goal from the user's request, codebase scan, active specs, backlog, and `Docs/Context/`.
+    *   Read the project Goal Contract in `docs/Master-Plan.md` `## Project Charter`.
+    *   Infer the story goal from the user's request, codebase scan, active specs, backlog, and `docs/Context/`.
     *   If the goal, user outcome, measurable success condition, proof/evidence, non-goals, assumptions, risks, or unresolved questions are unclear, call the `/agtoosa-goal story` sub-workflow.
     *   Write the final Story Goal Contract into the spec under `## 1. Requirements` before User Stories.
-    *   Story goals must be stored in the active spec, not in `Docs/Context/`.
+    *   Story goals must be stored in the active spec, not in `docs/Context/`.
 
 4.  **Q&A — Plan-Mode Spec Interview (Smart Interview):**
 
-    > **Follow the Plan-Mode Spec Interview Contract** (above) and the **Smart Interview Protocol** (`Docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
+    > **Follow the Plan-Mode Spec Interview Contract** (above) and the **Smart Interview Protocol** (`docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
     > Full flow: adaptive cap **8** core questions; `/agtoosa-spec quick`: cap **2**.
     > Before each question, check whether the answer is already clear from research or Context files. If it is, state your finding and move on — do not ask.
 
@@ -189,14 +202,14 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
     *   This table is required by `/agtoosa-qa plan` and `/agtoosa-ship check`.
 
 9.  **File Generation:**
-    *   Generate a single file named `Docs/archived/spec-[story-id].md` (e.g., `Docs/archived/spec-DEV-15.md`).
-    *   The file must follow the section order defined in `Docs/SPEC-FORMAT.md`:
+    *   Generate a single file named `docs/archived/spec-[story-id].md` (e.g., `docs/archived/spec-DEV-15.md`).
+    *   The file must follow the section order defined in `docs/SPEC-FORMAT.md`:
         - `## 1. Requirements` (Goal Contract, User Stories, EARS ACs, Out of Scope)
         - `## 2. Design` (Architecture Blueprint, Data Flow, STRIDE Threat Model, Build Scope)
         - `## 3. Tasks` (Task Tree, Wave Plan, Test Plan — populated in Part 4)
         - `## ✅ Spec Approved` (appended on approval)
-    *   Refer to `Docs/SPEC-FORMAT.md` for the full format reference.
-    *   The `Docs/archived/` directory is created automatically by `/agtoosa-init`. If it is missing, create it with `mkdir -p Docs/archived`.
+    *   Refer to `docs/SPEC-FORMAT.md` for the full format reference.
+    *   The `docs/archived/` directory is created automatically by `/agtoosa-init`. If it is missing, create it with `mkdir -p docs/archived`.
 
 9a. **Spec Quality Analyzer Gate:**
 
@@ -208,7 +221,7 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
     - No contradiction exists between the Goal Contract, Non-goals, Build Scope, Acceptance Criteria, task tree, and test plan.
     - Every Must AC maps to at least one test-plan row.
     - Every enforcement or launch claim has a Claim Boundary classified as generator-enforced, CI-enforced, agent-instructed, manual, or roadmap.
-    - External agents, trackers, registries, dashboards, or hosted services preserve `Docs/Master-Plan.md` as the repo-local source of truth unless implementation evidence proves otherwise.
+    - External agents, trackers, registries, dashboards, or hosted services preserve `docs/Master-Plan.md` as the repo-local source of truth unless implementation evidence proves otherwise.
     - No TBD, TODO, or placeholder requirement remains.
 
     If any check fails, stop and revise the spec before enrollment or approval. Record the analyzer findings in the spec or test plan evidence section.
@@ -225,11 +238,11 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
     - Intended change deltas: the smallest observable differences the story will introduce.
     - drift evidence: conflicts between current code/docs/tests and the proposed spec, plus the planned resolution for each conflict.
     - Claim Boundary classification for every enforcement statement: generator-enforced, CI-enforced, agent-instructed, manual, or roadmap.
-    - Source-of-truth boundary: `Docs/Master-Plan.md remains the repo-local source of truth`; external agents, trackers, registries, and dashboards can be evidence sources or integrations only when implementation evidence proves that role.
+    - Source-of-truth boundary: `docs/Master-Plan.md remains the repo-local source of truth`; external agents, trackers, registries, and dashboards can be evidence sources or integrations only when implementation evidence proves that role.
 
     Do not claim static analysis coverage, architecture-review completeness, hosted dashboard sync, or external-tracker authority from this baseline alone. If the baseline exposes unresolved drift, either revise the spec, split the story, or mark the unresolved item as manual, blocked, or roadmap before approval.
 10. **Master-Plan.md Story Entry:**
-    *   Add a Story entry to `Docs/Master-Plan.md`:
+    *   Add a Story entry to `docs/Master-Plan.md`:
         - Title: `Feature: [spec short name]` (use `Bug:` / `Chore:` / `Fix:` as appropriate)
         - Type: Feature (or Bug / Chore / Fix as appropriate)
         - Status: `Todo`
@@ -237,14 +250,14 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
         - Parent Epic: link to the relevant Epic from `/agtoosa-init`
         - Summary: paste the spec's Goal Contract + ACs table + Definition of Done checklist
     *   Record the Story ID in the spec file header.
-    *   Update `Docs/Master-Plan.md`: add the Story row to `## Backlog` (or `## Active Cycle` if enrolling now).
+    *   Update `docs/Master-Plan.md`: add the Story row to `## Backlog` (or `## Active Cycle` if enrolling now).
 
 11. **Estimation & Cycle Enrollment:**
     *   Ask the user: "How big is this Story? T-shirt size: **XS** (< 4 h) / **S** (1 d) / **M** (2–3 d) / **L** (4–5 d) / **XL** (6+ d)"
     *   If the user picks **L** or **XL**, prompt: "This is large. Should we split it into smaller Stories now, or proceed as one?"
-    *   Record the estimate in `Docs/Master-Plan.md` on the Story row.
+    *   Record the estimate in `docs/Master-Plan.md` on the Story row.
     *   Ask: "Enroll this Story in the current active cycle/sprint? (Yes / No)"
-    *   If Yes: add the Story to `Docs/Master-Plan.md` under `## Active Cycle` and record enrollment in the **Update Log**.
+    *   If Yes: add the Story to `docs/Master-Plan.md` under `## Active Cycle` and record enrollment in the **Update Log**.
 
 ### Part 4 — Task Planning
 
@@ -261,13 +274,13 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
     Out of scope        : [list anything that must NOT be touched]
     ```
 
-    Save the scope declaration in the spec's `### 2.4 Build Scope` section (under `## 2. Design`, per `Docs/SPEC-FORMAT.md`).
+    Save the scope declaration in the spec's `### 2.4 Build Scope` section (under `## 2. Design`, per `docs/SPEC-FORMAT.md`).
 
 13. **Atomic Task Breakdown:**
     *   Read the spec and translate it into atomic, clear, step-by-step actionable tasks.
     *   Identify tasks that can run in parallel during `/agtoosa-build`.
     *   If a critical flaw is found during task breakdown, stop and ask the user to revise the spec before continuing.
-    *   Emit a **hierarchical checkbox tree** in `## Active Tasks` in `Docs/Master-Plan.md` (follow the format in `Docs/SPEC-FORMAT.md` § 3.1):
+    *   Emit a **hierarchical checkbox tree** in `## Active Tasks` in `docs/Master-Plan.md` (follow the format in `docs/SPEC-FORMAT.md` § 3.1):
         - Top-level items: `- [ ] **N.** [Group]: [description]`
         - Sub-tasks: `  - [ ] N.M [description] — _Requirements: AC-NNN_`
     *   After generating the task tree, identify groups of sub-tasks that can run in parallel (no shared state, no data dependency). Add a `### Wave Plan` subsection in the spec's `## 3. Tasks` section using:
@@ -277,7 +290,7 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
         **Wave 2 (sequential after Wave 1):** [list sub-task IDs]
         ```
 
-    *   **Work Package DAG derivation (agent-instructed):** After the Wave Plan exists, emit `### 3.4 Work Package DAG` in the active spec (schema in `Docs/SPEC-FORMAT.md`). Rules:
+    *   **Work Package DAG derivation (agent-instructed):** After the Wave Plan exists, emit `### 3.4 Work Package DAG` in the active spec (schema in `docs/SPEC-FORMAT.md`). Rules:
         - Emit **one Work Package row for every executable sub-task** (`package_id` = `PKG-<task-id>`, for example `PKG-1.1`).
         - Set `wave` from the Wave Plan; set `depends_on` to packages in earlier waves whose outputs this task needs (or `—`).
         - Fill `owned_files`, `inputs`, `outputs`, `merge_order`, and `verification` for every row.
@@ -285,14 +298,14 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
         - Same-wave `owned_files` sets must be **disjoint**. On overlap (duplicate paths or intersecting directory wildcards), replace the parallel relationship with an explicit **sequential fallback** in the Wave Plan.
         - Every `depends_on` reference must resolve to an existing package with an **earlier wave**; reject unknown, self, circular, same-wave, or later-wave dependencies.
         - XS / single-task stories may stay sequential without full DAG ceremony.
-    *   Mirror the task tree into `Docs/Master-Plan.md` under `## Active Tasks` (replacing the flat table format).
+    *   Mirror the task tree into `docs/Master-Plan.md` under `## Active Tasks` (replacing the flat table format).
 
 14. **Test Plan Skeleton:**
-    *   Generate **`Docs/AgToosa_TestPlan-[story-id].md`** containing:
-        - Spec reference (link to `Docs/archived/spec-[story-id].md`)
+    *   Generate **`docs/AgToosa_TestPlan-[story-id].md`** containing:
+        - Spec reference (link to `docs/archived/spec-[story-id].md`)
         - AC coverage table — each `AC-NNN` from the spec mapped to test IDs (`T-001`, `T-002`, ...)
         - Test category per ID: Unit · Integration · E2E · Security · Performance
-        - Coverage target from `Docs/Context/workflow.md` (`coverage_threshold`), default 80%
+        - Coverage target from `docs/Context/workflow.md` (`coverage_threshold`), default 80%
         - At least one negative/edge scenario per Must-priority AC
         - Smoke set — at least one test per Must-priority AC tagged `@smoke`
 
@@ -307,15 +320,15 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
     *   **Secret safety:** exclude secret values from generated skills; reference file paths and process steps only. Add a safety note when credentials or tokens are relevant.
     *   Present the same candidate table shape as `/agtoosa-init` Project Skill Discovery (Skill name, Trigger description, Purpose, Inputs, Optional resources, Validation, Decision).
     *   Require **explicit user approval** before writing any `.codex/skills/<skill-name>/SKILL.md` file.
-    *   Record accepted and declined decisions in the active spec file or `Docs/Master-Plan.md` **Update Log**.
+    *   Record accepted and declined decisions in the active spec file or `docs/Master-Plan.md` **Update Log**.
 
 ## Policy violation contract
 
-Consult `Docs/AgToosa_GovernancePolicy.md` (checker: `Docs/agtoosa-policy-check.sh`) before actions covered by a declared rule. On a policy violation: identify the rule `id`, `enforcement_class`, and `on_violation`; follow that `on_violation` only (`warn` / `instruct_stop` / wired `block_generator`); never invent stronger enforcement; never echo secret values. Preserve `Docs/Master-Plan.md` as lifecycle authority — policy handling must not write story status or tasks.
+Consult `docs/AgToosa_GovernancePolicy.md` (checker: `docs/agtoosa-policy-check.sh`) before actions covered by a declared rule. On a policy violation: identify the rule `id`, `enforcement_class`, and `on_violation`; follow that `on_violation` only (`warn` / `instruct_stop` / wired `block_generator`); never invent stronger enforcement; never echo secret values. Preserve `docs/Master-Plan.md` as lifecycle authority — policy handling must not write story status or tasks.
 
 ## Output
 *   Present the generated Spec (with Goal Contract and embedded plan), task list, and test plan skeleton to the user.
-*   Print the closure line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+*   Print the **dual-line phase close** (see `docs/AgToosa_Agent.md` → **Lifecycle Next-Step Contract**): primary `Next: /agtoosa-<command>` line, then automatic `SYNC:` pulse. Optional tertiary: `/agtoosa-status` for full health findings — **not** the headline next step.
 *   Present the approval gate:
 
     ```
@@ -338,8 +351,8 @@ Approved: [YYYY-MM-DD HH:MM]
 
 This approval marker is required by `/agtoosa-ship check` to verify the spec was signed off before deployment. Do not proceed to `/agtoosa-build` without appending it.
 
-*   **Master-Plan Update Log:** Immediately after appending the approval marker, add a timestamped entry to `Docs/Master-Plan.md` `## Update Log`:
+*   **Master-Plan Update Log:** Immediately after appending the approval marker, add a timestamped entry to `docs/Master-Plan.md` `## Update Log`:
 
     `YYYY-MM-DD HH:MM — /agtoosa-spec — Spec ✅ Approved — [Story ID] — [spec filename]; estimate [XS/S/M/L/XL]; [enrolled in cycle / backlog only].`
 
-    Keep the Active Cycle row at `Todo` until `/agtoosa-build` starts the first TDD task (then status → `In Progress` per `Docs/AgToosa_Governance.md`).
+    Keep the Active Cycle row at `Todo` until `/agtoosa-build` starts the first TDD task (then status → `In Progress` per `docs/AgToosa_Governance.md`).

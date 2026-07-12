@@ -73,10 +73,11 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 ## Backlog
 
 > Priority-ordered list of upcoming stories and issues. Updated by `/agtoosa-spec` and `/agtoosa-task`.
+> Optional **Clarity** column (DEV-109): combinable tags `ready` · `sa-ready` · `needs-interview` (aliases `Ready` · `SA-R` · `N-CI`).
 
-| ID | Title | Type | Estimate | Epic | Priority | Status |
-|----|-------|------|----------|------|----------|--------|
-| [DEV-XX] | Feature: [name] | Feature | S | [DEV-YY] | High | ⬜ Backlog |
+| ID | Title | Type | Estimate | Epic | Priority | Clarity | Status |
+|----|-------|------|----------|------|----------|---------|--------|
+| [DEV-XX] | Feature: [name] | Feature | S | [DEV-YY] | High | needs-interview | ⬜ Backlog |
 
 *(Empty until stories are created via `/agtoosa-spec` or `/agtoosa-task`.)*
 

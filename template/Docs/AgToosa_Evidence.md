@@ -73,7 +73,7 @@ Never treat JSONL as overriding the markdown file.
 ## Output
 
 * Print the evidence file path and row count.
-* Print verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+* Print the dual-line phase close per Docs/AgToosa_Agent.md → Lifecycle Next-Step Contract
 
 ## Rules
 

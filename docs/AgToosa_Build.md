@@ -235,5 +235,5 @@ Consult `docs/AgToosa_Hooks.md` for the single event/platform matrix. During Bui
 *   Confirm build and test phases are complete and all tests pass.
 *   Present a summary of test results and any security findings.
 *   If any wave tasks remain for async dispatch, offer to run `/agtoosa-build handoff` (see `docs/AgToosa_Handoff.md`) before handing off to external agents. On return, run `/agtoosa-build import` (see `docs/AgToosa_Import.md`) to verify and integrate results.
-*   Print the closure line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+*   Print the **dual-line phase close** per `docs/AgToosa_Agent.md` → **Lifecycle Next-Step Contract** (`Next:` lifecycle command + `SYNC:` pulse). Optional: `/agtoosa-status` for full health findings.
 *   Prompt the user to run `/agtoosa-review`.

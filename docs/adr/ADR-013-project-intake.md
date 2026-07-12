@@ -1,6 +1,6 @@
 # ADR-013: AgToosa Project Intake (Dual-Mode Freeform PM)
 
-**Status:** Proposed  
+**Status:** Accepted  
 **Date:** 2026-07-12  
 **Deciders:** AI agent + human review (DEV-110)
 

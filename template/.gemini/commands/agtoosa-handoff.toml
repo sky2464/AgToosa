@@ -9,5 +9,5 @@ Read Docs/AgToosa_Handoff.md and execute the handoff pack export workflow.
 
 Use any argument provided to resolve the sub-command (`wave` or `task`) and any story ID or title fragment. If no argument is given, run the full flow from Step 1.
 
-On successful completion, print this line verbatim: ✅ Done. Run /agtoosa-status to verify findings cleared.
+On successful completion, print the dual-line phase close per Docs/AgToosa_Agent.md → Lifecycle Next-Step Contract
 """

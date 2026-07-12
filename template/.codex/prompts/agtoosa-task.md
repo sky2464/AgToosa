@@ -4,4 +4,4 @@ This file is the Codex project prompt for `/agtoosa-task`. When the user invokes
 
 Read `Docs/AgToosa_Task.md` and execute the `/agtoosa-task` workflow.
 
-On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+On successful completion, print this line verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

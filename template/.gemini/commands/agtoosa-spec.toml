@@ -20,5 +20,5 @@ Dispatch based on any arguments provided after the command:
 
 Phase stop: stop at the approval gate. Do not run /agtoosa-build automatically — the user must invoke it after approval.
 
-On successful completion, print this line verbatim: ✅ Done. Run /agtoosa-status to verify findings cleared.
+On successful completion, print the dual-line phase close per Docs/AgToosa_Agent.md → Lifecycle Next-Step Contract
 """

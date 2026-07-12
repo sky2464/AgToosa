@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-110  
 > **Epic:** DEV-002 — Workflow Templates  
-> **Status:** ⬜ Backlog  
+> **Status:** 🟨 In Progress (build complete)  
 > **Estimate:** M  
 > **Clarity:** ready  
 > **Spec created:** 2026-07-12  
@@ -242,15 +242,15 @@ Out of scope        : New slash intake command, DEV-109 merge, DEV-107 runtime, 
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Contract docs + ADR
-  - [ ] 1.1 Finalize ADR-013 Accepted on build start; add CONTEXT term Project Intake — _Requirements: AC-005, AC-009, AC-010_
-  - [ ] 1.2 Add Project Intake section to Agent.md (+ template mirror): dual-mode, destinations, Standing Corrections, expedite, Phase Stop — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-008_
-  - [ ] 1.3 Update Spec-First / dual-mode wording in core rule; set `alwaysApply: true` — _Requirements: AC-007, AC-013_
-  - [ ] 1.4 Add Standing Corrections template to workflow.md (+ mirrors) — _Requirements: AC-005_
-  - [ ] 1.5 Entry-point one-liners (CLAUDE.md, AGENTS.md, help/quickref as Should/Could) — _Requirements: AC-007, AC-014_
-- [ ] **2.** Tests + evidence
-  - [ ] 2.1 Add INT bats (alwaysApply, Standing Corrections, intake contract strings, Phase Stop, mirrors) — _Requirements: AC-011_
-  - [ ] 2.2 Record RED/GREEN in test plan — _Requirements: AC-012_
+- [x] **1.** Contract docs + ADR
+  - [x] 1.1 Finalize ADR-013 Accepted on build start; add CONTEXT term Project Intake — _Requirements: AC-005, AC-009, AC-010_
+  - [x] 1.2 Add Project Intake section to Agent.md (+ template mirror): dual-mode, destinations, Standing Corrections, expedite, Phase Stop — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-008_
+  - [x] 1.3 Update Spec-First / dual-mode wording in core rule; set `alwaysApply: true` — _Requirements: AC-007, AC-013_
+  - [x] 1.4 Add Standing Corrections template to workflow.md (+ mirrors) — _Requirements: AC-005_
+  - [x] 1.5 Entry-point one-liners (CLAUDE.md, AGENTS.md, help/quickref as Should/Could) — _Requirements: AC-007, AC-014_
+- [x] **2.** Tests + evidence
+  - [x] 2.1 Add INT bats (alwaysApply, Standing Corrections, intake contract strings, Phase Stop, mirrors) — _Requirements: AC-011_
+  - [x] 2.2 Record RED/GREEN in test plan — _Requirements: AC-012_
 
 ### 3.2 Wave Plan
 
@@ -276,3 +276,9 @@ See `docs/AgToosa_TestPlan-DEV-110.md`.
 | PKG-1.5 | 3 | PKG-1.2 | `template/CLAUDE.md`, `template/AGENTS.md`, help/quickref | AC-007, AC-014 | pointers | 1 | greps |
 | PKG-2.1b | 3 | PKG-1.2, PKG-1.3, PKG-1.4 | `tests/agtoosa.bats` | INT GREEN | passing INT | 2 | bats filter DEV-110 |
 | PKG-2.2 | 3 | PKG-2.1b | `docs/AgToosa_TestPlan-DEV-110.md` | evidence | RED/GREEN filled | 3 | test plan updated |
+
+## ✅ Spec Approved
+
+Approved: 2026-07-12 14:59 UTC
+Approved-by: user (build all waves)
+Notes: Expedited enrollment after DEV-109 ship; dual-mode Project Intake per interview decisions.

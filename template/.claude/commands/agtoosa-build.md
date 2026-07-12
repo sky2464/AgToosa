@@ -12,4 +12,4 @@ If no arguments were given, run the full flow from Docs/AgToosa_Build.md.
 
 If build prerequisites fail, **stop** and instruct the user — do **not** auto-run `/agtoosa-spec`. Report **Terminal Evidence Contract** fields for every command and parallel subagent.
 
-On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+On successful completion, print this line verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

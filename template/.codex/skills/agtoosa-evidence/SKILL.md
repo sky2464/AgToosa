@@ -11,4 +11,4 @@ Use when the user asks for `/agtoosa-evidence`, `$agtoosa-evidence`, or wants to
 
 1. Read `Docs/AgToosa_Evidence.md` in full and **run** its workflow precisely.
 2. **Dispatch** based on argument: `review` (review-phase update only), `ship` (ship-phase finalize only); otherwise run the full evidence ledger flow.
-3. On successful completion, print verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+3. On successful completion, print verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

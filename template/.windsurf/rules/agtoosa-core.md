@@ -43,4 +43,4 @@ Installed AgToosa workflow commands live in `.windsurf/workflows/agtoosa-*.md`. 
 
 ## Closure Loop
 
-On successful completion of `/agtoosa-init`, `/agtoosa-spec`, `/agtoosa-build`, `/agtoosa-task`, or `/agtoosa-ship`, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+On successful completion of `/agtoosa-init`, `/agtoosa-spec`, `/agtoosa-build`, `/agtoosa-task`, or `/agtoosa-ship`, print this line verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

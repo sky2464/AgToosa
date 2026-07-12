@@ -12,4 +12,4 @@ Use when the user asks for `/agtoosa-qa`, `$agtoosa-qa`, or dedicated QA plannin
 1. Read `Docs/AgToosa_QA.md` in full and **run** its workflow precisely.
 2. **Dispatch** `plan`, `run`, `report`, or `triage` when provided; otherwise run the full QA flow.
 3. Map work to `AC-NNN` items from the active spec and update `Docs/Master-Plan.md` for triaged defects.
-4. On successful completion, print verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+4. On successful completion, print verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

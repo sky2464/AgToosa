@@ -8,4 +8,4 @@ Dispatch based on any arguments after the command: `tdd` or `test`.
 
 Respect all prerequisites. If a spec or task list is missing, stop and instruct the user to run `/agtoosa-spec` or `/agtoosa-spec tasks`; do **not** auto-run `/agtoosa-spec`.
 
-On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+On successful completion, print this line verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

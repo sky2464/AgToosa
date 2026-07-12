@@ -13,5 +13,5 @@ Dispatch based on any arguments provided after the command:
 - /agtoosa-build tdd    → TDD Red-Green-Refactor cycle for the current task list
 - /agtoosa-build test   → testing and quality-gate phase only
 
-On successful completion, print this line verbatim: ✅ Done. Run /agtoosa-status to verify findings cleared.
+On successful completion, print the dual-line phase close per Docs/AgToosa_Agent.md → Lifecycle Next-Step Contract
 """

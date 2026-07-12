@@ -17,4 +17,4 @@ When executing any specification or planning work, follow `Docs/AgToosa_Spec.md`
 - Update `Docs/Master-Plan.md` after the spec is written.
 - Domain language alignment (read `Docs/Context/CONTEXT.md`, update terminology, create ADRs) is built into Part 1.
 - For `to-issues`: use vertical slices only — each issue must deliver one complete user-facing behaviour change.
-- On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+- On successful completion, print this line verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

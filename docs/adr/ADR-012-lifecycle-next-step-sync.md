@@ -1,6 +1,6 @@
 # ADR-012: Lifecycle Next-Step Sync + Clarity Tags
 
-**Status:** Proposed  
+**Status:** Accepted  
 **Date:** 2026-07-12  
 **Deciders:** AI agent + human review (DEV-109)
 

@@ -284,4 +284,4 @@ PowerShell parity:
 
 On successful completion of the full flow or `apply`, print verbatim:
 
-`✅ Done. Run /agtoosa-status to verify findings cleared.`
+`Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

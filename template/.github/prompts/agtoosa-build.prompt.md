@@ -13,4 +13,4 @@ Sub-command dispatch:
 - `tdd` → TDD Red-Green-Refactor cycle for the current task list
 - `test` → testing and quality-gate phase only
 
-On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+On successful completion, print this line verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

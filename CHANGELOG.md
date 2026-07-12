@@ -5,6 +5,22 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.22] — 2026-07-12
+
+Patch release: DEV-110 — AgToosa Project Intake.
+
+### Added
+
+- **DEV-110 — AgToosa Project Intake.** Dual-mode freeform PM classifier (soft expedite + hard gate); always-on `agtoosa-core.mdc`; Project Intake Protocol in Agent.md; Standing Corrections in `workflow.md`; ADR-013; INT-001–INT-012 bats.
+
+## [5.3.21] — 2026-07-12
+
+Patch release: DEV-109 — Lifecycle Next-Step Sync + Multi-Spec Clarity.
+
+### Added
+
+- **DEV-109 — Lifecycle Next-Step Sync + Multi-Spec Clarity.** Dual-line phase close (`Next:` lifecycle command + `SYNC:` pulse); `agtoosa.sh --status-line` and `agtoosa.ps1 -StatusLine` read-only Master-Plan parse; multi-spec intake + clarity tags (`ready` · `sa-ready` · `needs-interview`); repeating soft-cap interview budget; ADR-012; LNS-001–LNS-010 bats.
+
 ## [5.3.20] — 2026-07-12
 
 Patch release: DEV-107 + Rev4 Wave 3 (DEV-095, DEV-096, DEV-098, DEV-099, DEV-101, DEV-102, DEV-103, DEV-104, DEV-106).

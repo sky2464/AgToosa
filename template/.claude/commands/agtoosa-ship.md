@@ -10,4 +10,4 @@ Dispatch rules based on arguments:
 
 If no arguments were given, run the full flow from Docs/AgToosa_Ship.md.
 
-On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+On successful completion, print this line verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

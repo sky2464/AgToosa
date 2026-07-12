@@ -7,21 +7,21 @@
 | `/agtoosa-build` | Full flow: Parts 1 + 2 + 3 |
 | `/agtoosa-build tdd` | Part 1 only — TDD Red-Green-Refactor loop against the task list from the approved spec |
 | `/agtoosa-build test` | Parts 2 + 3 — run the full testing army + security scans, then update tracking |
-| `/agtoosa-build handoff` | Export a handoff pack for remaining wave tasks via `Docs/AgToosa_Handoff.md` (recommend target via `Docs/AgToosa_AgentCapability.md`) |
-| `/agtoosa-build import` | Run Import Checklist for returning async agent results via `Docs/AgToosa_Import.md` |
+| `/agtoosa-build handoff` | Export a handoff pack for remaining wave tasks via `docs/AgToosa_Handoff.md` (recommend target via `docs/AgToosa_AgentCapability.md`) |
+| `/agtoosa-build import` | Run Import Checklist for returning async agent results via `docs/AgToosa_Import.md` |
 
 ### Claude Code Parallel Pattern
 
 On Claude Code, independent tasks within a phase can be dispatched to parallel sub-agents via the `Task` tool. Apply this when the task list from the spec contains tasks with no sequential dependency:
 
-- Read the task list in `Docs/Master-Plan.md` under `## Active Tasks`.
+- Read the task list in `docs/Master-Plan.md` under `## Active Tasks`.
 - Identify tasks that do not share state with other tasks.
 - Batch those tasks into parallel `Task` tool calls before starting the TDD loop (Part 1).
-- Each parallel subagent must return the **Terminal Evidence Contract** block from `Docs/AgToosa_Agent.md` (command, exit code, pass/fail, warnings, errors, changed files, next action).
+- Each parallel subagent must return the **Terminal Evidence Contract** block from `docs/AgToosa_Agent.md` (command, exit code, pass/fail, warnings, errors, changed files, next action).
 - Collect results when all parallel tasks complete; merge conflicts are resolved by the orchestrating agent.
 - The orchestrator must summarize unresolved terminal output before marking any task checkbox done.
 - Async or background agents dispatched via parallel sub-agents should receive a `/agtoosa-handoff` pack (run `/agtoosa-build handoff` before dispatch) and return results via `/agtoosa-import` (Terminal Evidence still required).
-- Before async dispatch, consult `Docs/AgToosa_AgentCapability.md` for an installed-surface routing recommendation and documented fallbacks.
+- Before async dispatch, consult `docs/AgToosa_AgentCapability.md` for an installed-surface routing recommendation and documented fallbacks.
 - See `/agtoosa-review` for the reference parallel pattern (4 reviewer personas run simultaneously).
 
 > **Note:** Parallel dispatch applies to Claude Code only. On other platforms, run tasks sequentially.
@@ -31,33 +31,33 @@ Execute TDD against a planned task list and run the full test suite.
 
 > **Prerequisites:** `/agtoosa-spec` must be complete with task planning done.
 > Verify:
-> 1. The active spec (`Docs/archived/spec-[story-id].md` for the story in `## Active Cycle`) has a `## ✅ Spec Approved` section. If not, **stop** and instruct the user to run `/agtoosa-spec` (or approve the spec). Do **not** auto-run `/agtoosa-spec`.
-> 2. `Docs/Master-Plan.md` has tasks listed under `## Active Tasks`. If not, **stop** and instruct the user to run `/agtoosa-spec tasks`. Do **not** auto-run `/agtoosa-spec tasks`.
-> 3. The story status allows building (Todo or In Progress). Out-of-order runs follow `Docs/AgToosa_Governance.md` → **Conflict playbook**: warn and abort with the exact message defined there.
+> 1. The active spec (`docs/archived/spec-[story-id].md` for the story in `## Active Cycle`) has a `## ✅ Spec Approved` section. If not, **stop** and instruct the user to run `/agtoosa-spec` (or approve the spec). Do **not** auto-run `/agtoosa-spec`.
+> 2. `docs/Master-Plan.md` has tasks listed under `## Active Tasks`. If not, **stop** and instruct the user to run `/agtoosa-spec tasks`. Do **not** auto-run `/agtoosa-spec tasks`.
+> 3. The story status allows building (Todo or In Progress). Out-of-order runs follow `docs/AgToosa_Governance.md` → **Conflict playbook**: warn and abort with the exact message defined there.
 
 ## Terminal Evidence Contract
 
-> See `Docs/AgToosa_Agent.md` → **Terminal Evidence Contract** for the full rules.
+> See `docs/AgToosa_Agent.md` → **Terminal Evidence Contract** for the full rules.
 
 After every command, test run, scan, or parallel subagent during `/agtoosa-build`:
 
 - Report command run, exit code, pass/fail, warnings, errors, changed files, and next action.
 - A nonzero exit code, lint warning, markdownlint warning, or failing test **blocks** marking the task complete unless explicitly classified as accepted/pre-existing with evidence.
-- Before checking off any task in `Docs/Master-Plan.md` or the active spec, summarize any unresolved terminal output.
+- Before checking off any task in `docs/Master-Plan.md` or the active spec, summarize any unresolved terminal output.
 
 ## Workflow
 
 ### Part 1 — TDD Build Cycle
 
 > **TDD Enforcement:**
-> If `Docs/Context/workflow.md` has `tdd: true`, strictly follow the Red-Green-Refactor cycle below.
+> If `docs/Context/workflow.md` has `tdd: true`, strictly follow the Red-Green-Refactor cycle below.
 > If TDD is disabled, still write tests but the strict ordering is relaxed.
 
 **Before starting the first TDD task:**
-- Update `Docs/Master-Plan.md`: move the Story row from `## Backlog` to `## Active Cycle`, set status to `In Progress`.
-- Append a phase event to `Docs/agtoosa-events.jsonl` (create the file if missing):
+- Update `docs/Master-Plan.md`: move the Story row from `## Backlog` to `## Active Cycle`, set status to `In Progress`.
+- Append a phase event to `docs/agtoosa-events.jsonl` (create the file if missing):
   `{"ts":"[ISO-8601 UTC]","phase":"build","event":"start","story":"[Story ID]","by":"AgToosa"}`
-- Add an Update Log entry to `Docs/Master-Plan.md`:
+- Add an Update Log entry to `docs/Master-Plan.md`:
 
     ```
     Build 🏗️ Started
@@ -68,7 +68,7 @@ After every command, test run, scan, or parallel subagent during `/agtoosa-build
     Next: Task 1/[N] — [task title].
     ```
 
-1.  **Scope Boundary Reminder:** Read the `### 2.4 Build Scope` section in the active spec (`Docs/archived/spec-[story-id].md`). Any edit to a file not listed there requires stopping and presenting:
+1.  **Scope Boundary Reminder:** Read the `### 2.4 Build Scope` section in the active spec (`docs/archived/spec-[story-id].md`). Any edit to a file not listed there requires stopping and presenting:
     ```
     ❓ [filename] is outside the declared scope.
       → A) Include it in scope (I'll update the spec)
@@ -79,9 +79,9 @@ After every command, test run, scan, or parallel subagent during `/agtoosa-build
 
 2.  **Dependency Validation:** Never assume dependency versions from memory — verify via web search or terminal (`npm view`, `pip index`, `dart pub outdated`).
 
-3.  **Wave execution:** Read `### 3.2 Wave Plan` and `### 3.4 Work Package DAG` in the active spec and execute tasks **wave by wave**: complete every task in Wave N — including its Terminal Evidence — before starting Wave N+1. Within a wave, tasks share no files or data dependencies, so on Claude Code they may be dispatched in parallel via the pattern above; on all other platforms run the wave's tasks sequentially. If the spec has no Wave Plan, fall back to the `## Active Tasks` order in `Docs/Master-Plan.md`.
+3.  **Wave execution:** Read `### 3.2 Wave Plan` and `### 3.4 Work Package DAG` in the active spec and execute tasks **wave by wave**: complete every task in Wave N — including its Terminal Evidence — before starting Wave N+1. Within a wave, tasks share no files or data dependencies, so on Claude Code they may be dispatched in parallel via the pattern above; on all other platforms run the wave's tasks sequentially. If the spec has no Wave Plan, fall back to the `## Active Tasks` order in `docs/Master-Plan.md`.
 
-    > **Orchestration Brain step 0:** Before Wave / Work Package fan-out, read `Docs/AgToosa_Orchestration.md` and run Capability Inventory → lane plan → parallel or sequential dispatch → orchestrator merge.
+    > **Orchestration Brain step 0:** Before Wave / Work Package fan-out, read `docs/AgToosa_Orchestration.md` and run Capability Inventory → lane plan → parallel or sequential dispatch → orchestrator merge.
 
     > **Work Package fan-out gate (agent-instructed):** Before parallel fan-out of a wave, read each Work Package row for that wave:
     > - Confirm every `depends_on` package exists, is complete, and has an **earlier wave**.
@@ -89,18 +89,18 @@ After every command, test run, scan, or parallel subagent during `/agtoosa-build
     > - Run each package's `verification` command after its lane completes; present accepted results in `merge_order` before Tracking updates.
     > - Claim Boundary: package checks are **agent-instructed**; agent selection and branch integration are **manual**; a runtime scheduler is **roadmap**.
 
-    > **Optional worktree isolation (agent-instructed):** For **M+** waves with at least two parallel packages (or an explicitly risky lane), offer optional isolation per `Docs/AgToosa_Worktree.md`. Preferred path: `../<repo>-<package_id>`. Git worktree add/list/remove/prune is **manual** — AgToosa does not create worktrees. When skipping: state exactly `No worktree: run packages sequentially in one branch and verify a clean working tree between packages.` Lifecycle routing remains a **read-only** consult of `Docs/AgToosa_AgentCapability.md` (do not edit it).
+    > **Optional worktree isolation (agent-instructed):** For **M+** waves with at least two parallel packages (or an explicitly risky lane), offer optional isolation per `docs/AgToosa_Worktree.md`. Preferred path: `../<repo>-<package_id>`. Git worktree add/list/remove/prune is **manual** — AgToosa does not create worktrees. When skipping: state exactly `No worktree: run packages sequentially in one branch and verify a clean working tree between packages.` Lifecycle routing remains a **read-only** consult of `docs/AgToosa_AgentCapability.md` (do not edit it).
 
-    > **Async dispatch:** Before sending tasks to async or background agents for a wave, offer to run `/agtoosa-handoff wave` (see `Docs/AgToosa_Handoff.md`) to export a handoff pack that includes the selected-wave Work Packages section. Agents should return results via `/agtoosa-import` before any Tracking update.
+    > **Async dispatch:** Before sending tasks to async or background agents for a wave, offer to run `/agtoosa-handoff wave` (see `docs/AgToosa_Handoff.md`) to export a handoff pack that includes the selected-wave Work Packages section. Agents should return results via `/agtoosa-import` before any Tracking update.
 
 4.  **For each atomic task, execute the TDD Cycle:**
 
     **⚠️ External / async task detection — runs before every task:**
-    Before starting a task, check whether the work was completed out-of-band (by an async agent, background runner, or external actor). If so, run the Import Checklist (`/agtoosa-import` or `Docs/AgToosa_Import.md`) before any Tracking update. Never mark a task complete without recorded verification commands and mapped ACs. "Imported claims are not evidence until repo-local verification passes."
+    Before starting a task, check whether the work was completed out-of-band (by an async agent, background runner, or external actor). If so, run the Import Checklist (`/agtoosa-import` or `docs/AgToosa_Import.md`) before any Tracking update. Never mark a task complete without recorded verification commands and mapped ACs. "Imported claims are not evidence until repo-local verification passes."
 
 
     **⚠️ Manual Task Detection — runs before every task:**
-    Before starting a task, check whether its line in `Docs/Master-Plan.md` or the active spec contains `[manual]` or `[manual-deferred]`.
+    Before starting a task, check whether its line in `docs/Master-Plan.md` or the active spec contains `[manual]` or `[manual-deferred]`.
 
     *   If the task is tagged `[manual]`, present this prompt — do NOT proceed with TDD:
 
@@ -113,8 +113,8 @@ After every command, test run, scan, or parallel subagent during `/agtoosa-build
           → C) Show me what needs to be done, then defer
         ```
 
-        - **If A:** mark the sub-task `- [x] N.M [task] \`[manual-done]\`` in both `Docs/Master-Plan.md` and the spec; count it as a completed task and continue.
-        - **If B or C:** update the annotation to `[manual-deferred: YYYY-MM-DD]` in both files; add a line to the Manual / Deferred section in `Docs/Master-Plan.md`; **skip to the next task** — do not block the build cycle.
+        - **If A:** mark the sub-task `- [x] N.M [task] \`[manual-done]\`` in both `docs/Master-Plan.md` and the spec; count it as a completed task and continue.
+        - **If B or C:** update the annotation to `[manual-deferred: YYYY-MM-DD]` in both files; add a line to the Manual / Deferred section in `docs/Master-Plan.md`; **skip to the next task** — do not block the build cycle.
         - In all cases, add a note to the Update Log entry for this build session listing deferred manual tasks.
 
     *   If the task is already tagged `[manual-deferred]`, skip it automatically and mention it in the session summary.
@@ -122,7 +122,7 @@ After every command, test run, scan, or parallel subagent during `/agtoosa-build
     **🔴 RED — Write a Failing Test First:**
     *   Before writing ANY implementation code, write a test that describes the expected behavior.
     *   The test MUST fail initially (confirming it tests something real).
-    *   **RED evidence (mandatory):** run the new test and capture the failing run **before** writing implementation code. Record it in the story test plan (`Docs/AgToosa_TestPlan-[story-id].md`) as:
+    *   **RED evidence (mandatory):** run the new test and capture the failing run **before** writing implementation code. Record it in the story test plan (`docs/AgToosa_TestPlan-[story-id].md`) as:
 
         ```
         RED evidence — [task-id]
@@ -164,10 +164,10 @@ After every command, test run, scan, or parallel subagent during `/agtoosa-build
     *   Ensure OpenTelemetry observability hooks are present (structured logging, metrics, tracing).
     *   Run the full test suite again to confirm nothing broke.
     *   **Tracking update (per completed task):** After the Refactor step passes:
-        - In the active spec (`Docs/archived/spec-[story-id].md`), change `- [ ] N.M [task]` → `- [x] N.M [task]` in `## 3. Tasks / ### 3.1 Task Tree`.
-        - In `Docs/Master-Plan.md` under `## Active Tasks`, change the same checkbox `- [ ] N.M` → `- [x] N.M`.
-        - In `Docs/Master-Plan.md` under `## Active Cycle`, increment the progress bar: update the ▰/▱ fill and the counter (e.g. `▰▰▰▱▱▱▱▱ 2/8 tasks` → `▰▰▰▰▱▱▱▱ 3/8 tasks`). Each ▰ represents one completed task.
-        - Update `Docs/Master-Plan.md`: increment the Tasks Done count for the Story row.
+        - In the active spec (`docs/archived/spec-[story-id].md`), change `- [ ] N.M [task]` → `- [x] N.M [task]` in `## 3. Tasks / ### 3.1 Task Tree`.
+        - In `docs/Master-Plan.md` under `## Active Tasks`, change the same checkbox `- [ ] N.M` → `- [x] N.M`.
+        - In `docs/Master-Plan.md` under `## Active Cycle`, increment the progress bar: update the ▰/▱ fill and the counter (e.g. `▰▰▰▱▱▱▱▱ 2/8 tasks` → `▰▰▰▰▱▱▱▱ 3/8 tasks`). Each ▰ represents one completed task.
+        - Update `docs/Master-Plan.md`: increment the Tasks Done count for the Story row.
         - Add an **Update Log** entry: `YYYY-MM-DD HH:MM — /agtoosa-build — Task 🟢 [N]/[M] complete — [Story ID] — [task title]; tests green.`
 
 5.  **Repeat** the Red-Green-Refactor cycle for every atomic task.
@@ -184,7 +184,7 @@ After every command, test run, scan, or parallel subagent during `/agtoosa-build
         When you complete them, run /agtoosa-build and select (A) to mark them done.
         ```
 
-    *   Update the Active Cycle Tasks Done counter in `Docs/Master-Plan.md` using the format: `[auto-done]/[auto-total] tasks ([N] manual-deferred)`.
+    *   Update the Active Cycle Tasks Done counter in `docs/Master-Plan.md` using the format: `[auto-done]/[auto-total] tasks ([N] manual-deferred)`.
     *   Story status remains 🟨 In Progress only if automated tasks are still incomplete. If all automated tasks are done and only manual tasks remain deferred, transition the story status to **🔧 Awaiting Manual** — a distinct state that `/agtoosa-status` treats as non-blocking.
 
 ### Discovery Triage
@@ -203,7 +203,7 @@ Any bug, edge case, or out-of-scope requirement discovered during the TDD cycle 
 1. Classify: Bug / Chore / Feature / Security
 2. Size: can it be fixed in < 15 min without scope creep? If yes → fix it now and note it in the build summary.
 3. If not trivial — ask the user: "I found [brief description]. Should I: (A) add to Master-Plan.md Backlog for later, (B) add to current scope, or (C) ignore?"
-4. **If A** — run `/agtoosa-task`, add `Discovered during /agtoosa-build on [Story ID] on [date]` to the description, record in `Docs/Master-Plan.md` under `## Backlog`. Note: Backlog items use flat table rows (ID | Title | Type | Estimate | Epic | Priority). The hierarchical task tree is only used in `## Active Tasks` for the current In Progress story.
+4. **If A** — run `/agtoosa-task`, add `Discovered during /agtoosa-build on [Story ID] on [date]` to the description, record in `docs/Master-Plan.md` under `## Backlog`. Note: Backlog items use flat table rows (ID | Title | Type | Estimate | Epic | Priority). The hierarchical task tree is only used in `## Active Tasks` for the current In Progress story.
 5. **If B** — update the Scope Boundary in the active spec, create a new Task sub-issue under the Story, continue TDD.
 6. Record the triage decision (fix now / issue created / ignored) in the build summary output.
 
@@ -218,22 +218,22 @@ Any bug, edge case, or out-of-scope requirement discovered during the TDD cycle 
 
 ### Part 3 — Tracking
 
-10. **Master-Plan Update:** Mark all completed tasks in `Docs/Master-Plan.md`; update story status.
-11. **Phase event:** Append to `Docs/agtoosa-events.jsonl`:
+10. **Master-Plan Update:** Mark all completed tasks in `docs/Master-Plan.md`; update story status.
+11. **Phase event:** Append to `docs/agtoosa-events.jsonl`:
     `{"ts":"[ISO-8601 UTC]","phase":"build","event":"complete","story":"[Story ID]","by":"AgToosa"}`
-12. **Self-verify:** Run `bash Docs/agtoosa-verify.sh` and resolve any FAIL findings before reporting the build complete.
+12. **Self-verify:** Run `bash docs/agtoosa-verify.sh` and resolve any FAIL findings before reporting the build complete.
 
 ## Policy violation contract
 
-Consult `Docs/AgToosa_GovernancePolicy.md` (checker: `Docs/agtoosa-policy-check.sh`) before actions covered by a declared rule. On a policy violation: identify the rule `id`, `enforcement_class`, and `on_violation`; follow that `on_violation` only (`warn` / `instruct_stop` / wired `block_generator`); never invent stronger enforcement; never echo secret values. Preserve `Docs/Master-Plan.md` as lifecycle authority — policy handling must not write story status or tasks.
+Consult `docs/AgToosa_GovernancePolicy.md` (checker: `docs/agtoosa-policy-check.sh`) before actions covered by a declared rule. On a policy violation: identify the rule `id`, `enforcement_class`, and `on_violation`; follow that `on_violation` only (`warn` / `instruct_stop` / wired `block_generator`); never invent stronger enforcement; never echo secret values. Preserve `docs/Master-Plan.md` as lifecycle authority — policy handling must not write story status or tasks.
 
 ## Hook lifecycle pointers
 
-Consult `Docs/AgToosa_Hooks.md` for the single event/platform matrix. During Build, apply checklist (or proven native) steps for `task-start`, `pre-tool-use`, `pre-test`, and `post-test` as applicable. Do not duplicate the matrix here. Optional pack absence is not a health or verifier finding.
+Consult `docs/AgToosa_Hooks.md` for the single event/platform matrix. During Build, apply checklist (or proven native) steps for `task-start`, `pre-tool-use`, `pre-test`, and `post-test` as applicable. Do not duplicate the matrix here. Optional pack absence is not a health or verifier finding.
 
 ## Output
 *   Confirm build and test phases are complete and all tests pass.
 *   Present a summary of test results and any security findings.
-*   If any wave tasks remain for async dispatch, offer to run `/agtoosa-build handoff` (see `Docs/AgToosa_Handoff.md`) before handing off to external agents. On return, run `/agtoosa-build import` (see `Docs/AgToosa_Import.md`) to verify and integrate results.
-*   Print the closure line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+*   If any wave tasks remain for async dispatch, offer to run `/agtoosa-build handoff` (see `docs/AgToosa_Handoff.md`) before handing off to external agents. On return, run `/agtoosa-build import` (see `docs/AgToosa_Import.md`) to verify and integrate results.
+*   Print the **dual-line phase close** per `docs/AgToosa_Agent.md` → **Lifecycle Next-Step Contract** (`Next:` lifecycle command + `SYNC:` pulse). Optional: `/agtoosa-status` for full health findings.
 *   Prompt the user to run `/agtoosa-review`.

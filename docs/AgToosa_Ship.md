@@ -217,5 +217,5 @@ Run this step when `docs/Master-Plan.md` exceeds approximately 200 lines **or** 
 *   Append a phase event to `docs/agtoosa-events.jsonl`:
     `{"ts":"[ISO-8601 UTC]","phase":"ship","event":"complete","story":"[Story ID]","by":"AgToosa"}`
 *   Present the suggested next Spec to the user.
-*   Print the closure line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+*   Print the **dual-line phase close** per `docs/AgToosa_Agent.md` → **Lifecycle Next-Step Contract** (`Next:` lifecycle command + `SYNC:` pulse). Optional: `/agtoosa-status` for full health findings.
 *   Ask if they want to run `/agtoosa-spec` for the next story.

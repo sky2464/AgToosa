@@ -67,7 +67,7 @@ Before writing or finalizing the spec file, run a **Plan-Mode Spec Interview**:
 5. **Contextual options** — Derive 2–3 concrete options from repo/research when possible; mark one **recommended** default; always allow free-text override (see **Question Format** in `docs/AgToosa_Agent.md` → Smart Interview Protocol).
 6. **Adaptive sequencing** — Let each answer shape the next question; use the six forcing questions (Part 1 step 4) as a **candidate pool**, not a mandatory script.
 7. **Adaptive cap** — Full flow: at most **8 core interview questions**. `/agtoosa-spec quick`: at most **2** questions.
-8. **Budget exhaustion** — If decision-complete clarity is still missing after 8 core questions, stop and ask:
+8. **Budget exhaustion** — Default soft cap: **8** core questions, then offer **+4** continuation. If the user answers with **new free-text directions** (not a menu pick), the **+4 extension may repeat** until Decision-complete or explicit assumption acceptance. After 8 questions without resolution, ask:
 
     ```
     ❓ Interview budget reached (8 questions). How should we proceed?
@@ -76,7 +76,20 @@ Before writing or finalizing the spec file, run a **Plan-Mode Spec Interview**:
       Or type your own answer.
     ```
 
-9. **Write gate** — Do **not** generate the final spec file until the Decision-complete checklist is satisfied **or** the user explicitly accepts documented assumptions under `### 1.1 Goal Contract` → Assumptions / Unresolved questions.
+    **Not a hard stop:** keep interviewing when free-text answers open new gaps until the Decision-complete checklist passes or assumptions are explicitly accepted. Never auto-write a detailed spec while a child story carries `needs-interview` / `N-CI` or Must clarity gaps remain.
+
+### Multi-spec intake
+
+When the user asks to learn objectives and split work into **multiple specs**:
+
+1. **Detect** multi-objective / “break into specs” intent.
+2. **Propose** a story map (IDs, titles, non-goals, suggested clarity tags, default `intake:small` vs `intake:large`).
+3. **Confirm** the map with the user.
+4. **Small agenda (`intake:small`):** run Plan-Mode Spec Interview now (parallel child interviews when host supports subagents and row carries `sa-ready` / `SA-R`).
+5. **Large agenda (`intake:large`):** capture portfolio-level clarity only; enroll children with `needs-interview` / `N-CI`; do **not** write detailed child specs until each is interviewed.
+6. **Write gate:** never finalize a detailed spec file for a story tagged `needs-interview` / `N-CI` without completing Plan-Mode Spec Interview (or explicit `/agtoosa-spec quick` only when the user chooses quick).
+
+**Clarity tags** (combinable on Master-Plan `Clarity` column and spec header): canonical `ready` · `sa-ready` · `needs-interview` (aliases `Ready` · `SA-R` · `N-CI`). See `docs/adr/ADR-012-lifecycle-next-step-sync.md`.
 
 ### Decision-complete checklist
 
@@ -315,7 +328,7 @@ Consult `docs/AgToosa_GovernancePolicy.md` (checker: `docs/agtoosa-policy-check.
 
 ## Output
 *   Present the generated Spec (with Goal Contract and embedded plan), task list, and test plan skeleton to the user.
-*   Print the closure line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+*   Print the **dual-line phase close** (see `docs/AgToosa_Agent.md` → **Lifecycle Next-Step Contract**): primary `Next: /agtoosa-<command>` line, then automatic `SYNC:` pulse. Optional tertiary: `/agtoosa-status` for full health findings — **not** the headline next step.
 *   Present the approval gate:
 
     ```

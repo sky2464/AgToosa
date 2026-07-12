@@ -6,4 +6,4 @@ Read `Docs/AgToosa_Evidence.md` and execute the `/agtoosa-evidence` workflow.
 
 Dispatch based on any arguments after the command: `review` or `ship`.
 
-On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+On successful completion, print this line verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

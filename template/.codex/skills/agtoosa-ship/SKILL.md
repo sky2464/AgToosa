@@ -12,4 +12,4 @@ Use when the user asks for `/agtoosa-ship`, `$agtoosa-ship`, or wants to close o
 1. Read `Docs/AgToosa_Ship.md` in full and **run** its workflow precisely.
 2. **Dispatch** `check` → `Docs/AgToosa_Ship.md` **Part 0 only** as a **read-only readiness audit** (no deploy, archive, changelog mutation, or deployment approval); otherwise run the full ship flow starting with Part 0.
 3. Enforce readiness gates (spec approval, tests, review) before any deploy or archive step in the full flow.
-4. On successful completion, print verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+4. On successful completion, print verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

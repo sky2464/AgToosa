@@ -11,4 +11,4 @@ Use when the user asks for `/agtoosa-handoff`, `$agtoosa-handoff`, or wants to e
 
 1. Read `Docs/AgToosa_Handoff.md` in full and **run** its workflow precisely.
 2. **Dispatch** `wave` or `task` when provided; otherwise run the full flow (Resolve target → Assemble pack → Write file).
-3. On successful completion, print verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+3. On successful completion, print verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

@@ -14,4 +14,4 @@ When executing any build or implementation work, follow `Docs/AgToosa_Build.md` 
 - Commit after each green test cycle, not at the end.
 - Report **Terminal Evidence Contract** fields for every command and parallel subagent; unresolved exits or warnings block checkbox completion.
 - If build prerequisites fail, **stop** and instruct the user — do **not** auto-run `/agtoosa-spec`.
-- On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+- On successful completion, print this line verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

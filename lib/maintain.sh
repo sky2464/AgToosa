@@ -377,3 +377,104 @@ run_uninstall() {
   echo -e "${CYAN}   delete the AGTOOSA START/END blocks inside them manually if desired.${NC}"
   return 0
 }
+
+# Emit one executive SYNC line from Master-Plan (read-only).
+# stdout: SYNC: <story-id|none> · <status> · tasks N/M · clarity <tags|—> · next </agtoosa-command>
+run_status_line() {
+  local target="${1:-$PWD}"
+  if [[ ! -d "$target" ]]; then
+    echo -e "${RED}❌ Error: Directory '${target}' does not exist.${NC}" >&2
+    return 2
+  fi
+  local mp=""
+  for candidate in "${target}/docs/Master-Plan.md" "${target}/Docs/Master-Plan.md"; do
+    [[ -f "$candidate" ]] && mp="$candidate" && break
+  done
+  if [[ -z "$mp" ]]; then
+    echo -e "${RED}❌ Error: Master-Plan.md not found under docs/ or Docs/.${NC}" >&2
+    return 2
+  fi
+  MP_PATH="$mp" python3 - <<'PY'
+import os, re
+
+path = os.environ["MP_PATH"]
+text = open(path, encoding="utf-8").read()
+
+def section(body, name):
+    m = re.search(rf"^## {re.escape(name)}\s*\n(.*?)(?=^## |\Z)", body, re.M | re.S)
+    return m.group(1) if m else ""
+
+ac = section(text, "Active Cycle")
+rows = []
+for line in ac.splitlines():
+    if not re.match(r"^\| DEV-\d+", line):
+        continue
+    parts = [p.strip() for p in line.split("|") if p.strip()]
+    if len(parts) < 5:
+        continue
+    sid, st = parts[0], parts[4]
+    tc = parts[5] if len(parts) > 5 else "0/0"
+    rows.append((sid, st, tc))
+
+def score(st):
+    if "In Progress" in st or "🟨" in st:
+        return 3
+    if "In Review" in st or "🔍" in st:
+        return 2
+    if "Todo" in st or "🟦" in st:
+        return 1
+    return 0
+
+story_id, status, tasks_col = "none", "none", "0/0"
+picked = [r for r in rows if score(r[1]) > 0]
+if picked:
+    picked.sort(key=lambda r: -score(r[1]))
+    story_id, status, tasks_col = picked[0]
+
+tasks_done, tasks_total = 0, 0
+if "/" in tasks_col:
+    try:
+        tasks_done, tasks_total = [int(x) for x in tasks_col.split("/", 1)]
+    except ValueError:
+        pass
+
+at = section(text, "Active Tasks")
+if story_id != "none":
+    m = re.search(rf"^### {re.escape(story_id)}[^\n]*\n(.*?)(?=^### |\Z)", at, re.M | re.S)
+    if m:
+        block = m.group(1)
+        sub = [ln for ln in block.splitlines() if re.match(r"^\s+- \[[ x]\]", ln)]
+        if sub:
+            tasks_total = len(sub)
+            tasks_done = sum(1 for ln in sub if re.match(r"^\s+- \[x\]", ln))
+
+clarity = "—"
+bl = section(text, "Backlog")
+if story_id != "none":
+    for line in bl.splitlines():
+        if line.startswith(f"| {story_id} "):
+            parts = [p.strip() for p in line.split("|") if p.strip()]
+            if len(parts) >= 8:
+                clarity = parts[7] or "—"
+            break
+
+st_short = re.sub(r"[🟦🟨🔍✅🏁🚫🔧⬜]\s*", "", status).strip() or status
+
+if not rows or all(score(r[1]) == 0 for r in rows):
+    next_cmd = "/agtoosa-spec"
+elif story_id == "none":
+    next_cmd = "/agtoosa-status"
+elif "In Review" in status or "🔍" in status:
+    next_cmd = "/agtoosa-ship"
+elif tasks_total > 0 and tasks_done < tasks_total:
+    next_cmd = "/agtoosa-build"
+elif tasks_total > 0 and tasks_done >= tasks_total:
+    next_cmd = "/agtoosa-review"
+elif "Todo" in status or "🟦" in status or "In Progress" in status or "🟨" in status:
+    next_cmd = "/agtoosa-build"
+else:
+    next_cmd = "/agtoosa-spec"
+
+print(f"SYNC: {story_id} · {st_short} · tasks {tasks_done}/{tasks_total} · clarity {clarity} · next {next_cmd}")
+PY
+}

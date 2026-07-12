@@ -90,6 +90,7 @@ Beyond the interactive install wizard, `agtoosa.sh` exposes these maintainer-rel
 |------|-------------|---------|--------------|
 | `--verify [path]` | `lib/maintain.sh:run_verify` | Run the deterministic lifecycle verifier (prefers the target's installed `Docs/agtoosa-verify.sh` or `docs/agtoosa-verify.sh`, falls back to template copy) | Verifier exit code (0 pass, 1 findings, 2 usage) |
 | `--doctor [path]` | `lib/maintain.sh:run_doctor` | Report version skew (`Docs/.agtoosa-version` vs generator), missing workflow docs, platform wiring gaps, context placeholders, queued packs, stale `*.bak.*` files | 0 healthy, 1 issues found, 2 bad path |
+| `--status-line [path]` | `lib/maintain.sh:run_status_line` | Print one executive `SYNC:` pulse from Master-Plan (read-only) | 0 ok, 2 missing path or Master-Plan |
 | `--uninstall [path]` | `lib/maintain.sh:run_uninstall` | Remove AgToosa-owned files; preserves Master-Plan, Context/, archived/, and merged entry points | Blocks uninstall on the generator source tree; prompts unless `--yes` |
 | `--reinstall --clean [path]` | `lib/reinstall.sh:run_reinstall_clean` | ADR-004 Option C: archive generated files, regenerate fresh for platforms, rewrite `Docs/agtoosa-lock.json` | Destructive; requires confirmation (`--yes` non-interactive); default upgrade remains `--update` |
 | `--path <dir>` | `agtoosa.sh` | Skip the interactive path prompt | Requires valid path |
@@ -179,7 +180,7 @@ These strings are part of the user-facing contract and must appear verbatim in e
 
 | String | Canonical source | Variants |
 |---|---|---|
-| `✅ Done. Run /agtoosa-status to verify findings cleared.` (closure line) | `template/Docs/AgToosa_{Build,Task,Spec,Ship,Init}.md` Output section | All relevant command, rule, prompt, workflow, and skill adapters |
+| `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract) (closure line) | `template/Docs/AgToosa_{Build,Task,Spec,Ship,Init}.md` Output section | All relevant command, rule, prompt, workflow, and skill adapters |
 | `Note: '<token>' is not a defined sub-command. Did you mean: plan, readiness, git, orphans? Falling back to full dashboard.` (status typo helper) | `template/Docs/AgToosa_Status.md` Part 5.6 | 5 status platform variants |
 | `Recommended Next Actions generation` heading + the Part 5.5 algorithm | `template/Docs/AgToosa_Status.md` Part 5.5 | Referenced (not duplicated) from each status variant |
 

@@ -120,4 +120,4 @@ Update `Docs/archived/evidence-[story-id].md` with a `cross-model` row per `Docs
 ## Output
 
 - Present merged cross-model findings before the review approval gate.
-- On successful completion of a fix workflow that defines a closure line, print: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+- On successful completion, print the dual-line phase close per Docs/AgToosa_Agent.md → Lifecycle Next-Step Contract

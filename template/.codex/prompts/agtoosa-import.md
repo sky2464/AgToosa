@@ -6,4 +6,4 @@ Read `Docs/AgToosa_Import.md` and execute the `/agtoosa-import` workflow.
 
 Dispatch based on any arguments after the command: `check`.
 
-On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+On successful completion, print this line verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

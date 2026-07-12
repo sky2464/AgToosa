@@ -156,4 +156,4 @@ Optional: also append a short `## Retrospective — [date]` pointer in the chang
 * Path to `archived/retro-[cycle-date].md`
 * Proposal table with next commands
 * Explicit reminder: acceptance is manual via `/agtoosa-task` / `/agtoosa-spec` / `/agtoosa-spec amend`
-* Closure line when invoked as part of successful ship: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+* Print the dual-line phase close per Docs/AgToosa_Agent.md → Lifecycle Next-Step Contract

@@ -18,4 +18,4 @@ When executing `/agtoosa-build` or any implementation work, follow `Docs/AgToosa
 - Report **Terminal Evidence Contract** fields for every command and parallel subagent; unresolved exits or warnings block checkbox completion.
 - If build prerequisites fail, **stop** and instruct the user — do **not** auto-run `/agtoosa-spec`.
 - Update `Docs/Master-Plan.md` Active Tasks checkboxes and Update Log as tasks complete.
-- On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+- On successful completion, print this line verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

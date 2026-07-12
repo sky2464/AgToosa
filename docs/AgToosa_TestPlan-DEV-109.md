@@ -2,7 +2,7 @@
 
 > **Spec:** `docs/archived/spec-DEV-109.md`  
 > **Smoke filter:** `bats tests/agtoosa.bats -f "DEV-109\\|LNS-"`  
-> **Status:** ⬜ Spec Approved — build deferred (backlog after last wave)  
+> **Status:** 🏁 Shipped — v5.3.21  
 > **Coverage target:** 80% focused contract tests (docs + CLI + PS1 greps)
 
 ## AC Coverage
@@ -44,8 +44,19 @@ git diff --check
 
 ### RED evidence
 
-_Pending `/agtoosa-build` — expect LNS tests to fail until dual-line docs, status-line CLI, and adapter updates land._
+```text
+$ bats tests/agtoosa.bats -f "DEV-109"
+# LNS-001–LNS-010 fail before dual-line docs, status-line CLI, and adapter updates land
+```
 
 ### GREEN evidence
 
-_Pending `/agtoosa-build`._
+```text
+$ bats tests/agtoosa.bats -f "DEV-109"
+1..11
+ok 1 DEV-109 @smoke LNS-001: ...
+ok 11 DEV-109 LNS-003n: --status-line fails without Master-Plan
+
+$ bash agtoosa.sh --status-line .
+SYNC: DEV-109 · Todo · tasks 0/11 · clarity — · next /agtoosa-build
+```

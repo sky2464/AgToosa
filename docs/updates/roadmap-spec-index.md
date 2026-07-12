@@ -87,14 +87,14 @@ Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
 | ID | Story | Type | Est | Epic | Pri | Spec | Test plan |
 |---|---|---|---:|---|---:|---|---|
 | DEV-107 | Agent-Instructed Orchestration Brain | Feature | M | DEV-002 | P1 | `docs/archived/spec-DEV-107.md` | `docs/AgToosa_TestPlan-DEV-107.md` |
-| DEV-109 | Lifecycle Next-Step Sync + Multi-Spec Clarity | Feature | L | DEV-002 / DEV-001 | P0 | `docs/archived/spec-DEV-109.md` | `docs/AgToosa_TestPlan-DEV-109.md` |
-| DEV-110 | AgToosa Project Intake | Feature | M | DEV-002 | P0 | `docs/archived/spec-DEV-110.md` | `docs/AgToosa_TestPlan-DEV-110.md` |
+| DEV-109 | Lifecycle Next-Step Sync + Multi-Spec Clarity | Feature | L | DEV-002 / DEV-001 | P0 | `docs/archived/spec-DEV-109.md` | `docs/AgToosa_TestPlan-DEV-109.md` | 🏁 Shipped v5.3.21 |
+| DEV-110 | AgToosa Project Intake | Feature | M | DEV-002 | P0 | `docs/archived/spec-DEV-110.md` | `docs/AgToosa_TestPlan-DEV-110.md` | 🏁 Shipped v5.3.22 |
 
 > **Enrollment note (2026-07-12):** DEV-107 Spec Approved; remains Backlog until after Wave 1a capacity frees. Build must not displace DEV-086 / DEV-090 / DEV-105.
 >
-> **Enrollment note (2026-07-12):** DEV-109 Spec Approved; estimate L; backlog after last wave; not in Active Cycle; build deferred until capacity frees. ID skips DEV-108 (roadmap-reserved voluntary scorecard).
+> **Enrollment note (2026-07-12):** DEV-109 shipped v5.3.21 — dual-line lifecycle closure + SYNC CLI + multi-spec clarity tags.
 >
-> **Enrollment note (2026-07-12):** DEV-110 estimate M; backlog immediately after planned specs (after DEV-109); expedite build when capacity frees; dual-mode freeform Project Intake (not merged into DEV-109); spec draft awaiting approval.
+> **Enrollment note (2026-07-12):** DEV-110 shipped v5.3.22 — dual-mode Project Intake + always-on core rule + Standing Corrections.
 
 ## Recently shipped (v5.3.14 — 2026-07-11)
 

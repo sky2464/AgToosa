@@ -111,7 +111,7 @@ Resolved source and rule metadata from `docs/AgToosa_GovernancePolicy.md` via `b
 ## Output
 
 * Print the pack path and a one-line summary of story + wave/task.
-* Print verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+* Print the dual-line phase close per Docs/AgToosa_Agent.md → Lifecycle Next-Step Contract
 * Remind: launch is **manual**; closure requires `/agtoosa-import`.
 
 ## Rules

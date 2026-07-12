@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-12 (Wave 3 shipped v5.3.20)
+> **Last updated:** 2026-07-12 (DEV-110 shipped — v5.3.22 Project Intake)
 
 ## Project Charter
 
@@ -9,9 +9,9 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | v5.3.20 shipped — Rev4 Wave 3 + DEV-107 batched |
-| Milestone | `v5.3.21` (next) |
-| Active cycle | _empty — enroll next story via `/agtoosa-spec`_ |
+| Current phase | DEV-110 shipped — Project Intake; next enroll |
+| Milestone | `v5.3.23` (next) |
+| Active cycle | _(none — enroll via `/agtoosa-spec`)_ |
 | Cycle capacity | `8 story points` |
 
 ## Active Cycle
@@ -20,8 +20,10 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| _empty_ | — | — | — | — | — |
+| — | _(no active story — run `/agtoosa-spec` to enroll)_ | — | — | — | — |
 
+<!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.22.md (DEV-110 v5.3.22) -->
+<!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.21.md (DEV-109 v5.3.21) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.20.md (Wave 3 + DEV-107 batched v5.3.20) -->
 <!-- Wave 1a archived to docs/archived/cycle-2026-07-12-release-5.3.17.md -->
 <!-- Wave 1b/2 remainder archived via v5.3.18 ship -->
@@ -48,7 +50,6 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 > Task breakdown for enrolled Active Cycle stories. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
-> _No active tasks — Wave 3 archived to `docs/archived/cycle-2026-07-12-release-5.3.20.md`._
 
 ## Manual / Deferred Tasks
 
@@ -78,7 +79,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 |----|-------|-----------|-------|
 | — | (none) | — | — |
 
-Conflict playbook: _Wave 3 complete — next enroll via `/agtoosa-spec` (e.g. DEV-109)._
+Conflict playbook: _DEV-110 shipped v5.3.22 — next enroll via `/agtoosa-spec` (e.g. DEV-080 external publish follow-up or demand-gated DEV-057)._
 
 ## Backlog
 
@@ -148,8 +149,8 @@ Conflict playbook: _Wave 3 complete — next enroll via `/agtoosa-spec` (e.g. DE
 | DEV-105 | Feature: PowerShell Maintain + Update Parity | Feature | M | DEV-001 | P0 | 🏁 Shipped — v5.3.17 |
 | DEV-106 | Docs: Built with AgToosa Showcase | Docs | XS | DEV-004 | P2 | 🏁 Shipped — v5.3.20 |
 | DEV-107 | Feature: Agent-Instructed Orchestration Brain | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.20 |
-| DEV-109 | Feature: Lifecycle Next-Step Sync + Multi-Spec Clarity | Feature | L | DEV-002 / DEV-001 | P0 | ⬜ Backlog — Spec Approved; after last wave |
-| DEV-110 | Feature: AgToosa Project Intake | Feature | M | DEV-002 | P0 | ⬜ Backlog — spec draft; after planned specs (after DEV-109); expedite when capacity frees; awaiting Spec Approved |
+| DEV-109 | Feature: Lifecycle Next-Step Sync + Multi-Spec Clarity | Feature | L | DEV-002 / DEV-001 | P0 | 🏁 Shipped — v5.3.21 |
+| DEV-110 | Feature: AgToosa Project Intake | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.22 |
 
 ## Epics
 
@@ -158,8 +159,8 @@ Conflict playbook: _Wave 3 complete — next enroll via `/agtoosa-spec` (e.g. DE
 | ID | Title | Stories | Status | Next spec |
 |----|-------|---------|--------|-----------|
 | DEV-001 | Epic: Core Generator Engine | 5 open / 12 total | 🟨 Active | DEV-093 · DEV-091 · DEV-100 |
-| DEV-002 | Epic: Workflow Templates | 1 open / 18 total | 🟨 Active | DEV-109 (after Wave 3 ship); DEV-089 (after DEV-087) |
-| DEV-003 | Epic: Community Template Registry | 2 open / 11 total | 🟨 Active | DEV-109 (next); external publish manual |
+| DEV-002 | Epic: Workflow Templates | 1 open / 19 total | 🟨 Active | DEV-057 (demand-gated) |
+| DEV-003 | Epic: Community Template Registry | 2 open / 11 total | 🟨 Active | DEV-080 external publish manual |
 | DEV-004 | Epic: Testing & QA Harness | 5 open / 18 total | 🟨 Active | DEV-089 (Wave 1b) |
 
 ### Epic Charters
@@ -183,7 +184,8 @@ Conflict playbook: _Wave 3 complete — next enroll via `/agtoosa-spec` (e.g. DE
     *   **Last shipped:** DEV-052 — Hook Automation Pack → `docs/archived/spec-DEV-052.md`
     *   **Last shipped:** DEV-056 — Retrospective Learning Loop → `docs/archived/spec-DEV-056.md`
     *   **Last shipped:** DEV-045 — Work Package Wave DAG → `docs/archived/spec-DEV-045.md`
-    *   **Current:** v5.3.20 shipped — Wave 3 + DEV-107; DEV-109 Spec Approved (next build); DEV-110 Project Intake (spec draft); demand-gated DEV-057 remains separate
+    *   **Last shipped:** DEV-110 — AgToosa Project Intake → `docs/archived/spec-DEV-110.md`
+    *   **Current:** demand-gated DEV-057 remains separate; enroll next via `/agtoosa-spec`
 
 *   **DEV-003 - Epic: Community Template Registry**
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
@@ -220,6 +222,8 @@ Conflict playbook: _Wave 3 complete — next enroll via `/agtoosa-spec` (e.g. DE
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-110 | Feature: AgToosa Project Intake | 2026-07-12 | [spec-DEV-110.md](archived/spec-DEV-110.md) · [review-DEV-110.md](archived/review-DEV-110.md) · [evidence-DEV-110.md](archived/evidence-DEV-110.md) |
+| DEV-109 | Feature: Lifecycle Next-Step Sync + Multi-Spec Clarity | 2026-07-12 | [spec-DEV-109.md](archived/spec-DEV-109.md) · [review-DEV-109.md](archived/review-DEV-109.md) · [evidence-DEV-109.md](archived/evidence-DEV-109.md) |
 | DEV-096 | Chore: Pack Validation CI | 2026-07-12 | [spec-DEV-096.md](archived/spec-DEV-096.md) · [review-DEV-096.md](archived/review-DEV-096.md) · [evidence-DEV-096.md](archived/evidence-DEV-096.md) |
 | DEV-095 | Feature: Official Pack Expansion (5-pack max) | 2026-07-12 | [spec-DEV-095.md](archived/spec-DEV-095.md) · [review-DEV-095.md](archived/review-DEV-095.md) · [evidence-DEV-095.md](archived/evidence-DEV-095.md) |
 | DEV-098 | Docs: Navigation by User Job | 2026-07-12 | [spec-DEV-098.md](archived/spec-DEV-098.md) · [review-DEV-098.md](archived/review-DEV-098.md) · [evidence-DEV-098.md](archived/evidence-DEV-098.md) |
@@ -487,8 +491,23 @@ Conflict playbook: _Wave 3 complete — next enroll via `/agtoosa-spec` (e.g. DE
 | 2026-07-12 | ✏️ /agtoosa-spec — DEV-109 draft — Lifecycle Next-Step Sync + Multi-Spec Clarity; ADR-012; test plan `docs/AgToosa_TestPlan-DEV-109.md`; backlog; awaiting Spec Approved | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — DEV-109 estimate L; backlog only (after last wave); not enrolled in Active Cycle | AgToosa |
 | 2026-07-12 | /agtoosa-spec — Spec ✅ Approved — DEV-109 — spec-DEV-109.md; estimate L; backlog only | AgToosa |
+| 2026-07-12 | ✏️ /agtoosa-spec tasks — DEV-109 Part 4 synced; enrolled Active Cycle Todo; 11 tasks | AgToosa |
+| 2026-07-12 | 🏗️ Build 🏗️ Started — DEV-109 — Lifecycle Next-Step Sync; 11 tasks; dual-line + SYNC + status-line | AgToosa |
+| 2026-07-12 | 🏗️ /agtoosa-build DEV-109 — Task 🟢 11/11 — LNS-001–LNS-010 green; run_status_line + adapter parity | AgToosa |
+| 2026-07-12 | 🏗️ Build complete — DEV-109; next: `/agtoosa-review` | AgToosa |
+| 2026-07-12 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-109 — 4-persona review running | AgToosa |
+| 2026-07-12 | 🔍 Review ✅ Approved — DEV-109; 0 🔴 Critical, 5 warnings accepted; report: `docs/archived/review-DEV-109.md`; evidence: `docs/archived/evidence-DEV-109.md` | AgToosa |
+| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-109 — smoke PASS; v5.3.21; spec archived | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v5.3.21 — DEV-109 Lifecycle Next-Step Sync; smoke PASS; cycle archived | AgToosa |
+| 2026-07-12 | 🚀 Release 5.3.21 shipped — v5.3.21; version parity bash/ps1/npm; Milestone v5.3.22 (next) | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — DEV-110 draft — AgToosa Project Intake; ADR-013; test plan `docs/AgToosa_TestPlan-DEV-110.md`; backlog after DEV-109; expedite when capacity frees; awaiting Spec Approved | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — DEV-110 Part 4 complete — Story Skill synthesis (decline all); Spec Quality re-run pass; approval gate presented; tasks in spec until enrollment | AgToosa |
+| 2026-07-12 | /agtoosa-spec — Spec ✅ Approved — DEV-110 — expedited enrollment on build request | AgToosa |
+| 2026-07-12 | 🏗️ Build 🏗️ Started — DEV-110 — AgToosa Project Intake; 7 tasks; dual-mode intake + Standing Corrections + INT bats | AgToosa |
+| 2026-07-12 | 🏗️ /agtoosa-build DEV-110 — Task 🟢 7/7 — INT-001–INT-012 green; Agent Project Intake + alwaysApply core + workflow Standing Corrections | AgToosa |
+| 2026-07-12 | 🏗️ Build complete — DEV-110; next: `/agtoosa-review` | AgToosa |
+| 2026-07-12 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-110 — 4-persona review running | AgToosa |
+| 2026-07-12 | 🔍 Review ✅ Approved — DEV-110; 0 🔴 Critical, 4 🟡 Warning accepted; report: `docs/archived/review-DEV-110.md`; evidence: `docs/archived/evidence-DEV-110.md` | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — Wave 2 A+B enroll — DEV-092 · DEV-093 · DEV-094 · DEV-097 · DEV-100 into Active Cycle; Wave 1a retained through ship; DEV-093 blocked on 092; DEV-100 R1 amend `--format json` pending; capacity soft overrun | AgToosa |
 | 2026-07-12 | 🏗️ Build 🏗️ Started — Wave 2 parallel — DEV-092 · DEV-094 · DEV-097; DEV-093 blocked; DEV-100 skipped (R1 amend pending); no worktree (sequential stories, clean tree between) | AgToosa |
 | 2026-07-12 | 🏗️ /agtoosa-build Wave 2 — DEV-092 · DEV-094 · DEV-097 Task 🟢 complete — TAP/ACC/FST green; DEV-093 blocked; DEV-100 R1 pending | AgToosa |
@@ -537,3 +556,6 @@ Conflict playbook: _Wave 3 complete — next enroll via `/agtoosa-spec` (e.g. DE
 | 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — Wave 3 (095·096·098·099·101·102·103·104·106) + DEV-107 batched — smoke PASS; v5.3.20 | AgToosa |
 | 2026-07-12 | 🚀 Ship complete — v5.3.20 — Rev4 Wave 3 + DEV-107; smoke PASS; cycle archived | AgToosa |
 | 2026-07-12 | 🚀 Release 5.3.20 shipped — v5.3.20; version parity bash/ps1/npm; Milestone v5.3.21 (next) | AgToosa |
+| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-110 — smoke PASS; v5.3.22; spec archived | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v5.3.22 — DEV-110 Project Intake; smoke PASS; cycle archived | AgToosa |
+| 2026-07-12 | 🚀 Release 5.3.22 shipped — v5.3.22; version parity bash/ps1/npm; Milestone v5.3.23 (next) | AgToosa |

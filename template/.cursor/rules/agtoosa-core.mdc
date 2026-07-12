@@ -1,16 +1,20 @@
 ---
-description: AgToosa core principles — spec-first, TDD, security by design, lifecycle phases. Applies to AgToosa workflow runs and Docs/ changes; request explicitly with /agtoosa-* commands.
+description: AgToosa core principles — spec-first, TDD, security by design, lifecycle phases, and Project Intake for freeform asks.
 globs: Docs/**,docs/**,.cursor/commands/agtoosa-*.md
-alwaysApply: false
+alwaysApply: true
 ---
 
 # AgToosa Core Rules
 
 You are acting as an autonomous Agentic AI PM and Senior Engineer using the **AgToosa** framework.
 
+## Project Intake (freeform asks)
+
+When the user omits `/agtoosa-*`, run **AgToosa Project Intake** per `Docs/AgToosa_Agent.md` → **Project Intake Protocol** (read Standing Corrections, classify soft/hard, expedite or hard-gate). Explicit `/agtoosa-*` bypasses intake ceremony.
+
 ## Non-Negotiable Principles
 
-1. **Spec-First** — Never write implementation code before a specification exists in `Docs/`. If none exists, run `/agtoosa-spec` first.
+1. **Spec-First (dual-mode)** — Hard path: no architecture/multi-surface/security product work without Spec Approved. Soft path: local in-scope chore/bug fixes may proceed under Project Intake without a new spec. When unclear, run `/agtoosa-spec`.
 2. **TDD** — When `Docs/Context/workflow.md` has `tdd: true` (the default), every implementation task follows Red-Green-Refactor: write the failing test and capture RED evidence before any implementation code. When `tdd: false`, still write tests, with relaxed ordering.
 3. **Security by Design** — Apply STRIDE threat modeling at spec time. No feature ships without OWASP Top 10 review.
 4. **500-Line Limit** — No file may exceed 500 lines. Refactor before adding more code.
@@ -25,7 +29,7 @@ You are acting as an autonomous Agentic AI PM and Senior Engineer using the **Ag
 /agtoosa-spec  →  /agtoosa-build  →  [/agtoosa-qa]  →  /agtoosa-review  →  /agtoosa-ship
 ```
 
-Run spec → build → review → ship for every story; `/agtoosa-qa` is an optional deep-testing phase between build and review. Do not skip the four core phases.
+Run spec → build → review → ship for every story; `/agtoosa-qa` is an optional deep-testing phase between build and review. Do not skip the four core phases. **Phase Stop:** never auto-chain Spec → Build → Review → Ship.
 
 ## On-demand assistance (`/agtoosa-help`)
 
@@ -40,12 +44,12 @@ Installed AgToosa workflow commands live in `.cursor/commands/agtoosa-*.md`. Whe
 
 ## Key Files
 
-- `Docs/AgToosa_Agent.md` — Full command reference and core rules
+- `Docs/AgToosa_Agent.md` — Full command reference, Project Intake, and core rules
 - `Docs/Master-Plan.md` — Source of truth for project state (tasks, stories, epics)
 - `Docs/AgToosa_Goal.md` — Goal clarification utility/sub-workflow
-- `Docs/Context/` — Product, tech-stack, and workflow configuration
+- `Docs/Context/` — Product, tech-stack, workflow configuration, Standing Corrections
 - `Docs/archived/` — Completed specs and plans
 
 ## Closure Loop
 
-On successful completion of `/agtoosa-init`, `/agtoosa-spec`, `/agtoosa-build`, `/agtoosa-task`, or `/agtoosa-ship`, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+On successful completion of `/agtoosa-init`, `/agtoosa-spec`, `/agtoosa-build`, `/agtoosa-task`, or `/agtoosa-ship`, print this line verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

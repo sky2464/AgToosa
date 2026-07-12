@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.20" ]]
+  [[ "$output" == "AgToosa v5.3.22" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1636,7 +1636,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.3.20" ]
+  [ "$ver" = "5.3.22" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1647,7 +1647,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.3.20"* ]]
+  [[ "$output" == *"5.3.22"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -1667,7 +1667,7 @@ PY
 }
 
 @test "D2: closure line appears in 5 canonical workflow docs" {
-  local needle='Run /agtoosa-status to verify findings cleared'
+  local needle='Lifecycle Next-Step Contract'
   for f in AgToosa_Build AgToosa_Task AgToosa_Spec AgToosa_Ship AgToosa_Init; do
     grep -q "$needle" "$TEMPLATE_DIR/Docs/${f}.md" || {
       echo "MISSING closure line in canonical: ${f}.md"
@@ -1677,7 +1677,7 @@ PY
 }
 
 @test "D2: closure line appears in 5 platform variants of build/task/spec/ship" {
-  local needle='Run /agtoosa-status to verify findings cleared'
+  local needle='Lifecycle Next-Step Contract'
   for cmd in build task spec ship; do
     for path in \
       ".claude/commands/agtoosa-${cmd}.md" \
@@ -1694,7 +1694,7 @@ PY
 }
 
 @test "D2: closure line appears in 3 init platform variants" {
-  local needle='Run /agtoosa-status to verify findings cleared'
+  local needle='Lifecycle Next-Step Contract'
   for path in \
     ".claude/commands/agtoosa-init.md" \
     ".gemini/commands/agtoosa-init.toml" \
@@ -1707,7 +1707,7 @@ PY
 }
 
 @test "D2: closure line appears in cursor + windsurf agtoosa-core fallback rules" {
-  local needle='Run /agtoosa-status to verify findings cleared'
+  local needle='Lifecycle Next-Step Contract'
   grep -q "$needle" "$TEMPLATE_DIR/.cursor/rules/agtoosa-core.mdc"
   grep -q "$needle" "$TEMPLATE_DIR/.windsurf/rules/agtoosa-core.md"
 }
@@ -1776,7 +1776,7 @@ PY
   grep -q ".cursor/commands" "$f"
   grep -q ".windsurf/workflows" "$f"
   grep -q ".codex/skills" "$f"
-  grep -q "Run /agtoosa-status to verify findings cleared" "$f"
+  grep -q "Lifecycle Next-Step Contract" "$f"
   grep -q "Did you mean: plan, readiness, git, orphans" "$f"
 }
 
@@ -3649,7 +3649,7 @@ PY
   grep -q "Claude Code Instructions" "$project/CLAUDE.md"
   ! grep -q "old claude block" "$project/CLAUDE.md"
   grep -q "AgToosa" "$project/.claude/commands/agtoosa-spec.md"
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.20" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.22" ]
 }
 
 @test "DEV-036 WP-002: Bash registry install normalizes top-level pack directory" {
@@ -7455,11 +7455,11 @@ JSON
   done
 }
 
-@test "DEV-089 SR-003: Master-Plan records v5.3.18 ship and v5.3.20 next milestone" {
+@test "DEV-089 SR-003: Master-Plan records v5.3.18 ship and v5.3.20 milestone progression" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   grep -q 'Ship complete — v5.3.18' "$mp"
   grep -q 'Release 5.3.18 shipped' "$mp"
-  grep -q 'v5.3.20 (next)' "$mp"
+  grep -q 'Release 5.3.20 shipped' "$mp"
   grep -q '| DEV-089 | Feature: Evidence-Profile Verifier Gates' "$mp"
   grep -q '| DEV-091 | Feature: Migration Wizard' "$mp"
   grep -q '| DEV-093 | Feature: Install State File' "$mp"
@@ -9621,7 +9621,7 @@ EOF
   run pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1" -Update -UpdatePath "$project"
   [ "$status" -eq 0 ]
   [ -f "$project/Docs/.agtoosa-version" ]
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.20" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.22" ]
 }
 
 @test "DEV-105 PSP-005: maintain switches require -UpdatePath" {
@@ -10043,7 +10043,7 @@ PY
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.20"
+    AGTOOSA_VERSION="5.3.22"
     PROJECT_PATH="'"$proj"'"
     apply_reset_summary
     apply_begin_staging "'"$proj"'"
@@ -10102,7 +10102,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.20"
+    AGTOOSA_VERSION="5.3.22"
     PROJECT_PATH="'"$proj"'"
     USE_CURSOR=true; USE_CLAUDE=true
     USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10120,7 +10120,7 @@ d = json.load(open(sys.argv[1]))
 plats = set(d.get("platforms") or [])
 assert "cursor" in plats and "claude" in plats, plats
 assert "gemini" not in plats, "stale platform should be reconciled out"
-assert d.get("agtoosa_version") == "5.3.20"
+assert d.get("agtoosa_version") == "5.3.22"
 PY
   [ "$status" -eq 0 ]
 }
@@ -10135,7 +10135,7 @@ PY
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.20"
+    AGTOOSA_VERSION="5.3.22"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10192,7 +10192,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.20"
+    AGTOOSA_VERSION="5.3.22"
     PROJECT_PATH="'"$proj"'"
     # Inject observed SHA that differs from lock pin
     AGTOOSA_PACK_OBSERVED_SHA_tampered_pack="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
@@ -10227,7 +10227,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.20"
+    AGTOOSA_VERSION="5.3.22"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10251,7 +10251,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.20"
+    AGTOOSA_VERSION="5.3.22"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -10279,7 +10279,7 @@ JSON
     source "'"$root"'/lib/apply.sh"
     source "'"$root"'/lib/state.sh"
     source "'"$root"'/lib/lock.sh"
-    AGTOOSA_VERSION="5.3.20"
+    AGTOOSA_VERSION="5.3.22"
     PROJECT_PATH="'"$proj"'"
     USE_CLAUDE=true
     USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
@@ -12347,7 +12347,7 @@ PY
 
   PACK_QUEUE_DIR="$queue_dir"
   PROJECT_PATH="$project_dir"
-  AGTOOSA_VERSION="5.3.20"
+  AGTOOSA_VERSION="5.3.22"
   GREEN="" YELLOW="" NC=""
   source "$BATS_TEST_DIRNAME/../lib/install.sh"
   _merge_pack_queue
@@ -12376,7 +12376,7 @@ PY
 
   PACK_QUEUE_DIR="$queue_dir"
   PROJECT_PATH="$project_dir"
-  AGTOOSA_VERSION="5.3.20"
+  AGTOOSA_VERSION="5.3.22"
   GREEN="" YELLOW="" NC=""
   source "$BATS_TEST_DIRNAME/../lib/install.sh"
   _merge_pack_queue
@@ -12615,18 +12615,18 @@ PY
   [ "$status" -eq 0 ]
 }
 
-# -- Wave 3 ship regression v5.3.20 (SR-001–SR-003) ---------------------------
+# -- Wave 3 ship regression v5.3.20 (SR-001–SR-003) + v5.3.22 current pins --------
 
-@test "DEV-096 SR-001: v5.3.20 release pins are aligned" {
+@test "DEV-096 SR-001: v5.3.22 release pins are aligned" {
   local root="$BATS_TEST_DIRNAME/.."
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -oE '"version": "[0-9]+\.[0-9]+\.[0-9]+"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "5.3.20" ]
-  [ "$ps_ver" = "5.3.20" ]
-  [ "$npm_ver" = "5.3.20" ]
-  grep -q '## \[5.3.20\]' "$root/CHANGELOG.md"
-  grep -q 'version-5.3.20' "$root/README.md"
+  [ "$bash_ver" = "5.3.22" ]
+  [ "$ps_ver" = "5.3.22" ]
+  [ "$npm_ver" = "5.3.22" ]
+  grep -q '## \[5.3.22\]' "$root/CHANGELOG.md"
+  grep -q 'version-5.3.22' "$root/README.md"
 }
 
 @test "DEV-096 SR-002: v5.3.20 changelog and Wave 3 review/evidence/spec artifacts exist" {
@@ -12643,11 +12643,219 @@ PY
   done
 }
 
-@test "DEV-096 SR-003: Master-Plan records v5.3.20 ship and v5.3.21 next milestone" {
+@test "DEV-096 SR-003: Master-Plan records v5.3.22 ship and v5.3.23 next milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v5.3.20' "$mp"
-  grep -q 'Release 5.3.20 shipped' "$mp"
-  grep -q 'v5.3.21 (next)' "$mp"
-  grep -q 'DEV-096' "$mp"
-  grep -q 'Shipped — v5.3.20' "$mp"
+  grep -q 'Ship complete — v5.3.22' "$mp"
+  grep -q 'Release 5.3.22 shipped' "$mp"
+  grep -q 'v5.3.23 (next)' "$mp"
+  grep -q 'DEV-110' "$mp"
+  grep -q 'Shipped — v5.3.22' "$mp"
+}
+
+# ── DEV-109: Lifecycle Next-Step Sync + Multi-Spec Clarity (LNS-001–LNS-010) ───
+
+@test "DEV-109 @smoke LNS-001: Spec Build Review Ship use dual-line phase close not status headline" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in \
+    "$root/docs/AgToosa_Spec.md" "$root/docs/AgToosa_Build.md" \
+    "$root/docs/AgToosa_Review.md" "$root/docs/AgToosa_Ship.md"
+  do
+    grep -q "dual-line phase close" "$f"
+    grep -q "Lifecycle Next-Step Contract" "$f"
+    ! grep -q "Print the closure line verbatim" "$f"
+  done
+}
+
+@test "DEV-109 @smoke LNS-002: Agent defines SYNC pulse format" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "SYNC:" "$root/docs/AgToosa_Agent.md"
+  grep -q "tasks N/M" "$root/docs/AgToosa_Agent.md"
+}
+
+@test "DEV-109 @smoke LNS-003: agtoosa.sh --status-line wired and run_status_line exists" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "run_status_line" "$root/lib/maintain.sh"
+  run bash "$root/agtoosa.sh" --help
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"--status-line"* ]]
+  run bash "$root/agtoosa.sh" --status-line "$root"
+  [ "$status" -eq 0 ]
+  [[ "$output" =~ ^SYNC: ]]
+}
+
+@test "DEV-109 @smoke LNS-004: agtoosa.ps1 -StatusLine parity" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '\$StatusLine' "$root/agtoosa.ps1"
+  grep -q '\-StatusLine' "$root/agtoosa.ps1"
+  grep -q '\-\-status-line' "$root/agtoosa.ps1"
+}
+
+@test "DEV-109 @smoke LNS-005: SPEC-FORMAT documents Clarity tags" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "needs-interview" "$root/docs/SPEC-FORMAT.md"
+  grep -q "sa-ready" "$root/docs/SPEC-FORMAT.md"
+  grep -q "Clarity" "$root/template/Docs/Master-Plan.md"
+}
+
+@test "DEV-109 @smoke LNS-006: Spec.md defines multi-spec intake" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "Multi-spec intake" "$root/docs/AgToosa_Spec.md"
+  grep -q "intake:small" "$root/docs/AgToosa_Spec.md"
+  grep -q "intake:large" "$root/docs/AgToosa_Spec.md"
+}
+
+@test "DEV-109 @smoke LNS-007: Spec blocks finalize while needs-interview" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "needs-interview" "$root/docs/AgToosa_Spec.md"
+  grep -q "N-CI" "$root/docs/AgToosa_Spec.md"
+}
+
+@test "DEV-109 @smoke LNS-008: Spec interview soft cap allows repeating +4" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "+4 extension may repeat" "$root/docs/AgToosa_Spec.md"
+  grep -q "+4 may repeat" "$root/docs/AgToosa_Agent.md"
+}
+
+@test "DEV-109 LNS-009: canonical Output demotes status-only closure" {
+  local root="$BATS_TEST_DIRNAME/.."
+  ! grep -q "Print the closure line verbatim" "$root/docs/AgToosa_Build.md"
+  ! grep -q "Print the closure line verbatim" "$root/docs/AgToosa_Spec.md"
+}
+
+@test "DEV-109 LNS-010: Status empty-state prefers lifecycle next" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "Run \`/agtoosa-spec\` to start the next story" "$root/docs/AgToosa_Status.md"
+}
+
+@test "DEV-109 LNS-003n: --status-line fails without Master-Plan" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local tmp
+  tmp="$(mktemp -d)"
+  run bash "$root/agtoosa.sh" --status-line "$tmp"
+  [ "$status" -ne 0 ]
+  rm -rf "$tmp"
+}
+
+# -- DEV-109 ship regression v5.3.21 (SR-001–SR-002) ---------------------------
+
+@test "DEV-109 SR-001: v5.3.21 changelog and DEV-109 review/evidence/spec artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.21\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-109' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-109.md" ]
+  [ -f "$root/docs/archived/review-DEV-109.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-109.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-109.md"
+}
+
+@test "DEV-109 SR-002: lifecycle-next-step-sync capability spec merged" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/docs/specs/system/lifecycle-next-step-sync.md" ]
+  grep -q 'DEV-109' "$root/docs/specs/system/lifecycle-next-step-sync.md"
+}
+
+# ── DEV-110: AgToosa Project Intake (INT-001–INT-012) ─────────────────────────
+
+@test "DEV-110 @smoke INT-001: Agent defines Project Intake for freeform asks" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '### Project Intake Protocol' "$root/docs/AgToosa_Agent.md"
+  grep -q '### Project Intake Protocol' "$root/template/Docs/AgToosa_Agent.md"
+  grep -q 'AgToosa Project Intake' "$root/docs/AgToosa_Agent.md"
+  grep -q 'without an explicit `/agtoosa-\*`' "$root/docs/AgToosa_Agent.md"
+}
+
+@test "DEV-110 @smoke INT-002: soft path expedite and quiet one-liner documented" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Soft path' "$root/docs/AgToosa_Agent.md"
+  grep -q 'expedite' "$root/docs/AgToosa_Agent.md"
+  grep -q 'Intake: soft' "$root/docs/AgToosa_Agent.md"
+}
+
+@test "DEV-110 @smoke INT-003: hard gate blocks product code until confirm" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'do \*\*not\*\* modify product/implementation code until the user confirms' "$root/docs/AgToosa_Agent.md"
+  grep -q 'AgToosa Project Intake' "$root/docs/AgToosa_Agent.md"
+}
+
+@test "DEV-110 @smoke INT-004: destination map includes task review build spec factor-out" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '/agtoosa-task' "$root/docs/AgToosa_Agent.md"
+  grep -q '/agtoosa-review' "$root/docs/AgToosa_Agent.md"
+  grep -q '/agtoosa-build' "$root/docs/AgToosa_Agent.md"
+  grep -q '/agtoosa-spec' "$root/docs/AgToosa_Agent.md"
+  grep -q 'Factor out' "$root/docs/AgToosa_Agent.md"
+}
+
+@test "DEV-110 @smoke INT-005: workflow Standing Corrections and read-before-classify" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## Standing Corrections' "$root/template/Docs/Context/workflow.md"
+  grep -q '## Standing Corrections' "$root/docs/Context/workflow.md"
+  grep -q 'Standing Corrections' "$root/docs/AgToosa_Agent.md"
+  grep -qi 'read.*Standing Corrections' "$root/docs/AgToosa_Agent.md"
+}
+
+@test "DEV-110 @smoke INT-006: tiered Master-Plan logging documented" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Tiered logging' "$root/docs/AgToosa_Agent.md"
+  grep -qi 'soft path' "$root/docs/AgToosa_Agent.md"
+  grep -qi 'hard path' "$root/docs/AgToosa_Agent.md"
+}
+
+@test "DEV-110 @smoke INT-007: agtoosa-core alwaysApply true and slash bypass" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'alwaysApply: true' "$root/template/.cursor/rules/agtoosa-core.mdc"
+  grep -q 'bypasses intake ceremony' "$root/docs/AgToosa_Agent.md"
+  grep -q 'Project Intake' "$root/template/.cursor/rules/agtoosa-core.mdc"
+}
+
+@test "DEV-110 @smoke INT-008: Phase Stop preserved intake never auto-chains" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Never\*\* auto-chain Spec' "$root/docs/AgToosa_Agent.md"
+  ! grep -q 'auto-run `/agtoosa-build` after' "$root/docs/AgToosa_Agent.md"
+}
+
+@test "DEV-110 @smoke INT-009: Claim Boundary agent-instructed labels" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'agent-instructed' "$root/docs/archived/spec-DEV-110.md"
+  grep -q 'agent-instructed' "$root/docs/AgToosa_Agent.md"
+  grep -q 'Not a runtime orchestrator' "$root/docs/AgToosa_Agent.md"
+}
+
+@test "DEV-110 @smoke INT-010: DEV-110 backlog after DEV-109 with expedite note" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local mp="$root/docs/Master-Plan.md"
+  grep -q '| DEV-110 |' "$mp"
+  grep -q 'expedite' "$mp"
+}
+
+@test "DEV-110 INT-011: Spec-First dual-mode in core rule" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Spec-First (dual-mode)' "$root/template/.cursor/rules/agtoosa-core.mdc"
+  grep -q 'Soft path' "$root/template/.cursor/rules/agtoosa-core.mdc"
+}
+
+@test "DEV-110 INT-012: Quickref Project Intake pointer" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Project Intake' "$root/docs/AgToosa_Quickref.md"
+  grep -q 'Project Intake' "$root/template/Docs/AgToosa_Quickref.md"
+}
+
+# -- DEV-110 ship regression v5.3.22 (SR-001–SR-002) ---------------------------
+
+@test "DEV-110 SR-001: v5.3.22 changelog and DEV-110 review/evidence/spec artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.22\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-110' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-110.md" ]
+  [ -f "$root/docs/archived/review-DEV-110.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-110.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-110.md"
+}
+
+@test "DEV-110 SR-002: ADR-013 project intake accepted" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/docs/adr/ADR-013-project-intake.md" ]
+  grep -q 'Accepted' "$root/docs/adr/ADR-013-project-intake.md"
+  grep -q 'DEV-110' "$root/docs/adr/ADR-013-project-intake.md"
 }

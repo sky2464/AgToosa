@@ -150,3 +150,5 @@ Consult `docs/AgToosa_GovernancePolicy.md` (checker: `docs/agtoosa-policy-check.
     ```
 
     If any 🔴 Critical findings remain, the gate shows `BLOCKED`. Do not proceed to `/agtoosa-ship` without explicit user override. Wait for the user's response.
+
+*   Print the **dual-line phase close** per `docs/AgToosa_Agent.md` → **Lifecycle Next-Step Contract** (`Next:` lifecycle command + `SYNC:` pulse). Optional: `/agtoosa-status` for full health findings.

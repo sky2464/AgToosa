@@ -9,4 +9,4 @@ Read Docs/AgToosa_Import.md and execute the external agent result import workflo
 
 Use any sub-command provided (`check`) to pre-fill Step 1. If `check`, report gaps only and stop. Otherwise start from Step 1 (Collect returns).
 
-On successful completion, print this line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+On successful completion, print this line verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

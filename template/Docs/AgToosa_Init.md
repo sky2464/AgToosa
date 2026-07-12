@@ -245,4 +245,4 @@ Run /agtoosa-status readiness to verify initial product gates (see Docs/AgToosa_
 → Approve and run /agtoosa-spec when ready  |  Comment or adjust below
 ```
 
-Then print the closure line verbatim: `✅ Done. Run /agtoosa-status to verify findings cleared.`
+Then print the dual-line phase close per Docs/AgToosa_Agent.md → Lifecycle Next-Step Contract
