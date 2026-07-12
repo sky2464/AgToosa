@@ -147,17 +147,17 @@ Out of scope        : all §1.4 exclusions, generator/template behavior, payment
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Audit and define the canonical boundary
-  - [ ] 1.1 Inventory sponsor, support, security, contribution, and timing claims across public surfaces — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006_
-  - [ ] 1.2 Write the canonical channel matrix and sponsorship/consulting disclosure in `.github/SUPPORT.md` — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005_
-- [ ] **2.** Align public repository surfaces
-  - [ ] 2.1 Align `SECURITY.md` with the private route and non-SLA boundary — _Requirements: AC-002, AC-003, AC-006_
-  - [ ] 2.2 Align README and contribution pointers without duplicating the full policy — _Requirements: AC-002, AC-006_
-  - [ ] 2.3 Confirm the configured GitHub Sponsors destination is official and reachable — _Requirements: AC-001, AC-006_ `[manual]`
-- [ ] **3.** Lock the disclosure contract
-  - [ ] 3.1 Add OSS checks for required distinctions, no feature gates, and no unsupported fixed-time claims before changing documentation — _Requirements: AC-001, AC-003, AC-004, AC-005, AC-006_
-  - [ ] 3.2 Review all public surfaces for consistent links and claim boundaries — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006_
-  - [ ] 3.3 Record actual RED/GREEN and manual-link evidence only during future execution — _Requirements: AC-006_
+- [x] **1.** Audit and define the canonical boundary
+  - [x] 1.1 Inventory sponsor, support, security, contribution, and timing claims across public surfaces — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006_
+  - [x] 1.2 Write the canonical channel matrix and sponsorship/consulting disclosure in `.github/SUPPORT.md` — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005_
+- [x] **2.** Align public repository surfaces
+  - [x] 2.1 Align `SECURITY.md` with the private route and non-SLA boundary — _Requirements: AC-002, AC-003, AC-006_
+  - [x] 2.2 Align README and contribution pointers without duplicating the full policy — _Requirements: AC-002, AC-006_
+  - [ ] 2.3 Confirm the configured GitHub Sponsors destination is official and reachable — _Requirements: AC-001, AC-006_ `[manual-deferred: 2026-07-11]`
+- [x] **3.** Lock the disclosure contract
+  - [x] 3.1 Add OSS checks for required distinctions, no feature gates, and no unsupported fixed-time claims before changing documentation — _Requirements: AC-001, AC-003, AC-004, AC-005, AC-006_
+  - [x] 3.2 Review all public surfaces for consistent links and claim boundaries — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006_
+  - [x] 3.3 Record actual RED/GREEN and manual-link evidence only during future execution — _Requirements: AC-006_
 
 ### 3.2 Wave Plan
 
@@ -171,7 +171,7 @@ Out of scope        : all §1.4 exclusions, generator/template behavior, payment
 Test plan: `docs/AgToosa_TestPlan-DEV-084.md`
 AC coverage: 6 ACs mapped to 7 planned OSS test IDs
 Smoke set: 4 planned tests tagged `@smoke`
-Evidence state: RED and GREEN are unexecuted placeholders; no support or sponsorship evidence is claimed.
+Evidence state: RED and GREEN recorded in `docs/AgToosa_TestPlan-DEV-084.md`. OSS-007 live Sponsors enablement remains `[manual-deferred: 2026-07-11]`.
 
 ## ✅ Spec Approved
 
