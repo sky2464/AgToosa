@@ -119,3 +119,7 @@
 {"ts":"2026-07-12T15:15:00Z","phase":"build","event":"blocked","story":"DEV-091","by":"AgToosa","reason":"hard-dep DEV-090 not shipped"}
 {"ts":"2026-07-12T15:30:00Z","phase":"build","event":"complete","story":"DEV-087","by":"AgToosa"}
 {"ts":"2026-07-12T15:30:00Z","phase":"build","event":"complete","story":"DEV-088","by":"AgToosa"}
+{"ts":"2026-07-12T15:25:00Z","phase":"review","event":"start","story":"DEV-087","by":"AgToosa"}
+{"ts":"2026-07-12T15:25:00Z","phase":"review","event":"start","story":"DEV-088","by":"AgToosa"}
+{"ts":"2026-07-12T15:35:00Z","phase":"review","event":"approved","story":"DEV-087","by":"AgToosa","critical":0}
+{"ts":"2026-07-12T15:35:00Z","phase":"review","event":"approved","story":"DEV-088","by":"AgToosa","critical":0}

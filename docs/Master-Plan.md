@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-12 (Wave 1b build complete — DEV-087 · DEV-088; DEV-091 blocked)
+> **Last updated:** 2026-07-12 (Wave 1b review approved — DEV-087 · DEV-088)
 
 ## Project Charter
 
@@ -23,8 +23,8 @@
 | DEV-086 | Chore: Canonical Proof Product Experience | Chore | S | 🟦 Todo | 0/4 |
 | DEV-090 | Feature: Unified Install/Update Plan Engine | Feature | M | 🟦 Todo | 0/5 |
 | DEV-105 | Feature: PowerShell Maintain + Update Parity | Feature | M | 🟦 Todo | 0/5 |
-| DEV-087 | Feature: Delivery Evidence Contract + Profiles | Feature | M | ✅ Done | 8/8 |
-| DEV-088 | Feature: Verifier and Doctor Machine Output | Feature | M | ✅ Done | 9/9 |
+| DEV-087 | Feature: Delivery Evidence Contract + Profiles | Feature | M | 🔍 In Review | 8/8 |
+| DEV-088 | Feature: Verifier and Doctor Machine Output | Feature | M | 🔍 In Review | 9/9 |
 
 <!-- Rev4 Cycle C (after DEV-090): DEV-091; Wave 1b remainder: DEV-089 -->
 
@@ -160,8 +160,8 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
 | DEV-034 | Chore: Maintainer release-state reconciliation | Chore | S | DEV-004 | High | 🏁 Shipped |
 | DEV-085 | Chore: Post-v5.3.12 release hygiene (bats restore + Master-Plan reconciliation) | Chore | XS | DEV-004 | High | 🏁 Shipped — v5.3.13 |
 | DEV-086 | Chore: Canonical Proof Product Experience | Chore | S | DEV-004 | P0 | 🟦 Todo — Wave 1a active cycle |
-| DEV-087 | Feature: Delivery Evidence Contract + Profiles | Feature | M | DEV-002 | P0 | ✅ Done — build complete; awaiting review |
-| DEV-088 | Feature: Verifier and Doctor Machine Output | Feature | M | DEV-004 | P0 | ✅ Done — build complete; awaiting review |
+| DEV-087 | Feature: Delivery Evidence Contract + Profiles | Feature | M | DEV-002 | P0 | 🔍 In Review — Wave 1b |
+| DEV-088 | Feature: Verifier and Doctor Machine Output | Feature | M | DEV-004 | P0 | 🔍 In Review — Wave 1b |
 | DEV-089 | Feature: Evidence-Profile Verifier Gates | Feature | M | DEV-004 | P1 | ⬜ Backlog — spec approved; after DEV-087 |
 | DEV-090 | Feature: Unified Install/Update Plan Engine | Feature | M | DEV-001 | P0 | 🟦 Todo — Wave 1a active cycle |
 | DEV-091 | Feature: Migration Wizard + Rollback Manifest | Feature | L | DEV-001 | P0 | ⬜ Backlog — Cycle C after DEV-090 (hard dep) |
@@ -473,3 +473,7 @@ Conflict playbook: build aborted for DEV-091 — hard dependency unmet. Enroll A
 | 2026-07-12 | 🏗️ /agtoosa-build DEV-087 — Task 🟢 8/8 — DEC-001–009 green; Delivery Evidence Contract + `.agtoosa/` profiles + schema checker | AgToosa |
 | 2026-07-12 | 🏗️ /agtoosa-build DEV-088 — Task 🟢 9/9 — VFJ-001–010 green; verify/doctor `--format json` + gate JSON step; VF-001/002 still pass | AgToosa |
 | 2026-07-12 | 🏗️ Build complete — Wave 1b (DEV-087 · DEV-088); DEV-091 remains blocked; next: `/agtoosa-review` | AgToosa |
+| 2026-07-12 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-087 · DEV-088 — 4-persona + cross-model review running | AgToosa |
+| 2026-07-12 | 🔍 Review ✅ Approved — DEV-087; 0 🔴 Critical, 6 🟡 Warning accepted; report: `docs/archived/review-DEV-087.md`; evidence: `docs/archived/evidence-DEV-087.md` | AgToosa |
+| 2026-07-12 | 🔍 Review ✅ Approved — DEV-088; 0 🔴 Critical, 7 🟡 Warning accepted; report: `docs/archived/review-DEV-088.md`; evidence: `docs/archived/evidence-DEV-088.md` | AgToosa |
+| 2026-07-12 | 🔍 Review complete — Wave 1b DEV-087 · DEV-088 PASS (0 critical); next: `/agtoosa-ship` v5.3.15 | AgToosa |
