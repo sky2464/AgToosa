@@ -69,14 +69,25 @@ When **Generated Project Mode** is detected, continue to Stage 1b.
 Gather installed project state without mutating files (read-only file reads and inspection only):
 
 1. **Installed version** — read `Docs/.agtoosa-version` if present; note `unknown` when missing.
-2. **Lock metadata** — read `Docs/agtoosa-lock.json` when present (generator version, platforms, template hash).
-3. **Platform sentinels** — note which entry points exist (`CLAUDE.md`, `.cursorrules`, `AGENTS.md`, `.github/copilot-instructions.md`, `OPENCODE.md`, etc.).
-4. **Project context** — read all files in `Docs/Context/` (`product.md`, `tech-stack.md`, `workflow.md`, `product-guidelines.md`).
-5. **Architecture memory** — read `Docs/Master-Architecture.md` as high-priority architecture memory: system boundaries, diagrams, data flow, deployment, security, and observability. Note whether it exists and is non-empty; preserve user-authored content on update.
-6. **Master-Plan** — read `Docs/Master-Plan.md` (Project Charter, active cycle, In Progress stories, blocked items, recent ships).
-7. **Changelog** — read `Docs/AgToosa_Changelog.md` (last 1–2 releases).
-8. **Active specs** — list non-archived specs under `Docs/archived/`; note status and Goal Contract.
-9. **Drift** — compare installed version to the target baseline the user intends (from generator checkout, lock file, or stated version). If already current, skip Apply.
+2. **Lock metadata** — read `Docs/agtoosa-lock.json` when present (generator version, platforms, pack pins).
+3. **Operational state** — note `.agtoosa/state.json` when present (gitignored; last apply, generated-file hashes). Absent is OK.
+4. **Platform sentinels** — note which entry points exist (`CLAUDE.md`, `.cursorrules`, `AGENTS.md`, `.github/copilot-instructions.md`, `OPENCODE.md`, etc.).
+5. **Project context** — read all files in `Docs/Context/` (`product.md`, `tech-stack.md`, `workflow.md`, `product-guidelines.md`).
+6. **Architecture memory** — read `Docs/Master-Architecture.md` as high-priority architecture memory: system boundaries, diagrams, data flow, deployment, security, and observability. Note whether it exists and is non-empty; preserve user-authored content on update.
+7. **Master-Plan** — read `Docs/Master-Plan.md` (Project Charter, active cycle, In Progress stories, blocked items, recent ships).
+8. **Changelog** — read `Docs/AgToosa_Changelog.md` (last 1–2 releases).
+9. **Active specs** — list non-archived specs under `Docs/archived/`; note status and Goal Contract.
+10. **Drift** — compare installed version to the target baseline the user intends (from generator checkout, lock file, or stated version). If already current, skip Apply.
+
+**Provenance surface authority (rev4 §5 / DEV-093):**
+
+| Surface | Authority | Committed to git |
+|---------|-----------|------------------|
+| `Docs/.agtoosa-version` | Installed AgToosa semver marker | Yes |
+| `Docs/agtoosa-lock.json` | Pack pins, platforms, reproducibility contract | Yes (when used) |
+| `.agtoosa/state.json` | Operational hashes, last apply, evidence refs | No (gitignored) |
+
+Prefer the lock for committed reproducibility fields; prefer state for operational `generated_file_hashes`. Do not treat either file as the other's authority.
 
 For **`/agtoosa-update check`** in Generated Project Mode, continue to the briefing below and **stop**. Do not run shell commands or mutate files.
 
@@ -109,6 +120,22 @@ When drift exists or the user invoked `plan` or `apply` in **Generated Project M
 
 **Migration guidance (before Apply):** When **major-version** drift or **breaking change** entries appear in the generator `CHANGELOG.md` or release notes relative to the installed version, summarize what the user should expect (new commands, renamed docs, merge behavior) and point to the relevant changelog section **before Apply**.
 
+#### MAJOR-version migration wizard (CLI)
+
+When installed `Docs/.agtoosa-version` MAJOR is behind the generator MAJOR, `bash agtoosa.sh --update` enters the **migration wizard** (DEV-091):
+
+| Step | Command / behavior |
+|------|--------------------|
+| Preview (no writes) | `bash agtoosa.sh --update --dry-run <project>` — categorized plan: `overwrite`, `merge`, `preserve`, `manual` |
+| JSON plan | `bash agtoosa.sh --update --json <project>` (alias of `--format json`; no ANSI; no writes unless combined with `--accept-breaking`) |
+| Apply | `bash agtoosa.sh --update --accept-breaking <project>` — prints the plan first, then applies |
+| Interactive | Without `--accept-breaking`, a TTY confirm is required; non-interactive MAJOR without the flag **blocks** (exit non-zero) |
+| Rollback artifact | On apply, writes `.agtoosa/rollback/<timestamp>.json` listing backed-up paths (under gitignored `.agtoosa/`) |
+| Preserve | User content **outside** AgToosa HTML-comment markers is classified `preserve` and is not overwritten |
+| PATCH / MINOR | Unchanged — no `--accept-breaking` required |
+
+`--yes` alone does **not** bypass the MAJOR gate. Prefer dry-run (or `--json`) in CI before `--accept-breaking`.
+
 If the user invoked **`plan` only**, print the plan and preflight, then **stop** (no mutation).
 
 ### Stage 3 — Apply (approval gate)
@@ -121,7 +148,7 @@ When approved (or when running full `/agtoosa-update` and the user confirms at t
    ```bash
    bash agtoosa.sh --update <project-path>
    ```
-   Use `--dry-run` first when preflight flagged high risk and the user has not yet seen the dry-run output.
+   For MAJOR bumps use `--dry-run` first, then `--accept-breaking` after review. Use `--dry-run` first when preflight flagged high risk and the user has not yet seen the dry-run output.
 
 2. **Forbidden:** Hand-copying individual template files, editing workflow docs manually, or syncing without the CLI when the goal is a baseline update.
 
@@ -134,10 +161,12 @@ After Apply (or when the user invoked **`verify` only** on an already-updated pr
 | Check | What to verify |
 |-------|----------------|
 | Version marker | `Docs/.agtoosa-version` exists and matches expected target |
-| Lock metadata | `Docs/agtoosa-lock.json` present and consistent when lock was used at install |
+| Lock metadata | `Docs/agtoosa-lock.json` present and consistent when lock was used at install (reproducibility pins) |
+| Operational state | `.agtoosa/state.json` present after apply (gitignored; operational hashes) — absent only if apply never ran |
 | Platform surfaces | Installed entry points and native dirs contain expected AgToosa commands/rules |
 | Preserved files | `Docs/Context/`, `Docs/Master-Plan.md`, `Docs/AgToosa_Changelog.md`, `Docs/archived/` unchanged |
 | duplicate marker safety | Platform entry points contain a single `<!-- AgToosa START -->` … `END` block (no duplicate injection) |
+| MAJOR rollback (when used) | After `--accept-breaking` apply, `.agtoosa/rollback/<timestamp>.json` exists with `entries` |
 
 Report filenames and pass/fail status only — do not dump secrets, tokens, or full config values.
 

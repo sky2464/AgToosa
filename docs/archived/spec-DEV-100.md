@@ -3,7 +3,7 @@
 > **Story ID:** DEV-100
 > **Type:** Feature
 > **Epic:** DEV-001 — Core Generator & Install
-> **Status:** 🟦 Todo — Rev4 Wave 2 (enrolled; R1 amend pending approval)
+> **Status:** 🟦 Todo — Rev4 Wave 2 (enrolled; R1 amend approved)
 > **Estimate:** S
 > **Priority:** P2
 > **Depends on:** DEV-090 (install/update plan schema); sequential after/with DEV-092 (shared `lib/dryrun.sh` / `agtoosa.sh`)
@@ -20,7 +20,7 @@ Human-colored tables remain default; JSON mode is opt-in for automation.
 
 | Rev | Date | What changed | Why | Approved-by |
 |-----|------|--------------|-----|-------------|
-| R1 | 2026-07-12 | Align Must ACs and design to reuse DEV-090 `--format json` (not a second `--json` flag); note sequential ownership vs DEV-092 | Wave 2 enrollment deepen — avoid dual JSON flags and file conflict with transactional apply | pending |
+| R1 | 2026-07-12 | Align Must ACs and design to reuse DEV-090 `--format json` (not a second `--json` flag); note sequential ownership vs DEV-092 | Wave 2 enrollment deepen — avoid dual JSON flags and file conflict with transactional apply | user |
 
 ## 1. Requirements
 
@@ -154,8 +154,8 @@ Smoke set: 3 tests tagged `@smoke`
 ## ✅ Spec Approved
 
 Approved: 2026-07-12 09:56
-Enrollment: Rev4 Wave 2 Active Cycle (2026-07-12) — sequential vs DEV-092; R1 `--format json` amend pending
+Enrollment: Rev4 Wave 2 Active Cycle (2026-07-12) — sequential vs DEV-092; R1 `--format json` amend approved
 
 ## ✅ Amendment R1 Approved
 
-_(pending user approval)_
+Approved: 2026-07-12 13:20 — user (“approve all”) — Must ACs use `--format json` only (no second `--json` flag).

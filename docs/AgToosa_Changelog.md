@@ -9,6 +9,27 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.18] — 2026-07-12
+
+Patch release: Rev4 Wave 1b/2 remainder (DEV-089, DEV-091, DEV-093, DEV-100).
+
+### Added
+
+- **DEV-089 — Evidence-Profile Verifier Gates.** Verifier Gate 7 after Gate 6; opt-in `.agtoosa/evidence.yml`; guided/evidenced WARN semantics; EPV-001–009 bats.
+- **DEV-091 — Migration Wizard + Rollback Manifest.** MAJOR update gate; `--accept-breaking`; `.agtoosa/rollback/` manifests; MWZ-001–010 bats.
+- **DEV-093 — Install State File + Lock Reconciliation.** `lib/state.sh` + `lib/lock.sh`; gitignored `.agtoosa/state.json`; STF-001–009 bats.
+- **DEV-100 — Shared JSON Output for Install/Registry.** Catalog plan/info `--format json` reusing DEV-090 schema; JIO-001–007 bats.
+
+## [5.3.17] — 2026-07-12
+
+Patch release: Rev4 Wave 1a (DEV-086, DEV-090, DEV-105).
+
+### Added
+
+- **DEV-086 — Canonical Proof Product Experience.** README primary proof CTA; first-15 verifier success step; `tests/fixtures/proof-journey/`; launch-readiness proof-journey checks; PRF-001–009 bats.
+- **DEV-090 — Unified Install/Update Plan Engine.** `lib/plan.sh` shared categorization; dry-run/`--format json` plan schema; Init/Update lock path `Docs/agtoosa-lock.json`; PLN-001–009 bats.
+- **DEV-105 — PowerShell Maintain + Update Parity.** `-Verify`/`-Doctor`/`-Uninstall`; `-Update` delegates to bash `run_update`; Pester maintain suite; PSP bats.
+
 ## [5.3.16] — 2026-07-12
 
 Patch release: Rev4 Wave 2 (DEV-092, DEV-094, DEV-097).

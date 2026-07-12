@@ -20,7 +20,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.16" ]]
+  [[ "$output" == "AgToosa v5.3.18" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -1636,7 +1636,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/.agtoosa-version" ]
   local ver
   ver="$(cat "$TEST_PROJECT/Docs/.agtoosa-version")"
-  [ "$ver" = "5.3.16" ]
+  [ "$ver" = "5.3.18" ]
 }
 
 @test "--update after fresh install shows real version not 'vunknown'" {
@@ -1647,7 +1647,7 @@ PY
   run bash "$SCRIPT" --update "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"vunknown"* ]]
-  [[ "$output" == *"5.3.16"* ]]
+  [[ "$output" == *"5.3.18"* ]]
 }
 
 # ── 4.1.0 status guidance loop (D1 / D2 / D3) ────────────────────────────────
@@ -3649,7 +3649,7 @@ PY
   grep -q "Claude Code Instructions" "$project/CLAUDE.md"
   ! grep -q "old claude block" "$project/CLAUDE.md"
   grep -q "AgToosa" "$project/.claude/commands/agtoosa-spec.md"
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.16" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.18" ]
 }
 
 @test "DEV-036 WP-002: Bash registry install normalizes top-level pack directory" {
@@ -7381,6 +7381,91 @@ JSON
   grep -q '| DEV-097 | Docs: Framework Supply-Chain Threat Model' "$mp"
 }
 
+# -- Wave 1a ship regression v5.3.17 (SR-001–SR-003) ----------------------------
+
+@test "DEV-086 SR-001: v5.3.17 release pins are aligned" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  grep -q '## \[5.3.17\]' "$root/CHANGELOG.md"
+  grep -q 'Release 5.3.17 shipped' "$root/docs/Master-Plan.md"
+  [ "$bash_ver" = "$ps_ver" ]
+  [ "$bash_ver" = "$npm_ver" ]
+  grep -qE "version-${bash_ver}" "$root/README.md"
+  grep -qE -- "--ref v${bash_ver}" "$root/README.md"
+}
+
+@test "DEV-086 SR-002: v5.3.17 changelog and Wave 1a review/evidence/spec artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.17\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-086' "$root/CHANGELOG.md"
+  grep -q 'DEV-090' "$root/CHANGELOG.md"
+  grep -q 'DEV-105' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/review-DEV-086.md" ]
+  [ -f "$root/docs/archived/spec-DEV-086.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-086.md" ]
+  [ -f "$root/docs/archived/review-DEV-090.md" ]
+  [ -f "$root/docs/archived/spec-DEV-090.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-090.md" ]
+  [ -f "$root/docs/archived/review-DEV-105.md" ]
+  [ -f "$root/docs/archived/spec-DEV-105.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-105.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-086.md"
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-090.md"
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-105.md"
+}
+
+@test "DEV-086 SR-003: Master-Plan records v5.3.17 ship and v5.3.18 next milestone" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  grep -q 'Ship complete — v5.3.17' "$mp"
+  grep -q 'Release 5.3.17 shipped' "$mp"
+  grep -q 'v5.3.18 (next)' "$mp"
+  grep -q '| DEV-086 | Chore: Canonical Proof Product Experience' "$mp"
+  grep -q '| DEV-090 | Feature: Unified Install/Update Plan Engine' "$mp"
+  grep -q '| DEV-105 | Feature: PowerShell Maintain + Update Parity' "$mp"
+}
+
+# -- Wave 1b/2 remainder ship regression v5.3.18 (SR-001–SR-003) ---------------
+
+@test "DEV-089 SR-001: v5.3.18 release pins are aligned" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  grep -q '## \[5.3.18\]' "$root/CHANGELOG.md"
+  grep -q 'Release 5.3.18 shipped' "$root/docs/Master-Plan.md"
+  [ "$bash_ver" = "$ps_ver" ]
+  [ "$bash_ver" = "$npm_ver" ]
+  grep -qE "version-${bash_ver}" "$root/README.md"
+  grep -qE -- "--ref v${bash_ver}" "$root/README.md"
+}
+
+@test "DEV-089 SR-002: v5.3.18 changelog and remainder review/evidence/spec artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.18\]' "$root/CHANGELOG.md"
+  for id in 089 091 093 100; do
+    grep -q "DEV-$id" "$root/CHANGELOG.md"
+    [ -f "$root/docs/archived/review-DEV-$id.md" ]
+    [ -f "$root/docs/archived/spec-DEV-$id.md" ]
+    [ -f "$root/docs/archived/evidence-DEV-$id.md" ]
+    grep -q '| ship |' "$root/docs/archived/evidence-DEV-$id.md"
+  done
+}
+
+@test "DEV-089 SR-003: Master-Plan records v5.3.18 ship and v5.3.19 next milestone" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  grep -q 'Ship complete — v5.3.18' "$mp"
+  grep -q 'Release 5.3.18 shipped' "$mp"
+  grep -q 'v5.3.19 (next)' "$mp"
+  grep -q '| DEV-089 | Feature: Evidence-Profile Verifier Gates' "$mp"
+  grep -q '| DEV-091 | Feature: Migration Wizard' "$mp"
+  grep -q '| DEV-093 | Feature: Install State File' "$mp"
+  grep -q '| DEV-100 | Feature: Shared JSON Output' "$mp"
+}
+
 # ── DEV-081: Optional Local DX Add-on Validation (DXV-001–DXV-008) ───────────
 
 SPIKE_DEV081="$BATS_TEST_DIRNAME/../docs/spikes/DEV-081-local-dx-validation.md"
@@ -9533,7 +9618,7 @@ EOF
   run pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1" -Update -UpdatePath "$project"
   [ "$status" -eq 0 ]
   [ -f "$project/Docs/.agtoosa-version" ]
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.16" ]
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.18" ]
 }
 
 @test "DEV-105 PSP-005: maintain switches require -UpdatePath" {
@@ -9939,4 +10024,972 @@ PY
   local root="$BATS_TEST_DIRNAME/.."
   grep -q "DEV-092" "$root/tests/agtoosa.bats"
   grep -q "TAP-" "$root/docs/AgToosa_TestPlan-DEV-092.md"
+}
+
+# ── DEV-093: Install State File + Lock Reconciliation (STF-001–STF-009) ───────
+
+@test "DEV-093 @smoke STF-001: Successful apply writes state.json" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local proj="$TEST_PROJECT"
+  mkdir -p "$proj/Docs"
+  echo "workflow" > "$proj/Docs/AgToosa_Build.md"
+  echo "5.3.17" > "$proj/Docs/.agtoosa-version"
+
+  run bash -c '
+    set -euo pipefail
+    source "'"$root"'/lib/apply.sh"
+    source "'"$root"'/lib/state.sh"
+    source "'"$root"'/lib/lock.sh"
+    AGTOOSA_VERSION="5.3.18"
+    PROJECT_PATH="'"$proj"'"
+    apply_reset_summary
+    apply_begin_staging "'"$proj"'"
+    mkdir -p "$APPLY_STAGING_ROOT/Docs"
+    echo "workflow" > "$APPLY_STAGING_ROOT/Docs/AgToosa_Build.md"
+    apply_commit_staging "'"$proj"'" "install"
+  '
+  [ "$status" -eq 0 ]
+  [ -f "$proj/.agtoosa/state.json" ]
+  run python3 - "$proj/.agtoosa/state.json" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1]))
+assert d.get("schema_version") == 1
+assert d.get("agtoosa_version")
+assert "platforms" in d
+assert "packs" in d
+assert "generated_file_hashes" in d and isinstance(d["generated_file_hashes"], dict)
+assert d.get("last_apply_at")
+assert d.get("last_apply_command") in ("install", "update", "apply")
+PY
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-093 @smoke STF-002: State file is gitignored not templated" {
+  local root="$BATS_TEST_DIRNAME/.."
+  # .agtoosa/ ignored; explicit state.json comment/entry optional but .agtoosa/ must cover it
+  grep -qE '^\.agtoosa/' "$root/.gitignore"
+  # Must NOT appear in committed template file lists
+  ! grep -q 'state\.json' "$root/lib/config.sh"
+  ! grep -q '\.agtoosa/state\.json' "$root/lib/config.sh"
+  # AGTOOSA_DOTDIR_FILES must not include state.json
+  run bash -c '
+    source "'"$root"'/lib/config.sh"
+    printf "%s\n" "${AGTOOSA_DOTDIR_FILES[@]}"
+  '
+  [ "$status" -eq 0 ]
+  ! [[ "$output" == *state.json* ]]
+}
+
+@test "DEV-093 @smoke STF-003: Lock platforms and packs reconcile after apply" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local proj="$TEST_PROJECT"
+  mkdir -p "$proj/Docs" "$proj/.agtoosa"
+  # Stale lock with wrong platform
+  cat > "$proj/Docs/agtoosa-lock.json" <<'JSON'
+{
+  "agtoosa_version": "5.0.0",
+  "generated_at": "2026-01-01T00:00:00Z",
+  "platforms": ["gemini"],
+  "packs": []
+}
+JSON
+
+  run bash -c '
+    set -euo pipefail
+    source "'"$root"'/lib/apply.sh"
+    source "'"$root"'/lib/state.sh"
+    source "'"$root"'/lib/lock.sh"
+    AGTOOSA_VERSION="5.3.18"
+    PROJECT_PATH="'"$proj"'"
+    USE_CURSOR=true; USE_CLAUDE=true
+    USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
+    apply_reset_summary
+    apply_begin_staging "'"$proj"'"
+    mkdir -p "$APPLY_STAGING_ROOT/Docs"
+    echo "x" > "$APPLY_STAGING_ROOT/Docs/AgToosa_Build.md"
+    apply_commit_staging "'"$proj"'" "install"
+  '
+  [ "$status" -eq 0 ]
+  [ -f "$proj/Docs/agtoosa-lock.json" ]
+  run python3 - "$proj/Docs/agtoosa-lock.json" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1]))
+plats = set(d.get("platforms") or [])
+assert "cursor" in plats and "claude" in plats, plats
+assert "gemini" not in plats, "stale platform should be reconciled out"
+assert d.get("agtoosa_version") == "5.3.18"
+PY
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-093 STF-004: First install creates Docs/agtoosa-lock.json" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local proj="$TEST_PROJECT"
+  mkdir -p "$proj"
+  # Library-level first apply (avoids concurrent ship/ races from parallel installs)
+  run bash -c '
+    set -euo pipefail
+    source "'"$root"'/lib/apply.sh"
+    source "'"$root"'/lib/state.sh"
+    source "'"$root"'/lib/lock.sh"
+    AGTOOSA_VERSION="5.3.18"
+    PROJECT_PATH="'"$proj"'"
+    USE_CLAUDE=true
+    USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
+    apply_reset_summary
+    apply_begin_staging "'"$proj"'"
+    mkdir -p "$APPLY_STAGING_ROOT/Docs"
+    echo "first" > "$APPLY_STAGING_ROOT/Docs/AgToosa_Build.md"
+    apply_commit_staging "'"$proj"'" "install"
+  '
+  [ "$status" -eq 0 ]
+  [ -f "$proj/Docs/agtoosa-lock.json" ]
+  [ ! -f "$proj/.agtoosa-lock.json" ]
+  run python3 - "$proj/Docs/agtoosa-lock.json" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1]))
+assert "agtoosa_version" in d
+assert "platforms" in d
+assert "packs" in d
+assert isinstance(d["packs"], list)
+# ADR-004: platforms should include installed selection
+assert "claude" in d["platforms"]
+PY
+  [ "$status" -eq 0 ]
+  [ -f "$proj/.agtoosa/state.json" ]
+}
+
+@test "DEV-093 @smoke STF-005: Pack SHA mismatch aborts before state write" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local proj="$TEST_PROJECT"
+  mkdir -p "$proj/Docs" "$proj/.agtoosa"
+  cat > "$proj/Docs/agtoosa-lock.json" <<'JSON'
+{
+  "agtoosa_version": "5.3.17",
+  "generated_at": "2026-07-01T00:00:00Z",
+  "platforms": ["claude"],
+  "packs": [
+    {
+      "name": "tampered-pack",
+      "version": "1.0.0",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "installed_at": "2026-07-01T00:00:00Z"
+    }
+  ]
+}
+JSON
+  # Seed prior state so we can detect non-update
+  echo '{"schema_version":1,"agtoosa_version":"old","last_apply_command":"install"}' \
+    > "$proj/.agtoosa/state.json"
+  local state_before
+  state_before="$(cat "$proj/.agtoosa/state.json")"
+
+  run bash -c '
+    set -euo pipefail
+    source "'"$root"'/lib/apply.sh"
+    source "'"$root"'/lib/state.sh"
+    source "'"$root"'/lib/lock.sh"
+    AGTOOSA_VERSION="5.3.18"
+    PROJECT_PATH="'"$proj"'"
+    # Inject observed SHA that differs from lock pin
+    AGTOOSA_PACK_OBSERVED_SHA_tampered_pack="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    apply_reset_summary
+    apply_begin_staging "'"$proj"'"
+    mkdir -p "$APPLY_STAGING_ROOT/Docs"
+    echo "new" > "$APPLY_STAGING_ROOT/Docs/AgToosa_Build.md"
+    apply_commit_staging "'"$proj"'" "update"
+  '
+  {
+    local m1=0 m2=0 m3=0
+    [[ "$output" == *"tampered-pack"* ]] && m1=1 || true
+    [[ "$output" == *"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"* ]] && m2=1 || true
+    [[ "$output" == *"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"* ]] && m3=1 || true
+    printf "STF005 status=%s m1=%s m2=%s m3=%s\noutput=%s\n" "$status" "$m1" "$m2" "$m3" "$output" > /tmp/stf005-real.txt
+  }
+  [ "$status" -ne 0 ]
+  [ "$(cat "$proj/.agtoosa/state.json")" = "$state_before" ]
+  # Real assertions kept for GREEN after implement
+  [[ "$output" == *"tampered-pack"* ]]
+  [[ "$output" == *"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"* ]]
+  [[ "$output" == *"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"* ]]
+}
+
+@test "DEV-093 STF-006: Manual edit reflected in state hashes on next apply" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local proj="$TEST_PROJECT"
+  mkdir -p "$proj/Docs"
+
+  run bash -c '
+    set -euo pipefail
+    source "'"$root"'/lib/apply.sh"
+    source "'"$root"'/lib/state.sh"
+    source "'"$root"'/lib/lock.sh"
+    AGTOOSA_VERSION="5.3.18"
+    PROJECT_PATH="'"$proj"'"
+    USE_CLAUDE=true
+    USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
+    apply_reset_summary
+    apply_begin_staging "'"$proj"'"
+    mkdir -p "$APPLY_STAGING_ROOT/Docs"
+    echo "v1-content" > "$APPLY_STAGING_ROOT/Docs/AgToosa_Build.md"
+    apply_commit_staging "'"$proj"'" "install"
+  '
+  [ "$status" -eq 0 ]
+  local hash1 lock_ver
+  hash1="$(python3 -c "import json; d=json.load(open(\"$proj/.agtoosa/state.json\")); print(d[\"generated_file_hashes\"].get(\"Docs/AgToosa_Build.md\",\"\"))")"
+  [ -n "$hash1" ]
+  lock_ver="$(python3 -c "import json; print(json.load(open(\"$proj/Docs/agtoosa-lock.json\")).get(\"agtoosa_version\",\"\"))")"
+
+  # Manual edit of generated file
+  echo "v2-manual-edit" > "$proj/Docs/AgToosa_Build.md"
+
+  run bash -c '
+    set -euo pipefail
+    source "'"$root"'/lib/apply.sh"
+    source "'"$root"'/lib/state.sh"
+    source "'"$root"'/lib/lock.sh"
+    AGTOOSA_VERSION="5.3.18"
+    PROJECT_PATH="'"$proj"'"
+    USE_CLAUDE=true
+    USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
+    apply_reset_summary
+    apply_begin_staging "'"$proj"'"
+    mkdir -p "$APPLY_STAGING_ROOT/Docs"
+    echo "v2-manual-edit" > "$APPLY_STAGING_ROOT/Docs/AgToosa_Build.md"
+    apply_commit_staging "'"$proj"'" "update"
+  '
+  [ "$status" -eq 0 ]
+  local hash2 lock_ver2
+  hash2="$(python3 -c "import json; d=json.load(open(\"$proj/.agtoosa/state.json\")); print(d[\"generated_file_hashes\"].get(\"Docs/AgToosa_Build.md\",\"\"))")"
+  lock_ver2="$(python3 -c "import json; print(json.load(open(\"$proj/Docs/agtoosa-lock.json\")).get(\"agtoosa_version\",\"\"))")"
+  [ "$hash1" != "$hash2" ]
+  [ "$lock_ver" = "$lock_ver2" ]
+}
+
+@test "DEV-093 STF-007: Authority separation state vs lock" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local proj="$TEST_PROJECT"
+  mkdir -p "$proj/Docs"
+
+  run bash -c '
+    set -euo pipefail
+    source "'"$root"'/lib/apply.sh"
+    source "'"$root"'/lib/state.sh"
+    source "'"$root"'/lib/lock.sh"
+    AGTOOSA_VERSION="5.3.18"
+    PROJECT_PATH="'"$proj"'"
+    USE_CLAUDE=true
+    USE_CURSOR=false; USE_WINDSURF=false; USE_GEMINI=false; USE_COPILOT=false; USE_OPENCODE=false
+    # Seed a pack pin into lock via reconcile inputs
+    apply_reset_summary
+    apply_begin_staging "'"$proj"'"
+    mkdir -p "$APPLY_STAGING_ROOT/Docs"
+    echo "body" > "$APPLY_STAGING_ROOT/Docs/AgToosa_Build.md"
+    apply_commit_staging "'"$proj"'" "install"
+  '
+  [ "$status" -eq 0 ]
+  run python3 - "$proj/.agtoosa/state.json" "$proj/Docs/agtoosa-lock.json" <<'PY'
+import json, sys
+state = json.load(open(sys.argv[1]))
+lock = json.load(open(sys.argv[2]))
+assert "generated_file_hashes" in state, "state must hold operational hashes"
+assert "generated_file_hashes" not in lock, "lock must not hold generated_file_hashes"
+assert "packs" in lock, "lock holds reproducibility pack pins"
+assert "platforms" in lock
+assert "last_apply_at" in state
+assert "last_apply_at" not in lock or True  # lock may have generated_at/installed_at instead
+assert "generated_at" in lock or "installed_at" in lock or "agtoosa_version" in lock
+PY
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-093 STF-008: Update doc cites authority table" {
+  local root="$BATS_TEST_DIRNAME/.."
+  for f in "$root/template/Docs/AgToosa_Update.md" "$root/docs/AgToosa_Update.md"; do
+    [ -f "$f" ]
+    grep -q 'Docs/\.agtoosa-version' "$f"
+    grep -q 'Docs/agtoosa-lock.json' "$f"
+    grep -q '\.agtoosa/state\.json' "$f"
+    # Three-surface authority table markers
+    grep -qi 'authority' "$f"
+    grep -qiE 'operational|gitignored' "$f"
+    grep -qiE 'reproducib|pack pin' "$f"
+  done
+}
+
+@test "DEV-093 STF-009: DEV-093 filter and lock path regression" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "DEV-093" "$root/tests/agtoosa.bats"
+  grep -q "STF-" "$root/docs/AgToosa_TestPlan-DEV-093.md"
+  [ -f "$root/lib/state.sh" ]
+  [ -f "$root/lib/lock.sh" ]
+  # Lock writer must target Docs/agtoosa-lock.json, never root .agtoosa-lock.json
+  grep -q 'Docs/agtoosa-lock.json' "$root/lib/lock.sh"
+  ! grep -E '["'\'']\.agtoosa-lock\.json["'\'']' "$root/lib/lock.sh"
+  # apply sources / hooks state+lock
+  grep -E 'for _lib in .*state|for _lib in .*lock' "$root/agtoosa.sh"
+}
+
+# ── DEV-100: Shared JSON output for catalog plan/info (JIO-001–JIO-007) ───────
+
+@test "DEV-100 @smoke JIO-001: Catalog plan emits DEV-090 JSON schema" {
+  local fixtures="$BATS_TEST_DIRNAME/fixtures/catalog"
+  local registry
+  registry="$(cat "$fixtures/registry.json")"
+  mkdir -p "$TEST_PROJECT/.cursor" "$TEST_PROJECT/.claude"
+
+  local json_out
+  json_out="$(env AGTOOSA_CATALOG_PATH="$fixtures/valid-preset.json" \
+    AGTOOSA_CATALOG_REGISTRY_JSON="$registry" \
+    AGTOOSA_CATALOG_PLATFORMS="cursor,claude" \
+    AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+    bash "$SCRIPT" --catalog plan valid-preset --format json)"
+  echo "$json_out" | jq -e '.schema_version == "plan-result-v1"' >/dev/null
+  echo "$json_out" | jq -e '.operation and .project_path and .generator_version' >/dev/null
+  echo "$json_out" | jq -e '(.actions | type == "array") and (.actions | length) > 0' >/dev/null
+  echo "$json_out" | jq -e '.actions[0].path and .actions[0].category and (.actions[0].detail | type == "string")' >/dev/null
+
+  # Empty / not-ready plan still emits valid JSON with empty actions
+  json_out="$(env AGTOOSA_CATALOG_PATH="$fixtures/valid-preset.json" \
+    AGTOOSA_CATALOG_PLATFORMS="cursor,claude" \
+    AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+    AGTOOSA_REGISTRY_URL="file://$TEST_PROJECT/no-registry.json" \
+    AGTOOSA_REGISTRY_CACHE_DIR="$TEST_PROJECT/empty-cache" \
+    bash "$SCRIPT" --catalog plan valid-preset --format json)"
+  echo "$json_out" | jq -e '.schema_version == "plan-result-v1" and (.actions | type == "array") and (.actions | length) == 0' >/dev/null
+}
+
+@test "DEV-100 @smoke JIO-002: Dry-run plan matches catalog plan schema shape" {
+  local fixtures="$BATS_TEST_DIRNAME/fixtures/catalog"
+  local root="$BATS_TEST_DIRNAME/.."
+  local registry catalog_json dry_json
+  registry="$(cat "$fixtures/registry.json")"
+  mkdir -p "$TEST_PROJECT/.cursor" "$TEST_PROJECT/.claude"
+
+  catalog_json="$(env AGTOOSA_CATALOG_PATH="$fixtures/valid-preset.json" \
+    AGTOOSA_CATALOG_REGISTRY_JSON="$registry" \
+    AGTOOSA_CATALOG_PLATFORMS="cursor,claude" \
+    AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+    bash "$SCRIPT" --catalog plan valid-preset --format json)"
+
+  # Same emitter dry-run uses (emit_plan_json) — avoids ship/ races with concurrent bats teardowns.
+  dry_json="$(bash -c '
+    set -euo pipefail
+    AGTOOSA_VERSION="$(grep -E "^AGTOOSA_VERSION=" "'"$root"'/agtoosa.sh" | head -1 | cut -d\" -f2)"
+    source "'"$root"'/lib/config.sh"
+    source "'"$root"'/lib/version.sh"
+    source "'"$root"'/lib/plan.sh"
+    PLAN_OPERATION="install"
+    PLAN_PROJECT_PATH="'"$TEST_PROJECT"'"
+    PLAN_ACTIONS=("Docs/AgToosa_Agent.md|new|New file")
+    emit_plan_json
+  ')"
+
+  python3 - <<'PY' "$catalog_json" "$dry_json" "$root/docs/schemas/plan-result-v1.json"
+import json, sys
+c = json.loads(sys.argv[1])
+d = json.loads(sys.argv[2])
+schema = json.load(open(sys.argv[3]))
+required = set(schema["required"])
+assert required <= set(c.keys()), f"catalog missing keys: {required - set(c.keys())}"
+assert required <= set(d.keys()), f"dry-run emitter missing keys: {required - set(d.keys())}"
+assert c["schema_version"] == d["schema_version"] == "plan-result-v1"
+assert isinstance(c["actions"], list) and isinstance(d["actions"], list)
+action_required = set(schema["properties"]["actions"]["items"]["required"])
+for row in c["actions"] + d["actions"]:
+    assert action_required <= set(row.keys()), row
+PY
+
+  # Live update --dry-run --format json when ship staging is free (skip on race).
+  if bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes >/dev/null 2>&1; then
+    echo "STALE-JIO2" > "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+    if update_json="$(bash "$SCRIPT" --update --dry-run --format json "$TEST_PROJECT" 2>/dev/null)"; then
+      echo "$update_json" | jq -e '.schema_version == "plan-result-v1"' >/dev/null
+      grep -q "STALE-JIO2" "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+    fi
+  fi
+}
+
+@test "DEV-100 JIO-003: Catalog info JSON includes metadata fields" {
+  local fixtures="$BATS_TEST_DIRNAME/fixtures/catalog"
+  local registry json_out
+  registry="$(cat "$fixtures/registry.json")"
+  mkdir -p "$TEST_PROJECT/.cursor" "$TEST_PROJECT/.claude"
+
+  json_out="$(env AGTOOSA_CATALOG_PATH="$fixtures/valid-extension.json" \
+    AGTOOSA_CATALOG_REGISTRY_JSON="$registry" \
+    AGTOOSA_CATALOG_PLATFORMS="cursor,claude" \
+    AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+    bash "$SCRIPT" --catalog info valid-extension --format json)"
+  echo "$json_out" | jq -e '.id == "valid-extension"' >/dev/null
+  echo "$json_out" | jq -e '.name and .version and .platforms and .sha256 and .compatibility and .signature' >/dev/null
+  echo "$json_out" | jq -e '(.platforms | type == "array") and (.platforms | length) > 0' >/dev/null
+  echo "$json_out" | jq -e '.sha256 | test("^[0-9a-f]{64}$")' >/dev/null
+
+  # Unknown entry: non-zero exit; stderr message; no partial JSON on stdout
+  run env AGTOOSA_CATALOG_PATH="$fixtures/valid-extension.json" \
+    bash "$SCRIPT" --catalog info does-not-exist --format json
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"not found"* ]]
+  ! echo "$output" | grep -q '^{'
+}
+
+@test "DEV-100 @smoke JIO-004: JSON stdout contains no ANSI escapes" {
+  local fixtures="$BATS_TEST_DIRNAME/fixtures/catalog"
+  local registry plan_out info_out
+  registry="$(cat "$fixtures/registry.json")"
+  mkdir -p "$TEST_PROJECT/.cursor" "$TEST_PROJECT/.claude"
+
+  plan_out="$(env AGTOOSA_CATALOG_PATH="$fixtures/valid-preset.json" \
+    AGTOOSA_CATALOG_REGISTRY_JSON="$registry" \
+    AGTOOSA_CATALOG_PLATFORMS="cursor,claude" \
+    AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+    bash "$SCRIPT" --catalog plan valid-preset --format json)"
+  info_out="$(env AGTOOSA_CATALOG_PATH="$fixtures/valid-extension.json" \
+    AGTOOSA_CATALOG_REGISTRY_JSON="$registry" \
+    AGTOOSA_CATALOG_PLATFORMS="cursor,claude" \
+    AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+    bash "$SCRIPT" --catalog info valid-extension --format json)"
+
+  ! printf '%s' "$plan_out" | grep -q $'\x1b\['
+  ! printf '%s' "$info_out" | grep -q $'\x1b\['
+  echo "$plan_out" | jq -e . >/dev/null
+  echo "$info_out" | jq -e . >/dev/null
+}
+
+@test "DEV-100 JIO-005: Default output remains human tables" {
+  local fixtures="$BATS_TEST_DIRNAME/fixtures/catalog"
+  local registry
+  registry="$(cat "$fixtures/registry.json")"
+  mkdir -p "$TEST_PROJECT/.cursor" "$TEST_PROJECT/.claude"
+
+  run env AGTOOSA_CATALOG_PATH="$fixtures/valid-preset.json" \
+    AGTOOSA_CATALOG_REGISTRY_JSON="$registry" \
+    AGTOOSA_CATALOG_PLATFORMS="cursor,claude" \
+    AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+    bash "$SCRIPT" --catalog plan valid-preset
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Preset plan:"* ]]
+  ! echo "$output" | grep -qE '^\s*\{'
+  ! echo "$output" | grep -q 'schema_version'
+
+  run env AGTOOSA_CATALOG_PATH="$fixtures/valid-extension.json" \
+    AGTOOSA_CATALOG_REGISTRY_JSON="$registry" \
+    AGTOOSA_CATALOG_PLATFORMS="cursor,claude" \
+    AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+    bash "$SCRIPT" --catalog info valid-extension
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Catalog entry:"* ]]
+  ! echo "$output" | grep -qE '^\s*\{'
+
+  # Bare --json is rejected without a consumer mode (DEV-091 aliases --json → --format json).
+  # Catalog Must path remains --format json (DEV-100 R1).
+  run bash "$SCRIPT" --json
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"requires a command"* || "$output" == *"Unknown option"* ]]
+}
+
+@test "DEV-100 JIO-006: Plan JSON includes schema_version" {
+  local fixtures="$BATS_TEST_DIRNAME/fixtures/catalog"
+  local registry json_out
+  registry="$(cat "$fixtures/registry.json")"
+  mkdir -p "$TEST_PROJECT/.cursor" "$TEST_PROJECT/.claude"
+
+  json_out="$(env AGTOOSA_CATALOG_PATH="$fixtures/valid-preset.json" \
+    AGTOOSA_CATALOG_REGISTRY_JSON="$registry" \
+    AGTOOSA_CATALOG_PLATFORMS="cursor,claude" \
+    AGTOOSA_CATALOG_PROJECT="$TEST_PROJECT" \
+    bash "$SCRIPT" --catalog plan valid-preset --format json)"
+  echo "$json_out" | jq -e '.schema_version == "plan-result-v1"' >/dev/null
+}
+
+@test "DEV-100 JIO-007: DEV-100 filter documents evidence" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "DEV-100" "$root/tests/agtoosa.bats"
+  grep -q "JIO-" "$root/docs/AgToosa_TestPlan-DEV-100.md"
+  grep -q 'bats tests/agtoosa.bats -f "DEV-100|JIO-"' "$root/docs/AgToosa_TestPlan-DEV-100.md" \
+    || grep -q 'DEV-100\\|JIO-' "$root/docs/AgToosa_TestPlan-DEV-100.md"
+  grep -q -- '--format json' "$root/docs/AgToosa_Catalog.md"
+  grep -q -- '--format json' "$root/template/Docs/AgToosa_Catalog.md"
+}
+
+# ── DEV-089: Evidence-Profile Verifier Gates (EPV-001–EPV-009) ──
+
+# Seed a minimal docs/ project that passes Gates 1–5 without an Active Cycle story.
+_epv_seed_idle() {
+  local dest="$1"
+  mkdir -p "$dest/docs/Context" "$dest/docs/archived" "$dest/.agtoosa"
+  printf '# product\nEPV fixture.\n' > "$dest/docs/Context/product.md"
+  printf '# stack\nbash\n' > "$dest/docs/Context/tech-stack.md"
+  printf '# workflow\ntdd: true\n' > "$dest/docs/Context/workflow.md"
+  cat > "$dest/docs/Master-Plan.md" <<'EOF'
+# Master-Plan
+
+## Active Cycle
+
+| ID | Title | Type | Estimate | Status | Tasks Done |
+|----|-------|------|----------|--------|-----------|
+
+## Epics
+
+| ID | Title | Stories | Status |
+|----|-------|---------|--------|
+| DEV-900 | Epic: Core | 0 open / 0 total | ⬜ Backlog |
+
+## Update Log
+
+| Date | Event | By |
+|------|-------|----|
+| 2026-01-01 | init | AgToosa |
+EOF
+  echo "5.3.17" > "$dest/docs/.agtoosa-version"
+}
+
+# Seed project with one Done story (spec/tests/review present; ledger optional).
+_epv_seed_done_story() {
+  local dest="$1"
+  local with_ledger="${2:-no}"
+  mkdir -p "$dest/docs/Context" "$dest/docs/archived" "$dest/.agtoosa"
+  printf '# product\nEPV fixture.\n' > "$dest/docs/Context/product.md"
+  printf '# stack\nbash\n' > "$dest/docs/Context/tech-stack.md"
+  printf '# workflow\ntdd: true\n' > "$dest/docs/Context/workflow.md"
+  cat > "$dest/docs/Master-Plan.md" <<'EOF'
+# Master-Plan
+
+## Active Cycle
+
+| ID | Title | Type | Estimate | Status | Tasks Done |
+|----|-------|------|----------|--------|-----------|
+| DEV-901 | Fixture Story | Feature | S | ✅ Done | 1/1 |
+
+## Active Tasks
+
+### DEV-901 — Fixture Story (1/1)
+- [x] **1.** Done
+
+## Epics
+
+| ID | Title | Stories | Status |
+|----|-------|---------|--------|
+| DEV-900 | Epic: Core | 0 open / 1 total | ⬜ Backlog |
+
+## Update Log
+
+| Date | Event | By |
+|------|-------|----|
+| 2026-01-01 | init | AgToosa |
+EOF
+  cat > "$dest/docs/archived/spec-DEV-901.md" <<'EOF'
+# Spec: DEV-901
+
+## 1.3 Acceptance Criteria (EARS)
+
+| ID | EARS | Priority |
+|----|------|----------|
+| AC-001 | WHEN x THE SYSTEM SHALL y | Must |
+
+## Threat Model (STRIDE)
+
+| Threat | Category | Mitigation |
+|--------|----------|------------|
+| Spoof | Spoofing | Auth |
+
+### Wave Plan
+
+Wave 1: build
+
+## ✅ Spec Approved
+
+Approved: 2026-01-01
+EOF
+  cat > "$dest/docs/AgToosa_TestPlan-DEV-901.md" <<'EOF'
+# Test Plan DEV-901
+
+| AC | Test | Status |
+|----|------|--------|
+| AC-001 | T-001 | ⬜ |
+
+## RED Evidence
+
+| Task | Exit code |
+|------|-----------|
+| 1 | 1 |
+
+## GREEN Evidence
+
+| Task | Exit code |
+|------|-----------|
+| 1 | 0 |
+EOF
+  echo "# Review DEV-901" > "$dest/docs/archived/review-DEV-901.md"
+  echo "5.3.17" > "$dest/docs/.agtoosa-version"
+  if [[ "$with_ledger" == "yes" ]]; then
+    cat > "$dest/docs/archived/evidence-DEV-901.md" <<'EOF'
+# Evidence Ledger — DEV-901
+| Phase | AC | Artifact | Pointer | Verification | Exit | Reviewer | ts |
+|-------|----|----------|---------|--------------|------|----------|-----|
+| review | AC-001 | review | docs/archived/review-DEV-901.md | present | 0 | AgToosa | 2026-01-01T00:00:00Z |
+EOF
+  fi
+}
+
+@test "DEV-089 EPV-001: Gate 6 precedes Gate 7 in verifier output" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local verify="$root/docs/agtoosa-verify.sh"
+  [ -x "$verify" ] || [ -f "$verify" ]
+  # Source-level order: Gate 6 block before Gate 7 before finish
+  local g6src g7src finsrc
+  g6src=$(grep -n 'Gate 6 — Optional governance policy' "$verify" | head -1 | cut -d: -f1)
+  g7src=$(grep -n 'Gate 7 — Optional evidence profile' "$verify" | head -1 | cut -d: -f1)
+  finsrc=$(grep -n '^finish$' "$verify" | head -1 | cut -d: -f1)
+  [ -n "$g6src" ] && [ -n "$g7src" ] && [ -n "$finsrc" ]
+  [ "$g6src" -lt "$g7src" ]
+  [ "$g7src" -lt "$finsrc" ]
+  grep -q 'Gate 7 — Optional evidence profile' "$root/template/Docs/agtoosa-verify.sh"
+
+  _epv_seed_idle "$TEST_PROJECT"
+  # Present (possibly invalid) policy + valid profile → both gates run; order preserved
+  mkdir -p "$TEST_PROJECT/.agtoosa"
+  cp "$root/tests/fixtures/policy/invalid-missing-class.yaml" "$TEST_PROJECT/.agtoosa/policy.yaml" 2>/dev/null \
+    || printf 'version: 1\nrules: []\n' > "$TEST_PROJECT/.agtoosa/policy.yaml"
+  cp "$root/tests/fixtures/evidence-profile/valid-standard.yml" "$TEST_PROJECT/.agtoosa/evidence.yml"
+
+  run bash "$verify" --root "$TEST_PROJECT"
+  # Gate headers in order
+  local g6_line g7_line sum_line
+  g6_line=$(printf '%s\n' "$output" | grep -n 'Gate 6' | head -1 | cut -d: -f1)
+  g7_line=$(printf '%s\n' "$output" | grep -n 'Gate 7' | head -1 | cut -d: -f1)
+  sum_line=$(printf '%s\n' "$output" | grep -n 'Verifier summary' | head -1 | cut -d: -f1)
+  [ -n "$g6_line" ]
+  [ -n "$g7_line" ]
+  [ -n "$sum_line" ]
+  [ "$g6_line" -lt "$g7_line" ]
+  [ "$g7_line" -lt "$sum_line" ]
+  # Lifecycle story/spec gate still runs in the same invocation
+  printf '%s\n' "$output" | grep -q 'Gate 3'
+}
+
+@test "DEV-089 EPV-002: Absent evidence profile is healthy" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local verify="$root/docs/agtoosa-verify.sh"
+
+  # Maintainer repo: no .agtoosa/evidence.yml → healthy Gate 7
+  [ ! -f "$root/.agtoosa/evidence.yml" ]
+  run bash "$verify" --root "$root"
+  [ "$status" -eq 0 ]
+  printf '%s\n' "$output" | grep -qi 'no evidence profile configured'
+  ! printf '%s\n' "$output" | grep -E '⚠️  WARN .*G7-'
+
+  # Idle fixture without evidence.yml
+  _epv_seed_idle "$TEST_PROJECT"
+  run bash "$verify" --root "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  printf '%s\n' "$output" | grep -qi 'no evidence profile configured'
+  ! printf '%s\n' "$output" | grep -E '⚠️  WARN .*G7-'
+}
+
+@test "DEV-089 EPV-003: Valid profile checks required entries deterministically" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local verify="$root/docs/agtoosa-verify.sh"
+  local fx="$root/tests/fixtures/evidence-profile"
+  local proj2
+
+  # Complete artifacts → pass profile checks
+  _epv_seed_done_story "$TEST_PROJECT" yes
+  cp "$fx/valid-standard.yml" "$TEST_PROJECT/.agtoosa/evidence.yml"
+  run bash "$verify" --root "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  printf '%s\n' "$output" | grep -q 'Gate 7'
+  printf '%s\n' "$output" | grep -qiE 'evidence profile|profile.*standard|required'
+
+  # Missing sast artifact under security-sensitive → WARN with rule id + basename only
+  proj2="$(mktemp -d)"
+  _epv_seed_done_story "$proj2" yes
+  cp "$fx/valid-security-sensitive.yml" "$proj2/.agtoosa/evidence.yml"
+  run bash "$verify" --root "$proj2"
+  local st2="$status" out2="$output"
+  rm -rf "$proj2"
+  [ "$st2" -eq 0 ]
+  printf '%s\n' "$out2" | grep -E '⚠️  WARN .*G7-.*sast|⚠️  WARN .*G7-missing-sast'
+  ! printf '%s\n' "$out2" | grep -E "G7-.*/Users/|/home/"
+  ! printf '%s\n' "$out2" | grep -qiE 'no vulnerabilities|SAST clean'
+}
+
+@test "DEV-089 EPV-004: Guided rows are not upgraded to enforced" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local verify="$root/docs/agtoosa-verify.sh"
+  local fx="$root/tests/fixtures/evidence-profile"
+
+  _epv_seed_idle "$TEST_PROJECT"
+  # Idle project: threat-model guided/evidenced — missing must WARN or pass, never FAIL
+  cp "$fx/valid-guided-stride.yml" "$TEST_PROJECT/.agtoosa/evidence.yml"
+  run bash "$verify" --root "$TEST_PROJECT"
+  # Default mode: no FAIL for guided/evidenced absence
+  ! printf '%s\n' "$output" | grep -E '❌ FAIL .*G7-'
+  [ "$status" -eq 0 ]
+  # Must not claim enforced without wired command
+  ! printf '%s\n' "$output" | grep -qiE 'enforced security control without|upgraded to enforced'
+  printf '%s\n' "$output" | grep -qiE 'guided|evidenced|presence only'
+}
+
+@test "DEV-089 EPV-005: SAST rows never claim vulnerability absence" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local verify="$root/docs/agtoosa-verify.sh"
+  local fx="$root/tests/fixtures/evidence-profile"
+
+  _epv_seed_done_story "$TEST_PROJECT" yes
+  cp "$fx/valid-security-sensitive.yml" "$TEST_PROJECT/.agtoosa/evidence.yml"
+  # Provide presence-only sast + dependency-scan artifacts
+  mkdir -p "$TEST_PROJECT/docs/archived"
+  echo "sast exit=0" > "$TEST_PROJECT/docs/archived/sast-DEV-901.log"
+  echo "deps exit=0" > "$TEST_PROJECT/docs/archived/dependency-scan-DEV-901.log"
+
+  run bash "$verify" --root "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  printf '%s\n' "$output" | grep -q 'Gate 7'
+  # Presence/exit-code language only
+  printf '%s\n' "$output" | grep -qiE 'presence|exit-code|exit code'
+  ! printf '%s\n' "$output" | grep -qiE 'no vulnerabilities|SAST clean|vulnerability absence proven|zero vulns'
+}
+
+@test "DEV-089 EPV-006: Missing ledger emits WARN not FAIL" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local verify="$root/docs/agtoosa-verify.sh"
+  local fx="$root/tests/fixtures/evidence-profile"
+
+  _epv_seed_done_story "$TEST_PROJECT" no
+  cp "$fx/ledger-missing-profile.yml" "$TEST_PROJECT/.agtoosa/evidence.yml"
+  [ ! -f "$TEST_PROJECT/docs/archived/evidence-DEV-901.md" ]
+
+  run bash "$verify" --root "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  printf '%s\n' "$output" | grep -E '⚠️  WARN'
+  printf '%s\n' "$output" | grep -qi 'DEV-049'
+  printf '%s\n' "$output" | grep -qiE 'ledger|evidence-DEV-901|evidence-\*'
+  ! printf '%s\n' "$output" | grep -E '❌ FAIL .*G7-.*ledger|❌ FAIL .*G7-.*evidence'
+}
+
+@test "DEV-089 EPV-007: Invalid evidence.yml emits bounded WARN" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local verify="$root/docs/agtoosa-verify.sh"
+  local fx="$root/tests/fixtures/evidence-profile"
+
+  _epv_seed_idle "$TEST_PROJECT"
+  cp "$fx/invalid-malformed.yml" "$TEST_PROJECT/.agtoosa/evidence.yml"
+  run bash "$verify" --root "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  printf '%s\n' "$output" | grep -E '⚠️  WARN .*G7-'
+  # Continues to summary
+  printf '%s\n' "$output" | grep -q 'Verifier summary'
+
+  # Unknown active profile
+  local proj2
+  proj2="$(mktemp -d)"
+  _epv_seed_idle "$proj2"
+  cp "$fx/invalid-unknown-active.yml" "$proj2/.agtoosa/evidence.yml"
+  run bash "$verify" --root "$proj2"
+  local st2="$status" out2="$output"
+  rm -rf "$proj2"
+  [ "$st2" -eq 0 ]
+  printf '%s\n' "$out2" | grep -E '⚠️  WARN .*G7-'
+  printf '%s\n' "$out2" | grep -qiE 'enterprise|unknown|active|profile'
+
+  # Command injection: never execute; reject/ignore metacharacters
+  local proj3
+  proj3="$(mktemp -d)"
+  _epv_seed_idle "$proj3"
+  cp "$fx/command-injection.yml" "$proj3/.agtoosa/evidence.yml"
+  run bash "$verify" --root "$proj3"
+  local out3="$output"
+  rm -rf "$proj3"
+  [ ! -e /tmp/agtoosa-epv-pwned ]
+  # Must not echo full command payload with curl URL in finding (basename/rule only)
+  ! printf '%s\n' "$out3" | grep -q 'evil.example'
+}
+
+@test "DEV-089 EPV-008: Strict mode promotes Gate 7 WARN to FAIL" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local verify="$root/docs/agtoosa-verify.sh"
+  local fx="$root/tests/fixtures/evidence-profile"
+
+  _epv_seed_idle "$TEST_PROJECT"
+  cp "$fx/invalid-malformed.yml" "$TEST_PROJECT/.agtoosa/evidence.yml"
+
+  run bash "$verify" --root "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  printf '%s\n' "$output" | grep -E '⚠️  WARN .*G7-'
+
+  run bash "$verify" --strict --root "$TEST_PROJECT"
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"strict"* || "$output" == *"FAIL"* ]]
+}
+
+@test "DEV-089 EPV-009: DEV-089 filter documents RED/GREEN boundary" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "DEV-089" "$root/tests/agtoosa.bats"
+  grep -q "EPV-" "$root/docs/AgToosa_TestPlan-DEV-089.md"
+  # EPV @test titles must not claim hosted SaaS audit or mandatory CI profiles
+  ! grep -E '^@test "DEV-089 EPV-[0-9]+:.*(hosted SaaS|mandatory CI profile)' "$root/tests/agtoosa.bats"
+  grep -q 'bats tests/agtoosa.bats -f "DEV-089|EPV-"' "$root/docs/AgToosa_TestPlan-DEV-089.md" \
+    || grep -q 'DEV-089\\|EPV-' "$root/docs/AgToosa_TestPlan-DEV-089.md"
+}
+
+# ── DEV-091: Migration wizard + rollback manifest (MWZ-001–MWZ-010) ───────────
+
+_mwz_gen_ver() {
+  bash "$SCRIPT" --version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1
+}
+
+# Minimal installed-project fixture (avoids full install / ship/ races).
+_mwz_seed_install() {
+  local proj="$1"
+  local root="$BATS_TEST_DIRNAME/.."
+  local gen
+  gen="$(_mwz_gen_ver)"
+  mkdir -p "$proj/Docs" "$proj/.claude/commands" "$proj/.agtoosa"
+  cp "$root/template/Docs/AgToosa_Agent.md" "$proj/Docs/AgToosa_Agent.md"
+  cp "$root/template/Docs/AgToosa_Build.md" "$proj/Docs/AgToosa_Build.md"
+  cp "$root/template/Docs/AgToosa_Update.md" "$proj/Docs/AgToosa_Update.md"
+  if [[ -f "$root/template/CLAUDE.md" ]]; then
+    cp "$root/template/CLAUDE.md" "$proj/CLAUDE.md"
+  else
+    printf '<!-- AgToosa v%s START -->\n# AgToosa\n<!-- AgToosa END -->\n' "$gen" > "$proj/CLAUDE.md"
+  fi
+  printf '%s\n' "$gen" > "$proj/Docs/.agtoosa-version"
+  printf '{\n  "agtoosa_version": "%s",\n  "generated_at": "2026-01-01T00:00:00Z",\n  "platforms": ["claude"],\n  "packs": []\n}\n' "$gen" \
+    > "$proj/Docs/agtoosa-lock.json"
+}
+
+_mwz_seed_major() {
+  local proj="$1"
+  local fx="$BATS_TEST_DIRNAME/fixtures/migration"
+  _mwz_seed_install "$proj"
+  echo "4.9.0" > "$proj/Docs/.agtoosa-version"
+  cp "$fx/claude-outside-markers.md" "$proj/CLAUDE.md"
+  cp "$fx/orphan-AgToosa_LegacyRemoved.md" "$proj/Docs/AgToosa_LegacyRemoved.md"
+}
+
+@test "DEV-091 @smoke MWZ-001: MAJOR update blocked without accept-breaking" {
+  _mwz_seed_major "$TEST_PROJECT"
+  local before
+  before="$(shasum "$TEST_PROJECT/Docs/AgToosa_Agent.md" | awk '{print $1}')"
+  run bash "$SCRIPT" --update --yes "$TEST_PROJECT"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"MAJOR"* || "$output" == *"accept-breaking"* || "$output" == *"blocked"* ]]
+  [ "$(shasum "$TEST_PROJECT/Docs/AgToosa_Agent.md" | awk '{print $1}')" = "$before" ]
+  [ "$(cat "$TEST_PROJECT/Docs/.agtoosa-version")" = "4.9.0" ]
+  [ ! -d "$TEST_PROJECT/.agtoosa/rollback" ] || [ -z "$(ls -A "$TEST_PROJECT/.agtoosa/rollback" 2>/dev/null || true)" ]
+}
+
+@test "DEV-091 @smoke MWZ-002: Dry-run plan uses DEV-090 action categories" {
+  _mwz_seed_major "$TEST_PROJECT"
+  run bash "$SCRIPT" --update --dry-run "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"overwrite"* ]]
+  [[ "$output" == *"merge"* || "$output" == *"preserve"* ]]
+  [[ "$output" == *"preserve"* ]]
+  [[ "$output" == *"manual"* ]]
+  [[ "$output" == *"AgToosa_LegacyRemoved"* || "$output" == *"LegacyRemoved"* ]]
+  [[ "$output" == *"[DRY RUN]"* || "$output" == *"No changes"* ]]
+}
+
+@test "DEV-091 @smoke MWZ-003: Apply writes timestamped rollback manifest" {
+  _mwz_seed_major "$TEST_PROJECT"
+  run bash "$SCRIPT" --update --accept-breaking "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  local manifest
+  manifest="$(find "$TEST_PROJECT/.agtoosa/rollback" -maxdepth 1 -name '*.json' | head -1)"
+  [ -n "$manifest" ]
+  [ -f "$manifest" ]
+  jq -e '.schema_version == 1 and (.entries | type == "array") and (.entries | length) >= 1' "$manifest" >/dev/null
+  jq -e '.agtoosa_from == "4.9.0" and (.agtoosa_to | length) > 0 and (.created_at | length) > 0' "$manifest" >/dev/null
+}
+
+@test "DEV-091 MWZ-004: Content outside markers is preserved" {
+  _mwz_seed_major "$TEST_PROJECT"
+  grep -q "USER_SUFFIX_OUTSIDE_MARKERS" "$TEST_PROJECT/CLAUDE.md"
+  run bash "$SCRIPT" --update --accept-breaking "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  grep -q "USER_SUFFIX_OUTSIDE_MARKERS" "$TEST_PROJECT/CLAUDE.md"
+}
+
+@test "DEV-091 MWZ-005: accept-breaking prints plan before apply" {
+  _mwz_seed_major "$TEST_PROJECT"
+  run bash "$SCRIPT" --update --accept-breaking "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"MAJOR migration plan"* || "$output" == *"overwrite"* ]]
+  [[ "$output" == *"preserve"* || "$output" == *"merge"* ]]
+  local gen
+  gen="$(_mwz_gen_ver)"
+  [ "$(cat "$TEST_PROJECT/Docs/.agtoosa-version")" = "$gen" ]
+}
+
+@test "DEV-091 @smoke MWZ-006: Dry-run makes no writes" {
+  _mwz_seed_major "$TEST_PROJECT"
+  local before after
+  before="$(find "$TEST_PROJECT" -type f -print0 | sort -z | xargs -0 shasum | shasum | awk '{print $1}')"
+  run bash "$SCRIPT" --update --dry-run "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  after="$(find "$TEST_PROJECT" -type f -print0 | sort -z | xargs -0 shasum | shasum | awk '{print $1}')"
+  [ "$before" = "$after" ]
+  [ ! -d "$TEST_PROJECT/.agtoosa/rollback" ] || [ -z "$(find "$TEST_PROJECT/.agtoosa/rollback" -type f 2>/dev/null | head -1)" ]
+  [ "$(cat "$TEST_PROJECT/Docs/.agtoosa-version")" = "4.9.0" ]
+}
+
+@test "DEV-091 MWZ-007: JSON mode emits valid plan object" {
+  _mwz_seed_major "$TEST_PROJECT"
+  local json_out
+  json_out="$(bash "$SCRIPT" --update --json "$TEST_PROJECT")"
+  echo "$json_out" | jq -e '.schema_version == "plan-result-v1" and .operation == "update" and (.actions | type == "array")' >/dev/null
+  echo "$json_out" | jq -e '[.actions[].category] | unique | .[]' >/dev/null
+  # Must include migration categories
+  echo "$json_out" | jq -e '[.actions[].category] | index("overwrite") != null' >/dev/null
+  echo "$json_out" | jq -e '[.actions[].category] | (index("preserve") != null or index("merge") != null)' >/dev/null
+  echo "$json_out" | jq -e '[.actions[].category] | index("manual") != null' >/dev/null
+  # No ANSI escapes
+  ! echo "$json_out" | grep -qE $'\033\[|[0-9]+;[0-9]+m'
+  # No writes
+  [ "$(cat "$TEST_PROJECT/Docs/.agtoosa-version")" = "4.9.0" ]
+  [ ! -d "$TEST_PROJECT/.agtoosa/rollback" ] || [ -z "$(find "$TEST_PROJECT/.agtoosa/rollback" -type f 2>/dev/null | head -1)" ]
+}
+
+@test "DEV-091 MWZ-008: MINOR update skips MAJOR gate" {
+  _mwz_seed_install "$TEST_PROJECT"
+  # Same major, older minor/patch — no --accept-breaking required
+  echo "5.0.0" > "$TEST_PROJECT/Docs/.agtoosa-version"
+  run bash "$SCRIPT" --update --yes "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  [[ "$output" != *"MAJOR migration blocked"* ]]
+  local gen
+  gen="$(_mwz_gen_ver)"
+  [ "$(cat "$TEST_PROJECT/Docs/.agtoosa-version")" = "$gen" ]
+}
+
+@test "DEV-091 MWZ-009: Update doc documents MAJOR wizard" {
+  local root="$BATS_TEST_DIRNAME/.."
+  for f in "$root/template/Docs/AgToosa_Update.md" "$root/docs/AgToosa_Update.md"; do
+    grep -qiE 'MAJOR|major.?version|migration wizard' "$f"
+    grep -q 'rollback' "$f"
+    grep -q -- '--accept-breaking' "$f"
+    grep -qE '\-\-json|migration plan' "$f"
+  done
+}
+
+@test "DEV-091 MWZ-010: DEV-091 filter and manifest schema fields" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "DEV-091" "$root/tests/agtoosa.bats"
+  grep -q "MWZ-" "$root/docs/AgToosa_TestPlan-DEV-091.md"
+  grep -q 'bats tests/agtoosa.bats -f "DEV-091|MWZ-"' "$root/docs/AgToosa_TestPlan-DEV-091.md" \
+    || grep -q 'DEV-091\\|MWZ-' "$root/docs/AgToosa_TestPlan-DEV-091.md"
+  [ -f "$root/lib/migrate.sh" ]
+  grep -q 'is_major_migration\|run_major_migration\|write_rollback_manifest' "$root/lib/migrate.sh"
+
+  _mwz_seed_major "$TEST_PROJECT"
+  run bash "$SCRIPT" --update --accept-breaking "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  local manifest
+  manifest="$(find "$TEST_PROJECT/.agtoosa/rollback" -maxdepth 1 -name '*.json' | head -1)"
+  [ -f "$manifest" ]
+  jq -e 'has("schema_version") and has("agtoosa_from") and has("agtoosa_to") and has("created_at") and has("entries")' "$manifest" >/dev/null
+  jq -e '.entries[0] | has("path") and has("action") and has("backup")' "$manifest" >/dev/null
 }

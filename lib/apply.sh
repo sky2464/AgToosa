@@ -62,8 +62,10 @@ apply_stage_file() {
 # Commit all staged files into project. On any failure, leave project unchanged
 # for files not yet committed by rolling back via not writing until validated.
 # Strategy: validate all staged files first (hash + inject), then write.
+# Optional 2nd arg: apply command label for .agtoosa/state.json (install|update|apply).
 apply_commit_staging() {
   local project_path="$1"
+  local apply_command="${2:-apply}"
   local rel staged target staged_hash target_hash mode
   local -a commit_list=()
 
@@ -81,6 +83,15 @@ apply_commit_staging() {
       return 1
       ;;
   esac
+
+  # Pack SHA revalidation before any project mutation or state write (DEV-093).
+  if declare -F lock_revalidate_packs >/dev/null 2>&1; then
+    if ! lock_revalidate_packs "$project_path"; then
+      APPLY_FAILED=$((APPLY_FAILED + 1))
+      apply_abort_staging
+      return 1
+    fi
+  fi
 
   while IFS= read -r -d '' staged; do
     rel="${staged#"${APPLY_STAGING_ROOT}/"}"
@@ -137,6 +148,14 @@ apply_commit_staging() {
   done
 
   apply_abort_staging
+
+  # Post-apply operational state + lock reconcile (DEV-093).
+  if declare -F lock_reconcile >/dev/null 2>&1; then
+    lock_reconcile "$project_path"
+  fi
+  if declare -F state_write_after_apply >/dev/null 2>&1; then
+    state_write_after_apply "$project_path" "$apply_command" "${commit_list[@]+"${commit_list[@]}"}"
+  fi
   return 0
 }
 

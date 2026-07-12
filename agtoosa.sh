@@ -10,7 +10,7 @@ set -euo pipefail
 #   bash agtoosa.sh [--force] [--dry-run] [--version] [--help]
 # ──────────────────────────────────────────────────────────────
 
-AGTOOSA_VERSION="5.3.16"
+AGTOOSA_VERSION="5.3.18"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
 SHIP_DIR="${SCRIPT_DIR}/ship"
@@ -29,7 +29,7 @@ if [[ ! -d "${SCRIPT_DIR}/lib" ]]; then
 fi
 
 # ── Source modular libraries ──────────────────────────────────
-for _lib in config version copy apply generate plan dryrun install update provenance registry catalog tracker maintain; do
+for _lib in config version copy apply state lock generate plan dryrun install update migrate provenance registry catalog tracker maintain; do
   # shellcheck source=/dev/null
   source "${SCRIPT_DIR}/lib/${_lib}.sh"
 done
@@ -91,6 +91,7 @@ UNINSTALL_PATH=""
 OUTPUT_FORMAT=""
 VERIFY_STRICT=false
 PLAN_JSON_MODE=false
+ACCEPT_BREAKING=false
 while [[ $# -gt 0 ]]; do
   arg="$1"
   case "$arg" in
@@ -105,6 +106,9 @@ while [[ $# -gt 0 ]]; do
     --dry-run)             DRY_RUN=true ;;
     --allow-unverified)    ALLOW_UNVERIFIED=true ;;
     --yes|-y)              ASSUME_YES=true ;;
+    --accept-breaking)     ACCEPT_BREAKING=true ;;
+    # DEV-091 AC-007: --json is required on the migration path (alias of --format json).
+    --json)                OUTPUT_FORMAT="json" ;;
     --strict)              VERIFY_STRICT=true ;;
     --format)
       if [[ $# -lt 2 ]]; then
@@ -183,6 +187,15 @@ if [[ "$DRY_RUN" == true && "$OUTPUT_FORMAT" == "json" ]]; then
   PLAN_JSON_MODE=true
 fi
 
+# --json / --format json require a consumer mode (install dry-run, update, verify, …).
+if [[ "$OUTPUT_FORMAT" == "json" \
+      && "$UPDATE" != true && "$DRY_RUN" != true && "$VERIFY" != true \
+      && "$DOCTOR" != true && "$CATALOG" != true && "$REGISTRY" != true \
+      && "$TRACKER" != true ]]; then
+  echo -e "${RED}❌ Error: --json / --format json requires a command (--update, --dry-run, --verify, --doctor, --catalog, …).${NC}" >&2
+  exit 1
+fi
+
 # ── Source guard (allows sourcing for unit tests) ─────────────
 [[ "${BASH_SOURCE[0]}" == "${0}" ]] || return 0
 
@@ -233,6 +246,7 @@ if [[ "$REGISTRY" == true ]]; then
 fi
 
 # ── Catalog mode (read-only discovery + non-executing plans) ───
+# OUTPUT_FORMAT (text|json) is honored by catalog_info / catalog_plan (DEV-100).
 if [[ "$CATALOG" == true ]]; then
   case "$CATALOG_COMMAND" in
     list)
@@ -333,12 +347,21 @@ if [[ "$UPDATE" == true ]]; then
     exit 1
   fi
 
+  OLD_VERSION="$(read_installed_version "$PROJECT_PATH")"
+
+  # DEV-091: MAJOR migration wizard (plan / gate / rollback)
+  if declare -F is_major_migration >/dev/null 2>&1 \
+     && is_major_migration "$OLD_VERSION" "$AGTOOSA_VERSION"; then
+    COPIED=0; SKIPPED=0
+    run_major_migration "$PROJECT_PATH" "$OLD_VERSION"
+    exit $?
+  fi
+
   if [[ "$DRY_RUN" == true ]]; then
     run_update_dryrun "${OUTPUT_FORMAT:-text}"
     exit 0
   fi
 
-  OLD_VERSION="$(read_installed_version "$PROJECT_PATH")"
   echo ""
   echo -e "${PURPLE}${BOLD}Updating AgToosa v${OLD_VERSION} → v${AGTOOSA_VERSION}${NC}"
   echo -e "${PURPLE}${BOLD}Project: ${PROJECT_PATH}${NC}"

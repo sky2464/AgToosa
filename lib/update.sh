@@ -160,6 +160,11 @@ run_update() {
     apply_reset_summary
   fi
 
+  # DEV-093: pack SHA revalidation before mutate / state write
+  if declare -F lock_revalidate_packs >/dev/null 2>&1; then
+    lock_revalidate_packs "$PROJECT_PATH" || return 1
+  fi
+
   echo -e "${YELLOW}Updating workflow files...${NC}"
 
   # Step 1: Workflow files — hash-aware overwrite (DEV-092 shared apply helper)
@@ -235,13 +240,17 @@ run_update() {
       "${PROJECT_PATH}/.claude/settings.json" ".claude/settings.json"
   fi
 
-  # Step 5: Update lock file agtoosa_version field if it exists.
-  local lock_file="${PROJECT_PATH}/Docs/agtoosa-lock.json"
-  if [[ -f "$lock_file" ]] && command -v jq &>/dev/null; then
-    local tmp_lock
-    tmp_lock=$(mktemp)
-    jq --arg v "$AGTOOSA_VERSION" --arg t "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-      '.agtoosa_version = $v | .generated_at = $t' "$lock_file" > "$tmp_lock" && mv "$tmp_lock" "$lock_file"
+  # Step 5: Reconcile lock (platforms + version) — DEV-093 / ADR-004.
+  if declare -F lock_reconcile >/dev/null 2>&1; then
+    lock_reconcile "$PROJECT_PATH"
+  else
+    local lock_file="${PROJECT_PATH}/Docs/agtoosa-lock.json"
+    if [[ -f "$lock_file" ]] && command -v jq &>/dev/null; then
+      local tmp_lock
+      tmp_lock=$(mktemp)
+      jq --arg v "$AGTOOSA_VERSION" --arg t "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+        '.agtoosa_version = $v | .generated_at = $t' "$lock_file" > "$tmp_lock" && mv "$tmp_lock" "$lock_file"
+    fi
   fi
 
   # Write version marker
@@ -258,11 +267,17 @@ run_update() {
     docs_updated=$((docs_updated + 1))
   done
 
+  # DEV-093: operational state after successful update apply
+  if declare -F state_write_after_apply >/dev/null 2>&1; then
+    state_write_after_apply "$PROJECT_PATH" "update"
+  fi
+
   print_update_summary "$old_ver" "$docs_updated" "$platforms_merged" "$dirs_updated" \
     "${detected_names[@]+"${detected_names[@]}"}"
 }
 
 # Dry-run preview for --update via unified plan engine (read-only).
+# MAJOR deltas are handled by run_major_migration / print_update_dryrun_preview.
 run_update_dryrun() {
   local format="${1:-text}"
   compute_agtoosa_plan "$PROJECT_PATH" "update"

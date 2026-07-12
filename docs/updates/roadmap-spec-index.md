@@ -19,13 +19,9 @@ Editing this index does not enroll a story. Backlog stories still require `/agto
 
 | ID | Story | Wave | Status |
 |---|---|---|---|
-| DEV-086 | Canonical Proof Product Experience | 1a | 🔍 In Review — ship next (v5.3.17) |
-| DEV-090 | Unified Install/Update Plan Engine | 1a | 🔍 In Review — ship next (v5.3.17) |
-| DEV-105 | PowerShell Maintain + Update Parity | 1a | 🔍 In Review — ship next (v5.3.17) |
-| DEV-093 | Install State File + Lock Reconciliation | 2 | 🟦 Todo — ready (DEV-092 shipped v5.3.16) |
-| DEV-100 | Shared JSON Output for Install/Registry | 2 | 🟦 Todo — R1 amend pending |
+| — | _(Waves 1a/1b/2 complete through v5.3.18)_ | — | — |
 
-Shipped in v5.3.16: **DEV-092 · DEV-094 · DEV-097**. Deferred to Cycle C (hard dep DEV-090 ship): **DEV-091**. Wave 1b remainder: **DEV-089**. Demand-gated: **DEV-057**.
+Shipped through v5.3.18: Waves **1a** (086·090·105), **1b** (087·088·089·091), **2** (092·093·094·097·100). Next: Wave 3 / post-Rev4. Demand-gated: **DEV-057**.
 
 ## Rev4 Wave — Spec Approved (2026-07-12)
 

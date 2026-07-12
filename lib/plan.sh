@@ -348,13 +348,15 @@ emit_plan_human() {
 emit_plan_json() {
   local actions_json="" entry rel cat detail
 
-  for entry in "${PLAN_ACTIONS[@]}"; do
-    IFS='|' read -r rel cat detail <<< "$entry"
-    if [[ -n "$actions_json" ]]; then
-      actions_json+=","
-    fi
-    actions_json+="$(python3 -c 'import json,sys; print(json.dumps({"path":sys.argv[1],"category":sys.argv[2],"detail":sys.argv[3]}))' "$rel" "$cat" "$detail")"
-  done
+  if ((${#PLAN_ACTIONS[@]} > 0)); then
+    for entry in "${PLAN_ACTIONS[@]}"; do
+      IFS='|' read -r rel cat detail <<< "$entry"
+      if [[ -n "$actions_json" ]]; then
+        actions_json+=","
+      fi
+      actions_json+="$(python3 -c 'import json,sys; print(json.dumps({"path":sys.argv[1],"category":sys.argv[2],"detail":sys.argv[3]}))' "$rel" "$cat" "$detail")"
+    done
+  fi
 
   export PLAN_JSON_ACTIONS="$actions_json"
   export PLAN_JSON_OPERATION="$PLAN_OPERATION"

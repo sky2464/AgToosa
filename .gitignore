@@ -54,6 +54,9 @@ docs/_site/
 # ── AgToosa Generated Output ────────────────────────────────
 ship/
 .agtoosa/
+# Operational install state (DEV-093) — covered by .agtoosa/ above; never commit.
+# .agtoosa/state.json
+# MAJOR migration rollback manifests/backups (DEV-091) — .agtoosa/rollback/
 # Template pack ships committed .agtoosa/ examples (DEV-087 config index).
 !template/.agtoosa/
 !template/.agtoosa/**

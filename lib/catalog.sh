@@ -475,6 +475,38 @@ _catalog_print_trust() {
   fi
 }
 
+_catalog_want_json() {
+  [[ "${OUTPUT_FORMAT:-}" == "json" ]]
+}
+
+# Emit registry-info JSON for --catalog info --format json (AC-003).
+_catalog_emit_info_json() {
+  local entry="$1" compat_status="$2" compat_reason="$3"
+  echo "$entry" | jq -c \
+    --arg status "$compat_status" \
+    --arg reason "$compat_reason" \
+    '
+    {
+      id: .id,
+      name: .name,
+      platforms: (.compatibility.platforms // []),
+      compatibility: {
+        status: $status,
+        reason: $reason,
+        agtoosa: .compatibility.agtoosa,
+        platforms: (.compatibility.platforms // []),
+        requires: (.compatibility.requires // []),
+        conflicts: (.compatibility.conflicts // [])
+      }
+    }
+    + (if .kind == "extension" then {
+        version: .provenance.version,
+        sha256: .provenance.sha256,
+        signature: (.provenance.signature // "not-present")
+      } else {} end)
+    '
+}
+
 catalog_info() {
   local entry_id="$1" project="${2:-$PWD}" catalog_path="${3:-$(_catalog_path)}"
   if [[ -z "$entry_id" ]]; then
@@ -495,6 +527,11 @@ catalog_info() {
   compat_line=$(_catalog_evaluate_compatibility "$entry")
   compat_status="${compat_line%%|*}"
   compat_reason="${compat_line#*|}"
+
+  if _catalog_want_json; then
+    _catalog_emit_info_json "$entry" "$compat_status" "$compat_reason"
+    return 0
+  fi
 
   echo ""
   echo "Catalog entry: $entry_id"
@@ -533,7 +570,7 @@ _catalog_cycle_dfs() {
   done < <(echo "$catalog_json" | jq -r --arg id "$node" \
     '.entries[] | select(.id == $id and .kind == "preset") | .members[].extension_id')
   if [[ ${#CATALOG_CYCLE_PATH[@]} -gt 0 ]]; then
-    unset 'CATALOG_CYCLE_PATH[-1]'
+    unset "CATALOG_CYCLE_PATH[$((${#CATALOG_CYCLE_PATH[@]} - 1))]"
   fi
   return 1
 }
@@ -636,6 +673,22 @@ catalog_plan() {
       ready=0
       reasons+=("members declare overlapping conflict: $overlap")
     fi
+  fi
+
+  # JSON mode reuses DEV-090 emit_plan_json / plan-result-v1 (AC-001, AC-006).
+  if _catalog_want_json; then
+    PLAN_OPERATION="install"
+    PLAN_PROJECT_PATH="$(_catalog_project_dir)"
+    PLAN_ACTIONS=()
+    if [[ $ready -eq 1 ]]; then
+      local cmd pin
+      for cmd in "${commands[@]}"; do
+        pin="${cmd##*install }"
+        PLAN_ACTIONS+=("${pin}|manual|${cmd}")
+      done
+    fi
+    emit_plan_json
+    return 0
   fi
 
   echo ""

@@ -558,12 +558,24 @@ install_files() {
     new_lock_entries+=("${_PACK_LOCK_ENTRIES[@]}")
   fi
   [[ $pack_count -gt 0 ]] && echo -e "  ${GREEN}✅${NC} Packs merged: ${pack_count}"
-  if [[ ${#new_lock_entries[@]} -gt 0 ]]; then
+  # DEV-093: always reconcile lock (platforms + packs) on install; path Docs/agtoosa-lock.json.
+  if declare -F lock_reconcile >/dev/null 2>&1; then
+    if [[ ${#new_lock_entries[@]} -gt 0 ]]; then
+      lock_reconcile "$PROJECT_PATH" "${new_lock_entries[@]}"
+    else
+      lock_reconcile "$PROJECT_PATH"
+    fi
+  elif [[ ${#new_lock_entries[@]} -gt 0 ]]; then
     _write_lock_file "${new_lock_entries[@]}"
   fi
 
   # Write version marker (enables --update to know installed version)
   echo "$AGTOOSA_VERSION" > "${PROJECT_PATH}/Docs/.agtoosa-version"
+
+  # DEV-093: operational state after successful install apply
+  if declare -F state_write_after_apply >/dev/null 2>&1; then
+    state_write_after_apply "$PROJECT_PATH" "install"
+  fi
 
   # Summary
   echo ""

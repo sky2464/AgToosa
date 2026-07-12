@@ -454,4 +454,223 @@ else
   fi
 fi
 
+# ── Gate 7: optional evidence profile (DEV-089) ───────────────
+gate "Gate 7 — Optional evidence profile"
+EVIDENCE_YML="$ROOT/.agtoosa/evidence.yml"
+if [[ ! -f "$EVIDENCE_YML" ]]; then
+  pass "no evidence profile configured"
+else
+  # Never eval YAML command values; reject shell metacharacters (print rule id only).
+  if grep -E '^[[:space:]]*command[[:space:]]*:' "$EVIDENCE_YML" 2>/dev/null \
+    | grep -qE '[;&|$<>]|\$\(' || grep -E '^[[:space:]]*command[[:space:]]*:' "$EVIDENCE_YML" 2>/dev/null \
+    | grep -qF '`'; then
+    warn "G7-unsafe-command" "evidence.yml command field rejected (shell metacharacters); not executed" \
+      "Crafted command fields must not run inside the verifier." \
+      "Remove command: from evidence.yml or use an allowlisted local checker." enforced
+  fi
+
+  EVIDENCE_CHECK=""
+  for candidate in \
+    "$DOCS/agtoosa-evidence-profile-check.sh" \
+    "$VERIFY_DIR/agtoosa-evidence-profile-check.sh" \
+    "$ROOT/docs/agtoosa-evidence-profile-check.sh" \
+    "$ROOT/Docs/agtoosa-evidence-profile-check.sh" \
+    "$ROOT/template/Docs/agtoosa-evidence-profile-check.sh"
+  do
+    if [[ -f "$candidate" ]]; then
+      EVIDENCE_CHECK="$candidate"
+      break
+    fi
+  done
+
+  epv_schema_ok=1
+  if [[ -n "$EVIDENCE_CHECK" ]]; then
+    epv_rc=0
+    epv_out=$(bash "$EVIDENCE_CHECK" --root "$ROOT" 2>&1) || epv_rc=$?
+    if [[ $epv_rc -ne 0 ]]; then
+      epv_schema_ok=0
+      warn "G7-bad-profile" "invalid evidence.yml (schema); see agtoosa-evidence-profile-check.sh" \
+        "An invalid present profile can mislead delivery-assurance claims." \
+        "Fix or remove .agtoosa/evidence.yml; missing profile is OK." guided
+    fi
+  fi
+
+  if [[ $epv_schema_ok -eq 1 ]]; then
+    # Resolve active profile + required tokens (stdlib python; no YAML lib).
+    # Avoid $(python <<EOF) — parentheses in the heredoc body break bash parsing.
+    epv_tmp="$(mktemp)"
+    EVIDENCE_YML="$EVIDENCE_YML" python3 - >"$epv_tmp" 2>/dev/null <<'PY' || true
+import os, re
+path = os.environ["EVIDENCE_YML"]
+text = open(path, encoding="utf-8").read()
+active = None
+for raw in text.splitlines():
+    line = raw.split("#", 1)[0].rstrip()
+    m = re.match(r"^active:\s*['\"]?([A-Za-z0-9_-]+)['\"]?\s*$", line)
+    if m:
+        active = m.group(1)
+profiles = {}
+cur = None
+for raw in text.splitlines():
+    line = raw.split("#", 1)[0].rstrip()
+    if not line.strip():
+        continue
+    m = re.match(r"^  ([A-Za-z0-9_-]+):\s*$", line)
+    if m and not line.startswith("    "):
+        cur = m.group(1)
+        profiles.setdefault(cur, [])
+        continue
+    if cur is None:
+        continue
+    m = re.match(r"^    required:\s*\[(.*)\]\s*$", line)
+    if m:
+        inner = m.group(1).strip()
+        if inner:
+            profiles[cur] = [p.strip().strip("'\"") for p in inner.split(",") if p.strip()]
+        else:
+            profiles[cur] = []
+        continue
+    m = re.match(r"^    -\s*['\"]?([A-Za-z0-9_-]+)['\"]?\s*$", line)
+    if m:
+        profiles.setdefault(cur, []).append(m.group(1))
+if not active:
+    print("ERR\tmissing-active")
+elif active not in profiles:
+    print("ERR\tunknown-active\t" + active)
+else:
+    print("OK\t" + active + "\t" + ",".join(profiles[active]))
+PY
+    epv_resolve="$(cat "$epv_tmp" 2>/dev/null || true)"
+    rm -f "$epv_tmp"
+    epv_status=${epv_resolve%%$'\t'*}
+    if [[ "$epv_status" != "OK" ]]; then
+      epv_detail=$(printf '%s' "$epv_resolve" | cut -f2- | tr '\t' ' ')
+      warn "G7-bad-profile" "invalid evidence.yml (${epv_detail:-parse})" \
+        "An invalid present profile can mislead delivery-assurance claims." \
+        "Fix active/profiles in .agtoosa/evidence.yml; missing profile is OK." guided
+    else
+      epv_active=$(printf '%s' "$epv_resolve" | cut -f2)
+      epv_tokens=$(printf '%s' "$epv_resolve" | cut -f3)
+      pass "evidence profile active=${epv_active} (deterministic presence/exit-code checks only)"
+
+      # Active / Done-boundary story ids (reuse Gate 3/4 scans).
+      epv_active_ids=$(awk '/^## Active Cycle/,/^## [^A]/' "$MP" | grep -oE '^\| DEV-[0-9]{3}' | grep -oE 'DEV-[0-9]{3}' | sort -u)
+      epv_done_ids=$(awk '/^## Active Cycle/,/^## [^A]/' "$MP" | grep -E '✅ Done|🏁 Shipped|🔍 In Review' | grep -oE 'DEV-[0-9]{3}' | sort -u)
+
+      IFS=',' read -r -a epv_req <<< "$epv_tokens"
+      for tok in "${epv_req[@]}"; do
+        [[ -z "$tok" ]] && continue
+        case "$tok" in
+          spec|tests|review|threat-model)
+            if [[ -z "$epv_active_ids" ]]; then
+              pass "profile ${tok}: no active stories to check (guided/evidenced — presence only)"
+              continue
+            fi
+            for id in $epv_active_ids; do
+              case "$tok" in
+                spec)
+                  if [[ -f "$DOCS/archived/spec-${id}.md" || -f "$DOCS/specs/spec-${id}.md" ]]; then
+                    pass "profile spec present for $id (evidenced)"
+                  else
+                    warn "G7-missing-spec" "required spec missing for $id (basename=spec-${id}.md)" \
+                      "Profile requires spec artifact presence." \
+                      "Add archived/spec-${id}.md or remove spec from the profile." evidenced
+                  fi
+                  ;;
+                tests)
+                  if ls "$DOCS"/AgToosa_TestPlan-"${id}"*.md >/dev/null 2>&1; then
+                    pass "profile tests present for $id (evidenced)"
+                  else
+                    warn "G7-missing-tests" "required tests missing for $id (basename=AgToosa_TestPlan-${id}.md)" \
+                      "Profile requires test-plan presence." \
+                      "Add Docs/AgToosa_TestPlan-${id}.md." evidenced
+                  fi
+                  ;;
+                review)
+                  if ls "$DOCS/archived/review-${id}"*.md >/dev/null 2>&1; then
+                    pass "profile review present for $id (evidenced)"
+                  else
+                    # Guided/evidenced — WARN only; never upgrade to enforced FAIL without wired command.
+                    warn "G7-missing-review" "required review missing for $id (basename=review-${id}.md)" \
+                      "Profile requires review artifact presence (evidenced, not enforced)." \
+                      "Archive review-${id}.md or adjust the profile." evidenced
+                  fi
+                  ;;
+                threat-model)
+                  spec=""
+                  for candidate in "$DOCS/archived/spec-${id}.md" "$DOCS/specs/spec-${id}.md"; do
+                    [[ -f "$candidate" ]] && spec="$candidate" && break
+                  done
+                  if [[ -n "$spec" ]] && grep -qiE 'threat model|STRIDE' "$spec"; then
+                    pass "profile threat-model present for $id (evidenced/guided — not enforced FAIL)"
+                  else
+                    tm_base="spec-${id}.md"
+                    [[ -n "$spec" ]] && tm_base=$(basename "$spec")
+                    warn "G7-missing-threat-model" "required threat-model missing for $id (basename=${tm_base})" \
+                      "Guided/evidenced STRIDE presence only — not an enforced security control." \
+                      "Add a STRIDE section or wire a local checker before claiming enforced." guided
+                  fi
+                  ;;
+              esac
+            done
+            ;;
+          sast|dependency-scan)
+            # Presence / recorded exit-code only — never claim vulnerability absence.
+            found=0
+            base_pat="$tok"
+            if compgen -G "$DOCS/archived/${base_pat}*" > /dev/null 2>&1 \
+              || compgen -G "$DOCS/archived/*${base_pat}*" > /dev/null 2>&1; then
+              found=1
+            fi
+            if [[ $found -eq 1 ]]; then
+              pass "profile ${tok}: artifact present (presence/exit-code only; not a vulnerability-absence claim)"
+            else
+              warn "G7-missing-${tok}" "required ${tok} artifact missing (basename=${base_pat}.log); presence/exit-code only" \
+                "Profile requires a local ${tok} log/report pointer — not a security guarantee." \
+                "Add Docs/archived/${base_pat}-STORY.log with recorded exit code." evidenced
+            fi
+            ;;
+          changelog)
+            if [[ -f "$ROOT/CHANGELOG.md" || -f "$DOCS/AgToosa_Changelog.md" || -f "$DOCS/CHANGELOG.md" ]]; then
+              pass "profile changelog present (evidenced)"
+            else
+              warn "G7-missing-changelog" "required changelog missing (basename=CHANGELOG.md)" \
+                "Release profile expects a changelog artifact." \
+                "Add CHANGELOG.md or Docs/AgToosa_Changelog.md." evidenced
+            fi
+            ;;
+          rollback-note)
+            if compgen -G "$DOCS/archived/*rollback*" > /dev/null 2>&1 \
+              || compgen -G "$ROOT/*rollback*" > /dev/null 2>&1; then
+              pass "profile rollback-note present (evidenced)"
+            else
+              warn "G7-missing-rollback-note" "required rollback-note missing (basename=rollback-note.md)" \
+                "Release profile expects a rollback note artifact." \
+                "Add an archived rollback note or adjust the profile." evidenced
+            fi
+            ;;
+          *)
+            warn "G7-unknown-token" "unknown required token ${tok} in profile ${epv_active}" \
+              "Unrecognized tokens cannot be checked deterministically." \
+              "Use contract tokens only (see AgToosa_Delivery_Evidence_Contract.md)." guided
+            ;;
+        esac
+      done
+
+      # Ledger WARN (DEV-049): profile requires review ⇒ Done-boundary stories need evidence-*.md
+      if [[ ",$epv_tokens," == *",review,"* ]]; then
+        for id in $epv_done_ids; do
+          if ! compgen -G "$DOCS/archived/evidence-${id}*" > /dev/null 2>&1; then
+            warn "G7-missing-ledger" "evidence ledger missing for $id (basename=evidence-${id}.md); DEV-049 agent-instructed" \
+              "Profile expects review/ship ledger rows; missing ledger is WARN not FAIL (DEV-049)." \
+              "Run /agtoosa-evidence or archive evidence-${id}.md; ledger remains agent-instructed." guided
+          else
+            pass "evidence ledger present for $id (DEV-049 WARN boundary satisfied)"
+          fi
+        done
+      fi
+    fi
+  fi
+fi
+
 finish

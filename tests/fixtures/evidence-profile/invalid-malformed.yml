@@ -1,0 +1,6 @@
+version: 1
+active: standard
+profiles:
+  standard:
+    required: [spec
+    # deliberately broken YAML — unclosed bracket

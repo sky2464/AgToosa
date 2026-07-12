@@ -13,11 +13,9 @@ Optional project-local YAML for AgToosa governance and delivery evidence. Files 
 
 **policy (Gate 6) → evidence profile (Gate 7, DEV-089) → lifecycle gates**
 
-When the verifier grows profile enforcement:
-
-1. **Policy (Gate 6)** — validate optional `.agtoosa/policy.yaml` / Context policy (DEV-059)
-2. **Evidence profile (Gate 7)** — validate delivery profile requirements (**DEV-089**; schema-only checker ships in DEV-087)
-3. **Lifecycle gates** — context, Master-Plan, spec approval, ACs, tests, threat model, TDD evidence
+1. **Policy (Gate 6)** — validate optional `.agtoosa/policy.yaml` / Context policy (DEV-059). Missing policy is never a finding.
+2. **Evidence profile (Gate 7, DEV-089)** — when `.agtoosa/evidence.yml` is absent → healthy `no evidence profile configured`. When present: schema WARN on invalid YAML; deterministic presence/path/exit-code checks for required tokens; guided/evidenced rows never upgrade to enforced FAIL without a wired command; SAST/dependency-scan checks never claim vulnerability absence; missing evidence ledger → WARN citing DEV-049 (not FAIL). `--strict` promotes Gate 7 WARN to FAIL.
+3. **Lifecycle gates** — context, Master-Plan, spec approval, ACs, tests, threat model, TDD evidence (Gates 1–4 in current verifier numbering; Gate 7 runs after Gate 6 before summary).
 
 Do not conflate `policy.yaml` (agent boundaries) with `evidence.yml` (delivery artifact minimums).
 
@@ -26,4 +24,4 @@ Do not conflate `policy.yaml` (agent boundaries) with `evidence.yml` (delivery a
 - `Docs/AgToosa_GovernancePolicy.md` — policy schema vocabulary
 - `Docs/AgToosa_Delivery_Evidence_Contract.md` — Guided / Evidenced / Enforced + profiles
 - `Docs/AgToosa_Agent.md` — Terminal Evidence Contract (per-task output; distinct)
-- `Docs/agtoosa-policy-check.sh` / `Docs/agtoosa-evidence-profile-check.sh` — local schema checkers
+- `Docs/agtoosa-policy-check.sh` / `Docs/agtoosa-evidence-profile-check.sh` — local schema checkers (Gate 7 enforcement lives in `Docs/agtoosa-verify.sh`)

@@ -23,6 +23,13 @@ bash agtoosa.sh --catalog search ml
 bash agtoosa.sh --catalog info ext-ml-pipeline
 ```
 
+**Machine-readable registry info (opt-in):**
+```bash
+bash agtoosa.sh --catalog info ext-ml-pipeline --format json
+```
+
+Emits a JSON object with `id`, `name`, `platforms`, `compatibility`, and when present for extensions: `version`, `sha256`, `signature`. Diagnostics stay on stderr; stdout has no ANSI.
+
 **Validate a catalog file:**
 ```bash
 bash agtoosa.sh --catalog validate catalog/catalog.json
@@ -32,6 +39,13 @@ bash agtoosa.sh --catalog validate catalog/catalog.json
 ```bash
 bash agtoosa.sh --catalog plan preset-fullstack-ml
 ```
+
+**Machine-readable plan (DEV-090 `plan-result-v1` schema):**
+```bash
+bash agtoosa.sh --catalog plan preset-fullstack-ml --format json
+```
+
+Same schema shape as install/update `--dry-run --format json` (`schema_version`, `operation`, `project_path`, `generator_version`, `actions[]`). Ready plans list registry pins as `manual` actions; not-ready plans emit an empty `actions` array. Use `--format json` only (no separate `--json` flag).
 
 Run each printed `--registry install name@version` command separately. The catalog never installs packs itself.
 

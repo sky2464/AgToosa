@@ -1,7 +1,8 @@
-# Optional AgToosa delivery evidence profiles (DEV-087).
+# Optional AgToosa delivery evidence profiles (DEV-087 / Gate 7 DEV-089).
 # Copy to .agtoosa/evidence.yml after human review — this .example is never auto-active.
 # Schema-only validation: bash Docs/agtoosa-evidence-profile-check.sh
-# Full Gate 7 enforcement is DEV-089. Do not store secrets here.
+# Gate 7 enforcement: Docs/agtoosa-verify.sh (absent file = healthy; never eval command:).
+# Do not store secrets here.
 #
 # Canonical contract: Docs/AgToosa_Delivery_Evidence_Contract.md
 # Config index: .agtoosa/README.md (policy.yaml vs evidence.yml)
@@ -9,7 +10,6 @@
 version: 1
 
 # Optional: which profile the team intends for the active delivery class.
-# Schema checker accepts this key; Gate 7 (DEV-089) may use it later.
 active: standard
 
 profiles:
