@@ -61,6 +61,13 @@ Return artifacts that `/agtoosa-import` can map to tasks and ACs:
 
 ## 7. Out of Scope
 [From spec §1.3 / Non-goals]
+
+## 8. Work Packages
+Selected-wave package rows only (from active spec `### 3.4 Work Package DAG`). Omit packages from unselected waves.
+
+| package_id | wave | depends_on | owned_files | inputs | outputs | merge_order | verification |
+|------------|------|------------|-------------|--------|---------|-------------|--------------|
+| PKG-[N.M] | [N] | [deps or —] | [paths] | [inputs] | [outputs] | [order] | [command] |
 ```
 
 ## Workflow
@@ -68,6 +75,7 @@ Return artifacts that `/agtoosa-import` can map to tasks and ACs:
 1. **Resolve target** — Active Cycle story; if multiple In Progress, ask which ID. For `wave` / `task`, resolve against the active spec Wave Plan or Active Tasks.
 2. **Recommend target agent** — Consult `Docs/AgToosa_AgentCapability.md` (Installed-Surface Detection + Routing Recommendation Algorithm). Prefer an **installed** surface for handoff; document the chosen row and **fallback** when the preferred surface is absent. Record the recommendation in the pack `Target agent` field.
 3. **Assemble pack** — Fill every section from the approved spec, Master-Plan Active Tasks, and test plan. Prefer inference; ask at most one clarifying question (target agent) if unknown after the matrix recommendation.
+   - For `/agtoosa-handoff wave`, include **§8 Work Packages** with only the **selected-wave** rows (`package_id`, `owned_files`, `inputs`, `outputs`, `merge_order`, `verification`, plus `depends_on` / `wave` for context). Do not export packages from unselected waves.
 4. **Write file** — Create `Docs/archived/handoff-…md`. Do not overwrite prior packs.
 5. **Phase event** — Append to `Docs/agtoosa-events.jsonl`:
    `{"ts":"[ISO-8601 UTC]","phase":"handoff","event":"export","story":"[Story ID]","by":"AgToosa"}`

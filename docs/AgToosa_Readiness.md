@@ -16,7 +16,7 @@
 
 ## Workflow guidance vs enforcement
 
-AgToosa is markdown instructions for your AI assistant — not a runtime. The generator **installs** workflow docs, platform entry points, and a deterministic verifier; it does **not** execute builds, scans, or PM sync. The verifier (`docs/agtoosa-verify.sh` in this repo) machine-checks lifecycle state locally and becomes **CI-enforced** once wired into a workflow (see `docs/agtoosa-gate.yml.example`).
+AgToosa is markdown instructions for your AI assistant — not a runtime. The generator **installs** workflow docs, platform entry points, and a deterministic verifier; it does **not** execute builds, scans, or PM sync. The verifier (`docs/agtoosa-verify.sh` in this repo) is a **local machine check**. `docs/agtoosa-gate.yml.example` is **template only** until copied, pushed, and a real workflow run is observed — only then is the gate **CI-enforced**. See [docs/examples/verifier-ci-adoption.md](examples/verifier-ci-adoption.md).
 
 | Capability | Required by workflow instructions | Machine-checked |
 |------------|-----------------------------------|-----------------|
@@ -31,7 +31,7 @@ AgToosa is markdown instructions for your AI assistant — not a runtime. The ge
 | SAST / DAST / secrets scanning | Yes (`/agtoosa-build`, `/agtoosa-review security`) | No |
 | Browser / E2E QA | Yes when stack supports it (`/agtoosa-qa`, review QA persona) | No |
 | Sandboxed execution (Docker / Firecracker) | Yes when applicable — workflow instructs isolated runs | No |
-| Initial readiness gates (this checklist) | Yes — `/agtoosa-status readiness` | Yes — `bash docs/agtoosa-verify.sh` (CI-enforceable via the gate workflow) |
+| Initial readiness gates (this checklist) | Yes — `/agtoosa-status readiness` | Yes — `bash docs/agtoosa-verify.sh` (local machine check; CI-enforced only after observed gate run — see verifier-ci-adoption) |
 | Ship readiness gate | Yes (`/agtoosa-ship check`) | Partially — verifier covers spec/review/test-plan rows; deploy evidence stays agent-reported |
 | Agent result import gate / Async handoff packs | Yes — `/agtoosa-import` gates Tracking updates on repo-local verification; `/agtoosa-handoff` instructs context export before dispatch | No (agent-instructed) |
 | Evidence ledger (per-story proof index) | Yes — required at review and ship phases (`/agtoosa-evidence review` · `ship`); `docs/archived/evidence-[story-id].md` must exist before marking Shipped | No (agent-instructed) |

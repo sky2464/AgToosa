@@ -5,21 +5,32 @@
       "id": "ext-official-infra",
       "kind": "extension",
       "name": "Official Infrastructure / Security Pack",
-      "summary": "Maintained AgToosa pilot pack for infrastructure and security workflows. Primary domain: infrastructure. Local candidate only — not externally published.",
-      "tags": ["official", "pilot", "infrastructure", "security"],
+      "summary": "Maintained AgToosa pilot pack for infrastructure and security workflows. Primary domain: infrastructure. Local candidate only \u2014 not externally published.",
+      "tags": [
+        "official",
+        "pilot",
+        "infrastructure",
+        "security"
+      ],
       "examples": [
         "Install locally: bash agtoosa.sh --registry install ./packs/official-infra",
         "Confirm preview/consent; denylisted CI/hook paths remain blocked"
       ],
       "maintainers": [
-        { "name": "sky2464", "contact": "https://github.com/sky2464" }
+        {
+          "name": "sky2464",
+          "contact": "https://github.com/sky2464"
+        }
       ],
       "support": "https://github.com/sky2464/AgToosa/issues",
       "lifecycle": "maintained",
       "reviewed_at": "2026-07-11",
       "compatibility": {
         "agtoosa": ">=5.0.0 <6.0.0",
-        "platforms": ["cursor", "claude"],
+        "platforms": [
+          "cursor",
+          "claude"
+        ],
         "requires": [],
         "conflicts": []
       },
@@ -31,7 +42,7 @@
       "provenance": {
         "registry_name": "official-infra",
         "version": "0.1.0",
-        "source": "packs/official-infra/ (AgToosa maintainer repo local candidate)",
+        "source": "packs/official-infra/ AgToosa maintainer repo local candidate",
         "sha256": "2543fdc0391506a67d8485855d1b81fc6d09494ac09ff4adb841ee5ed3136f88",
         "signature": "not-present"
       }

@@ -73,7 +73,12 @@ bash agtoosa.sh --registry install my-pack --allow-unverified
 
 ## Creating Your Own Pack
 
-To publish a template pack:
+Before opening a registry PR, complete the canonical readiness checklist in the AgToosa maintainer handbook:
+[registry-pack-authoring.md](https://github.com/sky2464/AgToosa/blob/main/docs/registry-pack-authoring.md)
+(scoped spec, tests, threat notes, compatibility, provenance, worked example, and named owner).
+That handbook owns the full checklist — this section is discovery only.
+
+Publication summary:
 
 1. Create a GitHub repo: `your-org/agtoosa-my-pack`
 2. Write your workflow markdown files.
@@ -86,7 +91,7 @@ To publish a template pack:
    - Add an entry to `registry.json` with name, description, author, version, URL, and SHA-256.
    - Add a `packs/my-pack.json` manifest with full metadata and link to your repo docs.
 
-A maintainer will review and merge your contribution.
+A maintainer will review and merge your contribution (`verified: true` is manual approval).
 
 ---
 
@@ -197,6 +202,20 @@ AgToosa caches `registry.json` locally so list/search/info work when the network
 - `--registry install <name>@1.2.0` installs only when the index lists exactly `1.2.0` for that name.
 
 ---
+
+## Official Pack Pilot
+
+AgToosa maintains exactly three **local candidate** official pilot packs (not a marketplace; **not externally published** until an accepted external registry record is confirmed). Catalog contract: DEV-053 `schema_version` 1.0.
+
+| Pack | Primary domain | Status |
+|------|----------------|--------|
+| `official-web` | primary domain: web | local candidate — not externally published |
+| `official-api` | primary domain: api | local candidate — not externally published |
+| `official-infra` | primary domain: infrastructure | local candidate — not externally published |
+
+**Support boundary:** “Official” means curated under documented maintenance policy for the pilot — not a fit guarantee. Install via local pack path when provided by your AgToosa distribution; registry safety controls (preview, consent, allowlist, denylist) remain authoritative.
+
+External submission/approval is **manual**. A local artifact or open PR is not proof of publication.
 
 ## Extension and Preset Catalog
 

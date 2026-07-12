@@ -59,3 +59,5 @@
 {"ts":"2026-07-12T02:21:19Z","phase":"build","event":"start","story":"DEV-083","by":"AgToosa"}
 {"ts":"2026-07-12T02:21:19Z","phase":"spec","event":"approved","story":"DEV-084","by":"AgToosa"}
 {"ts":"2026-07-12T02:21:19Z","phase":"build","event":"start","story":"DEV-084","by":"AgToosa"}
+{"ts":"2026-07-12T02:24:58Z","phase":"build","event":"complete","story":"DEV-083","by":"AgToosa"}
+{"ts":"2026-07-12T02:30:00Z","phase":"build","event":"complete","story":"DEV-080","by":"AgToosa","note":"automated tasks green; 4.2/4.3 manual-deferred; local candidate only"}

@@ -45,6 +45,11 @@ Output the table below directly. Do not read any Docs file for the default path.
 - `Docs/archived/` — completed specs and plans
 - `Docs/AgToosa_Changelog.md` — auto-maintained changelog
 
+### Authoring resources
+Static maintainer-guide links (print as-is; do not fetch or treat as local Docs paths):
+- Platform extensions: https://github.com/sky2464/AgToosa/blob/main/docs/extension-authoring-guide.md
+- Registry packs: https://github.com/sky2464/AgToosa/blob/main/docs/registry-pack-authoring.md
+
 ### `/agtoosa-help next` (read-only)
 
 1. Read `Docs/Master-Plan.md` and run read-only git commands (`git status`, `git log --oneline -5`). **Never modify** files, git state, or Master-Plan.

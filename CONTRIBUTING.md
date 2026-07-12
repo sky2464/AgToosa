@@ -98,6 +98,17 @@ See `docs/agtoosa-maintainer.md` for the full maintainer guide (generator mainte
 | Partial or broken install | `--doctor` for missing docs/wiring; `--update` to restore; `--uninstall` only when removing AgToosa (preserves Master-Plan and Context/) |
 | CI gate not running | Copy `Docs/agtoosa-gate.yml.example` to `.github/workflows/agtoosa-gate.yml` manually — AgToosa does not write workflows automatically |
 
+## Where to ask or report
+
+Use the channel matrix in [`.github/SUPPORT.md`](.github/SUPPORT.md) — that document is the canonical support, sponsorship, and consulting boundary. Community responses are best effort and are not an SLA.
+
+| Need | Where |
+|------|--------|
+| Questions / troubleshooting | [GitHub Discussions](https://github.com/sky2464/AgToosa/discussions) |
+| Public bugs | [GitHub Issues](https://github.com/sky2464/AgToosa/issues) (see below) |
+| Feature proposals | Issues or Discussions |
+| Security vulnerabilities | Private only — [SECURITY.md](SECURITY.md) (never a public issue) |
+
 ## Report Bugs Using GitHub Issues
 
 We use GitHub Issues to track public bugs. Report a bug by [opening a new issue](https://github.com/sky2464/AgToosa/issues).

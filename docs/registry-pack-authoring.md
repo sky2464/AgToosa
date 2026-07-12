@@ -44,7 +44,7 @@ Packs remain markdown-only for automatic install. Sensitive destinations such as
 | This handbook and readiness checklist | documentation (agent-instructed) |
 | Focused AUTH / inventory link checks in this repository | CI-enforced when repository CI runs them |
 | Pack SHA-256, isolated staging, denylist, verified-flag gate | existing **generator-enforced** controls (referenced, not redefined here) |
-| Registry approval (`verified: true`) and maintenance-owner confirmation | **manual** maintainer review — not CI-enforced |
+| Registry approval (`verified: true`) and maintenance-owner confirmation | **manual** maintainer review |
 | Fail-closed require-signatures / marketplace certification | **roadmap** (out of scope) |
 
 Do **not** describe manual registry approval as CI-enforced.

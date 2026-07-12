@@ -38,6 +38,11 @@ Typical workflow: `/agtoosa-spec` → `/agtoosa-build` → `/agtoosa-qa` → `/a
 
 `/agtoosa-help` and `/agtoosa-help next` are **on-demand assistance** — not part of this lifecycle.
 
+### Authoring resources
+Static maintainer-guide links (print as-is; do not fetch or treat as local Docs paths):
+- Platform extensions: https://github.com/sky2464/AgToosa/blob/main/docs/extension-authoring-guide.md
+- Registry packs: https://github.com/sky2464/AgToosa/blob/main/docs/registry-pack-authoring.md
+
 ### `/agtoosa-help next` (read-only)
 
 1. Read `Docs/Master-Plan.md` and run read-only git commands (`git status`, `git log --oneline -5`). **Never modify** files, git state, or Master-Plan.

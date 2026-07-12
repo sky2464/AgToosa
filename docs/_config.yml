@@ -1,0 +1,21 @@
+# DEV-076 — minimal GitHub Pages / Jekyll config for project-pages proof.
+# Canonical prose stays under docs/; this file only configures the static build.
+title: AgToosa
+description: AgToosa framework documentation (static proof)
+baseurl: "/AgToosa"
+url: "https://sky2464.github.io"
+
+# Exclude paths that are not part of the browsable proof surface, plus
+# markdown that embeds GitHub Actions `${{ }}` / Liquid-like tokens which
+# would break a Jekyll build if processed as templates.
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .sass-cache
+  - .jekyll-cache
+  - .jekyll-metadata
+  - _site
+  - audit-v3.1.0-prod-readiness.md
+  - adr/ADR-008-operating-contexts.md

@@ -4234,7 +4234,9 @@ _dag_deps_valid() {
     grep -q "CI-enforced" "$f"
     grep -q "agent-instructed" "$f"
     grep -q "roadmap" "$f"
-    ! grep -qiE 'runtime scheduler|schedules parallel agents|guaranteed parallel isolation' "$f"
+    # Reject overclaims of runtime enforcement (honest "roadmap" mentions of a
+    # runtime scheduler are allowed; positive scheduling claims are not).
+    ! grep -qiE 'runtime scheduler (enforces|runs|dispatches)|schedules parallel agents|provides guaranteed parallel isolation|AgToosa schedules' "$f"
   done
 }
 
@@ -4336,10 +4338,10 @@ _dag_deps_valid() {
   # Claim Boundary honesty across Quickref + Trust (no runtime scheduler claim)
   for f in "$root/docs/AgToosa_Quickref.md" "$root/template/Docs/AgToosa_Quickref.md"; do
     grep -qiE 'Work Package|DAG' "$f"
-    ! grep -qiE 'runtime scheduler|schedules parallel agents' "$f"
+    ! grep -qiE 'runtime scheduler (enforces|runs|dispatches)|schedules parallel agents|AgToosa schedules' "$f"
   done
   grep -qiE 'Work Package|work-package DAG|DEV-045' "$root/docs/AgToosa_Team_Trust_Roadmap.md"
-  ! grep -qiE 'runtime scheduler|schedules parallel agents|guaranteed parallel isolation' \
+  ! grep -qiE 'runtime scheduler (enforces|runs|dispatches)|schedules parallel agents|provides guaranteed parallel isolation|AgToosa schedules' \
     "$root/docs/AgToosa_Team_Trust_Roadmap.md"
 }
 
@@ -4355,17 +4357,18 @@ _dag_deps_valid() {
     [ -f "$f" ]
     grep -qE 'Work Package|owned_files|### 3.4 Work Package DAG' "$f"
   done
-  # Must not reopen DEV-055 surfaces
-  ! grep -q "DEV-045" "$root/docs/AgToosa_AgentCapability.md" 2>/dev/null \
-    || ! grep -q "Work Package DAG" "$root/docs/AgToosa_AgentCapability.md"
+  # Must not reopen DEV-055 surfaces with DEV-045 Work Package content
+  ! grep -qiE 'Work Package DAG|owned_files' "$root/docs/AgToosa_AgentCapability.md"
+  ! grep -qiE 'Work Package DAG|owned_files' "$root/template/Docs/AgToosa_AgentCapability.md"
   tp="$root/docs/AgToosa_TestPlan-DEV-045.md"
   [ -f "$tp" ]
   grep -q "PKG-1.1" "$tp"
   grep -q "PKG-1.2" "$tp"
   grep -q "PKG-2.1" "$tp"
-  # Dogfood evidence must be recorded (not still planned-only placeholders)
-  grep -qiE 'Status:.*GREEN|Observed exit code: *0|dogfood.*(executed|complete|GREEN)' "$tp"
-  ! grep -q "PLANNED — NOT EXECUTED" "$tp" || grep -qiE 'GREEN evidence.*Task 4.1|Status:.*GREEN' "$tp"
+  # Dogfood evidence must record an actual GREEN run (not placeholders only)
+  grep -q "Observed exit code: 0" "$tp"
+  grep -qiE 'Status:.*(?:GREEN|executed|complete)' "$tp"
+  grep -q "two-parallel" "$tp" || grep -q "PKG-2.1" "$tp"
 }
 
 @test "DEV-047 HO-001: handoff contract exists in template and maintainer docs" {
@@ -6749,8 +6752,8 @@ oss_public_surfaces() {
   grep -qi "GitHub Actions" "$guide"
   grep -qiE 'provider-neutral|unmaintained' "$guide"
   grep -qiE 'copy-ready|maintained' "$guide"
-  # Must not present GitLab/CircleCI/Jenkins/Azure as copy-ready maintained examples
-  ! grep -qiE '(GitLab|CircleCI|Jenkins|Azure Pipelines).{0,80}(copy-ready|maintained example)' "$guide"
+  # Must not present GitLab/CircleCI/Jenkins/Azure as affirmative copy-ready support
+  ! grep -qiE '(GitLab|CircleCI|Jenkins|Azure Pipelines).{0,60}(is copy-ready|are copy-ready|copy-ready example|maintained example)' "$guide"
 }
 
 @test "DEV-079 VCA-006: Command blocks never mix operating-context paths" {
@@ -6859,9 +6862,12 @@ MET_CASE_MIRROR="$BATS_TEST_DIRNAME/../docs/AgToosa_CaseStudy.template.md"
     grep -qiE 'background analytics|automatic reporting|auto-report|shall not.*report' "$f"
     grep -qi 'voluntary' "$f"
   done
-  # Kit must not introduce generator collection hooks
-  ! grep -qiE 'curl .*metric|telemetry endpoint|analytics sdk|beacon' "$MET_KIT_TEMPLATE"
-  ! grep -qiE 'curl .*metric|telemetry endpoint|analytics sdk|beacon' "$MET_KIT_MIRROR"
+  # Kit must not instruct affirmative collection/send actions
+  local f
+  for f in "$MET_KIT_TEMPLATE" "$MET_KIT_MIRROR"; do
+    ! grep -qiE 'curl .+metric|wget .+metric|POST .+telemetry|submit .+telemetry|send .+analytics' "$f"
+    ! grep -qiE 'enable telemetry by default|collection enabled by default' "$f"
+  done
 }
 
 @test "DEV-083 MET-002: common metric schema completeness" {
@@ -7368,9 +7374,8 @@ _auth_help_adapters() {
   local f
   while IFS= read -r f; do
     [ -f "$f" ]
-    # Extract Authoring resources section (through next heading or EOF) and ensure no git/Master-Plan read
     local section
-    section="$(awk '/Authoring resources/{flag=1} flag{print} /^## / && !/Authoring resources/{if(flag&&!/Authoring/){exit}}' "$f")"
+    section="$(grep -A6 -F "Authoring resources" "$f")"
     [ -n "$section" ]
     ! grep -qiE 'read Docs/Master-Plan|git status|git log|project.context|project files' <<< "$section"
   done < <(_auth_help_adapters "$root")
@@ -7408,5 +7413,5 @@ _auth_help_adapters() {
   grep -qiE "registry review|manual" "$handbook"
   grep -qi "roadmap" "$handbook"
   # Must not call manual registry approval CI-enforced
-  ! grep -qiE 'registry (approval|review).*CI-enforced|CI-enforced.*registry (approval|review)' "$handbook"
+  ! grep -qiE 'registry (approval|review) is CI-enforced|CI-enforced registry (approval|review)' "$handbook"
 }

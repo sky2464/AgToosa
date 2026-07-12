@@ -1,13 +1,25 @@
 # AgToosa Gate — deterministic lifecycle verification in CI.
 #
-# AgToosa never writes into .github/workflows/ automatically (CI is a
-# sensitive surface). To enable the gate, copy this file yourself:
+# This file is a TEMPLATE ONLY until you copy it and observe a real
+# workflow run. AgToosa never writes into .github/workflows/ automatically
+# (CI is a sensitive surface). Do not call the uncopied .example CI-enforced.
 #
-#   cp Docs/agtoosa-gate.yml.example .github/workflows/agtoosa-gate.yml
+# Safe enablement (inspect → copy → review → push → observe):
+#   1. Inspect .github/workflows/ — STOP if agtoosa-gate.yml already exists
+#      (do not silently overwrite a customized workflow).
+#   2. mkdir -p .github/workflows
+#   3. cp Docs/agtoosa-gate.yml.example .github/workflows/agtoosa-gate.yml
+#      (Maintainer Dogfood Mode: use docs/agtoosa-gate.yml.example instead.)
+#   4. Review the diff, commit, and push.
+#   5. Observe a real GitHub Actions run before calling the gate CI-enforced.
+#
+# Full adoption guide: docs/examples/verifier-ci-adoption.md
+#   (generated projects: https://github.com/sky2464/AgToosa/blob/main/docs/examples/verifier-ci-adoption.md)
 #
 # The gate runs the repo-local verifier (no AI, no network) and fails the
 # check when AgToosa state is inconsistent: missing spec approval, unmapped
 # acceptance criteria, absent threat model, missing RED/GREEN TDD evidence.
+# Verifier exit status is preserved as the job result.
 
 name: AgToosa Gate
 

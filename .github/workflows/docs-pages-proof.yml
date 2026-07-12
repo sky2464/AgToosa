@@ -1,0 +1,56 @@
+# DEV-076 — build-only GitHub Pages proof from canonical docs/.
+# Ephemeral artifact only; no automatic production deployment.
+name: Docs Pages Proof
+
+on:
+  pull_request:
+    paths:
+      - "docs/**"
+      - ".github/workflows/docs-pages-proof.yml"
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - ".github/workflows/docs-pages-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: Build docs static artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Record source revision
+        run: |
+          set -euo pipefail
+          echo "Building docs site from commit ${{ github.sha }}"
+
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@44a6e6beabd48582f863aeeb6cb2151cc1716697 # v1
+        with:
+          source: ./docs
+          destination: ./_site
+          build_revision: ${{ github.sha }}
+
+      - name: Stamp artifact with source commit
+        run: |
+          set -euo pipefail
+          printf '%s\n' "${{ github.sha }}" > _site/SOURCE_COMMIT.txt
+          echo "Artifact source commit: $(cat _site/SOURCE_COMMIT.txt)"
+
+      - name: Upload ephemeral proof artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: docs-pages-proof-${{ github.sha }}
+          path: _site
+          retention-days: 7
+          if-no-files-found: error

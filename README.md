@@ -347,7 +347,7 @@ bash Docs/agtoosa-verify.sh --strict   # warnings fail too
 bash Docs/agtoosa-verify.sh stats      # cycle analytics from your Master-Plan and phase events
 ```
 
-Copy `Docs/agtoosa-gate.yml.example` to `.github/workflows/agtoosa-gate.yml` and the same checks **block PRs in CI** — converting agent-instructed discipline into machine-enforced gates. See the [enforcement boundary comparison](docs/enforcement-comparison.md) for how this stacks up against other SDD frameworks, and [docs/benchmarks/](docs/benchmarks/README.md) for the reproducible benchmark suite.
+To enable the same checks in CI, follow the [verifier and CI adoption guide](docs/examples/verifier-ci-adoption.md) (inspect → copy the shipped `Docs/agtoosa-gate.yml.example` → review → push → observe a run). The uncopied example is **template only**; call it **CI-enforced** only after an observed workflow result. See the [enforcement boundary comparison](docs/enforcement-comparison.md) and [docs/benchmarks/](docs/benchmarks/README.md).
 
 ---
 
@@ -541,9 +541,18 @@ AgToosa ships with comprehensive GitHub automation to keep your project healthy 
 
 We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
+**Authoring resources** (canonical guides — link only, no duplicated checklists):
+
+- [Platform extension authoring](docs/extension-authoring-guide.md) — wire a new AI platform into the generator
+- [Registry pack authoring](docs/registry-pack-authoring.md) — readiness checklist before registry review
+
+## Support and sponsorship
+
+Community help, GitHub Sponsors, and optional consulting boundaries are documented in [`.github/SUPPORT.md`](.github/SUPPORT.md). Support is best effort; sponsorship is voluntary and does not buy feature access or priority.
+
 ## Security
 
-For security concerns, please see our [Security Policy](SECURITY.md).
+For security concerns, please see our [Security Policy](SECURITY.md). Do not open public issues for vulnerabilities.
 
 ## License
 

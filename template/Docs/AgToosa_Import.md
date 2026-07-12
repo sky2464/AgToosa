@@ -45,6 +45,15 @@ Append (or create) this table in the story test plan under `## Evidence`:
 
 Also record a Terminal Evidence Contract block (command, exit code, pass/fail, warnings, errors, changed files, next action) per `Docs/AgToosa_Agent.md`.
 
+## Work Package ownership gate (agent-instructed)
+
+When the handoff pack or active spec includes `### 3.4 Work Package DAG` / §8 Work Packages:
+
+1. **Compare changed files** (from the return contract) to each package's `owned_files`.
+2. Report every path outside ownership as an **ownership gap** — do not treat the import as clean until gaps are accepted, rejected, or reassigned.
+3. Present accepted packages in declared **`merge_order`** before any lifecycle checkbox or Master-Plan status mutation.
+4. Import evidence **cannot** directly mark Master-Plan tasks complete; only `/agtoosa-build` (or an explicit user request to close via import after green verification) may tick checkboxes after this gate.
+
 ## Closure Gate (agent-instructed)
 
 **Do not** mark `- [x]` on `Docs/Master-Plan.md` → `## Active Tasks` or the active spec task tree until:
@@ -53,6 +62,7 @@ Also record a Terminal Evidence Contract block (command, exit code, pass/fail, w
 2. Every Must AC touched by the import appears in the Evidence Mapping table.
 3. Verification commands exit `0` (or are explicitly accepted as pre-existing with evidence).
 4. Unresolved terminal warnings/errors are summarized and accepted or fixed.
+5. Ownership gaps (if any) are reported and resolved; accepted packages are ordered by `merge_order`.
 
 Language to use when refusing premature closure:
 
@@ -62,12 +72,13 @@ Language to use when refusing premature closure:
 
 1. **Collect returns** — Ask for or locate: handoff pack path (if any), PR/branch, logs, screenshots. Infer from recent git remotes when obvious.
 2. **Map to tasks/ACs** — Fill the Evidence Mapping table; flag unmapped Must ACs as gaps.
-3. **Verify locally** — Run verification commands; capture Terminal Evidence.
-4. **If `/agtoosa-import check`** — Report pass/fail gaps only; stop.
-5. **If full import and checklist green** — Update test plan Evidence section; then instruct the user that `/agtoosa-build` may tick the matching checkboxes (or tick them here only when the user explicitly asked import to close tasks).
-6. **Phase event** — Append to `Docs/agtoosa-events.jsonl`:
+3. **Work Package ownership** — Compare changed paths to `owned_files`; report ownership gaps; order accepted packages by `merge_order` before status mutation.
+4. **Verify locally** — Run verification commands; capture Terminal Evidence.
+5. **If `/agtoosa-import check`** — Report pass/fail gaps only; stop.
+6. **If full import and checklist green** — Update test plan Evidence section; then instruct the user that `/agtoosa-build` may tick the matching checkboxes (or tick them here only when the user explicitly asked import to close tasks).
+7. **Phase event** — Append to `Docs/agtoosa-events.jsonl`:
    `{"ts":"[ISO-8601 UTC]","phase":"import","event":"complete","story":"[Story ID]","by":"AgToosa"}`
-7. **Update Log** — Note import summary and artifact pointers.
+8. **Update Log** — Note import summary and artifact pointers.
 
 ## Relationship to Build / Ship
 

@@ -4,7 +4,7 @@
 > **Epic:** DEV-004 — Testing & QA Harness
 > **Type:** Docs
 > **Priority:** P2
-> **Status:** ⬜ Backlog
+> **Status:** 🟨 Build complete (awaiting review)
 > **Estimate:** S
 > **Spec created:** 2026-07-11
 > **Spec deepened:** 2026-07-11
@@ -137,7 +137,7 @@ Key interfaces:
 
 ### 2.4 Build Scope
 
-⬜ Backlog — Proposed Scope Boundary (not build authorization)
+✅ Implemented — Scope Boundary (kit docs + inventory + MET tests; no telemetry)
 
 Files in scope      : future metrics-kit and case-study template sources/mirrors, documentation inventory wiring, and focused MET contract tests
 Directories in scope: `template/Docs/`, `docs/`, `lib/config.sh`, and `tests/`
@@ -148,23 +148,23 @@ Out of scope        : all §1.4 exclusions, network code, analytics infrastructu
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Define the voluntary measurement contract
-  - [ ] 1.1 Write opt-in, local-only, minimization, redaction, withdrawal, and consent rules — _Requirements: AC-001, AC-002_
-  - [ ] 1.2 Define the common metric schema, interpretation rules, and synthetic-example labels — _Requirements: AC-002_
-- [ ] **2.** Author the six metric templates
-  - [ ] 2.1 Define install-success fields and formula — _Requirements: AC-003_
-  - [ ] 2.2 Define verifier-adoption fields and formula — _Requirements: AC-004_
-  - [ ] 2.3 Define handoff/import fields and formula — _Requirements: AC-005_
-  - [ ] 2.4 Define cross-model-finding fields and interpretation boundary — _Requirements: AC-006_
-  - [ ] 2.5 Define cycle-time fields, pauses, and incomplete-state handling — _Requirements: AC-007_
-  - [ ] 2.6 Define pack-maintenance fields and no-SLA boundary — _Requirements: AC-008_
-- [ ] **3.** Complete the documentation kit
-  - [ ] 3.1 Author the case-study template with evidence, limitations, consent, and claim review — _Requirements: AC-001, AC-002_
-  - [ ] 3.2 Add clearly labeled synthetic worked examples and maintainer mirrors — _Requirements: AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008_
-  - [ ] 3.3 Register the two kit files for install/update without collection hooks — _Requirements: AC-001_
-- [ ] **4.** Prove the documentation contract
-  - [ ] 4.1 Add MET tests for required fields, six metric sections, mirror parity, and no-telemetry language before implementation — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008_
-  - [ ] 4.2 Record actual RED/GREEN and privacy-review evidence only during future execution — _Requirements: AC-001, AC-002_
+- [x] **1.** Define the voluntary measurement contract
+  - [x] 1.1 Write opt-in, local-only, minimization, redaction, withdrawal, and consent rules — _Requirements: AC-001, AC-002_
+  - [x] 1.2 Define the common metric schema, interpretation rules, and synthetic-example labels — _Requirements: AC-002_
+- [x] **2.** Author the six metric templates
+  - [x] 2.1 Define install-success fields and formula — _Requirements: AC-003_
+  - [x] 2.2 Define verifier-adoption fields and formula — _Requirements: AC-004_
+  - [x] 2.3 Define handoff/import fields and formula — _Requirements: AC-005_
+  - [x] 2.4 Define cross-model-finding fields and interpretation boundary — _Requirements: AC-006_
+  - [x] 2.5 Define cycle-time fields, pauses, and incomplete-state handling — _Requirements: AC-007_
+  - [x] 2.6 Define pack-maintenance fields and no-SLA boundary — _Requirements: AC-008_
+- [x] **3.** Complete the documentation kit
+  - [x] 3.1 Author the case-study template with evidence, limitations, consent, and claim review — _Requirements: AC-001, AC-002_
+  - [x] 3.2 Add clearly labeled synthetic worked examples and maintainer mirrors — _Requirements: AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008_
+  - [x] 3.3 Register the two kit files for install/update without collection hooks — _Requirements: AC-001_
+- [x] **4.** Prove the documentation contract
+  - [x] 4.1 Add MET tests for required fields, six metric sections, mirror parity, and no-telemetry language before implementation — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007, AC-008_
+  - [x] 4.2 Record actual RED/GREEN and privacy-review evidence only during future execution — _Requirements: AC-001, AC-002_
 
 ### 3.2 Wave Plan
 

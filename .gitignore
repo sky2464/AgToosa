@@ -46,6 +46,10 @@ logs/
 dist/
 build/
 *.egg-info/
+_site/
+docs/_site/
+.jekyll-cache/
+.sass-cache/
 
 # ── AgToosa Generated Output ────────────────────────────────
 ship/

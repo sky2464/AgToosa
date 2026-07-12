@@ -129,20 +129,20 @@ Out of scope        : registry implementation, pack publication, new onboarding 
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Authoring discovery contract
-  - [ ] 1.1 Add RED AUTH checks for canonical files, checklist fields, links, adapter parity, and static-help behavior — _Requirements: AC-002, AC-004, AC-005, AC-006_
-  - [ ] 1.2 Define the one-line discovery copy and stable link policy — _Requirements: AC-003, AC-004, AC-005_
-- [ ] **2.** Canonical authoring content
-  - [ ] 2.1 Refresh the extension guide against current platform wiring and parity surfaces — _Requirements: AC-001, AC-007_
-  - [ ] 2.2 Create the registry-pack handbook and readiness checklist — _Requirements: AC-002, AC-007_
-- [ ] **3.** Registry and README discovery
-  - [ ] 3.1 Replace expanded pack-readiness duplication with a canonical handbook pointer in Registry mirrors — _Requirements: AC-003, AC-006_
-  - [ ] 3.2 Add concise README links to both authoring owners — _Requirements: AC-004, AC-006_
-- [ ] **4.** Help discovery parity
-  - [ ] 4.1 Add the stable authoring-resources pointer to every maintained help adapter — _Requirements: AC-005, AC-006_
-  - [ ] 4.2 Confirm default help remains static and performs no context read — _Requirements: AC-005_
-- [ ] **5.** Evidence
-  - [ ] 5.1 Run focused AUTH checks and record RED/GREEN evidence without changing registry behavior — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007_
+- [x] **1.** Authoring discovery contract
+  - [x] 1.1 Add RED AUTH checks for canonical files, checklist fields, links, adapter parity, and static-help behavior — _Requirements: AC-002, AC-004, AC-005, AC-006_
+  - [x] 1.2 Define the one-line discovery copy and stable link policy — _Requirements: AC-003, AC-004, AC-005_
+- [x] **2.** Canonical authoring content
+  - [x] 2.1 Refresh the extension guide against current platform wiring and parity surfaces — _Requirements: AC-001, AC-007_
+  - [x] 2.2 Create the registry-pack handbook and readiness checklist — _Requirements: AC-002, AC-007_
+- [x] **3.** Registry and README discovery
+  - [x] 3.1 Replace expanded pack-readiness duplication with a canonical handbook pointer in Registry mirrors — _Requirements: AC-003, AC-006_
+  - [x] 3.2 Add concise README links to both authoring owners — _Requirements: AC-004, AC-006_
+- [x] **4.** Help discovery parity
+  - [x] 4.1 Add the stable authoring-resources pointer to every maintained help adapter — _Requirements: AC-005, AC-006_
+  - [x] 4.2 Confirm default help remains static and performs no context read — _Requirements: AC-005_
+- [x] **5.** Evidence
+  - [x] 5.1 Run focused AUTH checks and record RED/GREEN evidence without changing registry behavior — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-005, AC-006, AC-007_
 
 ### 3.2 Wave Plan
 

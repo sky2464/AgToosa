@@ -47,9 +47,9 @@ DEV-042 through DEV-060 define the Competitive execution wave. **v5.3.0 shipped 
 - Supply-chain hardening (DEV-064–066) — tar-slip pre-scan, pack containment, pinned installs + `SHA256SUMS`.
 - Public benchmark suite scaffold (DEV-060) — `docs/benchmarks/` (competitor runs manual-deferred).
 
-**Shipped agent-instructed:** Async agent handoff packs (DEV-047 `/agtoosa-handoff`), agent result import gate (DEV-048 `/agtoosa-import`), and Evidence ledger (DEV-049 `/agtoosa-evidence`) — all wired into canonical workflow docs; agent-instructed, not generator-enforced.
+**Shipped agent-instructed:** Async agent handoff packs (DEV-047 `/agtoosa-handoff`), agent result import gate (DEV-048 `/agtoosa-import`), Evidence ledger (DEV-049 `/agtoosa-evidence`), and Work Package Wave DAG schema (DEV-045 — Spec/Build/Handoff/Import consume `### 3.4 Work Package DAG`; agent-instructed derivation and fan-out checks; no runtime scheduler) — all wired into canonical workflow docs; agent-instructed where noted, not a hosted orchestrator.
 
-**Still backlog (examples):** work-package DAG schema (DEV-045 partial), worktree isolation (DEV-046), cross-model review (DEV-050), tracker sync (DEV-051), hook automation pack (DEV-052), extension catalog (DEV-053), agent capability matrix (DEV-055), retrospective loop (DEV-056), multi-repo overlay (DEV-057), local dashboard (DEV-058), governance policy-as-code (DEV-059). Signed registry provenance (DEV-054) ships optional soft-warn minisign; fail-closed / SBOM / cosign verify / private-key automation remain open. See `docs/Master-Plan.md` → Backlog.
+**Still backlog (examples):** worktree isolation (DEV-046), cross-model review (DEV-050), tracker sync (DEV-051), hook automation pack (DEV-052), extension catalog (DEV-053), retrospective loop (DEV-056), multi-repo overlay (DEV-057), local dashboard (DEV-058), governance policy-as-code (DEV-059). Agent capability matrix (DEV-055) and signed registry provenance (DEV-054) soft-warn minisign are shipped separately; fail-closed / SBOM / cosign verify / private-key automation remain open. See `docs/Master-Plan.md` → Backlog.
 
 Each story must classify its controls as generator-enforced, CI-enforced, agent-instructed, manual, or roadmap before it can be described as implemented.
 
@@ -74,6 +74,7 @@ Each story must classify its controls as generator-enforced, CI-enforced, agent-
 | Async agent handoff packs | agent-instructed | `/agtoosa-handoff` exports a context snapshot, task list, evidence requirements, and return instructions before dispatching to async agents. Not generator-enforced. |
 | Agent result import gate | agent-instructed | `/agtoosa-import` validates returned evidence, maps ACs, and gates Tracking updates on repo-local verification. "Imported claims are not evidence until repo-local verification passes." Not generator-enforced. |
 | Evidence ledger | agent-instructed | `/agtoosa-evidence` wired into `/agtoosa-review` (creates `phase=review` rows) and `/agtoosa-ship` (finalizes `phase=ship` rows); `docs/archived/evidence-[story-id].md` is the per-story proof index. Not generator-enforced. Verifier WARN/FAIL for missing ledgers is roadmap. |
+| Work Package Wave DAG | generator-enforced schema + agent-instructed checks | `SPEC-FORMAT.md` `### 3.4` ships eight columns; Spec derives packages; Build fans out only on disjoint ownership; Handoff exports selected-wave rows; Import reports ownership gaps in `merge_order`. No runtime scheduler. |
 | TDD workflow | agent-instructed + machine-warned | `/agtoosa-build` requires RED/GREEN evidence blocks; the verifier warns when they are missing (`--strict` fails). |
 | STRIDE threat modeling | agent-instructed + machine-checked | `/agtoosa-spec` instructs threat modeling; the verifier fails active specs without a threat-model section. |
 | SBOM, SAST, DAST, observability | agent-instructed | Workflows instruct tool use; project stacks must provide the actual tools. |

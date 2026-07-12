@@ -25,8 +25,8 @@
 | DEV-077 | Chore: Authoring Guide and Onboarding Surface | Chore | S | 🟨 In Progress | 0/5 |
 | DEV-079 | Docs: Verifier and CI Adoption Examples | Docs | S | 🟨 In Progress | 0/5 |
 | DEV-080 | Feature: Official Registry Pack Pilot | Feature | L | 🟨 In Progress | 0/4 |
-| DEV-082 | Spike: High-Assurance Signature Mode Validation | Spike | S | 🟨 In Progress | 0/4 |
-| DEV-083 | Docs: Voluntary Workflow Metrics and Case Study Kit | Docs | S | 🟨 In Progress | 0/4 |
+| DEV-082 | Spike: High-Assurance Signature Mode Validation | Spike | S | 🟨 In Progress | 4/4 |
+| DEV-083 | Docs: Voluntary Workflow Metrics and Case Study Kit | Docs | S | 🟨 In Progress | 4/4 |
 | DEV-084 | Chore: Open-Source Sustainability and Support Boundary | Chore | XS | 🟨 In Progress | 0/4 |
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.8.md -->
@@ -693,3 +693,5 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | ✏️ /agtoosa-spec DEV-045 enrolled — Work Package Wave DAG deepened (schema + Spec/Build/Handoff/Import wiring); spec `docs/archived/spec-DEV-045.md`; test plan `docs/AgToosa_TestPlan-DEV-045.md`; estimate M; Active Cycle Todo; awaiting Spec Approved | AgToosa |
 | 2026-07-11 | ✅ /agtoosa-spec — Spec ✅ Approved — remaining-specs fan-out wave 1: DEV-045/076/077/079/080/082/083/084; demand-gated DEV-051/057 parked; dependents DEV-046/059/052/056/058 deferred to later waves | AgToosa |
 | 2026-07-11 | 🏗️ Build 🏗️ Started — remaining-specs fan-out wave 1 — 8 parallel subagents; orchestrator owns Master-Plan | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-082 — Task 🟢 4/4 — HAS bats green; spike decision Defer; no production flags | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-083 — Task 🟢 4/4 — MET-001–010 green; metrics kit + case-study template; no telemetry | AgToosa |

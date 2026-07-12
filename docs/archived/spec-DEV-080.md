@@ -4,7 +4,7 @@
 > **Epic:** DEV-003 — Community Template Registry
 > **Type:** Feature
 > **Priority:** P2
-> **Status:** ⬜ Backlog
+> **Status:** 🔧 Awaiting Manual (automated tasks done; external publish deferred)
 > **Estimate:** L
 > **Spec created:** 2026-07-11
 > **Spec deepened:** 2026-07-11
@@ -149,21 +149,21 @@ Out of scope        : all §1.4 exclusions, unrelated generator behavior, regist
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Catalog gate and pilot contract
-  - [ ] 1.1 Confirm the implemented DEV-053 manifest and compatibility contract; record the consumed version — _Requirements: AC-002, AC-004_
-  - [ ] 1.2 Define the shared pilot review and evidence checklist — _Requirements: AC-005, AC-006, AC-007_
-- [ ] **2.** Author the three maintained candidates
-  - [ ] 2.1 Author the web pack with manifest, examples, compatibility, and ownership — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-007_
-  - [ ] 2.2 Author the API/service pack with manifest, examples, compatibility, and ownership — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-007_
-  - [ ] 2.3 Author the infrastructure/security pack with manifest, examples, compatibility, and ownership — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-006, AC-007_
-- [ ] **3.** Prove local install and safety boundaries
-  - [ ] 3.1 Add OPP contract and deterministic fixture tests before implementation changes — _Requirements: AC-002, AC-004, AC-005, AC-006_
-  - [ ] 3.2 Run each future candidate through isolated install, preview, queue, and merge checks; record actual results — _Requirements: AC-005, AC-006_
-  - [ ] 3.3 Review maintenance and deprecation records for all three candidates — _Requirements: AC-007_
-- [ ] **4.** Document and publish within the external boundary
-  - [ ] 4.1 Publish the local pilot inventory with exact candidate state and evidence links — _Requirements: AC-001, AC-003, AC-005, AC-008_
-  - [ ] 4.2 Submit the three registry entries and obtain external review — _Requirements: AC-002, AC-008_ `[manual]`
-  - [ ] 4.3 Confirm accepted external records before changing state to published — _Requirements: AC-008_ `[manual]`
+- [x] **1.** Catalog gate and pilot contract
+  - [x] 1.1 Confirm the implemented DEV-053 manifest and compatibility contract; record the consumed version — _Requirements: AC-002, AC-004_ (consumed: schema_version 1.0)
+  - [x] 1.2 Define the shared pilot review and evidence checklist — _Requirements: AC-005, AC-006, AC-007_ (`docs/official-pack-pilot-checklist.md`)
+- [x] **2.** Author the three maintained candidates
+  - [x] 2.1 Author the web pack with manifest, examples, compatibility, and ownership — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-007_ (`packs/official-web/`)
+  - [x] 2.2 Author the API/service pack with manifest, examples, compatibility, and ownership — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-007_ (`packs/official-api/`)
+  - [x] 2.3 Author the infrastructure/security pack with manifest, examples, compatibility, and ownership — _Requirements: AC-001, AC-002, AC-003, AC-004, AC-006, AC-007_ (`packs/official-infra/`)
+- [x] **3.** Prove local install and safety boundaries
+  - [x] 3.1 Add OPP contract and deterministic fixture tests before implementation changes — _Requirements: AC-002, AC-004, AC-005, AC-006_
+  - [x] 3.2 Run each future candidate through isolated install, preview, queue, and merge checks; record actual results — _Requirements: AC-005, AC-006_
+  - [x] 3.3 Review maintenance and deprecation records for all three candidates — _Requirements: AC-007_
+- [x] **4.** Document and publish within the external boundary
+  - [x] 4.1 Publish the local pilot inventory with exact candidate state and evidence links — _Requirements: AC-001, AC-003, AC-005, AC-008_
+  - [ ] 4.2 Submit the three registry entries and obtain external review — _Requirements: AC-002, AC-008_ `[manual-deferred: 2026-07-11]`
+  - [ ] 4.3 Confirm accepted external records before changing state to published — _Requirements: AC-008_ `[manual-deferred: 2026-07-11]`
 
 ### 3.2 Wave Plan
 
@@ -178,7 +178,7 @@ Out of scope        : all §1.4 exclusions, unrelated generator behavior, regist
 Test plan: `docs/AgToosa_TestPlan-DEV-080.md`
 AC coverage: 8 ACs mapped to 10 planned OPP test IDs
 Smoke set: 4 planned tests tagged `@smoke`
-Evidence state: RED and GREEN are unexecuted placeholders; no test or install evidence is claimed.
+Evidence state: RED then GREEN recorded in `docs/AgToosa_TestPlan-DEV-080.md`. Tasks 4.2/4.3 remain manual-deferred; packs stay local candidate only.
 
 ## ✅ Spec Approved
 

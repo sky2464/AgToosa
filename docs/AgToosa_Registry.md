@@ -73,7 +73,12 @@ bash agtoosa.sh --registry install my-pack --allow-unverified
 
 ## Creating Your Own Pack
 
-To publish a template pack:
+Before opening a registry PR, complete the canonical readiness checklist in
+[`docs/registry-pack-authoring.md`](registry-pack-authoring.md)
+(scoped spec, tests, threat notes, compatibility, provenance, worked example, and named owner).
+That handbook owns the full checklist — this section is discovery only.
+
+Publication summary:
 
 1. Create a GitHub repo: `your-org/agtoosa-my-pack`
 2. Write your workflow markdown files.
@@ -86,7 +91,7 @@ To publish a template pack:
    - Add an entry to `registry.json` with name, description, author, version, URL, and SHA-256.
    - Add a `packs/my-pack.json` manifest with full metadata and link to your repo docs.
 
-A maintainer will review and merge your contribution.
+A maintainer will review and merge your contribution (`verified: true` is manual approval).
 
 ---
 
@@ -197,6 +202,30 @@ AgToosa caches `registry.json` locally so list/search/info work when the network
 - `--registry install <name>@1.2.0` installs only when the index lists exactly `1.2.0` for that name.
 
 ---
+
+## Official Pack Pilot
+
+DEV-080 maintains exactly three **local candidate** packs (not a marketplace; **not externally published**). Catalog contract: DEV-053 `schema_version` 1.0. Maintainer: sky2464.
+
+| Pack | Primary domain | Source root | Install fixture | Status |
+|------|----------------|-------------|-----------------|--------|
+| `official-web` | primary domain: web | `packs/official-web/` | `tests/fixtures/registry-packs/official-web/` | local candidate — not externally published |
+| `official-api` | primary domain: api | `packs/official-api/` | `tests/fixtures/registry-packs/official-api/` | local candidate — not externally published |
+| `official-infra` | primary domain: infrastructure | `packs/official-infra/` | `tests/fixtures/registry-packs/official-infra/` | local candidate — not externally published |
+
+**Support boundary:** “Official” means curated under each pack’s `MAINTENANCE.md` for the pilot. It is not a fit guarantee for every project and does not imply external registry availability.
+
+**Local install (offline):**
+
+```bash
+bash agtoosa.sh --registry install ./packs/official-web
+bash agtoosa.sh --registry install ./packs/official-api
+bash agtoosa.sh --registry install ./packs/official-infra
+```
+
+Evidence and review checklist: `docs/official-pack-pilot-checklist.md` · test plan: `docs/AgToosa_TestPlan-DEV-080.md`.
+
+External submission/approval remains **manual**. Do not report a pack as externally published until the accepted `agtoosa-registry` record is independently confirmed.
 
 ## Extension and Preset Catalog
 

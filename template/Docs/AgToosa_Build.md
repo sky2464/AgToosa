@@ -79,9 +79,15 @@ After every command, test run, scan, or parallel subagent during `/agtoosa-build
 
 2.  **Dependency Validation:** Never assume dependency versions from memory — verify via web search or terminal (`npm view`, `pip index`, `dart pub outdated`).
 
-3.  **Wave execution:** Read `### 3.2 Wave Plan` in the active spec and execute tasks **wave by wave**: complete every task in Wave N — including its Terminal Evidence — before starting Wave N+1. Within a wave, tasks share no files or data dependencies, so on Claude Code they may be dispatched in parallel via the pattern above; on all other platforms run the wave's tasks sequentially. If the spec has no Wave Plan, fall back to the `## Active Tasks` order in `Docs/Master-Plan.md`.
+3.  **Wave execution:** Read `### 3.2 Wave Plan` and `### 3.4 Work Package DAG` in the active spec and execute tasks **wave by wave**: complete every task in Wave N — including its Terminal Evidence — before starting Wave N+1. Within a wave, tasks share no files or data dependencies, so on Claude Code they may be dispatched in parallel via the pattern above; on all other platforms run the wave's tasks sequentially. If the spec has no Wave Plan, fall back to the `## Active Tasks` order in `Docs/Master-Plan.md`.
 
-    > **Async dispatch:** Before sending tasks to async or background agents for a wave, offer to run `/agtoosa-handoff wave` (see `Docs/AgToosa_Handoff.md`) to export a handoff pack. Agents should return results via `/agtoosa-import` before any Tracking update.
+    > **Work Package fan-out gate (agent-instructed):** Before parallel fan-out of a wave, read each Work Package row for that wave:
+    > - Confirm every `depends_on` package exists, is complete, and has an **earlier wave**.
+    > - Confirm same-wave `owned_files` sets are **disjoint**. On overlap, do **not** fan out in parallel — convert the affected packages to an explicit **sequential fallback** in the Wave Plan and run them in `merge_order`.
+    > - Run each package's `verification` command after its lane completes; present accepted results in `merge_order` before Tracking updates.
+    > - Claim Boundary: package checks are **agent-instructed**; agent selection and branch integration are **manual**; a runtime scheduler is **roadmap**.
+
+    > **Async dispatch:** Before sending tasks to async or background agents for a wave, offer to run `/agtoosa-handoff wave` (see `Docs/AgToosa_Handoff.md`) to export a handoff pack that includes the selected-wave Work Packages section. Agents should return results via `/agtoosa-import` before any Tracking update.
 
 4.  **For each atomic task, execute the TDD Cycle:**
 

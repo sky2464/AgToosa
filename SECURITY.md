@@ -20,7 +20,9 @@ If you discover a security vulnerability in AgToosa, please report it responsibl
    - Potential impact assessment
    - Suggested fix (if any)
 
-We will acknowledge receipt within **48 hours** and provide a timeline for resolution.
+Security intake is private and maintained on a **best-effort** basis. This policy defines where to report; it does **not** establish an acknowledgement, response, remediation, or SLA timeline. Any contractual timing commitments would appear only in a separately executed agreement, not in this document.
+
+For community support channels (questions, bugs, proposals) and the sponsorship/consulting boundary, see [`.github/SUPPORT.md`](.github/SUPPORT.md).
 
 ## Security Model
 

@@ -32,6 +32,12 @@ Utilities (load on demand): `/agtoosa-status`, `/agtoosa-task`, `/agtoosa-qa`,
    unless they explicitly asked to chain phases.
 6. **Scope discipline.** Stay inside the spec's Build Scope; new ideas go to
    the Master-Plan Backlog, not into the current diff.
+7. **Work Package DAG (when present).** Specs may declare `### 3.4 Work Package
+   DAG` rows (`package_id`, `owned_files`, `depends_on`, `merge_order`,
+   `verification`). Build checks ownership before fan-out; Handoff exports
+   selected-wave packages; Import reports ownership gaps. Derivation and
+   checks are **agent-instructed**; schema copies are **generator-enforced**;
+   bats/CI when wired are **CI-enforced**; a runtime scheduler is **roadmap**.
 
 ## State files
 
@@ -63,8 +69,9 @@ bash docs/agtoosa-verify.sh stats      # cycle analytics
 | 4 — Review | Done stories have archived review artifacts |
 | 5 — Version | Generator bash/ps1 parity (maintainer repos) or installed `.agtoosa-version` marker |
 
-CI template: copy `docs/agtoosa-gate.yml.example` to
-`.github/workflows/agtoosa-gate.yml` to block PRs on verifier failures.
+CI gate: `docs/agtoosa-gate.yml.example` is a **template only** until you
+copy, review, push, and observe a run. Full sequence:
+[docs/examples/verifier-ci-adoption.md](examples/verifier-ci-adoption.md).
 
 ## Generator CLI (install/maintenance)
 

@@ -152,21 +152,21 @@ Out of scope        : all §1.4 exclusions, changes to `lib/provenance.sh`, regi
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Define baseline and decision gates
-  - [ ] 1.1 Document the current layered trust model for both protected surfaces — _Requirements: AC-002_
-  - [ ] 1.2 Define demand, operability, security, and rollback criteria before gathering findings — _Requirements: AC-001, AC-007, AC-008_
-- [ ] **2.** Gather validation inputs
-  - [ ] 2.1 Record representative demand scenarios and constraints without telemetry — _Requirements: AC-001, AC-008_
-  - [ ] 2.2 Exercise synthetic key lifecycle roles and operations outside the repository — _Requirements: AC-003, AC-008_
-  - [ ] 2.3 Complete the signature/key/tool/network/cache/rotation failure matrix — _Requirements: AC-004_
-  - [ ] 2.4 Classify existing artifact compatibility and opt-in migration paths — _Requirements: AC-005_
-- [ ] **3.** Validate recovery and decide
-  - [ ] 3.1 Conduct and record the authorized rollback/break-glass tabletop — _Requirements: AC-006, AC-008_
-  - [ ] 3.2 Review demand, key operations, availability, migration, and rollback findings — _Requirements: AC-001, AC-003, AC-004, AC-005, AC-006_
-  - [ ] 3.3 Issue the adopt/defer/reject decision with confidence and prerequisites — _Requirements: AC-007, AC-008_
-- [ ] **4.** Preserve the pre-implementation gate
-  - [ ] 4.1 If adopted, draft a separate future implementation proposal without changing production behavior — _Requirements: AC-007_
-  - [ ] 4.2 Confirm no `AGTOOSA_REQUIRE_SIGNATURES` implementation, production key material, or shipped claim entered the spike — _Requirements: AC-003, AC-007, AC-008_
+- [x] **1.** Define baseline and decision gates
+  - [x] 1.1 Document the current layered trust model for both protected surfaces — _Requirements: AC-002_
+  - [x] 1.2 Define demand, operability, security, and rollback criteria before gathering findings — _Requirements: AC-001, AC-007, AC-008_
+- [x] **2.** Gather validation inputs
+  - [x] 2.1 Record representative demand scenarios and constraints without telemetry — _Requirements: AC-001, AC-008_
+  - [x] 2.2 Exercise synthetic key lifecycle roles and operations outside the repository — _Requirements: AC-003, AC-008_
+  - [x] 2.3 Complete the signature/key/tool/network/cache/rotation failure matrix — _Requirements: AC-004_
+  - [x] 2.4 Classify existing artifact compatibility and opt-in migration paths — _Requirements: AC-005_
+- [x] **3.** Validate recovery and decide
+  - [x] 3.1 Conduct and record the authorized rollback/break-glass tabletop — _Requirements: AC-006, AC-008_
+  - [x] 3.2 Review demand, key operations, availability, migration, and rollback findings — _Requirements: AC-001, AC-003, AC-004, AC-005, AC-006_
+  - [x] 3.3 Issue the adopt/defer/reject decision with confidence and prerequisites — _Requirements: AC-007, AC-008_
+- [x] **4.** Preserve the pre-implementation gate
+  - [x] 4.1 If adopted, draft a separate future implementation proposal without changing production behavior — _Requirements: AC-007_ (N/A — deferred; no proposal opened)
+  - [x] 4.2 Confirm no `AGTOOSA_REQUIRE_SIGNATURES` implementation, production key material, or shipped claim entered the spike — _Requirements: AC-003, AC-007, AC-008_
 
 ### 3.2 Wave Plan
 
