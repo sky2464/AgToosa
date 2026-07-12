@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (DEV-085 — post-v5.3.12 Master-Plan reconciliation; demand-gated DEV-051/057 parked)
+> **Last updated:** 2026-07-11 (DEV-085 shipped — v5.3.13 post-ship hygiene)
 
 ## Project Charter
 
@@ -9,8 +9,8 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | 🏁 v5.3.12 shipped — all unblocked specs done; DEV-051/057 demand-gated |
-| Milestone | `v5.3.13` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
+| Current phase | 🏁 v5.3.13 shipped — all unblocked specs done; DEV-051/057 demand-gated |
+| Milestone | `v5.3.14` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
 | Active cycle | — |
 | Cycle capacity | `8 story points` |
 
@@ -20,7 +20,9 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-085 | Chore: Post-v5.3.12 release hygiene (bats restore + Master-Plan reconciliation) | Chore | XS | ✅ Done | 1/1 |
+| *(empty — cycle archived)* | | | | | |
+
+<!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.13.md -->
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.12.md -->
 
@@ -111,7 +113,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | DEV-030 | Fix: `/agtoosa-update` self-target uncertainty | Fix | S | DEV-002 | High | 🏁 Shipped |
 | DEV-033 | Fix: agtoosa.ps1 PSScriptAnalyzer approved verbs | Fix | XS | DEV-001 | Medium | 🏁 Shipped |
 | DEV-034 | Chore: Maintainer release-state reconciliation | Chore | S | DEV-004 | High | 🏁 Shipped |
-| DEV-085 | Chore: Post-v5.3.12 release hygiene (bats restore + Master-Plan reconciliation) | Chore | XS | DEV-004 | High | ✅ Done — v5.3.13 prep |
+| DEV-085 | Chore: Post-v5.3.12 release hygiene (bats restore + Master-Plan reconciliation) | Chore | XS | DEV-004 | High | 🏁 Shipped — v5.3.13 |
 
 ## Epics
 
@@ -170,6 +172,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
     *   **Last shipped:** DEV-079 — Verifier and CI Adoption Examples → `docs/archived/spec-DEV-079.md`
     *   **Last shipped:** DEV-083 — Voluntary Workflow Metrics and Case Study Kit → `docs/archived/spec-DEV-083.md`
     *   **Last shipped:** DEV-084 — Open-Source Sustainability and Support Boundary → `docs/archived/spec-DEV-084.md`
+    *   **Last shipped:** DEV-085 — Post-v5.3.12 release hygiene → `docs/archived/spec-DEV-085.md`
     *   **Current:** All epic stories shipped — no open harness work
 
 ## Completed This Cycle
@@ -179,6 +182,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-085 | Chore: Post-v5.3.12 release hygiene (bats restore + Master-Plan reconciliation) | 2026-07-11 | [spec-DEV-085.md](archived/spec-DEV-085.md) · [review-DEV-085.md](archived/review-DEV-085.md) · [evidence-DEV-085.md](archived/evidence-DEV-085.md) |
 | DEV-058 | Feature: Local Dashboard | 2026-07-11 | [spec-DEV-058.md](archived/spec-DEV-058.md) · [review-DEV-058.md](archived/review-DEV-058.md) · [evidence-DEV-058.md](archived/evidence-DEV-058.md) |
 | DEV-052 | Feature: Hook Automation Pack | 2026-07-11 | [spec-DEV-052.md](archived/spec-DEV-052.md) · [review-DEV-052.md](archived/review-DEV-052.md) · [evidence-DEV-052.md](archived/evidence-DEV-052.md) |
 | DEV-056 | Feature: Retrospective Learning Loop | 2026-07-11 | [spec-DEV-056.md](archived/spec-DEV-056.md) · [review-DEV-056.md](archived/review-DEV-056.md) · [evidence-DEV-056.md](archived/evidence-DEV-056.md) |
@@ -400,3 +404,6 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 | 2026-07-11 | 🚀 Release 5.3.12 shipped — v5.3.12; version parity bash/ps1/npm; Milestone v5.3.13 (next); all unblocked remaining specs complete | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-085 — Task 🟢 1/1 — bats restore (bb8a8bd) + Master-Plan reconciliation after v5.3.12 ship drift | AgToosa |
 | 2026-07-11 | ✏️ DEV-085 — Master-Plan Update Log / Completed This Cycle / Epics reconciled; roadmap-spec-index note added | AgToosa |
+| 2026-07-11 | 🔍 Review ✅ Approved — DEV-085; 0 🔴 Critical; report: `docs/archived/review-DEV-085.md`; evidence: `docs/archived/evidence-DEV-085.md` | AgToosa |
+| 2026-07-11 | 🚀 Ship complete — v5.3.13 — DEV-085; smoke PASS; cycle archived | AgToosa |
+| 2026-07-11 | 🚀 Release 5.3.13 shipped — v5.3.13; version parity bash/ps1/npm; Milestone v5.3.14 (next); post-ship hygiene complete | AgToosa |

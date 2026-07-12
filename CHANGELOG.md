@@ -5,6 +5,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.13] — 2026-07-11
+
+Patch release: post-ship hygiene (DEV-085).
+
+### Changed
+
+- **DEV-085 — Post-v5.3.12 release hygiene.** Restores ship-regression bats coverage (`bb8a8bd`) and reconciles `docs/Master-Plan.md` Completed This Cycle / Update Log / Epics after v5.3.12 ship drift.
+
 ## [5.3.12] — 2026-07-11
 
 Patch release: wave 4 (DEV-058).
