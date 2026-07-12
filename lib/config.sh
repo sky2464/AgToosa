@@ -22,6 +22,8 @@ DOCS_FILES=(
   "Docs/AgToosa_Import.md"
   "Docs/AgToosa_Evidence.md"
   "Docs/agtoosa-evidence.jsonl"
+  "Docs/AgToosa_MetricsKit.md"
+  "Docs/AgToosa_CaseStudy.template.md"
   "Docs/AgToosa_Status.md"
   "Docs/AgToosa_StatusGuide.md"
   "Docs/AgToosa_Readiness.md"

@@ -275,6 +275,14 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
         **Wave 2 (sequential after Wave 1):** [list sub-task IDs]
         ```
 
+    *   **Work Package DAG derivation (agent-instructed):** After the Wave Plan exists, emit `### 3.4 Work Package DAG` in the active spec (schema in `docs/SPEC-FORMAT.md`). Rules:
+        - Emit **one Work Package row for every executable sub-task** (`package_id` = `PKG-<task-id>`, for example `PKG-1.1`).
+        - Set `wave` from the Wave Plan; set `depends_on` to packages in earlier waves whose outputs this task needs (or `—`).
+        - Fill `owned_files`, `inputs`, `outputs`, `merge_order`, and `verification` for every row.
+        - Packages proposed for **parallel** execution must have non-empty `owned_files` and `verification`.
+        - Same-wave `owned_files` sets must be **disjoint**. On overlap (duplicate paths or intersecting directory wildcards), replace the parallel relationship with an explicit **sequential fallback** in the Wave Plan.
+        - Every `depends_on` reference must resolve to an existing package with an **earlier wave**; reject unknown, self, circular, same-wave, or later-wave dependencies.
+        - XS / single-task stories may stay sequential without full DAG ceremony.
     *   Mirror the task tree into `docs/Master-Plan.md` under `## Active Tasks` (replacing the flat table format).
 
 14. **Test Plan Skeleton:**

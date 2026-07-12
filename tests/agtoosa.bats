@@ -4173,7 +4173,200 @@ assert_competitive_story_artifacts() {
   assert_competitive_story_artifacts "DEV-048"
 }
 
-# ── DEV-047: Async Agent Handoff Packs (HO-001–HO-005) ───────────────────────
+# ── DEV-045: Work Package Wave DAG (DAG-001–DAG-007) ─────────────────────────
+
+# Ownership overlap: same-wave packages must have disjoint owned_files, or the
+# Wave Plan must declare an explicit sequential fallback for the overlap set.
+_dag_paths_overlap() {
+  local a="$1" b="$2"
+  local pa pb
+  for pa in $a; do
+    for pb in $b; do
+      [[ "$pa" == "$pb" ]] && return 0
+      [[ "$pa" == */ ]] && [[ "$pb" == "$pa"* ]] && return 0
+      [[ "$pb" == */ ]] && [[ "$pa" == "$pb"* ]] && return 0
+    done
+  done
+  return 1
+}
+
+_dag_require_disjoint_or_sequential() {
+  local owned_a="$1" owned_b="$2" fallback="$3"
+  if _dag_paths_overlap "$owned_a" "$owned_b"; then
+    [[ "$fallback" == "sequential" ]] || return 1
+  fi
+  return 0
+}
+
+# Dependency contract: every depends_on target must exist and have an earlier wave.
+_dag_deps_valid() {
+  # Args: package_id wave depends_csv  then remaining triples as id:wave pairs in a map file
+  local pkg="$1" wave="$2" deps="$3" mapfile="$4"
+  local dep dep_wave
+  [[ "$deps" == "-" || "$deps" == "—" || -z "$deps" ]] && return 0
+  IFS=',' read -r -a dep_arr <<< "$deps"
+  for dep in "${dep_arr[@]}"; do
+    dep="${dep// /}"
+    [[ -z "$dep" ]] && continue
+    [[ "$dep" == "$pkg" ]] && return 1
+    dep_wave="$(awk -F: -v id="$dep" '$1==id {print $2; exit}' "$mapfile")"
+    [[ -n "$dep_wave" ]] || return 1
+    [[ "$dep_wave" -lt "$wave" ]] || return 1
+  done
+  return 0
+}
+
+@test "DEV-045 DAG-001: SPEC-FORMAT defines Work Package DAG schema and Claim Boundary @smoke" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/SPEC-FORMAT.md" "$root/template/Docs/SPEC-FORMAT.md"; do
+    [ -f "$f" ]
+    grep -q "### 3.4 Work Package DAG" "$f"
+    grep -q "package_id" "$f"
+    grep -q "depends_on" "$f"
+    grep -q "owned_files" "$f"
+    grep -q "merge_order" "$f"
+    grep -q "verification" "$f"
+    # Eight-column normative header
+    grep -E '\| *package_id *\| *wave *\| *depends_on *\| *owned_files *\| *inputs *\| *outputs *\| *merge_order *\| *verification *\|' "$f"
+    grep -q "PKG-" "$f"
+    grep -q "generator-enforced" "$f"
+    grep -q "CI-enforced" "$f"
+    grep -q "agent-instructed" "$f"
+    grep -q "roadmap" "$f"
+    ! grep -qiE 'runtime scheduler|schedules parallel agents|guaranteed parallel isolation' "$f"
+  done
+}
+
+@test "DEV-045 DAG-002: Spec derives one Work Package per executable sub-task @smoke" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Spec.md" "$root/template/Docs/AgToosa_Spec.md"; do
+    [ -f "$f" ]
+    grep -q "Work Package" "$f"
+    grep -q "PKG-" "$f"
+    grep -q "owned_files" "$f"
+    grep -q "verification" "$f"
+    grep -q "depends_on" "$f"
+    grep -qiE 'one Work Package|one package row|package row for every|one package per' "$f"
+    grep -qiE 'parallel.*(owned_files|verification)|(owned_files|verification).*parallel' "$f"
+  done
+}
+
+@test "DEV-045 DAG-003: disjoint ownership accepted; overlap requires sequential fallback @smoke" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  # Positive fixture: disjoint paths in the same wave
+  _dag_require_disjoint_or_sequential "lib/foo.sh" "docs/AgToosa_Bar.md" "parallel"
+  # Negative fixture: duplicate explicit path without fallback
+  ! _dag_require_disjoint_or_sequential "lib/foo.sh" "lib/foo.sh" "parallel"
+  # Negative fixture becomes valid with sequential fallback
+  _dag_require_disjoint_or_sequential "lib/foo.sh" "lib/foo.sh" "sequential"
+  # Directory wildcard intersection requires sequential fallback
+  ! _dag_require_disjoint_or_sequential "lib/" "lib/foo.sh" "parallel"
+  _dag_require_disjoint_or_sequential "lib/" "lib/foo.sh" "sequential"
+  for f in "$root/docs/AgToosa_Build.md" "$root/template/Docs/AgToosa_Build.md" \
+           "$root/docs/AgToosa_Spec.md" "$root/template/Docs/AgToosa_Spec.md"; do
+    grep -qiE 'owned_files|Work Package' "$f"
+    grep -qiE 'sequential fallback|disjoint' "$f"
+  done
+  for f in "$root/docs/SPEC-FORMAT.md" "$root/template/Docs/SPEC-FORMAT.md"; do
+    grep -qiE 'disjoint|sequential fallback|overlap' "$f"
+  done
+}
+
+@test "DEV-045 DAG-004: depends_on must resolve to earlier-wave packages" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local mapfile f
+  mapfile="$(mktemp)"
+  printf '%s\n' "PKG-1.1:1" "PKG-1.2:1" "PKG-2.1:2" > "$mapfile"
+  # Valid: earlier-wave deps
+  _dag_deps_valid "PKG-2.1" 2 "PKG-1.1,PKG-1.2" "$mapfile"
+  # Invalid: unknown package
+  ! _dag_deps_valid "PKG-2.1" 2 "PKG-9.9" "$mapfile"
+  # Invalid: self-reference
+  ! _dag_deps_valid "PKG-1.1" 1 "PKG-1.1" "$mapfile"
+  # Invalid: same-wave dependency
+  ! _dag_deps_valid "PKG-1.2" 1 "PKG-1.1" "$mapfile"
+  # Invalid: later-wave dependency
+  ! _dag_deps_valid "PKG-1.1" 1 "PKG-2.1" "$mapfile"
+  rm -f "$mapfile"
+  for f in "$root/docs/SPEC-FORMAT.md" "$root/template/Docs/SPEC-FORMAT.md" \
+           "$root/docs/AgToosa_Spec.md" "$root/template/Docs/AgToosa_Spec.md" \
+           "$root/docs/AgToosa_Build.md" "$root/template/Docs/AgToosa_Build.md"; do
+    grep -q "depends_on" "$f"
+    grep -qiE 'earlier wave|earlier-wave' "$f"
+    grep -q "merge_order" "$f"
+  done
+}
+
+@test "DEV-045 DAG-005: Handoff exports selected-wave Work Packages section @smoke" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Handoff.md" "$root/template/Docs/AgToosa_Handoff.md"; do
+    [ -f "$f" ]
+    grep -q "Work Packages" "$f"
+    grep -q "package_id" "$f"
+    grep -q "owned_files" "$f"
+    grep -q "inputs" "$f"
+    grep -q "outputs" "$f"
+    grep -q "merge_order" "$f"
+    grep -q "verification" "$f"
+    grep -qiE 'selected wave|selected-wave|Wave N|current wave' "$f"
+  done
+}
+
+@test "DEV-045 DAG-006: Import reports ownership gaps and merge_order before status mutation" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Import.md" "$root/template/Docs/AgToosa_Import.md"; do
+    [ -f "$f" ]
+    grep -qiE 'ownership gap|owned_files' "$f"
+    grep -q "merge_order" "$f"
+    grep -qiE 'changed files|changed paths' "$f"
+    grep -q "source of truth" "$f"
+    # Import must not claim to mutate Master-Plan as authority
+    grep -qiE 'cannot.*Master-Plan|before.*checkbox|lifecycle checkbox|status mutation|No checkbox' "$f" \
+      || grep -q "block checkbox closure" "$f"
+  done
+  for f in "$root/docs/AgToosa_Quickref.md" "$root/template/Docs/AgToosa_Quickref.md" \
+           "$root/docs/AgToosa_Team_Trust_Roadmap.md"; do
+    grep -q "generator-enforced" "$f" || true
+  done
+  # Claim Boundary honesty across Quickref + Trust (no runtime scheduler claim)
+  for f in "$root/docs/AgToosa_Quickref.md" "$root/template/Docs/AgToosa_Quickref.md"; do
+    grep -qiE 'Work Package|DAG' "$f"
+    ! grep -qiE 'runtime scheduler|schedules parallel agents' "$f"
+  done
+  grep -qiE 'Work Package|work-package DAG|DEV-045' "$root/docs/AgToosa_Team_Trust_Roadmap.md"
+  ! grep -qiE 'runtime scheduler|schedules parallel agents|guaranteed parallel isolation' \
+    "$root/docs/AgToosa_Team_Trust_Roadmap.md"
+}
+
+@test "DEV-045 DAG-007: dual-path wiring and dogfood DAG evidence @smoke" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f tp
+  for f in \
+    "$root/docs/SPEC-FORMAT.md" "$root/template/Docs/SPEC-FORMAT.md" \
+    "$root/docs/AgToosa_Spec.md" "$root/template/Docs/AgToosa_Spec.md" \
+    "$root/docs/AgToosa_Build.md" "$root/template/Docs/AgToosa_Build.md" \
+    "$root/docs/AgToosa_Handoff.md" "$root/template/Docs/AgToosa_Handoff.md" \
+    "$root/docs/AgToosa_Import.md" "$root/template/Docs/AgToosa_Import.md"; do
+    [ -f "$f" ]
+    grep -qE 'Work Package|owned_files|### 3.4 Work Package DAG' "$f"
+  done
+  # Must not reopen DEV-055 surfaces
+  ! grep -q "DEV-045" "$root/docs/AgToosa_AgentCapability.md" 2>/dev/null \
+    || ! grep -q "Work Package DAG" "$root/docs/AgToosa_AgentCapability.md"
+  tp="$root/docs/AgToosa_TestPlan-DEV-045.md"
+  [ -f "$tp" ]
+  grep -q "PKG-1.1" "$tp"
+  grep -q "PKG-1.2" "$tp"
+  grep -q "PKG-2.1" "$tp"
+  # Dogfood evidence must be recorded (not still planned-only placeholders)
+  grep -qiE 'Status:.*GREEN|Observed exit code: *0|dogfood.*(executed|complete|GREEN)' "$tp"
+  ! grep -q "PLANNED — NOT EXECUTED" "$tp" || grep -qiE 'GREEN evidence.*Task 4.1|Status:.*GREEN' "$tp"
+}
 
 @test "DEV-047 HO-001: handoff contract exists in template and maintainer docs" {
   local root="$BATS_TEST_DIRNAME/.."
@@ -6109,4 +6302,1111 @@ EOF
   done
   ! grep -q "## Pack Template" "$readme"
   ! grep -q "## Import Checklist" "$readme"
+}
+
+# ── DEV-076: Static Documentation Site Proof (SITE-001–SITE-008) ──────────────
+
+# Build docs/ into an isolated destination using Jekyll (local binary or Docker).
+site076_jekyll_build() {
+  local root="$1"
+  local outdir="$2"
+  mkdir -p "$outdir"
+  if command -v jekyll >/dev/null 2>&1; then
+    (cd "$root" && jekyll build --source docs --destination "$outdir" --baseurl /AgToosa)
+    return $?
+  fi
+  if command -v docker >/dev/null 2>&1; then
+    chmod 777 "$outdir" 2>/dev/null || true
+    docker run --rm \
+      -v "$root:/repo:ro" \
+      -v "$outdir:/out" \
+      -e JEKYLL_ENV=production \
+      jekyll/jekyll:4.2.2 \
+      jekyll build --source /repo/docs --destination /out --baseurl /AgToosa
+    return $?
+  fi
+  echo "SITE-076: need jekyll or docker to execute the static build" >&2
+  return 127
+}
+
+@test "DEV-076 @smoke SITE-001: Pages build reads canonical docs directly" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local config="$root/docs/_config.yml"
+  local wf="$root/.github/workflows/docs-pages-proof.yml"
+  local gitignore="$root/.gitignore"
+
+  [ -f "$config" ]
+  [ -f "$wf" ]
+  [ -f "$gitignore" ]
+
+  # No competing documentation source tree
+  [ ! -d "$root/site-content" ]
+  [ ! -d "$root/docs-site" ]
+  [ ! -d "$root/docs/_site" ]
+
+  # Workflow builds from canonical docs/
+  grep -qE 'source:[[:space:]]*\./docs' "$wf"
+  grep -qE 'destination:[[:space:]]*\./_site' "$wf"
+
+  # Local/CI generated output must stay untracked
+  grep -qE '(^|/)_site/' "$gitignore"
+
+  # Execute build into an ephemeral directory (not committed)
+  local outdir
+  outdir="$(mktemp -d "${BATS_TEST_TMPDIR}/site076.XXXXXX")"
+  run site076_jekyll_build "$root" "$outdir"
+  [ "$status" -eq 0 ]
+  [ -f "$outdir/index.html" ]
+  [ ! -d "$root/site-content" ]
+  [ ! -d "$root/docs/_site" ]
+}
+
+@test "DEV-076 SITE-002: Site navigation links instead of cloning prose" {
+  local index="$BATS_TEST_DIRNAME/../docs/index.md"
+  local agent="$BATS_TEST_DIRNAME/../docs/AgToosa_Agent.md"
+  local first15="$BATS_TEST_DIRNAME/../docs/examples/first-15-minutes.md"
+
+  [ -f "$index" ]
+  [ -f "$agent" ]
+  [ -f "$first15" ]
+
+  # Landing must point at canonical markdown paths
+  grep -qE '\[.*\]\(AgToosa_Agent\.md\)' "$index"
+  grep -qE '\[.*\]\(examples/first-15-minutes\.md\)' "$index"
+
+  # Must not embed maintained duplicates of guide bodies
+  ! grep -q "Generated Project Mode" "$index"
+  ! grep -q "## 1. Start From A Clean Repo" "$index"
+  ! grep -q "Terminal Evidence Contract" "$index"
+}
+
+@test "DEV-076 @smoke SITE-003: Pull-request workflow fails closed on build error" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/docs-pages-proof.yml"
+  [ -f "$wf" ]
+
+  grep -q "pull_request" "$wf"
+  grep -qE "docs/\*\*|docs/" "$wf"
+  grep -q "jekyll-build-pages" "$wf"
+
+  # Build failures must not be swallowed
+  ! grep -qE 'continue-on-error:[[:space:]]*true' "$wf"
+}
+
+@test "DEV-076 SITE-004: Project Pages base path resolves" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local config="$root/docs/_config.yml"
+  [ -f "$config" ]
+  grep -qE 'baseurl:[[:space:]]*"/AgToosa"' "$config"
+
+  local outdir
+  outdir="$(mktemp -d "${BATS_TEST_TMPDIR}/site076-base.XXXXXX")"
+  run site076_jekyll_build "$root" "$outdir"
+  [ "$status" -eq 0 ]
+  [ -f "$outdir/index.html" ]
+
+  # Landing navigation must resolve under the project Pages base path
+  grep -q "/AgToosa/" "$outdir/index.html"
+}
+
+@test "DEV-076 @smoke SITE-005: Representative canonical pages render" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local outdir
+  outdir="$(mktemp -d "${BATS_TEST_TMPDIR}/site076-render.XXXXXX")"
+  run site076_jekyll_build "$root" "$outdir"
+  [ "$status" -eq 0 ]
+
+  [ -f "$outdir/index.html" ]
+  [ -f "$outdir/AgToosa_Agent.html" ]
+  [ -f "$outdir/examples/first-15-minutes.html" ]
+
+  grep -qi "AgToosa" "$outdir/index.html"
+  grep -q "Operating Contexts" "$outdir/AgToosa_Agent.html"
+  grep -q "First 15 Minutes" "$outdir/examples/first-15-minutes.html"
+}
+
+@test "DEV-076 SITE-006: Artifact identifies its source revision" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/docs-pages-proof.yml"
+  [ -f "$wf" ]
+
+  grep -q "github.sha" "$wf"
+  grep -q "upload-artifact" "$wf"
+  grep -qE 'docs-pages-proof-\$\{\{\s*github\.sha\s*\}\}' "$wf"
+}
+
+@test "DEV-076 SITE-007: Proof has no runtime service or tracking" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local config="$root/docs/_config.yml"
+  local index="$root/docs/index.md"
+  local wf="$root/.github/workflows/docs-pages-proof.yml"
+
+  [ -f "$config" ]
+  [ -f "$index" ]
+  [ -f "$wf" ]
+
+  local f
+  for f in "$config" "$index" "$wf"; do
+    ! grep -qiE 'google-analytics|gtag\(|analytics\.js|mixpanel|segment\.com|plausible\.io' "$f"
+    ! grep -qiE 'postgres|mongodb|mysql|redis|oauth|passport|database_url' "$f"
+    ! grep -qiE 'express\(|fastapi|django\.|flask\.|rails' "$f"
+  done
+
+  # Proof is build-only — no automatic production deploy step
+  ! grep -q "actions/deploy-pages" "$wf"
+  ! grep -qE 'pages:[[:space:]]*write' "$wf"
+}
+
+@test "DEV-076 SITE-008: Docs workflow is pinned and least privilege" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/docs-pages-proof.yml"
+  [ -f "$wf" ]
+
+  grep -qE 'permissions:' "$wf"
+  grep -qE 'contents:[[:space:]]*read' "$wf"
+  ! grep -qE 'contents:[[:space:]]*write' "$wf"
+  ! grep -qE 'id-token:[[:space:]]*write' "$wf"
+
+  # Every third-party action must be immutable-pinned (40-char SHA)
+  local uses_line
+  while IFS= read -r uses_line; do
+    [[ "$uses_line" =~ uses:[[:space:]]*[^@]+@([0-9a-f]{40}) ]]
+  done < <(grep -E 'uses:' "$wf")
+}
+
+# ── DEV-082: High-Assurance Signature Mode Validation (HSV-001–HSV-009) ──────
+
+SPIKE_DEV082="$BATS_TEST_DIRNAME/../docs/spikes/DEV-082"
+
+@test "DEV-082 HSV-001: demand and decision gate completeness @smoke" {
+  local f="$SPIKE_DEV082/demand.md"
+  [ -f "$f" ]
+  grep -qi 'scenario' "$f"
+  grep -qi 'workaround' "$f"
+  grep -qi 'protected surface' "$f"
+  grep -qi 'blocking' "$f"
+  grep -qi 'constraint' "$f"
+  grep -qi 'evidence source\|source' "$f"
+  grep -qiE 'adopt|defer|reject' "$f"
+  grep -qi 'criteria\|threshold' "$f"
+}
+
+@test "DEV-082 HSV-002: layered signature trust model" {
+  local f="$SPIKE_DEV082/trust-model.md"
+  [ -f "$f" ]
+  grep -qi 'SHA-256\|SHA256' "$f"
+  grep -qi 'registry.*review\|verified' "$f"
+  grep -qi 'soft-warn\|soft warn' "$f"
+  grep -qi 'fail-closed\|fail closed' "$f"
+  grep -qi 'registry pack' "$f"
+  grep -qi 'release' "$f"
+  grep -qi 'DEV-054\|ADR-011' "$f"
+}
+
+@test "DEV-082 HSV-003: synthetic key lifecycle operations @smoke" {
+  local f="$SPIKE_DEV082/key-operations.md"
+  [ -f "$f" ]
+  grep -qi 'generation\|generate' "$f"
+  grep -qi 'custody' "$f"
+  grep -qi 'signer separation\|separation' "$f"
+  grep -qi 'distribution' "$f"
+  grep -qi 'rotation' "$f"
+  grep -qi 'revocation\|revoke' "$f"
+  grep -qi 'expiry\|expir' "$f"
+  grep -qi 'recovery' "$f"
+  grep -qi 'audit' "$f"
+  grep -qi 'nonretention\|non-retention\|never.*commit\|synthetic' "$f"
+}
+
+@test "DEV-082 HSV-004: private key nonretention boundary" {
+  local dir="$SPIKE_DEV082"
+  [ -d "$dir" ]
+  # No private key material under spike artifacts
+  ! find "$dir" -type f \( -name '*.key' -o -name '*secret*' -o -name '*private*' \) | grep -q .
+  ! grep -rqiE 'BEGIN.*PRIVATE KEY|minisign.*untrusted comment:.*secret key|RWR[A-Za-z0-9+/]{40,}' "$dir" 2>/dev/null \
+    || ! grep -rqiE 'BEGIN.*PRIVATE KEY|secret key' "$dir"
+  # Production surfaces must not newly wire AGTOOSA_REQUIRE_SIGNATURES
+  ! grep -rqE 'AGTOOSA_REQUIRE_SIGNATURES' \
+    "$BATS_TEST_DIRNAME/../agtoosa.sh" \
+    "$BATS_TEST_DIRNAME/../agtoosa.ps1" \
+    "$BATS_TEST_DIRNAME/../lib" \
+    "$BATS_TEST_DIRNAME/../bootstrap.sh" \
+    "$BATS_TEST_DIRNAME/../bootstrap.ps1" \
+    "$BATS_TEST_DIRNAME/../npm" 2>/dev/null
+}
+
+@test "DEV-082 HSV-005: fail-closed failure matrix @smoke" {
+  local f="$SPIKE_DEV082/failure-matrix.md"
+  [ -f "$f" ]
+  grep -qi 'absent\|missing.*signature' "$f"
+  grep -qi 'invalid' "$f"
+  grep -qi 'revoked\|stale' "$f"
+  grep -qi 'minisign\|verifier.*tool\|tooling' "$f"
+  grep -qi 'offline' "$f"
+  grep -qi 'cache' "$f"
+  grep -qi 'rotation' "$f"
+  grep -qi 'expected outcome\|expected' "$f"
+}
+
+@test "DEV-082 HSV-006: existing artifact migration safety" {
+  local f="$SPIKE_DEV082/trust-model.md"
+  [ -f "$f" ]
+  grep -qi 'unsigned' "$f"
+  grep -qi 'opt-in\|opt in\|migration' "$f"
+  grep -qi 'default' "$f"
+  # Decision must not silently change defaults
+  local d="$SPIKE_DEV082/decision.md"
+  [ -f "$d" ]
+  grep -qi 'default' "$d"
+}
+
+@test "DEV-082 HSV-007: authorized rollback and restoration @smoke" {
+  local f="$SPIKE_DEV082/rollback-runbook.md"
+  [ -f "$f" ]
+  grep -qi 'authorization\|authorize\|break-glass\|break glass' "$f"
+  grep -qi 'recovery' "$f"
+  grep -qi 'audit' "$f"
+  grep -qi 'restoration\|restore\|return' "$f"
+  grep -qi 'safe default\|soft-warn\|prior' "$f"
+}
+
+@test "DEV-082 HSV-008: require-signatures pre-implementation gate" {
+  local d="$SPIKE_DEV082/decision.md"
+  [ -f "$d" ]
+  grep -qiE '\*\*(adopt|defer|reject)\*\*|outcome.*\b(adopt|defer|reject)\b' "$d"
+  grep -qi 'prerequisite\|confidence' "$d"
+  grep -qi 'AGTOOSA_REQUIRE_SIGNATURES\|no production\|spike evidence' "$d"
+  # Flag string must not appear as wired behavior in production entrypoints
+  ! grep -q 'AGTOOSA_REQUIRE_SIGNATURES' "$BATS_TEST_DIRNAME/../agtoosa.sh"
+  ! grep -q 'AGTOOSA_REQUIRE_SIGNATURES' "$BATS_TEST_DIRNAME/../lib/"*.sh 2>/dev/null
+}
+
+@test "DEV-082 HSV-009: signature finding confidence labels" {
+  local dir="$SPIKE_DEV082"
+  [ -d "$dir" ]
+  grep -rqi 'observed' "$dir"
+  grep -rqi 'tabletop' "$dir"
+  grep -rqi 'assumed\|assumption' "$dir"
+  grep -rqi 'untested' "$dir"
+  ! grep -rqiE 'production (key|ready|enforcement)|fail-closed.*(ships|shipped|enforced|is live)' "$dir" \
+    || grep -rqiE 'does not (exist|claim)|not (shipped|implemented)|spike evidence only|tabletop' "$dir"
+}
+
+# ── DEV-084: Open-Source Sustainability and Support Boundary (OSS-001–OSS-007) ─
+
+oss_support="$BATS_TEST_DIRNAME/../.github/SUPPORT.md"
+oss_funding="$BATS_TEST_DIRNAME/../.github/FUNDING.yml"
+oss_security="$BATS_TEST_DIRNAME/../SECURITY.md"
+oss_readme="$BATS_TEST_DIRNAME/../README.md"
+oss_contrib="$BATS_TEST_DIRNAME/../CONTRIBUTING.md"
+
+# Surfaces that form the public sustainability boundary (OSS-003 / OSS-006 scope).
+oss_public_surfaces() {
+  printf '%s\n' "$oss_support" "$oss_funding" "$oss_security" "$oss_readme" "$oss_contrib"
+}
+
+@test "DEV-084 @smoke OSS-001: voluntary sponsorship no-entitlement boundary" {
+  [ -f "$oss_support" ]
+  [ -f "$oss_funding" ]
+  grep -qE 'github:[[:space:]]*\[sky2464\]' "$oss_funding"
+  grep -qi 'github sponsors\|sponsors\.github\|github.com/sponsors/sky2464' "$oss_support"
+  grep -qi 'voluntary' "$oss_support"
+  grep -qi 'does not guarantee\|does not buy\|does not grant' "$oss_support"
+  grep -qi 'support priority\|priority support' "$oss_support"
+  grep -qi 'response time' "$oss_support"
+  grep -qi 'roadmap' "$oss_support"
+  grep -qi 'private release' "$oss_support"
+  grep -qi 'feature access\|feature entitlement\|gated' "$oss_support"
+}
+
+@test "DEV-084 @smoke OSS-002: support channel routing matrix" {
+  [ -f "$oss_support" ]
+  [ -f "$oss_security" ]
+  # Distinct channels for questions, bugs, proposals, and private vulns
+  grep -qi 'discussion' "$oss_support"
+  grep -qi 'bug\|issue' "$oss_support"
+  grep -qi 'feature\|proposal' "$oss_support"
+  grep -qi 'SECURITY\.md\|security vulnerabilit' "$oss_support"
+  grep -qi 'do \*\*not\*\*\|do not.*public issue\|NOT report.*public' "$oss_security"
+  grep -qi 'security@agtoosa.dev\|private security advisory\|security advisory' "$oss_security"
+  # Submission guidance / expected information
+  grep -qi 'include\|before asking\|steps to reproduce\|operating system\|environment' "$oss_support"
+}
+
+@test "DEV-084 @smoke OSS-003: best-effort no-SLA language" {
+  [ -f "$oss_support" ]
+  [ -f "$oss_security" ]
+  grep -qi 'best.?effort\|best effort' "$oss_support"
+  grep -qi 'best.?effort\|best effort\|no.*sla\|not.*sla\|non-contractual\|does not establish' "$oss_security"
+  # Unsupported fixed-time / SLA promises must not appear on public sustainability surfaces
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    ! grep -qiE 'acknowledge[[:space:]]+receipt[[:space:]]+within' "$f"
+    ! grep -qiE 'within[[:space:]]+\*\*[0-9]+[[:space:]]*(hour|day|business)' "$f"
+    ! grep -qiE 'response[[:space:]]+sla|service[[:space:]]+level[[:space:]]+agreement' "$f"
+    ! grep -qiE 'business[[:space:]]+hours|uptime[[:space:]]+(target|guarantee|sla)' "$f"
+  done < <(oss_public_surfaces)
+}
+
+@test "DEV-084 OSS-004: commercial and sponsored-content independence disclosure" {
+  [ -f "$oss_support" ]
+  grep -qi 'consulting' "$oss_support"
+  grep -qi 'optional\|separately executed\|separate.*agreement' "$oss_support"
+  grep -qi 'sponsored.*content\|sponsored educational\|educational content' "$oss_support"
+  grep -qi 'editorial\|conflict' "$oss_support"
+  grep -qi 'governance\|roadmap' "$oss_support"
+  grep -qi 'security.reporting\|security.report\|vulnerability' "$oss_support"
+  grep -qi 'does not\|no.*grant\|does not grant' "$oss_support"
+}
+
+@test "DEV-084 @smoke OSS-005: open-source feature parity" {
+  [ -f "$oss_support" ]
+  grep -qi 'regardless of sponsorship\|same public.*feature\|no sponsor-only\|not gated by sponsorship\|ungated\|equal.*feature' "$oss_support"
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    ! grep -qiE 'sponsor[- ]only (feature|release|fix|workflow)|sponsors? get (priority|early|private)|paid tier|feature gate' "$f"
+  done < <(oss_public_surfaces)
+}
+
+@test "DEV-084 OSS-006: public sustainability surface consistency" {
+  [ -f "$oss_support" ]
+  [ -f "$oss_funding" ]
+  [ -f "$oss_security" ]
+  [ -f "$oss_readme" ]
+  [ -f "$oss_contrib" ]
+  # Preserve launch-gate marker and cross-links
+  grep -q 'public support channel' "$oss_support"
+  grep -q 'SECURITY.md' "$oss_support"
+  grep -qE '\.github/SUPPORT\.md|SUPPORT\.md' "$oss_readme"
+  grep -q 'SECURITY.md' "$oss_readme"
+  grep -qE '\.github/SUPPORT\.md|SUPPORT\.md' "$oss_contrib"
+  grep -q 'SECURITY.md' "$oss_contrib"
+  # Funding destination matches support disclosure
+  grep -qE 'github:[[:space:]]*\[sky2464\]' "$oss_funding"
+  grep -qi 'sky2464' "$oss_support"
+  # Canonical boundary language present on support surface
+  grep -qi 'best.?effort\|best effort' "$oss_support"
+  grep -qi 'voluntary' "$oss_support"
+}
+
+@test "DEV-084 OSS-007: official sponsor destination metadata" {
+  # Static contract: FUNDING.yml + SUPPORT.md name the official destination.
+  # Live reachability and account control remain manual (OSS-007 [manual]).
+  [ -f "$oss_funding" ]
+  [ -f "$oss_support" ]
+  grep -qE 'github:[[:space:]]*\[sky2464\]' "$oss_funding"
+  grep -qi 'github.com/sponsors/sky2464' "$oss_support"
+}
+
+# ── DEV-079: Verifier and CI Adoption Examples (VCA-001–VCA-009) ──────────────
+
+@test "DEV-079 VCA-001: Generated-project verifier example is complete" {
+  local guide="$BATS_TEST_DIRNAME/../docs/examples/verifier-ci-adoption.md"
+  [ -f "$guide" ]
+  grep -q "Docs/agtoosa-verify.sh" "$guide"
+  grep -q -- "--strict" "$guide"
+  grep -Eq 'exit[[:space:]]*(code|codes)?[[:space:]]*(`?0`?|0)' "$guide" || grep -q "exit \`0\`" "$guide" || grep -q "| 0 |" "$guide" || grep -q "\`0\`" "$guide"
+  grep -q "1" "$guide"
+  grep -q "2" "$guide"
+  # Local section must not claim CI enforcement for the local machine check alone
+  ! grep -qiE 'local.*(CI-enforced|ci.enforced)' "$guide"
+}
+
+@test "DEV-079 VCA-002: Maintainer verifier example uses lowercase context" {
+  local guide="$BATS_TEST_DIRNAME/../docs/examples/verifier-ci-adoption.md"
+  [ -f "$guide" ]
+  grep -qiE 'Maintainer|Dogfood|maintainer repository' "$guide"
+  grep -q "docs/agtoosa-verify.sh" "$guide"
+  # Separately labeled maintainer block (heading or bold label)
+  grep -qiE '(^#+ .*[Mm]aintainer|Generated [Pp]roject|Operating [Cc]ontext)' "$guide"
+}
+
+@test "DEV-079 @smoke VCA-003: GitHub gate copy-in is reviewable and non-destructive" {
+  local guide="$BATS_TEST_DIRNAME/../docs/examples/verifier-ci-adoption.md"
+  [ -f "$guide" ]
+  grep -qiE 'inspect|\.github/workflows' "$guide"
+  grep -qiE 'overwrite|already exists|stop' "$guide"
+  grep -q "agtoosa-gate.yml" "$guide"
+  grep -qiE 'diff|review' "$guide"
+  grep -qiE 'commit|push' "$guide"
+  grep -qiE 'observ|workflow run|Actions run|CI run' "$guide"
+}
+
+@test "DEV-079 @smoke VCA-004: Adoption states have honest enforcement labels" {
+  local guide="$BATS_TEST_DIRNAME/../docs/examples/verifier-ci-adoption.md"
+  [ -f "$guide" ]
+  grep -qiE 'local machine check|machine-enforced locally|local (machine )?check' "$guide"
+  grep -qiE 'template( only)?' "$guide"
+  grep -q "CI-enforced" "$guide"
+  # Uncopied .example must not be labeled CI-enforced
+  ! grep -qiE 'agtoosa-gate\.yml\.example[^.]*CI-enforced' "$guide"
+  # CI-enforced requires observed/running language nearby in claim boundary or states table
+  grep -qiE 'observ|running|copied.*(workflow|gate)' "$guide"
+}
+
+@test "DEV-079 VCA-005: Provider-specific support requires maintained evidence" {
+  local guide="$BATS_TEST_DIRNAME/../docs/examples/verifier-ci-adoption.md"
+  [ -f "$guide" ]
+  grep -qi "GitHub Actions" "$guide"
+  grep -qiE 'provider-neutral|unmaintained' "$guide"
+  grep -qiE 'copy-ready|maintained' "$guide"
+  # Must not present GitLab/CircleCI/Jenkins/Azure as copy-ready maintained examples
+  ! grep -qiE '(GitLab|CircleCI|Jenkins|Azure Pipelines).{0,80}(copy-ready|maintained example)' "$guide"
+}
+
+@test "DEV-079 VCA-006: Command blocks never mix operating-context paths" {
+  local guide="$BATS_TEST_DIRNAME/../docs/examples/verifier-ci-adoption.md"
+  [ -f "$guide" ]
+  # Extract fenced bash/sh/shell blocks; each must not contain both Docs/ and docs/ verifier paths
+  local mixed
+  mixed="$(awk '
+    /^```(bash|sh|shell)?[[:space:]]*$/ { in_block=1; block=""; next }
+    /^```[[:space:]]*$/ && in_block {
+      if (block ~ /Docs\/agtoosa-verify\.sh/ && block ~ /[^D\/]docs\/agtoosa-verify\.sh|^\s*docs\/agtoosa-verify\.sh|[^a-zA-Z]docs\/agtoosa-verify\.sh/) {
+        # Check both path forms present as runnable commands
+        has_docs = (block ~ /(^|[[:space:]])Docs\/agtoosa-verify\.sh/)
+        has_lower = (block ~ /(^|[[:space:]])docs\/agtoosa-verify\.sh/)
+        if (has_docs && has_lower) print "MIXED"
+      }
+      in_block=0
+      next
+    }
+    in_block { block = block "\n" $0 }
+  ' "$guide")"
+  [ -z "$mixed" ]
+  # Runnable verifier command blocks should be context-labeled nearby
+  grep -qiE 'Generated [Pp]roject' "$guide"
+  grep -qiE 'Maintainer|Dogfood' "$guide"
+}
+
+@test "DEV-079 VCA-007: Discovery surfaces route to one adoption owner" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local guide_rel="docs/examples/verifier-ci-adoption.md"
+  [ -f "$root/$guide_rel" ]
+  grep -q "$guide_rel" "$root/README.md"
+  grep -q "verifier-ci-adoption" "$root/docs/AgToosa_Quickref.md"
+  grep -q "verifier-ci-adoption" "$root/docs/AgToosa_Readiness.md"
+  grep -q "verifier-ci-adoption\|sky2464/AgToosa.*verifier-ci-adoption" "$root/template/Docs/AgToosa_Quickref.md"
+  grep -q "verifier-ci-adoption\|sky2464/AgToosa.*verifier-ci-adoption" "$root/template/Docs/AgToosa_Readiness.md"
+  # Discovery surfaces must not reproduce the full inspect→copy→diff→push→observe procedure
+  for f in \
+    "$root/README.md" \
+    "$root/docs/AgToosa_Quickref.md" \
+    "$root/docs/AgToosa_Readiness.md" \
+    "$root/template/Docs/AgToosa_Quickref.md" \
+    "$root/template/Docs/AgToosa_Readiness.md"; do
+    local hits=0
+    grep -qiE 'inspect.*(workflow|destination)|\.github/workflows' "$f" && hits=$((hits+1)) || true
+    grep -qiE 'review.*(diff|the diff)|git diff' "$f" && hits=$((hits+1)) || true
+    grep -qiE 'observ.*(run|workflow)|workflow run' "$f" && hits=$((hits+1)) || true
+    [ "$hits" -lt 3 ]
+  done
+}
+
+@test "DEV-079 @smoke VCA-008: Maintained gate is immutable-pinned and least privilege" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in \
+    "$root/docs/agtoosa-gate.yml.example" \
+    "$root/template/Docs/agtoosa-gate.yml.example"; do
+    [ -f "$f" ]
+    grep -q "permissions:" "$f"
+    grep -q "contents: read" "$f"
+    # Immutable SHA pin for checkout (40 hex chars), not a floating major tag alone
+    grep -Eq 'actions/checkout@[0-9a-f]{40}' "$f"
+    ! grep -Eq 'actions/checkout@v[0-9]+[[:space:]]*$' "$f"
+    ! grep -qiE 'permissions:[[:space:]]*write-all|contents:[[:space:]]*write' "$f"
+    ! grep -qiE 'secrets\.|GITHUB_TOKEN:|permissions:.*write' "$f"
+  done
+}
+
+@test "DEV-079 VCA-009: Gate mirrors fail closed and remain identical" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local docs_gate="$root/docs/agtoosa-gate.yml.example"
+  local tmpl_gate="$root/template/Docs/agtoosa-gate.yml.example"
+  [ -f "$docs_gate" ]
+  [ -f "$tmpl_gate" ]
+  diff -u "$docs_gate" "$tmpl_gate"
+  # Fail closed when verifier missing
+  grep -q "not found" "$docs_gate"
+  grep -q "exit 1" "$docs_gate"
+  # Preserve verifier exit status (invoke bash on the script directly; no || true / exit 0 swallow)
+  ! grep -Eq 'agtoosa-verify\.sh.*\|\|[[:space:]]*true' "$docs_gate"
+  ! grep -Eq 'agtoosa-verify\.sh.*;[[:space:]]*exit 0' "$docs_gate"
+  # Safe-copy comments: inspect destination, review diff, honest template/CI label
+  grep -qiE 'inspect' "$docs_gate"
+  grep -qiE 'review|diff' "$docs_gate"
+  grep -qiE 'template|CI-enforced' "$docs_gate"
+}
+
+# ── DEV-083: Voluntary Workflow Metrics and Case Study Kit (MET-001–MET-010) ──
+
+MET_KIT_TEMPLATE="$BATS_TEST_DIRNAME/../template/Docs/AgToosa_MetricsKit.md"
+MET_KIT_MIRROR="$BATS_TEST_DIRNAME/../docs/AgToosa_MetricsKit.md"
+MET_CASE_TEMPLATE="$BATS_TEST_DIRNAME/../template/Docs/AgToosa_CaseStudy.template.md"
+MET_CASE_MIRROR="$BATS_TEST_DIRNAME/../docs/AgToosa_CaseStudy.template.md"
+
+@test "DEV-083 MET-001: voluntary local-only boundary @smoke" {
+  local f
+  for f in "$MET_KIT_TEMPLATE" "$MET_KIT_MIRROR"; do
+    [ -f "$f" ]
+    grep -qi 'opt-in' "$f"
+    grep -qi 'local' "$f"
+    grep -qi 'redact' "$f"
+    grep -qi 'withdraw' "$f"
+    grep -qiE 'no telemetry|no-telemetry|shall not.*telemetry|without telemetry' "$f"
+    grep -qiE 'collection hook|no collection|shall not.*collect' "$f"
+    grep -qiE 'network submission|no network|shall not.*network' "$f"
+    grep -qiE 'background analytics|automatic reporting|auto-report|shall not.*report' "$f"
+    grep -qi 'voluntary' "$f"
+  done
+  # Kit must not introduce generator collection hooks
+  ! grep -qiE 'curl .*metric|telemetry endpoint|analytics sdk|beacon' "$MET_KIT_TEMPLATE"
+  ! grep -qiE 'curl .*metric|telemetry endpoint|analytics sdk|beacon' "$MET_KIT_MIRROR"
+}
+
+@test "DEV-083 MET-002: common metric schema completeness" {
+  local f
+  for f in "$MET_KIT_TEMPLATE" "$MET_KIT_MIRROR"; do
+    [ -f "$f" ]
+    grep -qi 'purpose' "$f"
+    grep -qi 'definition' "$f"
+    grep -qi 'population' "$f"
+    grep -qiE 'numerator|denominator|unit' "$f"
+    grep -qiE 'time window|observation window|window' "$f"
+    grep -qiE 'local source|source' "$f"
+    grep -qi 'exclusion' "$f"
+    grep -qiE 'missing.data|missing-data|missing data' "$f"
+    grep -qiE 'calculation method|formula' "$f"
+    grep -qiE 'privacy review|privacy' "$f"
+    grep -qiE 'evidence link|evidence' "$f"
+    grep -qi 'limitation' "$f"
+    grep -qiE 'publication consent|consent' "$f"
+  done
+}
+
+@test "DEV-083 MET-003: evidence-bounded case study template @smoke" {
+  local f
+  for f in "$MET_CASE_TEMPLATE" "$MET_CASE_MIRROR"; do
+    [ -f "$f" ]
+    grep -qi 'context' "$f"
+    grep -qiE 'method|question' "$f"
+    grep -qi 'evidence' "$f"
+    grep -qiE 'synthetic|observed' "$f"
+    grep -qi 'limitation' "$f"
+    grep -qi 'consent' "$f"
+    grep -qiE 'publication|claim review|claim boundary' "$f"
+  done
+}
+
+@test "DEV-083 MET-004: install success definition @smoke" {
+  local f
+  for f in "$MET_KIT_TEMPLATE" "$MET_KIT_MIRROR"; do
+    [ -f "$f" ]
+    grep -qiE 'install success|Install Success' "$f"
+    grep -qi 'attempt' "$f"
+    grep -qiE 'successful completion|completion' "$f"
+    grep -qiE 'post-install|post install' "$f"
+    grep -qiE 'failure stage|failure' "$f"
+    grep -qi 'platform' "$f"
+    grep -qi 'version' "$f"
+    grep -qi 'retry' "$f"
+    grep -qiE 'not.*(download|start).*success|download.*not.*success|start.*not.*success|without treating downloads' "$f" \
+      || grep -qiE 'Downloads or starts are not success|download or start is not success' "$f"
+  done
+}
+
+@test "DEV-083 MET-005: verifier adoption definition" {
+  local f
+  for f in "$MET_KIT_TEMPLATE" "$MET_KIT_MIRROR"; do
+    [ -f "$f" ]
+    grep -qiE 'verifier adoption|Verifier Adoption' "$f"
+    grep -qiE 'eligible|eligibility' "$f"
+    grep -qiE 'availability|available' "$f"
+    grep -qiE 'actual run|observed run|verifier run' "$f"
+    grep -qi 'mode' "$f"
+    grep -qi 'result' "$f"
+    grep -qiE 'follow-up|follow up' "$f"
+    grep -qiE 'observation window|window' "$f"
+    grep -qiE 'availability.*(not|≠|!=).*use|not equat|without equating availability|availability is not adoption' "$f"
+  done
+}
+
+@test "DEV-083 MET-006: handoff import outcome definition" {
+  local f
+  for f in "$MET_KIT_TEMPLATE" "$MET_KIT_MIRROR"; do
+    [ -f "$f" ]
+    grep -qiE 'handoff|import' "$f"
+    grep -qiE 'pack.*(export|exported)|exported' "$f"
+    grep -qiE 'import attempt|attempts' "$f"
+    grep -qiE 'successful import|import success' "$f"
+    grep -qiE 'rejected|partial' "$f"
+    grep -qiE 'target surface|target' "$f"
+    grep -qiE 'completion criteria|completion' "$f"
+    grep -qiE 'without collecting.*content|do not collect.*content|no pack content|must not.*pack content' "$f"
+  done
+}
+
+@test "DEV-083 MET-007: cross-model finding state definition" {
+  local f
+  for f in "$MET_KIT_TEMPLATE" "$MET_KIT_MIRROR"; do
+    [ -f "$f" ]
+    grep -qiE 'cross-model|Cross-Model' "$f"
+    grep -qi 'proposed' "$f"
+    grep -qi 'confirmed' "$f"
+    grep -qi 'duplicate' "$f"
+    grep -qi 'rejected' "$f"
+    grep -qi 'resolved' "$f"
+    grep -qi 'severity' "$f"
+    grep -qiE 'individual.*(performance|scor)|not.*performance score|prohibit.*individual|shall not.*individual' "$f"
+  done
+}
+
+@test "DEV-083 MET-008: cycle time boundary definition" {
+  local f
+  for f in "$MET_KIT_TEMPLATE" "$MET_KIT_MIRROR"; do
+    [ -f "$f" ]
+    grep -qiE 'cycle time|Cycle Time' "$f"
+    grep -qiE 'start.*event|start event' "$f"
+    grep -qiE 'end.*event|end event' "$f"
+    grep -qi 'pause' "$f"
+    grep -qiE 'deferred|manual' "$f"
+    grep -qiE 'incomplete' "$f"
+    grep -qiE 'timezone|time zone' "$f"
+    grep -qi 'aggregation' "$f"
+    grep -qiE 'sample size|sample' "$f"
+    grep -qiE 'without inventing|must not invent|do not invent|missing timestamp' "$f"
+  done
+}
+
+@test "DEV-083 MET-009: pack maintenance no-SLA definition" {
+  local f
+  for f in "$MET_KIT_TEMPLATE" "$MET_KIT_MIRROR"; do
+    [ -f "$f" ]
+    grep -qiE 'pack maintenance|Pack Maintenance' "$f"
+    grep -qiE 'population|pack/version|pack version' "$f"
+    grep -qiE 'compatibility review|review age' "$f"
+    grep -qiE 'open.*(maintenance|item)|open item' "$f"
+    grep -qiE 'owner response|response state' "$f"
+    grep -qiE 'deprecat' "$f"
+    grep -qiE 'observation date|observed' "$f"
+    grep -qiE 'not an SLA|no SLA|without.*(implying|promising).*SLA|descriptive.*not.*SLA' "$f"
+    ! grep -qiE 'guaranteed response time|promised SLA|SLA commitment' "$f"
+  done
+}
+
+@test "DEV-083 MET-010: metrics kit inventory and mirror contract @smoke" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$MET_KIT_TEMPLATE" ]
+  [ -f "$MET_KIT_MIRROR" ]
+  [ -f "$MET_CASE_TEMPLATE" ]
+  [ -f "$MET_CASE_MIRROR" ]
+
+  run bash "$root/agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_MetricsKit.md"* ]]
+  [[ "$output" == *"Docs/AgToosa_CaseStudy.template.md"* ]]
+
+  # Maintainer mirrors use docs/ path prefix for repo-local refs
+  grep -q 'docs/' "$MET_KIT_MIRROR"
+  grep -q 'docs/' "$MET_CASE_MIRROR"
+  ! grep -q 'Docs/Master-Plan.md' "$MET_KIT_MIRROR"
+  ! grep -q 'Docs/Master-Plan.md' "$MET_CASE_MIRROR"
+
+  # Template pack keeps Docs/ canonical paths where it references Master-Plan
+  grep -qE 'Docs/|Generated Project' "$MET_KIT_TEMPLATE"
+
+  # Only documentation artifacts — no collection hooks in generator surfaces
+  ! grep -qiE 'metrics.?kit|case.?study' "$root/lib/maintain.sh" || true
+  local hook_hits
+  hook_hits="$(grep -RniE 'telemetry|metrics.?collect|analytics.?sdk|beacon.?url' \
+    "$root/agtoosa.sh" "$root/lib/" --include='*.sh' 2>/dev/null \
+    | grep -viE 'no.?telemetry|without telemetry|not.*telemetry|telemetry.*(exclusion|out of scope)|#.*telemetry' \
+    || true)"
+  [ -z "$hook_hits" ]
+
+  # Synthetic examples clearly labeled in kit
+  grep -qiE 'synthetic.*(example|worked|illustrative)|SYNTHETIC' "$MET_KIT_TEMPLATE"
+  grep -qiE 'synthetic.*(example|worked|illustrative)|SYNTHETIC' "$MET_KIT_MIRROR"
+  grep -qiE 'not (real|customer)|non-customer|illustrative only' "$MET_KIT_TEMPLATE"
+}
+
+# ── DEV-080: Official Registry Pack Pilot (OPP-001–OPP-010) ───────────────────
+
+@test "DEV-080 @smoke OPP-001: Exactly Three Pilot Domains" {
+  local inv="$BATS_TEST_DIRNAME/../docs/AgToosa_Registry.md"
+  [ -f "$inv" ]
+  grep -q "## Official Pack Pilot" "$inv"
+  grep -q "official-web" "$inv"
+  grep -q "official-api" "$inv"
+  grep -q "official-infra" "$inv"
+  grep -q "primary domain: web" "$inv"
+  grep -q "primary domain: api" "$inv"
+  grep -q "primary domain: infrastructure" "$inv"
+  # Exactly three pilot pack roots — no fourth official-* under packs/
+  local count
+  count=$(find "$BATS_TEST_DIRNAME/../packs" -maxdepth 1 -type d -name 'official-*' 2>/dev/null | wc -l | tr -d ' ')
+  [ "$count" -eq 3 ]
+}
+
+@test "DEV-080 @smoke OPP-002: Catalog Manifest Conformance" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local pack
+  for pack in official-web official-api official-infra; do
+    [ -f "$root/packs/$pack/manifest.json" ]
+    run bash "$SCRIPT" --catalog validate "$root/packs/$pack/manifest.json"
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"Catalog valid"* ]]
+    run python3 - "$root/packs/$pack/manifest.json" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1]))
+assert d.get("schema_version") == "1.0", d.get("schema_version")
+assert len(d.get("entries", [])) == 1
+e = d["entries"][0]
+for field in ("id", "kind", "name", "summary", "tags", "examples",
+              "maintainers", "support", "lifecycle", "reviewed_at",
+              "compatibility", "trust", "provenance"):
+    assert field in e, f"missing {field}"
+assert e["kind"] == "extension"
+assert e["lifecycle"] == "maintained"
+p = e["provenance"]
+for field in ("registry_name", "version", "source", "sha256", "signature"):
+    assert field in p, f"missing provenance.{field}"
+c = e["compatibility"]
+for field in ("agtoosa", "platforms", "requires", "conflicts"):
+    assert field in c, f"missing compatibility.{field}"
+t = e["trust"]
+for field in ("curation_tier", "registry_verified_snapshot", "review_status"):
+    assert field in t, f"missing trust.{field}"
+assert e["maintainers"][0]["name"] == "sky2464"
+PY
+    [ "$status" -eq 0 ]
+  done
+}
+
+@test "DEV-080 OPP-003: Pack Example Completeness" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local pack
+  for pack in official-web official-api official-infra; do
+    local ex="$root/packs/$pack/EXAMPLES.md"
+    [ -f "$ex" ]
+    grep -qi "Prerequisites" "$ex"
+    grep -qi "Intended use" "$ex"
+    grep -qi "Runnable example" "$ex"
+    grep -qi "Non-goals" "$ex"
+    grep -q "bash agtoosa.sh --registry install" "$ex"
+  done
+}
+
+@test "DEV-080 OPP-004: Compatibility Boundary Matrix" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local pack
+  for pack in official-web official-api official-infra; do
+    local mf="$root/packs/$pack/manifest.json"
+    run python3 - "$mf" <<'PY'
+import json, sys
+e = json.load(open(sys.argv[1]))["entries"][0]
+c = e["compatibility"]
+assert c["agtoosa"], "empty agtoosa range"
+assert isinstance(c["platforms"], list) and len(c["platforms"]) >= 1
+# Untested/incompatible combinations must be named in summary or conflicts note
+doc = open(sys.argv[1].replace("manifest.json", "COMPATIBILITY.md")).read().lower()
+assert "untested" in doc or "incompatible" in doc
+assert "agtoosa" in doc
+assert "platform" in doc
+PY
+    [ "$status" -eq 0 ]
+  done
+}
+
+@test "DEV-080 @smoke OPP-005: Web Pack Clean Install" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/registry-packs/official-web"
+  [ -d "$fixture" ]
+  [ -f "$fixture/Docs/official-web-workflow.md" ]
+  local queue_dir project_dir
+  queue_dir="$(mktemp -d)"
+  project_dir="$(mktemp -d)"
+
+  run env AGTOOSA_PACK_QUEUE_DIR="$queue_dir" bash -c "echo Y | bash '$SCRIPT' --registry install '$fixture'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Pack contents:"* ]]
+  [ -d "$queue_dir/official-web" ]
+  [ -f "$queue_dir/official-web/Docs/official-web-workflow.md" ]
+  [ -f "$queue_dir/official-web/.pack-meta.json" ]
+
+  PACK_QUEUE_DIR="$queue_dir"
+  PROJECT_PATH="$project_dir"
+  AGTOOSA_VERSION="5.3.8"
+  GREEN="" YELLOW="" NC=""
+  source "$BATS_TEST_DIRNAME/../lib/install.sh"
+  _merge_pack_queue
+  [ -f "$project_dir/Docs/official-web-workflow.md" ]
+  [ ! -d "$queue_dir/official-web" ]
+
+  rm -rf "$queue_dir" "$project_dir"
+}
+
+@test "DEV-080 OPP-006: API Service Pack Clean Install" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/registry-packs/official-api"
+  [ -d "$fixture" ]
+  [ -f "$fixture/Docs/official-api-workflow.md" ]
+  local queue_dir project_dir
+  queue_dir="$(mktemp -d)"
+  project_dir="$(mktemp -d)"
+
+  run env AGTOOSA_PACK_QUEUE_DIR="$queue_dir" bash -c "echo Y | bash '$SCRIPT' --registry install '$fixture'"
+  [ "$status" -eq 0 ]
+  [ -f "$queue_dir/official-api/Docs/official-api-workflow.md" ]
+
+  PACK_QUEUE_DIR="$queue_dir"
+  PROJECT_PATH="$project_dir"
+  AGTOOSA_VERSION="5.3.8"
+  GREEN="" YELLOW="" NC=""
+  source "$BATS_TEST_DIRNAME/../lib/install.sh"
+  _merge_pack_queue
+  [ -f "$project_dir/Docs/official-api-workflow.md" ]
+
+  rm -rf "$queue_dir" "$project_dir"
+}
+
+@test "DEV-080 @smoke OPP-007: Infrastructure Security Pack Safe Install" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/registry-packs/official-infra"
+  [ -d "$fixture" ]
+  [ -f "$fixture/Docs/official-infra-workflow.md" ]
+  local queue_dir project_dir
+  queue_dir="$(mktemp -d)"
+  project_dir="$(mktemp -d)"
+
+  run env AGTOOSA_PACK_QUEUE_DIR="$queue_dir" bash -c "echo Y | bash '$SCRIPT' --registry install '$fixture'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Pack contents:"* ]]
+  [[ "$output" == *"Continue?"* ]] || [[ "$output" == *"queued"* ]]
+  [ -f "$queue_dir/official-infra/Docs/official-infra-workflow.md" ]
+  # Must not stage denylisted destinations from the safe fixture
+  [ ! -f "$queue_dir/official-infra/.claude/settings.json" ]
+  [ ! -d "$queue_dir/official-infra/.github/workflows" ]
+
+  PACK_QUEUE_DIR="$queue_dir"
+  PROJECT_PATH="$project_dir"
+  AGTOOSA_VERSION="5.3.8"
+  GREEN="" YELLOW="" NC=""
+  source "$BATS_TEST_DIRNAME/../lib/install.sh"
+  _merge_pack_queue
+  [ -f "$project_dir/Docs/official-infra-workflow.md" ]
+  [ ! -f "$project_dir/.claude/settings.json" ]
+  [ ! -f "$project_dir/.github/workflows/pwn.yml" ]
+
+  rm -rf "$queue_dir" "$project_dir"
+}
+
+@test "DEV-080 OPP-008: Unsafe Pack Boundary Rejection" {
+  local bad="$BATS_TEST_DIRNAME/fixtures/registry-packs/unsafe-disallowed"
+  [ -d "$bad" ]
+  [ -f "$bad/evil.sh" ]
+  local queue_dir
+  queue_dir="$(mktemp -d)"
+  run env AGTOOSA_PACK_QUEUE_DIR="$queue_dir" bash -c "echo Y | bash '$SCRIPT' --registry install '$bad'"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"disallowed file type"* ]]
+  [ ! -d "$queue_dir/unsafe-disallowed" ]
+
+  # Denylist merge boundary remains enforced (generator-enforced)
+  local queue_dir2 project_dir
+  queue_dir2="$(mktemp -d)"
+  project_dir="$(mktemp -d)"
+  mkdir -p "$queue_dir2/sneak/.github/workflows" "$queue_dir2/sneak/.claude"
+  echo "# ok" > "$queue_dir2/sneak/workflow.md"
+  echo "name: pwn" > "$queue_dir2/sneak/.github/workflows/pwn.yml"
+  echo '{"hooks":{}}' > "$queue_dir2/sneak/.claude/settings.json"
+  PACK_QUEUE_DIR="$queue_dir2"
+  PROJECT_PATH="$project_dir"
+  AGTOOSA_VERSION="5.3.8"
+  GREEN="" YELLOW="" NC=""
+  source "$BATS_TEST_DIRNAME/../lib/install.sh"
+  _merge_pack_queue
+  [ -f "$project_dir/workflow.md" ]
+  [ ! -f "$project_dir/.github/workflows/pwn.yml" ]
+  [ ! -f "$project_dir/.claude/settings.json" ]
+
+  rm -rf "$queue_dir" "$queue_dir2" "$project_dir"
+}
+
+@test "DEV-080 OPP-009: Maintenance Ownership Contract" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local pack
+  for pack in official-web official-api official-infra; do
+    local pol="$root/packs/$pack/MAINTENANCE.md"
+    [ -f "$pol" ]
+    grep -qi "Owner" "$pol"
+    grep -q "sky2464" "$pol"
+    grep -qi "Review cadence" "$pol"
+    grep -qi "Compatibility-update policy\|Compatibility update policy" "$pol"
+    grep -qi "Issue path" "$pol"
+    grep -qi "Deprecation" "$pol"
+  done
+}
+
+@test "DEV-080 OPP-010: External Publication State Honesty" {
+  local inv="$BATS_TEST_DIRNAME/../docs/AgToosa_Registry.md"
+  local checklist="$BATS_TEST_DIRNAME/../docs/official-pack-pilot-checklist.md"
+  [ -f "$inv" ]
+  [ -f "$checklist" ]
+  grep -q "local candidate" "$inv"
+  grep -q "not externally published" "$inv"
+  # Must not claim published/available in external registry for pilot packs
+  ! grep -E "official-(web|api|infra).*externally published" "$inv"
+  ! grep -qi "marketplace" "$inv" || grep -qi "not a marketplace\|No.*marketplace" "$inv"
+  grep -q "submitted" "$checklist"
+  grep -q "published" "$checklist"
+  grep -q "requires confirmed external record\|confirmed external" "$checklist"
+  # Catalog contract pin
+  grep -q "schema_version.*1.0\|catalog contract.*1.0\|schema_version 1.0" "$checklist"
+}
+
+# ── DEV-077: Authoring Guide and Onboarding Surface (AUTH-001–AUTH-008) ───────
+
+# Stable discovery pointer copied into every maintained help adapter (GitHub URLs only).
+_AUTH_EXT_URL="https://github.com/sky2464/AgToosa/blob/main/docs/extension-authoring-guide.md"
+_AUTH_PACK_URL="https://github.com/sky2464/AgToosa/blob/main/docs/registry-pack-authoring.md"
+
+_auth_help_adapters() {
+  local root="$1"
+  printf '%s\n' \
+    "$root/template/.claude/commands/agtoosa-help.md" \
+    "$root/template/.cursor/commands/agtoosa-help.md" \
+    "$root/template/.gemini/commands/agtoosa-help.toml" \
+    "$root/template/.github/prompts/agtoosa-help.prompt.md" \
+    "$root/template/.windsurf/workflows/agtoosa-help.md" \
+    "$root/template/.codex/prompts/agtoosa-help.md" \
+    "$root/template/.codex/skills/agtoosa-help/SKILL.md"
+}
+
+@test "DEV-077 AUTH-001: Extension guide covers current wiring surfaces" {
+  local guide="$BATS_TEST_DIRNAME/../docs/extension-authoring-guide.md"
+  [ -f "$guide" ]
+  # Current platform entry points
+  grep -q "CLAUDE.md" "$guide"
+  grep -q ".cursorrules" "$guide"
+  grep -q ".windsurfrules" "$guide"
+  grep -q "AGENTS.md" "$guide"
+  grep -q ".github/copilot-instructions.md" "$guide"
+  grep -q "OPENCODE.md" "$guide"
+  grep -qiE "VS Code|vscode" "$guide"
+  grep -qiE "Codex|\.codex/" "$guide"
+  # Generator wiring surfaces
+  grep -q "lib/config.sh" "$guide"
+  grep -q "lib/generate.sh" "$guide"
+  grep -q "agtoosa.sh" "$guide"
+  grep -q "OPTIONAL_TEMPLATE_FILES" "$guide"
+  grep -q "stage_files" "$guide"
+  # Parity checks and maintained examples
+  grep -qiE "parity|bats|smoke" "$guide"
+  grep -q "tests/agtoosa.bats" "$guide"
+  grep -qiE "OpenCode|Claude|Cursor" "$guide"
+}
+
+@test "DEV-077 @smoke AUTH-002: Pack handbook carries the complete readiness checklist" {
+  local handbook="$BATS_TEST_DIRNAME/../docs/registry-pack-authoring.md"
+  [ -f "$handbook" ]
+  grep -q "## Readiness Checklist" "$handbook"
+  # Seven required checkable fields (checkbox markers)
+  grep -Eq '^\- \[ \] .*[Ss]coped [Ss]pec' "$handbook"
+  grep -Eq '^\- \[ \] .*[Tt]est' "$handbook"
+  grep -Eq '^\- \[ \] .*[Tt]hreat' "$handbook"
+  grep -Eq '^\- \[ \] .*[Cc]ompatibilit' "$handbook"
+  grep -Eq '^\- \[ \] .*[Pp]rovenance' "$handbook"
+  grep -Eq '^\- \[ \] .*([Ww]orked [Ee]xample|[Ee]xample)' "$handbook"
+  grep -Eq '^\- \[ \] .*([Mm]aintenance [Oo]wner|[Nn]amed .*[Oo]wner|[Oo]wner)' "$handbook"
+}
+
+@test "DEV-077 AUTH-003: Registry points to one pack handbook" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Registry.md" "$root/template/Docs/AgToosa_Registry.md"; do
+    [ -f "$f" ]
+    grep -q "registry-pack-authoring.md" "$f"
+    # Discovery only — must not host the full readiness checklist heading
+    ! grep -q "## Readiness Checklist" "$f"
+    # Must not embed all seven checkbox readiness fields
+    ! grep -Eq '^\- \[ \] .*[Pp]rovenance' "$f"
+    ! grep -Eq '^\- \[ \] .*[Mm]aintenance [Oo]wner' "$f"
+  done
+}
+
+@test "DEV-077 AUTH-004: README exposes both authoring paths" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  grep -q "docs/extension-authoring-guide.md" "$readme"
+  grep -q "docs/registry-pack-authoring.md" "$readme"
+  # Concise discovery — no duplicated readiness checklist
+  ! grep -q "## Readiness Checklist" "$readme"
+  ! grep -Eq '^\- \[ \] .*[Pp]rovenance' "$readme"
+}
+
+@test "DEV-077 @smoke AUTH-005: Native help surfaces share one authoring pointer" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    grep -q "Authoring resources" "$f"
+    grep -Fq "$_AUTH_EXT_URL" "$f"
+    grep -Fq "$_AUTH_PACK_URL" "$f"
+    # Generated-project-safe: no maintainer-only relative docs/ paths for these guides
+    ! grep -Eq '(^|[^/])docs/extension-authoring-guide\.md' "$f"
+    ! grep -Eq '(^|[^/])docs/registry-pack-authoring\.md' "$f"
+  done < <(_auth_help_adapters "$root")
+}
+
+@test "DEV-077 AUTH-006: Authoring discovery preserves static help" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local claude="$root/template/.claude/commands/agtoosa-help.md"
+  local gemini="$root/template/.gemini/commands/agtoosa-help.toml"
+  local copilot="$root/template/.github/prompts/agtoosa-help.prompt.md"
+  # Default path remains static (no Master-Plan / git / project-context read)
+  grep -q "Do not read any Docs file" "$claude"
+  grep -q "without reading" "$gemini"
+  grep -q "without reading" "$copilot"
+  # Authoring block must not instruct a context read on the default path
+  local f
+  while IFS= read -r f; do
+    [ -f "$f" ]
+    # Extract Authoring resources section (through next heading or EOF) and ensure no git/Master-Plan read
+    local section
+    section="$(awk '/Authoring resources/{flag=1} flag{print} /^## / && !/Authoring resources/{if(flag&&!/Authoring/){exit}}' "$f")"
+    [ -n "$section" ]
+    ! grep -qiE 'read Docs/Master-Plan|git status|git log|project.context|project files' <<< "$section"
+  done < <(_auth_help_adapters "$root")
+}
+
+@test "DEV-077 @smoke AUTH-007: Authoring links fail closed on drift" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/docs/extension-authoring-guide.md" ]
+  [ -f "$root/docs/registry-pack-authoring.md" ]
+  # README discovery targets exist
+  grep -q "docs/extension-authoring-guide.md" "$root/README.md"
+  grep -q "docs/registry-pack-authoring.md" "$root/README.md"
+  # Registry discovery targets exist (path token resolves under docs/)
+  local f
+  for f in "$root/docs/AgToosa_Registry.md" "$root/template/Docs/AgToosa_Registry.md"; do
+    grep -q "registry-pack-authoring.md" "$f"
+  done
+  # Help adapters point at the same canonical blob paths whose basename files exist
+  while IFS= read -r f; do
+    grep -Fq "$_AUTH_EXT_URL" "$f"
+    grep -Fq "$_AUTH_PACK_URL" "$f"
+  done < <(_auth_help_adapters "$root")
+  # Basename inventory must match on-disk canonical files
+  local base
+  for base in extension-authoring-guide.md registry-pack-authoring.md; do
+    [ -f "$root/docs/$base" ]
+  done
+}
+
+@test "DEV-077 AUTH-008: Handbook labels enforcement honestly" {
+  local handbook="$BATS_TEST_DIRNAME/../docs/registry-pack-authoring.md"
+  [ -f "$handbook" ]
+  grep -q "Claim Boundary" "$handbook"
+  grep -qiE "CI-enforced|repository check" "$handbook"
+  grep -qiE "registry review|manual" "$handbook"
+  grep -qi "roadmap" "$handbook"
+  # Must not call manual registry approval CI-enforced
+  ! grep -qiE 'registry (approval|review).*CI-enforced|CI-enforced.*registry (approval|review)' "$handbook"
 }

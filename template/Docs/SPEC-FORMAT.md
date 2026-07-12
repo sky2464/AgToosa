@@ -232,6 +232,38 @@ Every Must-priority AC must appear in the test plan. Should and Could ACs should
 
 The test plan also stores the **TDD evidence blocks** captured by `/agtoosa-build` — one `RED evidence` (failing run: command, nonzero exit, failure excerpt) and one `GREEN evidence` (passing run) block per task. `Docs/agtoosa-verify.sh` checks for their presence.
 
+### 3.4 Work Package DAG
+
+Declares auditable parallel lanes for `/agtoosa-build`, `/agtoosa-handoff`, and `/agtoosa-import`. Each executable sub-task maps to one package. Package IDs use `PKG-<task-id>` (for example, `PKG-1.1`).
+
+| package_id | wave | depends_on | owned_files | inputs | outputs | merge_order | verification |
+|------------|------|------------|-------------|--------|---------|-------------|--------------|
+| PKG-1.1 | 1 | — | `lib/foo.sh` | — | `lib/foo.sh` | 1 | `bats tests/agtoosa.bats -f "foo"` |
+| PKG-1.2 | 1 | — | `Docs/AgToosa_Bar.md` | — | `Docs/AgToosa_Bar.md` | 1 | `test -s Docs/AgToosa_Bar.md` |
+| PKG-2.1 | 2 | PKG-1.1, PKG-1.2 | `tests/agtoosa.bats` | Wave 1 outputs | `tests/agtoosa.bats` | 2 | `bats tests/agtoosa.bats -f "DEV-045"` |
+
+**Column rules:**
+
+| Column | Meaning |
+|--------|---------|
+| `package_id` | Stable ID `PKG-<task-id>` matching one executable sub-task |
+| `wave` | Wave Plan wave number for this package |
+| `depends_on` | Comma-separated package IDs that must complete first, or `—` |
+| `owned_files` | Explicit paths this package may edit (no secret values) |
+| `inputs` | Required inputs (artifact names, prior outputs, or `—`) |
+| `outputs` | Expected outputs (paths or artifact names) |
+| `merge_order` | Integration order within/across waves (lower first) |
+| `verification` | Runnable command that proves the package is done |
+
+**Dependency and ownership rules:**
+
+- Every `depends_on` reference must resolve to an existing package with an **earlier wave**. Unknown, self, circular, same-wave, or later-wave dependencies are invalid.
+- Same-wave packages must have **disjoint** `owned_files` sets. Duplicate explicit paths or intersecting directory wildcards are an **overlap** — convert the affected packages to an explicit **sequential fallback** in the Wave Plan (do not present them as safe parallel).
+- `merge_order` resolves integration order within each wave after verification passes.
+- XS / single-task stories may keep a sequential Wave Plan without full DAG ceremony; when packages are proposed for parallel execution, `owned_files` and `verification` must be non-empty.
+
+**Claim Boundary:** Shipping these schema copies is **generator-enforced**. Focused DAG bats when run in CI are **CI-enforced**. Deriving and checking package rows during Spec/Build/Handoff/Import is **agent-instructed**. Selecting agents and integrating branches is **manual**. A runtime scheduler or guaranteed parallel isolation remains **roadmap** — AgToosa does not schedule parallel agents at runtime.
+
 ---
 
 ## Capability Delta (living system spec)
@@ -411,6 +443,14 @@ Out of scope        : src/users/, database migrations, email service
 Test plan: `Docs/AgToosa_TestPlan-UserAuthentication.md`
 AC coverage: 5 ACs mapped to 12 test IDs
 Smoke set: 3 tests tagged @smoke
+
+### 3.4 Work Package DAG
+
+| package_id | wave | depends_on | owned_files | inputs | outputs | merge_order | verification |
+|------------|------|------------|-------------|--------|---------|-------------|--------------|
+| PKG-1.1 | 1 | — | `src/auth/session.ts` | — | `src/auth/session.ts` | 1 | `npm test -- session` |
+| PKG-2.1 | 1 | — | `src/auth/login.ts` | — | `src/auth/login.ts` | 1 | `npm test -- login` |
+| PKG-1.2 | 2 | PKG-1.1 | `src/auth/session.test.ts` | PKG-1.1 output | `src/auth/session.test.ts` | 2 | `npm test -- session` |
 ```
 
 ### Approval marker (appended by /agtoosa-spec after review)
