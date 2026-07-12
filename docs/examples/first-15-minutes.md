@@ -63,7 +63,17 @@ Docs/archived/ship-check-PROOF-001.md
 
 The exact story ID can differ. The proof is that the repo now has a spec, a test-plan mapping, a review artifact, and a ship-check artifact that survive chat context loss.
 
-## 4. What This Proves
+## 5. Verify (success condition)
+
+Run the deterministic lifecycle verifier:
+
+```bash
+bash agtoosa.sh --verify .
+```
+
+A passing result (exit code 0) is the documented success condition for this proof walkthrough.
+
+## 6. What This Proves
 
 AgToosa's value is repo-native workflow continuity:
 

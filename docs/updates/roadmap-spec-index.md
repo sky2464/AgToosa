@@ -1,7 +1,7 @@
 # Roadmap-to-Spec Index
 
 > **Purpose:** Coverage map from `docs/updates/` strategy into executable AgToosa work.
-> **Snapshot:** 2026-07-11.
+> **Snapshot:** 2026-07-12 (Rev4 wave promoted).
 > **Authority:** `docs/Master-Plan.md` remains the source of truth for status and priority.
 
 ## Coverage Contract
@@ -17,7 +17,58 @@ Editing this index does not enroll a story. Backlog stories still require `/agto
 
 ## Active Stories
 
-_(None — cycle parked. Parked demand-gated: **DEV-057**.)_
+| ID | Story | Wave | Status |
+|---|---|---|---|
+| DEV-086 | Canonical Proof Product Experience | 1a | 🟦 Todo — active cycle |
+| DEV-090 | Unified Install/Update Plan Engine | 1a | 🟦 Todo — active cycle |
+| DEV-105 | PowerShell Maintain + Update Parity | 1a | 🟦 Todo — active cycle |
+
+Demand-gated (unchanged): **DEV-057**.
+
+## Rev4 Wave — Spec Approved (2026-07-12)
+
+Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
+
+### Wave 1a (active cycle)
+
+| ID | Story | Type | Est | Epic | Pri | Spec | Test plan |
+|---|---|---|---:|---|---:|---|---|
+| DEV-086 | Canonical Proof Product Experience | Chore | S | DEV-004 | P0 | `docs/archived/spec-DEV-086.md` | `docs/AgToosa_TestPlan-DEV-086.md` |
+| DEV-090 | Unified Install/Update Plan Engine | Feature | M | DEV-001 | P0 | `docs/archived/spec-DEV-090.md` | `docs/AgToosa_TestPlan-DEV-090.md` |
+| DEV-105 | PowerShell Maintain + Update Parity | Feature | M | DEV-001 | P0 | `docs/archived/spec-DEV-105.md` | `docs/AgToosa_TestPlan-DEV-105.md` |
+
+### Wave 1b
+
+| ID | Story | Type | Est | Epic | Pri | Spec | Test plan |
+|---|---|---|---:|---|---:|---|---|
+| DEV-087 | Delivery Evidence Contract + Profiles | Feature | M | DEV-002 | P0 | `docs/archived/spec-DEV-087.md` | `docs/AgToosa_TestPlan-DEV-087.md` |
+| DEV-088 | Verifier and Doctor Machine Output | Feature | M | DEV-004 | P0 | `docs/archived/spec-DEV-088.md` | `docs/AgToosa_TestPlan-DEV-088.md` |
+| DEV-089 | Evidence-Profile Verifier Gates | Feature | M | DEV-004 | P1 | `docs/archived/spec-DEV-089.md` | `docs/AgToosa_TestPlan-DEV-089.md` |
+| DEV-091 | Migration Wizard + Rollback Manifest | Feature | L | DEV-001 | P0 | `docs/archived/spec-DEV-091.md` | `docs/AgToosa_TestPlan-DEV-091.md` |
+
+### Wave 2
+
+| ID | Story | Type | Est | Epic | Pri | Spec | Test plan |
+|---|---|---|---:|---|---:|---|---|
+| DEV-092 | Transactional Apply + Idempotency | Chore | M | DEV-001 | P1 | `docs/archived/spec-DEV-092.md` | `docs/AgToosa_TestPlan-DEV-092.md` |
+| DEV-093 | Install State File + Lock Reconciliation | Feature | M | DEV-001 | P1 | `docs/archived/spec-DEV-093.md` | `docs/AgToosa_TestPlan-DEV-093.md` |
+| DEV-094 | Assistant Compatibility Contract | Feature | M | DEV-004 | P1 | `docs/archived/spec-DEV-094.md` | `docs/AgToosa_TestPlan-DEV-094.md` |
+| DEV-097 | Framework Supply-Chain Threat Model | Docs | S | DEV-004 | P1 | `docs/archived/spec-DEV-097.md` | `docs/AgToosa_TestPlan-DEV-097.md` |
+| DEV-100 | Shared JSON Output for Install/Registry | Feature | S | DEV-001 | P2 | `docs/archived/spec-DEV-100.md` | `docs/AgToosa_TestPlan-DEV-100.md` |
+
+### Wave 3
+
+| ID | Story | Type | Est | Epic | Pri | Spec | Test plan |
+|---|---|---|---:|---|---:|---|---|
+| DEV-095 | Official Pack Expansion (5-pack max) | Feature | M | DEV-003 | P1 | `docs/archived/spec-DEV-095.md` | `docs/AgToosa_TestPlan-DEV-095.md` |
+| DEV-096 | Pack Validation CI | Chore | S | DEV-003 | P1 | `docs/archived/spec-DEV-096.md` | `docs/AgToosa_TestPlan-DEV-096.md` |
+| DEV-098 | Navigation by User Job | Docs | XS | DEV-004 | P2 | `docs/archived/spec-DEV-098.md` | `docs/AgToosa_TestPlan-DEV-098.md` |
+| DEV-099 | Core vs Optional Pack Boundary | Docs | XS | DEV-002 | P2 | `docs/archived/spec-DEV-099.md` | `docs/AgToosa_TestPlan-DEV-099.md` |
+| DEV-101 | Verified vs Community Pack Labeling | Docs | XS | DEV-003 | P2 | `docs/archived/spec-DEV-101.md` | `docs/AgToosa_TestPlan-DEV-101.md` |
+| DEV-102 | Offline and Network-Dependency Matrix | Docs | XS | DEV-001 | P2 | `docs/archived/spec-DEV-102.md` | `docs/AgToosa_TestPlan-DEV-102.md` |
+| DEV-103 | External Registry Publication Runbook | Chore | S | DEV-003 | P2 | `docs/archived/spec-DEV-103.md` | `docs/AgToosa_TestPlan-DEV-103.md` |
+| DEV-104 | `--reinstall --clean` (ADR-004 Option C) | Feature | S | DEV-001 | P2 | `docs/archived/spec-DEV-104.md` | `docs/AgToosa_TestPlan-DEV-104.md` |
+| DEV-106 | Built with AgToosa Showcase | Docs | XS | DEV-004 | P2 | `docs/archived/spec-DEV-106.md` | `docs/AgToosa_TestPlan-DEV-106.md` |
 
 ## Recently shipped (v5.3.14 — 2026-07-11)
 
@@ -101,7 +152,20 @@ These competitive-wave placeholders now contain functional EARS criteria, failur
 | DEV-083 | Voluntary Workflow Metrics and Case Study Kit | Docs | S | DEV-004 | P2 | `docs/archived/spec-DEV-083.md` | `docs/AgToosa_TestPlan-DEV-083.md` |
 | DEV-084 | Open-Source Sustainability and Support Boundary | Chore | XS | DEV-004 | P2 | `docs/archived/spec-DEV-084.md` | `docs/AgToosa_TestPlan-DEV-084.md` |
 
-## Dependency Order
+## Rev4 Dependency Order
+
+```text
+Wave 1a (parallel): DEV-086, DEV-090, DEV-105
+  DEV-087 ──► DEV-089
+  DEV-088 ──► DEV-091 (soft)
+  DEV-090 ──► DEV-091, DEV-092, DEV-100, DEV-104
+  DEV-092 ──► DEV-093
+  DEV-086 ──► DEV-094 (scenario tier)
+  DEV-096 ──► DEV-095
+  DEV-057 (demand-gated, independent)
+```
+
+## Dependency Order (competitive wave — shipped)
 
 ```text
 DEV-055
@@ -135,6 +199,10 @@ These proposals already have authoritative Manual / Deferred rows and do not nee
 | Configure release-environment reviewers | DEV-066 M-1 |
 | Mirror the pinned Homebrew formula to the tap | DEV-066 M-2 |
 | Optionally publish the CI gate to GitHub Marketplace | DEV-062 M-1 |
+| Case study / tutorial publish | REV4-M-1 |
+| Paid workshop pilot | REV4-M-2 |
+| Proof terminal video | REV4-M-3 |
+| Monthly progress note | REV4-M-4 |
 
 ## Shipped Coverage
 
@@ -164,6 +232,9 @@ These remain hypotheses until a documented user segment, security model, operati
 - Federated registry and dependency solver.
 - Commercial marketplace and revenue sharing.
 - OpenTelemetry export and usage analytics.
+- Voluntary scorecard instrumentation (DEV-108).
+- Python CLI sixth official pack.
+- Pro tier / SaaS / marketplace / federation.
 
 If evidence appears, start with `/agtoosa-spec research`; do not promote directly to implementation.
 
@@ -181,22 +252,37 @@ If evidence appears, start with `/agtoosa-spec research`; do not promote directl
 
 | Update area | Story or disposition |
 |---|---|
-| Safe subagent routing and fan-out | DEV-055, DEV-045, DEV-046 |
-| Policy, hooks, and learning | DEV-059, DEV-052, DEV-056 |
-| Visibility and integrations | DEV-058, DEV-051, DEV-057 |
-| Catalog and maintained packs | DEV-053, DEV-077, DEV-080 |
-| Subagent/persona adoption docs | DEV-075 |
-| Static docs distribution | DEV-076 |
-| First-15 maintenance | DEV-078 |
-| Verifier/CI adoption | DEV-079 |
-| Optional wrapper/editor/CI validation | DEV-081 |
-| Fail-closed signature validation | DEV-082 |
-| Voluntary metrics/case studies | DEV-083 |
-| Sponsors/support boundary | DEV-084 |
-| Sponsored educational content and optional support disclosure | DEV-084 |
-| OpenTelemetry export and usage analytics | Parked |
-| Distribution publication tasks | Existing Manual / Deferred rows |
+| Rev4 proof + verify CTA | DEV-086 (+ DEV-078 shipped) |
+| Delivery evidence contract | DEV-087, DEV-089 |
+| Verifier JSON flagship | DEV-088 |
+| Safe upgrade / plan engine | DEV-090, DEV-091, DEV-092, DEV-093 |
+| PS maintain parity | DEV-105 |
+| Compatibility Install/Render/Scenario | DEV-094 (+ DEV-055 shipped) |
+| Pack expansion (5 max) | DEV-095 (supersedes DEV-080 cap), DEV-096 |
+| Docs by user job | DEV-098 (+ DEV-076 shipped) |
+| Core vs pack boundary | DEV-099 |
+| Framework threat model | DEV-097 |
+| Install/registry JSON | DEV-100 |
+| Pack trust labeling | DEV-101 |
+| Offline/network matrix | DEV-102 |
+| External registry runbook | DEV-103 (+ DEV-080 manual) |
+| `--reinstall --clean` | DEV-104 |
+| Community showcase | DEV-106 |
+| Safe subagent routing and fan-out | DEV-055, DEV-045, DEV-046 (shipped) |
+| Policy, hooks, and learning | DEV-059, DEV-052, DEV-056 (shipped) |
+| Visibility and integrations | DEV-058, DEV-051, DEV-057 (demand-gated) |
+| Catalog and maintained packs | DEV-053, DEV-077, DEV-080 (shipped) |
+| Subagent/persona adoption docs | DEV-075 (shipped) |
+| Static docs distribution | DEV-076 (shipped) |
+| First-15 maintenance | DEV-078 (shipped) |
+| Verifier/CI adoption | DEV-079 (shipped) |
+| Optional wrapper/editor/CI validation | DEV-081 (shipped) |
+| Fail-closed signature validation | DEV-082 (shipped, Defer) |
+| Voluntary metrics/case studies | DEV-083 (shipped) |
+| Sponsors/support boundary | DEV-084 (shipped) |
+| OpenTelemetry / scorecard / Pro tier | Parked |
+| Distribution publication tasks | Manual / Deferred rows |
 | SaaS/identity/runtime expansion | Parked |
 | Core rewrite/silent telemetry/SoT replacement | Rejected |
 
-All actionable items in `docs/updates/` are covered by the rows above.
+All actionable items in `docs/updates/` including Rev4 (`Rev4-*.md`) are covered by the rows above.

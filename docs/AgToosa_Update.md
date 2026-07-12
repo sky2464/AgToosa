@@ -69,7 +69,7 @@ When **Generated Project Mode** is detected, continue to Stage 1b.
 Gather installed project state without mutating files (read-only file reads and inspection only):
 
 1. **Installed version** — read `docs/.agtoosa-version` if present; note `unknown` when missing.
-2. **Lock metadata** — read `.agtoosa-lock.json` when present (generator version, platforms, template hash).
+2. **Lock metadata** — read `Docs/agtoosa-lock.json` when present (generator version, platforms, template hash).
 3. **Platform sentinels** — note which entry points exist (`CLAUDE.md`, `.cursorrules`, `AGENTS.md`, `.github/copilot-instructions.md`, `OPENCODE.md`, etc.).
 4. **Project context** — read all files in `docs/Context/` (`product.md`, `tech-stack.md`, `workflow.md`, `product-guidelines.md`).
 5. **Architecture memory** — read `docs/Master-Architecture.md` as high-priority architecture memory: system boundaries, diagrams, data flow, deployment, security, and observability. Note whether it exists and is non-empty; preserve user-authored content on update.
@@ -93,7 +93,7 @@ When drift exists or the user invoked `plan` or `apply` in **Generated Project M
 | Workflow doc overwrites | `docs/AgToosa_*.md` files the CLI will refresh |
 | Platform entry points | Smart merge for `CLAUDE.md`, `.cursorrules`, `AGENTS.md`, `.github/copilot-instructions.md`, `OPENCODE.md` when installed |
 | Native dir refreshes | `.claude/commands/`, `.cursor/rules/`, `.gemini/commands/`, etc. — AgToosa-owned files only |
-| Version / lock metadata | `docs/.agtoosa-version` and `.agtoosa-lock.json` when applicable |
+| Version / lock metadata | `Docs/.agtoosa-version` and `Docs/agtoosa-lock.json` when applicable |
 | Preserved files | `docs/Context/`, `docs/Master-Plan.md`, `docs/AgToosa_Changelog.md`, `docs/archived/`, user files in platform dirs |
 | Backups | `.bak` files the CLI may create on force merge paths |
 
@@ -103,7 +103,7 @@ When drift exists or the user invoked `plan` or `apply` in **Generated Project M
 - **malformed** AgToosa markers — broken `<!-- AgToosa START -->` / `END` blocks in entry points
 - **Existing backup files** — prior `.bak` files from forced merges
 - **missing `docs/`** — project not initialized for AgToosa
-- **lock-file** issues — missing, stale, or mismatched `.agtoosa-lock.json`
+- **lock-file** issues — missing, stale, or mismatched `Docs/agtoosa-lock.json`
 - **platform drift** — sentinels present but native dirs missing or partial
 - **major-version migration** risk — installed major version behind target; breaking workflow changes likely
 
@@ -134,7 +134,7 @@ After Apply (or when the user invoked **`verify` only** on an already-updated pr
 | Check | What to verify |
 |-------|----------------|
 | Version marker | `docs/.agtoosa-version` exists and matches expected target |
-| Lock metadata | `.agtoosa-lock.json` present and consistent when lock was used at install |
+| Lock metadata | `Docs/agtoosa-lock.json` present and consistent when lock was used at install |
 | Platform surfaces | Installed entry points and native dirs contain expected AgToosa commands/rules |
 | Preserved files | `docs/Context/`, `docs/Master-Plan.md`, `docs/AgToosa_Changelog.md`, `docs/archived/` unchanged |
 | duplicate marker safety | Platform entry points contain a single `<!-- AgToosa START -->` … `END` block (no duplicate injection) |

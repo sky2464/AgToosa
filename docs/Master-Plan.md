@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-11 (DEV-051 shipped — v5.3.14 Tracker Sync Bridge)
+> **Last updated:** 2026-07-12 (Rev4 wave promoted — DEV-086–DEV-106 specs approved)
 
 ## Project Charter
 
@@ -9,9 +9,9 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | v5.3.14 shipped — cycle parked (demand-gated backlog only) |
-| Milestone | `v5.3.15` (next) — PATCH train per `docs/adr/ADR-005-release-cadence.md` |
-| Active cycle | _(none — parked)_ |
+| Current phase | v5.3.14 shipped — Rev4 trust wave active (Wave 1a) |
+| Milestone | `v5.3.15` (next) — PATCH train; `v5.4.0` target if Wave 1b ships migration wizard per `docs/adr/ADR-005-release-cadence.md` |
+| Active cycle | Rev4 Wave 1a — proof, plan engine, PS parity |
 | Cycle capacity | `8 story points` |
 
 ## Active Cycle
@@ -20,7 +20,11 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| _(none — cycle parked)_ | | | | | |
+| DEV-086 | Chore: Canonical Proof Product Experience | Chore | S | 🟦 Todo | 0/4 |
+| DEV-090 | Feature: Unified Install/Update Plan Engine | Feature | M | 🟦 Todo | 0/5 |
+| DEV-105 | Feature: PowerShell Maintain + Update Parity | Feature | M | 🟦 Todo | 0/5 |
+
+<!-- Rev4 Wave 1b (next cycle): DEV-087, DEV-088, DEV-091 -->
 
 <!-- Archived to docs/archived/cycle-2026-07-11-release-5.3.14.md -->
 
@@ -41,7 +45,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for the current In Progress story. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-_(Empty — cycle parked. Next enrollment via `/agtoosa-spec` when demand un-gates a backlog story.)_
+_(Empty — enroll via `/agtoosa-build` on first In Progress story.)_
 
 ## Manual / Deferred Tasks
 
@@ -58,6 +62,10 @@ _(Empty — cycle parked. Next enrollment via `/agtoosa-spec` when demand un-gat
 | DEV-066 | M-1 | 2026-06-09 | Configure required reviewers on the `release` environment in repo settings `[manual]` |
 | DEV-066 | M-2 | 2026-06-09 | Mirror the pinned `Formula/agtoosa.rb` to the `sky2464/homebrew-agtoosa` tap `[manual]` |
 | DEV-060 | M-1 | 2026-06-09 | Execute benchmark tasks B1–B3 against Spec Kit/OpenSpec/BMAD and publish results under `docs/benchmarks/results/` `[manual]` |
+| REV4-M-1 | — | 2026-07-12 | Publish first case study / tutorial (finish DEV-083 review if pending) `[manual]` |
+| REV4-M-2 | — | 2026-07-12 | Offer one paid workshop / consulting pilot `[manual]` |
+| REV4-M-3 | — | 2026-07-12 | Produce and link proof terminal video (3–5 min) for README `[manual]` |
+| REV4-M-4 | — | 2026-07-12 | Publish monthly progress note template / first issue `[manual]` |
 
 ## Blocked
 
@@ -115,6 +123,27 @@ _(Empty — cycle parked. Next enrollment via `/agtoosa-spec` when demand un-gat
 | DEV-033 | Fix: agtoosa.ps1 PSScriptAnalyzer approved verbs | Fix | XS | DEV-001 | Medium | 🏁 Shipped |
 | DEV-034 | Chore: Maintainer release-state reconciliation | Chore | S | DEV-004 | High | 🏁 Shipped |
 | DEV-085 | Chore: Post-v5.3.12 release hygiene (bats restore + Master-Plan reconciliation) | Chore | XS | DEV-004 | High | 🏁 Shipped — v5.3.13 |
+| DEV-086 | Chore: Canonical Proof Product Experience | Chore | S | DEV-004 | P0 | ⬜ Backlog — spec approved; Wave 1a active |
+| DEV-087 | Feature: Delivery Evidence Contract + Profiles | Feature | M | DEV-002 | P0 | ⬜ Backlog — spec approved; Wave 1b |
+| DEV-088 | Feature: Verifier and Doctor Machine Output | Feature | M | DEV-004 | P0 | ⬜ Backlog — spec approved; Wave 1b |
+| DEV-089 | Feature: Evidence-Profile Verifier Gates | Feature | M | DEV-004 | P1 | ⬜ Backlog — spec approved; Wave 1b |
+| DEV-090 | Feature: Unified Install/Update Plan Engine | Feature | M | DEV-001 | P0 | 🟦 Todo — Wave 1a active cycle |
+| DEV-091 | Feature: Migration Wizard + Rollback Manifest | Feature | L | DEV-001 | P0 | ⬜ Backlog — spec approved; Wave 1b |
+| DEV-092 | Chore: Transactional Apply + Idempotency | Chore | M | DEV-001 | P1 | ⬜ Backlog — spec approved; Wave 2 |
+| DEV-093 | Feature: Install State File + Lock Reconciliation | Feature | M | DEV-001 | P1 | ⬜ Backlog — spec approved; Wave 2 |
+| DEV-094 | Feature: Assistant Compatibility Contract | Feature | M | DEV-004 | P1 | ⬜ Backlog — spec approved; Wave 2 |
+| DEV-095 | Feature: Official Pack Expansion (5-pack max) | Feature | M | DEV-003 | P1 | ⬜ Backlog — spec approved; Wave 3; after DEV-096 |
+| DEV-096 | Chore: Pack Validation CI | Chore | S | DEV-003 | P1 | ⬜ Backlog — spec approved; Wave 3 |
+| DEV-097 | Docs: Framework Supply-Chain Threat Model | Docs | S | DEV-004 | P1 | ⬜ Backlog — spec approved; Wave 2 |
+| DEV-098 | Docs: Navigation by User Job | Docs | XS | DEV-004 | P2 | ⬜ Backlog — spec approved; Wave 3 |
+| DEV-099 | Docs: Core vs Optional Pack Boundary | Docs | XS | DEV-002 | P2 | ⬜ Backlog — spec approved; Wave 3 |
+| DEV-100 | Feature: Shared JSON Output for Install/Registry | Feature | S | DEV-001 | P2 | ⬜ Backlog — spec approved; Wave 2 |
+| DEV-101 | Docs: Verified vs Community Pack Labeling | Docs | XS | DEV-003 | P2 | ⬜ Backlog — spec approved; Wave 3 |
+| DEV-102 | Docs: Offline and Network-Dependency Matrix | Docs | XS | DEV-001 | P2 | ⬜ Backlog — spec approved; Wave 3 |
+| DEV-103 | Chore: External Registry Publication Runbook | Chore | S | DEV-003 | P2 | ⬜ Backlog — spec approved; Wave 3 |
+| DEV-104 | Feature: `--reinstall --clean` (ADR-004 Option C) | Feature | S | DEV-001 | P2 | ⬜ Backlog — spec approved; Wave 3 |
+| DEV-105 | Feature: PowerShell Maintain + Update Parity | Feature | M | DEV-001 | P0 | 🟦 Todo — Wave 1a active cycle |
+| DEV-106 | Docs: Built with AgToosa Showcase | Docs | XS | DEV-004 | P2 | ⬜ Backlog — spec approved; Wave 3 |
 
 ## Epics
 
@@ -122,10 +151,10 @@ _(Empty — cycle parked. Next enrollment via `/agtoosa-spec` when demand un-gat
 
 | ID | Title | Stories | Status | Next spec |
 |----|-------|---------|--------|-----------|
-| DEV-001 | Epic: Core Generator Engine | 0 open / 5 total | 🏁 Complete | — |
-| DEV-002 | Epic: Workflow Templates | 1 open / 14 total | 🟨 Demand-gated | DEV-057 (demand-gated) |
-| DEV-003 | Epic: Community Template Registry | 0 open / 7 total | 🏁 Complete | — |
-| DEV-004 | Epic: Testing & QA Harness | 0 open / 11 total | 🏁 Complete | — |
+| DEV-001 | Epic: Core Generator Engine | 7 open / 12 total | 🟨 Active | DEV-090 (Wave 1a) |
+| DEV-002 | Epic: Workflow Templates | 3 open / 16 total | 🟨 Active | DEV-087 (Wave 1b) |
+| DEV-003 | Epic: Community Template Registry | 4 open / 11 total | 🟨 Active | DEV-096 (Wave 3) |
+| DEV-004 | Epic: Testing & QA Harness | 7 open / 18 total | 🟨 Active | DEV-086 (Wave 1a) |
 
 ### Epic Charters
 
@@ -135,7 +164,7 @@ _(Empty — cycle parked. Next enrollment via `/agtoosa-spec` when demand un-gat
     *   **Success Criteria:** Zero-friction installation and error-free multi-platform scaffolding on clean or existing directories.
     *   **Last shipped:** DEV-046 — Optional Worktree Isolation → `docs/archived/spec-DEV-046.md`
     *   **Last shipped:** DEV-081 — Optional Local DX spike (defer all three options) → `docs/archived/spec-DEV-081.md`
-    *   **Current:** All epic stories shipped — no open generator work
+    *   **Current:** Rev4 wave — DEV-090, DEV-091, DEV-092, DEV-093, DEV-100, DEV-104, DEV-105, DEV-102 in backlog; DEV-090 + DEV-105 in Wave 1a active cycle
 
 *   **DEV-002 - Epic: Workflow Templates**
     *   **Goal:** Comprehensive AI-native rule files, prompts, skills, and templates keeping AI agents fully aligned with the four-phase lifecycle.
@@ -147,7 +176,7 @@ _(Empty — cycle parked. Next enrollment via `/agtoosa-spec` when demand un-gat
     *   **Last shipped:** DEV-052 — Hook Automation Pack → `docs/archived/spec-DEV-052.md`
     *   **Last shipped:** DEV-056 — Retrospective Learning Loop → `docs/archived/spec-DEV-056.md`
     *   **Last shipped:** DEV-045 — Work Package Wave DAG → `docs/archived/spec-DEV-045.md`
-    *   **Current:** Wave stories shipped; demand-gated DEV-057 remains in backlog
+    *   **Current:** Rev4 wave — DEV-087, DEV-099 in backlog; demand-gated DEV-057 remains separate
 
 *   **DEV-003 - Epic: Community Template Registry**
     *   **Goal:** Discoverable and secure package manager cache allowing developers to list, search, install, and publish community packs.
@@ -160,7 +189,7 @@ _(Empty — cycle parked. Next enrollment via `/agtoosa-spec` when demand un-gat
     *   **Last shipped:** DEV-080 — Official Registry Pack Pilot → `docs/archived/spec-DEV-080.md`
     *   **Last shipped:** DEV-082 — High-Assurance Signature Mode Validation → `docs/archived/spec-DEV-082.md`
     *   **Last shipped:** DEV-051 — Tracker Sync Bridge → `docs/archived/spec-DEV-051.md`
-    *   **Current:** All epic stories shipped; DEV-080 external registry publish remains [manual-deferred]
+    *   **Current:** Rev4 wave — DEV-095, DEV-096, DEV-101, DEV-103 in backlog; DEV-080 external publish remains [manual-deferred]
 
 *   **DEV-004 - Epic: Testing & QA Harness**
     *   **Goal:** Comprehensive end-to-end integration and version verification suites validating the robustness of the entire framework.
@@ -175,7 +204,7 @@ _(Empty — cycle parked. Next enrollment via `/agtoosa-spec` when demand un-gat
     *   **Last shipped:** DEV-083 — Voluntary Workflow Metrics and Case Study Kit → `docs/archived/spec-DEV-083.md`
     *   **Last shipped:** DEV-084 — Open-Source Sustainability and Support Boundary → `docs/archived/spec-DEV-084.md`
     *   **Last shipped:** DEV-085 — Post-v5.3.12 release hygiene → `docs/archived/spec-DEV-085.md`
-    *   **Current:** All epic stories shipped — no open harness work
+    *   **Current:** Rev4 wave — DEV-086, DEV-088, DEV-089, DEV-094, DEV-097, DEV-098, DEV-106 in backlog; DEV-086 in Wave 1a active cycle
 
 ## Completed This Cycle
 
@@ -401,3 +430,5 @@ _(Empty — cycle parked. Next enrollment via `/agtoosa-spec` when demand un-gat
 | 2026-07-11 | 🚀 Ship complete — v5.3.14 — DEV-051 Tracker Sync Bridge; smoke PASS; cycle archived | AgToosa |
 | 2026-07-11 | 🚀 Release 5.3.14 shipped — v5.3.14; version parity bash/ps1/npm; Milestone v5.3.15 (next); all unblocked remaining specs complete | AgToosa |
 | 2026-07-11 | 🔍 /agtoosa-spec triage — no enrollable stories; DEV-057 demand gate unmet (7/7 fields); competitive wave complete; cycle remains parked | AgToosa |
+| 2026-07-12 | ✏️ Rev4 wave promoted — DEV-086–DEV-106 specs + test plans approved; conflict resolutions `docs/updates/rev4-conflict-resolutions.md`; roadmap index updated | AgToosa |
+| 2026-07-12 | ✏️ /agtoosa-spec — Wave 1a enrolled — DEV-086, DEV-090, DEV-105; specs `docs/archived/spec-DEV-086.md` … `spec-DEV-105.md` | AgToosa |

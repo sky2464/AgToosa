@@ -11,6 +11,9 @@
 5. `docs/updates/agtoosa-plan-revised.md` — recommended execution sequence.
 6. `docs/updates/roadmap-spec-index.md` — coverage map from actionable proposals to DEV specs.
 7. `docs/updates/AgToosa Strategic Improvement Roadmap.md` — non-authoritative opportunity map.
+8. `docs/updates/Rev4-AgToosa Strategic Improvement Roadmap.md` — Rev4 owner-review intake (maps to DEV-086–DEV-106).
+9. `docs/updates/Rev4-agtoosa-plan-revised.md` — Rev4 practical plan intake.
+10. `docs/updates/rev4-conflict-resolutions.md` — binding conflict resolutions for Rev4 specs.
 
 If an update document conflicts with Master-Plan, Master-Plan wins.
 
@@ -47,6 +50,10 @@ The opportunity map:
 - Review cadence.
 
 It must not contain authoritative backlog status, unsupported market claims, or invented product commands.
+
+### `Rev4-*.md` and `rev4-conflict-resolutions.md`
+
+Rev4 owner-review intake (2026-07-12). Promoted to DEV-086–DEV-106 in `docs/Master-Plan.md`. Conflict resolutions are binding at spec approval time.
 
 ## Roadmap Workflow
 
