@@ -264,26 +264,7 @@ _(Empty — cycle parked. Next enrollment via `/agtoosa-spec` when demand un-gat
 
 | Date | Event | By |
 |------|-------|----|
-<!-- Older rows through 2026-06-07: docs/archived/updatelog-2026.md -->
-| 2026-06-08 | 🏗️ /agtoosa-build DEV-041 public proof complete — repo, release, raw bootstraps, registry, Homebrew tap, support surfaces, and proof repo public; public launch publication proof complete | AgToosa |
-| 2026-06-08 | 🔍 Review ✅ Passed — DEV-041; 0 🔴 Critical, 1 🟡 Warning accepted; report: `docs/archived/review-DEV-041.md` | AgToosa |
-| 2026-06-08 | 🚀 Ship complete — DEV-041 v5.2.7 Shipped; CHANGELOG + version pins; public launch gate; full suite pending current ship verification; Milestone v5.2.8 (next) | AgToosa |
-| 2026-06-08 | 🚀 Release 5.2.7 shipped — v5.2.7; public launch publication proof on main; version parity bash/ps1; active cycle archived | AgToosa |
-| 2026-06-08 | ✏️ /agtoosa-spec DEV-042-DEV-060 — Competitive execution wave specs and test plans created; backlog only; implementation requires per-story enrollment and evidence gates | AgToosa |
-| 2026-06-08 | ✅ /agtoosa-spec DEV-042 — Spec Quality Analyzer enrolled in Active Cycle; approved backlog spec promoted with task tree and wave plan | AgToosa |
-| 2026-06-08 | 🏗️ /agtoosa-build DEV-042 — Spec Quality Analyzer gate implemented in maintainer and template spec workflows; 4/5 tasks complete pending final validation | AgToosa |
-| 2026-06-08 | 🏗️ /agtoosa-build DEV-042 complete — Spec Quality Analyzer gate implemented; DEV-042 focused and adjacent validation green; full suite pending final run | AgToosa |
-| 2026-06-08 | ✅ /agtoosa-spec DEV-043 — Brownfield Spec Drift Baseline enrolled in Active Cycle; approved backlog spec promoted with task tree and wave plan | AgToosa |
-| 2026-06-08 | 🏗️ /agtoosa-build DEV-043 complete — Brownfield current-state baseline workflow implemented in maintainer and template spec workflows; focused validation green pending full suite | AgToosa |
-| 2026-06-09 | ✏️ /agtoosa-spec DEV-061–DEV-073 — proof-engine + supply-chain wave enrolled from deep-review top-20 (verifier, CI gate, events, tar safety, pack containment, pinned chain, executable workflows, adapter fixes, governance wiring, token diet, non-interactive CLI/npm, spec amend/living specs, doctor/uninstall/README); consolidated plan: docs/AgToosa_TestPlan-DEV-061-073.md | AgToosa |
-| 2026-06-09 | 🏗️ /agtoosa-build DEV-061–DEV-073 complete — Docs/agtoosa-verify.sh + --verify/--doctor/--uninstall + --path/--platforms/--yes wired (bash); PS1 gains Test-SafeTarArchive/Test-PackFiles/Test-PackPathDenied + verified gate; bootstraps fail closed with --sha256; Formula pinned to v5.2.7 tarball+sha256; release workflow publishes SHA256SUMS; mirrors regenerated from canonical templates; 29 new bats (VF/SC/NI/DR/UN/WC/PS) green; verifier self-run PASS on this repo | AgToosa |
-| 2026-06-09 | 🧾 Threat models added to spec-DEV-042/043 (verifier Gate 3 found the gap); DEV-044 + DEV-060 closed via wave delivery; npm publish, tap mirror, release-env reviewers, signing keys, and benchmark runs recorded in Manual / Deferred | AgToosa |
-| 2026-06-10 | 🔍 Review 🔍 Started — DEV-042–DEV-043 + DEV-061–DEV-073 — 4-persona review running | AgToosa |
-| 2026-06-10 | 🔍 Review ✅ Approved — DEV-042–DEV-043; 0 🔴 Critical, 2 🟡 Warning (accepted); report: `docs/archived/review-DEV-042-043.md` | AgToosa |
-| 2026-06-10 | 🔍 Review ✅ Approved — DEV-061–DEV-073; 0 🔴 Critical, 5 🟡 Warning (accepted); full suite 458/458; verifier PASS; report: `docs/archived/review-DEV-061-073.md` | AgToosa |
-| 2026-06-10 | 🚀 Ship complete — DEV-042–DEV-073 v5.3.0; smoke VF-001/SC-002/NI-001/SC-005 PASS; full suite 461/461; verifier PASS; cycle archived | AgToosa |
-| 2026-06-10 | 🚀 Release 5.3.0 shipped — v5.3.0; proof engine + supply chain wave on branch; version parity bash/ps1/npm; Milestone v5.3.1 (next) | AgToosa |
-
+<!-- Older rows through 2026-06-10: docs/archived/updatelog-2026.md -->
 | 2026-07-07 | 🏗️ Merged v5.3.x fix batch — pack lock provenance, re-install data loss, multi-root tarball smuggle, npm pack queue, PowerShell hooks/merge containment (PRs #36–#48, #61–#63) | AgToosa |
 | 2026-07-08 | 🚀 Ship complete — v5.3.1 patch; Unreleased fixes + bootstrap durable pack queue (PR #64); focused SR bats green | AgToosa |
 | 2026-07-08 | 🚀 Release 5.3.1 shipped — v5.3.1; version parity bash/ps1/npm; Milestone v5.3.2 (next) | AgToosa |

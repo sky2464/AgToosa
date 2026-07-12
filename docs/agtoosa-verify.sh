@@ -150,7 +150,11 @@ fi
 echo "Gate 3 — Spec approval and naming"
 active_ids=$(awk '/^## Active Cycle/,/^## [^A]/' "$MP" | grep -oE '^\| DEV-[0-9]{3}' | grep -oE 'DEV-[0-9]{3}' | sort -u)
 if [[ -z "$active_ids" ]]; then
-  warn "no stories found in ## Active Cycle (idle is fine; verify skipped spec checks)"
+  if awk '/^## Active Cycle/,/^## [^A]/' "$MP" | grep -qiE 'cycle parked|_\(none'; then
+    pass "Active Cycle idle (parked — spec checks skipped)"
+  else
+    warn "no stories found in ## Active Cycle (idle is fine; verify skipped spec checks)"
+  fi
 else
   for id in $active_ids; do
     spec=""
