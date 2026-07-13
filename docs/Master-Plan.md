@@ -159,6 +159,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-113 | Chore: Cursor Intake Hardening + Fixture Parity | Chore | S | DEV-002 | P1 | 🏁 Shipped — v5.3.26 |
 | DEV-114 | Fix: `--cleanup` false positives | Fix | S | DEV-112 | P0 | 🏁 Shipped — v5.3.25 |
 | DEV-115 | Fix: `--cleanup` safety follow-up | Fix | S | DEV-114 | P0 | 🏁 Shipped — v5.3.27 |
+| DEV-116 | Feature: AgToosa Lifecycle Compass | Feature | M | DEV-002 | P0 | 🟦 Backlog — spec drafted; awaiting Spec Approved |
 
 ## Epics
 
@@ -588,4 +589,5 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-12 | 🚀 Ship complete — v5.3.26 — DEV-113 Cursor intake hardening; smoke PASS; cycle archived | AgToosa |
 | 2026-07-12 | 🚀 Release 5.3.26 shipped — v5.3.26; version parity bash/ps1/npm; Milestone v5.3.27 (next) | AgToosa |
 | 2026-07-12 | 🚀 Ship complete — v5.3.27 — DEV-115 cleanup safety follow-up; CLN-015–017 PASS; miToosa dogfood | AgToosa |
+| 2026-07-12 | ✏️ /agtoosa-spec — DEV-116 draft — AgToosa Lifecycle Compass; ADR-014; test plan `docs/AgToosa_TestPlan-DEV-116.md`; design `docs/superpowers/specs/2026-07-12-lifecycle-compass-design.md`; awaiting Spec Approved | AgToosa |
 | 2026-07-12 | 🚀 Release 5.3.27 shipped — v5.3.27; version parity bash/ps1/npm; Milestone v5.3.28 (next) | AgToosa |
