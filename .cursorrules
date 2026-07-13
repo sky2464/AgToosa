@@ -4,6 +4,6 @@ Read `docs/agtoosa-maintainer.md` before making changes.
 
 Use this repository mode for generator changes, template changes, platform wiring, version wiring, and bats updates.
 
-**Freeform asks** without `/agtoosa-*` trigger **AgToosa Project Intake** per `docs/AgToosa_Agent.md` → Project Intake Protocol (including Natural Language Intent Map). Always-on detail: `.cursor/rules/agtoosa-maintainer-core.mdc`.
+**Freeform asks** without `/agtoosa-*` trigger **AgToosa Project Intake** per `docs/AgToosa_Agent.md` → Project Intake Protocol (including **AgToosa Lifecycle Compass**). Always-on detail: `.cursor/rules/agtoosa-maintainer-core.mdc`.
 
 Do not run `agtoosa.sh` install against this repo. For downstream Cursor verification: `bash scripts/cursor-intake-fixture.sh`.

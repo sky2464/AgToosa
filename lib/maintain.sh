@@ -415,8 +415,8 @@ run_status_line() {
     echo -e "${RED}❌ Error: Master-Plan.md not found under docs/ or Docs/.${NC}" >&2
     return 2
   fi
-  MP_PATH="$mp" python3 - <<'PY'
-import os, re
+  MP_PATH="$mp" ROUTE_HINT="${ROUTE_HINT:-false}" STATUS_LINE_FORMAT="${STATUS_LINE_FORMAT:-text}" python3 - <<'PY'
+import json, os, re
 
 path = os.environ["MP_PATH"]
 text = open(path, encoding="utf-8").read()
@@ -496,6 +496,26 @@ elif "Todo" in status or "🟦" in status or "In Progress" in status or "🟨" i
 else:
     next_cmd = "/agtoosa-spec"
 
-print(f"SYNC: {story_id} · {st_short} · tasks {tasks_done}/{tasks_total} · clarity {clarity} · next {next_cmd}")
+sync_line = f"SYNC: {story_id} · {st_short} · tasks {tasks_done}/{tasks_total} · clarity {clarity} · next {next_cmd}"
+
+anchor_map = {
+    "/agtoosa-spec": "spec",
+    "/agtoosa-build": "build",
+    "/agtoosa-review": "review",
+    "/agtoosa-ship": "ship",
+}
+anchor = anchor_map.get(next_cmd, "none")
+
+if os.environ.get("ROUTE_HINT") == "true" and os.environ.get("STATUS_LINE_FORMAT") == "json":
+    print(json.dumps({
+        "sync": sync_line,
+        "anchor": anchor,
+        "story_id": story_id,
+        "tasks_done": tasks_done,
+        "tasks_total": tasks_total,
+        "next": next_cmd,
+    }))
+else:
+    print(sync_line)
 PY
 }

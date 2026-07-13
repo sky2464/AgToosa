@@ -348,18 +348,50 @@ drifting the product. Confirm to open Spec, or say how you want to override.
 
 **Mid-build:** out-of-scope discoveries during `/agtoosa-build` still use Discovery Triage below — not Project Intake.
 
-#### Natural Language Intent Map
+#### AgToosa Lifecycle Compass
 
-When the user omits `/agtoosa-*` but uses informal phrasing, map intent **before** acting (still subject to soft/hard classification and Phase Stop):
+> Extends **Project Intake** (soft/hard gate above). Every freeform ask finds its place on **Spec → Build → Review → Ship**.
 
-| Example phrases | Route |
-|-----------------|-------|
-| "plan and code", "plan and build", "design this feature", "architect", "implement feature" | Hard path → `/agtoosa-spec` workflow (`docs/AgToosa_Spec.md`); stop at approval gate |
-| "build it", "implement it", "code it", "make it work" | If approved spec + active tasks exist → `/agtoosa-build` workflow; else hard path → spec first |
-| "review it", "check my work", "code review" | `/agtoosa-review` workflow |
-| "ship it", "deploy", "release" | `/agtoosa-ship` workflow |
+When the user omits `/agtoosa-*`, run **AgToosa Lifecycle Compass** after Project Intake Standing Corrections read:
 
-**Do not use Cursor native Plan mode** for in-scope product work when AgToosa is installed — execute the AgToosa workflow files above instead. On hard-path confirm, **begin executing** the named workflow file immediately; intake is not permission to skip the workflow.
+1. Run `bash agtoosa.sh --status-line [path]` (or `agtoosa.ps1 -StatusLine`; fallback: read Master-Plan Active Cycle).
+2. Infer **semantic intent** from the utterance (not phrase-table lookup): `PLAN` · `BUILD` · `REVIEW` · `SHIP` · `FIX` · `EXPLORE` · `TRACK`.
+3. Apply Claim Boundary soft/hard (intake triggers above).
+4. **Reconcile** intent × SYNC `next` × hard triggers → exactly one **ANCHOR** (`spec` · `build` · `review` · `ship` · `none`).
+5. Route to the matching workflow; **Phase Stop** preserved.
+
+**Branded lines (normative):**
+
+| Path | Line |
+|------|------|
+| Soft | `Compass: soft → <phase> — <rationale>` |
+| Hard gate | `**AgToosa Lifecycle Compass** — <benefit>. ANCHOR: <phase> — confirm /agtoosa-<phase>.` |
+| Tributary | `Compass: tributary (<explore\|fix\|track>) → serving <phase> · <story-id\|none>` then `When done: return to /agtoosa-<phase> — <rationale>` |
+
+**Semantic classes → ANCHOR** (examples illustrative, not exhaustive):
+
+| Class | Meaning | ANCHOR | Workflow |
+|-------|---------|--------|----------|
+| PLAN | New capability, architecture, scope expand | `spec` | `/agtoosa-spec` |
+| BUILD | Implement approved work, finish tasks | `build` | `/agtoosa-build` |
+| REVIEW | Audit, check quality, PR review | `review` | `/agtoosa-review` |
+| SHIP | Release, deploy, publish | `ship` | `/agtoosa-ship` |
+| FIX | Claim-Boundary-small bug/chore | active phase | tributary → expedite |
+| EXPLORE | Read-only questions | active phase | tributary → answer |
+| TRACK | Log backlog item | `spec` | tributary → `/agtoosa-task` |
+
+**Reconciliation (intent × SYNC):**
+
+| Condition | Route |
+|-----------|-------|
+| PLAN or hard-sized ask | Hard gate → ANCHOR `spec` |
+| BUILD intent + SYNC `next /agtoosa-spec` | Explain mismatch → ANCHOR `spec`; do not code |
+| BUILD intent + active tasks remain | ANCHOR `build` |
+| REVIEW intent + tasks complete | ANCHOR `review` |
+| SHIP intent + review not done | ANCHOR `review` first |
+| Low confidence | One multiple-choice question (plan / build / fix / review) |
+
+Explicit `/agtoosa-*` bypasses Compass ceremony. **Do not use Cursor native Plan mode** for in-scope product work — execute AgToosa workflow files. On hard-path confirm, begin the named workflow immediately; Compass is not permission to skip it. Never auto-chain Spec → Build → Review → Ship.
 
 ### Discovery Triage Protocol
 

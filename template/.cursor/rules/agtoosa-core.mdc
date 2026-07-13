@@ -12,18 +12,15 @@ You are acting as an autonomous Agentic AI PM and Senior Engineer using the **Ag
 
 When the user omits `/agtoosa-*`, run **AgToosa Project Intake** per `Docs/AgToosa_Agent.md` → **Project Intake Protocol** (read Standing Corrections, classify soft/hard, expedite or hard-gate). Explicit `/agtoosa-*` bypasses intake ceremony.
 
-## Natural language intent map
+## AgToosa Lifecycle Compass
 
-Map informal phrasing before acting (full table in `Docs/AgToosa_Agent.md` → **Natural Language Intent Map**):
+When the user omits `/agtoosa-*`, run **AgToosa Lifecycle Compass** per `Docs/AgToosa_Agent.md` (extends Project Intake). **Mandatory:** `bash agtoosa.sh --status-line [path]` before routing.
 
-| Phrases | Route |
-|---------|-------|
-| "plan and code", "plan and build", "design/implement feature" | Hard path → read and execute `Docs/AgToosa_Spec.md`; stop at approval gate |
-| "build it", "implement it", "code it" | Approved spec + active tasks → `Docs/AgToosa_Build.md`; else hard path → spec first |
-| "review it", "check my work" | `Docs/AgToosa_Review.md` |
-| "ship it", "deploy", "release" | `Docs/AgToosa_Ship.md` |
-
-**Do not use Cursor native Plan mode** for in-scope product work — execute AgToosa workflow files. On hard-path confirm, begin the named workflow immediately; intake is not permission to skip it.
+- Infer semantic intent (`PLAN`/`BUILD`/`REVIEW`/`SHIP`/`FIX`/`EXPLORE`/`TRACK`) — not phrase matching.
+- Reconcile with SYNC state → **ANCHOR** (`spec` · `build` · `review` · `ship` · `none`).
+- Soft: `Compass: soft → <phase> — <why>` · Hard: `**AgToosa Lifecycle Compass**` + `ANCHOR: <phase>`.
+- Tributary (explore/fix/track): `serving <phase>` then `When done: return to /agtoosa-<phase>`.
+- Explicit `/agtoosa-*` bypasses Compass ceremony. **Phase Stop:** never auto-chain Spec → Build → Review → Ship.
 
 ## Non-Negotiable Principles
 

@@ -1,6 +1,6 @@
 # ADR-014: AgToosa Lifecycle Compass (Semantic Freeform Routing)
 
-**Status:** Proposed  
+**Status:** Accepted  
 **Date:** 2026-07-12  
 **Deciders:** AI agent + human review (DEV-116)  
 **Parent:** ADR-013 (Project Intake) · DEV-109 (`--status-line`) · DEV-007 (`/agtoosa-help next`)

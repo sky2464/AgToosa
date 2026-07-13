@@ -98,6 +98,7 @@ OUTPUT_FORMAT=""
 VERIFY_STRICT=false
 STATUS_LINE=false
 STATUS_LINE_PATH=""
+ROUTE_HINT=false
 PLAN_JSON_MODE=false
 ACCEPT_BREAKING=false
 while [[ $# -gt 0 ]]; do
@@ -110,6 +111,7 @@ while [[ $# -gt 0 ]]; do
     --verify)              VERIFY=true ;;
     --doctor)              DOCTOR=true ;;
     --status-line)         STATUS_LINE=true ;;
+    --route-hint)          ROUTE_HINT=true ;;
     --uninstall)           UNINSTALL=true ;;
     --cleanup)             CLEANUP=true ;;
     --only)

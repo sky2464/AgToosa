@@ -18,6 +18,12 @@
 
 **Standing Corrections**: Dated, deduped always/never lessons in `Docs/Context/workflow.md` written by Project Intake so agents re-read them before repeating mistakes (e.g. inventing dependency versions from memory). Context: DEV-110. Not: "retro proposals only", "Update Log spam".
 
+**Lifecycle Compass**: Semantic freeform router extending Project Intake — infers intent, reads `--status-line` SYNC state, anchors to Spec → Build → Review → Ship via **ANCHOR**; tributaries (explore/fix/track) serve a phase and return. Context: DEV-116, ADR-014. Not: "phrase table", "/agtoosa-compass command", "runtime orchestrator".
+
+**ANCHOR**: Lifecycle phase label (`spec` · `build` · `review` · `ship` · `none`) printed on every Compass resolution. Context: DEV-116. Not: "git branch", "file path".
+
+**Tributary**: Side work (explore, fix, track) allowed under Compass when it serves an anchored lifecycle phase and ends with a return cue. Context: DEV-116. Not: "permanent off-ramp", "skip spec forever".
+
 **Phase pulse / SYNC line**: One executive line after lifecycle phases and from `agtoosa.sh --status-line` / `agtoosa.ps1 -StatusLine`. Context: ADR-012, DEV-109. Not: full `/agtoosa-status` dashboard.
 
 **Lifecycle next-step**: Primary post-phase recommendation following Spec → Build → Review → Ship. Context: ADR-012. Not: universal “run `/agtoosa-status`” as headline.
