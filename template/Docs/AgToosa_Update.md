@@ -293,9 +293,9 @@ After upgrades, projects may accumulate **unnecessary AgToosa-owned files** that
 | Removed workflow docs | Framework `Docs/AgToosa_*.md` files no longer shipped in the template — **not** per-story test plans (`Docs/AgToosa_TestPlan-*`) |
 | Deselected platforms | `.windsurf/`, `.codex/`, etc. when `Docs/agtoosa-lock.json` `platforms[]` no longer includes that platform. GitHub Copilot and VS Code (generic) **share** `.github/prompts/` and `.github/agents/`; cleanup skips those shared paths when **either** `copilot` or `vscode` is in `platforms[]`. VS Code-only installs (platform 6) without `copilot-instructions.md` infer `vscode` when `agtoosa-*` prompts are present. |
 
-**`--cleanup`** is opt-in housekeeping — not destructive full regen. It never touches `Docs/Context/`, `Docs/archived/`, `Docs/AgToosa_TestPlan-*`, Master-Plan, or user project specialist files.
+**`--cleanup`** is opt-in housekeeping — not destructive full regen. It never touches `Docs/Context/`, `Docs/archived/`, `Docs/AgToosa_TestPlan-*`, Master-Plan, user project specialist files, or deep-merged `.claude/settings.json` (user hooks are preserved when Claude is deselected).
 
-**Always run `--dry-run` first** on production repos. `--yes` applies all listed categories without further confirmation.
+**Always run `--dry-run` first** on production repos. `--yes` applies all listed categories without further confirmation. Use **`--only backups`** to remove merge backups only and skip orphan doc/platform categories.
 
 The install/upgrade wizard may offer cleanup when candidates exist. You can also run it directly:
 
@@ -304,6 +304,7 @@ bash agtoosa.sh --cleanup <project>              # interactive plan + confirm
 bash agtoosa.sh --cleanup <project> --dry-run    # plan only
 bash agtoosa.sh --cleanup <project> --format json
 bash agtoosa.sh --cleanup <project> --yes        # non-interactive apply
+bash agtoosa.sh --cleanup <project> --only backups --dry-run  # backups only
 ```
 
 JSON conforms to `Docs/schemas/cleanup-result-v1.json` (`summary` + `candidates[]`).

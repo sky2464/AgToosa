@@ -93,6 +93,7 @@ Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
 | DEV-112 | Smart Apply UX Polish + `--cleanup` | Feature | M | DEV-001 / DEV-111 | P0 | `docs/archived/spec-DEV-112.md` | `docs/AgToosa_TestPlan-DEV-112.md` | 🏁 Shipped v5.3.24 |
 | DEV-114 | `--cleanup` false-positive hotfix | Fix | S | DEV-112 | P0 | `docs/archived/spec-DEV-114.md` | `docs/AgToosa_TestPlan-DEV-114.md` | 🏁 Shipped v5.3.25 |
 | DEV-113 | Cursor intake hardening + fixture parity | Chore | S | DEV-002 | P1 | `docs/archived/spec-DEV-113.md` | `docs/AgToosa_TestPlan-DEV-113.md` | 🏁 Shipped v5.3.26 |
+| DEV-115 | `--cleanup` safety follow-up | Fix | S | DEV-114 | P0 | `docs/archived/spec-DEV-115.md` | `docs/AgToosa_TestPlan-DEV-115.md` | 🏁 Shipped v5.3.27 |
 
 > **Enrollment note (2026-07-12):** DEV-107 Spec Approved; remains Backlog until after Wave 1a capacity frees. Build must not displace DEV-086 / DEV-090 / DEV-105.
 >

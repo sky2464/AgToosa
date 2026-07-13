@@ -13320,6 +13320,7 @@ _cln_seed_project() {
     grep -qiE 'housekeeping|merge backup|orphan' "$f"
     grep -qiE 'vscode|VS Code' "$f"
     grep -qiE 'AgToosa_TestPlan|dry-run' "$f"
+    grep -qiE 'only backups|settings\.json' "$f"
   done
 }
 
@@ -13371,6 +13372,54 @@ _cln_seed_project() {
   [ "$status" -eq 0 ]
   ! [[ "$output" == *"orphan_platform"* ]]
   [[ "$output" == *"No unnecessary"* ]]
+}
+
+@test "DEV-114 CLN-015: neither copilot nor vscode — shared prompts flagged as orphans" {
+  local root="$BATS_TEST_DIRNAME/.."
+  _cln_seed_project claude
+  mkdir -p "$TEST_PROJECT/.github/prompts"
+  # Sentinel blocks vscode inference when agtoosa prompts exist without copilot in lock.
+  touch "$TEST_PROJECT/.github/copilot-instructions.md"
+  cp "$root/template/.github/prompts"/agtoosa-*.prompt.md "$TEST_PROJECT/.github/prompts/" 2>/dev/null || true
+  find "$TEST_PROJECT/.github/prompts" -maxdepth 1 -name 'agtoosa-*' | grep -q .
+  run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --dry-run
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"orphan_platform"* ]]
+  [[ "$output" == *"agtoosa-spec.prompt"* ]]
+}
+
+@test "DEV-114 CLN-016: --only backups skips orphan doc and platform categories" {
+  local root="$BATS_TEST_DIRNAME/.."
+  _cln_seed_project claude
+  echo "backup-body" > "$TEST_PROJECT/CLAUDE.md.bak.20260712-1658"
+  cp "$BATS_TEST_DIRNAME/fixtures/migration/orphan-AgToosa_LegacyRemoved.md" \
+    "$TEST_PROJECT/Docs/AgToosa_LegacyRemoved.md"
+  mkdir -p "$TEST_PROJECT/.github/prompts"
+  cp "$root/template/.github/prompts"/agtoosa-*.prompt.md "$TEST_PROJECT/.github/prompts/" 2>/dev/null || true
+  run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --only backups --dry-run
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"CLAUDE.md.bak"* ]]
+  ! [[ "$output" == *"AgToosa_LegacyRemoved.md"* ]]
+  ! [[ "$output" == *"orphan_platform"* ]]
+}
+
+@test "DEV-114 CLN-017: deselected claude does not flag .claude/settings.json" {
+  _cln_seed_project cursor
+  mkdir -p "$TEST_PROJECT/.claude"
+  echo '{"hooks":{"PreToolUse":[{"command":"user-custom-hook"}]}}' > "$TEST_PROJECT/.claude/settings.json"
+  run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --dry-run
+  [ "$status" -eq 0 ]
+  ! [[ "$output" == *"settings.json"* ]]
+}
+
+@test "DEV-115 SR-001: v5.3.27 changelog and DEV-115 review/evidence/spec artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.27\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-115' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-115.md" ]
+  [ -f "$root/docs/archived/review-DEV-115.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-115.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-115.md"
 }
 
 @test "DEV-114 SR-001: v5.3.25 changelog and DEV-114 review/evidence/spec artifacts exist" {

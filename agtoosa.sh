@@ -10,7 +10,7 @@ set -euo pipefail
 #   bash agtoosa.sh [--force] [--dry-run] [--version] [--help]
 # ──────────────────────────────────────────────────────────────
 
-AGTOOSA_VERSION="5.3.26"
+AGTOOSA_VERSION="5.3.27"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
 SHIP_DIR="${AGTOOSA_SHIP_DIR:-${SCRIPT_DIR}/ship}"
@@ -93,6 +93,7 @@ REINSTALL_PATH=""
 CLEAN=false
 CLEANUP=false
 CLEANUP_PATH=""
+CLEANUP_ONLY=""
 OUTPUT_FORMAT=""
 VERIFY_STRICT=false
 STATUS_LINE=false
@@ -111,6 +112,16 @@ while [[ $# -gt 0 ]]; do
     --status-line)         STATUS_LINE=true ;;
     --uninstall)           UNINSTALL=true ;;
     --cleanup)             CLEANUP=true ;;
+    --only)
+      if [[ $# -lt 2 ]]; then
+        echo -e "${RED}❌ Error: --only requires a category (backups).${NC}"; exit 1
+      fi
+      case "$2" in
+        backups) CLEANUP_ONLY="backups" ;;
+        *)
+          echo -e "${RED}❌ Error: invalid --only '${2}' (expected backups).${NC}"; exit 2 ;;
+      esac
+      shift ;;
     --reinstall)           REINSTALL=true ;;
     --clean)               CLEAN=true ;;
     --force)               FORCE=true ;;
@@ -214,6 +225,10 @@ if [[ "$REINSTALL" == true && "$CLEAN" != true ]]; then
 fi
 if [[ "$CLEAN" == true && "$REINSTALL" != true ]]; then
   echo -e "${RED}❌ Error: --clean requires --reinstall.${NC}" >&2
+  exit 1
+fi
+if [[ -n "${CLEANUP_ONLY:-}" && "$CLEANUP" != true ]]; then
+  echo -e "${RED}❌ Error: --only requires --cleanup.${NC}" >&2
   exit 1
 fi
 

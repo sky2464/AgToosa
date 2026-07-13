@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-12 (DEV-113 shipped — v5.3.26 cursor intake hardening)
+> **Last updated:** 2026-07-12 (DEV-115 shipped — v5.3.27 cleanup safety follow-up)
 
 ## Project Charter
 
@@ -9,8 +9,8 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | DEV-113 shipped — next enroll via `/agtoosa-spec` |
-| Milestone | `v5.3.27` (next) |
+| Current phase | DEV-115 shipped — next enroll via `/agtoosa-spec` |
+| Milestone | `v5.3.28` (next) |
 | Active cycle | _(none — enroll via `/agtoosa-spec`)_ |
 | Cycle capacity | `8 story points` |
 
@@ -22,6 +22,7 @@
 |----|-------|------|----------|--------|-----------|
 | — | _(no active story — run `/agtoosa-spec` to enroll)_ | — | — | — | — |
 
+<!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.27.md (DEV-115 v5.3.27) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.26.md (DEV-113 v5.3.26) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.23.md (DEV-111 v5.3.23) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.22.md (DEV-110 v5.3.22) -->
@@ -157,6 +158,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-112 | Feature: Smart Apply UX Polish + `--cleanup` | Feature | M | DEV-001 / DEV-111 | P0 | 🏁 Shipped — v5.3.24 |
 | DEV-113 | Chore: Cursor Intake Hardening + Fixture Parity | Chore | S | DEV-002 | P1 | 🏁 Shipped — v5.3.26 |
 | DEV-114 | Fix: `--cleanup` false positives | Fix | S | DEV-112 | P0 | 🏁 Shipped — v5.3.25 |
+| DEV-115 | Fix: `--cleanup` safety follow-up | Fix | S | DEV-114 | P0 | 🏁 Shipped — v5.3.27 |
 
 ## Epics
 
@@ -230,6 +232,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 |----|-------|---------|--------------|
 | DEV-113 | Chore: Cursor Intake Hardening + Fixture Parity | 2026-07-12 | [spec-DEV-113.md](archived/spec-DEV-113.md) · [review-DEV-113.md](archived/review-DEV-113.md) · [evidence-DEV-113.md](archived/evidence-DEV-113.md) |
 | DEV-114 | Fix: `--cleanup` false positives | 2026-07-12 | [spec-DEV-114.md](archived/spec-DEV-114.md) · [review-DEV-114.md](archived/review-DEV-114.md) · [evidence-DEV-114.md](archived/evidence-DEV-114.md) |
+| DEV-115 | Fix: `--cleanup` safety follow-up | 2026-07-12 | [spec-DEV-115.md](archived/spec-DEV-115.md) · [review-DEV-115.md](archived/review-DEV-115.md) · [evidence-DEV-115.md](archived/evidence-DEV-115.md) |
 | DEV-110 | Feature: AgToosa Project Intake | 2026-07-12 | [spec-DEV-110.md](archived/spec-DEV-110.md) · [review-DEV-110.md](archived/review-DEV-110.md) · [evidence-DEV-110.md](archived/evidence-DEV-110.md) |
 | DEV-109 | Feature: Lifecycle Next-Step Sync + Multi-Spec Clarity | 2026-07-12 | [spec-DEV-109.md](archived/spec-DEV-109.md) · [review-DEV-109.md](archived/review-DEV-109.md) · [evidence-DEV-109.md](archived/evidence-DEV-109.md) |
 | DEV-096 | Chore: Pack Validation CI | 2026-07-12 | [spec-DEV-096.md](archived/spec-DEV-096.md) · [review-DEV-096.md](archived/review-DEV-096.md) · [evidence-DEV-096.md](archived/evidence-DEV-096.md) |
@@ -584,3 +587,5 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-113 — smoke PASS; v5.3.26; spec archived | AgToosa |
 | 2026-07-12 | 🚀 Ship complete — v5.3.26 — DEV-113 Cursor intake hardening; smoke PASS; cycle archived | AgToosa |
 | 2026-07-12 | 🚀 Release 5.3.26 shipped — v5.3.26; version parity bash/ps1/npm; Milestone v5.3.27 (next) | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v5.3.27 — DEV-115 cleanup safety follow-up; CLN-015–017 PASS; miToosa dogfood | AgToosa |
+| 2026-07-12 | 🚀 Release 5.3.27 shipped — v5.3.27; version parity bash/ps1/npm; Milestone v5.3.28 (next) | AgToosa |

@@ -9,6 +9,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.27] — 2026-07-12
+
+Patch release: DEV-115 — `--cleanup` safety follow-up.
+
+### Added
+
+- **DEV-115 — `--cleanup` safety follow-up.** `--only backups` limits housekeeping to merge backups; preserve deep-merged `.claude/settings.json` when Claude is deselected; CLN-015–CLN-017 bats; `AgToosa_Update.md` guidance.
+
 ## [5.3.26] — 2026-07-12
 
 Patch release: DEV-113 — Cursor intake hardening + fixture parity.

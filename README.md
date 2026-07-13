@@ -5,7 +5,7 @@
 **The Spec-Driven Agentic AI Framework for Software Development**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-5.3.26-green.svg)](https://github.com/sky2464/AgToosa/releases)
+[![Version](https://img.shields.io/badge/version-5.3.27-green.svg)](https://github.com/sky2464/AgToosa/releases)
 [![CI Status](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml)
 [![Security Scan](https://github.com/sky2464/AgToosa/actions/workflows/security-scan.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/security-scan.yml)
 [![Semantic Release](https://github.com/sky2464/AgToosa/actions/workflows/release.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/release.yml)
@@ -57,7 +57,7 @@ Use these when you already know AgToosa and only need an install command.
 
 ```bash
 # Public launch: pinned release (alternative to the proof walkthrough).
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.26
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.27
 
 # Homebrew alternative (formula pinned to the tagged release tarball)
 brew install sky2464/agtoosa/agtoosa
@@ -85,7 +85,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstr
 
 ```powershell
 # Public launch: pinned release.
-$Ref = "v5.3.26"
+$Ref = "v5.3.27"
 iwr -UseBasicParsing https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.ps1 | iex
 .\agtoosa.ps1 -Version
 

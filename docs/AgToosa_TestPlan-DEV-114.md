@@ -8,6 +8,9 @@
 | CLN-012 | AC-001 | Copilot selected, vscode absent — prompts not orphans | `bats -f CLN-012` |
 | CLN-013 | AC-003, AC-004 | TestPlan preserved; legacy orphan still flagged | `bats -f CLN-013` |
 | CLN-014 | AC-002 | Copilot + vscode both selected — no orphan prompts | `bats -f CLN-014` |
+| CLN-015 | AC-001 inverse | Neither copilot nor vscode — shared prompts flagged | `bats -f CLN-015` |
+| CLN-016 | — | `--only backups` skips orphan categories | `bats -f CLN-016` |
+| CLN-017 | — | Deselected claude preserves `.claude/settings.json` | `bats -f CLN-017` |
 
 ## miToosa recovery (manual verification)
 

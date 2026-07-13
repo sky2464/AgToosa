@@ -106,7 +106,7 @@ _cleanup_paths_for_platform() {
       printf '%s\n' "${CLAUDE_COMMAND_FILES[@]+"${CLAUDE_COMMAND_FILES[@]}"}"
       printf '%s\n' "${CLAUDE_SKILL_FILES[@]+"${CLAUDE_SKILL_FILES[@]}"}"
       printf '%s\n' "${CLAUDE_HOOK_FILES[@]+"${CLAUDE_HOOK_FILES[@]}"}"
-      printf '%s\n' ".claude/settings.json"
+      # .claude/settings.json is deep-merged with user hooks — never whole-file delete.
       ;;
     gemini)
       printf '%s\n' "AGENTS.md" "Docs/AgToosa_Gemini.md"
@@ -229,10 +229,12 @@ _cleanup_collect_orphan_platforms() {
 }
 
 # Populate CLEANUP_CANDIDATES for project_path.
+# When CLEANUP_ONLY=backups, skip orphan_doc and orphan_platform (safer incremental housekeeping).
 cleanup_collect_candidates() {
   local project_path="$1"
   CLEANUP_CANDIDATES=()
   _cleanup_collect_backups "$project_path"
+  [[ "${CLEANUP_ONLY:-}" == "backups" ]] && return 0
   _cleanup_collect_orphan_docs "$project_path"
   _cleanup_collect_orphan_platforms "$project_path"
 }
