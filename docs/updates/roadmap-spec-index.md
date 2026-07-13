@@ -94,6 +94,7 @@ Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
 | DEV-114 | `--cleanup` false-positive hotfix | Fix | S | DEV-112 | P0 | `docs/archived/spec-DEV-114.md` | `docs/AgToosa_TestPlan-DEV-114.md` | 🏁 Shipped v5.3.25 |
 | DEV-113 | Cursor intake hardening + fixture parity | Chore | S | DEV-002 | P1 | `docs/archived/spec-DEV-113.md` | `docs/AgToosa_TestPlan-DEV-113.md` | 🏁 Shipped v5.3.26 |
 | DEV-115 | `--cleanup` safety follow-up | Fix | S | DEV-114 | P0 | `docs/archived/spec-DEV-115.md` | `docs/AgToosa_TestPlan-DEV-115.md` | 🏁 Shipped v5.3.27 |
+| DEV-116 | AgToosa Lifecycle Compass | Feature | M | DEV-002 | P0 | `docs/archived/spec-DEV-116.md` | `docs/AgToosa_TestPlan-DEV-116.md` | 🏁 Shipped v5.3.28 |
 
 > **Enrollment note (2026-07-12):** DEV-107 Spec Approved; remains Backlog until after Wave 1a capacity frees. Build must not displace DEV-086 / DEV-090 / DEV-105.
 >
@@ -104,6 +105,8 @@ Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
 > **Enrollment note (2026-07-12):** DEV-111 shipped v5.3.23 — one-command smart apply; auto-detect upgrade; platform Found/add UX; summary buckets.
 >
 > **Enrollment note (2026-07-12):** DEV-112 shipped v5.3.24 — quiet upgrade UX; platform legend; context-aware next steps; `--cleanup` housekeeping.
+>
+> **Enrollment note (2026-07-12):** DEV-116 shipped v5.3.28 — AgToosa Lifecycle Compass; semantic intent routing; --route-hint CLI formatting; CMP integration tests.
 
 ## Recently shipped (v5.3.14 — 2026-07-11)
 

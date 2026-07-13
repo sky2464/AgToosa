@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.28] — 2026-07-12
+
+Patch release: DEV-116 — AgToosa Lifecycle Compass.
+
+### Added
+
+- **DEV-116 — AgToosa Lifecycle Compass.** Replaced Natural Language Intent Map with Lifecycle Compass semantic intent classes; added `--route-hint --format json` status formatting support in generator and PowerShell wrapper; added CMP-001–CMP-007 bats integration tests.
+
+---
+
 ## [5.3.27] — 2026-07-12
 
 Patch release: DEV-115 — `--cleanup` safety follow-up.

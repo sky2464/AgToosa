@@ -13451,3 +13451,84 @@ _cln_seed_project() {
   [ -f "$root/docs/archived/evidence-DEV-112.md" ]
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-112.md"
 }
+
+# ── DEV-116: AgToosa Lifecycle Compass (CMP-001–CMP-007) ──────────────────────
+
+@test "DEV-116 @smoke CMP-001: Agent defines Lifecycle Compass preamble with mandatory --status-line" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "run \*\*AgToosa Lifecycle Compass\*\* after Project Intake" "$root/docs/AgToosa_Agent.md"
+  grep -q "run \*\*AgToosa Lifecycle Compass\*\* after Project Intake" "$root/template/Docs/AgToosa_Agent.md"
+  grep -q "\-\-status\-line" "$root/docs/AgToosa_Agent.md"
+  grep -q "ANCHOR" "$root/docs/AgToosa_Agent.md"
+}
+
+@test "DEV-116 @smoke CMP-002: Semantic intent classes replace NL Intent Map" {
+  local root="$BATS_TEST_DIRNAME/.."
+  ! grep -q 'Natural Language Intent Map' "$root/docs/AgToosa_Agent.md"
+  ! grep -q 'Natural Language Intent Map' "$root/template/Docs/AgToosa_Agent.md"
+  grep -q "Infer \*\*semantic intent\*\*" "$root/docs/AgToosa_Agent.md"
+  grep -q "agtoosa-core.mdc" "$root/docs/archived/spec-DEV-116.md"
+  grep -q "AgToosa Lifecycle Compass" "$root/template/.cursor/rules/agtoosa-core.mdc"
+  grep -q "AgToosa Lifecycle Compass" "$root/.cursor/rules/agtoosa-maintainer-core.mdc"
+}
+
+@test "DEV-116 @smoke CMP-003: Branded Compass soft line and bypass documented" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Compass: soft' "$root/docs/AgToosa_Agent.md"
+  grep -q 'Compass: soft' "$root/template/Docs/AgToosa_Agent.md"
+  grep -q 'bypasses Compass ceremony' "$root/docs/AgToosa_Agent.md"
+}
+
+@test "DEV-116 @smoke CMP-004: Hard gate ANCHOR and Quickref/CLAUDE/AGENTS use branding" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'ANCHOR:' "$root/docs/AgToosa_Agent.md"
+  grep -q 'Lifecycle Compass' "$root/docs/AgToosa_Quickref.md"
+  grep -q 'Lifecycle Compass' "$root/template/Docs/AgToosa_Quickref.md"
+  grep -q 'Lifecycle Compass' "$root/template/CLAUDE.md"
+  grep -q 'Lifecycle Compass' "$root/template/AGENTS.md"
+}
+
+@test "DEV-116 CMP-005: Tributary serving phase and return cue documented" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Compass: tributary' "$root/docs/AgToosa_Agent.md"
+  grep -q 'When done: return to' "$root/docs/AgToosa_Agent.md"
+}
+
+@test "DEV-116 CMP-006: Phase Stop preserved and no auto-chaining" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -qi 'never auto-chain Spec' "$root/docs/AgToosa_Agent.md"
+  grep -qi 'never auto-chain Spec' "$root/template/.cursor/rules/agtoosa-core.mdc"
+}
+
+@test "DEV-116 CMP-007: --route-hint --format json emits expected JSON fields" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/agtoosa.sh" --status-line "$root" --route-hint --format json
+  [ "$status" -eq 0 ]
+  [[ "$output" == *'"sync":'* ]]
+  [[ "$output" == *'"anchor":'* ]]
+  [[ "$output" == *'"story_id":'* ]]
+  [[ "$output" == *'"tasks_done":'* ]]
+  [[ "$output" == *'"tasks_total":'* ]]
+  [[ "$output" == *'"next":'* ]]
+}
+
+# -- DEV-116 ship regression v5.3.28 (SR-001–SR-002) ---------------------------
+
+@test "DEV-116 SR-001: v5.3.28 changelog and DEV-116 review/evidence/spec artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.28\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-116' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-116.md" ]
+  [ -f "$root/docs/archived/review-DEV-116.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-116.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-116.md"
+}
+
+@test "DEV-116 SR-002: ADR-014 lifecycle compass accepted" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/docs/adr/ADR-014-lifecycle-compass.md" ]
+  grep -q 'Accepted' "$root/docs/adr/ADR-014-lifecycle-compass.md"
+  grep -q 'DEV-116' "$root/docs/adr/ADR-014-lifecycle-compass.md"
+}
+
+

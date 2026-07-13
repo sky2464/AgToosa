@@ -49,4 +49,14 @@ git diff --check
 
 ### GREEN evidence
 
-_(Record after build completes.)_
+2026-07-12 — Ran `bats tests/agtoosa.bats -f "DEV-116"`:
+```text
+1..7
+ok 1 DEV-116 @smoke CMP-001: Agent defines Lifecycle Compass preamble with mandatory --status-line
+ok 2 DEV-116 @smoke CMP-002: Semantic intent classes replace NL Intent Map
+ok 3 DEV-116 @smoke CMP-003: Branded Compass soft line and bypass documented
+ok 4 DEV-116 @smoke CMP-004: Hard gate ANCHOR and Quickref/CLAUDE/AGENTS use branding
+ok 5 DEV-116 CMP-005: Tributary serving phase and return cue documented
+ok 6 DEV-116 CMP-006: Phase Stop preserved and no auto-chaining
+ok 7 DEV-116 CMP-007: --route-hint --format json emits expected JSON fields
+```

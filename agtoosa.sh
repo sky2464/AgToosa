@@ -10,7 +10,7 @@ set -euo pipefail
 #   bash agtoosa.sh [--force] [--dry-run] [--version] [--help]
 # ──────────────────────────────────────────────────────────────
 
-AGTOOSA_VERSION="5.3.27"
+AGTOOSA_VERSION="5.3.28"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
 SHIP_DIR="${AGTOOSA_SHIP_DIR:-${SCRIPT_DIR}/ship}"
@@ -275,7 +275,7 @@ if [[ "$DOCTOR" == true ]]; then
 fi
 
 if [[ "$STATUS_LINE" == true ]]; then
-  run_status_line "${STATUS_LINE_PATH:-$PWD}"
+  STATUS_LINE_FORMAT="$OUTPUT_FORMAT" run_status_line "${STATUS_LINE_PATH:-$PWD}"
   exit $?
 fi
 

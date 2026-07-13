@@ -1,6 +1,6 @@
 {
   "name": "agtoosa",
-  "version": "5.3.27",
+  "version": "5.3.28",
   "description": "Spec-driven agentic AI framework generator — installs the AgToosa SDLC workflow pack (spec, TDD build, review, ship + deterministic verifier) into your repo for Cursor, Claude Code, Windsurf, Gemini CLI, Copilot, and Codex.",
   "bin": {
     "agtoosa": "bin/agtoosa.js"

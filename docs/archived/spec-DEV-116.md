@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-116  
 > **Epic:** DEV-002 — Workflow Templates  
-> **Status:** 🟦 Todo — awaiting Spec Approved  
+> **Status:** 🟦 Todo — Spec Approved  
 > **Estimate:** M  
 > **Clarity:** ready  
 > **Spec created:** 2026-07-12  
@@ -267,7 +267,7 @@ Out of scope        : Runtime orchestrator, /agtoosa-compass command, Discovery 
 - [ ] **4.** Contract tests + evidence
   - [ ] 4.1 Add CMP-001–CMP-006 to `tests/agtoosa.bats`; capture RED then GREEN in test plan — _Requirements: AC-013, AC-014_
 
-### 3.2 Wave Plan
+### Wave Plan
 
 **Wave 1 (parallel):** 1.1, 2.1  
 **Wave 2 (sequential after Wave 1):** 1.2, 2.2  
@@ -290,3 +290,8 @@ Smoke set: CMP-001, CMP-002, CMP-003, CMP-004 @smoke
 | PKG-2.2 | 2 | PKG-2.1 | `template/CLAUDE.md`, `template/AGENTS.md`, Quickref, CONTEXT | PKG-2.1 | entry pointers | 2 | `bats -f CMP-004` |
 | PKG-3.1 | 3 | PKG-1.1 | `lib/maintain.sh`, `agtoosa.sh`, `agtoosa.ps1`, `lib/config.sh` | — | JSON route hint | 3 | `bash agtoosa.sh --status-line . --route-hint --format json` |
 | PKG-4.1 | 4 | PKG-1.2, PKG-2.2 | `tests/agtoosa.bats`, test plan | Waves 1–2 outputs | CMP bats green | 4 | `bats -f DEV-116` |
+
+## ✅ Spec Approved
+
+Approved: 2026-07-12 20:38
+

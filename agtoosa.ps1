@@ -105,6 +105,8 @@ param(
     [switch]$Verify,
     [switch]$Doctor,
     [switch]$StatusLine,
+    [switch]$RouteHint,
+    [string]$Format = "",
     [switch]$Uninstall,
     [switch]$Cleanup,
     [switch]$Reinstall,
@@ -130,7 +132,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 # ── Version ───────────────────────────────────────────────────
-$AGTOOSA_VERSION = "5.3.27"
+$AGTOOSA_VERSION = "5.3.28"
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $TEMPLATE_DIR = Join-Path $SCRIPT_DIR "template"
 $SHIP_DIR = Join-Path $SCRIPT_DIR "ship"
@@ -1350,7 +1352,14 @@ if ($StatusLine) {
         exit 1
     }
     $agtoosaSh = Join-Path $SCRIPT_DIR 'agtoosa.sh'
-    & $bash @($agtoosaSh, '--status-line', $slTarget)
+    $slArgs = @('--status-line', $slTarget)
+    if ($RouteHint) {
+        $slArgs += '--route-hint'
+    }
+    if (-not [string]::IsNullOrWhiteSpace($Format)) {
+        $slArgs += @('--format', $Format)
+    }
+    & $bash $agtoosaSh $slArgs
     exit $LASTEXITCODE
 }
 

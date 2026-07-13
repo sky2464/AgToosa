@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-12 (DEV-115 shipped — v5.3.27 cleanup safety follow-up)
+> **Last updated:** 2026-07-12 (DEV-116 shipped — v5.3.28 AgToosa Lifecycle Compass)
 
 ## Project Charter
 
@@ -9,8 +9,8 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | DEV-115 shipped — next enroll via `/agtoosa-spec` |
-| Milestone | `v5.3.28` (next) |
+| Current phase | DEV-116 shipped — next enroll via `/agtoosa-spec` |
+| Milestone | `v5.3.29` (next) |
 | Active cycle | _(none — enroll via `/agtoosa-spec`)_ |
 | Cycle capacity | `8 story points` |
 
@@ -22,6 +22,7 @@
 |----|-------|------|----------|--------|-----------|
 | — | _(no active story — run `/agtoosa-spec` to enroll)_ | — | — | — | — |
 
+<!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.28.md (DEV-116 v5.3.28) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.27.md (DEV-115 v5.3.27) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.26.md (DEV-113 v5.3.26) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.23.md (DEV-111 v5.3.23) -->
@@ -53,6 +54,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 > Task breakdown for enrolled Active Cycle stories. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
+
+
 
 ## Manual / Deferred Tasks
 
@@ -159,7 +162,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-113 | Chore: Cursor Intake Hardening + Fixture Parity | Chore | S | DEV-002 | P1 | 🏁 Shipped — v5.3.26 |
 | DEV-114 | Fix: `--cleanup` false positives | Fix | S | DEV-112 | P0 | 🏁 Shipped — v5.3.25 |
 | DEV-115 | Fix: `--cleanup` safety follow-up | Fix | S | DEV-114 | P0 | 🏁 Shipped — v5.3.27 |
-| DEV-116 | Feature: AgToosa Lifecycle Compass | Feature | M | DEV-002 | P0 | 🟦 Backlog — spec drafted; awaiting Spec Approved |
+| DEV-116 | Feature: AgToosa Lifecycle Compass | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.28 |
 
 ## Epics
 
@@ -591,3 +594,11 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-12 | 🚀 Ship complete — v5.3.27 — DEV-115 cleanup safety follow-up; CLN-015–017 PASS; miToosa dogfood | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — DEV-116 draft — AgToosa Lifecycle Compass; ADR-014; test plan `docs/AgToosa_TestPlan-DEV-116.md`; design `docs/superpowers/specs/2026-07-12-lifecycle-compass-design.md`; awaiting Spec Approved | AgToosa |
 | 2026-07-12 | 🚀 Release 5.3.27 shipped — v5.3.27; version parity bash/ps1/npm; Milestone v5.3.28 (next) | AgToosa |
+| 2026-07-12 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-116 — spec-DEV-116.md; estimate M; enrolled in cycle | AgToosa |
+| 2026-07-12 | 🏗️ Build 🏗️ Started — DEV-116 — AgToosa Lifecycle Compass; 11 tasks; CMP-001→CMP-007, route-hint | AgToosa |
+| 2026-07-12 | 🏗️ /agtoosa-build DEV-116 — Task 🟢 11/11 — CMP green; next: /agtoosa-review | AgToosa |
+| 2026-07-12 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-116 — 4-persona review running | AgToosa |
+| 2026-07-12 | 🔍 Review ✅ Approved — DEV-116; 0 🔴 Critical, 2 🟡 Warning accepted; report: docs/archived/review-DEV-116.md; evidence: docs/archived/evidence-DEV-116.md; next: /agtoosa-ship | AgToosa |
+| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-116 — smoke PASS; v5.3.28; spec archived | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v5.3.28 — DEV-116 AgToosa Lifecycle Compass; smoke PASS; cycle archived | AgToosa |
+| 2026-07-12 | 🚀 Release 5.3.28 shipped — v5.3.28; version parity bash/ps1/npm/formula; Milestone v5.3.29 (next) | AgToosa |
