@@ -286,7 +286,7 @@ install_files() {
   for file in "${DOCS_FILES[@]}"; do
     if [[ -f "${SHIP_DIR}/${file}" ]]; then
       if [[ "$file" == "Docs/Master-Plan.md" || "$file" == "Docs/AgToosa_Changelog.md" || \
-            "$file" == "Docs/Master-Architecture.md" ]]; then
+            "$file" == "Docs/Master-Architecture.md" || "$file" == "Docs/agtoosa-evidence.jsonl" ]]; then
         if [[ -f "${PROJECT_PATH}/${file}" ]]; then
           if declare -F apply_note_preserved >/dev/null 2>&1; then
             apply_note_preserved
