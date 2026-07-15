@@ -19,8 +19,11 @@
 | GitHub repo | `[url]` |
 | Milestone | `[e.g. v1.0, Sprint 3, Unreleased]` |
 | Active cycle | `[cycle name]` |
+| Cycle state | Idle — awaiting next scoped story |
 | Cycle capacity | `[N] story points` |
 | Current phase | ✏️ Spec · 🏗️ Build · 🔍 Review · 🚢 Ship ← _(update the active one)_ |
+
+> **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
 
 ## Active Cycle
 

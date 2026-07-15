@@ -9245,10 +9245,10 @@ _vfj_assert_schema_fields() {
 @test "DEV-088 VFJ-004: Doctor JSON labels provenance surfaces" {
   run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
   [ "$status" -eq 0 ]
-  # No state.json by default — absent must still report authority text
-  [ ! -f "$TEST_PROJECT/.agtoosa/state.json" ]
+  # DEV-093 writes operational state after every successful install.
+  [ -f "$TEST_PROJECT/.agtoosa/state.json" ]
   run bash "$SCRIPT" --doctor "$TEST_PROJECT" --format json
-  [ "$status" -eq 0 ]
+  [ "$status" -eq 1 ]
   _vfj_assert_schema_fields "$output"
   echo "$output" | jq -e '.tool == "doctor"' >/dev/null
   echo "$output" | jq -e '
@@ -9260,9 +9260,9 @@ _vfj_assert_schema_fields() {
     and .provenance.lock_file.committed == true
     and (.provenance.lock_file.authority | test("pack|pin|reproducib"; "i"))
     and .provenance.state_file.path == ".agtoosa/state.json"
-    and .provenance.state_file.present == false
+    and .provenance.state_file.present == true
     and .provenance.state_file.committed == false
-    and (.provenance.state_file.authority | test("gitignored|absent|OK|operational"; "i"))
+    and (.provenance.state_file.authority | test("gitignored|OK|operational"; "i"))
   ' >/dev/null
 }
 
@@ -9330,8 +9330,8 @@ _vfj_assert_schema_fields() {
   run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
   [ "$status" -eq 0 ]
   run bash "$SCRIPT" --doctor --format json "$TEST_PROJECT"
-  [ "$status" -eq 0 ]
-  echo "$output" | jq -e '.tool == "doctor" and .provenance.version_marker.present == true' >/dev/null
+  [ "$status" -eq 1 ]
+  echo "$output" | jq -e '.tool == "doctor" and .summary.warn >= 1 and .provenance.version_marker.present == true' >/dev/null
 
   run bash "$SCRIPT" --verify --format xml "$BATS_TEST_DIRNAME/.."
   [ "$status" -ne 0 ]
@@ -13531,4 +13531,100 @@ _cln_seed_project() {
   grep -q 'DEV-116' "$root/docs/adr/ADR-014-lifecycle-compass.md"
 }
 
+# ── DEV-117: Cycle Continuity Guard (CCG-001–CCG-005) ────────────────────────
 
+_ccg_seed_cycle() {
+  local dest="$1"
+  local state="${2:-}"
+  local state_row=""
+  [[ -n "$state" ]] && state_row="| Cycle state | $state |"
+
+  mkdir -p "$dest/docs/Context" "$dest/docs/archived"
+  printf '# product\nCycle continuity fixture.\n' > "$dest/docs/Context/product.md"
+  printf '# stack\nBash.\n' > "$dest/docs/Context/tech-stack.md"
+  printf '# workflow\ntdd: true\n' > "$dest/docs/Context/workflow.md"
+  printf '5.3.28\n' > "$dest/docs/.agtoosa-version"
+  cat > "$dest/docs/Master-Plan.md" <<EOF
+# Master-Plan
+
+## Project Charter
+
+| Field | Value |
+|-------|-------|
+| Product | Cycle Fixture |
+| Active cycle | No active story |
+$state_row
+| Cycle capacity | 8 story points |
+| Current phase | Spec |
+
+## Active Cycle
+
+| ID | Title | Type | Estimate | Status | Tasks Done |
+|----|-------|------|----------|--------|-----------|
+| — | No active story | — | — | — | — |
+
+## Epics
+
+| ID | Title | Stories | Status |
+|----|-------|---------|--------|
+| DEV-001 | Epic: Fixture | 0 | Active |
+
+## Update Log
+
+| Date | Event | By |
+|------|-------|----|
+| 2099-01-01 | fixture initialized | Test |
+EOF
+}
+
+@test "DEV-117 @smoke CCG-001: explicit Idle cycle passes verifier without G3-idle" {
+  local root="$BATS_TEST_DIRNAME/.."
+  _ccg_seed_cycle "$TEST_PROJECT" "Idle — awaiting next scoped story"
+
+  run bash "$root/docs/agtoosa-verify.sh" --root "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Active Cycle idle (explicit Cycle state: Idle"* ]]
+  [[ "$output" != *"G3-idle"* ]]
+}
+
+@test "DEV-117 @smoke CCG-002: explicit Idle cycle passes strict verifier" {
+  local root="$BATS_TEST_DIRNAME/.."
+  _ccg_seed_cycle "$TEST_PROJECT" "Idle — awaiting next scoped story"
+
+  run bash "$root/docs/agtoosa-verify.sh" --strict --root "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  [[ "$output" != *"G3-idle"* ]]
+}
+
+@test "DEV-117 @smoke CCG-003: unmarked empty cycle retains G3-idle warning" {
+  local root="$BATS_TEST_DIRNAME/.."
+  _ccg_seed_cycle "$TEST_PROJECT"
+
+  run bash "$root/docs/agtoosa-verify.sh" --root "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"G3-idle"* ]]
+}
+
+@test "DEV-117 @smoke CCG-004: Master-Plan contract declares bounded cycle states" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '| Cycle state | Idle — awaiting next scoped story |' "$root/template/Docs/Master-Plan.md"
+  grep -q '| Cycle state | Active |' "$root/docs/Master-Plan.md"
+  grep -q 'Cycle state.*Active.*Idle' "$root/template/Docs/Master-Plan.md"
+}
+
+@test "DEV-117 @smoke CCG-005: verifier and status mirrors share neutral Idle contract" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local verify status_doc
+
+  for verify in "$root/template/Docs/agtoosa-verify.sh" "$root/docs/agtoosa-verify.sh"; do
+    grep -q 'cycle_state' "$verify"
+    grep -q 'Active Cycle idle (explicit Cycle state: Idle' "$verify"
+  done
+
+  for status_doc in "$root/template/Docs/AgToosa_Status.md" "$root/docs/AgToosa_Status.md"; do
+    grep -q 'Cycle state' "$status_doc"
+    grep -q 'intentionally idle' "$status_doc"
+    grep -q 'no Plan Completeness deduction' "$status_doc"
+    grep -q 'independent findings remain active' "$status_doc"
+  done
+}

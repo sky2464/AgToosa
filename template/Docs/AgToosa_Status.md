@@ -29,14 +29,16 @@ Produce a read-only health dashboard by parsing `Docs/Master-Plan.md`, cross-ref
 1.  **Read** `Docs/Master-Plan.md` in full.
 
 2.  **Parse Project Charter:**
-    *   Extract: Product name, Milestone, Active cycle name, Cycle capacity, Current phase emoji.
+    *   Extract: Product name, Milestone, Active cycle name, **Cycle state**, Cycle capacity, Current phase emoji.
+    *   Normalize `Cycle state` to `Active` or `Idle — <reason>`. Only a bounded Project Charter field whose value starts with `Idle` declares intentional idleness; free-form mentions elsewhere do not.
     *   Flag any **placeholder values** still present — patterns: `[name]`, `[url]`, `[YYYY-MM-DD]`, `[e.g.`, `[N]`, `[cycle name]`.
     *   Record each placeholder as a finding: 🟡 Warning — *Fix with:* `/agtoosa-init`.
 
 3.  **Parse Active Cycle table:**
     *   Extract each story row: ID, Title, Type, Estimate, Status pill, Tasks Done counter (`N/M`).
     *   Record each story with status 🟨 In Progress for staleness check in Part 1 step 7.
-    *   If the Active Cycle table is empty (only placeholder rows or no data rows), record: 🟡 Warning — "No active stories. *Fix with:* `/agtoosa-spec`".
+    *   If the Active Cycle table is empty (only placeholder rows or no data rows) and `Cycle state` is `Idle — <reason>`, record: ℹ️ Info — "Active Cycle is intentionally idle: `<reason>`. Run `/agtoosa-spec` when the next story is scoped." This state has **no Plan Completeness deduction**.
+    *   Otherwise, if the Active Cycle table is empty, record: 🟡 Warning — "No active stories. *Fix with:* `/agtoosa-spec`".
 
 4.  **Parse Active Tasks:**
     *   Count total checkboxes (`- [ ]` unchecked + `- [x]` checked). Compute completion percentage.
@@ -57,7 +59,8 @@ Produce a read-only health dashboard by parsing `Docs/Master-Plan.md`, cross-ref
 6.  **Parse Backlog:**
     *   Count items by Priority: High, Medium, Low.
     *   Record as ℹ️ Info — "Backlog: `[H]` High, `[M]` Medium, `[L]` Low priority items."
-    *   If any High-priority items exist and Active Cycle is empty, record: 🟡 Warning — "High-priority backlog items exist but nothing is in Active Cycle. *Fix with:* `/agtoosa-spec`".
+    *   If any High-priority items exist and Active Cycle is empty, record: 🟡 Warning — "High-priority backlog items exist but nothing is in Active Cycle. *Fix with:* `/agtoosa-spec`". This warning is retained when `Cycle state` is Idle.
+    *   **Idle isolation:** the explicit Idle exemption applies only to the no-active-story finding and deduction; all independent findings remain active, including stale Update Log, high-priority backlog, blocked work, branch drift, and orphaned work.
 
 7.  **Parse Update Log:**
     *   Find the most recent entry by date.
@@ -140,7 +143,7 @@ Compute four category scores, each starting at 100 with deductions applied. Floo
 **Plan Completeness (25%):**
 *   −5 per placeholder value still in Project Charter
 *   −10 if Update Log is stale (last entry > 7 days ago)
-*   −10 if Active Cycle is empty (no active stories)
+*   −10 if Active Cycle is empty (no active stories) **unless** Project Charter `Cycle state` is explicitly `Idle — <reason>`; an explicitly idle cycle has no Plan Completeness deduction for being empty
 *   −5 per failed Initial Product Readiness gate (Part 1.5; maximum −35)
 
 **Task Consistency (25%):**
@@ -245,6 +248,7 @@ The dashboard MUST emit a deterministic, ranked, deduplicated "Recommended Next 
 | Finding pattern | Fix command |
 |---|---|
 | Placeholder values still in Project Charter | `/agtoosa-init` |
+| Intentionally idle Active Cycle (Info) | `/agtoosa-spec` |
 | Empty Active Cycle; missing spec for In Progress / Todo story; High-priority backlog with empty Active Cycle; branch ahead with no In Progress story | `/agtoosa-spec` |
 | Empty Active Tasks while Active Cycle has In Progress; Orphaned Active Task group references unknown story ID | `/agtoosa-spec tasks` |
 | Tasks Done counter mismatch; stale checkboxes referenced by recent commits | `/agtoosa-build` |

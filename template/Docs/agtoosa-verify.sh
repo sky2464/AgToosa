@@ -282,12 +282,24 @@ fi
 gate "Gate 3 — Spec approval and naming"
 active_ids=$(awk '/^## Active Cycle/,/^## [^A]/' "$MP" | grep -oE '^\| DEV-[0-9]{3}' | grep -oE 'DEV-[0-9]{3}' | sort -u)
 if [[ -z "$active_ids" ]]; then
-  if awk '/^## Active Cycle/,/^## [^A]/' "$MP" | grep -qiE 'cycle parked|_\(none'; then
-    pass "Active Cycle idle (parked — spec checks skipped)"
+  cycle_state=$(awk -F'|' '
+    /^## Project Charter[[:space:]]*$/ { in_charter=1; next }
+    in_charter && /^## / { exit }
+    in_charter && /^\|/ {
+      key=$2
+      value=$3
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", key)
+      gsub(/^[[:space:]]+|[[:space:]]+$/, "", value)
+      if (tolower(key) == "cycle state") { print value; exit }
+    }
+  ' "$MP")
+  cycle_state_lc=$(printf '%s' "$cycle_state" | tr '[:upper:]' '[:lower:]')
+  if [[ "$cycle_state_lc" == "idle" || "$cycle_state_lc" == "idle "* ]]; then
+    pass "Active Cycle idle (explicit Cycle state: Idle — spec checks skipped)"
   else
     warn "G3-idle" "no stories found in ## Active Cycle (idle is fine; verify skipped spec checks)" \
       "No active story means lifecycle gates for specs/tests are skipped." \
-      "Enroll a story via /agtoosa-spec or park the Active Cycle explicitly." guided
+      "Enroll a story via /agtoosa-spec or set Project Charter Cycle state to Idle with a reason." guided
   fi
 else
   for id in $active_ids; do
