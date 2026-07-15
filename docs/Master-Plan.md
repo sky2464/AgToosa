@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-14 (DEV-117 ship-gate review approved)
+> **Last updated:** 2026-07-14 (DEV-117 shipped v5.3.29)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | DEV-117 Review approved — ready for `/agtoosa-ship` |
-| Milestone | `v5.3.29` (next) |
-| Active cycle | DEV-117 — Cycle Continuity Guard |
-| Cycle state | Active |
+| Current phase | DEV-117 shipped — enroll next via `/agtoosa-spec` |
+| Milestone | `v5.3.30` (next) |
+| Active cycle | Idle — awaiting next scoped story |
+| Cycle state | Idle — awaiting next scoped story |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -23,8 +23,9 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-117 | Chore: Cycle Continuity Guard | Chore | S | 🔍 In Review | 5/5 |
+| — | (none — cycle idle) | — | — | — | — |
 
+<!-- Archived to docs/archived/cycle-2026-07-14-release-5.3.29.md (DEV-117 v5.3.29) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.28.md (DEV-116 v5.3.28) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.27.md (DEV-115 v5.3.27) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.26.md (DEV-113 v5.3.26) -->
@@ -58,17 +59,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for enrolled Active Cycle stories. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-- [x] **1.** DEV-117 Cycle-state contract: add the bounded Project Charter vocabulary and maintainer lifecycle transition.
-  - [x] 1.1 Update template and maintainer Master Plans with `Cycle state` semantics and current DEV-117 Active state — _Requirements: AC-001, AC-002_
-- [x] **2.** DEV-117 Deterministic verifier: recognize only explicit idle cycles and retain accidental-empty warnings.
-  - [x] 2.1 Implement and mirror Gate 3 `Cycle state: Idle` parsing with default and strict behavior — _Requirements: AC-003, AC-004, AC-007_
-- [x] **3.** DEV-117 Status contract: make explicit idle informational without hiding other risk.
-  - [x] 3.1 Update and mirror status parsing, scoring, and next-action rules for `Cycle state: Idle` — _Requirements: AC-005, AC-006, AC-007_
-- [x] **4.** DEV-117 Regression proof: add focused CCG coverage and capture evidence.
-  - [x] 4.1 Add CCG bats for explicit idle, unmarked empty, strict mode, status contract, and mirror parity; record RED/GREEN evidence — _Requirements: AC-003, AC-004, AC-005, AC-006, AC-007, AC-008_
-- [x] **5.** DEV-117 Ship readiness follow-up: close the per-Must smoke-coverage gate.
-  - [x] 5.1 Tag `CCG-005` as smoke and align DEV-117 traceability — _Requirements: AC-005, AC-006, AC-007, AC-008_
-
+*(No active stories — cycle idle. Run `/agtoosa-spec` to enroll the next story.)*
 
 ## Manual / Deferred Tasks
 
@@ -176,7 +167,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-114 | Fix: `--cleanup` false positives | Fix | S | DEV-112 | P0 | 🏁 Shipped — v5.3.25 |
 | DEV-115 | Fix: `--cleanup` safety follow-up | Fix | S | DEV-114 | P0 | 🏁 Shipped — v5.3.27 |
 | DEV-116 | Feature: AgToosa Lifecycle Compass | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.28 |
-| DEV-117 | Chore: Cycle Continuity Guard | Chore | S | DEV-004 | P1 | 🔍 In Review |
+| DEV-117 | Chore: Cycle Continuity Guard | Chore | S | DEV-004 | P1 | 🏁 Shipped — v5.3.29 |
 
 ## Epics
 
@@ -248,6 +239,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-117 | Chore: Cycle Continuity Guard | 2026-07-14 | [spec-DEV-117.md](archived/spec-DEV-117.md) · [review-DEV-117.md](archived/review-DEV-117.md) · [evidence-DEV-117.md](archived/evidence-DEV-117.md) |
 | DEV-113 | Chore: Cursor Intake Hardening + Fixture Parity | 2026-07-12 | [spec-DEV-113.md](archived/spec-DEV-113.md) · [review-DEV-113.md](archived/review-DEV-113.md) · [evidence-DEV-113.md](archived/evidence-DEV-113.md) |
 | DEV-114 | Fix: `--cleanup` false positives | 2026-07-12 | [spec-DEV-114.md](archived/spec-DEV-114.md) · [review-DEV-114.md](archived/review-DEV-114.md) · [evidence-DEV-114.md](archived/evidence-DEV-114.md) |
 | DEV-115 | Fix: `--cleanup` safety follow-up | 2026-07-12 | [spec-DEV-115.md](archived/spec-DEV-115.md) · [review-DEV-115.md](archived/review-DEV-115.md) · [evidence-DEV-115.md](archived/evidence-DEV-115.md) |
@@ -631,3 +623,6 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-14 17:44 | /agtoosa-build — Build complete — DEV-117 ship-gate follow-up; 5/5 tasks; next `/agtoosa-review`. | AgToosa |
 | 2026-07-14 17:48 | /agtoosa-review — Review 🔍 Started — DEV-117 ship-gate follow-up — 4-persona review running. | AgToosa |
 | 2026-07-14 17:57 | /agtoosa-review — Review ✅ Approved — DEV-117 ship-gate follow-up — 0 new Critical, 0 new Warning; 4 accepted warnings unchanged; 5 smoke tests cover 8/8 Must ACs; next `/agtoosa-ship`. | AgToosa |
+| 2026-07-14 22:42 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-117 — smoke PASS 5/5; v5.3.29; cycle archived | AgToosa |
+| 2026-07-14 22:42 | 🚀 Ship complete — v5.3.29 — DEV-117 Cycle Continuity Guard; smoke PASS; cycle archived | AgToosa |
+| 2026-07-14 22:42 | 🚀 Release 5.3.29 shipped — v5.3.29; version parity bash/ps1/npm; Milestone v5.3.30 (next) | AgToosa |

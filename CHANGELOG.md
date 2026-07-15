@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.29] — 2026-07-14
+
+Patch release: DEV-117 — Cycle Continuity Guard.
+
+### Added
+
+- **DEV-117 — Cycle Continuity Guard.** Bounded `Cycle state` Project Charter vocabulary (`Active` / `Idle — <reason>`); verifier Gate 3 recognizes explicit idle empty cycles without `G3-idle`; `/agtoosa-status` treats intentional idle as Info with no empty-cycle Plan Completeness deduction while retaining independent risk findings; CCG-001–CCG-005 bats with smoke tags.
+
+---
+
 ## [5.3.28] — 2026-07-12
 
 Patch release: DEV-116 — AgToosa Lifecycle Compass.
@@ -236,10 +246,6 @@ Patch release: Signed Registry Provenance (DEV-054).
 ### Added
 
 - **DEV-054 — Signed Registry Provenance.** Optional minisign soft-warn verify for registry packs and release/bootstrap sidecars; provenance schema (minisign primary, cosign documented); ADR-011; bundled pubkey path + `AGTOOSA_MINISIGN_PUBKEY`; SP-001–SP-006 bats. Private-key generation remains Manual/Deferred (M-1); fail-closed require-signatures / SBOM / cosign verify remain roadmap.
-
----
-
-## [Unreleased]
 
 ---
 

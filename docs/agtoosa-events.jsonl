@@ -225,3 +225,4 @@
 {"ts":"2026-07-14T22:48:07Z","phase":"review","event":"start","story":"DEV-117","by":"AgToosa","note":"ship-gate smoke coverage follow-up"}
 {"ts":"2026-07-14T22:57:42Z","phase":"review","event":"approved","story":"DEV-117","by":"AgToosa","critical":0,"warnings":4,"note":"ship-gate smoke coverage follow-up"}
 {"ts":"2026-07-14T22:57:42Z","phase":"evidence","event":"update","story":"DEV-117","by":"AgToosa","note":"ship-gate smoke coverage follow-up"}
+{"ts":"2026-07-15T03:42:00Z","phase":"ship","event":"complete","story":"DEV-117","by":"AgToosa","note":"v5.3.29 smoke PASS 5/5"}

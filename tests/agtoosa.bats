@@ -13531,6 +13531,18 @@ _cln_seed_project() {
   grep -q 'DEV-116' "$root/docs/adr/ADR-014-lifecycle-compass.md"
 }
 
+# -- DEV-117 ship regression v5.3.29 (SR-001) ---------------------------------
+
+@test "DEV-117 SR-001: v5.3.29 changelog and DEV-117 review/evidence/spec artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.29\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-117' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-117.md" ]
+  [ -f "$root/docs/archived/review-DEV-117.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-117.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-117.md"
+}
+
 # ── DEV-117: Cycle Continuity Guard (CCG-001–CCG-005) ────────────────────────
 
 _ccg_seed_cycle() {
@@ -13543,7 +13555,7 @@ _ccg_seed_cycle() {
   printf '# product\nCycle continuity fixture.\n' > "$dest/docs/Context/product.md"
   printf '# stack\nBash.\n' > "$dest/docs/Context/tech-stack.md"
   printf '# workflow\ntdd: true\n' > "$dest/docs/Context/workflow.md"
-  printf '5.3.28\n' > "$dest/docs/.agtoosa-version"
+  printf '5.3.29\n' > "$dest/docs/.agtoosa-version"
   cat > "$dest/docs/Master-Plan.md" <<EOF
 # Master-Plan
 
@@ -13608,7 +13620,7 @@ EOF
 @test "DEV-117 @smoke CCG-004: Master-Plan contract declares bounded cycle states" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q '| Cycle state | Idle — awaiting next scoped story |' "$root/template/Docs/Master-Plan.md"
-  grep -q '| Cycle state | Active |' "$root/docs/Master-Plan.md"
+  grep -q '| Cycle state | Idle — awaiting next scoped story |' "$root/docs/Master-Plan.md"
   grep -q 'Cycle state.*Active.*Idle' "$root/template/Docs/Master-Plan.md"
 }
 

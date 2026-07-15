@@ -2,7 +2,7 @@
 
 > **Story:** DEV-117 — Cycle Continuity Guard
 > **Claim Boundary:** deterministic verifier behavior is generator-enforced; status behavior and this index are agent-instructed; Master-Plan remains SoT
-> **Updated:** 2026-07-14 17:57 (ship-gate follow-up review)
+> **Updated:** 2026-07-14 22:42 (ship v5.3.29)
 
 | Phase | AC | Artifact | Pointer | Verification | Exit | Reviewer | ts |
 |-------|----|----------|---------|--------------|------|----------|-----|
@@ -18,3 +18,6 @@
 | review | AC-001–AC-008 | test-log | `docs/archived/review-DEV-117.md#Terminal-Evidence` | focused and smoke-only filters 5/5; repeated focused runs stable | 0 | QA Lead | 2026-07-14T22:57:42Z |
 | review | AC-001–AC-008 | other | `docs/AgToosa_TestPlan-DEV-117.md#AC-Coverage` | all 8 Must ACs map to 5 tagged CCG tests | 0 | QA Lead | 2026-07-14T22:57:42Z |
 | review | AC-005–AC-008 | other | `4873f68` | only test-file delta is the CCG-005 `@smoke` title tag; test body and product behavior unchanged | 0 | Security / EM | 2026-07-14T22:57:42Z |
+| ship | AC-001–AC-008 | test-log | `docs/AgToosa_TestPlan-DEV-117.md` | `bats tests/agtoosa.bats -f 'DEV-117|CCG-'` smoke PASS 5/5 | 0 | AgToosa | 2026-07-15T03:42:00Z |
+| ship | release | other | `CHANGELOG.md` | `## [5.3.29]` DEV-117 entry | PASS | AgToosa | 2026-07-15T03:42:00Z |
+| ship | version parity | other | `agtoosa.sh` · `agtoosa.ps1` · `npm/package.json` | pins 5.3.29; DEV-117 SR-001 | PASS | AgToosa | 2026-07-15T03:42:00Z |
