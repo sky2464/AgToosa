@@ -4694,12 +4694,24 @@ _dag_deps_valid() {
     "$root/template/.gemini/commands/agtoosa-evidence.toml" \
     "$root/template/.github/prompts/agtoosa-evidence.prompt.md" \
     "$root/template/.windsurf/workflows/agtoosa-evidence.md" \
-    "$root/template/.codex/prompts/agtoosa-evidence.md" \
+    "$root/template/.codex/prompts/agtoosa-evidence.prompt.md" \
     "$root/template/.codex/skills/agtoosa-evidence/SKILL.md"; do
     [ -f "$f" ]
     grep -q "Docs/AgToosa_Evidence.md" "$f"
     ! grep -q "Markdown schema" "$f"
   done
+}
+
+@test "DEV-049 EL-006: re-install and --update preserve append-only agtoosa-evidence.jsonl" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo '{"ts":"2026-01-01T00:00:00Z","story":"DEV-TEST","phase":"review"}' > "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  grep -q "DEV-TEST" "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+  run bash "$SCRIPT" --update "$TEST_PROJECT" --yes < /dev/null
+  [ "$status" -eq 0 ]
+  grep -q "DEV-TEST" "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
 }
 
 @test "DEV-049 CW-012: Evidence Ledger backlog artifacts exist" {
