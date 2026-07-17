@@ -175,7 +175,8 @@ run_update() {
 
   # Step 1: Workflow files — hash-aware overwrite (DEV-092 shared apply helper)
   for f in "${DOCS_FILES[@]}"; do
-    [[ "$f" == "Docs/Master-Plan.md" || "$f" == "Docs/AgToosa_Changelog.md" || "$f" == "Docs/Master-Architecture.md" ]] && continue
+    [[ "$f" == "Docs/Master-Plan.md" || "$f" == "Docs/AgToosa_Changelog.md" || \
+       "$f" == "Docs/Master-Architecture.md" || "$f" == "Docs/agtoosa-evidence.jsonl" ]] && continue
     src="${TEMPLATE_DIR}/${f}"; dst="${PROJECT_PATH}/${f}"
     [[ ! -f "$src" ]] && continue
     mkdir -p "$(dirname "$dst")"
