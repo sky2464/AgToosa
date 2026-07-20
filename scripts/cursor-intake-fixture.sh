@@ -50,8 +50,8 @@ if ! grep -q 'Project Intake' "$FIXTURE/.cursor/rules/agtoosa-core.mdc"; then
   fail=1
 fi
 
-if ! grep -q 'Natural language intent map' "$FIXTURE/.cursor/rules/agtoosa-core.mdc"; then
-  echo "❌ agtoosa-core.mdc missing Natural language intent map" >&2
+if ! grep -q 'AgToosa Lifecycle Compass' "$FIXTURE/.cursor/rules/agtoosa-core.mdc"; then
+  echo "❌ agtoosa-core.mdc missing AgToosa Lifecycle Compass" >&2
   fail=1
 fi
 
@@ -65,7 +65,8 @@ echo ""
 echo "Manual verification checklist (open this path in Cursor):"
 echo "  1. Command picker: /agtoosa-spec — runs Docs/AgToosa_Spec.md workflow"
 echo "  2. Freeform: \"plan and code <feature>\" — Project Intake hard-gate (no silent coding)"
-echo "  3. Freeform: \"build it\" with no approved spec — routes to spec first"
-echo "  4. Command picker: /agtoosa-build — runs Docs/AgToosa_Build.md after spec approval"
+echo "  3. Freeform: \"build it\" with no approved spec — Compass routes to spec first (ANCHOR: spec)"
+echo "  4. Freeform: \"add OAuth\" — Lifecycle Compass infers PLAN → ANCHOR spec (no phrase table)"
+echo "  5. Command picker: /agtoosa-build — runs Docs/AgToosa_Build.md after spec approval"
 echo ""
 echo "Remove when done: rm -rf \"$FIXTURE\""

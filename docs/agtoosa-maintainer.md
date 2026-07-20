@@ -91,9 +91,9 @@ Beyond the interactive install wizard, `agtoosa.sh` exposes these maintainer-rel
 |------|-------------|---------|--------------|
 | `--verify [path]` | `lib/maintain.sh:run_verify` | Run the deterministic lifecycle verifier (prefers the target's installed `Docs/agtoosa-verify.sh` or `docs/agtoosa-verify.sh`, falls back to template copy) | Verifier exit code (0 pass, 1 findings, 2 usage) |
 | `--doctor [path]` | `lib/maintain.sh:run_doctor` | Report version skew (`Docs/.agtoosa-version` vs generator), missing workflow docs, platform wiring gaps, context placeholders, queued packs, stale unnecessary files | 0 healthy, 1 issues found, 2 bad path |
-| `--status-line [path]` | `lib/maintain.sh:run_status_line` | Print one executive `SYNC:` pulse from Master-Plan (read-only) | 0 ok, 2 missing path or Master-Plan |
+| `--status-line [path]` | `lib/maintain.sh:run_status_line` | Print one executive `SYNC:` pulse from Master-Plan (read-only). Add `--route-hint --format json` for machine-readable `anchor`, `story_id`, task counts, and `next` command (DEV-116; PS1 `-RouteHint` parity) | 0 ok, 2 missing path or Master-Plan |
 | `--uninstall [path]` | `lib/maintain.sh:run_uninstall` | Remove AgToosa-owned files; preserves Master-Plan, Context/, archived/, and merged entry points | Blocks uninstall on the generator source tree; prompts unless `--yes` |
-| `--cleanup [path]` | `lib/cleanup.sh:run_cleanup` | Remove merge backups (`*.bak.*`), removed workflow docs, and deselected platform outputs; `--only backups` limits to merge backups | Plan with `--dry-run` or `--format json`; apply requires confirmation (`--yes` non-interactive) |
+| `--cleanup [path]` | `lib/cleanup.sh:run_cleanup` | Remove merge backups (`*.bak.*`), removed workflow docs, and deselected platform outputs; `--only backups` limits to merge backups. Never targets `Docs/Context/`, `Docs/archived/`, `Docs/AgToosa_TestPlan-*`, or deep-merged `.claude/settings.json` (DEV-114/115) | Plan with `--dry-run` or `--format json`; apply requires confirmation (`--yes` non-interactive) |
 | `--reinstall --clean [path]` | `lib/reinstall.sh:run_reinstall_clean` | ADR-004 Option C: archive generated files, regenerate fresh for platforms, rewrite `Docs/agtoosa-lock.json` | Destructive; requires confirmation (`--yes` non-interactive); default upgrade remains `bash agtoosa.sh` or `--update` |
 | `--force` | `agtoosa.sh` / `lib/copy.sh` | Advanced/CI: full replace on Context and platform entry points when version guard allows | Hidden from interactive UX; never overwrites Master-Plan, Changelog, or Master-Architecture |
 | `--path <dir>` | `agtoosa.sh` | Skip the interactive path prompt | Requires valid path |
@@ -114,6 +114,15 @@ bash docs/agtoosa-verify.sh --strict     # WARN → FAIL
 bash docs/agtoosa-verify.sh stats        # cycle analytics from Update Log + agtoosa-events.jsonl
 bash agtoosa.sh --verify .               # generator dispatch (maintainer dogfood)
 ```
+
+**Status-line modes** (DEV-109 text pulse; DEV-116 JSON route hint):
+
+```bash
+bash agtoosa.sh --status-line .                              # SYNC: story · status · tasks N/M · clarity — · next /agtoosa-<phase>
+bash agtoosa.sh --status-line . --route-hint --format json   # {"sync":"...","anchor":"spec|build|review|ship|none","story_id":"...","tasks_done":N,"tasks_total":M,"next":"/agtoosa-<phase>"}
+```
+
+The JSON `anchor` maps from the same `next` command the text line prints (`spec` ← `/agtoosa-spec`, etc.). Agents use the text line at intake; bats and CI use JSON for deterministic state checks (CMP-007).
 
 **Common pitfalls:**
 
@@ -226,7 +235,8 @@ Do **not** advance MINOR for every small story. Update Project Charter **Milesto
 - After changing `lib/maintain.sh` uninstall paths: run focused bats (`-f "DEV-073"` or `-f "UN"`) before the full suite.
 - For registry or bootstrap changes: exercise `--registry install` with a test pack and confirm tar-slip rejection, denylist blocking, and preview output.
 - For documentation-only or agent-config-only changes, verify that each native entry file points to this guide and that no frontmatter errors were introduced.
-- For Cursor Project Intake / NL intent verification on a downstream install: `bash scripts/cursor-intake-fixture.sh` then open the printed path in Cursor (do not install into this repo). CI exercises the same path via bats **FIX-001** (`bats -f FIX-001`).
+- For Cursor Project Intake / Lifecycle Compass verification on a downstream install: `bash scripts/cursor-intake-fixture.sh` then open the printed path in Cursor (do not install into this repo). CI exercises the same path via bats **FIX-001** (`bats -f FIX-001`) and Compass wiring via **CMP-001–CMP-007** (`bats -f CMP-007`).
+- After changing `run_status_line` or route-hint JSON: `bash agtoosa.sh --status-line . --route-hint --format json` on this repo and `bats -f CMP-007`.
 
 ## Cursor dogfood (generator repo)
 
@@ -240,6 +250,28 @@ This repository commits maintainer Cursor wiring at the repo root using `docs/` 
 | `.cursorrules` | Short maintainer entry + intake pointer |
 
 Downstream installs receive the full pack from `template/.cursor/` via `agtoosa.sh`. Use `bash scripts/cursor-intake-fixture.sh` to create a disposable test project — never target the generator source tree.
+
+### AgToosa Lifecycle Compass (maintainer)
+
+Freeform asks in this repo (no `/agtoosa-*`) follow **AgToosa Lifecycle Compass** per `docs/AgToosa_Agent.md` — same protocol as downstream installs, with maintainer paths (`docs/` not `Docs/`).
+
+| Step | Maintainer action |
+|------|-------------------|
+| State pulse | `bash agtoosa.sh --status-line .` before routing (mandatory) |
+| Semantic intent | Infer PLAN · BUILD · REVIEW · SHIP · FIX · EXPLORE · TRACK — not phrase-table lookup |
+| Reconcile | Cross intent with SYNC `next` → one **ANCHOR** (`spec` · `build` · `review` · `ship` · `none`) |
+| Tributary work | FIX/EXPLORE/TRACK may serve the active phase; print `When done: return to /agtoosa-<phase>` |
+| Bypass | Explicit `/agtoosa-*` skips Compass ceremony; **Phase Stop** — never auto-chain Spec → Build → Review → Ship |
+
+Always-on rule: `.cursor/rules/agtoosa-maintainer-core.mdc`. Full protocol and branded lines: `docs/AgToosa_Agent.md` → **AgToosa Lifecycle Compass**. ADR: `docs/adr/ADR-014-lifecycle-compass.md`.
+
+### Maintainer scripts
+
+| Script | Purpose |
+|--------|---------|
+| `scripts/cursor-intake-fixture.sh [path]` | Disposable Cursor-only downstream install for manual intake/Compass verification (FIX-001) |
+| `scripts/check-launch-readiness.sh` | Pre-release public/private readiness checks (DEV-035) |
+| `scripts/validate-official-packs.sh` | Official registry pack shape validation |
 
 ## Expected Output
 
