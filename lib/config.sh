@@ -500,6 +500,7 @@ print_usage() {
   echo "  --verify [path]        Run the deterministic AgToosa lifecycle verifier (read-only)"
   echo "  --doctor [path]        Diagnose an AgToosa install (versions, wiring, context health)"
   echo "  --status-line [path]   One-line executive SYNC pulse from Master-Plan (read-only)"
+  echo "  --route-hint           With --status-line --format json: emit anchor + task counts (DEV-116)"
   echo "  --format text|json     Machine output for verify/doctor/dry-run/plan/status (default: text)"
   echo "  --json                 Alias for --format json (DEV-091 migration plan / dry-run)"
   echo "  --strict               With --verify: treat WARN findings as failures"
