@@ -434,7 +434,7 @@ function Copy-FileWithGuard([string]$src, [string]$dst, [string]$label, [string]
             Write-Color "  ${GREEN}✅${NC} $label"
             return
         }
-        if ($label -like "Docs\Master-Plan.md" -or $label -like "Docs\AgToosa_Changelog.md" -or $label -like "Docs\Master-Architecture.md") {
+        if ($label -like "Docs\Master-Plan.md" -or $label -like "Docs\AgToosa_Changelog.md" -or $label -like "Docs\Master-Architecture.md" -or $label -like "Docs\agtoosa-evidence.jsonl") {
             Write-Color "  ${BLUE}🔒${NC} Preserved $label ${CYAN}(your project plan)${NC}"
             return
         }
