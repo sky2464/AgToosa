@@ -4702,6 +4702,19 @@ _dag_deps_valid() {
   done
 }
 
+@test "DEV-049 EL-006: re-install and --update preserve project-owned evidence JSONL" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo '{"story":"EL-006","phase":"build"}' >> "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  grep -q 'EL-006' "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+  echo '{"story":"EL-006-update","phase":"review"}' >> "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+  run bash "$SCRIPT" --update "$TEST_PROJECT" --yes
+  [ "$status" -eq 0 ]
+  grep -q 'EL-006-update' "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+}
+
 @test "DEV-049 CW-012: Evidence Ledger backlog artifacts exist" {
   assert_competitive_story_artifacts "DEV-049"
 }
