@@ -1,6 +1,5 @@
 # AgToosa Windows Bootstrap Installer (PowerShell)
-# Usage: powershell -ExecutionPolicy Bypass -Command "iex (New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.ps1')"
-# Or: iwr -useb https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.ps1 | iex
+# Usage: $Ref='v5.3.28'; download bootstrap.ps1 from that ref, then invoke it with -Ref $Ref.
 
 param(
     [string]$Ref = "main",
@@ -43,7 +42,7 @@ function Print-Help {
     Write-Host ""
     Write-Host "Examples:"
     Write-Host "  # Pin a specific release:"
-    Write-Host "  `$ref='v2.8.0'; iex (New-Object System.Net.WebClient).DownloadString('...')"
+    Write-Host "  `$ref='v5.3.28'; `$body=Invoke-RestMethod -Uri \"https://raw.githubusercontent.com/sky2464/AgToosa/`$ref/bootstrap.ps1\"; & ([scriptblock]::Create(`$body)) -Ref `$ref"
 }
 
 function Test-Command {
@@ -78,6 +77,12 @@ function Print-Success {
 function Print-Info {
     param([string]$Message)
     Write-Host $Message -ForegroundColor $InfoColor
+}
+
+function Test-ReleaseRef {
+    param([string]$Candidate)
+    if ($Candidate -eq "main" -or $Candidate -eq "master") { return $true }
+    return $Candidate -match '\Av[0-9]+\.[0-9]+\.[0-9]+\z'
 }
 
 # ──────────────────────────────────────────────────────────────
@@ -184,6 +189,11 @@ function Cleanup {
 if ($Help) {
     Print-Help
     exit 0
+}
+
+if (-not $Archive -and -not (Test-ReleaseRef $Ref)) {
+    Print-Error "Invalid -Ref '$Ref'. Use main, master, or an exact vX.Y.Z release tag."
+    exit 1
 }
 
 # Ensure work directory exists

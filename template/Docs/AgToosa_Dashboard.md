@@ -19,7 +19,7 @@ bash Docs/agtoosa-dashboard.sh [--root PATH] [--format markdown|html] [--log-lin
 
 | Flag | Default | Notes |
 |------|---------|-------|
-| `--root PATH` | current directory | Repository root containing `Docs/` or `docs/` |
+| `--root PATH` | current directory | Repository root containing `Docs/` or `Docs/` |
 | `--format` | `markdown` | `markdown` or `html` |
 | `--log-lines N` | `20` | Positive integer; maximum `200` |
 | `--help` | — | Print usage |
@@ -40,7 +40,7 @@ There is **no** `--output` flag and **no** mutation flag. The script writes only
 | Latest Retrospective | newest `archived/retro-*.md` | Non-authoritative projection |
 | Recommended Next Actions | Minimal Master-Plan-only subset | Deterministic script logic; not Status ranking |
 
-**Source of truth:** `Master-Plan.md` under the selected `Docs/` or `docs/` root is the repo-local source of truth. Evidence, retrospectives, events, and external-integration references are labeled as **non-authoritative projections**.
+**Source of truth:** `Master-Plan.md` under the selected `Docs/` or `Docs/` root is the repo-local source of truth. Evidence, retrospectives, events, and external-integration references are labeled as **non-authoritative projections**.
 
 ## Relationship to `/agtoosa-status`
 
@@ -54,7 +54,7 @@ This dashboard **does not** reimplement the Status health-score algorithm, git h
 ## Source precedence
 
 1. Resolve `--root` (or `$PWD`).
-2. Prefer an exact `Docs/` directory with `Master-Plan.md`, else exact `docs/`.
+2. Prefer an exact `Docs/` directory with `Master-Plan.md`, else exact `Docs/`.
 3. Require a readable `Master-Plan.md` — otherwise exit `2`, stderr diagnostic, empty stdout, no files created.
 4. Optional sources may be missing or partially malformed; the renderer emits `Unavailable` / warnings and continues.
 
@@ -81,4 +81,4 @@ Rows are sorted by stable keys (evidence basename, retro filename, event order).
 
 ## HTML safety
 
-When `--format html` is selected, every repository-derived field is escaped for `&`, `<`, `>`, `"`, and `'`. Unsafe absolute, remote, or traversal-like pointers stay inert escaped text. Safe repo-relative pointers (`docs/...` or `Docs/...` without `..` or schemes) may render as `<code>` text only — never as remote assets.
+When `--format html` is selected, every repository-derived field is escaped for `&`, `<`, `>`, `"`, and `'`. Unsafe absolute, remote, or traversal-like pointers stay inert escaped text. Safe repo-relative pointers (`Docs/...` or `Docs/...` without `..` or schemes) may render as `<code>` text only — never as remote assets.

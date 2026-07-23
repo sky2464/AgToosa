@@ -13,7 +13,7 @@ Declare allowed **paths**, **tools**, **network**, **secrets**, **approvals**, a
 
 1. Explicit `--policy PATH` (checker only)
 2. `.agtoosa/policy.yaml` (project override)
-3. `Docs/Context/agtoosa-policy.yaml` or `docs/Context/agtoosa-policy.yaml` (mode-appropriate Context fallback)
+3. `Docs/Context/agtoosa-policy.yaml` or `Docs/Context/agtoosa-policy.yaml` (mode-appropriate Context fallback)
 4. If none of the above exist → report `no extra policy configured` / `policy_path=none` and **continue** — missing policy must **not** make a project unhealthy
 
 **Never auto-active:** `Docs/Context/agtoosa-policy.example.yaml` (and any `*.example.yaml` copy). Users copy the example to an active path after review.

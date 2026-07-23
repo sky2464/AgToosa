@@ -22,5 +22,19 @@ AgToosa publishes its own boundary honestly (see `docs/AgToosa_Readiness.md` and
 
 - "machine" for AgToosa means `bash Docs/agtoosa-verify.sh` exits non-zero (or warns; `--strict` fails) — locally and in CI via the gate workflow. It does **not** mean an LLM cannot ignore instructions elsewhere.
 - Spec Kit's `/analyze` and constitution checks are agent-executed; they are valuable but an LLM is the judge.
-- OpenSpec's `validate --strict` is real machine enforcement for spec structure — the strongest non-AgToosa machine control in the category.
+- OpenSpec's `validate --strict` is a documented machine control for spec structure.
 - Empty cells mean we found no equivalent documented control; it does not mean the framework cannot be extended to add one.
+
+<!-- AGTOOSA PRODUCT TRUTH START: claims.surface.enforcement -->
+<!-- Static conformance and freshness only; not behavioral or provenance proof. -->
+| Claim ID | Target | Status | Evidence class | Expires |
+| --- | --- | --- | --- | --- |
+| `claim.adapter.cursor` | `cursor.project-commands` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.windsurf` | `windsurf.workflows` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.claude` | `anthropic.claude-code` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.gemini` | `google.gemini-cli` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.copilot-vscode` | `github.copilot-vscode` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.codex` | `openai.codex-cli` | verified | static-conformance | 2026-10-12 |
+| `claim.windows.bootstrap-ref` | `windows-native` | verified | static-conformance | 2026-10-12 |
+| `claim.product-truth.local` | `maintainer` | verified | static-conformance | 2026-10-12 |
+<!-- AGTOOSA PRODUCT TRUTH END: claims.surface.enforcement -->

@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-14 (DEV-117 shipped v5.3.29)
+> **Last updated:** 2026-07-22 (DEV-118 shipped v5.3.30)
 
 ## Project Charter
 
@@ -9,8 +9,8 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | DEV-117 shipped — enroll next via `/agtoosa-spec` |
-| Milestone | `v5.3.30` (next) |
+| Current phase | DEV-118 shipped — enroll next via `/agtoosa-spec` |
+| Milestone | `v5.3.31` (next) |
 | Active cycle | Idle — awaiting next scoped story |
 | Cycle state | Idle — awaiting next scoped story |
 | Cycle capacity | `8 story points` |
@@ -25,6 +25,7 @@
 |----|-------|------|----------|--------|-----------|
 | — | (none — cycle idle) | — | — | — | — |
 
+<!-- Archived to docs/archived/cycle-2026-07-22-release-5.3.30.md (DEV-118 v5.3.30) -->
 <!-- Archived to docs/archived/cycle-2026-07-14-release-5.3.29.md (DEV-117 v5.3.29) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.28.md (DEV-116 v5.3.28) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.27.md (DEV-115 v5.3.27) -->
@@ -59,7 +60,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for enrolled Active Cycle stories. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-*(No active stories — cycle idle. Run `/agtoosa-spec` to enroll the next story.)*
+_(No active story — cycle idle. Enroll via `/agtoosa-spec`.)_
 
 ## Manual / Deferred Tasks
 
@@ -94,10 +95,17 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 ## Backlog
 
 > Priority-ordered list of upcoming stories and issues. Updated by `/agtoosa-spec` and `/agtoosa-task`.
-> Roadmap coverage and dependency gates: `docs/updates/roadmap-spec-index.md`. A “spec ready” row remains unapproved until explicitly enrolled through `/agtoosa-spec`.
+> Roadmap coverage and dependency gates: `docs/updates/roadmap-spec-index.md`. A “spec ready” row is neither approved nor enrolled by readiness alone; approval and enrollment are separate explicit lifecycle decisions.
 
 | ID | Title | Type | Estimate | Epic | Priority | Status |
 |----|-------|------|----------|------|----------|--------|
+| DEV-118 | Chore: Product Truth & Adapter Contract | Chore | L | DEV-001 / DEV-002 / DEV-004 | P0 | 🏁 Shipped — v5.3.30 |
+| DEV-119 | Feature: Recoverable Project Transaction | Feature | L | DEV-001 | P0 | ⬜ Backlog — Draft · needs-interview |
+| DEV-120 | Spike: Delivery Proof Fabric | Spike | L | DEV-002 / DEV-004 | P0 | ⬜ Backlog — Draft · needs-interview |
+| DEV-121 | Spike: Behavioral Conformance Lab | Spike | L | DEV-003 / DEV-004 | P0 | ⬜ Backlog — Draft · needs-interview · depends DEV-118, DEV-120 |
+| DEV-122 | Spike: Change-Aware Adaptive Delivery | Spike | L | DEV-002 / DEV-004 | P1 | ⬜ Backlog — Draft · needs-interview · depends DEV-120 |
+| DEV-123 | Spike: Guarded Portable Execution | Spike | M | DEV-002 / DEV-004 | P1 | ⬜ Backlog — Draft · needs-interview · depends DEV-120, DEV-122 |
+| DEV-124 | Spike: Cross-Framework Interchange | Spike | M | DEV-002 | P2 | ⬜ Backlog — Draft · needs-interview · depends DEV-120 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
 | DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v5.3.10 |
@@ -169,6 +177,22 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-116 | Feature: AgToosa Lifecycle Compass | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.28 |
 | DEV-117 | Chore: Cycle Continuity Guard | Chore | S | DEV-004 | P1 | 🏁 Shipped — v5.3.29 |
 
+### Competitive Proof Portfolio (`intake:large`)
+
+> **Clarity boundary:** The portfolio map is confirmed. DEV-118 shipped v5.3.30; DEV-119–DEV-124 remain `needs-interview`.
+
+| ID | Goal boundary | Depends on | Explicit non-goals |
+| --- | --- | --- | --- |
+| DEV-118 | Repair generated-path casing, command semantics, adapter parity, Windows/dependency truth, and public capability claims through one auditable product-truth contract. | Shipped DEV-094 and DEV-102 foundations | New assistant adapters; assistant Scenario execution; unsupported compatibility or enforcement claims. |
+| DEV-119 | Extend DEV-092/093 with project-wide journaling, late-write rollback, deterministic recovery, fault injection, and idempotent reruns. | DEV-092 and DEV-093 | Distributed transactions; databases; registry-protocol or migration redesign. |
+| DEV-120 | Validate Evidence Provenance v2, a derived delivery proof graph, stable/fingerprinted links, and a generic proof-provider interface with executable-requirement pilots. | DEV-087 and DEV-089 foundations | Replacing `Master-Plan.md`, evidence ledgers, or profiles; claiming natural-language formal proof; mandating Dafny, Nx, or another provider. |
+| DEV-121 | Establish one reproducible scenario corpus and evidence format for assistant compatibility and registry-pack behavioral certification. | DEV-118, DEV-120; extends DEV-094/096/101 | Hosted lab/runtime; automatic remote probing; absorbing DEV-060 competitor benchmark ownership. |
+| DEV-122 | Validate drift/impact providers, measured error behavior, adaptive rigor selection, and provenance-aware task context compilation. | DEV-120 | Default strict drift blocking before measured accuracy; mandatory language ecosystem; machine claims about semantic quality. |
+| DEV-123 | Validate portable execution capsules carrying approved scope, policy, ownership, budgets, verification, and safe evidence return through manual handoff and optional host exporters. | DEV-120, DEV-122; extends DEV-107 | Secret values; default network; protected-workflow writes; native sandbox claims; agent launch/supervision; bounded autonomous runner. |
+| DEV-124 | Validate loss-aware Spec Kit, OpenSpec, Kiro, and BMAD import/export while preserving source IDs and authority boundaries. | DEV-120 | Perfect round-trip claims; replacing source frameworks; required network access. |
+
+**Portfolio exclusions:** DEV-060 M-1 remains the manual competitor benchmark run; federated specification references remain demand-gated through DEV-057; the bounded local runner remains parked until interrupted-session evidence proves demand. Hosted control planes, unbounded swarms, silent telemetry, protected CI auto-writes, a core-language rewrite, and derived state replacing `Master-Plan.md` remain parked or rejected.
+
 ## Epics
 
 > Created at `/agtoosa-init`. One row per product area. Changes rarely — see Active Cycle for what's in flight.
@@ -239,6 +263,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-118 | Chore: Product Truth & Adapter Contract | 2026-07-22 | [spec-DEV-118.md](archived/spec-DEV-118.md) · [review-DEV-118.md](archived/review-DEV-118.md) · [evidence-DEV-118.md](archived/evidence-DEV-118.md) |
 | DEV-117 | Chore: Cycle Continuity Guard | 2026-07-14 | [spec-DEV-117.md](archived/spec-DEV-117.md) · [review-DEV-117.md](archived/review-DEV-117.md) · [evidence-DEV-117.md](archived/evidence-DEV-117.md) |
 | DEV-113 | Chore: Cursor Intake Hardening + Fixture Parity | 2026-07-12 | [spec-DEV-113.md](archived/spec-DEV-113.md) · [review-DEV-113.md](archived/review-DEV-113.md) · [evidence-DEV-113.md](archived/evidence-DEV-113.md) |
 | DEV-114 | Fix: `--cleanup` false positives | 2026-07-12 | [spec-DEV-114.md](archived/spec-DEV-114.md) · [review-DEV-114.md](archived/review-DEV-114.md) · [evidence-DEV-114.md](archived/evidence-DEV-114.md) |
@@ -626,3 +651,13 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-14 22:42 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-117 — smoke PASS 5/5; v5.3.29; cycle archived | AgToosa |
 | 2026-07-14 22:42 | 🚀 Ship complete — v5.3.29 — DEV-117 Cycle Continuity Guard; smoke PASS; cycle archived | AgToosa |
 | 2026-07-14 22:42 | 🚀 Release 5.3.29 shipped — v5.3.29; version parity bash/ps1/npm; Milestone v5.3.30 (next) | AgToosa |
+| 2026-07-14 18:31 | /agtoosa-spec — Spec ✅ Approved — DEV-118 — `docs/archived/spec-DEV-118.md`; estimate L; backlog only; ADR-015–ADR-017 accepted. | AgToosa |
+| 2026-07-22 | ✏️ /agtoosa-spec tasks — DEV-118 Part 4 synced; 10 tasks; test plan `docs/AgToosa_TestPlan-DEV-118.md`; enrolled Active Cycle Todo. | AgToosa |
+| 2026-07-22 | ✏️ /agtoosa-spec — DEV-118 enrolled on `main` — Product Truth & Adapter Contract; cycle Active; estimate L (soft capacity overrun). | AgToosa |
+| 2026-07-22 22:30 | 🏗️ Build 🏗️ Started — DEV-118 — TDD cycle; 10 tasks; scope: contracts, product-truth scripts, template adapters, CI, governed docs. | AgToosa |
+| 2026-07-23 03:32 | 🏗️ /agtoosa-build — Task 🟢 10/10 — DEV-118 — PTC 12/12; product-truth check PASS; verifier PASS; next `/agtoosa-review`. | AgToosa |
+| 2026-07-23 03:35 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-118 — 4-persona + cross-model review. | AgToosa |
+| 2026-07-23 03:45 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-118 — 0 Critical; 5 Warning; PTC 12/12; adjacent regressions 32/32; next `/agtoosa-ship`. | AgToosa |
+| 2026-07-23 04:00 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-118 — smoke PASS 12/12; v5.3.30; cycle archived | AgToosa |
+| 2026-07-23 04:00 | 🚀 Ship complete — v5.3.30 — DEV-118 Product Truth & Adapter Contract; smoke PASS; cycle archived | AgToosa |
+| 2026-07-23 04:00 | 🚀 Release 5.3.30 shipped — v5.3.30; version parity bash/ps1/npm/formula; Milestone v5.3.31 (next) | AgToosa |

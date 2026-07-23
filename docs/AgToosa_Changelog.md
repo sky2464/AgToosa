@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.30] — 2026-07-22
+
+Patch release: DEV-118 — Product Truth & Adapter Contract.
+
+### Added
+
+- **DEV-118 — Product Truth & Adapter Contract.** Closed `contracts/product-truth-v1.json` schema; maintainer-only inert checker/renderer (`scripts/product-truth.py`); managed truth blocks on 19 commands × six native targets; governed capability claims with freshness boundaries; Windows bootstrap exact-ref validation; CI Product Truth gate plus adjacent PN/WP2/ACC/NET/PSP/CORE regressions; PTC-001–PTC-012 `@smoke` bats; ADR-015–ADR-017.
+
+---
+
 ## [5.3.29] — 2026-07-14
 
 Patch release: DEV-117 — Cycle Continuity Guard.

@@ -49,3 +49,17 @@ Treat marketing copy and README tables as **aspirational workflow coverage** unl
 | Private-key generation / release signing | manual (`DEV-054 M-1`) |
 | Fail-closed `AGTOOSA_REQUIRE_SIGNATURES`, SBOM, cosign verify | roadmap |
 | Repo-local PM source of truth | `docs/Master-Plan.md` |
+
+<!-- AGTOOSA PRODUCT TRUTH START: claims.surface.readiness -->
+<!-- Static conformance and freshness only; not behavioral or provenance proof. -->
+| Claim ID | Target | Status | Evidence class | Expires |
+| --- | --- | --- | --- | --- |
+| `claim.adapter.cursor` | `cursor.project-commands` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.windsurf` | `windsurf.workflows` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.claude` | `anthropic.claude-code` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.gemini` | `google.gemini-cli` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.copilot-vscode` | `github.copilot-vscode` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.codex` | `openai.codex-cli` | verified | static-conformance | 2026-10-12 |
+| `claim.windows.bootstrap-ref` | `windows-native` | verified | static-conformance | 2026-10-12 |
+| `claim.product-truth.local` | `maintainer` | verified | static-conformance | 2026-10-12 |
+<!-- AGTOOSA PRODUCT TRUTH END: claims.surface.readiness -->

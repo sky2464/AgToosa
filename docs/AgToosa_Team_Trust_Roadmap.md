@@ -89,3 +89,17 @@ Each story must classify its controls as generator-enforced, CI-enforced, agent-
 - AgToosa does not enforce enterprise policy at runtime.
 - AgToosa does not promise an enterprise SLA.
 - AgToosa does not replace a company's CI, legal, compliance, or security review obligations.
+
+<!-- AGTOOSA PRODUCT TRUTH START: claims.surface.team-trust -->
+<!-- Static conformance and freshness only; not behavioral or provenance proof. -->
+| Claim ID | Target | Status | Evidence class | Expires |
+| --- | --- | --- | --- | --- |
+| `claim.adapter.cursor` | `cursor.project-commands` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.windsurf` | `windsurf.workflows` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.claude` | `anthropic.claude-code` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.gemini` | `google.gemini-cli` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.copilot-vscode` | `github.copilot-vscode` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.codex` | `openai.codex-cli` | verified | static-conformance | 2026-10-12 |
+| `claim.windows.bootstrap-ref` | `windows-native` | verified | static-conformance | 2026-10-12 |
+| `claim.product-truth.local` | `maintainer` | verified | static-conformance | 2026-10-12 |
+<!-- AGTOOSA PRODUCT TRUTH END: claims.surface.team-trust -->

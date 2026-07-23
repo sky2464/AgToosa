@@ -49,3 +49,15 @@
 **Master Architecture**: The durable project architecture map at `Docs/Master-Architecture.md`, created during setup and treated as high-priority context before architectural decisions. It captures goals, constraints, C4-style diagrams, system boundaries, data flow, deployment, security, observability, and decision links. Not: "Master-Plan", "Context files", "one-off diagram".
 
 **Signed Registry Provenance**: Optional cryptographic signatures (minisign primary; cosign future alternate) on registry packs and release assets, verified with soft-warn when a signature artifact is present. Does not replace SHA-256 integrity or the registry `verified` flag. Not: "mandatory signed install", "SBOM", "fail-closed require-signatures" (those remain roadmap). Context: DEV-054, ADR-011.
+
+**Product Truth Contract**: Maintainer-only, versioned, inert JSON authority for cross-surface command facts, adapter invariants, path policy, operation dependencies, backend classifications, and public claim metadata. Context: DEV-118, ADR-015. Not: workflow prose replacement, downstream project state, executable manifest, network verifier.
+
+**Semantic adapter invariant**: Portable command fact that every declared native target must preserve, such as canonical workflow routing, supported modes, question budget, mutation class, approval gate, Phase Stop, and lifecycle close. Context: DEV-118, ADR-016. Not: byte-for-byte adapter equality or Scenario-tested assistant behavior.
+
+**Managed truth block**: Bounded adapter or public-document region rendered from the Product Truth Contract and updated only by explicit maintainer `render --apply`; CI uses check-only comparison. Context: DEV-118, ADR-016. Not: whole-file generation or automatic CI writes.
+
+**Capability claim ledger**: Product Truth Contract records that bind governed public claims to owner, surface, status, evidence class, evidence pointer, owning-contract ID/fingerprint, and freshness dates. Context: DEV-118, ADR-017. Not: authenticated evidence, telemetry, or external tracker authority.
+
+**Backend classification**: Per-operation label `native`, `bash-delegated`, `redirect-only`, `unsupported`, or `optional/degraded`, paired with dependency and missing-behavior truth. Context: DEV-118, ADR-017. Not: a platform-wide “Full” badge.
+
+**Claim freshness**: Ninety-day maximum age plus immediate re-verification after an owning contract changes; expiration downgrades a claim to stale/unverified rather than proving it unsupported. Context: DEV-118, ADR-017. Not: evidence authenticity or automatic network refresh.

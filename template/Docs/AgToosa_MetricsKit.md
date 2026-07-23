@@ -90,7 +90,7 @@ Copy this block for every measure. All fields are required before publishing a n
 | Field | Notes |
 |-------|-------|
 | Eligibility | Projects/cycles that should run the verifier per local policy |
-| Availability | `Docs/agtoosa-verify.sh` (or `docs/`) present — **availability is not adoption** |
+| Availability | `Docs/agtoosa-verify.sh` (or `Docs/`) present — **availability is not adoption** |
 | Actual / observed runs | Verifier executed in the observation window |
 | Mode | default / `--strict` / `stats` |
 | Result | pass / findings / usage error |

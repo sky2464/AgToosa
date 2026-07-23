@@ -4,15 +4,11 @@ on:
   push:
     branches: [ main ]
     paths-ignore:
-      - 'docs/**'
-      - '**/*.md'
       - '.github/ISSUE_TEMPLATE/**'
       - '.github/PULL_REQUEST_TEMPLATE/**'
   pull_request:
     branches: [ main ]
     paths-ignore:
-      - 'docs/**'
-      - '**/*.md'
       - '.github/ISSUE_TEMPLATE/**'
       - '.github/PULL_REQUEST_TEMPLATE/**'
 
@@ -106,6 +102,19 @@ jobs:
           tar -xzf bats.tar.gz
           sudo "./bats-core-${BATS_VERSION#v}/install.sh" /usr/local
           bats --version
+
+      - name: Product Truth contract and adjacent regressions
+        run: |
+          python3 scripts/product-truth.py check \
+            --root . \
+            --contract contracts/product-truth-v1.json \
+            --as-of 2026-07-14
+          python3 scripts/product-truth.py render --check \
+            --root . \
+            --contract contracts/product-truth-v1.json \
+            --as-of 2026-07-14
+          bats tests/product-truth.bats
+          bats tests/agtoosa.bats -f 'PN|WP2|ACC|NET|PSP|CORE'
 
       - name: Run generator smoke tests
         run: bats tests/agtoosa.bats

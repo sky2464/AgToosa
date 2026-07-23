@@ -5,7 +5,7 @@
 **The Spec-Driven Agentic AI Framework for Software Development**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-5.3.29-green.svg)](https://github.com/sky2464/AgToosa/releases)
+[![Version](https://img.shields.io/badge/version-5.3.28-green.svg)](https://github.com/sky2464/AgToosa/releases)
 [![CI Status](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml)
 [![Security Scan](https://github.com/sky2464/AgToosa/actions/workflows/security-scan.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/security-scan.yml)
 [![Semantic Release](https://github.com/sky2464/AgToosa/actions/workflows/release.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/release.yml)
@@ -57,7 +57,7 @@ Use these when you already know AgToosa and only need an install command.
 
 ```bash
 # Public launch: pinned release (alternative to the proof walkthrough).
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.29
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.28
 
 # Homebrew alternative (formula pinned to the tagged release tarball)
 brew install sky2464/agtoosa/agtoosa
@@ -85,8 +85,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstr
 
 ```powershell
 # Public launch: pinned release.
-$Ref = "v5.3.29"
-iwr -UseBasicParsing https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.ps1 | iex
+$Ref = "v5.3.28"
+$Bootstrap = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/sky2464/AgToosa/$Ref/bootstrap.ps1"
+& ([scriptblock]::Create($Bootstrap)) -Ref $Ref
 .\agtoosa.ps1 -Version
 
 # Manual verification path for local source checkouts
@@ -99,7 +100,7 @@ cd AgToosa
 1. [Set up WSL2 on Windows](https://docs.microsoft.com/en-us/windows/wsl/install)
 2. Open your WSL2 terminal and run the macOS/Linux command above
 
-> **Note:** Windows native installation requires Git for Windows. Both native and WSL2 paths are fully supported.
+> **Note:** Windows native installation requires Git for Windows. Native PowerShell and WSL2 are supported installation paths with different backend and dependency boundaries; see the [Network & API Matrix](docs/AgToosa_Network_Matrix.md#backend-classification).
 
 ### Platform Notes
 
@@ -109,8 +110,7 @@ cd AgToosa
 | Windows native (PowerShell) | ✅ Full | ✅ | ✅ | ❌ Not supported | ✅ |
 | Windows WSL2 | ✅ Full | ✅ (requires `jq`) | ✅ | ✅ | ✅ |
 
-> **Windows tip:** For full feature parity including `--registry publish`, use WSL2 or Git Bash instead of native PowerShell.
-> Windows tip: For full feature parity including registry publish, use WSL2 or Git Bash instead of native PowerShell.
+> **Windows tip:** Native PowerShell redirects registry publishing to the maintainer workflow. Use WSL2 or Git Bash when you need the Bash-backed registry publish operation.
 
 **Clone-and-run alternative:**
 ```bash
@@ -239,7 +239,7 @@ flowchart TD
         All checks pass
         No open blockers"]
         SH2["📦 Deploy
-        Zero-downtime · Changelog
+        Approval-gated deployment · Changelog
         GitHub Release"]
         SH3["🗄️ Archive
         Specs → Docs/archived/
@@ -286,7 +286,7 @@ flowchart TD
 | `/agtoosa-spec` | Research and create an **Executable Specification** with embedded architectural plan, STRIDE threat modeling, and atomic task breakdown |
 | `/agtoosa-build` | Implement the planned task list with **TDD Red-Green-Refactor** and run the full test suite with SAST/DAST |
 | `/agtoosa-review` | Multi-persona review (Security Officer, Eng Manager, CEO, QA Lead) + code simplification |
-| `/agtoosa-ship` | **Zero-downtime deployment**, archive specs to `Docs/archived/`, update changelog, suggest next story |
+| `/agtoosa-ship` | Run approval-gated deployment guidance, archive specs to `Docs/archived/`, update changelog, and suggest the next story |
 
 ### Optional Utility
 
@@ -337,7 +337,7 @@ The AI will guide you through each phase — asking one goal-aware question at a
 
 ## Verification — Trust, but Verify
 
-AgToosa is the only multi-assistant SDD framework that ships a **deterministic, no-AI verifier** with every install:
+AgToosa is a multi-assistant SDD framework that ships a **deterministic, no-AI verifier** with every install:
 
 ```bash
 bash Docs/agtoosa-verify.sh            # context, spec approval, EARS ACs, AC→test mapping, threat model, TDD evidence
@@ -372,7 +372,7 @@ AgToosa integrates Test-Driven Development principles directly into its workflow
 | 🟢 **GREEN** | Write minimal code to make the test pass | After test is written |
 | 🔵 **REFACTOR** | Clean up, lint, ensure <500 LOC per file | After test passes |
 
-TDD is configured during `/agtoosa-init` and enforced during every `/agtoosa-build` cycle. This ensures no implementation code is written without a corresponding test.
+TDD is configured during `/agtoosa-init` and instructed during every `/agtoosa-build` cycle. Deterministic evidence checks can verify that the required RED and GREEN evidence was recorded.
 
 ---
 
@@ -566,3 +566,17 @@ MIT License — see [LICENSE](LICENSE) for details.
 [Report Bug](https://github.com/sky2464/AgToosa/issues) · [Request Feature](https://github.com/sky2464/AgToosa/issues) · [Discussions](https://github.com/sky2464/AgToosa/discussions)
 
 </div>
+
+<!-- AGTOOSA PRODUCT TRUTH START: claims.surface.readme -->
+<!-- Static conformance and freshness only; not behavioral or provenance proof. -->
+| Claim ID | Target | Status | Evidence class | Expires |
+| --- | --- | --- | --- | --- |
+| `claim.adapter.cursor` | `cursor.project-commands` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.windsurf` | `windsurf.workflows` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.claude` | `anthropic.claude-code` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.gemini` | `google.gemini-cli` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.copilot-vscode` | `github.copilot-vscode` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.codex` | `openai.codex-cli` | verified | static-conformance | 2026-10-12 |
+| `claim.windows.bootstrap-ref` | `windows-native` | verified | static-conformance | 2026-10-12 |
+| `claim.product-truth.local` | `maintainer` | verified | static-conformance | 2026-10-12 |
+<!-- AGTOOSA PRODUCT TRUTH END: claims.surface.readme -->

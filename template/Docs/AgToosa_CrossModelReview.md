@@ -30,7 +30,7 @@ Run an optional **cross-model review gate** that separates the **writer** (build
 
 | Tier | When | Gate expectation |
 |------|------|------------------|
-| **Standard** | Routine docs/chore with no trust-boundary ACs | Cross-model optional |
+| **Standard** | Routine Docs/chore with no trust-boundary ACs | Cross-model optional |
 | **Recommended** | Spec threat model touches auth, registry, secrets, supply chain, or user-controlled input | Strongly recommend `/agtoosa-review cross-model` |
 | **Strongly recommended** | Must ACs explicitly tag security/registry/auth surfaces | Run cross-model or document explicit skip rationale in review report |
 

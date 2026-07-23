@@ -40,3 +40,17 @@ AgToosa is markdown instructions for your AI assistant — not a runtime. The ge
 | Version parity (bash vs PowerShell generator) | — | Yes — maintainer CI only |
 
 Treat marketing copy and README tables as **aspirational workflow coverage** unless this doc marks a row as machine-checked or generator-enforced.
+
+<!-- AGTOOSA PRODUCT TRUTH START: claims.surface.template-readiness -->
+<!-- Static conformance and freshness only; not behavioral or provenance proof. -->
+| Claim ID | Target | Status | Evidence class | Expires |
+| --- | --- | --- | --- | --- |
+| `claim.adapter.cursor` | `cursor.project-commands` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.windsurf` | `windsurf.workflows` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.claude` | `anthropic.claude-code` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.gemini` | `google.gemini-cli` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.copilot-vscode` | `github.copilot-vscode` | verified | static-conformance | 2026-10-12 |
+| `claim.adapter.codex` | `openai.codex-cli` | verified | static-conformance | 2026-10-12 |
+| `claim.windows.bootstrap-ref` | `windows-native` | verified | static-conformance | 2026-10-12 |
+| `claim.product-truth.local` | `maintainer` | verified | static-conformance | 2026-10-12 |
+<!-- AGTOOSA PRODUCT TRUTH END: claims.surface.template-readiness -->

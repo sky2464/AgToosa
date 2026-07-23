@@ -132,7 +132,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 # ── Version ───────────────────────────────────────────────────
-$AGTOOSA_VERSION = "5.3.29"
+$AGTOOSA_VERSION = "5.3.30"
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $TEMPLATE_DIR = Join-Path $SCRIPT_DIR "template"
 $SHIP_DIR = Join-Path $SCRIPT_DIR "ship"
@@ -177,10 +177,10 @@ function ConvertTo-PlatformList([string]$PlatformsCsv) {
             '^(3|claude|claude-code)$' { & $addPlatform 'claude'; break }
             '^(4|gemini|jules)$' { & $addPlatform 'gemini'; break }
             '^(5|copilot|github-copilot)$' { & $addPlatform 'copilot'; break }
-            '^(6|vscode)$' { & $addPlatform 'copilot'; break }
+            '^(6|vscode)$' { & $addPlatform 'vscode'; break }
             '^(7|codex|opencode|other)$' { & $addPlatform 'opencode'; break }
             '^(8|all)$' {
-                return [string[]]@('cursor', 'windsurf', 'claude', 'gemini', 'copilot', 'opencode')
+                return [string[]]@('cursor', 'windsurf', 'claude', 'gemini', 'copilot', 'vscode', 'opencode')
             }
             default {
                 Write-Color "${RED}❌ Error: Unknown platform '$token' in -Platforms.${NC}"
@@ -351,6 +351,7 @@ function Get-PlatformDisplayNames([string[]]$platforms) {
             "claude"   { $names.Add("Claude Code") }
             "gemini"   { $names.Add("Gemini") }
             "copilot"  { $names.Add("GitHub Copilot") }
+            "vscode"   { $names.Add("VS Code") }
             "opencode" { $names.Add("Codex/OpenCode") }
         }
     }
@@ -367,7 +368,7 @@ function Write-ApplyVerbose([string]$Message) {
 }
 
 function Test-AllPlatformsInstalled([string[]]$platforms) {
-    foreach ($key in @("cursor", "windsurf", "claude", "gemini", "copilot", "opencode")) {
+    foreach ($key in @("cursor", "windsurf", "claude", "gemini", "copilot", "vscode", "opencode")) {
         if ($platforms -notcontains $key) { return $false }
     }
     return $true
@@ -386,7 +387,7 @@ function Write-PlatformLegend([string[]]$platforms) {
     Write-Color "  3) Claude Code$(& $mark 'claude')"
     Write-Color "  4) Gemini$(& $mark 'gemini')"
     Write-Color "  5) GitHub Copilot$(& $mark 'copilot')"
-    Write-Color "  6) VS Code (generic)"
+    Write-Color "  6) VS Code (generic)$(& $mark 'vscode')"
     Write-Color "  7) Codex / OpenCode / Other$(& $mark 'opencode')"
     Write-Color "  8) All of the above"
     Write-Color ""
@@ -712,6 +713,18 @@ function Copy-StageFiles([string[]]$platforms) {
                 if ($promptCount -gt 0) { Write-ApplyVerbose "  ${GREEN}✅${NC} .github/prompts/ ${CYAN}($promptCount prompts)${NC}" }
                 if ($agentCount -gt 0) { Write-ApplyVerbose "  ${GREEN}✅${NC} .github/agents/ ${CYAN}($agentCount agents)${NC}" }
             }
+            "vscode" {
+                if ($platforms -notcontains "copilot") {
+                    Copy-TemplateFile ".github/copilot-instructions.md" | Out-Null
+                    $instructionCount = Copy-TemplateDirectory ".github/instructions"
+                    $promptCount = Copy-TemplateDirectory ".github/prompts"
+                    $agentCount = Copy-TemplateDirectory ".github/agents"
+                    Write-ApplyVerbose "  ${GREEN}✅${NC} .github\copilot-instructions.md ${CYAN}(VS Code)${NC}"
+                    if ($instructionCount -gt 0) { Write-ApplyVerbose "  ${GREEN}✅${NC} .github/instructions/ ${CYAN}($instructionCount instructions)${NC}" }
+                    if ($promptCount -gt 0) { Write-ApplyVerbose "  ${GREEN}✅${NC} .github/prompts/ ${CYAN}($promptCount prompts)${NC}" }
+                    if ($agentCount -gt 0) { Write-ApplyVerbose "  ${GREEN}✅${NC} .github/agents/ ${CYAN}($agentCount agents)${NC}" }
+                }
+            }
             "opencode" {
                 if (Copy-TemplateFile "OPENCODE.md") {
                     $skillCount = Copy-TemplateDirectory ".codex/skills"
@@ -1011,6 +1024,17 @@ function Install-Files([string]$projectPath, [string[]]$platforms) {
                 Copy-StagedDirectory ".github/prompts" $projectPath ".github/prompts/" | Out-Null
                 Copy-StagedDirectory ".github/agents" $projectPath ".github/agents/" | Out-Null
                 Copy-StagedDirectory ".github/instructions" $projectPath ".github/instructions/" | Out-Null
+            }
+            "vscode" {
+                if ($platforms -notcontains "copilot") {
+                    $ghDir = Join-Path $projectPath ".github"
+                    New-Item -ItemType Directory -Path $ghDir -Force | Out-Null
+                    $src = Join-Path $SHIP_DIR ".github\copilot-instructions.md"
+                    if (Test-Path $src) { Merge-PlatformFile $src (Join-Path $ghDir "copilot-instructions.md") ".github\copilot-instructions.md" }
+                    Copy-StagedDirectory ".github/prompts" $projectPath ".github/prompts/" | Out-Null
+                    Copy-StagedDirectory ".github/agents" $projectPath ".github/agents/" | Out-Null
+                    Copy-StagedDirectory ".github/instructions" $projectPath ".github/instructions/" | Out-Null
+                }
             }
             "opencode" {
                 $src = Join-Path $SHIP_DIR "OPENCODE.md"
@@ -1464,14 +1488,14 @@ if ($smartUpgradeMode -and [string]::IsNullOrWhiteSpace($cliPlatforms)) {
         if (-not [string]::IsNullOrWhiteSpace($addSelection)) {
             if ($addSelection -match "8") {
                 $selectedPlatforms.Clear()
-                $selectedPlatforms.AddRange([string[]]@("cursor", "windsurf", "claude", "gemini", "copilot", "opencode"))
+                $selectedPlatforms.AddRange([string[]]@("cursor", "windsurf", "claude", "gemini", "copilot", "vscode", "opencode"))
             } else {
                 if ($addSelection -match "1") { if (-not $selectedPlatforms.Contains("cursor")) { $selectedPlatforms.Add("cursor") } }
                 if ($addSelection -match "2") { if (-not $selectedPlatforms.Contains("windsurf")) { $selectedPlatforms.Add("windsurf") } }
                 if ($addSelection -match "3") { if (-not $selectedPlatforms.Contains("claude")) { $selectedPlatforms.Add("claude") } }
                 if ($addSelection -match "4") { if (-not $selectedPlatforms.Contains("gemini")) { $selectedPlatforms.Add("gemini") } }
                 if ($addSelection -match "5") { if (-not $selectedPlatforms.Contains("copilot")) { $selectedPlatforms.Add("copilot") } }
-                if ($addSelection -match "6") { if (-not $selectedPlatforms.Contains("copilot")) { $selectedPlatforms.Add("copilot") } }
+                if ($addSelection -match "6") { if (-not $selectedPlatforms.Contains("vscode")) { $selectedPlatforms.Add("vscode") } }
                 if ($addSelection -match "7") { if (-not $selectedPlatforms.Contains("opencode")) { $selectedPlatforms.Add("opencode") } }
             }
             Write-Color ""
@@ -1506,14 +1530,14 @@ if ($smartUpgradeMode -and [string]::IsNullOrWhiteSpace($cliPlatforms)) {
     $selection = $selectionRaw.Trim()
 
     if ($selection -eq "8") {
-        $selectedPlatforms.AddRange([string[]]@("cursor", "windsurf", "claude", "gemini", "copilot", "opencode"))
+        $selectedPlatforms.AddRange([string[]]@("cursor", "windsurf", "claude", "gemini", "copilot", "vscode", "opencode"))
     } else {
         if ($selection -match "1") { $selectedPlatforms.Add("cursor") }
         if ($selection -match "2") { $selectedPlatforms.Add("windsurf") }
         if ($selection -match "3") { $selectedPlatforms.Add("claude") }
         if ($selection -match "4") { $selectedPlatforms.Add("gemini") }
         if ($selection -match "5") { $selectedPlatforms.Add("copilot") }
-        if ($selection -match "6") { $selectedPlatforms.Add("copilot") }
+        if ($selection -match "6") { $selectedPlatforms.Add("vscode") }
         if ($selection -match "7") { $selectedPlatforms.Add("opencode") }
     }
 }

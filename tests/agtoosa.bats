@@ -2678,13 +2678,13 @@ PY
   done
 }
 
-@test "WP2: each native surface has exactly 18 agtoosa workflow adapters" {
-  [ "$(find "$TEMPLATE_DIR/.claude/commands" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 18 ]
-  [ "$(find "$TEMPLATE_DIR/.cursor/commands" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 18 ]
-  [ "$(find "$TEMPLATE_DIR/.gemini/commands" -maxdepth 1 -name 'agtoosa-*.toml' 2>/dev/null | wc -l | tr -d ' ')" -eq 18 ]
-  [ "$(find "$TEMPLATE_DIR/.github/prompts" -maxdepth 1 -name 'agtoosa-*.prompt.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 18 ]
-  [ "$(find "$TEMPLATE_DIR/.windsurf/workflows" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 18 ]
-  [ "$(find "$TEMPLATE_DIR/.codex/prompts" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 18 ]
+@test "WP2: each native surface has exactly 19 agtoosa workflow adapters" {
+  [ "$(find "$TEMPLATE_DIR/.claude/commands" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 19 ]
+  [ "$(find "$TEMPLATE_DIR/.cursor/commands" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 19 ]
+  [ "$(find "$TEMPLATE_DIR/.gemini/commands" -maxdepth 1 -name 'agtoosa-*.toml' 2>/dev/null | wc -l | tr -d ' ')" -eq 19 ]
+  [ "$(find "$TEMPLATE_DIR/.github/prompts" -maxdepth 1 -name 'agtoosa-*.prompt.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 19 ]
+  [ "$(find "$TEMPLATE_DIR/.windsurf/workflows" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 19 ]
+  [ "$(find "$TEMPLATE_DIR/.codex/prompts" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 19 ]
 }
 
 @test "WP3: ship adapters on all six surfaces delegate check to Part 0 read-only audit" {
@@ -9622,7 +9622,9 @@ EOF
   run pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1" -Update -UpdatePath "$project"
   [ "$status" -eq 0 ]
   [ -f "$project/Docs/.agtoosa-version" ]
-  [ "$(cat "$project/Docs/.agtoosa-version")" = "5.3.26" ]
+  local want_ver
+  want_ver="$(grep -m1 'AGTOOSA_VERSION=' "$BATS_TEST_DIRNAME/../agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$(cat "$project/Docs/.agtoosa-version")" = "$want_ver" ]
 }
 
 @test "DEV-105 PSP-005: maintain switches require -UpdatePath" {
@@ -13541,6 +13543,29 @@ _cln_seed_project() {
   [ -f "$root/docs/archived/review-DEV-117.md" ]
   [ -f "$root/docs/archived/evidence-DEV-117.md" ]
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-117.md"
+}
+
+# -- DEV-118 ship regression v5.3.30 (SR-001–SR-002) ---------------------------
+
+@test "DEV-118 SR-001: v5.3.30 changelog and DEV-118 review/evidence/spec artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.30\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-118' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-118.md" ]
+  [ -f "$root/docs/archived/review-DEV-118.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-118.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-118.md"
+}
+
+@test "DEV-118 SR-002: ADR-015–ADR-017 product truth accepted" {
+  local root="$BATS_TEST_DIRNAME/.."
+  for adr in ADR-015-product-truth-contract ADR-016-bounded-adapter-rendering ADR-017-fresh-claims-and-windows-truth; do
+    [ -f "$root/docs/adr/${adr}.md" ]
+    grep -q 'Accepted' "$root/docs/adr/${adr}.md"
+    grep -q 'DEV-118' "$root/docs/adr/${adr}.md"
+  done
+  [ -f "$root/contracts/product-truth-v1.json" ]
+  [ -f "$root/tests/product-truth.bats" ]
 }
 
 # ── DEV-117: Cycle Continuity Guard (CCG-001–CCG-005) ────────────────────────

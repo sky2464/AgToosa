@@ -70,9 +70,9 @@ Capability lanes ran sequentially (platform does not support parallel subagents)
 
 1. **Terminal Evidence** — Every lane returns the block from `Docs/AgToosa_Agent.md` → Terminal Evidence Contract.
 2. **Specialist evidence** — Review/spec specialists return the structured block from `Docs/AgToosa_Specialists.md`.
-3. **Master-Plan serial mutation** — Only the **orchestrator** edits `docs/Master-Plan.md` status and task checkboxes after merge.
+3. **Master-Plan serial mutation** — Only the **orchestrator** edits `Docs/Master-Plan.md` status and task checkboxes after merge.
 4. **Import gate** — External/async agents never close tasks without `/agtoosa-import` and repo-local verification.
-5. **Source of truth** — `docs/Master-Plan.md` remains repo-local SoT; external dashboards are evidence sources only.
+5. **Source of truth** — `Docs/Master-Plan.md` remains repo-local SoT; external dashboards are evidence sources only.
 
 ## Work Package fan-out (build)
 
@@ -103,7 +103,7 @@ Detail: `Docs/AgToosa_Build.md`, `Docs/AgToosa_Handoff.md`, `Docs/AgToosa_Import
 - `Docs/AgToosa_Skills.md` — project skill inventory
 - `Docs/AgToosa_Handoff.md` / `Docs/AgToosa_Import.md` — async lane boundaries
 - `Docs/AgToosa_CrossModelReview.md` — independent reviewer separation
-- `docs/guides/subagent-heavy-workflows.md` — end-to-end delegated workflow entry
+- `Docs/guides/subagent-heavy-workflows.md` — end-to-end delegated workflow entry
 
 ## Output (when consulted)
 
@@ -114,5 +114,5 @@ Lanes: [planned parallel or sequential lanes]
 Parallel: [yes|no — reason]
 Fallback: [sequential note if applicable]
 Merge owner: orchestrator
-SoT: docs/Master-Plan.md (unchanged until merge)
+SoT: Docs/Master-Plan.md (unchanged until merge)
 ```

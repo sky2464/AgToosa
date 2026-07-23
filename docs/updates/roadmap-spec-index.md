@@ -96,6 +96,7 @@ Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
 | DEV-115 | `--cleanup` safety follow-up | Fix | S | DEV-114 | P0 | `docs/archived/spec-DEV-115.md` | `docs/AgToosa_TestPlan-DEV-115.md` | 🏁 Shipped v5.3.27 |
 | DEV-116 | AgToosa Lifecycle Compass | Feature | M | DEV-002 | P0 | `docs/archived/spec-DEV-116.md` | `docs/AgToosa_TestPlan-DEV-116.md` | 🏁 Shipped v5.3.28 |
 | DEV-117 | Cycle Continuity Guard | Chore | S | DEV-004 | P1 | `docs/archived/spec-DEV-117.md` | `docs/AgToosa_TestPlan-DEV-117.md` | 🏁 Shipped v5.3.29 |
+| DEV-118 | Product Truth & Adapter Contract | Chore | L | DEV-001 / DEV-002 / DEV-004 | P0 | `docs/archived/spec-DEV-118.md` | `docs/AgToosa_TestPlan-DEV-118.md` | 🏁 Shipped v5.3.30 |
 
 > **Enrollment note (2026-07-12):** DEV-107 Spec Approved; remains Backlog until after Wave 1a capacity frees. Build must not displace DEV-086 / DEV-090 / DEV-105.
 >
@@ -109,6 +110,7 @@ Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
 >
 > **Enrollment note (2026-07-12):** DEV-116 shipped v5.3.28 — AgToosa Lifecycle Compass; semantic intent routing; --route-hint CLI formatting; CMP integration tests.
 > **Enrollment note (2026-07-14):** DEV-117 shipped v5.3.29 — Cycle Continuity Guard; explicit `Cycle state` idle contract; verifier Gate 3 + status scoring; CCG bats.
+> **Enrollment note (2026-07-22):** DEV-118 shipped v5.3.30 — Product Truth & Adapter Contract; PTC CI gate; competitive portfolio DEV-119–DEV-124 remain `needs-interview`.
 
 ## Recently shipped (v5.3.14 — 2026-07-11)
 

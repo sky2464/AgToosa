@@ -25,7 +25,7 @@ Honest boundary: AgToosa does **not** claim automated learning. Proposals are re
 ## Prerequisites
 
 - A closed or closing cycle with a normalized cycle date (`YYYY-MM-DD`).
-- Repo-local sources under the selected `Docs/` or `docs/` root (see Inputs).
+- Repo-local sources under the selected `Docs/` or `Docs/` root (see Inputs).
 - Optional sources may be missing — mark them `unavailable`; never fetch remote trackers or network services.
 
 ## Inputs (repo-local only)
@@ -57,7 +57,7 @@ Missing or malformed optional sources → record `unavailable` in metadata and E
 
 > **Cycle:** [YYYY-MM-DD]
 > **Generated:** [ISO-8601]
-> **Docs root:** Docs/ | docs/
+> **Docs root:** Docs/ | Docs/
 > **Source availability:** Master-Plan=…; changelog=…; archived-spec=…; archived-review=…; archived-evidence=…; test-plan=…; events=…
 
 ## Planned vs Shipped

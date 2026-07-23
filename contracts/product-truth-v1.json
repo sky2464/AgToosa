@@ -1,0 +1,1550 @@
+{
+  "$schema": "product-truth-v1.schema.json",
+  "schema_version": "1",
+  "contract_id": "agtoosa.product-truth",
+  "contract_version": "1.0.0",
+  "static_claim_boundary": {
+    "allowed": [
+      "declared-static-conformance",
+      "claim-freshness"
+    ],
+    "forbidden": [
+      "host-recognition",
+      "scenario-tested-behavior",
+      "authenticated-provenance",
+      "native-sandboxing",
+      "full-powershell-parity",
+      "universal-assistant-support"
+    ]
+  },
+  "path_policy": {
+    "id": "path-policy",
+    "generated_root": "template",
+    "installed_root": "Docs",
+    "candidate_files": [
+      "template/Docs/AgToosa_Agent.md",
+      "template/Docs/AgToosa_Build.md",
+      "template/Docs/AgToosa_CrossModelReview.md",
+      "template/Docs/AgToosa_Dashboard.md",
+      "template/Docs/AgToosa_GovernancePolicy.md",
+      "template/Docs/AgToosa_MetricsKit.md",
+      "template/Docs/AgToosa_Network_Matrix.md",
+      "template/Docs/AgToosa_Orchestration.md",
+      "template/Docs/AgToosa_Readiness.md",
+      "template/Docs/AgToosa_Registry.md",
+      "template/Docs/AgToosa_Retro.md",
+      "template/Docs/AgToosa_Review.md",
+      "template/Docs/AgToosa_Ship.md",
+      "template/Docs/AgToosa_Spec.md",
+      "template/Docs/AgToosa_Update.md",
+      "template/Docs/SPEC-FORMAT.md",
+      "template/Docs/agtoosa-dashboard.sh",
+      "template/Docs/agtoosa-gate.yml.example",
+      "template/Docs/agtoosa-policy-check.sh",
+      "template/Docs/agtoosa-verify.sh"
+    ],
+    "max_file_bytes": 1048576,
+    "max_entries": 4096,
+    "max_string_bytes": 4096,
+    "exemptions": [
+      {
+        "id": "path.remote-url",
+        "kind": "remote-url",
+        "paths": [
+          "template/Docs/**"
+        ],
+        "owner": "DEV-118",
+        "reason": "Remote URL paths preserve the publisher's canonical lowercase path."
+      },
+      {
+        "id": "path.dual-root",
+        "kind": "dual-root-resolver",
+        "paths": [
+          "template/Docs/agtoosa-dashboard.sh",
+          "template/Docs/agtoosa-gate.yml.example",
+          "template/Docs/agtoosa-policy-check.sh",
+          "template/Docs/agtoosa-verify.sh"
+        ],
+        "owner": "DEV-118",
+        "reason": "Installed and maintainer mirrors intentionally probe both Docs/ and docs/ roots."
+      },
+      {
+        "id": "path.maintainer-text",
+        "kind": "maintainer-dogfood",
+        "paths": [
+          "template/Docs/AgToosa_Agent.md",
+          "template/Docs/AgToosa_Network_Matrix.md",
+          "template/Docs/AgToosa_Readiness.md",
+          "template/Docs/AgToosa_GovernancePolicy.md",
+          "template/Docs/AgToosa_Registry.md",
+          "template/Docs/AgToosa_Retro.md",
+          "template/Docs/AgToosa_Update.md"
+        ],
+        "owner": "DEV-118",
+        "reason": "Explicit maintainer-only examples name the lowercase source-repository root."
+      }
+    ]
+  },
+  "commands": [
+    {
+      "id": "command.build",
+      "phase": "build",
+      "invocation": "/agtoosa-build",
+      "modes": [
+        "full",
+        "tdd",
+        "test",
+        "handoff",
+        "import"
+      ],
+      "canonical_workflow": "Docs/AgToosa_Build.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 0,
+        "quick_max": 0
+      },
+      "mutation_class": "write",
+      "approval_gate": false,
+      "phase_stop": true,
+      "lifecycle_close": "review",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [
+        "Docs/Master-Plan.md"
+      ],
+      "side_effects": [
+        "repository-files"
+      ],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_Build.md",
+        "invocation:/agtoosa-build",
+        "mutation:write"
+      ]
+    },
+    {
+      "id": "command.catalog",
+      "phase": "utility",
+      "invocation": "/agtoosa-catalog",
+      "modes": [
+        "full",
+        "list",
+        "search",
+        "info",
+        "validate"
+      ],
+      "canonical_workflow": "Docs/AgToosa_Catalog.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 0,
+        "quick_max": 0
+      },
+      "mutation_class": "read-only",
+      "approval_gate": false,
+      "phase_stop": false,
+      "lifecycle_close": "none",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [],
+      "side_effects": [],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_Catalog.md",
+        "invocation:/agtoosa-catalog",
+        "mutation:read-only"
+      ]
+    },
+    {
+      "id": "command.concise",
+      "phase": "utility",
+      "invocation": "/agtoosa-concise",
+      "modes": [
+        "full"
+      ],
+      "canonical_workflow": "Docs/AgToosa_Concise.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 0,
+        "quick_max": 0
+      },
+      "mutation_class": "read-only",
+      "approval_gate": false,
+      "phase_stop": false,
+      "lifecycle_close": "none",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [],
+      "side_effects": [],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_Concise.md",
+        "invocation:/agtoosa-concise",
+        "mutation:read-only"
+      ]
+    },
+    {
+      "id": "command.debug",
+      "phase": "review",
+      "invocation": "/agtoosa-debug",
+      "modes": [
+        "full"
+      ],
+      "canonical_workflow": "Docs/AgToosa_Debug.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 0,
+        "quick_max": 0
+      },
+      "mutation_class": "read-only",
+      "approval_gate": false,
+      "phase_stop": false,
+      "lifecycle_close": "none",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [],
+      "side_effects": [],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_Debug.md",
+        "invocation:/agtoosa-debug",
+        "mutation:read-only"
+      ]
+    },
+    {
+      "id": "command.evidence",
+      "phase": "review",
+      "invocation": "/agtoosa-evidence",
+      "modes": [
+        "full",
+        "review",
+        "ship"
+      ],
+      "canonical_workflow": "Docs/AgToosa_Evidence.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 0,
+        "quick_max": 0
+      },
+      "mutation_class": "write",
+      "approval_gate": false,
+      "phase_stop": false,
+      "lifecycle_close": "none",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [
+        "Docs/Master-Plan.md"
+      ],
+      "side_effects": [
+        "repository-files"
+      ],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_Evidence.md",
+        "invocation:/agtoosa-evidence",
+        "mutation:write"
+      ]
+    },
+    {
+      "id": "command.goal",
+      "phase": "spec",
+      "invocation": "/agtoosa-goal",
+      "modes": [
+        "full",
+        "check"
+      ],
+      "canonical_workflow": "Docs/AgToosa_Goal.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 12,
+        "quick_max": 0
+      },
+      "mutation_class": "mixed",
+      "approval_gate": true,
+      "phase_stop": false,
+      "lifecycle_close": "none",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [
+        "Docs/Master-Plan.md"
+      ],
+      "side_effects": [
+        "repository-files"
+      ],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_Goal.md",
+        "invocation:/agtoosa-goal",
+        "mutation:mixed"
+      ]
+    },
+    {
+      "id": "command.handoff",
+      "phase": "build",
+      "invocation": "/agtoosa-handoff",
+      "modes": [
+        "full",
+        "wave",
+        "task"
+      ],
+      "canonical_workflow": "Docs/AgToosa_Handoff.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 0,
+        "quick_max": 0
+      },
+      "mutation_class": "write",
+      "approval_gate": false,
+      "phase_stop": false,
+      "lifecycle_close": "none",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [
+        "Docs/Master-Plan.md"
+      ],
+      "side_effects": [
+        "repository-files"
+      ],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_Handoff.md",
+        "invocation:/agtoosa-handoff",
+        "mutation:write"
+      ]
+    },
+    {
+      "id": "command.help",
+      "phase": "utility",
+      "invocation": "/agtoosa-help",
+      "modes": [
+        "full",
+        "next"
+      ],
+      "canonical_workflow": "Docs/AgToosa_Agent.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 0,
+        "quick_max": 0
+      },
+      "mutation_class": "read-only",
+      "approval_gate": false,
+      "phase_stop": false,
+      "lifecycle_close": "none",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [],
+      "side_effects": [],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_Agent.md",
+        "invocation:/agtoosa-help",
+        "mutation:read-only"
+      ]
+    },
+    {
+      "id": "command.import",
+      "phase": "build",
+      "invocation": "/agtoosa-import",
+      "modes": [
+        "full",
+        "check"
+      ],
+      "canonical_workflow": "Docs/AgToosa_Import.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 0,
+        "quick_max": 0
+      },
+      "mutation_class": "write",
+      "approval_gate": false,
+      "phase_stop": false,
+      "lifecycle_close": "none",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [
+        "Docs/Master-Plan.md"
+      ],
+      "side_effects": [
+        "repository-files"
+      ],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_Import.md",
+        "invocation:/agtoosa-import",
+        "mutation:write"
+      ]
+    },
+    {
+      "id": "command.init",
+      "phase": "init",
+      "invocation": "/agtoosa-init",
+      "modes": [
+        "full"
+      ],
+      "canonical_workflow": "Docs/AgToosa_Init.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 12,
+        "quick_max": 0
+      },
+      "mutation_class": "write",
+      "approval_gate": true,
+      "phase_stop": true,
+      "lifecycle_close": "spec",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [
+        "Docs/Master-Plan.md"
+      ],
+      "side_effects": [
+        "repository-files"
+      ],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_Init.md",
+        "invocation:/agtoosa-init",
+        "mutation:write"
+      ]
+    },
+    {
+      "id": "command.qa",
+      "phase": "qa",
+      "invocation": "/agtoosa-qa",
+      "modes": [
+        "full",
+        "plan",
+        "run",
+        "report",
+        "triage"
+      ],
+      "canonical_workflow": "Docs/AgToosa_QA.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 0,
+        "quick_max": 0
+      },
+      "mutation_class": "mixed",
+      "approval_gate": true,
+      "phase_stop": true,
+      "lifecycle_close": "review",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [
+        "Docs/Master-Plan.md"
+      ],
+      "side_effects": [
+        "repository-files"
+      ],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_QA.md",
+        "invocation:/agtoosa-qa",
+        "mutation:mixed"
+      ]
+    },
+    {
+      "id": "command.revert",
+      "phase": "utility",
+      "invocation": "/agtoosa-revert",
+      "modes": [
+        "full"
+      ],
+      "canonical_workflow": "Docs/AgToosa_Revert.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 0,
+        "quick_max": 0
+      },
+      "mutation_class": "write",
+      "approval_gate": false,
+      "phase_stop": false,
+      "lifecycle_close": "none",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [
+        "Docs/Master-Plan.md"
+      ],
+      "side_effects": [
+        "repository-files"
+      ],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_Revert.md",
+        "invocation:/agtoosa-revert",
+        "mutation:write"
+      ]
+    },
+    {
+      "id": "command.review",
+      "phase": "review",
+      "invocation": "/agtoosa-review",
+      "modes": [
+        "full",
+        "security",
+        "arch",
+        "debug",
+        "cross",
+        "cross-model"
+      ],
+      "canonical_workflow": "Docs/AgToosa_Review.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 0,
+        "quick_max": 0
+      },
+      "mutation_class": "write",
+      "approval_gate": true,
+      "phase_stop": true,
+      "lifecycle_close": "ship",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [
+        "Docs/Master-Plan.md"
+      ],
+      "side_effects": [
+        "repository-files"
+      ],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_Review.md",
+        "invocation:/agtoosa-review",
+        "mutation:write"
+      ]
+    },
+    {
+      "id": "command.ship",
+      "phase": "ship",
+      "invocation": "/agtoosa-ship",
+      "modes": [
+        "full",
+        "check",
+        "docs",
+        "retro"
+      ],
+      "canonical_workflow": "Docs/AgToosa_Ship.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 0,
+        "quick_max": 0
+      },
+      "mutation_class": "write",
+      "approval_gate": true,
+      "phase_stop": true,
+      "lifecycle_close": "spec",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [
+        "Docs/Master-Plan.md"
+      ],
+      "side_effects": [
+        "repository-files"
+      ],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_Ship.md",
+        "invocation:/agtoosa-ship",
+        "mutation:write"
+      ]
+    },
+    {
+      "id": "command.spec",
+      "phase": "spec",
+      "invocation": "/agtoosa-spec",
+      "modes": [
+        "full",
+        "research",
+        "plan",
+        "quick",
+        "tasks",
+        "amend",
+        "to-issues"
+      ],
+      "canonical_workflow": "Docs/AgToosa_Spec.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 8,
+        "quick_max": 2
+      },
+      "mutation_class": "write",
+      "approval_gate": true,
+      "phase_stop": true,
+      "lifecycle_close": "build",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [
+        "Docs/Master-Plan.md"
+      ],
+      "side_effects": [
+        "repository-files"
+      ],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_Spec.md",
+        "invocation:/agtoosa-spec",
+        "mutation:write"
+      ]
+    },
+    {
+      "id": "command.status",
+      "phase": "utility",
+      "invocation": "/agtoosa-status",
+      "modes": [
+        "full",
+        "plan",
+        "readiness",
+        "git",
+        "orphans"
+      ],
+      "canonical_workflow": "Docs/AgToosa_Status.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 0,
+        "quick_max": 0
+      },
+      "mutation_class": "read-only",
+      "approval_gate": false,
+      "phase_stop": false,
+      "lifecycle_close": "none",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [],
+      "side_effects": [],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_Status.md",
+        "invocation:/agtoosa-status",
+        "mutation:read-only"
+      ]
+    },
+    {
+      "id": "command.task",
+      "phase": "spec",
+      "invocation": "/agtoosa-task",
+      "modes": [
+        "full"
+      ],
+      "canonical_workflow": "Docs/AgToosa_Task.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 3,
+        "quick_max": 0
+      },
+      "mutation_class": "write",
+      "approval_gate": true,
+      "phase_stop": false,
+      "lifecycle_close": "none",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [
+        "Docs/Master-Plan.md"
+      ],
+      "side_effects": [
+        "repository-files"
+      ],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_Task.md",
+        "invocation:/agtoosa-task",
+        "mutation:write"
+      ]
+    },
+    {
+      "id": "command.tracker",
+      "phase": "utility",
+      "invocation": "/agtoosa-tracker",
+      "modes": [
+        "full",
+        "export",
+        "propose"
+      ],
+      "canonical_workflow": "Docs/AgToosa_TrackerSync.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 0,
+        "quick_max": 0
+      },
+      "mutation_class": "mixed",
+      "approval_gate": false,
+      "phase_stop": false,
+      "lifecycle_close": "none",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [
+        "Docs/Master-Plan.md"
+      ],
+      "side_effects": [
+        "repository-files"
+      ],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_TrackerSync.md",
+        "invocation:/agtoosa-tracker",
+        "mutation:mixed"
+      ]
+    },
+    {
+      "id": "command.update",
+      "phase": "utility",
+      "invocation": "/agtoosa-update",
+      "modes": [
+        "full",
+        "check",
+        "plan",
+        "apply",
+        "verify"
+      ],
+      "canonical_workflow": "Docs/AgToosa_Update.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 0,
+        "quick_max": 0
+      },
+      "mutation_class": "mixed",
+      "approval_gate": true,
+      "phase_stop": false,
+      "lifecycle_close": "none",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [
+        "Docs/Master-Plan.md"
+      ],
+      "side_effects": [
+        "repository-files"
+      ],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_Update.md",
+        "invocation:/agtoosa-update",
+        "mutation:mixed"
+      ]
+    }
+  ],
+  "targets": [
+    {
+      "id": "cursor.project-commands",
+      "directory": "template/.cursor/commands",
+      "suffix": ".md",
+      "format": "markdown",
+      "artifact_kind": "project-command",
+      "renderer_version": "1",
+      "managed_marker": "AGTOOSA PRODUCT TRUTH",
+      "supported_fields": [
+        "identity",
+        "workflow",
+        "modes",
+        "question-budget",
+        "mutation",
+        "approval",
+        "phase-stop",
+        "lifecycle-close"
+      ],
+      "unsupported_fields": [],
+      "extensions": {
+        "x-agtoosa-surface": "cursor.project-commands"
+      }
+    },
+    {
+      "id": "windsurf.workflows",
+      "directory": "template/.windsurf/workflows",
+      "suffix": ".md",
+      "format": "markdown",
+      "artifact_kind": "workflow",
+      "renderer_version": "1",
+      "managed_marker": "AGTOOSA PRODUCT TRUTH",
+      "supported_fields": [
+        "identity",
+        "workflow",
+        "modes",
+        "question-budget",
+        "mutation",
+        "approval",
+        "phase-stop",
+        "lifecycle-close"
+      ],
+      "unsupported_fields": [],
+      "extensions": {
+        "x-agtoosa-surface": "windsurf.workflows"
+      }
+    },
+    {
+      "id": "anthropic.claude-code",
+      "directory": "template/.claude/commands",
+      "suffix": ".md",
+      "format": "markdown",
+      "artifact_kind": "slash-command",
+      "renderer_version": "1",
+      "managed_marker": "AGTOOSA PRODUCT TRUTH",
+      "supported_fields": [
+        "identity",
+        "workflow",
+        "modes",
+        "question-budget",
+        "mutation",
+        "approval",
+        "phase-stop",
+        "lifecycle-close"
+      ],
+      "unsupported_fields": [],
+      "extensions": {
+        "x-agtoosa-surface": "anthropic.claude-code"
+      }
+    },
+    {
+      "id": "google.gemini-cli",
+      "directory": "template/.gemini/commands",
+      "suffix": ".toml",
+      "format": "toml",
+      "artifact_kind": "custom-command",
+      "renderer_version": "1",
+      "managed_marker": "AGTOOSA PRODUCT TRUTH",
+      "supported_fields": [
+        "identity",
+        "workflow",
+        "modes",
+        "question-budget",
+        "mutation",
+        "approval",
+        "phase-stop",
+        "lifecycle-close"
+      ],
+      "unsupported_fields": [],
+      "extensions": {
+        "x-agtoosa-surface": "google.gemini-cli"
+      }
+    },
+    {
+      "id": "github.copilot-vscode",
+      "directory": "template/.github/prompts",
+      "suffix": ".prompt.md",
+      "format": "markdown",
+      "artifact_kind": "prompt",
+      "renderer_version": "1",
+      "managed_marker": "AGTOOSA PRODUCT TRUTH",
+      "supported_fields": [
+        "identity",
+        "workflow",
+        "modes",
+        "question-budget",
+        "mutation",
+        "approval",
+        "phase-stop",
+        "lifecycle-close"
+      ],
+      "unsupported_fields": [],
+      "extensions": {
+        "x-agtoosa-surface": "github.copilot-vscode"
+      }
+    },
+    {
+      "id": "openai.codex-cli",
+      "directory": "template/.codex/prompts",
+      "suffix": ".md",
+      "format": "markdown",
+      "artifact_kind": "prompt",
+      "renderer_version": "1",
+      "managed_marker": "AGTOOSA PRODUCT TRUTH",
+      "supported_fields": [
+        "identity",
+        "workflow",
+        "modes",
+        "question-budget",
+        "mutation",
+        "approval",
+        "phase-stop",
+        "lifecycle-close"
+      ],
+      "unsupported_fields": [],
+      "extensions": {
+        "x-agtoosa-surface": "openai.codex-cli"
+      }
+    }
+  ],
+  "platforms": [
+    {
+      "id": "platform.cursor",
+      "install_token": "cursor",
+      "target_ids": [
+        "cursor.project-commands"
+      ],
+      "aliases": [
+        "1"
+      ],
+      "preserved_identity": true,
+      "non_inheriting_products": [],
+      "evidence_inheritance_from": []
+    },
+    {
+      "id": "platform.windsurf",
+      "install_token": "windsurf",
+      "target_ids": [
+        "windsurf.workflows"
+      ],
+      "aliases": [
+        "2"
+      ],
+      "preserved_identity": true,
+      "non_inheriting_products": [],
+      "evidence_inheritance_from": []
+    },
+    {
+      "id": "platform.claude-code",
+      "install_token": "claude",
+      "target_ids": [
+        "anthropic.claude-code"
+      ],
+      "aliases": [
+        "3",
+        "claude-code"
+      ],
+      "preserved_identity": true,
+      "non_inheriting_products": [],
+      "evidence_inheritance_from": []
+    },
+    {
+      "id": "platform.gemini-cli",
+      "install_token": "gemini",
+      "target_ids": [
+        "google.gemini-cli"
+      ],
+      "aliases": [
+        "4"
+      ],
+      "preserved_identity": true,
+      "non_inheriting_products": [
+        "jules"
+      ],
+      "evidence_inheritance_from": []
+    },
+    {
+      "id": "platform.copilot-vscode",
+      "install_token": "copilot",
+      "target_ids": [
+        "github.copilot-vscode"
+      ],
+      "aliases": [
+        "5",
+        "github-copilot"
+      ],
+      "preserved_identity": true,
+      "non_inheriting_products": [
+        "copilot-cloud"
+      ],
+      "evidence_inheritance_from": []
+    },
+    {
+      "id": "platform.vscode",
+      "install_token": "vscode",
+      "target_ids": [
+        "github.copilot-vscode"
+      ],
+      "aliases": [
+        "6"
+      ],
+      "preserved_identity": true,
+      "non_inheriting_products": [
+        "copilot-cloud"
+      ],
+      "evidence_inheritance_from": []
+    },
+    {
+      "id": "platform.codex-cli",
+      "install_token": "codex",
+      "target_ids": [
+        "openai.codex-cli"
+      ],
+      "aliases": [
+        "7"
+      ],
+      "preserved_identity": true,
+      "non_inheriting_products": [
+        "opencode",
+        "other"
+      ],
+      "evidence_inheritance_from": []
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "operation.bootstrap-powershell",
+      "commands": [
+        "powershell",
+        "git",
+        "bash",
+        "curl",
+        "tar"
+      ],
+      "affected_operations": [
+        "bootstrap.windows"
+      ],
+      "affected_platforms": [
+        "windows-native"
+      ],
+      "version_constraint": "*",
+      "preflight_probe": "Get-Command",
+      "missing_behavior": "abort before work-directory mutation",
+      "backend_class": "bash-delegated",
+      "network_access": true
+    },
+    {
+      "id": "operation.install-bash",
+      "commands": [
+        "bash",
+        "python3"
+      ],
+      "affected_operations": [
+        "install.bash"
+      ],
+      "affected_platforms": [
+        "macos",
+        "linux",
+        "wsl",
+        "git-bash"
+      ],
+      "version_constraint": "*",
+      "preflight_probe": "command -v",
+      "missing_behavior": "abort before project mutation",
+      "backend_class": "native",
+      "network_access": false
+    },
+    {
+      "id": "operation.install-powershell",
+      "commands": [
+        "powershell"
+      ],
+      "affected_operations": [
+        "install.powershell"
+      ],
+      "affected_platforms": [
+        "windows-native"
+      ],
+      "version_constraint": "*",
+      "preflight_probe": "Get-Command",
+      "missing_behavior": "abort before project mutation",
+      "backend_class": "native",
+      "network_access": false
+    },
+    {
+      "id": "operation.update-powershell",
+      "commands": [
+        "powershell",
+        "bash"
+      ],
+      "affected_operations": [
+        "update.powershell"
+      ],
+      "affected_platforms": [
+        "windows-native"
+      ],
+      "version_constraint": "*",
+      "preflight_probe": "Get-Command",
+      "missing_behavior": "abort before project mutation",
+      "backend_class": "bash-delegated",
+      "network_access": false
+    },
+    {
+      "id": "operation.maintain-powershell",
+      "commands": [
+        "powershell",
+        "bash"
+      ],
+      "affected_operations": [
+        "verify.powershell",
+        "doctor.powershell",
+        "uninstall.powershell"
+      ],
+      "affected_platforms": [
+        "windows-native"
+      ],
+      "version_constraint": "*",
+      "preflight_probe": "Get-Command",
+      "missing_behavior": "abort before target mutation",
+      "backend_class": "bash-delegated",
+      "network_access": false
+    },
+    {
+      "id": "operation.registry-publish-powershell",
+      "commands": [
+        "powershell",
+        "bash"
+      ],
+      "affected_operations": [
+        "registry.publish.powershell"
+      ],
+      "affected_platforms": [
+        "windows-native"
+      ],
+      "version_constraint": "*",
+      "preflight_probe": "Get-Command",
+      "missing_behavior": "print Bash/WSL/Git Bash redirect without mutation",
+      "backend_class": "redirect-only",
+      "network_access": false
+    },
+    {
+      "id": "operation.registry-json-bash",
+      "commands": [
+        "bash",
+        "jq"
+      ],
+      "affected_operations": [
+        "registry.list",
+        "registry.info",
+        "registry.install"
+      ],
+      "affected_platforms": [
+        "macos",
+        "linux",
+        "wsl",
+        "git-bash"
+      ],
+      "version_constraint": "*",
+      "preflight_probe": "command -v",
+      "missing_behavior": "use validated cache only where documented or abort",
+      "backend_class": "native",
+      "network_access": true
+    },
+    {
+      "id": "operation.product-truth",
+      "commands": [
+        "python3"
+      ],
+      "affected_operations": [
+        "product-truth.check",
+        "product-truth.render"
+      ],
+      "affected_platforms": [
+        "maintainer"
+      ],
+      "version_constraint": ">=3.9",
+      "preflight_probe": "command -v python3",
+      "missing_behavior": "abort without reading governed artifacts or writing",
+      "backend_class": "native",
+      "network_access": false
+    },
+    {
+      "id": "operation.markdownlint-ci",
+      "commands": [
+        "node",
+        "npm"
+      ],
+      "affected_operations": [
+        "ci.markdownlint"
+      ],
+      "affected_platforms": [
+        "ci"
+      ],
+      "version_constraint": "*",
+      "preflight_probe": "command -v npx",
+      "missing_behavior": "skip only when explicitly classified degraded",
+      "backend_class": "optional/degraded",
+      "network_access": true
+    }
+  ],
+  "claims": [
+    {
+      "id": "claim.adapter.cursor",
+      "capability_id": "adapter-static-conformance",
+      "target_id": "cursor.project-commands",
+      "status": "verified",
+      "owner": "AgToosa maintainers",
+      "evidence_class": "static-conformance",
+      "evidence_ref": "tests/product-truth.bats",
+      "evidence_commit": "pending-dev-118",
+      "evidence_tool_version": "product-truth-v1",
+      "governed_surfaces": [
+        "surface.readme",
+        "surface.compatibility",
+        "surface.network",
+        "surface.readiness",
+        "surface.enforcement",
+        "surface.team-trust",
+        "surface.template-compatibility",
+        "surface.template-network",
+        "surface.template-readiness"
+      ],
+      "owner_contract_id": "cursor.project-commands",
+      "owner_contract_fingerprint": "fc8423740d38c72293856468fac16741b70e3b0df550e4ef14ef15ce25a96772",
+      "verified_at": "2026-07-14",
+      "expires_at": "2026-10-12",
+      "verifier": "scripts/product-truth.py@1",
+      "notes": "Static local conformance only; no assistant behavior, evidence authenticity, sandbox, or universal-support claim."
+    },
+    {
+      "id": "claim.adapter.windsurf",
+      "capability_id": "adapter-static-conformance",
+      "target_id": "windsurf.workflows",
+      "status": "verified",
+      "owner": "AgToosa maintainers",
+      "evidence_class": "static-conformance",
+      "evidence_ref": "tests/product-truth.bats",
+      "evidence_commit": "pending-dev-118",
+      "evidence_tool_version": "product-truth-v1",
+      "governed_surfaces": [
+        "surface.readme",
+        "surface.compatibility",
+        "surface.network",
+        "surface.readiness",
+        "surface.enforcement",
+        "surface.team-trust",
+        "surface.template-compatibility",
+        "surface.template-network",
+        "surface.template-readiness"
+      ],
+      "owner_contract_id": "windsurf.workflows",
+      "owner_contract_fingerprint": "f0e5d314c073a4a23ca2f2e6ace26c2d7b069ec428e4903a4a3dafc5ab1bb3c3",
+      "verified_at": "2026-07-14",
+      "expires_at": "2026-10-12",
+      "verifier": "scripts/product-truth.py@1",
+      "notes": "Static local conformance only; no assistant behavior, evidence authenticity, sandbox, or universal-support claim."
+    },
+    {
+      "id": "claim.adapter.claude",
+      "capability_id": "adapter-static-conformance",
+      "target_id": "anthropic.claude-code",
+      "status": "verified",
+      "owner": "AgToosa maintainers",
+      "evidence_class": "static-conformance",
+      "evidence_ref": "tests/product-truth.bats",
+      "evidence_commit": "pending-dev-118",
+      "evidence_tool_version": "product-truth-v1",
+      "governed_surfaces": [
+        "surface.readme",
+        "surface.compatibility",
+        "surface.network",
+        "surface.readiness",
+        "surface.enforcement",
+        "surface.team-trust",
+        "surface.template-compatibility",
+        "surface.template-network",
+        "surface.template-readiness"
+      ],
+      "owner_contract_id": "anthropic.claude-code",
+      "owner_contract_fingerprint": "478622c8ce63eec90fdd7a5e053b1c38192f137649a0b0aaff7232f845fa4993",
+      "verified_at": "2026-07-14",
+      "expires_at": "2026-10-12",
+      "verifier": "scripts/product-truth.py@1",
+      "notes": "Static local conformance only; no assistant behavior, evidence authenticity, sandbox, or universal-support claim."
+    },
+    {
+      "id": "claim.adapter.gemini",
+      "capability_id": "adapter-static-conformance",
+      "target_id": "google.gemini-cli",
+      "status": "verified",
+      "owner": "AgToosa maintainers",
+      "evidence_class": "static-conformance",
+      "evidence_ref": "tests/product-truth.bats",
+      "evidence_commit": "pending-dev-118",
+      "evidence_tool_version": "product-truth-v1",
+      "governed_surfaces": [
+        "surface.readme",
+        "surface.compatibility",
+        "surface.network",
+        "surface.readiness",
+        "surface.enforcement",
+        "surface.team-trust",
+        "surface.template-compatibility",
+        "surface.template-network",
+        "surface.template-readiness"
+      ],
+      "owner_contract_id": "google.gemini-cli",
+      "owner_contract_fingerprint": "c890c693e93f01816e531a5d7ee41e12a9b4ba763c5bcbdfab66190ffee81161",
+      "verified_at": "2026-07-14",
+      "expires_at": "2026-10-12",
+      "verifier": "scripts/product-truth.py@1",
+      "notes": "Static local conformance only; no assistant behavior, evidence authenticity, sandbox, or universal-support claim."
+    },
+    {
+      "id": "claim.adapter.copilot-vscode",
+      "capability_id": "adapter-static-conformance",
+      "target_id": "github.copilot-vscode",
+      "status": "verified",
+      "owner": "AgToosa maintainers",
+      "evidence_class": "static-conformance",
+      "evidence_ref": "tests/product-truth.bats",
+      "evidence_commit": "pending-dev-118",
+      "evidence_tool_version": "product-truth-v1",
+      "governed_surfaces": [
+        "surface.readme",
+        "surface.compatibility",
+        "surface.network",
+        "surface.readiness",
+        "surface.enforcement",
+        "surface.team-trust",
+        "surface.template-compatibility",
+        "surface.template-network",
+        "surface.template-readiness"
+      ],
+      "owner_contract_id": "github.copilot-vscode",
+      "owner_contract_fingerprint": "513152f83e026f5877d1b7689b09b149c41492ee20b1730d03249e71a4755fce",
+      "verified_at": "2026-07-14",
+      "expires_at": "2026-10-12",
+      "verifier": "scripts/product-truth.py@1",
+      "notes": "Static local conformance only; no assistant behavior, evidence authenticity, sandbox, or universal-support claim."
+    },
+    {
+      "id": "claim.adapter.codex",
+      "capability_id": "adapter-static-conformance",
+      "target_id": "openai.codex-cli",
+      "status": "verified",
+      "owner": "AgToosa maintainers",
+      "evidence_class": "static-conformance",
+      "evidence_ref": "tests/product-truth.bats",
+      "evidence_commit": "pending-dev-118",
+      "evidence_tool_version": "product-truth-v1",
+      "governed_surfaces": [
+        "surface.readme",
+        "surface.compatibility",
+        "surface.network",
+        "surface.readiness",
+        "surface.enforcement",
+        "surface.team-trust",
+        "surface.template-compatibility",
+        "surface.template-network",
+        "surface.template-readiness"
+      ],
+      "owner_contract_id": "openai.codex-cli",
+      "owner_contract_fingerprint": "80bb91c3e19c16a62b0ad82fce7c4f663bebcb7d0f684d3a6e0620106a1a0878",
+      "verified_at": "2026-07-14",
+      "expires_at": "2026-10-12",
+      "verifier": "scripts/product-truth.py@1",
+      "notes": "Static local conformance only; no assistant behavior, evidence authenticity, sandbox, or universal-support claim."
+    },
+    {
+      "id": "claim.windows.bootstrap-ref",
+      "capability_id": "windows-bootstrap-ref-binding",
+      "target_id": "windows-native",
+      "status": "verified",
+      "owner": "AgToosa maintainers",
+      "evidence_class": "static-conformance",
+      "evidence_ref": "tests/product-truth.bats",
+      "evidence_commit": "pending-dev-118",
+      "evidence_tool_version": "product-truth-v1",
+      "governed_surfaces": [
+        "surface.readme",
+        "surface.compatibility",
+        "surface.network",
+        "surface.readiness",
+        "surface.enforcement",
+        "surface.team-trust",
+        "surface.template-compatibility",
+        "surface.template-network",
+        "surface.template-readiness"
+      ],
+      "owner_contract_id": "operation.bootstrap-powershell",
+      "owner_contract_fingerprint": "0e6e7d1503f9a6a6a5f2ecc81a29e8d7c999a4e55d76e6c1fc2541543d37c03a",
+      "verified_at": "2026-07-14",
+      "expires_at": "2026-10-12",
+      "verifier": "scripts/product-truth.py@1",
+      "notes": "Static local conformance only; no assistant behavior, evidence authenticity, sandbox, or universal-support claim."
+    },
+    {
+      "id": "claim.product-truth.local",
+      "capability_id": "product-truth-static-validation",
+      "target_id": "maintainer",
+      "status": "verified",
+      "owner": "AgToosa maintainers",
+      "evidence_class": "static-conformance",
+      "evidence_ref": "tests/product-truth.bats",
+      "evidence_commit": "pending-dev-118",
+      "evidence_tool_version": "product-truth-v1",
+      "governed_surfaces": [
+        "surface.readme",
+        "surface.compatibility",
+        "surface.network",
+        "surface.readiness",
+        "surface.enforcement",
+        "surface.team-trust",
+        "surface.template-compatibility",
+        "surface.template-network",
+        "surface.template-readiness"
+      ],
+      "owner_contract_id": "path-policy",
+      "owner_contract_fingerprint": "7cfad179dfc34be591ee57e7801fe6d71698e1f84616f16ff9ea772dea5d59b0",
+      "verified_at": "2026-07-14",
+      "expires_at": "2026-10-12",
+      "verifier": "scripts/product-truth.py@1",
+      "notes": "Static local conformance only; no assistant behavior, evidence authenticity, sandbox, or universal-support claim."
+    }
+  ],
+  "governed_surfaces": [
+    {
+      "id": "surface.readme",
+      "path": "README.md",
+      "claim_ids": [
+        "claim.adapter.cursor",
+        "claim.adapter.windsurf",
+        "claim.adapter.claude",
+        "claim.adapter.gemini",
+        "claim.adapter.copilot-vscode",
+        "claim.adapter.codex",
+        "claim.windows.bootstrap-ref",
+        "claim.product-truth.local"
+      ],
+      "marker_id": "claims.surface.readme"
+    },
+    {
+      "id": "surface.compatibility",
+      "path": "docs/AgToosa_Compatibility_Contract.md",
+      "claim_ids": [
+        "claim.adapter.cursor",
+        "claim.adapter.windsurf",
+        "claim.adapter.claude",
+        "claim.adapter.gemini",
+        "claim.adapter.copilot-vscode",
+        "claim.adapter.codex",
+        "claim.windows.bootstrap-ref",
+        "claim.product-truth.local"
+      ],
+      "marker_id": "claims.surface.compatibility"
+    },
+    {
+      "id": "surface.network",
+      "path": "docs/AgToosa_Network_Matrix.md",
+      "claim_ids": [
+        "claim.adapter.cursor",
+        "claim.adapter.windsurf",
+        "claim.adapter.claude",
+        "claim.adapter.gemini",
+        "claim.adapter.copilot-vscode",
+        "claim.adapter.codex",
+        "claim.windows.bootstrap-ref",
+        "claim.product-truth.local"
+      ],
+      "marker_id": "claims.surface.network"
+    },
+    {
+      "id": "surface.readiness",
+      "path": "docs/AgToosa_Readiness.md",
+      "claim_ids": [
+        "claim.adapter.cursor",
+        "claim.adapter.windsurf",
+        "claim.adapter.claude",
+        "claim.adapter.gemini",
+        "claim.adapter.copilot-vscode",
+        "claim.adapter.codex",
+        "claim.windows.bootstrap-ref",
+        "claim.product-truth.local"
+      ],
+      "marker_id": "claims.surface.readiness"
+    },
+    {
+      "id": "surface.enforcement",
+      "path": "docs/enforcement-comparison.md",
+      "claim_ids": [
+        "claim.adapter.cursor",
+        "claim.adapter.windsurf",
+        "claim.adapter.claude",
+        "claim.adapter.gemini",
+        "claim.adapter.copilot-vscode",
+        "claim.adapter.codex",
+        "claim.windows.bootstrap-ref",
+        "claim.product-truth.local"
+      ],
+      "marker_id": "claims.surface.enforcement"
+    },
+    {
+      "id": "surface.team-trust",
+      "path": "docs/AgToosa_Team_Trust_Roadmap.md",
+      "claim_ids": [
+        "claim.adapter.cursor",
+        "claim.adapter.windsurf",
+        "claim.adapter.claude",
+        "claim.adapter.gemini",
+        "claim.adapter.copilot-vscode",
+        "claim.adapter.codex",
+        "claim.windows.bootstrap-ref",
+        "claim.product-truth.local"
+      ],
+      "marker_id": "claims.surface.team-trust"
+    },
+    {
+      "id": "surface.template-compatibility",
+      "path": "template/Docs/AgToosa_Compatibility_Contract.md",
+      "claim_ids": [
+        "claim.adapter.cursor",
+        "claim.adapter.windsurf",
+        "claim.adapter.claude",
+        "claim.adapter.gemini",
+        "claim.adapter.copilot-vscode",
+        "claim.adapter.codex",
+        "claim.windows.bootstrap-ref",
+        "claim.product-truth.local"
+      ],
+      "marker_id": "claims.surface.template-compatibility"
+    },
+    {
+      "id": "surface.template-network",
+      "path": "template/Docs/AgToosa_Network_Matrix.md",
+      "claim_ids": [
+        "claim.adapter.cursor",
+        "claim.adapter.windsurf",
+        "claim.adapter.claude",
+        "claim.adapter.gemini",
+        "claim.adapter.copilot-vscode",
+        "claim.adapter.codex",
+        "claim.windows.bootstrap-ref",
+        "claim.product-truth.local"
+      ],
+      "marker_id": "claims.surface.template-network"
+    },
+    {
+      "id": "surface.template-readiness",
+      "path": "template/Docs/AgToosa_Readiness.md",
+      "claim_ids": [
+        "claim.adapter.cursor",
+        "claim.adapter.windsurf",
+        "claim.adapter.claude",
+        "claim.adapter.gemini",
+        "claim.adapter.copilot-vscode",
+        "claim.adapter.codex",
+        "claim.windows.bootstrap-ref",
+        "claim.product-truth.local"
+      ],
+      "marker_id": "claims.surface.template-readiness"
+    }
+  ],
+  "auxiliary_artifacts": [
+    {
+      "kind": "codex-skill",
+      "path_glob": "template/.codex/skills/agtoosa-*/SKILL.md",
+      "coverage": "explicit-subset",
+      "reason": "Codex skills are an auxiliary activation layer; native command parity is governed by openai.codex-cli prompts."
+    }
+  ]
+}

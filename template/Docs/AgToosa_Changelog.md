@@ -5,13 +5,19 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
-## [5.3.29] — 2026-07-14
+---
 
-Patch release: DEV-117 — Cycle Continuity Guard.
+## [5.3.30] — 2026-07-22
+
+Patch release: DEV-118 — Product Truth & Adapter Contract.
 
 ### Added
 
-- **DEV-117 — Cycle Continuity Guard.** Bounded `Cycle state` Project Charter vocabulary (`Active` / `Idle — <reason>`); verifier Gate 3 recognizes explicit idle empty cycles without `G3-idle`; `/agtoosa-status` treats intentional idle as Info with no empty-cycle Plan Completeness deduction while retaining independent risk findings; CCG-001–CCG-005 bats with smoke tags.
+- **DEV-118 — Product Truth & Adapter Contract.** Closed product-truth contract, inert checker/renderer, managed adapter blocks, governed claims, Windows exact-ref bootstrap validation, and PTC-001–PTC-012 smoke bats (ADR-015–ADR-017).
+
+---
+
+## [Unreleased]
 
 ---
 

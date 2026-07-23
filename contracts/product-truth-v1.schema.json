@@ -1,0 +1,670 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/sky2464/AgToosa/contracts/product-truth-v1.schema.json",
+  "title": "AgToosa Product Truth Contract v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "contract_id",
+    "contract_version",
+    "static_claim_boundary",
+    "path_policy",
+    "commands",
+    "targets",
+    "platforms",
+    "dependencies",
+    "claims",
+    "governed_surfaces",
+    "auxiliary_artifacts"
+  ],
+  "properties": {
+    "$schema": {
+      "const": "product-truth-v1.schema.json"
+    },
+    "schema_version": {
+      "const": "1"
+    },
+    "contract_id": {
+      "$ref": "#/$defs/id"
+    },
+    "contract_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "static_claim_boundary": {
+      "$ref": "#/$defs/claimBoundary"
+    },
+    "path_policy": {
+      "$ref": "#/$defs/pathPolicy"
+    },
+    "commands": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/command"
+      }
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "$ref": "#/$defs/target"
+      }
+    },
+    "platforms": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "items": {
+        "$ref": "#/$defs/platform"
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/dependency"
+      }
+    },
+    "claims": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {
+        "$ref": "#/$defs/claim"
+      }
+    },
+    "governed_surfaces": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/surface"
+      }
+    },
+    "auxiliary_artifacts": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "$ref": "#/$defs/auxiliary"
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 96,
+      "pattern": "^[a-z0-9][a-z0-9._-]+$"
+    },
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9*._/-]+$"
+    },
+    "stringList": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 240
+      }
+    },
+    "claimBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allowed",
+        "forbidden"
+      ],
+      "properties": {
+        "allowed": {
+          "$ref": "#/$defs/stringList"
+        },
+        "forbidden": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "exemption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "paths",
+        "owner",
+        "reason"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "enum": [
+            "remote-url",
+            "dual-root-resolver",
+            "maintainer-dogfood",
+            "safe-example"
+          ]
+        },
+        "paths": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "$ref": "#/$defs/path"
+          }
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 300
+        }
+      }
+    },
+    "pathPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "generated_root",
+        "installed_root",
+        "candidate_files",
+        "max_file_bytes",
+        "max_entries",
+        "max_string_bytes",
+        "exemptions"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "generated_root": {
+          "$ref": "#/$defs/path"
+        },
+        "installed_root": {
+          "$ref": "#/$defs/path"
+        },
+        "candidate_files": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/path"
+          }
+        },
+        "max_file_bytes": {
+          "type": "integer",
+          "minimum": 1024,
+          "maximum": 1048576
+        },
+        "max_entries": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4096
+        },
+        "max_string_bytes": {
+          "type": "integer",
+          "minimum": 16,
+          "maximum": 4096
+        },
+        "exemptions": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/exemption"
+          }
+        }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_questions",
+        "quick_max"
+      ],
+      "properties": {
+        "max_questions": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32
+        },
+        "quick_max": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        }
+      }
+    },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "phase",
+        "invocation",
+        "modes",
+        "canonical_workflow",
+        "operating_context",
+        "question_budget",
+        "mutation_class",
+        "approval_gate",
+        "phase_stop",
+        "lifecycle_close",
+        "state_reads",
+        "state_writes",
+        "side_effects",
+        "dependencies",
+        "failure_policy",
+        "portable_invariants"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "phase": {
+          "enum": [
+            "init",
+            "spec",
+            "build",
+            "qa",
+            "review",
+            "ship",
+            "utility"
+          ]
+        },
+        "invocation": {
+          "type": "string",
+          "pattern": "^/agtoosa-[a-z-]+$"
+        },
+        "modes": {
+          "$ref": "#/$defs/stringList"
+        },
+        "canonical_workflow": {
+          "$ref": "#/$defs/path"
+        },
+        "operating_context": {
+          "const": "generated-project"
+        },
+        "question_budget": {
+          "$ref": "#/$defs/budget"
+        },
+        "mutation_class": {
+          "enum": [
+            "read-only",
+            "write",
+            "mixed"
+          ]
+        },
+        "approval_gate": {
+          "type": "boolean"
+        },
+        "phase_stop": {
+          "type": "boolean"
+        },
+        "lifecycle_close": {
+          "enum": [
+            "spec",
+            "build",
+            "review",
+            "ship",
+            "none"
+          ]
+        },
+        "state_reads": {
+          "$ref": "#/$defs/stringList"
+        },
+        "state_writes": {
+          "$ref": "#/$defs/stringList"
+        },
+        "side_effects": {
+          "$ref": "#/$defs/stringList"
+        },
+        "dependencies": {
+          "$ref": "#/$defs/stringList"
+        },
+        "failure_policy": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 200
+        },
+        "portable_invariants": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "directory",
+        "suffix",
+        "format",
+        "artifact_kind",
+        "renderer_version",
+        "managed_marker",
+        "supported_fields",
+        "unsupported_fields",
+        "extensions"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "directory": {
+          "$ref": "#/$defs/path"
+        },
+        "suffix": {
+          "type": "string",
+          "enum": [
+            ".md",
+            ".toml",
+            ".prompt.md"
+          ]
+        },
+        "format": {
+          "enum": [
+            "markdown",
+            "toml"
+          ]
+        },
+        "artifact_kind": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 40
+        },
+        "renderer_version": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        "managed_marker": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 80
+        },
+        "supported_fields": {
+          "$ref": "#/$defs/stringList"
+        },
+        "unsupported_fields": {
+          "$ref": "#/$defs/stringList"
+        },
+        "extensions": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^x-[a-z0-9._-]+$"
+          },
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number",
+              "boolean"
+            ]
+          }
+        }
+      }
+    },
+    "platform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "install_token",
+        "target_ids",
+        "aliases",
+        "preserved_identity",
+        "non_inheriting_products",
+        "evidence_inheritance_from"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "install_token": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "target_ids": {
+          "$ref": "#/$defs/stringList"
+        },
+        "aliases": {
+          "$ref": "#/$defs/stringList"
+        },
+        "preserved_identity": {
+          "const": true
+        },
+        "non_inheriting_products": {
+          "$ref": "#/$defs/stringList"
+        },
+        "evidence_inheritance_from": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "commands",
+        "affected_operations",
+        "affected_platforms",
+        "version_constraint",
+        "preflight_probe",
+        "missing_behavior",
+        "backend_class",
+        "network_access"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "commands": {
+          "$ref": "#/$defs/stringList"
+        },
+        "affected_operations": {
+          "$ref": "#/$defs/stringList"
+        },
+        "affected_platforms": {
+          "$ref": "#/$defs/stringList"
+        },
+        "version_constraint": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "preflight_probe": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 100
+        },
+        "missing_behavior": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 240
+        },
+        "backend_class": {
+          "enum": [
+            "native",
+            "bash-delegated",
+            "redirect-only",
+            "unsupported",
+            "optional/degraded"
+          ]
+        },
+        "network_access": {
+          "type": "boolean"
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "capability_id",
+        "target_id",
+        "status",
+        "owner",
+        "evidence_class",
+        "evidence_ref",
+        "evidence_commit",
+        "evidence_tool_version",
+        "governed_surfaces",
+        "owner_contract_id",
+        "owner_contract_fingerprint",
+        "verified_at",
+        "expires_at",
+        "verifier",
+        "notes"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "capability_id": {
+          "$ref": "#/$defs/id"
+        },
+        "target_id": {
+          "$ref": "#/$defs/id"
+        },
+        "status": {
+          "enum": [
+            "verified",
+            "stale",
+            "unverified",
+            "unsupported"
+          ]
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "evidence_class": {
+          "enum": [
+            "static-conformance",
+            "install-tested",
+            "render-tested",
+            "scenario-tested",
+            "manual"
+          ]
+        },
+        "evidence_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "evidence_commit": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 80
+        },
+        "evidence_tool_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "governed_surfaces": {
+          "$ref": "#/$defs/stringList"
+        },
+        "owner_contract_id": {
+          "$ref": "#/$defs/id"
+        },
+        "owner_contract_fingerprint": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "verified_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "verifier": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 100
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 500
+        }
+      }
+    },
+    "surface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path",
+        "claim_ids",
+        "marker_id"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "claim_ids": {
+          "$ref": "#/$defs/stringList"
+        },
+        "marker_id": {
+          "$ref": "#/$defs/id"
+        }
+      }
+    },
+    "auxiliary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "path_glob",
+        "coverage",
+        "reason"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 40
+        },
+        "path_glob": {
+          "$ref": "#/$defs/path"
+        },
+        "coverage": {
+          "enum": [
+            "explicit-subset",
+            "full"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 300
+        }
+      }
+    }
+  }
+}
