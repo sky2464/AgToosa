@@ -14,7 +14,7 @@ _reinstall_list_generated_paths() {
 
   for f in "${DOCS_FILES[@]}"; do
     case "$f" in
-      Docs/Master-Plan.md|Docs/AgToosa_Changelog.md|Docs/Master-Architecture.md) continue ;;
+      Docs/Master-Plan.md|Docs/AgToosa_Changelog.md|Docs/Master-Architecture.md|Docs/agtoosa-evidence.jsonl) continue ;;
     esac
     candidates+=("$f")
   done
@@ -117,7 +117,7 @@ _reinstall_apply_clean() {
   doc_targets+=("Docs/AgToosa_Claude.md" "Docs/AgToosa_Gemini.md")
   for f in "${doc_targets[@]}"; do
     case "$f" in
-      Docs/Master-Plan.md|Docs/AgToosa_Changelog.md|Docs/Master-Architecture.md) continue ;;
+      Docs/Master-Plan.md|Docs/AgToosa_Changelog.md|Docs/Master-Architecture.md|Docs/agtoosa-evidence.jsonl) continue ;;
     esac
     src="${SHIP_DIR}/${f}"
     dst="${project_path}/${f}"
