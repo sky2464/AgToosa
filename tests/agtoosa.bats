@@ -6615,6 +6615,18 @@ JSON
   [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
 }
 
+@test "DEV-049 EL-006: re-install and --update preserve project-owned agtoosa-evidence.jsonl" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  printf '%s\n' '{"story_id":"DEV-001","event":"review"}' > "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  grep -q 'DEV-001' "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+  run bash "$SCRIPT" --update --update-path "$TEST_PROJECT" --yes < /dev/null
+  [ "$status" -eq 0 ]
+  grep -q 'DEV-001' "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+}
+
 # ── DEV-074 PS1 non-interactive install parity (CT-001–CT-004) ───────────────
 
 @test "DEV-074 CT-001: agtoosa.ps1 defines -Path -Platforms -Yes parameters" {
