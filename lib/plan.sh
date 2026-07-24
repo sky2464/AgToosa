@@ -92,6 +92,11 @@ _plan_categorize_file() {
     PLAN_DETAIL="project-owned state preserved"
     return
   fi
+  if [[ "$rel" == "Docs/agtoosa-evidence.jsonl" && -f "$target" ]]; then
+    PLAN_CAT="preserve"
+    PLAN_DETAIL="project-owned evidence ledger preserved"
+    return
+  fi
 
   case "$rel" in
     Docs/Context/*)
@@ -175,6 +180,7 @@ _plan_collect_update_files() {
   files=()
   for f in "${DOCS_FILES[@]}"; do
     [[ "$f" == "Docs/Master-Plan.md" || "$f" == "Docs/AgToosa_Changelog.md" || "$f" == "Docs/Master-Architecture.md" ]] && continue
+    [[ "$f" == "Docs/agtoosa-evidence.jsonl" && -f "${PROJECT_PATH}/${f}" ]] && continue
     src="${TEMPLATE_DIR}/${f}"
     [[ -f "$src" ]] && files+=("$f")
   done

@@ -439,6 +439,10 @@ function Copy-FileWithGuard([string]$src, [string]$dst, [string]$label, [string]
             Write-Color "  ${BLUE}🔒${NC} Preserved $label ${CYAN}(your project plan)${NC}"
             return
         }
+        if ($label -like "Docs\agtoosa-evidence.jsonl") {
+            Write-Color "  ${BLUE}🔒${NC} Preserved $label ${CYAN}(your evidence ledger)${NC}"
+            return
+        }
         if ($label -like "Docs\Context\*") {
             Write-Color "  ${BLUE}🔒${NC} Preserved $label ${CYAN}(your project config)${NC}"
             return
