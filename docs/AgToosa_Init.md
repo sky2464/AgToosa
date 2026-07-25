@@ -123,6 +123,15 @@ Use when the AI agent is focused on a specific file or function and needs broade
 
     Only ask about commit strategy or branch naming if the project has no existing conventions detectable in git config or CI files.
 
+    When writing `docs/Context/workflow.md`, include the **Cross-model review** defaults unless the user overrides them:
+
+    ```
+    cross_model: recommended
+    reviewer_model: parent
+    ```
+
+    See `docs/AgToosa_CrossModelReview.md` → Project configuration. Users who want no subagents set `cross_model: off`; users who want explicit model choice each time set `reviewer_model: ask`.
+
     **Product guidelines** (`docs/Context/product-guidelines.md`):
 
     Infer from any existing UI, README tone, or brand assets. Only ask if nothing is detectable:

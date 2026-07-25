@@ -126,12 +126,14 @@ Writer/reviewer separation across different agents or models reduces single-agen
 For parallel vs sequential routing per installed host, consult `Docs/AgToosa_AgentCapability.md` (Cross-model column + Fallback Chain) before launching reviewer lanes.
 
 8.  **Cross-Model Review:**
+    *   Read `Docs/Context/workflow.md` → `cross_model` and `reviewer_model` before tiering or delegation (see `Docs/AgToosa_CrossModelReview.md` → Project configuration).
     *   After Part 1 virtual personas (or when running `cross-model` alone), compute the risk tier from the active spec threat model and Must ACs.
-    *   For **recommended** or **strongly recommended** tiers, run `/agtoosa-review cross-model` or record an explicit **skip rationale** in the review report `## Cross-Model Review` section.
-    *   Delegate an **independent reviewer** subagent or second model with a **read-only** guarantee — the reviewer must not modify files or git state during the gate.
+    *   For **recommended** or **strongly recommended** tiers, run `/agtoosa-review cross-model` or record an explicit **skip rationale** in the review report `## Cross-Model Review` section — unless `cross_model: off` or `on-demand` without user request.
+    *   **User consent:** Print the cross-model consent line and apply the **model ceiling** (reviewer must not exceed parent session model tier without explicit user approval in the same turn).
+    *   Delegate an **independent reviewer** read-only subagent — **same model as the parent session is valid**; do not default to premium models for independence.
     *   When `Docs/Context/specialists.md` exists, orchestrate `review`-phase specialists per `Docs/AgToosa_Specialists.md` (trigger match only).
     *   Merge findings with confidence tiers (`both-models`, `reviewer-only`, `writer-only`, `virtual-persona-only`) before Part 3 verdict.
-    *   Fallback when no second model is available: `/agtoosa-review cross`, sequential virtual personas, or documented skip — see `Docs/AgToosa_CrossModelReview.md`.
+    *   Fallback when no second model/subagent is available or the user declines: `/agtoosa-review cross`, sequential virtual personas, or documented skip — see `Docs/AgToosa_CrossModelReview.md`.
 
 ## Policy violation contract
 

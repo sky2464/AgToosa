@@ -30,6 +30,14 @@ linter: ""
 lint_config: ""
 <!-- Config file path (e.g., .eslintrc.json, pyproject.toml) -->
 
+## Cross-model review
+
+cross_model: recommended
+<!-- off | on-demand | recommended | required — controls independent reviewer subagents during /agtoosa-review (see Docs/AgToosa_CrossModelReview.md) -->
+
+reviewer_model: parent
+<!-- parent | ask — parent = same model tier as this chat unless user approves premium; ask = always confirm model before delegating -->
+
 ## Notes
 <!-- Add team workflow rules, code review requirements, or release policies here. -->
 

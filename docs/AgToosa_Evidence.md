@@ -48,7 +48,7 @@ Write to `Docs/archived/evidence-[story-id].md` (sanitize story-id to `[A-Za-z0-
 
 **Artifact types:** `test-log` · `review` · `cross-model` · `pr` · `branch` · `screenshot` · `spec` · `verifier` · `other`
 
-**Cross-model row (review phase):** When `/agtoosa-review cross-model` runs or is skipped with rationale, add a row with `artifact=cross-model`, pointer to `docs/archived/review-[story-id].md## Cross-Model Review`, and verification noting reviewer identity, outcome (`completed` / `fallback` / `skipped`), and skip rationale when applicable.
+**Cross-model row (review phase):** When `/agtoosa-review cross-model` runs or is skipped with rationale, add a row with `artifact=cross-model`, pointer to `docs/archived/review-[story-id].md## Cross-Model Review`, and verification noting workflow policy (`cross_model`, `reviewer_model`), consent (`stated` / `user-approved` / `skipped`), reviewer identity, outcome (`completed` / `fallback` / `skipped`), and skip rationale when applicable.
 
 ## Optional JSONL mirror (non-authoritative)
 

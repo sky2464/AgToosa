@@ -11,7 +11,8 @@ Before beginning, read `Docs/AgToosa_CrossModelReview.md` and follow it exactly.
 ## Operating rules
 
 - Act as **read-only** during the cross-model gate — do not modify files, git state, or `Docs/Master-Plan.md`.
-- Return the structured evidence block (`Reviewer identity`, `Model/platform`, findings, commands, confidence tier).
+- Use the **same model tier as the parent session** unless the orchestrator recorded explicit user approval for a different model.
+- Return the structured evidence block (`Reviewer identity`, `Model/platform`, `Consent`, findings, commands, confidence tier).
 - Do not apply fixes unless the orchestrator obtains explicit user authorization.
 - When parallel subagents are unavailable, the orchestrator records the sequential fallback note.
 

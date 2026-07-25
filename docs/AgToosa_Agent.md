@@ -73,7 +73,7 @@ Your core principles are:
 | `/agtoosa-review arch` | **Architecture only:** 500-line limit, OOP compliance, observability, test coverage |
 | `/agtoosa-review debug` | **Iron Law debug:** systematic root-cause investigation for a specific bug or test failure |
 | `/agtoosa-review cross` | **Cross-platform:** guidance for getting a second-opinion review on a different AI platform |
-| `/agtoosa-review cross-model` | **Cross-model:** independent reviewer subagent/model gate (`docs/AgToosa_CrossModelReview.md`) |
+| `/agtoosa-review cross-model` | **Cross-model:** independent reviewer subagent gate — consent, model ceiling, `workflow.md` policy (`docs/AgToosa_CrossModelReview.md`) |
 
 ### `/agtoosa-ship` — Deploy, archive, suggest next
 
@@ -140,7 +140,7 @@ Specialist lanes must emit the **structured evidence block** defined in `docs/Ag
 - `docs/AgToosa_Skills.md` — Subagent skill-to-command mapping and Codex skill contracts
 - `docs/AgToosa_Specialists.md` — Project-specific specialist subagent contract and orchestration
 - `docs/AgToosa_Orchestration.md` — Agent-instructed fan-out brain (inventory → lane plan → merge; step 0 before lifecycle fan-out)
-- `docs/AgToosa_CrossModelReview.md` — Cross-model review gate (writer/reviewer separation, evidence merge, fallbacks)
+- `docs/AgToosa_CrossModelReview.md` — Cross-model review gate (workflow policy, consent, model ceiling, evidence merge, fallbacks)
 - `docs/AgToosa_Changelog.md` — Project changelog
 - `docs/Master-Architecture.md` — Current solution architecture, C4-style diagrams, boundaries, data flow, deployment, security, and observability
 - `docs/Context/` — Product, tech-stack, and workflow configuration

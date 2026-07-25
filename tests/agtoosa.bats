@@ -4808,6 +4808,33 @@ _dag_deps_valid() {
   done
 }
 
+@test "DEV-050 CM-008: cross-model consent model ceiling and workflow knobs" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/template/Docs/Context/workflow.md" "$root/docs/Context/workflow.md"; do
+    grep -q "cross_model: recommended" "$f"
+    grep -q "reviewer_model: parent" "$f"
+    grep -q "Cross-model review" "$f"
+  done
+  for f in "$root/template/Docs/AgToosa_CrossModelReview.md" "$root/docs/AgToosa_CrossModelReview.md"; do
+    grep -q "User consent and model ceiling" "$f"
+    grep -q "Model ceiling" "$f"
+    grep -q "cross_model" "$f"
+    grep -q "reviewer_model" "$f"
+    grep -q "Never.*spawn a cross-model reviewer subagent silently" "$f"
+    grep -q "Same-model reviewer" "$f"
+  done
+  for f in "$root/template/Docs/AgToosa_Review.md" "$root/docs/AgToosa_Review.md"; do
+    grep -q "User consent" "$f"
+    grep -q "model ceiling" "$f"
+    grep -q "cross_model" "$f"
+  done
+  for f in "$root/template/.cursor/rules/agtoosa-review.mdc"; do
+    grep -q "consent line" "$f"
+    grep -q "reviewer_model" "$f"
+  done
+}
+
 @test "DEV-051 CW-014: Tracker Sync Bridge backlog artifacts exist" {
   assert_competitive_story_artifacts "DEV-051"
 }
