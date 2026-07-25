@@ -7,6 +7,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.31] — 2026-07-25
+
+Patch release: cross-model review consent and workflow policy.
+
+### Added
+
+- **Cross-model consent and model ceiling.** `Docs/Context/workflow.md` keys `cross_model` and `reviewer_model` (defaults: `recommended`, `parent`); mandatory user-visible consent before reviewer subagents; reviewer must not exceed parent session model tier without explicit approval; same-model read-only subagent is valid.
+
+---
+
 ## [5.3.30] — 2026-07-22
 
 Patch release: DEV-118 — Product Truth & Adapter Contract.

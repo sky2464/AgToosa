@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-22 (DEV-118 shipped v5.3.30)
+> **Last updated:** 2026-07-25 (v5.3.31 cross-model consent patch)
 
 ## Project Charter
 
@@ -10,7 +10,7 @@
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
 | Current phase | DEV-118 shipped — enroll next via `/agtoosa-spec` |
-| Milestone | `v5.3.31` (next) |
+| Milestone | `v5.3.32` (next) |
 | Active cycle | Idle — awaiting next scoped story |
 | Cycle state | Idle — awaiting next scoped story |
 | Cycle capacity | `8 story points` |
@@ -661,3 +661,4 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-23 04:00 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-118 — smoke PASS 12/12; v5.3.30; cycle archived | AgToosa |
 | 2026-07-23 04:00 | 🚀 Ship complete — v5.3.30 — DEV-118 Product Truth & Adapter Contract; smoke PASS; cycle archived | AgToosa |
 | 2026-07-23 04:00 | 🚀 Release 5.3.30 shipped — v5.3.30; version parity bash/ps1/npm/formula; Milestone v5.3.31 (next) | AgToosa |
+| 2026-07-25 00:35 | 🚀 Release 5.3.31 shipped — cross-model consent + workflow policy; version parity bash/ps1/npm/formula; Milestone v5.3.32 (next) | AgToosa |

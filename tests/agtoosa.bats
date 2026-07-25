@@ -13692,3 +13692,27 @@ EOF
     grep -q 'independent findings remain active' "$status_doc"
   done
 }
+
+# -- Cross-model consent ship v5.3.31 (SR-001–SR-002) --------------------------
+
+@test "v5.3.31 SR-001: release pins are aligned" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.31" ]
+  [ "$ps_ver" = "5.3.31" ]
+  [ "$npm_ver" = "5.3.31" ]
+  [ "$formula_ver" = "5.3.31" ]
+  grep -q '## \[5.3.31\]' "$root/CHANGELOG.md"
+  grep -q 'cross-model review consent' "$root/CHANGELOG.md"
+}
+
+@test "v5.3.31 SR-002: cross-model consent contract shipped in template" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'User consent and model ceiling' "$root/template/Docs/AgToosa_CrossModelReview.md"
+  grep -q 'cross_model: recommended' "$root/template/Docs/Context/workflow.md"
+  grep -q 'reviewer_model: parent' "$root/template/Docs/Context/workflow.md"
+}
