@@ -12890,7 +12890,7 @@ PY
   grep -q 'DEV-110' "$root/docs/adr/ADR-013-project-intake.md"
 }
 
-# ── Cursor intake fixture + NL intent map (FIX-001, NLM-001–NLM-006, CIT-002–CIT-004) ──
+# ── Cursor intake fixture + Lifecycle Compass (FIX-001, NLM-001–NLM-006, CIT-002–CIT-004) ──
 
 @test "FIX-001: cursor-intake-fixture script installs Cursor wiring" {
   local root="$BATS_TEST_DIRNAME/.."
@@ -12902,7 +12902,7 @@ PY
   [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
   run grep -q 'alwaysApply: true' "$TEST_PROJECT/.cursor/rules/agtoosa-core.mdc"
   [ "$status" -eq 0 ]
-  run grep -q 'Natural language intent map' "$TEST_PROJECT/.cursor/rules/agtoosa-core.mdc"
+  run grep -q 'AgToosa Lifecycle Compass' "$TEST_PROJECT/.cursor/rules/agtoosa-core.mdc"
   [ "$status" -eq 0 ]
   run grep -q 'Project Intake' "$TEST_PROJECT/.cursor/rules/agtoosa-core.mdc"
   [ "$status" -eq 0 ]
@@ -12920,39 +12920,39 @@ PY
   grep -q "grep -q 'Project Intake'" "$root/scripts/cursor-intake-fixture.sh"
 }
 
-@test "CIT-004: CLAUDE.md NL Intent Map parity with .cursorrules" {
+@test "CIT-004: CLAUDE.md Lifecycle Compass parity with .cursorrules" {
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q 'Natural Language Intent Map' "$root/template/CLAUDE.md"
-  grep -q 'Natural Language Intent Map' "$root/template/.cursorrules"
+  grep -q 'AgToosa Lifecycle Compass' "$root/template/CLAUDE.md"
+  grep -q 'AgToosa Lifecycle Compass' "$root/template/.cursorrules"
   grep -q 'Project Intake' "$root/template/CLAUDE.md"
 }
 
-@test "NLM-001: NL intent map in Agent mirrors" {
+@test "NLM-001: Lifecycle Compass in Agent mirrors" {
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '#### Natural Language Intent Map' "$root/template/Docs/AgToosa_Agent.md"
-  grep -q '#### Natural Language Intent Map' "$root/docs/AgToosa_Agent.md"
-  grep -q 'plan and code' "$root/template/Docs/AgToosa_Agent.md"
+  grep -q '#### AgToosa Lifecycle Compass' "$root/template/Docs/AgToosa_Agent.md"
+  grep -q '#### AgToosa Lifecycle Compass' "$root/docs/AgToosa_Agent.md"
+  grep -q 'semantic intent' "$root/template/Docs/AgToosa_Agent.md"
   grep -q 'Do not use Cursor native Plan mode' "$root/docs/AgToosa_Agent.md"
 }
 
-@test "NLM-002: NL map in template agtoosa-core.mdc" {
+@test "NLM-002: Lifecycle Compass in template agtoosa-core.mdc" {
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## Natural language intent map' "$root/template/.cursor/rules/agtoosa-core.mdc"
-  grep -q 'plan and code' "$root/template/.cursor/rules/agtoosa-core.mdc"
-  grep -q 'intake is not permission to skip' "$root/template/.cursor/rules/agtoosa-core.mdc"
+  grep -q '## AgToosa Lifecycle Compass' "$root/template/.cursor/rules/agtoosa-core.mdc"
+  grep -q 'semantic intent' "$root/template/.cursor/rules/agtoosa-core.mdc"
+  grep -q -e '--status-line' "$root/template/.cursor/rules/agtoosa-core.mdc"
 }
 
 @test "NLM-003: Project Intake in template .cursorrules" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q 'Project Intake' "$root/template/.cursorrules"
-  grep -q 'Natural Language Intent Map' "$root/template/.cursorrules"
+  grep -q 'AgToosa Lifecycle Compass' "$root/template/.cursorrules"
 }
 
 @test "NLM-004: maintainer agtoosa-maintainer-core.mdc alwaysApply" {
   local root="$BATS_TEST_DIRNAME/.."
   [ -f "$root/.cursor/rules/agtoosa-maintainer-core.mdc" ]
   grep -q 'alwaysApply: true' "$root/.cursor/rules/agtoosa-maintainer-core.mdc"
-  grep -q 'Natural language intent map' "$root/.cursor/rules/agtoosa-maintainer-core.mdc"
+  grep -q 'AgToosa Lifecycle Compass' "$root/.cursor/rules/agtoosa-maintainer-core.mdc"
   grep -q 'cursor-intake-fixture' "$root/.cursor/rules/agtoosa-maintainer-core.mdc"
 }
 

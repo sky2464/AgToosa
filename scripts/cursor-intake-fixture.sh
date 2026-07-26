@@ -50,8 +50,8 @@ if ! grep -q 'Project Intake' "$FIXTURE/.cursor/rules/agtoosa-core.mdc"; then
   fail=1
 fi
 
-if ! grep -q 'Natural language intent map' "$FIXTURE/.cursor/rules/agtoosa-core.mdc"; then
-  echo "❌ agtoosa-core.mdc missing Natural language intent map" >&2
+if ! grep -q 'AgToosa Lifecycle Compass' "$FIXTURE/.cursor/rules/agtoosa-core.mdc"; then
+  echo "❌ agtoosa-core.mdc missing AgToosa Lifecycle Compass" >&2
   fail=1
 fi
 
