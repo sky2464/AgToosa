@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-26 (DEV-124 shipped v5.3.40)
+> **Last updated:** 2026-07-26 (/agtoosa-spec tasks — Active Tasks idle hygiene)
 
 ## Project Charter
 
@@ -67,17 +67,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for enrolled Active Cycle stories. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-### DEV-124 — Cross-Framework Interchange
-
-_(Shipped v5.3.40 — tasks archived.)_
-
-### DEV-123 — Guarded Portable Execution
-
-_(Shipped v5.3.39 — tasks archived.)_
-
-### DEV-120 — Delivery Proof Fabric
-
-_(Shipped v5.3.37 — tasks archived.)_
+_(No stories enrolled — cycle idle. Shipped task trees live in archived specs under `docs/archived/spec-*.md`. Run `/agtoosa-spec` to enroll the next story, then `/agtoosa-spec tasks` to sync Part 4.)_
 
 ## Manual / Deferred Tasks
 
@@ -731,4 +721,4 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-26 22:20 | 🚀 Ship complete — v5.3.40 — DEV-124 Cross-Framework Interchange | AgToosa |
 | 2026-07-26 22:20 | 🚀 Release 5.3.40 shipped — v5.3.40; version parity bash/ps1/npm/formula; Milestone v5.3.41 (next); competitive proof portfolio complete | AgToosa |
 | 2026-07-26 22:15 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-124 — 0 Critical, 2 Warning | AgToosa |
-| 2026-07-26 22:12 | 🔨 /agtoosa-build — DEV-124 build complete — CFI-001–CFI-012 green; next `/agtoosa-review` | AgToosa |
+| 2026-07-26 22:25 | ✏️ /agtoosa-spec tasks — Active Tasks idle hygiene — removed orphaned DEV-120/123/124 stubs; cycle idle; next `/agtoosa-spec` to enroll | AgToosa |
