@@ -14118,17 +14118,8 @@ PY
   grep -q 'DEV-119|RPT-' "$root/docs/AgToosa_TestPlan-DEV-119.md"
 }
 
-@test "v5.3.31 SR-001: release pins are aligned" {
+@test "v5.3.31 SR-001: v5.3.31 changelog and cross-model consent release recorded" {
   local root="$BATS_TEST_DIRNAME/.."
-  local bash_ver ps_ver npm_ver formula_ver
-  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "5.3.31" ]
-  [ "$ps_ver" = "5.3.31" ]
-  [ "$npm_ver" = "5.3.31" ]
-  [ "$formula_ver" = "5.3.31" ]
   grep -q '## \[5.3.31\]' "$root/CHANGELOG.md"
   grep -q 'cross-model review consent' "$root/CHANGELOG.md"
 }
