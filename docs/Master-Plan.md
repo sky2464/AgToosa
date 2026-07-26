@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-26 (DEV-119 build complete)
+> **Last updated:** 2026-07-26 (DEV-119 Review Approved)
 
 ## Project Charter
 
@@ -9,7 +9,7 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | DEV-119 build complete — `/agtoosa-review` |
+| Current phase | DEV-119 Review Approved — `/agtoosa-ship` |
 | Milestone | `v5.3.32` (next) |
 | Active cycle | DEV-119 — Recoverable Project Transaction |
 | Cycle state | Active |
@@ -23,7 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-119 | Feature: Recoverable Project Transaction | Feature | L | 🟨 In Progress — Build complete | 12/12 |
+| DEV-119 | Feature: Recoverable Project Transaction | Feature | L | 🔍 In Review — Review ✅ Approved | 12/12 |
 
 <!-- Archived to docs/archived/cycle-2026-07-22-release-5.3.30.md (DEV-118 v5.3.30) -->
 <!-- Archived to docs/archived/cycle-2026-07-14-release-5.3.29.md (DEV-117 v5.3.29) -->
@@ -681,6 +681,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-26 12:52 | ✏️ /agtoosa-spec — DEV-119 spec + test plan generated — `docs/archived/spec-DEV-119.md`; 12 Must ACs; estimate L; enrolled Active Cycle Todo; **awaiting Spec Approved** | AgToosa |
 | 2026-07-26 13:08 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-119 — `docs/archived/spec-DEV-119.md`; estimate L; enrolled Active Cycle; next `/agtoosa-build` | AgToosa |
 | 2026-07-26 13:32 | 🔨 /agtoosa-build — DEV-119 build complete — `lib/transaction.sh`, apply journal hooks, `--transaction-recover`/`--transaction-status`, RPT-001–RPT-012 green | AgToosa |
+| 2026-07-26 13:35 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-119 — 0 Critical, 4 Warning; RPT 12/12; review `docs/archived/review-DEV-119.md`; next `/agtoosa-ship` | AgToosa |
 | 2026-07-26 13:10 | ✏️ /agtoosa-spec — DEV-125 spec enrolled — `/agtoosa-next` Lifecycle Dispatcher; ADR-019; test plan `docs/AgToosa_TestPlan-DEV-125.md`; backlog Spec ready; **awaiting Spec Approved** | AgToosa |
 | 2026-07-26 13:15 | 🔨 /agtoosa-build — DEV-125 build complete — `AgToosa_Next.md`, six platform adapters, product-truth `command.next`, NXT-001–NXT-009 bats green | AgToosa |
 | 2026-07-26 13:30 | 🔨 /agtoosa-build — DEV-126 build complete — spec interview hardening (validation floor, turn-stop, findings artifact, adapter contracts); DEV-126 T-001–T-008 bats green | AgToosa |

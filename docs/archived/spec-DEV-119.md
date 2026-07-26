@@ -184,19 +184,19 @@ Depends on: DEV-092 `apply_commit_staging`, DEV-093 `state_write_after_apply` / 
 
 ### 3.1 Task Tree
 
-- [ ] **1.** RED fixtures and schema
-  - [ ] 1.1 Journal schema + gitignore contract — _Requirements: AC-001, AC-008_
-  - [ ] 1.2 Late-failure partial-write fixture (pre-DEV-119 RED) — _Requirements: AC-003, AC-007_
-  - [ ] 1.3 Recovery CLI contract tests — _Requirements: AC-005, AC-010, AC-011_
-- [ ] **2.** Transaction journal implementation
-  - [ ] 2.1 `lib/transaction.sh` open/record/rollback — _Requirements: AC-001, AC-002, AC-003_
-  - [ ] 2.2 Wire `apply_commit_staging` hooks + success path — _Requirements: AC-003, AC-004_
-  - [ ] 2.3 `--transaction-recover` and `--transaction-status` in `agtoosa.sh` — _Requirements: AC-005, AC-010, AC-011_
-- [ ] **3.** Idempotency and docs
-  - [ ] 3.1 Regression: DEV-092 zero-delta + DEV-093 state ordering — _Requirements: AC-006, AC-004_
-  - [ ] 3.2 Update docs + ADR-018 Accepted + architecture note — _Requirements: AC-009_
-- [ ] **4.** Evidence
-  - [ ] 4.1 RPT RED/GREEN + ship regression — _Requirements: AC-012_
+- [x] **1.** RED fixtures and schema
+  - [x] 1.1 Journal schema + gitignore contract — _Requirements: AC-001, AC-008_
+  - [x] 1.2 Late-failure partial-write fixture (pre-DEV-119 RED) — _Requirements: AC-003, AC-007_
+  - [x] 1.3 Recovery CLI contract tests — _Requirements: AC-005, AC-010, AC-011_
+- [x] **2.** Transaction journal implementation
+  - [x] 2.1 `lib/transaction.sh` open/record/rollback — _Requirements: AC-001, AC-002, AC-003_
+  - [x] 2.2 Wire `apply_commit_staging` hooks + success path — _Requirements: AC-003, AC-004_
+  - [x] 2.3 `--transaction-recover` and `--transaction-status` in `agtoosa.sh` — _Requirements: AC-005, AC-010, AC-011_
+- [x] **3.** Idempotency and docs
+  - [x] 3.1 Regression: DEV-092 zero-delta + DEV-093 state ordering — _Requirements: AC-006, AC-004_
+  - [x] 3.2 Update docs + ADR-018 Accepted + architecture note — _Requirements: AC-009_
+- [x] **4.** Evidence
+  - [x] 4.1 RPT RED/GREEN + ship regression — _Requirements: AC-012_
 
 ### 3.2 Wave Plan
 
