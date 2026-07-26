@@ -61,3 +61,7 @@
 **Backend classification**: Per-operation label `native`, `bash-delegated`, `redirect-only`, `unsupported`, or `optional/degraded`, paired with dependency and missing-behavior truth. Context: DEV-118, ADR-017. Not: a platform-wide “Full” badge.
 
 **Claim freshness**: Ninety-day maximum age plus immediate re-verification after an owning contract changes; expiration downgrades a claim to stale/unverified rather than proving it unsupported. Context: DEV-118, ADR-017. Not: evidence authenticity or automatic network refresh.
+
+**Project transaction journal**: Gitignored `.agtoosa/transactions/<id>/` record of pre-image snapshots for generator-orchestrated apply commits, with `aborted`/`committed`/`recovered` status and CLI recovery. Context: DEV-119, ADR-018. Not: agent build journaling (DEV-123), git auto-revert, database WAL.
+
+**Late-write rollback**: Restoring journaled paths when `apply_commit_staging` fails after partial project writes. Context: DEV-119. Not: staging-only abort (DEV-092 pre-commit).
