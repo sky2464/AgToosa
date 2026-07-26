@@ -13593,7 +13593,7 @@ _cln_seed_project() {
   [[ "$output" == *'"tasks_done":'* ]]
   [[ "$output" == *'"tasks_total":'* ]]
   [[ "$output" == *'"next":'* ]]
-  [[ "$output" == *'"spec_approved":'* ]]
+  echo "$output" | grep -q '"spec_approved":'
 }
 
 # -- DEV-116 ship regression v5.3.28 (SR-001–SR-002) ---------------------------
@@ -13819,8 +13819,8 @@ EOF
   local root="$BATS_TEST_DIRNAME/.."
   run bash "$root/agtoosa.sh" --status-line "$root" --route-hint --format json
   [ "$status" -eq 0 ]
-  [[ "$output" == *'"spec_approved":'* ]]
-  [[ "$output" == *'"next":'* ]]
+  echo "$output" | grep -q '"spec_approved":'
+  echo "$output" | grep -q '"next":'
 }
 
 @test "DEV-125 NXT-012: AgToosa_Next documents tributary intents" {

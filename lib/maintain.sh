@@ -481,14 +481,12 @@ if story_id != "none":
 
 st_short = re.sub(r"[🟦🟨🔍✅🏁🚫🔧⬜]\s*", "", status).strip() or status
 
-spec_approved = None
+spec_approved = False
 if story_id != "none":
     base = os.path.dirname(path)
     spec_path = os.path.join(base, "archived", f"spec-{story_id}.md")
     if os.path.isfile(spec_path):
         spec_approved = "## ✅ Spec Approved" in open(spec_path, encoding="utf-8").read()
-    else:
-        spec_approved = False
 
 if not rows or all(score(r[1]) == 0 for r in rows):
     next_cmd = "/agtoosa-spec"
@@ -526,9 +524,8 @@ if os.environ.get("ROUTE_HINT") == "true" and os.environ.get("STATUS_LINE_FORMAT
         "tasks_done": tasks_done,
         "tasks_total": tasks_total,
         "next": next_cmd,
+        "spec_approved": spec_approved,
     }
-    if spec_approved is not None:
-        payload["spec_approved"] = spec_approved
     print(json.dumps(payload))
 else:
     print(sync_line)

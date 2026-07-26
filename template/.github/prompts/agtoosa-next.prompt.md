@@ -25,7 +25,7 @@ Sub-command dispatch:
 - Modes: `full`, `dry`, `pick`, `fix`, `test`, `docs`
 - Question budget: max 0; Quick max: 0
 - Mutation class: `mixed`
-- Approval gate: inherited
+- Approval gate: none
 - Phase stop: required
 - Lifecycle close: `none`
 <!-- AGTOOSA PRODUCT TRUTH END: command.next -->
