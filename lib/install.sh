@@ -606,7 +606,7 @@ install_files() {
   # Warn about .bak files when backups were created
   if [[ ${#BAK_FILES[@]} -gt 0 ]]; then
     echo ""
-    echo -e "${YELLOW}⚠️  Backup files created — add ${BOLD}*.bak.*${NC}${YELLOW} to your .gitignore${NC}"
+    echo -e "${YELLOW}⚠️  Merge backup created.${NC}"
     if ((${#BAK_FILES[@]} <= 3)); then
       local bak
       for bak in "${BAK_FILES[@]}"; do
@@ -615,6 +615,7 @@ install_files() {
     else
       echo -e "    ${CYAN}${#BAK_FILES[@]} backup files in project root${NC}"
     fi
+    echo -e "${CYAN}Cleanup can remove *.bak.* files, or add them to .gitignore if you keep backups.${NC}"
   fi
 
   if declare -F offer_cleanup_after_apply >/dev/null 2>&1; then
@@ -629,15 +630,19 @@ install_files() {
   if [[ "${SMART_UPGRADE_MODE:-false}" == true ]] \
      && declare -F project_context_initialized >/dev/null 2>&1 \
      && project_context_initialized; then
-    echo -e "  ${CYAN}2.${NC} Continue with the 4-command workflow:"
+    echo -e "  ${CYAN}2.${NC} Run ${BOLD}/agtoosa-update${NC} in Cursor to review what changed in v${AGTOOSA_VERSION}"
+    echo ""
+    echo -e "  ${CYAN}3.${NC} Continue with the 4-command workflow:"
     echo -e "     ${BOLD}/agtoosa-spec${NC}    → Research, specify, and plan"
     echo -e "     ${BOLD}/agtoosa-build${NC}   → TDD build and test"
     echo -e "     ${BOLD}/agtoosa-review${NC}  → Multi-persona code review"
     echo -e "     ${BOLD}/agtoosa-ship${NC}    → Deploy, archive, and suggest next"
   elif [[ "${SMART_UPGRADE_MODE:-false}" == true ]]; then
-    echo -e "  ${CYAN}2.${NC} Run ${BOLD}/agtoosa-init${NC} to finish Context setup"
+    echo -e "  ${CYAN}2.${NC} Run ${BOLD}/agtoosa-update${NC} in Cursor to review what changed in v${AGTOOSA_VERSION}"
     echo ""
-    echo -e "  ${CYAN}3.${NC} Then use the 4-command workflow:"
+    echo -e "  ${CYAN}3.${NC} Run ${BOLD}/agtoosa-init${NC} to finish Context setup"
+    echo ""
+    echo -e "  ${CYAN}4.${NC} Then use the 4-command workflow:"
     echo -e "     ${BOLD}/agtoosa-spec${NC}    → Research, specify, and plan"
     echo -e "     ${BOLD}/agtoosa-build${NC}   → TDD build and test"
     echo -e "     ${BOLD}/agtoosa-review${NC}  → Multi-persona code review"

@@ -33,7 +33,7 @@ bash agtoosa.sh --path <dir> --yes # non-interactive apply
 bash agtoosa.sh --update <dir>     # backward-compatible alias (same apply engine)
 ```
 
-When `Docs/.agtoosa-version` or `Docs/AgToosa_Agent.md` exists, the CLI enters **upgrade mode**: auto-detects installed platforms, **Enter keeps the current set**, entering numbers **replaces** the active platform set (cleanup can remove deselected platform files), **refuses apply when the generator is older than the installed version** (unless `--force`), preserves project-owned files (`Master-Plan`, `Changelog`, filled `Context/`), refreshes unfilled Context stubs, smart-merges entry points, and prints summary buckets (`Updated` / `Preserved` / `Unchanged` / `Merged`).
+When `Docs/.agtoosa-version` or `Docs/AgToosa_Agent.md` exists, the CLI enters **upgrade mode**: auto-detects installed platforms, **Enter keeps the current set**, entering numbers **replaces** the active platform set (you are prompted to confirm when that removes previously detected platforms; cleanup can remove deselected platform files), **refuses apply when the generator is older than the installed version** (unless `--force`), preserves project-owned files (`Master-Plan`, `Changelog`, filled `Context/`), refreshes unfilled Context stubs, smart-merges entry points, and prints summary buckets (`Updated` / `Preserved` / `Unchanged` / `Merged`).
 
 **`--force` (advanced / CI only):** Not shown in interactive copy. Use with `--yes` when you intentionally need full replace on Context or platform entry points (still never overwrites `Master-Plan`, `Changelog`, or `Master-Architecture`). Example: `bash agtoosa.sh --path <dir> --platforms cursor --yes --force`.
 
@@ -314,9 +314,10 @@ The install/upgrade wizard may offer cleanup when candidates exist. You can also
 
 ```bash
 bash agtoosa.sh --cleanup <project>              # interactive plan + confirm
-bash agtoosa.sh --cleanup <project> --dry-run    # plan only
+bash agtoosa.sh --cleanup <project> --dry-run    # plan only (compact summary; add --verbose for every file)
 bash agtoosa.sh --cleanup <project> --format json
 bash agtoosa.sh --cleanup <project> --yes        # non-interactive apply
+bash agtoosa.sh --cleanup <project> --verbose    # per-file plan and removal lines
 bash agtoosa.sh --cleanup <project> --only backups --dry-run  # backups only
 ```
 

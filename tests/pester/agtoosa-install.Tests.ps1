@@ -102,4 +102,18 @@ Describe 'DEV-128 PS1 upgrade guards' {
             Remove-Item -Recurse -Force $project -ErrorAction SilentlyContinue
         }
     }
+
+    It 'UPG-008: platform narrowing confirmation copy exists in agtoosa.ps1' {
+        $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+        $ps1 = Join-Path $root 'agtoosa.ps1'
+        Get-Content $ps1 -Raw | Should -Match 'Confirm-PlatformNarrowingIfNeeded'
+        Get-Content $ps1 -Raw | Should -Match 'Enter = keep all checked above'
+    }
+
+    It 'UPG-009: compact cleanup verbose flag forwards to bash' {
+        $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+        $ps1 = Join-Path $root 'agtoosa.ps1'
+        Get-Content $ps1 -Raw | Should -Match 'CleanupVerbose'
+        Get-Content $ps1 -Raw | Should -Match "--verbose"
+    }
 }

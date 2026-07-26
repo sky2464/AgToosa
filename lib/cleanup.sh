@@ -268,6 +268,76 @@ _cleanup_count_category() {
   printf '%s' "$count"
 }
 
+# Full per-file listing when --verbose or fewer than 10 candidates.
+_cleanup_use_verbose_output() {
+  [[ "${CLEANUP_VERBOSE:-false}" == true ]] && return 0
+  ((${#CLEANUP_CANDIDATES[@]} < 10)) && return 0
+  return 1
+}
+
+# Extract platform id from orphan_platform reason (deselected platform: claude).
+_cleanup_platform_from_reason() {
+  local reason="$1"
+  case "$reason" in
+    *"deselected platform: "*) printf '%s' "${reason#*deselected platform: }" ;;
+  esac
+}
+
+_cleanup_count_orphan_platform_for() {
+  local want="$1" entry cat _rel reason plat count=0
+  for entry in "${CLEANUP_CANDIDATES[@]+"${CLEANUP_CANDIDATES[@]}"}"; do
+    IFS='|' read -r cat _rel reason <<< "$entry"
+    [[ "$cat" == orphan_platform ]] || continue
+    plat="$(_cleanup_platform_from_reason "$reason")"
+    [[ "$plat" == "$want" ]] && count=$((count + 1))
+  done
+  printf '%s' "$count"
+}
+
+# Print orphan_platform counts grouped by platform id.
+_cleanup_emit_orphan_platform_breakdown() {
+  local plat line="" first=true count
+  local -a all_plats=(claude copilot cursor gemini opencode vscode windsurf)
+
+  for plat in "${all_plats[@]}"; do
+    count="$(_cleanup_count_orphan_platform_for "$plat")"
+    [[ "$count" -gt 0 ]] || continue
+    [[ "$first" == true ]] || line+="  ·  "
+    first=false
+    line+="${plat}: ${count} files"
+  done
+  [[ -n "$line" ]] && echo -e "    ${line}"
+}
+
+_cleanup_emit_removal_summary() {
+  local removed="$1"
+  local backup orphan_doc orphan_platform entry cat _rel reason
+  local plat line="" first=true count
+  local -a plats=(claude copilot cursor gemini opencode vscode windsurf)
+
+  backup="$(_cleanup_count_category backup)"
+  orphan_doc="$(_cleanup_count_category orphan_doc)"
+  orphan_platform="$(_cleanup_count_category orphan_platform)"
+
+  line="removed ${removed} file(s)"
+  [[ "$backup" -gt 0 || "$orphan_doc" -gt 0 || "$orphan_platform" -gt 0 ]] && line+=" ("
+  first=true
+  [[ "$backup" -gt 0 ]] && { [[ "$first" == true ]] || line+=", "; line+="backups: ${backup}"; first=false; }
+  [[ "$orphan_doc" -gt 0 ]] && { [[ "$first" == true ]] || line+=", "; line+="orphan_doc: ${orphan_doc}"; first=false; }
+  for plat in "${plats[@]}"; do
+    count="$(_cleanup_count_orphan_platform_for "$plat")"
+    [[ "$count" -gt 0 ]] || continue
+    [[ "$first" == true ]] || line+=", "
+    line+="${plat}: ${count}"
+    first=false
+  done
+  if [[ "$orphan_platform" -gt 0 && "$first" == true ]]; then
+    line+=", orphan_platform: ${orphan_platform}"
+  fi
+  [[ "$backup" -gt 0 || "$orphan_doc" -gt 0 || "$orphan_platform" -gt 0 ]] && line+=")"
+  printf '%s' "$line"
+}
+
 _cleanup_emit_json() {
   local target="$1"
   local backup orphan_doc orphan_platform total entry cat rel reason
@@ -331,17 +401,23 @@ _cleanup_emit_plan_human() {
 
   echo -e "  ${YELLOW}Found ${#CLEANUP_CANDIDATES[@]} candidate(s):${NC}"
   echo -e "    backups: ${backup}  ·  removed docs: ${orphan_doc}  ·  deselected platforms: ${orphan_platform}"
-  echo ""
 
-  for entry in "${CLEANUP_CANDIDATES[@]+"${CLEANUP_CANDIDATES[@]}"}"; do
-    IFS='|' read -r cat rel reason <<< "$entry"
-    case "$cat" in
-      backup)          echo -e "  ${CYAN}backup${NC}           ${rel}  — ${reason}" ;;
-      orphan_doc)      echo -e "  ${YELLOW}orphan_doc${NC}       ${rel}  — ${reason}" ;;
-      orphan_platform) echo -e "  ${PURPLE}orphan_platform${NC}  ${rel}  — ${reason}" ;;
-      *)               echo -e "  ${cat}  ${rel}  — ${reason}" ;;
-    esac
-  done
+  if _cleanup_use_verbose_output; then
+    echo ""
+    for entry in "${CLEANUP_CANDIDATES[@]+"${CLEANUP_CANDIDATES[@]}"}"; do
+      IFS='|' read -r cat rel reason <<< "$entry"
+      case "$cat" in
+        backup)          echo -e "  ${CYAN}backup${NC}           ${rel}  — ${reason}" ;;
+        orphan_doc)      echo -e "  ${YELLOW}orphan_doc${NC}       ${rel}  — ${reason}" ;;
+        orphan_platform) echo -e "  ${PURPLE}orphan_platform${NC}  ${rel}  — ${reason}" ;;
+        *)               echo -e "  ${cat}  ${rel}  — ${reason}" ;;
+      esac
+    done
+  else
+    [[ "$orphan_platform" -gt 0 ]] && _cleanup_emit_orphan_platform_breakdown
+    echo ""
+    echo -e "  ${CYAN}(run with --cleanup --dry-run --verbose for full list)${NC}"
+  fi
   echo ""
 }
 
@@ -433,14 +509,20 @@ run_cleanup() {
     if [[ -f "${target}/${rel}" ]]; then
       rm -f "${target}/${rel}"
       removed=$((removed + 1))
-      echo -e "  ${GREEN}✅${NC} removed ${rel}"
+      if _cleanup_use_verbose_output; then
+        echo -e "  ${GREEN}✅${NC} removed ${rel}"
+      fi
     fi
   done
 
   _cleanup_prune_empty_dirs "$target"
 
   echo ""
-  echo -e "${GREEN}${BOLD}✅ Cleanup complete — removed ${removed} file(s).${NC}"
+  if _cleanup_use_verbose_output; then
+    echo -e "${GREEN}${BOLD}✅ Cleanup complete — removed ${removed} file(s).${NC}"
+  else
+    echo -e "${GREEN}${BOLD}✅ Cleanup complete — $(_cleanup_emit_removal_summary "$removed").${NC}"
+  fi
   return 0
 }
 

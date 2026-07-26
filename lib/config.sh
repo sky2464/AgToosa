@@ -542,6 +542,7 @@ print_usage() {
   echo "  --uninstall [path]     Remove AgToosa-owned files from a project (keeps your data)"
   echo "  --cleanup [path]       Remove merge backups, orphan docs, deselected platform files"
   echo "  --only backups         With --cleanup: remove merge backups only (skip orphan categories)"
+  echo "  --verbose              With --cleanup: list every candidate file (default: compact summary)"
   echo "  --platforms <list>     Comma-separated platforms, e.g. cursor,claude (skips prompt)"
   echo "  --yes, -y              Assume yes for confirmation prompts (non-interactive)"
   echo "  --allow-unverified     Permit --registry install of packs not marked verified"

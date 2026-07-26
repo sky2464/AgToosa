@@ -184,6 +184,7 @@ apply_platform_selection() {
 }
 
 # Union additional platform selection digits into current USE_* flags.
+# Reserved for a future --add-platforms flag; smart upgrade uses replace (DEV-128).
 union_platform_selection() {
   local add_selection="$1"
   local uc uw ucl ug uco uv uop
@@ -198,6 +199,105 @@ union_platform_selection() {
   [[ "$uv" == true ]] && USE_VSCODE=true || true
   [[ "$uop" == true ]] && USE_OPENCODE=true || true
   return 0
+}
+
+PLATFORM_SNAPSHOT_CURSOR=false
+PLATFORM_SNAPSHOT_WINDSURF=false
+PLATFORM_SNAPSHOT_CLAUDE=false
+PLATFORM_SNAPSHOT_GEMINI=false
+PLATFORM_SNAPSHOT_COPILOT=false
+PLATFORM_SNAPSHOT_VSCODE=false
+PLATFORM_SNAPSHOT_OPENCODE=false
+
+# Save USE_* before an explicit platform replace (smart upgrade narrowing gate).
+platform_snapshot_save() {
+  PLATFORM_SNAPSHOT_CURSOR="${USE_CURSOR:-false}"
+  PLATFORM_SNAPSHOT_WINDSURF="${USE_WINDSURF:-false}"
+  PLATFORM_SNAPSHOT_CLAUDE="${USE_CLAUDE:-false}"
+  PLATFORM_SNAPSHOT_GEMINI="${USE_GEMINI:-false}"
+  PLATFORM_SNAPSHOT_COPILOT="${USE_COPILOT:-false}"
+  PLATFORM_SNAPSHOT_VSCODE="${USE_VSCODE:-false}"
+  PLATFORM_SNAPSHOT_OPENCODE="${USE_OPENCODE:-false}"
+}
+
+_platform_snapshot_was_selected() {
+  case "$1" in
+    cursor)   [[ "${PLATFORM_SNAPSHOT_CURSOR:-false}" == true ]] ;;
+    windsurf) [[ "${PLATFORM_SNAPSHOT_WINDSURF:-false}" == true ]] ;;
+    claude)   [[ "${PLATFORM_SNAPSHOT_CLAUDE:-false}" == true ]] ;;
+    gemini)   [[ "${PLATFORM_SNAPSHOT_GEMINI:-false}" == true ]] ;;
+    copilot)  [[ "${PLATFORM_SNAPSHOT_COPILOT:-false}" == true ]] ;;
+    vscode)   [[ "${PLATFORM_SNAPSHOT_VSCODE:-false}" == true ]] ;;
+    opencode) [[ "${PLATFORM_SNAPSHOT_OPENCODE:-false}" == true ]] ;;
+    *)        return 1 ;;
+  esac
+}
+
+_platform_currently_selected() {
+  case "$1" in
+    cursor)   [[ "${USE_CURSOR:-false}" == true ]] ;;
+    windsurf) [[ "${USE_WINDSURF:-false}" == true ]] ;;
+    claude)   [[ "${USE_CLAUDE:-false}" == true ]] ;;
+    gemini)   [[ "${USE_GEMINI:-false}" == true ]] ;;
+    copilot)  [[ "${USE_COPILOT:-false}" == true ]] ;;
+    vscode)   [[ "${USE_VSCODE:-false}" == true ]] ;;
+    opencode) [[ "${USE_OPENCODE:-false}" == true ]] ;;
+    *)        return 1 ;;
+  esac
+}
+
+# Print human names of platforms present in snapshot but not in current USE_*.
+platform_names_removed_since_snapshot() {
+  local -a removed=() id name
+  local -a ids=(cursor windsurf claude gemini copilot vscode opencode)
+  local -a labels=("Cursor" "Windsurf" "Claude Code" "Gemini" "GitHub Copilot" "VS Code" "Codex/OpenCode")
+  local i out=""
+  for i in "${!ids[@]}"; do
+    id="${ids[$i]}"
+    name="${labels[$i]}"
+    _platform_snapshot_was_selected "$id" || continue
+    _platform_currently_selected "$id" && continue
+    removed+=("$name")
+  done
+  for name in "${removed[@]+"${removed[@]}"}"; do
+    [[ -n "$out" ]] && out+=", "
+    out+="$name"
+  done
+  printf '%s' "$out"
+}
+
+# True when snapshot had platforms that current selection no longer includes.
+platform_narrowing_since_snapshot() {
+  [[ -n "$(platform_names_removed_since_snapshot)" ]]
+}
+
+# Echo "Cursor (removed: Claude Code, …)" or just active platform names.
+platform_selection_summary_line() {
+  local active removed
+  active="$(platform_flags_to_names)"
+  removed="$(platform_names_removed_since_snapshot)"
+  if [[ -n "$removed" ]]; then
+    printf '%s (removed: %s)' "$active" "$removed"
+  else
+    printf '%s' "$active"
+  fi
+}
+
+# Prompt when explicit replace drops previously detected platforms. Returns 1 on cancel.
+confirm_platform_narrowing_if_needed() {
+  local removed reply
+  [[ "${PLATFORM_SELECTION_EXPLICIT:-false}" == true ]] || return 0
+  removed="$(platform_names_removed_since_snapshot)"
+  [[ -n "$removed" ]] || return 0
+  if [[ "${ASSUME_YES:-false}" == true ]]; then
+    return 0
+  fi
+  echo ""
+  echo -e "${YELLOW}You are deselecting: ${removed}${NC}"
+  echo -e "${YELLOW}Their AgToosa files will be eligible for cleanup after apply.${NC}"
+  read -rp "Continue with this platform set? (y/N): " reply
+  reply="${reply:-N}"
+  [[ "$reply" =~ ^[Yy]$ ]]
 }
 
 emit_apply_summary_human() {

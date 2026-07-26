@@ -94,6 +94,7 @@ CLEAN=false
 CLEANUP=false
 CLEANUP_PATH=""
 CLEANUP_ONLY=""
+CLEANUP_VERBOSE=false
 OUTPUT_FORMAT=""
 VERIFY_STRICT=false
 STATUS_LINE=false
@@ -125,6 +126,7 @@ while [[ $# -gt 0 ]]; do
       TRANSACTION_ID="$2"; shift ;;
     --uninstall)           UNINSTALL=true ;;
     --cleanup)             CLEANUP=true ;;
+    --verbose)             CLEANUP_VERBOSE=true ;;
     --only)
       if [[ $# -lt 2 ]]; then
         echo -e "${RED}❌ Error: --only requires a category (backups).${NC}"; exit 1
@@ -566,8 +568,10 @@ if [[ "$SMART_UPGRADE_MODE" == true && -z "$CLI_PLATFORMS" ]]; then
   detect_installed_platforms
   if [[ "$PLAN_JSON_MODE" != true ]]; then
     print_platform_legend
+    platform_snapshot_save
     if [[ "$ASSUME_YES" != true ]]; then
-      echo -e "${CYAN}Change platforms? (Enter to keep current, or enter numbers e.g. 1 or 1 3)${NC}"
+      echo -e "${CYAN}Change platforms? (Enter = keep all checked above)${NC}"
+      echo -e "${CYAN}To replace the active set, enter the full list you want (e.g. 1  or  1 3 5)${NC}"
       echo ""
       read -rp "Platforms: " ADD_PLATFORM_SELECTION
       ADD_PLATFORM_SELECTION="$(sanitize_platform_menu_input "$ADD_PLATFORM_SELECTION")"
@@ -575,8 +579,12 @@ if [[ "$SMART_UPGRADE_MODE" == true && -z "$CLI_PLATFORMS" ]]; then
       if [[ -n "$ADD_PLATFORM_SELECTION" ]]; then
         apply_platform_selection "$ADD_PLATFORM_SELECTION"
         PLATFORM_SELECTION_EXPLICIT=true
+        if ! confirm_platform_narrowing_if_needed; then
+          echo -e "${YELLOW}Cancelled.${NC}"
+          exit 0
+        fi
         echo ""
-        echo -e "${GREEN}Platforms:${NC} $(platform_flags_to_names)"
+        echo -e "${GREEN}Platforms:${NC} $(platform_selection_summary_line)"
         echo ""
       fi
     fi
@@ -681,6 +689,7 @@ if [[ "$PLAN_JSON_MODE" != true ]]; then
   echo ""
   if [[ "$SMART_UPGRADE_MODE" == true ]]; then
     echo -e "${GREEN}${BOLD}Prepared ${GENERATED} files for upgrade.${NC}"
+    echo -e "${CYAN}(Apply updates only what changed.)${NC}"
   else
     echo -e "${GREEN}${BOLD}Generated ${GENERATED} files.${NC}"
   fi

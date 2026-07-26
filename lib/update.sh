@@ -334,11 +334,12 @@ print_update_summary() {
 
   if [[ ${#BAK_FILES[@]} -gt 0 ]]; then
     echo ""
-    echo -e "${YELLOW}⚠️  Backup files created — add *.bak.* to your .gitignore${NC}"
+    echo -e "${YELLOW}⚠️  Merge backup created.${NC}"
     local bak
     for bak in "${BAK_FILES[@]}"; do
       echo -e "    ${CYAN}${bak#"${PROJECT_PATH}/"}${NC}"
     done
+    echo -e "${CYAN}Cleanup can remove *.bak.* files, or add them to .gitignore if you keep backups.${NC}"
   fi
 
   if declare -F offer_cleanup_after_apply >/dev/null 2>&1; then

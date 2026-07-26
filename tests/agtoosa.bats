@@ -13387,7 +13387,7 @@ _cln_seed_project() {
   mv "$TEST_PROJECT/Docs/agtoosa-lock.json.tmp" "$TEST_PROJECT/Docs/agtoosa-lock.json"
   run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --dry-run
   [ "$status" -eq 0 ]
-  [[ "$output" == *".windsurf"* || "$output" == *"windsurfrules"* || "$output" == *"orphan_platform"* ]]
+  [[ "$output" == *"windsurf:"* || "$output" == *".windsurf"* || "$output" == *"windsurfrules"* || "$output" == *"orphan_platform"* ]]
 }
 
 @test "DEV-112 CLN-004: preserved docs never in cleanup plan" {
@@ -13528,7 +13528,7 @@ _cln_seed_project() {
   touch "$TEST_PROJECT/.github/copilot-instructions.md"
   cp "$root/template/.github/prompts"/agtoosa-*.prompt.md "$TEST_PROJECT/.github/prompts/" 2>/dev/null || true
   find "$TEST_PROJECT/.github/prompts" -maxdepth 1 -name 'agtoosa-*' | grep -q .
-  run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --dry-run
+  run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --dry-run --verbose
   [ "$status" -eq 0 ]
   [[ "$output" == *"orphan_platform"* ]]
   [[ "$output" == *"agtoosa-spec.prompt"* ]]
@@ -13556,6 +13556,31 @@ _cln_seed_project() {
   run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --dry-run
   [ "$status" -eq 0 ]
   ! [[ "$output" == *"settings.json"* ]]
+}
+
+@test "DEV-129 CLN-018: compact cleanup plan groups deselected platforms" {
+  _cln_seed_project cursor,claude,copilot
+  command -v jq >/dev/null 2>&1 || skip "jq not installed"
+  jq '.platforms = ["cursor"]' "$TEST_PROJECT/Docs/agtoosa-lock.json" \
+    > "$TEST_PROJECT/Docs/agtoosa-lock.json.tmp"
+  mv "$TEST_PROJECT/Docs/agtoosa-lock.json.tmp" "$TEST_PROJECT/Docs/agtoosa-lock.json"
+  run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --dry-run
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"for full list"* ]]
+  [[ "$output" == *"claude:"* ]]
+  ! [[ "$output" == *"orphan_platform  CLAUDE.md"* ]]
+}
+
+@test "DEV-129 CLN-019: --verbose cleanup lists every candidate file" {
+  _cln_seed_project cursor,claude,copilot
+  command -v jq >/dev/null 2>&1 || skip "jq not installed"
+  jq '.platforms = ["cursor"]' "$TEST_PROJECT/Docs/agtoosa-lock.json" \
+    > "$TEST_PROJECT/Docs/agtoosa-lock.json.tmp"
+  mv "$TEST_PROJECT/Docs/agtoosa-lock.json.tmp" "$TEST_PROJECT/Docs/agtoosa-lock.json"
+  run bash "$SCRIPT" --cleanup "$TEST_PROJECT" --dry-run --verbose
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"orphan_platform"* ]]
+  [[ "$output" == *"CLAUDE.md"* ]]
 }
 
 @test "DEV-115 SR-001: v5.3.27 changelog and DEV-115 review/evidence/spec artifacts exist" {
@@ -15089,7 +15114,7 @@ PY
 @test "UPG-001: smart upgrade input 1 replaces multi-platform lock with cursor only" {
   run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor,claude --yes < /dev/null
   [ "$status" -eq 0 ]
-  run bash -c "printf '%s\n1\ny\nn\n' '$TEST_PROJECT' | bash '$SCRIPT'"
+  run bash -c "printf '%s\n1\ny\ny\nn\n' '$TEST_PROJECT' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   run python3 - "$TEST_PROJECT/Docs/agtoosa-lock.json" <<'PY'
 import json, sys
@@ -15177,5 +15202,36 @@ PY
   run grep -n 'read -e' "$root/agtoosa.sh"
   [ "$status" -eq 1 ]
   run grep -n 'read -rp "Platforms: "' "$root/agtoosa.sh"
+  [ "$status" -eq 0 ]
+}
+
+@test "UPG-008: platform narrowing prompts for confirmation before apply" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor,claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  run bash -c "printf '%s\n1\nn\n' '$TEST_PROJECT' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"deselecting"* ]]
+  [[ "$output" == *"Cancelled"* ]]
+  run python3 - "$TEST_PROJECT/Docs/agtoosa-lock.json" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1]))
+plats = d.get("platforms") or []
+assert "claude" in plats, plats
+PY
+  [ "$status" -eq 0 ]
+}
+
+@test "UPG-009: Enter at platform prompt keeps all platforms without narrowing gate" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor,claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  run bash -c "printf '%s\n\ny\nn\n' '$TEST_PROJECT' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  ! [[ "$output" == *"You are deselecting"* ]]
+  run python3 - "$TEST_PROJECT/Docs/agtoosa-lock.json" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1]))
+plats = sorted(d.get("platforms") or [])
+assert plats == ["claude", "cursor"], plats
+PY
   [ "$status" -eq 0 ]
 }

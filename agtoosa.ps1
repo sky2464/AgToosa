@@ -269,7 +269,8 @@ function Invoke-AgToosaMaintain {
         [ValidateSet('verify', 'doctor', 'uninstall', 'update', 'reinstall-clean', 'cleanup')]
         [string]$Operation,
         [string]$ProjectPath,
-        [switch]$Yes
+        [switch]$Yes,
+        [switch]$CleanupVerbose
     )
     $switchLabel = if ($Operation -eq 'reinstall-clean') { 'Reinstall' } else {
         $Operation.Substring(0, 1).ToUpper() + $Operation.Substring(1)
@@ -308,6 +309,7 @@ function Invoke-AgToosaMaintain {
         @($agtoosaSh, "--$Operation", $ProjectPath)
     }
     if ($Yes) { $args += '--yes' }
+    if ($CleanupVerbose -and $Operation -eq 'cleanup') { $args += '--verbose' }
     & $bash @args
     exit $LASTEXITCODE
 }
@@ -391,6 +393,39 @@ function Write-PlatformLegend([string[]]$platforms) {
     Write-Color "  7) Codex / OpenCode / Other$(& $mark 'opencode')"
     Write-Color "  8) All of the above"
     Write-Color ""
+}
+
+function Get-PlatformNamesRemovedSinceSnapshot([string[]]$before, [string[]]$after) {
+    $display = @{
+        cursor = "Cursor"; windsurf = "Windsurf"; claude = "Claude Code"
+        gemini = "Gemini"; copilot = "GitHub Copilot"; vscode = "VS Code"; opencode = "Codex/OpenCode"
+    }
+    $removed = [System.Collections.Generic.List[string]]::new()
+    foreach ($key in $before) {
+        if ($after -notcontains $key) {
+            if ($display.ContainsKey($key)) { [void]$removed.Add($display[$key]) }
+        }
+    }
+    return ($removed -join ", ")
+}
+
+function Get-PlatformSelectionSummaryLine([string[]]$before, [string[]]$after) {
+    $active = Get-PlatformDisplayNames $after
+    $removed = Get-PlatformNamesRemovedSinceSnapshot $before $after
+    if ($removed) { return "$active (removed: $removed)" }
+    return $active
+}
+
+function Confirm-PlatformNarrowingIfNeeded([string[]]$before, [string[]]$after, [switch]$Yes) {
+    $removed = Get-PlatformNamesRemovedSinceSnapshot $before $after
+    if ([string]::IsNullOrWhiteSpace($removed)) { return $true }
+    if ($Yes) { return $true }
+    Write-Color ""
+    Write-Color "${YELLOW}You are deselecting: $removed${NC}"
+    Write-Color "${YELLOW}Their AgToosa files will be eligible for cleanup after apply.${NC}"
+    $reply = Read-Host "Continue with this platform set? (y/N)"
+    if ([string]::IsNullOrWhiteSpace($reply)) { $reply = "N" }
+    return ($reply -match '^[Yy]$')
 }
 
 function Test-ProjectContextInitialized([string]$projectPath) {
@@ -1437,7 +1472,8 @@ if ($Uninstall) {
 }
 
 if ($Cleanup) {
-    Invoke-AgToosaMaintain -Operation cleanup -ProjectPath $UpdatePath -Yes:$Yes
+    $cleanupVerbose = $PSBoundParameters.ContainsKey('Verbose')
+    Invoke-AgToosaMaintain -Operation cleanup -ProjectPath $UpdatePath -Yes:$Yes -CleanupVerbose:$cleanupVerbose
 }
 
 if ($Reinstall -or $Clean) {
@@ -1529,15 +1565,21 @@ if ($smartUpgradeMode -and [string]::IsNullOrWhiteSpace($cliPlatforms)) {
         if (-not $selectedPlatforms.Contains($p)) { [void]$selectedPlatforms.Add($p) }
     }
     Write-PlatformLegend $selectedPlatforms.ToArray()
+    $platformSnapshot = @($selectedPlatforms.ToArray())
     if (-not $Yes) {
-        Write-Color "${CYAN}Change platforms? (Enter to keep current, or enter numbers e.g. 1 or 1 3)${NC}"
+        Write-Color "${CYAN}Change platforms? (Enter = keep all checked above)${NC}"
+        Write-Color "${CYAN}To replace the active set, enter the full list you want (e.g. 1  or  1 3 5)${NC}"
         $addSelection = Sanitize-PlatformMenuInput (Read-Host "Platforms")
         if (-not [string]::IsNullOrWhiteSpace($addSelection)) {
             $selectedPlatforms.Clear()
             $selectedPlatforms.AddRange((Get-PlatformsFromMenuDigits $addSelection))
             $script:PlatformSelectionExplicit = $true
+            if (-not (Confirm-PlatformNarrowingIfNeeded $platformSnapshot $selectedPlatforms.ToArray() -Yes:$Yes)) {
+                Write-Color "${YELLOW}Cancelled.${NC}"
+                exit 0
+            }
             Write-Color ""
-            Write-Color "${GREEN}Platforms:${NC} $(Get-PlatformDisplayNames $selectedPlatforms.ToArray())"
+            Write-Color "${GREEN}Platforms:${NC} $(Get-PlatformSelectionSummaryLine $platformSnapshot $selectedPlatforms.ToArray())"
         }
     }
 } elseif (-not [string]::IsNullOrWhiteSpace($cliPlatforms)) {
@@ -1604,6 +1646,7 @@ try {
     Write-Color ""
     if ($smartUpgradeMode) {
         Write-Color "${GREEN}${BOLD}Prepared files for upgrade.${NC}"
+        Write-Color "${CYAN}(Apply updates only what changed.)${NC}"
     } else {
         Write-Color "${GREEN}${BOLD}Generated files staged.${NC}"
     }
@@ -1649,10 +1692,12 @@ try {
         Write-Color "${YELLOW}Next steps:${NC}"
         Write-Color "  1. Open your AI assistant in your project"
         if ($smartUpgradeMode -and (Test-ProjectContextInitialized $projectPath)) {
-            Write-Color "  2. Continue with /agtoosa-spec → /agtoosa-build → /agtoosa-review → /agtoosa-ship"
+            Write-Color "  2. Run /agtoosa-update in Cursor to review what changed in v${AGTOOSA_VERSION}"
+            Write-Color "  3. Continue with /agtoosa-spec → /agtoosa-build → /agtoosa-review → /agtoosa-ship"
         } elseif ($smartUpgradeMode) {
-            Write-Color "  2. Run /agtoosa-init to finish Context setup"
-            Write-Color "  3. Then use /agtoosa-spec → /agtoosa-build → /agtoosa-review → /agtoosa-ship"
+            Write-Color "  2. Run /agtoosa-update in Cursor to review what changed in v${AGTOOSA_VERSION}"
+            Write-Color "  3. Run /agtoosa-init to finish Context setup"
+            Write-Color "  4. Then use /agtoosa-spec → /agtoosa-build → /agtoosa-review → /agtoosa-ship"
         } else {
             Write-Color "  2. Run /agtoosa-init (one-time setup)"
             Write-Color "  3. Run /agtoosa-spec to start your first feature"
