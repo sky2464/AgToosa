@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "description": "Fixture-labeled drift cases for DEV-122 measurement block — not live production accuracy",
+  "cases": [
+    {
+      "fixture": "unchanged",
+      "expected_drift": false,
+      "label": "true_negative"
+    },
+    {
+      "fixture": "modified",
+      "expected_drift": true,
+      "label": "true_positive"
+    },
+    {
+      "fixture": "high-impact",
+      "expected_drift": true,
+      "label": "true_positive"
+    }
+  ]
+}

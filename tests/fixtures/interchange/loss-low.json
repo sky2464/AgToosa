@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "story_id": "DEV-124",
+  "source_framework": "speckit",
+  "entries": [
+    {
+      "field": "tasks.wave_plan",
+      "reason": "Spec Kit fixture omits AgToosa wave plan section",
+      "severity": "low"
+    },
+    {
+      "field": "provenance.interview_findings",
+      "reason": "Plan-Mode Spec Interview block not represented in external fixture",
+      "severity": "low"
+    }
+  ]
+}

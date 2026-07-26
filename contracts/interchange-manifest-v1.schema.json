@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/sky2464/AgToosa/contracts/interchange-manifest-v1.schema.json",
+  "title": "AgToosa Interchange Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "story_id",
+    "source_framework",
+    "source_ids",
+    "authority",
+    "requirements",
+    "tasks"
+  ],
+  "properties": {
+    "version": { "const": 1 },
+    "story_id": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
+    "source_framework": {
+      "enum": ["speckit", "openspec", "bmad", "kiro", "agtoosa"]
+    },
+    "source_ids": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string" }
+    },
+    "authority": { "$ref": "#/$defs/authority" },
+    "requirements": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/requirement" }
+    },
+    "tasks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/task" }
+    },
+    "provenance": { "$ref": "#/$defs/provenance" }
+  },
+  "$defs": {
+    "safePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*\\.\\.).+$"
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["owner", "preserved"],
+      "properties": {
+        "owner": { "enum": ["master-plan", "imported-derived"] },
+        "preserved": { "type": "boolean" }
+      }
+    },
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "text"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^AC-[0-9]{3}$" },
+        "kind": { "enum": ["acceptance-criterion"] },
+        "text": { "type": "string", "minLength": 1 },
+        "priority": { "enum": ["Must", "Should", "Could", "Won't"] }
+      }
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "text"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "text": { "type": "string", "minLength": 1 },
+        "completed": { "type": "boolean" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "spec_path": { "$ref": "#/$defs/safePath" },
+        "proof_graph_path": { "$ref": "#/$defs/safePath" },
+        "exported_at": { "type": "string" },
+        "imported_at": { "type": "string" },
+        "fixture_path": { "$ref": "#/$defs/safePath" }
+      }
+    }
+  }
+}

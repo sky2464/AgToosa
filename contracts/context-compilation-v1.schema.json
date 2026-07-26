@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/sky2464/AgToosa/contracts/context-compilation-v1.schema.json",
+  "title": "AgToosa Context Compilation v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "story_id", "compiled_at", "provenance", "drift", "task_context"],
+  "properties": {
+    "version": { "const": 1 },
+    "story_id": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
+    "compiled_at": { "type": "string" },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["proof_graph_verified", "proof_verify_note"],
+      "properties": {
+        "proof_graph_path": { "type": "string" },
+        "proof_graph_verified": { "type": "boolean" },
+        "proof_verify_note": { "type": "string" }
+      }
+    },
+    "drift": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["summary", "suggested_rigor"],
+      "properties": {
+        "report_path": { "type": "string" },
+        "summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "added": { "type": "integer" },
+            "removed": { "type": "integer" },
+            "modified": { "type": "integer" },
+            "unchanged": { "type": "integer" }
+          }
+        },
+        "overall_impact_level": { "enum": ["none", "low", "medium", "high"] },
+        "suggested_rigor": { "enum": ["light", "standard", "elevated"] }
+      }
+    },
+    "task_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["story_id", "paths"],
+      "properties": {
+        "story_id": { "type": "string" },
+        "paths": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

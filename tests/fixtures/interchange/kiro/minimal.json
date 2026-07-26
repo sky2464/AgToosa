@@ -1,0 +1,55 @@
+{
+  "framework": "kiro",
+  "fixture_profile": "kiro-spec-format-v1",
+  "story_id": "DEV-120",
+  "title": "Spike: Delivery Proof Fabric",
+  "spec_path": "docs/archived/spec-DEV-120.md",
+  "format": "SPEC-FORMAT.md",
+  "sections": {
+    "section_1": {
+      "title": "Requirements",
+      "lines": ["### Goal Contract"]
+    },
+    "section_2": {
+      "title": "Design",
+      "lines": ["### 2.1 Architecture Blueprint"]
+    }
+  },
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "kind": "acceptance-criterion",
+      "text": "WHEN Evidence Provenance v2 is documented THE SYSTEM SHALL define node types story, ac, artifact, command-run, content-hash, repo-snapshot",
+      "priority": "Must"
+    },
+    {
+      "id": "AC-002",
+      "kind": "acceptance-criterion",
+      "text": "WHEN a proof graph is authored THE SYSTEM SHALL conform to contracts/proof-graph-v1.schema.json",
+      "priority": "Must"
+    },
+    {
+      "id": "AC-003",
+      "kind": "acceptance-criterion",
+      "text": "WHEN the proof-provider interface is documented THE SYSTEM SHALL define provider identity and exit codes",
+      "priority": "Must"
+    }
+  ],
+  "task_tree": [
+    {
+      "id": "1",
+      "text": "Contract + ADR",
+      "completed": false
+    },
+    {
+      "id": "1.1",
+      "text": "AgToosa_Evidence_Provenance.md + template mirror",
+      "completed": false
+    }
+  ],
+  "source_ids": {
+    "story_id": "DEV-120",
+    "spec_path": "docs/archived/spec-DEV-120.md",
+    "framework": "kiro"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/sky2464/AgToosa/contracts/capsule-return-v1.schema.json",
+  "title": "AgToosa Capsule Return v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "capsule_id",
+    "returned_at",
+    "changed_files",
+    "verification_results",
+    "mapped_acs",
+    "import_ready"
+  ],
+  "properties": {
+    "version": { "const": 1 },
+    "capsule_id": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
+    "returned_at": { "type": "string" },
+    "changed_files": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/safePath" }
+    },
+    "verification_results": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/verificationResult" }
+    },
+    "mapped_acs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/mappedAc" }
+    },
+    "import_ready": { "type": "boolean" },
+    "violations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/violation" }
+    }
+  },
+  "$defs": {
+    "safePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*\\.\\.).+$"
+    },
+    "verificationResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command", "exit_code"],
+      "properties": {
+        "command": { "type": "string", "minLength": 1 },
+        "exit_code": { "type": "integer" },
+        "stdout_excerpt": { "type": "string" }
+      }
+    },
+    "mappedAc": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ac_id", "evidence"],
+      "properties": {
+        "ac_id": { "type": "string", "pattern": "^AC-[0-9]{3}$" },
+        "evidence": { "type": "string", "minLength": 1 }
+      }
+    },
+    "violation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    }
+  }
+}

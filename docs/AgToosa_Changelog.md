@@ -5,6 +5,66 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.40] — 2026-07-26
+
+Patch release: DEV-124 — Cross-Framework Interchange.
+
+### Added
+
+- **DEV-124 — Cross-Framework Interchange.** Interchange manifest + loss-report schemas; four fixture-based providers (Spec Kit, OpenSpec, BMAD, Kiro-style); `agtoosa-interchange-export.sh`, `agtoosa-interchange-import.sh`, `agtoosa-interchange-assess.sh`; suggest-only default with opt-in `--strict`; CFI-001–CFI-012 bats; ADR-024 Accepted.
+
+---
+
+## [5.3.39] — 2026-07-26
+
+Patch release: DEV-123 — Guarded Portable Execution.
+
+### Added
+
+- **DEV-123 — Guarded Portable Execution.** Execution capsule + capsule-return schemas; `lib/capsule.sh` + manual-handoff exporter; `agtoosa-capsule-pack.sh`, `agtoosa-capsule-verify.sh`, `agtoosa-capsule-return.sh`; suggest-only default with opt-in `--strict`; GPE-001–GPE-012 bats; ADR-023 Accepted.
+
+---
+
+## [5.3.38] — 2026-07-26
+
+Patch release: DEV-122 — Change-Aware Adaptive Delivery.
+
+### Added
+
+- **DEV-122 — Change-Aware Adaptive Delivery.** Drift baseline/report + context-compilation schemas; `git-inventory` provider; `agtoosa-drift-assess.sh` + `agtoosa-context-compile.sh`; suggest-only default with opt-in `--strict`; DIA-001–DIA-012 bats; ADR-022 Accepted.
+
+---
+
+## [5.3.37] — 2026-07-26
+
+Patch release: DEV-120 — Delivery Proof Fabric.
+
+### Added
+
+- **DEV-120 — Delivery Proof Fabric.** Evidence Provenance v2 contract; proof-graph schema; `local-hash` provider; `agtoosa-proof-verify.sh`; pilot `proof-graph-DEV-119.json`; DPF-001–DPF-012 bats; ADR-020 reaffirmed.
+
+---
+
+## [5.3.36] — 2026-07-26
+
+Patch release: DEV-126 — Spec Interview Hardening.
+
+### Added
+
+- **DEV-126 — Spec Interview Hardening.** Validation floor, turn-stop, findings artifact, adapter parity; DEV-126 T-001–T-008 bats.
+
+---
+
+## [5.3.35] — 2026-07-26
+
+Patch release: DEV-125 — /agtoosa-next Lifecycle Dispatcher.
+
+### Added
+
+- **DEV-125 — /agtoosa-next Lifecycle Dispatcher.** `AgToosa_Next.md`; six platform adapters; `command.next` product-truth; route-hint `spec_approved`; NXT-001–NXT-012 bats; ADR-019 Accepted.
+
+---
+
 ## [5.3.34] — 2026-07-26
 
 Patch release: DEV-121 — Behavioral Conformance Lab.

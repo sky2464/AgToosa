@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "story_id": "DEV-124",
+  "source_framework": "agtoosa",
+  "source_ids": {
+    "story_id": "DEV-124",
+    "spec_path": "docs/archived/spec-DEV-124.md"
+  },
+  "authority": {
+    "owner": "master-plan",
+    "preserved": true
+  },
+  "requirements": [
+    {
+      "id": "AC-001",
+      "kind": "acceptance-criterion",
+      "text": "WHEN Cross-Framework Interchange v1 is documented THE SYSTEM SHALL define manifest and loss-report semantics",
+      "priority": "Must"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "1",
+      "text": "Contract + ADR",
+      "completed": false
+    }
+  ],
+  "provenance": {
+    "spec_path": "docs/archived/spec-DEV-124.md",
+    "exported_at": "2026-07-26T20:00:00Z"
+  }
+}

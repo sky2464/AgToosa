@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "story_id": "DEV-120",
+  "compiled_at": "2026-07-26T20:18:42Z",
+  "provenance": {
+    "proof_graph_verified": false,
+    "proof_verify_note": "Run Docs/agtoosa-proof-verify.sh separately; this compiler does not verify graphs.",
+    "proof_graph_path": "tests/fixtures/proof-graph/valid-minimal.json"
+  },
+  "drift": {
+    "summary": {
+      "added": 0,
+      "removed": 0,
+      "modified": 0,
+      "unchanged": 0
+    },
+    "overall_impact_level": "none",
+    "suggested_rigor": "light"
+  },
+  "task_context": {
+    "story_id": "DEV-120",
+    "paths": [
+      "tests/fixtures/proof-graph/artifacts/hello.txt"
+    ],
+    "notes": "Derived context only \u2014 does not replace Docs/Master-Plan.md authority."
+  }
+}

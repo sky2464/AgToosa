@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "baseline_id": "drift-assess-v1",
+  "generated_at": "2026-07-26T20:00:00Z",
+  "paths": [
+    {
+      "path": "agent.md",
+      "sha256": "82bc040ed3cffe832ab6b4c02556990d0e29a7d4f392334ae5ca37e8f2a88b80",
+      "impact_level": "medium"
+    },
+    {
+      "path": "config.sh",
+      "sha256": "ae25a1556ff729881fa6d3ffdf3a8d80084ef96cdcd68d3ed63c08f4bc55bfda",
+      "impact_level": "high"
+    }
+  ]
+}

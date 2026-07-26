@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/sky2464/AgToosa/contracts/drift-baseline-v1.schema.json",
+  "title": "AgToosa Drift Baseline v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "baseline_id", "paths"],
+  "properties": {
+    "version": { "const": 1 },
+    "baseline_id": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
+    "generated_at": { "type": "string" },
+    "paths": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/pathEntry" }
+    }
+  },
+  "$defs": {
+    "impactLevel": { "enum": ["low", "medium", "high"] },
+    "pathEntry": {
+      "type": "object",
+      "required": ["path", "sha256", "impact_level"],
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*\\.\\.).+$" },
+        "sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+        "impact_level": { "$ref": "#/$defs/impactLevel" }
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "story_id": "DEV-119",
+  "generated_at": "2026-07-26T18:44:00Z",
+  "provider": "local-hash",
+  "nodes": [
+    { "id": "story-dev119", "type": "story", "ref": "DEV-119" },
+    { "id": "ac-all", "type": "ac", "ref": "AC-001-AC-012" },
+    { "id": "artifact-ledger", "type": "artifact", "ref": "docs/archived/evidence-DEV-119.md" },
+    { "id": "hash-ledger", "type": "content-hash", "ref": "docs/archived/evidence-DEV-119.md", "sha256": "aef373978663d63a68272dd26dcde2b3dae6b175c31f0a2d624ce9ef7fb19c3d" },
+    { "id": "artifact-testplan", "type": "artifact", "ref": "docs/AgToosa_TestPlan-DEV-119.md" },
+    { "id": "hash-testplan", "type": "content-hash", "ref": "docs/AgToosa_TestPlan-DEV-119.md", "sha256": "a453a841e33c0816921f1a4c1a6df4ac0e6fce82dd6652834f442233cd42ffa7" },
+    { "id": "artifact-review", "type": "artifact", "ref": "docs/archived/review-DEV-119.md" },
+    { "id": "hash-review", "type": "content-hash", "ref": "docs/archived/review-DEV-119.md", "sha256": "6f22302c061bb226361171297487dcbda163f1613f15180679ba1bc66bb033d5" },
+    { "id": "artifact-tx", "type": "artifact", "ref": "lib/transaction.sh" },
+    { "id": "hash-tx", "type": "content-hash", "ref": "lib/transaction.sh", "sha256": "4f35a728420f74955b132d67b36385008affa83923ca413654228f6fa46343e3" },
+    { "id": "cmd-bats", "type": "command-run", "ref": "bats tests/agtoosa.bats -f 'DEV-119|RPT-'", "exit_code": 0 },
+    { "id": "snap-ship", "type": "repo-snapshot", "sha": "901930340f59abf551c8a05b3d621cb3e0217f10" }
+  ],
+  "edges": [
+    { "from": "story-dev119", "to": "ac-all", "type": "references" },
+    { "from": "ac-all", "to": "artifact-ledger", "type": "references" },
+    { "from": "artifact-ledger", "to": "hash-ledger", "type": "content-of" },
+    { "from": "artifact-testplan", "to": "hash-testplan", "type": "content-of" },
+    { "from": "artifact-review", "to": "hash-review", "type": "content-of" },
+    { "from": "artifact-tx", "to": "hash-tx", "type": "content-of" },
+    { "from": "cmd-bats", "to": "artifact-ledger", "type": "verified-by" }
+  ]
+}

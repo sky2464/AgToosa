@@ -19,6 +19,8 @@ Maintain a **per-story evidence ledger** — a concise, auditable proof index fo
 > **Source of truth:** `Docs/Master-Plan.md` remains the repo-local source of truth. The markdown ledger is the canonical index; `Docs/agtoosa-evidence.jsonl` is an optional tooling mirror.
 >
 > **Delivery profiles:** Class minimums (`standard`, `security-sensitive`, `release`) and Guided / Evidenced / Enforced labels are defined in `Docs/AgToosa_Delivery_Evidence_Contract.md` (optional `.agtoosa/evidence.yml`). Ledger rows still consolidate at review/ship — profiles declare *what* to collect; this workflow indexes *pointers*.
+>
+> **Evidence Provenance v2 (optional):** At review/ship, agents may assemble `Docs/archived/proof-graph-<story-id>.json` per `Docs/AgToosa_Evidence_Provenance.md` and verify with `bash Docs/agtoosa-proof-verify.sh --root . --graph Docs/archived/proof-graph-<story-id>.json`. Gate 7 profile presence is unchanged; content-link binding is Provenance v2 / standalone script scope.
 
 ## When to update
 
@@ -82,3 +84,15 @@ Never treat JSONL as overriding the markdown file.
 3. **No hosted audit log.** Repo-local files only.
 4. **Consolidate at review/ship** — not during build/import.
 5. **Secret safety** — paths/process only; sanitize story-id in filenames.
+
+## Optional proof graph assembly (DEV-120)
+
+At `/agtoosa-review` or `/agtoosa-ship`, agents **may** extend the evidence ledger with a derived proof graph:
+
+1. Read `Docs/archived/evidence-[story-id].md` and cited artifact paths.
+2. Compute SHA-256 for each cited file; record `git rev-parse HEAD` as `repo-snapshot`.
+3. Write `Docs/archived/proof-graph-[story-id].json` per `Docs/AgToosa_Evidence_Provenance.md`.
+4. Verify with `bash Docs/agtoosa-proof-verify.sh --graph <path> [--allow-stale-snapshot]`.
+5. Add a ledger row with verification command and exit code.
+
+Proof graphs are **derived evidence** — they do not replace this ledger or `Docs/Master-Plan.md`.

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "capsule_id": "caps-dev-123-budget-exceed",
+  "returned_at": "2026-07-26T21:00:00Z",
+  "changed_files": [
+    "lib/capsule.sh",
+    "lib/capsule-exporters/manual-handoff.sh",
+    "contracts/execution-capsule-v1.schema.json"
+  ],
+  "verification_results": [
+    {
+      "command": "bats -f GPE",
+      "exit_code": 0
+    }
+  ],
+  "mapped_acs": [
+    {
+      "ac_id": "AC-001",
+      "evidence": "tests/fixtures/capsule/budget-exceed-return.json"
+    }
+  ],
+  "import_ready": false,
+  "violations": [
+    {
+      "code": "budget_files_exceeded",
+      "message": "changed_files count 3 exceeds max 1"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "framework": "openspec",
+  "fixture_profile": "openspec-v1",
+  "story_id": "DEV-120",
+  "proposal_id": "change-dev-120",
+  "title": "Spike: Delivery Proof Fabric",
+  "specs": [
+    {
+      "name": "DEV-120",
+      "scenarios": [
+        {
+          "id": "AC-001",
+          "when": "Evidence Provenance v2 is documented",
+          "then": "define node types story, ac, artifact, command-run, content-hash, repo-snapshot"
+        },
+        {
+          "id": "AC-002",
+          "when": "a proof graph is authored",
+          "then": "conform to contracts/proof-graph-v1.schema.json"
+        },
+        {
+          "id": "AC-003",
+          "when": "the proof-provider interface is documented",
+          "then": "define provider identity and exit codes"
+        }
+      ]
+    }
+  ],
+  "source_ids": {
+    "story_id": "DEV-120",
+    "proposal_id": "change-dev-120",
+    "framework": "openspec"
+  }
+}

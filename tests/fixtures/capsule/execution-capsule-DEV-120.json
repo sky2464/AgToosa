@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "capsule_id": "caps-dev-123",
+  "story_id": "DEV-123",
+  "created_at": "2026-07-26T20:31:01Z",
+  "ownership": {
+    "owner": "handoff-exporter",
+    "exported_by": "manual-handoff"
+  },
+  "scope": {
+    "allowed_paths": [
+      "lib/capsule.sh",
+      "lib/capsule-exporters/manual-handoff.sh",
+      "contracts/execution-capsule-v1.schema.json"
+    ],
+    "forbidden_paths": [
+      "docs/Master-Plan.md",
+      "Docs/Master-Plan.md"
+    ]
+  },
+  "policy": {
+    "network": "deny",
+    "secrets": "forbid"
+  },
+  "budgets": {
+    "max_files_changed": 3,
+    "max_verification_commands": 1
+  },
+  "verification": {
+    "commands": [
+      {
+        "command": "bats -f GPE",
+        "expected_exit_code": 0
+      }
+    ]
+  },
+  "return_contract": {
+    "schema": "capsule-return-v1",
+    "required_fields": [
+      "changed_files",
+      "verification_results",
+      "mapped_acs"
+    ]
+  },
+  "provenance": {
+    "handoff_path": "tests/fixtures/capsule/handoff-source.md"
+  }
+}

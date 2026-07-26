@@ -235,4 +235,24 @@
 {"ts":"2026-07-23T04:00:00Z","phase":"ship","event":"complete","story":"DEV-118","by":"AgToosa","note":"v5.3.30 smoke PASS 12/12"}
 {"ts":"2026-07-25T05:30:00Z","phase":"ship","event":"complete","story":"cross-model-consent","by":"AgToosa","note":"v5.3.31 patch; CM-008 + SR-001/SR-002"}
 {"ts":"2026-07-26T18:44:00Z","phase":"ship","event":"complete","story":"DEV-119","by":"AgToosa","note":"v5.3.32 smoke PASS 12/12"}
-{"ts":"2026-07-26T22:20:00Z","phase":"ship","event":"complete","story":"DEV-121","by":"AgToosa","note":"v5.3.34 smoke PASS 14/14"}
+{"ts":"2026-07-26T22:20:00Z","phase":"build","event":"start","story":"DEV-122","by":"AgToosa"}
+{"ts":"2026-07-26T22:25:00Z","phase":"build","event":"complete","story":"DEV-122","by":"AgToosa","note":"DIA-001–DIA-012 green"}
+{"ts":"2026-07-26T21:30:00Z","phase":"review","event":"approved","story":"DEV-120","by":"AgToosa","critical":0,"warnings":2}
+{"ts":"2026-07-26T21:35:00Z","phase":"ship","event":"complete","story":"DEV-120","by":"AgToosa","note":"v5.3.37 smoke PASS 12/12"}
+{"ts":"2026-07-26T21:40:00Z","phase":"review","event":"approved","story":"DEV-122","by":"AgToosa","critical":0,"warnings":2}
+{"ts":"2026-07-26T21:45:00Z","phase":"ship","event":"complete","story":"DEV-122","by":"AgToosa","note":"v5.3.38 smoke PASS 12/12"}
+{"ts":"2026-07-26T21:45:00Z","phase":"ship","event":"complete","story":"DEV-125","by":"AgToosa","note":"v5.3.35 batch ship"}
+{"ts":"2026-07-26T21:45:00Z","phase":"ship","event":"complete","story":"DEV-126","by":"AgToosa","note":"v5.3.36 batch ship"}
+{"ts":"2026-07-26T22:30:00Z","phase":"spec","event":"approved","story":"DEV-120","by":"AgToosa","note":"12 Must ACs; DPF test plan; enrolled Active Cycle"}
+{"ts":"2026-07-26T22:35:00Z","phase":"build","event":"start","story":"DEV-120","by":"AgToosa"}
+{"ts":"2026-07-26T22:40:00Z","phase":"build","event":"complete","story":"DEV-120","by":"AgToosa","note":"DPF-001–DPF-012 green"}
+{"ts":"2026-07-26T20:30:00Z","phase":"spec","event":"enrolled","story":"DEV-123","by":"AgToosa","note":"Spec Approved; Part 4 tasks synced; Active Cycle Todo; ADR-023 Proposed"}
+{"ts":"2026-07-26T21:50:00Z","phase":"build","event":"start","story":"DEV-123","by":"AgToosa"}
+{"ts":"2026-07-26T21:55:00Z","phase":"build","event":"complete","story":"DEV-123","by":"AgToosa","note":"GPE-001–GPE-012 green"}
+{"ts":"2026-07-26T22:00:00Z","phase":"review","event":"approved","story":"DEV-123","by":"AgToosa","critical":0,"warnings":2}
+{"ts":"2026-07-26T22:05:00Z","phase":"ship","event":"complete","story":"DEV-123","by":"AgToosa","note":"v5.3.39 smoke PASS 12/12 + SR-001"}
+{"ts":"2026-07-26T22:10:00Z","phase":"spec","event":"enrolled","story":"DEV-124","by":"AgToosa","note":"Spec Approved; Part 4 tasks synced; Active Cycle; test plan docs/AgToosa_TestPlan-DEV-124.md; ADR-024 Proposed"}
+{"ts":"2026-07-26T22:11:00Z","phase":"build","event":"start","story":"DEV-124","by":"AgToosa"}
+{"ts":"2026-07-26T22:12:00Z","phase":"build","event":"complete","story":"DEV-124","by":"AgToosa","note":"CFI-001–CFI-012 green"}
+{"ts":"2026-07-26T22:15:00Z","phase":"review","event":"approved","story":"DEV-124","by":"AgToosa","critical":0,"warnings":2}
+{"ts":"2026-07-26T22:20:00Z","phase":"ship","event":"complete","story":"DEV-124","by":"AgToosa","note":"v5.3.40 smoke PASS 12/12 + SR-001"}

@@ -93,6 +93,9 @@ Resolved source and rule metadata from `Docs/AgToosa_GovernancePolicy.md` via `b
    - **Optional Worktree Hint (agent-instructed):** IF the selected wave has parallel DEV-045 packages and isolation is selected, append a Worktree Hint table mapping each known `package_id` → `suggested_path` (default `../<repo>-<package_id>`) and `suggested_branch`. The hint is optional, package-scoped, and **read-only** — it **does not create** paths or branches and performs **no Git mutation**. Full checklist: `Docs/AgToosa_Worktree.md`. When skipping isolation, state exactly: `No worktree: run packages sequentially in one branch and verify a clean working tree between packages.`
    - Include **§9 Applicable Policy**: resolve via `Docs/agtoosa-policy-check.sh`; embed `policy_path` and rule metadata or `no extra policy configured`. Handoff **does not mutate** policy files or Master-Plan status.
 4. **Write file** — Create `Docs/archived/handoff-…md`. Do not overwrite prior packs.
+   - **Optional capsule pack (DEV-123):** After the handoff file exists, agents **may** emit a guarded execution capsule for bounded async execution:
+     `bash Docs/agtoosa-capsule-pack.sh --story <id> [--handoff Docs/archived/handoff-<id>-<stamp>.md] --output Docs/archived/capsule-<id>.json`
+     See `Docs/AgToosa_Guarded_Portable_Execution.md`. Default policy is **network deny** (documented only — the pack script performs no network I/O).
 5. **Phase event** — Append to `Docs/agtoosa-events.jsonl`:
    `{"ts":"[ISO-8601 UTC]","phase":"handoff","event":"export","story":"[Story ID]","by":"AgToosa"}`
 6. **Update Log** — Append a row to `Docs/Master-Plan.md` → `## Update Log` noting the pack path.

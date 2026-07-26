@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "story_id": "FIXTURE-TAMPER",
+  "generated_at": "2026-07-26T20:00:00Z",
+  "provider": "local-hash",
+  "nodes": [
+    { "id": "artifact-1", "type": "artifact", "ref": "tests/fixtures/proof-graph/artifacts/hello.txt" },
+    { "id": "hash-1", "type": "content-hash", "ref": "tests/fixtures/proof-graph/artifacts/hello.txt", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" },
+    { "id": "snap-1", "type": "repo-snapshot", "sha": "901930340f59abf551c8a05b3d621cb3e0217f10" }
+  ],
+  "edges": [
+    { "from": "artifact-1", "to": "hash-1", "type": "content-of" }
+  ]
+}

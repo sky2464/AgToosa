@@ -1,0 +1,29 @@
+{
+  "framework": "bmad",
+  "fixture_profile": "bmad-v1",
+  "story_id": "DEV-120",
+  "epic_id": "DEV-002 — Workflow Templates · DEV-004 — Testing & QA Harness",
+  "title": "Spike: Delivery Proof Fabric",
+  "stories": [
+    {
+      "id": "DEV-120",
+      "title": "Spike: Delivery Proof Fabric",
+      "acceptance_criteria": ["AC-001", "AC-002", "AC-003"],
+      "tasks": [
+        {
+          "id": "1",
+          "description": "Contract + ADR"
+        },
+        {
+          "id": "1.1",
+          "description": "AgToosa_Evidence_Provenance.md + template mirror"
+        }
+      ]
+    }
+  ],
+  "source_ids": {
+    "story_id": "DEV-120",
+    "epic_id": "DEV-002 — Workflow Templates · DEV-004 — Testing & QA Harness",
+    "framework": "bmad"
+  }
+}

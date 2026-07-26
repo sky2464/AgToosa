@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "story_id": "FIXTURE-INVALID",
+  "generated_at": "2026-07-26T20:00:00Z",
+  "provider": "local-hash",
+  "nodes": [
+    { "id": "bad-1", "type": "formal-proof", "ref": "invalid" }
+  ],
+  "edges": []
+}

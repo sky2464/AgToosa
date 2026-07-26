@@ -35,6 +35,17 @@ Execute TDD against a planned task list and run the full test suite.
 > 2. `docs/Master-Plan.md` has tasks listed under `## Active Tasks`. If not, **stop** and instruct the user to run `/agtoosa-spec tasks`. Do **not** auto-run `/agtoosa-spec tasks`.
 > 3. The story status allows building (Todo or In Progress). Out-of-order runs follow `docs/AgToosa_Governance.md` → **Conflict playbook**: warn and abort with the exact message defined there.
 
+### Optional pre-build steps (DEV-122)
+
+Before Wave 1, agents **may** run optional change-aware steps — they are **not** verifier gates:
+
+| Step | Command | Notes |
+|------|---------|-------|
+| Drift assess | `bash Docs/agtoosa-drift-assess.sh --baseline <path> --root .` | Default suggest-only (exit 0); see `Docs/AgToosa_Change_Aware_Delivery.md` |
+| Context compile | `bash Docs/agtoosa-context-compile.sh --story <id> [--proof-graph PATH] [--drift-report PATH]` | Derived JSON only — does not mutate Master-Plan |
+
+Proof graph validity still requires separate `Docs/agtoosa-proof-verify.sh` when a graph is cited.
+
 ## Terminal Evidence Contract
 
 > See `docs/AgToosa_Agent.md` → **Terminal Evidence Contract** for the full rules.

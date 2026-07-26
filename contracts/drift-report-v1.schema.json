@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/sky2464/AgToosa/contracts/drift-report-v1.schema.json",
+  "title": "AgToosa Drift Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version", "provider", "baseline_id", "assessed_at", "summary",
+    "overall_impact_level", "suggested_rigor", "changes"
+  ],
+  "properties": {
+    "version": { "const": 1 },
+    "provider": { "const": "git-inventory" },
+    "baseline_id": { "type": "string" },
+    "assessed_at": { "type": "string" },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["added", "removed", "modified", "unchanged"],
+      "properties": {
+        "added": { "type": "integer", "minimum": 0 },
+        "removed": { "type": "integer", "minimum": 0 },
+        "modified": { "type": "integer", "minimum": 0 },
+        "unchanged": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "overall_impact_level": { "enum": ["none", "low", "medium", "high"] },
+    "suggested_rigor": { "enum": ["light", "standard", "elevated"] },
+    "changes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["added", "removed", "modified", "unchanged"],
+      "properties": {
+        "added": { "type": "array", "items": { "type": "string" } },
+        "removed": { "type": "array", "items": { "type": "string" } },
+        "modified": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/modifiedEntry" }
+        },
+        "unchanged": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "measurement": { "$ref": "#/$defs/measurement" }
+  },
+  "$defs": {
+    "modifiedEntry": {
+      "type": "object",
+      "required": ["path", "expected_sha256", "actual_sha256", "impact_level"],
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string" },
+        "expected_sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+        "actual_sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+        "impact_level": { "enum": ["low", "medium", "high"] }
+      }
+    },
+    "measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source", "false_positive_rate", "false_negative_rate"
+      ],
+      "properties": {
+        "source": { "const": "fixture-labeled" },
+        "cases_file": { "type": "string" },
+        "true_positives": { "type": "integer", "minimum": 0 },
+        "true_negatives": { "type": "integer", "minimum": 0 },
+        "false_positives": { "type": "integer", "minimum": 0 },
+        "false_negatives": { "type": "integer", "minimum": 0 },
+        "false_positive_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "false_negative_rate": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    }
+  }
+}

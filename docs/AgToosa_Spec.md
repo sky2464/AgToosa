@@ -359,6 +359,16 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
     *   Require **explicit user approval** before writing any `.codex/skills/<skill-name>/SKILL.md` file.
     *   Record accepted and declined decisions in the active spec file or `docs/Master-Plan.md` **Update Log**.
 
+### Optional cross-framework export (DEV-124)
+
+After **Spec Approved**, maintainers may export the archived spec to framework-shaped artifacts for comparison or handoff — **optional**, not a verifier gate:
+
+```bash
+bash Docs/agtoosa-interchange-export.sh --story <Story ID> --target speckit|openspec|bmad|kiro --output docs/archived/interchange-manifest-<id>.json
+```
+
+When binding a proof graph pointer, pass `--proof-graph <path>` and verify separately with `Docs/agtoosa-proof-verify.sh` — export does **not** mark graphs valid. See `Docs/AgToosa_Cross_Framework_Interchange.md`. Interchange output is **derived**; `docs/Master-Plan.md` remains repo-local source of truth.
+
 ## Policy violation contract
 
 Consult `docs/AgToosa_GovernancePolicy.md` (checker: `docs/agtoosa-policy-check.sh`) before actions covered by a declared rule. On a policy violation: identify the rule `id`, `enforcement_class`, and `on_violation`; follow that `on_violation` only (`warn` / `instruct_stop` / wired `block_generator`); never invent stronger enforcement; never echo secret values. Preserve `docs/Master-Plan.md` as lifecycle authority — policy handling must not write story status or tasks.

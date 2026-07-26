@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "capsule_id": "caps-dev-123-minimal",
+  "returned_at": "2026-07-26T21:00:00Z",
+  "changed_files": [
+    "lib/capsule.sh"
+  ],
+  "verification_results": [
+    {
+      "command": "bats -f GPE",
+      "exit_code": 0,
+      "stdout_excerpt": "1..3 ok"
+    }
+  ],
+  "mapped_acs": [
+    {
+      "ac_id": "AC-001",
+      "evidence": "tests/fixtures/capsule/valid-minimal.json"
+    },
+    {
+      "ac_id": "AC-002",
+      "evidence": "lib/capsule.sh"
+    }
+  ],
+  "import_ready": true
+}

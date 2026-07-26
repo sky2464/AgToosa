@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "story_id": "DEV-120",
+  "source_framework": "openspec",
+  "entries": [
+    {
+      "field": "authority.owner",
+      "reason": "Imported manifest cannot assert Master-Plan SoT — authority.owner is imported-derived and preserved is false",
+      "severity": "high"
+    },
+    {
+      "field": "authority.preserved",
+      "reason": "Master-Plan checkbox and status authority not preserved on cross-framework import",
+      "severity": "high"
+    },
+    {
+      "field": "tasks.wave_plan",
+      "reason": "Framework fixture omits AgToosa wave plan section",
+      "severity": "low"
+    },
+    {
+      "field": "provenance.interview_findings",
+      "reason": "Plan-Mode Spec Interview block not represented in external fixture",
+      "severity": "low"
+    }
+  ]
+}

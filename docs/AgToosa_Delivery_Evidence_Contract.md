@@ -75,6 +75,7 @@ The checker is **schema-only**: it validates **structure, known profile keys, an
 |---------|------|
 | **Terminal Evidence Contract** (`AgToosa_Agent.md`) | Per-task command, exit code, warnings — orchestrator completion format |
 | **Evidence Ledger** (`AgToosa_Evidence.md`) | Per-story proof index consolidated at review/ship |
+| **Evidence Provenance v2** (`AgToosa_Evidence_Provenance.md`) | Optional content fingerprints + repo snapshot; verified by `agtoosa-proof-verify.sh` — **Gate 7 unchanged** |
 | **This contract** | Delivery-class minimums and profile vocabulary |
 | **`.agtoosa/policy.yaml`** (DEV-059) | Agent governance / boundaries (Gate 6) |
 | **`.agtoosa/evidence.yml`** (DEV-087) | Delivery evidence profiles (Gate 7 / DEV-089) |

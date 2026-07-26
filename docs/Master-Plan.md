@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-26 (DEV-121 shipped v5.3.34)
+> **Last updated:** 2026-07-26 (DEV-124 shipped v5.3.40)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | DEV-121 shipped — enroll next via `/agtoosa-spec` |
-| Milestone | `v5.3.35` (next) |
-| Active cycle | Idle — awaiting next scoped story |
-| Cycle state | Idle — awaiting next scoped story |
+| Current phase | Idle — competitive proof portfolio complete |
+| Milestone | `v5.3.41` (next) |
+| Active cycle | _(none — cycle idle)_ |
+| Cycle state | Idle — DEV-124 shipped v5.3.40 |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -23,8 +23,12 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| — | (none — cycle idle) | — | — | — | — |
+| _(none — cycle idle)_ | | | | | |
 
+<!-- Archived to docs/archived/cycle-2026-07-26-release-5.3.40.md (DEV-124 v5.3.40) -->
+<!-- Archived to docs/archived/cycle-2026-07-26-release-5.3.37.md (DEV-120 v5.3.37) -->
+<!-- Archived to docs/archived/cycle-2026-07-26-release-5.3.36.md (DEV-126 v5.3.36) -->
+<!-- Archived to docs/archived/cycle-2026-07-26-release-5.3.35.md (DEV-125 v5.3.35) -->
 <!-- Archived to docs/archived/cycle-2026-07-26-release-5.3.34.md (DEV-121 v5.3.34) -->
 <!-- Archived to docs/archived/cycle-2026-07-26-release-5.3.33.md (DEV-127 v5.3.33) -->
 <!-- Archived to docs/archived/cycle-2026-07-26-release-5.3.32.md (DEV-119 v5.3.32) -->
@@ -63,7 +67,17 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for enrolled Active Cycle stories. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-_(No active story — cycle idle. Enroll via `/agtoosa-spec`.)_
+### DEV-124 — Cross-Framework Interchange
+
+_(Shipped v5.3.40 — tasks archived.)_
+
+### DEV-123 — Guarded Portable Execution
+
+_(Shipped v5.3.39 — tasks archived.)_
+
+### DEV-120 — Delivery Proof Fabric
+
+_(Shipped v5.3.37 — tasks archived.)_
 
 ## Manual / Deferred Tasks
 
@@ -104,13 +118,13 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 |----|-------|------|----------|------|----------|--------|
 | DEV-118 | Chore: Product Truth & Adapter Contract | Chore | L | DEV-001 / DEV-002 / DEV-004 | P0 | 🏁 Shipped — v5.3.30 |
 | DEV-119 | Feature: Recoverable Project Transaction | Feature | L | DEV-001 | P0 | 🏁 Shipped — v5.3.32 |
-| DEV-125 | Feature: /agtoosa-next Lifecycle Dispatcher | Feature | L | DEV-002 | P0 | 🟨 In Progress — A+B hybrid build complete |
-| DEV-126 | Chore: Spec Interview Hardening | Chore | S | DEV-002 | P0 | 🟨 In Progress — Build complete |
-| DEV-120 | Spike: Delivery Proof Fabric | Spike | L | DEV-002 / DEV-004 | P0 | ⬜ Backlog — Draft · needs-interview |
+| DEV-125 | Feature: /agtoosa-next Lifecycle Dispatcher | Feature | L | DEV-002 | P0 | 🏁 Shipped — v5.3.35 |
+| DEV-126 | Chore: Spec Interview Hardening | Chore | S | DEV-002 | P0 | 🏁 Shipped — v5.3.36 |
+| DEV-120 | Spike: Delivery Proof Fabric | Spike | L | DEV-002 / DEV-004 | P0 | 🏁 Shipped — v5.3.37 |
 | DEV-121 | Spike: Behavioral Conformance Lab | Spike | L | DEV-003 / DEV-004 | P0 | 🏁 Shipped — v5.3.34 |
-| DEV-122 | Spike: Change-Aware Adaptive Delivery | Spike | L | DEV-002 / DEV-004 | P1 | ⬜ Backlog — Draft · needs-interview · depends DEV-120 |
-| DEV-123 | Spike: Guarded Portable Execution | Spike | M | DEV-002 / DEV-004 | P1 | ⬜ Backlog — Draft · needs-interview · depends DEV-120, DEV-122 |
-| DEV-124 | Spike: Cross-Framework Interchange | Spike | M | DEV-002 | P2 | ⬜ Backlog — Draft · needs-interview · depends DEV-120 |
+| DEV-122 | Spike: Change-Aware Adaptive Delivery | Spike | L | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.38 |
+| DEV-123 | Spike: Guarded Portable Execution | Spike | M | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.39 |
+| DEV-124 | Spike: Cross-Framework Interchange | Spike | M | DEV-002 | P2 | 🏁 Shipped — v5.3.40 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
 | DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v5.3.10 |
@@ -184,7 +198,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 
 ### Competitive Proof Portfolio (`intake:large`)
 
-> **Clarity boundary:** DEV-121 shipped v5.3.34; DEV-120 and DEV-122–DEV-124 remain `needs-interview`.
+> **Clarity boundary:** DEV-120/121/122/123/124 shipped — competitive proof portfolio complete.
 
 | ID | Goal boundary | Depends on | Explicit non-goals |
 | --- | --- | --- | --- |
@@ -268,6 +282,12 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-124 | Spike: Cross-Framework Interchange | 2026-07-26 | [spec-DEV-124.md](archived/spec-DEV-124.md) · [review-DEV-124.md](archived/review-DEV-124.md) · [evidence-DEV-124.md](archived/evidence-DEV-124.md) |
+| DEV-123 | Spike: Guarded Portable Execution | 2026-07-26 | [spec-DEV-123.md](archived/spec-DEV-123.md) · [review-DEV-123.md](archived/review-DEV-123.md) · [evidence-DEV-123.md](archived/evidence-DEV-123.md) |
+| DEV-122 | Spike: Change-Aware Adaptive Delivery | 2026-07-26 | [spec-DEV-122.md](archived/spec-DEV-122.md) · [review-DEV-122.md](archived/review-DEV-122.md) · [evidence-DEV-122.md](archived/evidence-DEV-122.md) |
+| DEV-120 | Spike: Delivery Proof Fabric | 2026-07-26 | [spec-DEV-120.md](archived/spec-DEV-120.md) · [review-DEV-120.md](archived/review-DEV-120.md) · [evidence-DEV-120.md](archived/evidence-DEV-120.md) |
+| DEV-126 | Chore: Spec Interview Hardening | 2026-07-26 | [spec-DEV-126.md](archived/spec-DEV-126.md) · [review-DEV-126.md](archived/review-DEV-126.md) · [evidence-DEV-126.md](archived/evidence-DEV-126.md) |
+| DEV-125 | Feature: /agtoosa-next Lifecycle Dispatcher | 2026-07-26 | [spec-DEV-125.md](archived/spec-DEV-125.md) · [review-DEV-125.md](archived/review-DEV-125.md) · [evidence-DEV-125.md](archived/evidence-DEV-125.md) |
 | DEV-121 | Spike: Behavioral Conformance Lab | 2026-07-26 | [spec-DEV-121.md](archived/spec-DEV-121.md) · [review-DEV-121.md](archived/review-DEV-121.md) · [evidence-DEV-121.md](archived/evidence-DEV-121.md) |
 | DEV-127 | Docs: README Experience Refresh | 2026-07-26 | [spec-DEV-127.md](archived/spec-DEV-127.md) · [review-DEV-127.md](archived/review-DEV-127.md) · [evidence-DEV-127.md](archived/evidence-DEV-127.md) |
 | DEV-119 | Feature: Recoverable Project Transaction | 2026-07-26 | [spec-DEV-119.md](archived/spec-DEV-119.md) · [review-DEV-119.md](archived/review-DEV-119.md) · [evidence-DEV-119.md](archived/evidence-DEV-119.md) |
@@ -692,3 +712,23 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-26 16:15 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-121 — smoke PASS 13/13 + SR-001; v5.3.34; cycle archived | AgToosa |
 | 2026-07-26 16:15 | 🚀 Ship complete — v5.3.34 — DEV-121 Behavioral Conformance Lab | AgToosa |
 | 2026-07-26 16:15 | 🚀 Release 5.3.34 shipped — v5.3.34; version parity bash/ps1/npm/formula; Milestone v5.3.35 (next) | AgToosa |
+| 2026-07-26 20:20 | 🏗️ Build 🏗️ Started — DEV-122 — TDD cycle; 11 tasks; scope: drift contracts, git-inventory provider, assess/compile CLIs, DIA bats | AgToosa |
+| 2026-07-26 20:25 | 🔨 /agtoosa-build — DEV-122 build complete — DIA-001–DIA-012 green; next `/agtoosa-review` | AgToosa |
+| 2026-07-26 21:30 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-120 — 0 Critical, 2 Warning | AgToosa |
+| 2026-07-26 21:35 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-120 — smoke PASS 12/12; v5.3.37 | AgToosa |
+| 2026-07-26 21:40 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-122 — 0 Critical, 2 Warning | AgToosa |
+| 2026-07-26 21:45 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-122 — smoke PASS 12/12 + SR-001; v5.3.38; cycle archived | AgToosa |
+| 2026-07-26 21:45 | 🚀 Ship complete — v5.3.38 — DEV-122 Change-Aware Adaptive Delivery | AgToosa |
+| 2026-07-26 21:45 | 🚀 Release 5.3.35–5.3.38 shipped — DEV-125/126/120/122 batch; version parity bash/ps1/npm/formula; Milestone v5.3.39 (next) | AgToosa |
+| 2026-07-26 20:30 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-120 — `docs/archived/spec-DEV-120.md`; 12 Must ACs; estimate L; enrolled Active Cycle; test plan `docs/AgToosa_TestPlan-DEV-120.md`; next `/agtoosa-build` | AgToosa |
+| 2026-07-26 20:35 | 🏗️ /agtoosa-build — DEV-120 build complete — DPF-001–DPF-012 green; pilot verify PASS; next `/agtoosa-review` | AgToosa |
+| 2026-07-26 22:05 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-123 — smoke PASS 12/12 + SR-001; v5.3.39; cycle archived | AgToosa |
+| 2026-07-26 22:05 | 🚀 Ship complete — v5.3.39 — DEV-123 Guarded Portable Execution | AgToosa |
+| 2026-07-26 22:05 | 🚀 Release 5.3.39 shipped — v5.3.39; version parity bash/ps1/npm/formula; Milestone v5.3.40 (next) | AgToosa |
+| 2026-07-26 22:00 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-123 — 0 Critical, 2 Warning | AgToosa |
+| 2026-07-26 21:55 | 🔨 /agtoosa-build — DEV-123 build complete — GPE-001–GPE-012 green; next `/agtoosa-review` | AgToosa |
+| 2026-07-26 22:20 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-124 — smoke PASS 12/12 + SR-001; v5.3.40; cycle archived | AgToosa |
+| 2026-07-26 22:20 | 🚀 Ship complete — v5.3.40 — DEV-124 Cross-Framework Interchange | AgToosa |
+| 2026-07-26 22:20 | 🚀 Release 5.3.40 shipped — v5.3.40; version parity bash/ps1/npm/formula; Milestone v5.3.41 (next); competitive proof portfolio complete | AgToosa |
+| 2026-07-26 22:15 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-124 — 0 Critical, 2 Warning | AgToosa |
+| 2026-07-26 22:12 | 🔨 /agtoosa-build — DEV-124 build complete — CFI-001–CFI-012 green; next `/agtoosa-review` | AgToosa |

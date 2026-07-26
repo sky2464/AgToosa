@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "story_id": "FIXTURE-STALE",
+  "generated_at": "2026-07-26T20:00:00Z",
+  "provider": "local-hash",
+  "nodes": [
+    { "id": "artifact-1", "type": "artifact", "ref": "tests/fixtures/proof-graph/artifacts/hello.txt" },
+    { "id": "hash-1", "type": "content-hash", "ref": "tests/fixtures/proof-graph/artifacts/hello.txt", "sha256": "1608559e640e61125004b032ad27a5e2304d5233506596e05a5ae0273c2e6382" },
+    { "id": "snap-1", "type": "repo-snapshot", "sha": "0000000000000000000000000000000000000000" }
+  ],
+  "edges": [
+    { "from": "artifact-1", "to": "hash-1", "type": "content-of" }
+  ]
+}

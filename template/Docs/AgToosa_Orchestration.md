@@ -60,7 +60,7 @@ Capability lanes ran sequentially (platform does not support parallel subagents)
 | Phase | Example parallel lanes | Merge owner |
 |-------|------------------------|-------------|
 | `/agtoosa-spec` | Context/code scan, web research, matching specialists, threat-model prep, domain-language, skill opportunity scan | Spec orchestrator → Goal Contract / ACs / Design |
-| `/agtoosa-build` | Wave packages with disjoint `owned_files`; optional build-hook specialists | Orchestrator; `/agtoosa-import` if async |
+| `/agtoosa-build` | Wave packages with disjoint `owned_files`; optional build-hook specialists; optional drift assess + context compile (DEV-122); optional capsule pack for async lanes (DEV-123) | Orchestrator; `/agtoosa-import` if async |
 | `/agtoosa-qa` | Plan/run lanes per AC clusters when host allows | QA orchestrator |
 | `/agtoosa-review` | Virtual personas + review specialists + optional cross-model | Review verdict gate |
 | `/agtoosa-ship` | Independent check / docs / retro prep | Ship gate |

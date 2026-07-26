@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "capsule_id": "caps-dev-123-minimal",
+  "returned_at": "2026-07-26T21:00:00Z",
+  "changed_files": [
+    "docs/Master-Plan.md"
+  ],
+  "verification_results": [
+    {
+      "command": "bats -f GPE",
+      "exit_code": 0
+    }
+  ],
+  "mapped_acs": [
+    {
+      "ac_id": "AC-001",
+      "evidence": "docs/Master-Plan.md"
+    }
+  ],
+  "import_ready": false,
+  "violations": [
+    {
+      "code": "forbidden_path",
+      "message": "forbidden path 'docs/Master-Plan.md'"
+    }
+  ]
+}

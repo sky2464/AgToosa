@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "story_id": "DEV-124",
+  "source_framework": "bmad",
+  "entries": [
+    {
+      "field": "requirements.constitution",
+      "reason": "BMAD constitution block has no AgToosa EARS equivalent",
+      "severity": "high"
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 # AgToosa Delivery Evidence Contract
 
-> **Distinct from Terminal Evidence.** Per-task command/exit reporting lives in `Docs/AgToosa_Agent.md` → **Terminal Evidence Contract**. This document defines **delivery-class** minimum evidence (what must exist for a story class), not orchestrator task output format.
+> **Distinct from Terminal Evidence.** Per-task command/exit reporting lives in `docs/AgToosa_Agent.md` → **Terminal Evidence Contract**. This document defines **delivery-class** minimum evidence (what must exist for a story class), not orchestrator task output format.
+>
+> **Maintainer mirror:** Generated projects install this as `Docs/AgToosa_Delivery_Evidence_Contract.md`. Template source: `template/Docs/AgToosa_Delivery_Evidence_Contract.md`.
 
 ## Purpose
 
@@ -54,7 +56,7 @@ Do **not** store secrets, tokens, or passwords in evidence profiles.
 Run the local schema checker (structure only):
 
 ```bash
-bash Docs/agtoosa-evidence-profile-check.sh [--root PATH]
+bash docs/agtoosa-evidence-profile-check.sh [--root PATH]
 ```
 
 | Exit | Meaning |
@@ -65,7 +67,7 @@ bash Docs/agtoosa-evidence-profile-check.sh [--root PATH]
 
 The checker is **schema-only**: it validates **structure, known profile keys, and allowed artifact tokens only**. It does **not** check that artifacts exist on disk, does **not** claim full delivery compliance, and does **not** use the network.
 
-**Gate 7** (DEV-089) in `Docs/agtoosa-verify.sh` enforces opt-in profiles: absent `evidence.yml` is healthy; invalid YAML WARNs; required tokens are checked for deterministic presence/path/exit-code only; guided/evidenced rows are not upgraded to enforced FAIL without a wired command; SAST rows never claim vulnerability absence; missing evidence ledger WARNs per DEV-049; `--strict` promotes WARN to FAIL.
+**Gate 7** (DEV-089) in `docs/agtoosa-verify.sh` enforces opt-in profiles: absent `evidence.yml` is healthy; invalid YAML WARNs; required tokens are checked for deterministic presence/path/exit-code only; guided/evidenced rows are not upgraded to enforced FAIL without a wired command; SAST rows never claim vulnerability absence; missing evidence ledger WARNs per DEV-049; `--strict` promotes WARN to FAIL.
 
 ## Relationship to other surfaces
 
@@ -73,9 +75,10 @@ The checker is **schema-only**: it validates **structure, known profile keys, an
 |---------|------|
 | **Terminal Evidence Contract** (`AgToosa_Agent.md`) | Per-task command, exit code, warnings — orchestrator completion format |
 | **Evidence Ledger** (`AgToosa_Evidence.md`) | Per-story proof index consolidated at review/ship |
+| **Evidence Provenance v2** (`AgToosa_Evidence_Provenance.md`) | Optional content fingerprints + repo snapshot; verified by `agtoosa-proof-verify.sh` — **Gate 7 unchanged** |
 | **This contract** | Delivery-class minimums and profile vocabulary |
 | **`.agtoosa/policy.yaml`** (DEV-059) | Agent governance / boundaries (Gate 6) |
-| **`.agtoosa/evidence.yml`** (DEV-087) | Delivery evidence profiles (Gate 7 in DEV-089) |
+| **`.agtoosa/evidence.yml`** (DEV-087) | Delivery evidence profiles (Gate 7 / DEV-089) |
 
 Config index: `.agtoosa/README.md` — verifier gate order: **policy (Gate 6) → evidence profile (Gate 7, DEV-089) → lifecycle gates**.
 

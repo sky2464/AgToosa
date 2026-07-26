@@ -80,6 +80,13 @@ Language to use when refusing premature closure:
 ## Workflow
 
 1. **Collect returns** — Ask for or locate: handoff pack path (if any), PR/branch, logs, screenshots. Infer from recent git remotes when obvious.
+   - **Optional return envelope (DEV-123):** When a parent execution capsule exists, validate the agent return JSON before mapping evidence:
+     `bash Docs/agtoosa-capsule-return.sh --capsule docs/archived/capsule-<id>.json --return <return.json>`
+     See `Docs/AgToosa_Guarded_Portable_Execution.md`. A passing return check is **not** import authority — repo-local verification still gates closure.
+   - **Optional cross-framework interchange (DEV-124):** When external results arrive as Spec Kit, OpenSpec, BMAD, or Kiro-style fixtures, normalize them before evidence mapping:
+     `bash Docs/agtoosa-interchange-import.sh --fixture <fixture> --output-manifest <manifest.json> --output-loss <loss.json>`
+     Then assess loss (suggest-only by default): `bash Docs/agtoosa-interchange-assess.sh --loss-report <loss.json>`
+     See `Docs/AgToosa_Cross_Framework_Interchange.md`. Interchange manifests are **derived** — not import authority or verifier gates.
 2. **Map to tasks/ACs** — Fill the Evidence Mapping table; flag unmapped Must ACs as gaps.
 3. **Work Package ownership** — Compare changed paths to `owned_files`; report ownership gaps; order accepted packages by `merge_order` before status mutation.
 4. **Verify locally** — Run verification commands; capture Terminal Evidence.

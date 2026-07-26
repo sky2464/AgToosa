@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/sky2464/AgToosa/contracts/proof-graph-v1.schema.json",
+  "title": "AgToosa Evidence Provenance v2 Proof Graph",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "story_id", "provider", "nodes", "edges"],
+  "properties": {
+    "version": { "const": 1 },
+    "story_id": { "type": "string", "pattern": "^[A-Za-z0-9._-]+$" },
+    "generated_at": { "type": "string" },
+    "provider": { "const": "local-hash" },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/node" }
+    },
+    "edges": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/edge" }
+    }
+  },
+  "$defs": {
+    "nodeType": {
+      "enum": ["story", "ac", "artifact", "command-run", "content-hash", "repo-snapshot"]
+    },
+    "edgeType": {
+      "enum": ["references", "verified-by", "content-of"]
+    },
+    "node": {
+      "type": "object",
+      "required": ["id", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "type": { "$ref": "#/$defs/nodeType" },
+        "ref": { "type": "string" },
+        "sha256": { "type": "string", "pattern": "^[a-fA-F0-9]{64}$" },
+        "sha": { "type": "string", "pattern": "^[a-fA-F0-9]{40}$" },
+        "exit_code": { "type": "integer" }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "required": ["from", "to", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "type": { "$ref": "#/$defs/edgeType" }
+      }
+    }
+  }
+}

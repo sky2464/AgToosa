@@ -1,0 +1,193 @@
+{
+  "version": 1,
+  "story_id": "DEV-120",
+  "source_framework": "agtoosa",
+  "source_ids": {
+    "story_id": "DEV-120",
+    "spec_path": "docs/archived/spec-DEV-120.md"
+  },
+  "authority": {
+    "owner": "master-plan",
+    "preserved": true
+  },
+  "requirements": [
+    {
+      "id": "AC-001",
+      "kind": "acceptance-criterion",
+      "text": "WHEN Evidence Provenance v2 is documented THE SYSTEM SHALL define node types `story`, `ac`, `artifact`, `command-run`, `content-hash`, `repo-snapshot` and edge types `references`, `verified-by`, `content-of` with claim boundaries distinguishing derived evidence from Master-Plan authority",
+      "priority": "Must"
+    },
+    {
+      "id": "AC-002",
+      "kind": "acceptance-criterion",
+      "text": "WHEN a proof graph is authored THE SYSTEM SHALL conform to a versioned JSON schema at `contracts/proof-graph-v1.schema.json` with one file per story at `docs/archived/proof-graph-<story-id>.json` (template: `Docs/archived/\u2026`)",
+      "priority": "Must"
+    },
+    {
+      "id": "AC-003",
+      "kind": "acceptance-criterion",
+      "text": "WHEN the proof-provider interface is documented THE SYSTEM SHALL define provider identity, supported node/edge kinds, verification inputs/outputs, and exit codes without mandating external tools",
+      "priority": "Must"
+    },
+    {
+      "id": "AC-004",
+      "kind": "acceptance-criterion",
+      "text": "WHEN the `local-hash` provider runs THE SYSTEM SHALL verify `content-of` edges by SHA-256 of referenced artifact paths and `verified-by` edges for `command-run` nodes against recorded verification strings",
+      "priority": "Must"
+    },
+    {
+      "id": "AC-005",
+      "kind": "acceptance-criterion",
+      "text": "WHEN `agtoosa-proof-verify.sh` runs on a valid pilot graph THE SYSTEM SHALL exit `0` and report provider id, node count, edge count, and snapshot sha",
+      "priority": "Must"
+    },
+    {
+      "id": "AC-006",
+      "kind": "acceptance-criterion",
+      "text": "WHEN `agtoosa-proof-verify.sh` runs on a graph with missing files, hash mismatch, broken edges, or unknown node types THE SYSTEM SHALL exit non-zero with bounded diagnostics naming the first failure",
+      "priority": "Must"
+    },
+    {
+      "id": "AC-007",
+      "kind": "acceptance-criterion",
+      "text": "WHEN repo snapshot strict mode is requested THE SYSTEM SHALL compare `repo-snapshot` node sha to current `git rev-parse HEAD` and fail when they differ unless `--allow-stale-snapshot` is passed",
+      "priority": "Must"
+    },
+    {
+      "id": "AC-008",
+      "kind": "acceptance-criterion",
+      "text": "WHEN cross-linking docs THE SYSTEM SHALL reference Provenance v2 from `AgToosa_Evidence.md` and `AgToosa_Delivery_Evidence_Contract.md` without replacing Terminal Evidence or Gate 7 semantics",
+      "priority": "Must"
+    },
+    {
+      "id": "AC-009",
+      "kind": "acceptance-criterion",
+      "text": "WHEN Gate 7 or evidence profiles are described THE SYSTEM SHALL state that profile presence checks remain Gate 7 scope and content-link provenance is Provenance v2 / standalone script scope",
+      "priority": "Must"
+    },
+    {
+      "id": "AC-010",
+      "kind": "acceptance-criterion",
+      "text": "WHEN `lib/config.sh` installs workflow files THE SYSTEM SHALL include contract doc, schema, verify script, and example pilot graph paths in maintainer and template inventories",
+      "priority": "Must"
+    },
+    {
+      "id": "AC-011",
+      "kind": "acceptance-criterion",
+      "text": "WHEN `/agtoosa-evidence` workflow is updated THE SYSTEM SHALL document optional proof-graph assembly at review/ship as agent-instructed with pointer to verify script",
+      "priority": "Must"
+    },
+    {
+      "id": "AC-012",
+      "kind": "acceptance-criterion",
+      "text": "WHEN shipping DEV-120 THE SYSTEM SHALL record DPF bats RED/GREEN evidence and a pilot graph for DEV-119 that validates end-to-end",
+      "priority": "Must"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "1",
+      "text": "Contract + ADR",
+      "completed": true
+    },
+    {
+      "id": "1.1",
+      "text": "`AgToosa_Evidence_Provenance.md` + template mirror \u2014 _Requirements: AC-001, AC-003, AC-008, AC-009_",
+      "completed": true
+    },
+    {
+      "id": "1.2",
+      "text": "ADR-020 \u2192 Accepted \u2014 _Requirements: AC-001_",
+      "completed": true
+    },
+    {
+      "id": "2",
+      "text": "Schema + fixtures",
+      "completed": true
+    },
+    {
+      "id": "2.1",
+      "text": "`contracts/proof-graph-v1.schema.json` \u2014 _Requirements: AC-002_",
+      "completed": true
+    },
+    {
+      "id": "2.2",
+      "text": "`tests/fixtures/proof-graph/` valid + tampered graphs \u2014 _Requirements: AC-006_",
+      "completed": true
+    },
+    {
+      "id": "3",
+      "text": "Provider + library",
+      "completed": true
+    },
+    {
+      "id": "3.1",
+      "text": "`lib/proof.sh` helpers \u2014 _Requirements: AC-004_",
+      "completed": true
+    },
+    {
+      "id": "3.2",
+      "text": "`lib/proof-providers/local-hash.sh` \u2014 _Requirements: AC-004, AC-007_",
+      "completed": true
+    },
+    {
+      "id": "4",
+      "text": "Verify script",
+      "completed": true
+    },
+    {
+      "id": "4.1",
+      "text": "`docs/agtoosa-proof-verify.sh` + template mirror \u2014 _Requirements: AC-005, AC-006, AC-007_",
+      "completed": true
+    },
+    {
+      "id": "5",
+      "text": "Pilot graph",
+      "completed": true
+    },
+    {
+      "id": "5.1",
+      "text": "`docs/archived/proof-graph-DEV-119.json` from ship evidence \u2014 _Requirements: AC-012_",
+      "completed": true
+    },
+    {
+      "id": "6",
+      "text": "Docs integration",
+      "completed": true
+    },
+    {
+      "id": "6.1",
+      "text": "`AgToosa_Evidence.md` assembly guidance \u2014 _Requirements: AC-011_",
+      "completed": true
+    },
+    {
+      "id": "6.2",
+      "text": "Delivery Evidence Contract cross-link \u2014 _Requirements: AC-008, AC-009_",
+      "completed": true
+    },
+    {
+      "id": "7",
+      "text": "Install wiring",
+      "completed": true
+    },
+    {
+      "id": "7.1",
+      "text": "`lib/config.sh` inventories \u2014 _Requirements: AC-010_",
+      "completed": true
+    },
+    {
+      "id": "8",
+      "text": "Tests",
+      "completed": true
+    },
+    {
+      "id": "8.1",
+      "text": "Bats DPF-001\u2013DPF-012 \u2014 _Requirements: AC-001\u2013AC-012_",
+      "completed": true
+    }
+  ],
+  "provenance": {
+    "spec_path": "docs/archived/spec-DEV-120.md",
+    "exported_at": "2026-07-26T20:42:29Z"
+  }
+}

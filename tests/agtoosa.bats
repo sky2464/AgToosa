@@ -14403,3 +14403,683 @@ PY
     grep -q "$plat" "$f"
   done
 }
+
+# -- DEV-120: Delivery Proof Fabric (DPF-001–DPF-012) ----------------------------
+
+@test "DEV-120 @smoke DPF-001: Provenance contract defines node and edge types" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Evidence_Provenance.md" "$root/template/Docs/AgToosa_Evidence_Provenance.md"; do
+    [ -f "$f" ]
+    grep -q '`story`' "$f"
+    grep -q '`content-hash`' "$f"
+    grep -q '`repo-snapshot`' "$f"
+    grep -q '`content-of`' "$f"
+    grep -q '`verified-by`' "$f"
+    grep -q "Master-Plan.md" "$f"
+    grep -qi "non-authoritative\|derived" "$f"
+    grep -q "Forbidden claims" "$f"
+    grep -A6 "Forbidden claims" "$f" | grep -qi "Dafny"
+  done
+}
+
+@test "DEV-120 @smoke DPF-002: Proof graph schema exists and valid fixture parses" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/contracts/proof-graph-v1.schema.json" ]
+  run bash -c 'source "'"$root"'/lib/proof.sh"; proof_validate_graph_json "'"$root"'/tests/fixtures/proof-graph/valid-minimal.json"'
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-120 DPF-003: Tampered or invalid graph structure fails validation" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash -c 'source "'"$root"'/lib/proof.sh"; proof_validate_graph_json "'"$root"'/tests/fixtures/proof-graph/invalid-type.json"' 2>&1
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"unknown node type"* ]]
+  run bash "$root/docs/agtoosa-proof-verify.sh" \
+    --root "$root" \
+    --graph "$root/tests/fixtures/proof-graph/invalid-type.json" 2>&1
+  [ "$status" -eq 1 ]
+}
+
+@test "DEV-120 DPF-004: Provider interface documented with exit codes" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f="$root/docs/AgToosa_Evidence_Provenance.md"
+  grep -q "local-hash" "$f"
+  grep -q "Exit codes" "$f"
+  grep -q '`0` valid' "$f"
+  grep -q '`1` validation failure' "$f"
+  ! grep -qE 'curl |wget ' "$root/docs/agtoosa-proof-verify.sh"
+}
+
+@test "DEV-120 @smoke DPF-005: local-hash verifies content-of edges" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash -c 'source "'"$root"'/lib/proof.sh"; proof_sha256_file "'"$root"'/tests/fixtures/proof-graph/artifacts/hello.txt"'
+  [ "$status" -eq 0 ]
+  [ "$output" = "1608559e640e61125004b032ad27a5e2304d5233506596e05a5ae0273c2e6382" ]
+  run bash "$root/docs/agtoosa-proof-verify.sh" \
+    --root "$root" \
+    --graph "$root/tests/fixtures/proof-graph/valid-minimal.json"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"provider=local-hash"* ]]
+}
+
+@test "DEV-120 @smoke DPF-006: Verify script exits 0 on valid graph and pilot" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/docs/agtoosa-proof-verify.sh" \
+    --root "$root" \
+    --graph "$root/tests/fixtures/proof-graph/valid-minimal.json"
+  [ "$status" -eq 0 ]
+  [ -f "$root/docs/archived/proof-graph-DEV-119.json" ]
+  run bash "$root/docs/agtoosa-proof-verify.sh" \
+    --root "$root" \
+    --graph "$root/docs/archived/proof-graph-DEV-119.json" \
+    --allow-stale-snapshot
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-120 @smoke DPF-007: Verify script fails on hash mismatch" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/docs/agtoosa-proof-verify.sh" \
+    --root "$root" \
+    --graph "$root/tests/fixtures/proof-graph/tampered-hash.json" \
+    --allow-stale-snapshot 2>&1
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"hash mismatch"* ]]
+}
+
+@test "DEV-120 DPF-008: Verify script fails on missing artifact path" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/docs/agtoosa-proof-verify.sh" \
+    --root "$root" \
+    --graph "$root/tests/fixtures/proof-graph/missing-file.json" \
+    --allow-stale-snapshot 2>&1
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"missing artifact"* ]]
+}
+
+@test "DEV-120 DPF-009: Strict snapshot mode fails on HEAD drift" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/docs/agtoosa-proof-verify.sh" \
+    --root "$root" \
+    --graph "$root/tests/fixtures/proof-graph/stale-snapshot.json" 2>&1
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"repo-snapshot stale"* ]]
+  run bash "$root/docs/agtoosa-proof-verify.sh" \
+    --root "$root" \
+    --graph "$root/tests/fixtures/proof-graph/stale-snapshot.json" \
+    --allow-stale-snapshot
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-120 DPF-010: Evidence and Delivery cross-links present" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Evidence.md" "$root/template/Docs/AgToosa_Evidence.md"; do
+    grep -q "AgToosa_Evidence_Provenance.md" "$f"
+    grep -q "agtoosa-proof-verify.sh" "$f"
+    grep -q "Gate 7" "$f"
+  done
+  for f in "$root/docs/AgToosa_Delivery_Evidence_Contract.md" "$root/template/Docs/AgToosa_Delivery_Evidence_Contract.md"; do
+    grep -q "AgToosa_Evidence_Provenance.md" "$f"
+    grep -q "Gate 7 unchanged" "$f"
+  done
+}
+
+@test "DEV-120 DPF-011: Gate 7 boundary preserved in verifier" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local verify="$root/docs/agtoosa-verify.sh"
+  grep -q 'Gate 7 — Optional evidence profile' "$verify"
+  ! grep -q 'agtoosa-proof-verify' "$verify"
+  ! grep -q 'proof-graph' "$verify"
+}
+
+@test "DEV-120 DPF-012: config.sh registers provenance surfaces" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run grep -F "Docs/AgToosa_Evidence_Provenance.md" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+  run grep -F "Docs/agtoosa-proof-verify.sh" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+  run bash "$root/agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Evidence_Provenance.md"* ]]
+  [[ "$output" == *"Docs/agtoosa-proof-verify.sh"* ]]
+}
+
+# -- DEV-122: Change-Aware Adaptive Delivery (DIA-001–DIA-012) -----------------
+
+@test "DEV-122 @smoke DIA-001: Contract defines rigor matrix and claim boundaries" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Change_Aware_Delivery.md" "$root/template/Docs/AgToosa_Change_Aware_Delivery.md"; do
+    [ -f "$f" ]
+    grep -q "suggested_rigor" "$f"
+    grep -q "light" "$f"
+    grep -q "standard" "$f"
+    grep -q "elevated" "$f"
+    grep -q "Forbidden claims" "$f"
+    grep -qiE 'fixture-labeled|fixture labeled' "$f"
+  done
+}
+
+@test "DEV-122 @smoke DIA-002: Drift baseline schema validates fixture" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/contracts/drift-baseline-v1.schema.json" ]
+  [ -f "$root/tests/fixtures/drift-assess/baseline-v1.json" ]
+  run bash -c 'source "'"$root"'/lib/drift.sh"; drift_validate_baseline "'"$root"'" "'"$root"'/tests/fixtures/drift-assess/baseline-v1.json"'
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-122 @smoke DIA-003: Drift assess emits valid report on unchanged fixture" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local tmp
+  tmp="$(mktemp)"
+  run bash "$root/docs/agtoosa-drift-assess.sh" \
+    --baseline "$root/tests/fixtures/drift-assess/baseline-v1.json" \
+    --root "$root/tests/fixtures/drift-assess/unchanged" \
+    --output "$tmp"
+  [ "$status" -eq 0 ]
+  grep -q '"unchanged": 2' "$tmp"
+  grep -q '"modified": 0' "$tmp"
+  run bash -c 'source "'"$root"'/lib/drift.sh"; drift_validate_report "'"$tmp"'"'
+  [ "$status" -eq 0 ]
+  local bad
+  bad="$(mktemp)"
+  printf '{"version":1,"baseline_id":"bad","paths":[{"path":"../escape","sha256":"%s","impact_level":"low"}]}\n' \
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" >"$bad"
+  run bash "$root/docs/agtoosa-drift-assess.sh" \
+    --baseline "$bad" \
+    --root "$root/tests/fixtures/drift-assess/unchanged"
+  [ "$status" -eq 2 ]
+  rm -f "$tmp" "$bad"
+}
+
+@test "DEV-122 DIA-004: Suggested rigor follows impact matrix" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local tmp
+  tmp="$(mktemp)"
+  run bash "$root/docs/agtoosa-drift-assess.sh" \
+    --baseline "$root/tests/fixtures/drift-assess/baseline-v1.json" \
+    --root "$root/tests/fixtures/drift-assess/modified" \
+    --output "$tmp"
+  [ "$status" -eq 0 ]
+  grep -q '"overall_impact_level": "medium"' "$tmp"
+  grep -q '"suggested_rigor": "standard"' "$tmp"
+  rm -f "$tmp"
+}
+
+@test "DEV-122 @smoke DIA-005: Default assess exits 0 on drift" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/docs/agtoosa-drift-assess.sh" \
+    --baseline "$root/tests/fixtures/drift-assess/baseline-v1.json" \
+    --root "$root/tests/fixtures/drift-assess/high-impact"
+  [ "$status" -eq 0 ]
+  ! grep -qE '\b(curl|wget)\b' "$root/docs/agtoosa-drift-assess.sh"
+}
+
+@test "DEV-122 DIA-006: Strict mode fails on high impact fixture" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/docs/agtoosa-drift-assess.sh" \
+    --baseline "$root/tests/fixtures/drift-assess/baseline-v1.json" \
+    --root "$root/tests/fixtures/drift-assess/high-impact" \
+    --strict
+  [ "$status" -eq 1 ]
+}
+
+@test "DEV-122 @smoke DIA-007: Measurement block cites fixture cases only" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local tmp
+  tmp="$(mktemp)"
+  run bash "$root/docs/agtoosa-drift-assess.sh" \
+    --baseline "$root/tests/fixtures/drift-assess/baseline-v1.json" \
+    --root "$root/tests/fixtures/drift-assess/unchanged" \
+    --measurement "$root/tests/fixtures/drift-assess/measurement-labels.json" \
+    --output "$tmp"
+  [ "$status" -eq 0 ]
+  grep -q '"source": "fixture-labeled"' "$tmp"
+  grep -q 'false_positive_rate' "$tmp"
+  local f="$root/docs/AgToosa_Change_Aware_Delivery.md"
+  ! grep -qiE 'production accuracy|live accuracy' "$f"
+  rm -f "$tmp"
+}
+
+@test "DEV-122 @smoke DIA-008: Context compile emits valid JSON" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local tmp
+  tmp="$(mktemp)"
+  run bash "$root/docs/agtoosa-context-compile.sh" \
+    --story DEV-122 \
+    --output "$tmp"
+  [ "$status" -eq 0 ]
+  grep -q '"story_id": "DEV-122"' "$tmp"
+  grep -q '"suggested_rigor": "light"' "$tmp"
+  run bash -c 'source "'"$root"'/lib/drift.sh"; drift_validate_context_compilation "'"$tmp"'"'
+  [ "$status" -eq 0 ]
+  rm -f "$tmp"
+}
+
+@test "DEV-122 DIA-009: Provenance cross-link requires separate verify" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local tmp
+  tmp="$(mktemp)"
+  run bash "$root/docs/agtoosa-context-compile.sh" \
+    --story DEV-120 \
+    --proof-graph "$root/tests/fixtures/proof-graph/valid-minimal.json" \
+    --output "$tmp"
+  [ "$status" -eq 0 ]
+  grep -q '"proof_graph_verified": false' "$tmp"
+  grep -q "agtoosa-proof-verify.sh" "$tmp"
+  rm -f "$tmp"
+}
+
+@test "DEV-122 DIA-010: Build and Orchestration cross-links present" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Build.md" "$root/template/Docs/AgToosa_Build.md"; do
+    grep -q "agtoosa-drift-assess.sh" "$f"
+    grep -q "agtoosa-context-compile.sh" "$f"
+    grep -qi "optional" "$f"
+  done
+  for f in "$root/docs/AgToosa_Orchestration.md" "$root/template/Docs/AgToosa_Orchestration.md"; do
+    grep -q "DEV-122" "$f"
+    grep -q "context compile" "$f"
+  done
+}
+
+@test "DEV-122 DIA-011: config.sh registers DIA surfaces" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run grep -F "Docs/AgToosa_Change_Aware_Delivery.md" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+  run grep -F "Docs/agtoosa-drift-assess.sh" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+  run grep -F "Docs/agtoosa-context-compile.sh" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+  run bash "$root/agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Change_Aware_Delivery.md"* ]]
+}
+
+@test "DEV-122 @smoke DIA-012: Pilot context-compilation validates" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/tests/fixtures/drift-assess/context-compilation-DEV-120.json" ]
+  run bash -c 'source "'"$root"'/lib/drift.sh"; drift_validate_context_compilation "'"$root"'/tests/fixtures/drift-assess/context-compilation-DEV-120.json"'
+  [ "$status" -eq 0 ]
+  grep -q '"story_id": "DEV-120"' "$root/tests/fixtures/drift-assess/context-compilation-DEV-120.json"
+}
+
+# -- DEV-125 ship regression v5.3.35 (SR-001) --------------------------------
+
+@test "DEV-125 SR-001: v5.3.35 changelog and DEV-125 artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.35\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-125' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-125.md" ]
+  [ -f "$root/docs/archived/review-DEV-125.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-125.md" ]
+  [ -f "$root/docs/AgToosa_Next.md" ]
+}
+
+# -- DEV-126 ship regression v5.3.36 (SR-001) --------------------------------
+
+@test "DEV-126 SR-001: v5.3.36 changelog and DEV-126 artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.36\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-126' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-126.md" ]
+  [ -f "$root/docs/archived/review-DEV-126.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-126.md" ]
+}
+
+# -- DEV-120 ship regression v5.3.37 (SR-001) --------------------------------
+
+@test "DEV-120 @smoke SR-001: v5.3.37 changelog and DEV-120 artifacts exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.37\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-120' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-120.md" ]
+  [ -f "$root/docs/archived/review-DEV-120.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-120.md" ]
+  [ -f "$root/docs/AgToosa_Evidence_Provenance.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-120.md"
+}
+
+# -- DEV-122 ship regression v5.3.38 (SR-001) --------------------------------
+
+@test "DEV-122 @smoke SR-001: v5.3.38 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.38" ]
+  [ "$ps_ver" = "5.3.38" ]
+  [ "$npm_ver" = "5.3.38" ]
+  [ "$formula_ver" = "5.3.38" ]
+  grep -q '## \[5.3.38\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-122' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-122.md" ]
+  [ -f "$root/docs/archived/review-DEV-122.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-122.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-122.md"
+  [ -f "$root/docs/AgToosa_Change_Aware_Delivery.md" ]
+}
+
+# -- DEV-123: Guarded Portable Execution (GPE-001–GPE-012) ---------------------
+
+@test "DEV-123 @smoke GPE-001: Contract defines policy matrix and claim boundaries" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Guarded_Portable_Execution.md" "$root/template/Docs/AgToosa_Guarded_Portable_Execution.md"; do
+    [ -f "$f" ]
+    grep -q "policy.network" "$f"
+    grep -q "capsule-return-v1" "$f"
+    grep -q "Forbidden claims" "$f"
+    grep -qiE 'fixture|declarative' "$f"
+    ! grep -qiE 'native sandbox|agent launch' "$f" || grep -q "Forbidden" "$f"
+  done
+}
+
+@test "DEV-123 @smoke GPE-002: Execution capsule schema validates fixture" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/contracts/execution-capsule-v1.schema.json" ]
+  [ -f "$root/tests/fixtures/capsule/capsule-v1.json" ]
+  run bash -c 'source "'"$root"'/lib/capsule.sh"; capsule_validate_capsule "'"$root"'" "'"$root"'/tests/fixtures/capsule/capsule-v1.json"'
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-123 @smoke GPE-003: Capsule pack emits valid manifest on handoff fixture" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local tmp
+  tmp="$(mktemp)"
+  run bash "$root/docs/agtoosa-capsule-pack.sh" \
+    --story DEV-123 \
+    --handoff "$root/tests/fixtures/capsule/handoff-source.md" \
+    --output "$tmp"
+  [ "$status" -eq 0 ]
+  grep -q '"scope"' "$tmp"
+  grep -q '"policy"' "$tmp"
+  grep -q '"budgets"' "$tmp"
+  grep -q '"ownership"' "$tmp"
+  rm -f "$tmp"
+}
+
+@test "DEV-123 @smoke GPE-004: Policy checks cite fixture cases only" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f="$root/docs/AgToosa_Guarded_Portable_Execution.md"
+  grep -qiE 'fixture|declarative' "$f"
+  ! grep -qi 'live sandbox telemetry' "$f"
+}
+
+@test "DEV-123 @smoke GPE-005: Default verify exits 0 on policy warning fixture" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/docs/agtoosa-capsule-verify.sh" \
+    --capsule "$root/tests/fixtures/capsule/policy-violation.json"
+  [ "$status" -eq 0 ]
+  run bash "$root/docs/agtoosa-capsule-verify.sh" \
+    --capsule "$root/tests/fixtures/capsule/valid-minimal.json"
+  [ "$status" -eq 0 ]
+  ! grep -qE '^\s*(curl|wget)\b' "$root/docs/agtoosa-capsule-verify.sh"
+}
+
+@test "DEV-123 GPE-006: Strict mode fails on high-severity violation fixture" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/docs/agtoosa-capsule-verify.sh" \
+    --capsule "$root/tests/fixtures/capsule/policy-violation.json" \
+    --strict
+  [ "$status" -eq 1 ]
+}
+
+@test "DEV-123 @smoke GPE-007: Return validator accepts valid capsule-return pair" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/docs/agtoosa-capsule-return.sh" \
+    --capsule "$root/tests/fixtures/capsule/valid-minimal.json" \
+    --return "$root/tests/fixtures/capsule/returns/valid-return.json"
+  [ "$status" -eq 0 ]
+  grep -q '"import_ready": true' "$root/tests/fixtures/capsule/returns/valid-return.json"
+}
+
+@test "DEV-123 GPE-008: Verify rejects secret-shaped patterns in capsule" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/docs/agtoosa-capsule-verify.sh" \
+    --capsule "$root/tests/fixtures/capsule/secret-shaped.json"
+  [ "$status" -eq 1 ]
+}
+
+@test "DEV-123 GPE-009: Handoff and Orchestration cross-links present" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Handoff.md" "$root/template/Docs/AgToosa_Handoff.md"; do
+    grep -q "agtoosa-capsule-pack.sh" "$f"
+    grep -qi "optional" "$f"
+  done
+  for f in "$root/docs/AgToosa_Orchestration.md" "$root/template/Docs/AgToosa_Orchestration.md"; do
+    grep -q "DEV-123" "$f"
+  done
+  grep -q "agtoosa-capsule-return.sh" "$root/docs/AgToosa_Import.md"
+}
+
+@test "DEV-123 @smoke GPE-010: Forbidden path return marks import not ready" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/docs/agtoosa-capsule-return.sh" \
+    --capsule "$root/tests/fixtures/capsule/valid-minimal.json" \
+    --return "$root/tests/fixtures/capsule/returns/forbidden-path.json"
+  [ "$status" -eq 0 ]
+  grep -q '"import_ready": false' "$root/tests/fixtures/capsule/returns/forbidden-path.json"
+  grep -q "Master-Plan.md" "$root/docs/Master-Plan.md"
+}
+
+@test "DEV-123 GPE-011: config.sh registers GPE surfaces" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run grep -F "Docs/AgToosa_Guarded_Portable_Execution.md" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+  run grep -F "Docs/agtoosa-capsule-pack.sh" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+  run grep -F "Docs/agtoosa-capsule-verify.sh" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+  run grep -F "Docs/agtoosa-capsule-return.sh" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+  run bash "$root/agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Guarded_Portable_Execution.md"* ]]
+}
+
+@test "DEV-123 @smoke GPE-012: Pilot execution-capsule validates" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/tests/fixtures/capsule/execution-capsule-DEV-120.json" ]
+  run bash "$root/docs/agtoosa-capsule-verify.sh" \
+    --capsule "$root/tests/fixtures/capsule/execution-capsule-DEV-120.json"
+  [ "$status" -eq 0 ]
+  grep -q '"story_id": "DEV-123"' "$root/tests/fixtures/capsule/execution-capsule-DEV-120.json"
+}
+
+# -- DEV-123 ship regression v5.3.39 (SR-001) --------------------------------
+
+@test "DEV-123 @smoke SR-001: v5.3.39 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.39" ]
+  [ "$ps_ver" = "5.3.39" ]
+  [ "$npm_ver" = "5.3.39" ]
+  [ "$formula_ver" = "5.3.39" ]
+  grep -q '## \[5.3.39\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-123' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-123.md" ]
+  [ -f "$root/docs/archived/review-DEV-123.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-123.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-123.md"
+  [ -f "$root/docs/AgToosa_Guarded_Portable_Execution.md" ]
+}
+
+# -- DEV-124: Cross-Framework Interchange (CFI-001–CFI-012) ------------------
+
+@test "DEV-124 @smoke CFI-001: Contract defines manifest, loss-report, and authority boundaries" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Cross_Framework_Interchange.md" "$root/template/Docs/AgToosa_Cross_Framework_Interchange.md"; do
+    grep -qi 'interchange manifest' "$f"
+    grep -qi 'loss report' "$f"
+    grep -qi 'master-plan' "$f"
+    grep -qi 'fixture' "$f"
+    ! grep -qi 'guarantees perfect round-trip' "$f"
+  done
+}
+
+@test "DEV-124 @smoke CFI-002: Interchange manifest schema validates fixture" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run python3 - "$root/tests/fixtures/interchange/manifest-v1.json" "$root" <<'PY'
+import subprocess, sys
+subprocess.run(
+    ["bash", "-c", f'source "{sys.argv[2]}/lib/interchange.sh" && interchange_validate_manifest "{sys.argv[2]}" "{sys.argv[1]}"'],
+    check=True,
+)
+PY
+  [ "$status" -eq 0 ]
+  grep -q '"story_id": "DEV-124"' "$root/tests/fixtures/interchange/manifest-v1.json"
+}
+
+@test "DEV-124 @smoke CFI-003: Export emits manifest and framework artifact on story fixture" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local tmp manifest artifact
+  tmp="$(mktemp -d)"
+  manifest="$tmp/manifest.json"
+  run bash "$root/docs/agtoosa-interchange-export.sh" \
+    --story DEV-120 --target speckit --output "$manifest"
+  [ "$status" -eq 0 ]
+  artifact="${manifest%.json}-speckit.json"
+  [ -f "$artifact" ]
+  grep -q '"story_id": "DEV-120"' "$manifest"
+  grep -q '"source_ids"' "$manifest"
+  grep -q '"authority"' "$manifest"
+  ! grep -qE '^\s*(curl|wget)\b' "$root/docs/agtoosa-interchange-export.sh"
+  rm -rf "$tmp"
+}
+
+@test "DEV-124 @smoke CFI-004: Import emits manifest and loss report on framework fixture" {
+  local root tmp manifest loss
+  root="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  tmp="$(mktemp -d)"
+  manifest="$tmp/manifest.json"
+  loss="$tmp/loss.json"
+  run bash "$root/docs/agtoosa-interchange-import.sh" \
+    --fixture "$root/tests/fixtures/interchange/openspec/minimal.json" \
+    --output-manifest "$manifest" \
+    --output-loss "$loss"
+  [ "$status" -eq 0 ]
+  [ -f "$manifest" ]
+  [ -f "$loss" ]
+  grep -q '"source_ids"' "$manifest"
+  grep -q '"entries"' "$loss"
+  rm -rf "$tmp"
+}
+
+@test "DEV-124 @smoke CFI-005: Loss report records unmappable fields with severity" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash -c "source '$root/lib/interchange.sh' && interchange_validate_loss_report '$root/tests/fixtures/interchange/loss-low.json'"
+  [ "$status" -eq 0 ]
+  grep -q '"severity": "low"' "$root/tests/fixtures/interchange/loss-low.json"
+  grep -qi 'fixture' "$root/docs/AgToosa_Cross_Framework_Interchange.md"
+}
+
+@test "DEV-124 @smoke CFI-006: Default assess exits 0 on low-severity loss warnings" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/docs/agtoosa-interchange-assess.sh" \
+    --loss-report "$root/tests/fixtures/interchange/loss-low.json"
+  [ "$status" -eq 0 ]
+  run bash "$root/docs/agtoosa-interchange-assess.sh" \
+    --loss-report "$root/tests/fixtures/interchange/loss-high.json"
+  [ "$status" -eq 0 ]
+  ! grep -qE '^\s*(curl|wget)\b' "$root/docs/agtoosa-interchange-assess.sh"
+}
+
+@test "DEV-124 CFI-007: Strict mode fails on high-severity loss fixture" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/docs/agtoosa-interchange-assess.sh" \
+    --loss-report "$root/tests/fixtures/interchange/loss-high.json" \
+    --strict
+  [ "$status" -eq 1 ]
+}
+
+@test "DEV-124 CFI-008: Export proof pointer requires separate verify; no auto valid" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'agtoosa-proof-verify.sh' "$root/docs/AgToosa_Cross_Framework_Interchange.md"
+  ! grep -q 'proof_valid' "$root/docs/agtoosa-interchange-export.sh"
+  ! grep -q 'proof_valid' "$root/lib/interchange.sh"
+}
+
+@test "DEV-124 CFI-009: Import and Spec cross-links present" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Import.md" "$root/template/Docs/AgToosa_Import.md"; do
+    grep -q "agtoosa-interchange-import.sh" "$f"
+    grep -qi "optional" "$f"
+  done
+  for f in "$root/docs/AgToosa_Spec.md" "$root/template/Docs/AgToosa_Spec.md"; do
+    grep -q "agtoosa-interchange-export.sh" "$f"
+  done
+}
+
+@test "DEV-124 @smoke CFI-010: Interchange scripts do not mutate Master-Plan" {
+  local root tmp manifest loss
+  root="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  tmp="$(mktemp -d)"
+  manifest="$tmp/manifest.json"
+  loss="$tmp/loss.json"
+  run bash "$root/docs/agtoosa-interchange-export.sh" \
+    --story DEV-120 --target openspec --output "$manifest"
+  [ "$status" -eq 0 ]
+  run bash "$root/docs/agtoosa-interchange-import.sh" \
+    --fixture "$root/tests/fixtures/interchange/bmad/minimal.json" \
+    --output-manifest "$manifest" --output-loss "$loss"
+  [ "$status" -eq 0 ]
+  grep -q "Master-Plan.md" "$root/docs/Master-Plan.md"
+  rm -rf "$tmp"
+}
+
+@test "DEV-124 CFI-011: config.sh registers CFI surfaces" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run grep -F "Docs/AgToosa_Cross_Framework_Interchange.md" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+  run grep -F "Docs/agtoosa-interchange-export.sh" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+  run grep -F "Docs/agtoosa-interchange-import.sh" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+  run grep -F "Docs/agtoosa-interchange-assess.sh" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+  run bash "$root/agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Cross_Framework_Interchange.md"* ]]
+}
+
+@test "DEV-124 @smoke CFI-012: Pilot interchange manifest validates" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/tests/fixtures/interchange/interchange-manifest-DEV-120.json" ]
+  run bash -c "source '$root/lib/interchange.sh' && interchange_validate_manifest '$root' '$root/tests/fixtures/interchange/interchange-manifest-DEV-120.json'"
+  [ "$status" -eq 0 ]
+  grep -q '"story_id": "DEV-120"' "$root/tests/fixtures/interchange/interchange-manifest-DEV-120.json"
+}
+
+# -- DEV-124 ship regression v5.3.40 (SR-001) --------------------------------
+
+@test "DEV-124 @smoke SR-001: v5.3.40 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.40" ]
+  [ "$ps_ver" = "5.3.40" ]
+  [ "$npm_ver" = "5.3.40" ]
+  [ "$formula_ver" = "5.3.40" ]
+  grep -q '## \[5.3.40\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-124' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-124.md" ]
+  [ -f "$root/docs/archived/review-DEV-124.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-124.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-124.md"
+  [ -f "$root/docs/AgToosa_Cross_Framework_Interchange.md" ]
+}

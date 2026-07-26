@@ -1,0 +1,36 @@
+{
+  "framework": "speckit",
+  "fixture_profile": "speckit-v1",
+  "story_id": "DEV-120",
+  "title": "Spike: Delivery Proof Fabric",
+  "spec_id": "spec-DEV-120",
+  "user_stories": [
+    {
+      "id": "US-DEV-120",
+      "title": "Spike: Delivery Proof Fabric",
+      "acceptance_criteria": ["AC-001", "AC-002", "AC-003"]
+    }
+  ],
+  "functional_requirements": [
+    {
+      "id": "AC-001",
+      "description": "WHEN Evidence Provenance v2 is documented THE SYSTEM SHALL define node types story, ac, artifact, command-run, content-hash, repo-snapshot",
+      "priority": "Must"
+    },
+    {
+      "id": "AC-002",
+      "description": "WHEN a proof graph is authored THE SYSTEM SHALL conform to contracts/proof-graph-v1.schema.json",
+      "priority": "Must"
+    },
+    {
+      "id": "AC-003",
+      "description": "WHEN the proof-provider interface is documented THE SYSTEM SHALL define provider identity and exit codes",
+      "priority": "Must"
+    }
+  ],
+  "source_ids": {
+    "story_id": "DEV-120",
+    "spec_id": "spec-DEV-120",
+    "framework": "speckit"
+  }
+}
