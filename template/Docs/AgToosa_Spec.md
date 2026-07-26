@@ -78,6 +78,41 @@ Before writing or finalizing the spec file, run a **Plan-Mode Spec Interview**:
 
     **Not a hard stop:** keep interviewing when free-text answers open new gaps until the Decision-complete checklist passes or assumptions are explicitly accepted. Never auto-write a detailed spec while a child story carries `needs-interview` / `N-CI` or Must clarity gaps remain.
 
+### User prompt ≠ interview complete
+
+A detailed user message, slash-command argument, or backlog story description is **input material**, not proof that the Decision-complete checklist is satisfied. Research may cover many areas, but **user confirmation** is still required on scope trade-offs, non-goals, and Must-priority behavior unless the user explicitly chose `/agtoosa-spec quick` or says to proceed with documented assumptions after a research summary.
+
+### Minimum validation floor
+
+Even when research infers ≥80% of checklist items:
+
+- **Full flow:** ask at least **2 validation questions** (adaptive cap still **8**) before writing `Docs/archived/spec-*.md`, enrolling `Docs/Master-Plan.md` story rows, or generating test plans. Prioritize: narrowest scope, non-goals/trade-offs, and failure modes or security when trust boundaries exist.
+- **`/agtoosa-spec quick`:** ask at least **1** validation question before writing the spec file (cap remains **2**).
+- **Exception:** after presenting a research summary, the user explicitly chooses *proceed with documented assumptions* — skip remaining questions and record every assumption in `### Plan-Mode Spec Interview (findings)`.
+
+### Interview turn-stop
+
+After research (and optional findings summary), **end the agent turn** on the first interview question. In the **same turn**, do **not**:
+
+- write or update `Docs/archived/spec-*.md`
+- enroll or mutate `Docs/Master-Plan.md` story rows (read-only research is allowed)
+- generate `Docs/AgToosa_TestPlan-*.md`
+- implement build artifacts (generator code, platform adapters, bats) or run `/agtoosa-build`
+
+Wait for the user's answer before the next question or any spec artifacts. Use `/agtoosa-spec research` when the user wants findings-only output without advancing to Q&A in the same session.
+
+### Plan-Mode Spec Interview (findings) — required spec section
+
+Before the approval gate, every spec file must include `### Plan-Mode Spec Interview (findings)` (see `Docs/SPEC-FORMAT.md`) with:
+
+| Subsection | Content |
+|------------|---------|
+| **Inferred (≥80%)** | Checklist areas filled from research without a user question |
+| **Asked & confirmed** | `Q[N]` · one-line question · user answer (or menu pick) |
+| **Documented assumptions** | Items accepted without user override; cite explicit user opt-in when used |
+
+Do not set Clarity `ready` or Goal Contract `Unresolved questions: None` until this section is complete and the minimum validation floor is met.
+
 ### Multi-spec intake
 
 When the user asks to learn objectives and split work into **multiple specs**:
@@ -151,8 +186,9 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
 4.  **Q&A — Plan-Mode Spec Interview (Smart Interview):**
 
     > **Follow the Plan-Mode Spec Interview Contract** (above) and the **Smart Interview Protocol** (`Docs/AgToosa_Agent.md` → `## Smart Interview Protocol`).
-    > Full flow: adaptive cap **8** core questions; `/agtoosa-spec quick`: cap **2**.
+    > Full flow: adaptive cap **8** core questions; `/agtoosa-spec quick`: cap **2**; minimum validation floor **2** / **1** respectively; **interview turn-stop** after Q1.
     > Before each question, check whether the answer is already clear from research or Context files. If it is, state your finding and move on — do not ask.
+    > A detailed user prompt does **not** satisfy the interview — still meet the minimum validation floor unless the user opts into documented assumptions.
 
     The six forcing questions below are the **candidate pool**. Ask only where the Decision-complete checklist still has a genuine gap. Present options derived from codebase findings and research. One question at a time; at most one follow-up per answer.
 
@@ -168,6 +204,7 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
     For `/agtoosa-spec quick`, ask at most questions 1 and 2 (abbreviated) — honoring the 2-question cap. Derive question 6 (failure modes/security) as an inferred finding from the codebase scan instead of asking it.
 5.  **Executable Spec Generation:**
     *   Synthesize all findings into a clean, comprehensive **Executable Specification**.
+    *   Include `### Plan-Mode Spec Interview (findings)` per the contract above before Goal Contract or User Stories (see `Docs/SPEC-FORMAT.md`).
     *   Specs must act as direct programmatic inputs for the `/agtoosa-build` phase (e.g., BDD syntax, strict preconditions/postconditions, or explicit acceptance criteria).
 
 ### Part 2 — Architectural Planning & Threat Modeling

@@ -9,7 +9,7 @@ When executing any specification or planning work, follow `Docs/AgToosa_Spec.md`
 
 ## Key constraints
 
-- Follow the **Plan-Mode Spec Interview Contract** in `Docs/AgToosa_Spec.md` (canonical) plus **Smart Interview Protocol** (`Docs/AgToosa_Agent.md`): research before asking; full flow adaptive cap **8**; `quick` cap **2**; infer before asking; satisfy the Decision-complete checklist or document accepted assumptions.
+- Follow the **Plan-Mode Spec Interview Contract** in `Docs/AgToosa_Spec.md` (canonical) plus **Smart Interview Protocol** (`Docs/AgToosa_Agent.md`): research before asking; full flow adaptive cap **8**; `quick` cap **2**; minimum validation floor **2** / **1**; **interview turn-stop** after Q1; infer before asking; satisfy the Decision-complete checklist or document accepted assumptions; include `### Plan-Mode Spec Interview (findings)` in every spec.
 - Always verify dependency versions against live sources — never assume from memory.
 - STRIDE threat model is mandatory for every spec (skip only for `quick`).
 - Output: a single spec file at `Docs/archived/spec-[story-id].md` with embedded architectural blueprint and threat model.

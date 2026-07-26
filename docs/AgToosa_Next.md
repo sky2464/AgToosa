@@ -2,7 +2,7 @@
 
 ## Objective
 
-Advance the project by **one lifecycle phase per invocation**. `/agtoosa-next` reads `docs/Master-Plan.md` (via the generator status pulse), picks the correct AgToosa workflow for the current state, and **executes** it — unlike `/agtoosa-help next`, which is read-only assistance.
+**Primary sequential command for ~90% of users.** After `/agtoosa-init`, repeat `/agtoosa-next` to spec, build, test, review, fix, decide, update docs, and ship — one phase per invocation. SYNC drives routing; users do not need to memorize the lifecycle diagram.
 
 > **Maintainer Dogfood Mode:** This repository uses `docs/` paths. Generated projects use `Docs/`. See `docs/agtoosa-maintainer.md`.
 
@@ -10,24 +10,27 @@ Advance the project by **one lifecycle phase per invocation**. `/agtoosa-next` r
 
 | Sub-command | Runs |
 |-------------|------|
-| `/agtoosa-next` | **Full dispatch:** state pulse → route → execute exactly one lifecycle workflow |
-| `/agtoosa-next dry` | **Preview only:** same routing logic; print dispatch decision; do **not** execute |
-| `/agtoosa-next pick` | **Idle cold-start:** when no active cycle work remains, present backlog recommendations; user picks one → run `/agtoosa-spec` for that story |
+| `/agtoosa-next` | **Full dispatch:** state pulse → route → execute exactly one workflow |
+| `/agtoosa-next dry` | **Preview only:** same routing as help-next; do **not** execute |
+| `/agtoosa-next pick` | **Idle cold-start:** present backlog recommendations; user picks → `/agtoosa-spec` |
+| `/agtoosa-next fix` | Tributary: small bug/chore → serving build or `/agtoosa-spec quick` |
+| `/agtoosa-next test` | Tributary: QA → `/agtoosa-qa` or `/agtoosa-build test` |
+| `/agtoosa-next docs` | Tributary: changelog/archive only → `/agtoosa-ship docs` |
 
-## Distinction from `/agtoosa-help next`
+## Help previews, Next executes (A+B)
 
-| Surface | Mutates project? | Executes workflows? |
-|---------|------------------|---------------------|
-| `/agtoosa-help next` | No | No — suggestion only |
-| `/agtoosa-next` | Yes (via dispatched workflow) | Yes — runs one phase |
-| `/agtoosa-next dry` | No | No — preview only |
+| Surface | Mutates? | Executes? |
+|---------|----------|-----------|
+| `/agtoosa-help next` | No | No — same routing as `dry`; ends with "To execute: `/agtoosa-next`" |
+| `/agtoosa-next` | Yes (via dispatched workflow) | Yes — one phase |
+| `/agtoosa-next dry` | No | No |
 
 ## Phase Stop Contract
 
-- `/agtoosa-next` dispatches **one** lifecycle command per invocation.
-- It **never** auto-chains Spec → Build → Review → Ship in a single run.
-- Inner workflows honor their own phase stops (e.g. `/agtoosa-spec` stops at the approval gate).
-- When the user says **"next"** again after a phase completes, run `/agtoosa-next` to advance to the following phase.
+- One lifecycle command per `/agtoosa-next` invocation.
+- **Never** auto-chain Spec → Build → Review → Ship in a single run.
+- Inner workflows honor their own phase stops (e.g. spec stops at approval gate).
+- Closure line: `Next: /agtoosa-next — <rationale>` plus SYNC pulse (underlying phase optional in rationale).
 
 ## Routing Algorithm
 
@@ -37,30 +40,34 @@ Advance the project by **one lifecycle phase per invocation**. `/agtoosa-next` r
 bash agtoosa.sh --status-line [path] --route-hint --format json
 ```
 
-On Windows: `agtoosa.ps1 -StatusLine -RouteHint` with JSON output when available.
+On Windows: `agtoosa.ps1 -StatusLine -RouteHint` with JSON when available.
 
-Parse: `anchor`, `story_id`, `tasks_done`, `tasks_total`, `next`, `sync`.
+Parse: `anchor`, `story_id`, `tasks_done`, `tasks_total`, `next`, `sync`, `spec_approved`.
 
-If CLI unavailable, read `docs/Master-Plan.md` read-only and apply the same rules as `lib/maintain.sh` → `run_status_line`.
+When `spec_approved` is `false`, SYNC `next` is already `/agtoosa-spec` (generator-enforced). Still verify active spec file before build dispatch.
 
-### Step 1 — Approval override (build guard)
+### Step 1 — Tributary intents (optional argument)
 
-When `anchor` is `build` (or `next` is `/agtoosa-build`):
+When user passes `fix`, `test`, `docs`, or Compass routes a tributary:
 
-1. Load `docs/archived/spec-<story_id>.md` for the active story.
-2. If `## ✅ Spec Approved` is **missing**, override dispatch to `/agtoosa-spec` — present the spec for approval; do **not** start build.
-3. Rationale line: `Spec ready but not approved — approval gate before build`.
+| Intent | Serving phase | Dispatches |
+|--------|---------------|------------|
+| `fix` — small bug/chore | active `build` | `/agtoosa-build` expedite or `/agtoosa-spec quick` |
+| `test` — QA / test run | `build` or pre-review | `/agtoosa-qa` or `/agtoosa-build test` |
+| PM / decision / unclear goal | `spec` | `/agtoosa-goal story` or `/agtoosa-spec` |
+| Backlog capture | `spec` | `/agtoosa-task` |
+| `docs` — changelog/archive only | `ship` | `/agtoosa-ship docs` |
+| Parallel / handoff / cross-model | — | **Advanced mode** — do not route via Next |
 
-### Step 2 — Active cycle dispatch
+### Step 2 — Lifecycle anchor (sequential default)
 
-When Active Cycle has an In Progress, In Review, or Todo story (`story_id` ≠ `none`):
-
-| `anchor` / `next` | Dispatch | Notes |
-|-------------------|----------|-------|
-| `spec` | `/agtoosa-spec` | Target active `story_id` when enrolled |
-| `build` | `/agtoosa-build` | After approval override passes |
-| `review` | `/agtoosa-review` | All automated tasks complete |
-| `ship` | `/agtoosa-ship` | Review passed / In Review status |
+| SYNC `anchor` / `next` | Dispatches |
+|------------------------|------------|
+| `spec` | `/agtoosa-spec` |
+| `build` | `/agtoosa-build` (only when `spec_approved` is true) |
+| `review` | `/agtoosa-review` |
+| `ship` | `/agtoosa-ship` |
+| idle / none | Backlog scan → spec, or cold-start |
 
 Print dispatch banner before executing:
 
@@ -69,54 +76,47 @@ AgToosa Next → /agtoosa-<command> (<story-id>) — <one-line rationale>
 SYNC: <paste pulse line>
 ```
 
-Then read and execute the matching `docs/AgToosa_<Phase>.md` workflow in full.
+### Step 3 — Idle cycle
 
-### Step 3 — Idle cycle (no active work)
+1. **Backlog scan** — highest-priority (`P0` first) non-shipped row with Draft, Spec ready, needs-interview, or Backlog.
+2. **Candidate exists** → `/agtoosa-spec` for that story (interview, approval, or draft).
+3. **No candidate** — cold start: ask for an idea OR present up to 3 backlog recommendations.
 
-When Active Cycle is empty or all rows are Shipped/Done/Backlog-only:
-
-1. **Backlog scan** — Read `## Backlog` for the highest-priority row (`P0` first) that is:
-   - Not `🏁 Shipped` or `✅ Done`
-   - Status contains `Draft`, `Spec ready`, `needs-interview`, or `Backlog`
-2. **If a backlog candidate exists:**
-   - `needs-interview` → `/agtoosa-spec` for that story (Plan-Mode Spec Interview)
-   - `Spec ready` → `/agtoosa-spec` (approval gate slice if spec file exists; else complete spec)
-   - `Draft` / `Backlog` → `/agtoosa-spec` for that story ID
-3. **If no backlog candidate** — **cold start:**
-   - Tell the user there is no enrolled spec yet.
-   - Ask: *"Do you have something in mind to work on together?"*
-   - If yes → `/agtoosa-spec` with their idea.
-   - If no → present **up to 3** recommendations from Backlog (priority order, skip shipped/done, note blockers). Use **Question Format** from `docs/AgToosa_Agent.md` → Smart Interview Protocol. User picks one → `/agtoosa-spec` for that story.
-
-`/agtoosa-next pick` always uses step 3 cold-start presentation even when a default backlog row exists — user must confirm the pick.
+`/agtoosa-next pick` always uses cold-start presentation (user must confirm).
 
 ### Step 4 — Blocked or unclear
 
-When multiple blockers, conflicting status, or `anchor` is `none` with ambiguous Master-Plan:
+Run `/agtoosa-status` (read-only), print top finding, **stop** — do not guess.
 
-1. Run `/agtoosa-status` (read-only).
-2. Print top finding and the recommended fix command.
-3. **Stop** — do not guess a mutating dispatch.
+## Advanced mode
+
+Honor explicit phase slashes when the user names them (`/agtoosa-review security`, `/agtoosa-handoff`, cross-model review, parallel orchestration). **Do not** invoke `/agtoosa-next` for those — run the named advanced command directly.
 
 ## Execution Contract
 
-After dispatch banner:
-
-1. Read the target workflow doc (`docs/AgToosa_Spec.md`, `Build.md`, `Review.md`, or `Ship.md`).
-2. Execute that workflow's full flow (respecting sub-command defaults).
-3. Honor **Phase Stop** inside the dispatched workflow.
-4. On successful completion, print the **dual-line phase close** from the dispatched workflow (`Next:` + `SYNC:` per `docs/AgToosa_Agent.md` → Lifecycle Next-Step Contract).
-5. Remind the user: *"Say `/agtoosa-next` again when ready to advance."*
+1. Read target workflow doc and execute full flow.
+2. Honor Phase Stop inside dispatched workflow.
+3. Print dual-line close with `Next: /agtoosa-next` when sequential mode applies.
+4. Remind: *"Say `/agtoosa-next` again when ready to advance."*
 
 ## Relationship to Lifecycle Compass
 
-- Freeform asks without `/agtoosa-*` still use **AgToosa Lifecycle Compass** (Project Intake).
-- Explicit `/agtoosa-next` bypasses Compass ceremony and runs this dispatch protocol.
-- Compass `ANCHOR` values (`spec` · `build` · `review` · `ship`) align with `anchor` from `--route-hint`.
+- Freeform **sequential** intent ("next", "what's next", "continue the cycle") → route to **`/agtoosa-next`**, not a raw phase slash.
+- Compass tributaries (explore, fix, track) may map through Next tributary intents when appropriate.
+- Explicit `/agtoosa-next` bypasses Compass ceremony.
+
+## Help handoff (`/agtoosa-help next`)
+
+1. Run Step 0 routing (same as `dry`).
+2. Output preview + rationale.
+3. End with:
+
+```text
+To execute: /agtoosa-next
+(This preview did not modify anything.)
+```
 
 ## Output (dry / preview)
-
-For `/agtoosa-next dry`:
 
 ```text
 AgToosa Next (dry) → /agtoosa-<command> (<story-id|none>) — <rationale>
@@ -128,9 +128,7 @@ Note: No workflow executed. Run `/agtoosa-next` to dispatch.
 
 | Threat | Mitigation |
 |--------|------------|
-| Spoofing — wrong phase dispatched | Deterministic pulse from Master-Plan; approval override before build |
-| Tampering — agent skips approval | Build guard checks `## ✅ Spec Approved` in spec file |
-| Repudiation — unclear what ran | Dispatch banner + SYNC line before every execution |
-| Information disclosure | No secrets in routing; same reads as status-line |
-| Denial of service | Single-phase dispatch; fail-closed on ambiguous state |
-| Elevation — auto-chaining phases | Phase Stop: one command per `/agtoosa-next` invocation |
+| Wrong phase dispatched | SYNC + `spec_approved` in route-hint JSON |
+| Build before approval | Generator sets `next` to spec when not approved |
+| Unclear what ran | Dispatch banner + SYNC before execution |
+| Auto-chaining phases | Phase Stop: one command per invocation |

@@ -14,7 +14,7 @@
 
 **Help-next**: The `/agtoosa-help next` sub-command that reads current project state read-only and recommends exactly one next AgToosa command. Context: spec DEV-007. Not: "auto-run", "Status Guide replacement".
 
-**AgToosa-next**: The `/agtoosa-next` lifecycle dispatcher that reads `--status-line --route-hint` state and **executes** exactly one lifecycle workflow per invocation. Context: spec DEV-125, ADR-019. Not: "help-next", "auto-chain phases", "Status replacement".
+**AgToosa-next**: Primary sequential driver — `/agtoosa-next` reads SYNC and executes one workflow per invocation; `/agtoosa-help next` previews and hands off. Context: DEV-125 A+B hybrid, ADR-019. Not: "help executes", "auto-chain phases".
 
 **Project Intake**: Dual-mode freeform PM classifier that runs when the user omits `/agtoosa-*`: soft-expedite small asks; hard-gate Claim-Boundary-sized work with benefit-framed confirmation; persist Standing Corrections in `Docs/Context/workflow.md`. Context: DEV-110, ADR-013. Not: "new slash command", "runtime orchestrator", "Discovery Triage" (mid-build only), "help-next".
 

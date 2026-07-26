@@ -13,9 +13,11 @@ Dispatch rules based on arguments:
 
 If no arguments were given, run the full flow from Docs/AgToosa_Spec.md.
 
-**Plan-Mode Spec Interview:** follow `Docs/AgToosa_Spec.md` → **Plan-Mode Spec Interview Contract** (canonical). Research before asking; interview before final spec; adaptive cap **8** (`quick` cap **2**).
+**Plan-Mode Spec Interview:** follow `Docs/AgToosa_Spec.md` → **Plan-Mode Spec Interview Contract** (canonical). Research before asking; interview before final spec; adaptive cap **8** (`quick` cap **2**); minimum validation floor **2** / **1**; **interview turn-stop** after Q1.
 
 **Phase stop:** stop at the approval gate. Do **not** run `/agtoosa-build` automatically — the user must invoke it after approval.
+
+**Agent Mode Execution Contract:** read `Docs/AgToosa_Spec.md` in full before outputs. **Forbidden:** skipping interview; treating a detailed user prompt as interview-complete; writing spec/test-plan/Master-Plan rows in the same turn as Q1; omitting `### Plan-Mode Spec Interview (findings)`; build artifacts before approval; auto-build or auto-approve.
 
 On successful completion, print this line verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)
 

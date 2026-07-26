@@ -1813,25 +1813,25 @@ PY
   grep -q "$needle" "$TEMPLATE_DIR/.windsurf/rules/agtoosa-core.md"
 }
 
-@test "H5: help-next presents mutating commands as suggestions only" {
+@test "H5: help-next previews and hands off to agtoosa-next" {
   local claude="$TEMPLATE_DIR/.claude/commands/agtoosa-help.md"
-  grep -q "suggestion only" "$claude"
-  grep -q "does not auto-run" "$claude"
-  grep -q "does not auto-run" "$TEMPLATE_DIR/.gemini/commands/agtoosa-help.toml"
-  grep -q "do not auto-run" "$TEMPLATE_DIR/.github/prompts/agtoosa-help.prompt.md"
+  grep -q "To execute: /agtoosa-next" "$claude"
+  grep -q "preview did not modify" "$claude"
+  grep -q "To execute: /agtoosa-next" "$TEMPLATE_DIR/.github/prompts/agtoosa-help.prompt.md"
 }
 
-@test "H6: help-next maps empty Active Cycle to /agtoosa-spec" {
-  grep -q "Empty Active Cycle" "$TEMPLATE_DIR/.claude/commands/agtoosa-help.md"
-  grep -q "/agtoosa-spec" "$TEMPLATE_DIR/.claude/commands/agtoosa-help.md"
-  grep -q "Empty Active Cycle" "$TEMPLATE_DIR/.cursor/rules/agtoosa-core.mdc"
+@test "H6: help-next routes via AgToosa_Next (idle cycle covered there)" {
+  grep -q "AgToosa_Next.md" "$TEMPLATE_DIR/.claude/commands/agtoosa-help.md"
+  grep -q "Idle cycle" "$TEMPLATE_DIR/Docs/AgToosa_Next.md"
+  grep -q "/agtoosa-next" "$TEMPLATE_DIR/.cursor/rules/agtoosa-core.mdc"
 }
 
-@test "H7: AgToosa_Agent.md lists help as assistance-only outside lifecycle" {
+@test "H7: AgToosa_Agent.md lists help as preview and next as primary driver" {
   local f="$TEMPLATE_DIR/Docs/AgToosa_Agent.md"
-  grep -q "Assistance-only" "$f"
+  grep -q "Preview only" "$f"
+  grep -q "Primary sequential driver" "$f"
   grep -q "/agtoosa-help next" "$f"
-  ! grep -q "agtoosa-help" <<< "$(sed -n '/## Development Cycle/,/## Key References/p' "$f" | grep -i help || true)"
+  grep -q "/agtoosa-next" "$f"
 }
 
 # ── 4.2.0 manual task support (M1 / M2 / M3 / M4) ────────────────────────────
@@ -13593,6 +13593,7 @@ _cln_seed_project() {
   [[ "$output" == *'"tasks_done":'* ]]
   [[ "$output" == *'"tasks_total":'* ]]
   [[ "$output" == *'"next":'* ]]
+  [[ "$output" == *'"spec_approved":'* ]]
 }
 
 # -- DEV-116 ship regression v5.3.28 (SR-001–SR-002) ---------------------------
@@ -13757,15 +13758,15 @@ EOF
   grep -q '\-\-status-line.*\-\-route-hint.*\-\-format json' "$root/docs/AgToosa_Next.md"
 }
 
-@test "DEV-125 @smoke NXT-002: AgToosa_Next documents build approval override" {
+@test "DEV-125 @smoke NXT-002: AgToosa_Next documents build approval guard" {
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## ✅ Spec Approved' "$root/template/Docs/AgToosa_Next.md"
-  grep -q 'approval override' "$root/template/Docs/AgToosa_Next.md"
+  grep -q 'spec_approved' "$root/template/Docs/AgToosa_Next.md"
+  grep -q 'Build before approval' "$root/template/Docs/AgToosa_Next.md"
 }
 
 @test "DEV-125 @smoke NXT-003: AgToosa_Next documents single-phase dispatch" {
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q 'one lifecycle' "$root/template/Docs/AgToosa_Next.md"
+  grep -q 'one phase' "$root/template/Docs/AgToosa_Next.md"
   grep -q 'auto-chain' "$root/template/Docs/AgToosa_Next.md"
 }
 
@@ -13777,7 +13778,7 @@ EOF
 @test "DEV-125 NXT-005: AgToosa_Next documents cold-start recommendations" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q 'up to 3' "$root/template/Docs/AgToosa_Next.md"
-  grep -q 'something in mind' "$root/template/Docs/AgToosa_Next.md"
+  grep -q 'cold start' "$root/template/Docs/AgToosa_Next.md"
 }
 
 @test "DEV-125 NXT-006: dry sub-command in workflow and adapters" {
@@ -13798,12 +13799,34 @@ EOF
   [ -f "$root/template/.codex/skills/agtoosa-next/SKILL.md" ]
 }
 
-@test "DEV-125 NXT-008: help-next remains read-only distinct from agtoosa-next" {
+@test "DEV-125 NXT-008: help-next previews and hands off to agtoosa-next" {
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q 'does not auto-run' "$root/template/.claude/commands/agtoosa-help.md"
-  grep -q 'executes' "$root/template/Docs/AgToosa_Next.md"
-  grep -q '/agtoosa-next' "$root/template/Docs/AgToosa_Agent.md"
+  grep -q 'To execute: /agtoosa-next' "$root/template/.claude/commands/agtoosa-help.md"
+  grep -q 'Help previews, Next executes' "$root/template/Docs/AgToosa_Next.md"
+  grep -q 'Primary sequential driver' "$root/template/Docs/AgToosa_Agent.md"
   ! grep -q 'executes workflows' "$root/template/.claude/commands/agtoosa-help.md"
+}
+
+@test "DEV-125 NXT-010: Quickref positions agtoosa-next as Day 1 default" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Day 1 — two commands' "$root/template/Docs/AgToosa_Quickref.md"
+  grep -q '/agtoosa-next' "$root/template/Docs/AgToosa_Quickref.md"
+  grep -q 'Advanced lifecycle' "$root/template/Docs/AgToosa_Quickref.md"
+}
+
+@test "DEV-125 NXT-011: route-hint JSON includes spec_approved" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/agtoosa.sh" --status-line "$root" --route-hint --format json
+  [ "$status" -eq 0 ]
+  [[ "$output" == *'"spec_approved":'* ]]
+  [[ "$output" == *'"next":'* ]]
+}
+
+@test "DEV-125 NXT-012: AgToosa_Next documents tributary intents" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Tributary intents' "$root/template/Docs/AgToosa_Next.md"
+  grep -q '/agtoosa-next fix' "$root/template/Docs/AgToosa_Next.md"
+  grep -q 'Advanced mode' "$root/template/Docs/AgToosa_Next.md"
 }
 
 @test "DEV-125 NXT-009: AgToosa_Next workflow is listed in DOCS_FILES" {

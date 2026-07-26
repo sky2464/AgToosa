@@ -28,12 +28,12 @@ Use when the user asks for `/agtoosa-spec`, `$agtoosa-spec`, or wants a new or u
 - **Spec Specialist Orchestration** — when `Docs/Context/specialists.md` exists, run matching `spec`-phase specialists per `Docs/AgToosa_Specialists.md`; parallel or sequential with evidence blocks merged before Goal Contract
 - **Research** — context gathering and external research before user questions; verify dependencies and platform behavior from live sources when the workflow requires it
 - **Goal Contract** — Story Goal Contract synthesis per the canonical spec workflow
-- **Plan-Mode Spec Interview** — follow `Docs/AgToosa_Spec.md` → **Plan-Mode Spec Interview Contract**; adaptive cap **8** (`quick` cap **2**); infer before asking; one question at a time with contextual options; satisfy Decision-complete checklist or document accepted assumptions
+- **Plan-Mode Spec Interview** — follow `Docs/AgToosa_Spec.md` → **Plan-Mode Spec Interview Contract**; adaptive cap **8** (`quick` cap **2**); minimum validation floor **2** / **1**; **interview turn-stop** after Q1; infer before asking; one question at a time with contextual options; satisfy Decision-complete checklist or document accepted assumptions; include `### Plan-Mode Spec Interview (findings)` in the spec
 - **Executable spec** — requirements, user stories, EARS acceptance criteria, design, architecture, and STRIDE threat model
 - **Task planning** — task tree in the spec and `Docs/Master-Plan.md` → `## Active Tasks`
 - **Test plan skeleton** — `Docs/AgToosa_TestPlan-[story-id].md` per the workflow
 - **Approval gate** — stop for `## ✅ Spec Approved`; never auto-approve or mark approved without the user
 
-**Forbidden for the full flow:** skipping Plan-Mode Spec Interview or research, Goal Contract, task planning, or the test plan skeleton; copying divergent Part 1 / Part 2 workflow section bodies from `Docs/AgToosa_Spec.md` into this skill; auto-running `/agtoosa-build` after spec.
+**Forbidden for the full flow:** skipping Plan-Mode Spec Interview or research; treating a detailed user prompt as interview-complete; writing spec/test-plan/Master-Plan rows in the **same turn** as the first interview question; omitting `### Plan-Mode Spec Interview (findings)`; implementing build artifacts before spec approval; skipping Goal Contract, task planning, or the test plan skeleton; copying divergent Part 1 / Part 2 workflow section bodies from `Docs/AgToosa_Spec.md` into this skill; auto-running `/agtoosa-build` after spec.
 
 **Sub-commands:** when the user passes `research`, `plan`, `quick`, `tasks`, `amend`, or `to-issues`, dispatch that slice only while preserving the canonical phase obligations and stop conditions from `Docs/AgToosa_Spec.md`.

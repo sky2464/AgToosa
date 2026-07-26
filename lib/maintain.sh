@@ -481,6 +481,15 @@ if story_id != "none":
 
 st_short = re.sub(r"[🟦🟨🔍✅🏁🚫🔧⬜]\s*", "", status).strip() or status
 
+spec_approved = None
+if story_id != "none":
+    base = os.path.dirname(path)
+    spec_path = os.path.join(base, "archived", f"spec-{story_id}.md")
+    if os.path.isfile(spec_path):
+        spec_approved = "## ✅ Spec Approved" in open(spec_path, encoding="utf-8").read()
+    else:
+        spec_approved = False
+
 if not rows or all(score(r[1]) == 0 for r in rows):
     next_cmd = "/agtoosa-spec"
 elif story_id == "none":
@@ -496,6 +505,9 @@ elif "Todo" in status or "🟦" in status or "In Progress" in status or "🟨" i
 else:
     next_cmd = "/agtoosa-spec"
 
+if spec_approved is False and next_cmd == "/agtoosa-build":
+    next_cmd = "/agtoosa-spec"
+
 sync_line = f"SYNC: {story_id} · {st_short} · tasks {tasks_done}/{tasks_total} · clarity {clarity} · next {next_cmd}"
 
 anchor_map = {
@@ -507,14 +519,17 @@ anchor_map = {
 anchor = anchor_map.get(next_cmd, "none")
 
 if os.environ.get("ROUTE_HINT") == "true" and os.environ.get("STATUS_LINE_FORMAT") == "json":
-    print(json.dumps({
+    payload = {
         "sync": sync_line,
-        "anchor": anchor,
+        "anchor": anchor_map.get(next_cmd, "none"),
         "story_id": story_id,
         "tasks_done": tasks_done,
         "tasks_total": tasks_total,
         "next": next_cmd,
-    }))
+    }
+    if spec_approved is not None:
+        payload["spec_approved"] = spec_approved
+    print(json.dumps(payload))
 else:
     print(sync_line)
 PY

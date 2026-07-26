@@ -47,6 +47,30 @@ Every spec file opens with a metadata block:
 
 Keep the short name brief — it should match the story title in `docs/Master-Plan.md`.
 
+### Plan-Mode Spec Interview (findings)
+
+Required for every spec produced by full `/agtoosa-spec` (and recommended for `quick`). Place after optional `## Context` / brownfield baseline and **before** Goal Contract. Records what was inferred vs asked vs assumed — do not mark Clarity `ready` without it.
+
+```
+### Plan-Mode Spec Interview (findings)
+
+#### Inferred (≥80% — no question asked)
+
+| Checklist area | Finding |
+|----------------|---------|
+| [area] | [concise finding from research] |
+
+#### Asked & confirmed
+
+| Q# | Question | Answer |
+|----|----------|--------|
+| Q1 | [one-line question] | [user answer or menu pick] |
+
+#### Documented assumptions
+
+- [assumption] — [why accepted; cite user opt-in if exception to minimum floor]
+```
+
 ---
 
 ## Section 1 — Requirements

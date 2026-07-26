@@ -10,7 +10,7 @@ Read `docs/AgToosa_Next.md` and execute the `/agtoosa-next` workflow. See `docs/
 
 **Mandatory:** run `bash agtoosa.sh --status-line [path] --route-hint --format json` before dispatch.
 
-Dispatch based on any arguments after the command: `dry` or `pick`.
+Dispatch based on any arguments after the command: `dry`, `pick`, `fix`, `test`, or `docs`.
 
 **Phase stop:** dispatch exactly **one** lifecycle workflow per invocation. Do **not** auto-chain Spec → Build → Review → Ship.
 

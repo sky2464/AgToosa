@@ -7,7 +7,9 @@ This file is the native Gemini CLI command for `/agtoosa-spec`. When the user in
 
 Read Docs/AgToosa_Spec.md and execute the specification workflow. Generated Project Mode — see Docs/AgToosa_Agent.md Operating Contexts (the project/product, not AgToosa as the app).
 
-Plan-Mode Spec Interview: follow Docs/AgToosa_Spec.md Plan-Mode Spec Interview Contract (canonical). Research before asking; interview before final spec; adaptive cap 8 (quick cap 2).
+Plan-Mode Spec Interview: follow Docs/AgToosa_Spec.md Plan-Mode Spec Interview Contract (canonical). Research before asking; interview before final spec; adaptive cap 8 (quick cap 2); minimum validation floor 2 / 1; interview turn-stop after Q1.
+
+Agent Mode Execution Contract: read Docs/AgToosa_Spec.md in full before outputs. Forbidden: skipping interview; detailed user prompt as interview-complete; writing spec files in same turn as Q1; omitting Plan-Mode Spec Interview (findings); build before approval; auto-build or auto-approve.
 
 Dispatch based on any arguments provided after the command:
 - /agtoosa-spec                   → full workflow (Parts 1 + 2 + 3 + 4: research, spec, architecture/threat-model, task planning)

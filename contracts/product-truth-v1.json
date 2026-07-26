@@ -363,7 +363,10 @@
       "modes": [
         "full",
         "dry",
-        "pick"
+        "pick",
+        "fix",
+        "test",
+        "docs"
       ],
       "canonical_workflow": "Docs/AgToosa_Next.md",
       "operating_context": "generated-project",

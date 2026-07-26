@@ -101,19 +101,25 @@ Your core principles are:
 | `/agtoosa-evidence` | `docs/AgToosa_Evidence.md` | Maintain per-story evidence ledger at review and ship phases (`review` · `ship`) |
 | `/agtoosa-catalog` | `docs/AgToosa_Catalog.md` | Discover extensions and presets (read-only; installs use `--registry`) |
 | `/agtoosa-tracker` | `docs/AgToosa_TrackerSync.md` | Export Master-Plan stories or propose tracker return changes (`export` · `propose`; no live API sync) |
-| `/agtoosa-help` | Platform help entry points (`.claude/commands/`, `.gemini/commands/`, `.github/prompts/`, Cursor/Windsurf core rules) | **Assistance-only:** static command reference; default path does not read Master-Plan or git |
-| `/agtoosa-help next` | Same platform help surfaces | **Assistance-only:** read-only context read; recommends exactly one next command without executing it |
-| `/agtoosa-next` | `docs/AgToosa_Next.md` | **Lifecycle dispatcher:** read state pulse, dispatch and **execute** exactly one lifecycle workflow per invocation (`dry` · `pick`) |
+| `/agtoosa-next` | `docs/AgToosa_Next.md` | **Primary sequential driver:** SYNC routes and **executes** one workflow per invocation (`dry` · `pick` · `fix` · `test` · `docs`) |
+| `/agtoosa-help` | Platform help entry points | Static command reference; default path does not read Master-Plan or git |
+| `/agtoosa-help next` | Same platform help surfaces | **Preview only:** same routing as `/agtoosa-next dry`; hand off to `/agtoosa-next` for execution |
 
 ## Development Cycle
 
+**Default (sequential):**
+
 ```
-/agtoosa-init  →  /agtoosa-spec  →  /agtoosa-build  →  [/agtoosa-qa]  →  /agtoosa-review  →  /agtoosa-ship
-      ↑                                                                                              ↓
-      └───────────────────────────── (one-time, re-run only for major changes) ────────────────────┘
+/agtoosa-init  (once)  →  /agtoosa-next  (repeat after each phase)
 ```
 
-`/agtoosa-qa` is optional but recommended for teams that need a dedicated QA gate between build and review.
+**Advanced (explicit phases / parallel):**
+
+```
+/agtoosa-init  →  /agtoosa-spec  →  /agtoosa-build  →  [/agtoosa-qa]  →  /agtoosa-review  →  /agtoosa-ship
+```
+
+`/agtoosa-qa` is optional between build and review. Handoff, cross-model review, and orchestration fan-out use explicit advanced commands — not `/agtoosa-next`.
 
 Use sub-commands to re-run individual parts without repeating the full phase:
 ```
@@ -257,7 +263,9 @@ All AgToosa commands that require user input follow this shared protocol. It is 
 
 | Principle | Rule |
 |-----------|------|
-| **Infer first, ask second** | Scan the codebase, `docs/Master-Plan.md`, active specs, and `docs/Context/` before forming any question. If an answer is inferable with high confidence (≥80%), state it as a finding — do not ask. |
+| **Infer first, ask second** | Scan the codebase, `docs/Master-Plan.md`, active specs, and `docs/Context/` before forming any question. If an answer is inferable with high confidence (≥80%), state it as a finding — do not ask. A detailed user prompt is input, not interview completion. |
+| **Minimum validation floor** | Full `/agtoosa-spec`: at least **2** validation questions before writing spec files (cap **8**). `/agtoosa-spec quick`: at least **1** (cap **2**). Exception: user explicitly opts into documented assumptions after a research summary. |
+| **Interview turn-stop** | After research, end the turn on the first interview question. Do not write spec files, test plans, Master-Plan enrollments, or build artifacts in the same turn as Q1. |
 | **Options from context** | When asking, derive 2–3 options from what was found in the codebase or research. Mark one as recommended. Always allow free-text override. |
 | **One question at a time** | Never present the next question until the previous answer is received. |
 | **Bounded question budgets** | Respect the per-command maximum listed below. Quality over quantity. |
@@ -295,7 +303,7 @@ Wait for the user's explicit approval before starting the next phase or writing 
 | Command | Max questions | Notes |
 |---------|--------------|-------|
 | `/agtoosa-init` | 12 before continue gate | Goal discovery plus Context setup; if clarity is still missing after 12 questions, ask whether to continue or proceed with documented assumptions |
-| `/agtoosa-spec` | 8 (adaptive) | Plan-Mode Spec Interview: research first, infer before asking; if still unclear after 8 core questions, ask continue or proceed with documented assumptions; `/agtoosa-spec quick` cap **2**; Part 4 task planning is auto-derived from the approved spec |
+| `/agtoosa-spec` | 8 (adaptive) | Plan-Mode Spec Interview: research first, infer before asking; minimum validation floor **2** before spec write (quick floor **1**); interview turn-stop after Q1; if still unclear after 8 core questions, ask continue or proceed with documented assumptions; `/agtoosa-spec quick` cap **2**; Part 4 task planning is auto-derived from the approved spec |
 | `/agtoosa-build` | 0 | Execution phase — task list is already approved as part of `/agtoosa-spec`. Discovery Triage may surface mid-build questions but is not a budgeted gate. |
 | `/agtoosa-task` | 3 | Type + priority + context; type+priority can merge into one |
 | `/agtoosa-qa` | 0 | Execution phase — approval gate only |
@@ -390,6 +398,7 @@ When the user omits `/agtoosa-*`, run **AgToosa Lifecycle Compass** after Projec
 | BUILD intent + active tasks remain | ANCHOR `build` |
 | REVIEW intent + tasks complete | ANCHOR `review` |
 | SHIP intent + review not done | ANCHOR `review` first |
+| Sequential progress ("next", "continue", "what's next") | Route to `/agtoosa-next` (not raw phase slash) |
 | Low confidence | One multiple-choice question (plan / build / fix / review) |
 
 Explicit `/agtoosa-*` bypasses Compass ceremony. **Do not use Cursor native Plan mode** for in-scope product work — execute AgToosa workflow files. On hard-path confirm, begin the named workflow immediately; Compass is not permission to skip it. Never auto-chain Spec → Build → Review → Ship.
@@ -413,10 +422,12 @@ After **successful** completion of `/agtoosa-spec` (post-approval tasks slice), 
 1. Print a **primary lifecycle next-step** line — **not** `/agtoosa-status` as the headline:
 
     ```
-    ✅ Done. Next: /agtoosa-<command> — <one-line rationale>
+    ✅ Done. Next: /agtoosa-next — <one-line rationale>
     ```
 
-    Order: Spec approved → `/agtoosa-build`; build complete → `/agtoosa-review`; review approved → `/agtoosa-ship`; ship / no active work → `/agtoosa-spec` for the next story.
+    For sequential users, `/agtoosa-next` is the default handoff (it reads SYNC and dispatches the underlying phase). Advanced users may still invoke phase commands directly.
+
+    Underlying phase order: Spec approved → build; build complete → review; review approved → ship; ship / idle → spec for next story.
 
 2. Print an automatic **executive SYNC pulse** (same format as CLI):
 

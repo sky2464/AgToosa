@@ -27,8 +27,8 @@ Run the full cycle for every story. Do not skip phases.
 ## On-demand assistance (`/agtoosa-help`)
 
 - `/agtoosa-help` — static command reference; **do not** read `Docs/Master-Plan.md` or git on the default path.
-- `/agtoosa-help next` — **assistance-only**, read-only: read `Docs/Master-Plan.md` and git status, recommend exactly one next command. **Never modify** files, git state, or Master-Plan. Present mutating commands as **suggestions only** — **do not auto-run** `/agtoosa-spec`, `/agtoosa-build`, `/agtoosa-task`, or `/agtoosa-ship`.
-- `/agtoosa-next` — **lifecycle dispatcher**: run status pulse, then **execute** exactly one lifecycle workflow. One phase per invocation. See `Docs/AgToosa_Next.md`.
+- `/agtoosa-help next` — preview only; hand off to `/agtoosa-next` for execution. **Never modify** project state from help.
+- `/agtoosa-next` — primary sequential driver. See `Docs/AgToosa_Next.md`.
 - Empty Active Cycle → recommend `/agtoosa-spec`.
 - Not part of the 4-phase lifecycle diagram above.
 
