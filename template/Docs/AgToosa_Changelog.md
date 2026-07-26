@@ -7,6 +7,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.34] — 2026-07-26
+
+Patch release: DEV-121 — Behavioral Conformance Lab.
+
+### Added
+
+- **DEV-121 — Behavioral Conformance Lab.** Versioned scenario corpus; universal `lifecycle-compass-proof` × six platforms; `agtoosa-scenario-run.sh` + `agtoosa-scenario-verify.sh`; golden fixtures; DEV-094/096/101 cross-links; BCL-001–BCL-013 bats; ADR-021 Accepted.
+
+---
+
 ## [5.3.33] — 2026-07-26
 
 Patch release: DEV-127 — README Experience Refresh.

@@ -3,7 +3,7 @@
 > **Story ID:** DEV-121  
 > **Epic:** DEV-003 — Community Template Registry · DEV-004 — Testing & QA Harness  
 > **Type:** Spike  
-> **Status:** 🔍 In Review — Approved · next `/agtoosa-ship`  
+> **Status:** 🏁 Shipped (v5.3.34)  
 > **Estimate:** L  
 > **Clarity:** `ready`  
 > **Priority:** P0  

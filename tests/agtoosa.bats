@@ -14245,6 +14245,28 @@ PY
   grep -q 'docs/media/agtoosa-hero/agtoosa-hero.gif' "$root/README.md"
 }
 
+# -- DEV-121 ship regression v5.3.34 (SR-001) --------------------------------
+
+@test "DEV-121 @smoke SR-001: v5.3.34 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.34" ]
+  [ "$ps_ver" = "5.3.34" ]
+  [ "$npm_ver" = "5.3.34" ]
+  [ "$formula_ver" = "5.3.34" ]
+  grep -q '## \[5.3.34\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-121' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-121.md" ]
+  [ -f "$root/docs/archived/review-DEV-121.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-121.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-121.md"
+  [ -f "$root/docs/AgToosa_Behavioral_Conformance.md" ]
+}
+
 # -- DEV-121: Behavioral Conformance Lab (BCL-001–BCL-013) --------------------
 
 @test "DEV-121 @smoke BCL-001: Behavioral conformance contract defines runner and claim boundaries" {
