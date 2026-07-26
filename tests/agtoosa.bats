@@ -15171,3 +15171,11 @@ PY
   [ -f "$root/docs/archived/evidence-DEV-128.md" ]
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-128.md"
 }
+
+@test "UPG-007: upgrade platform prompt uses read -rp not read -e" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run grep -n 'read -e' "$root/agtoosa.sh"
+  [ "$status" -eq 1 ]
+  run grep -n 'read -rp "Platforms: "' "$root/agtoosa.sh"
+  [ "$status" -eq 0 ]
+}

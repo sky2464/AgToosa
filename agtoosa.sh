@@ -569,8 +569,7 @@ if [[ "$SMART_UPGRADE_MODE" == true && -z "$CLI_PLATFORMS" ]]; then
     if [[ "$ASSUME_YES" != true ]]; then
       echo -e "${CYAN}Change platforms? (Enter to keep current, or enter numbers e.g. 1 or 1 3)${NC}"
       echo ""
-      read -e -r -p "Platforms: " ADD_PLATFORM_SELECTION 2>/dev/null \
-        || read -r -p "Platforms: " ADD_PLATFORM_SELECTION
+      read -rp "Platforms: " ADD_PLATFORM_SELECTION
       ADD_PLATFORM_SELECTION="$(sanitize_platform_menu_input "$ADD_PLATFORM_SELECTION")"
       ADD_PLATFORM_SELECTION="${ADD_PLATFORM_SELECTION//[[:space:]]/}"
       if [[ -n "$ADD_PLATFORM_SELECTION" ]]; then
