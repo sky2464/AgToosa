@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.42] — 2026-07-26
+
+Patch release: DEV-128 hotfix — interactive upgrade platform prompt.
+
+### Fixed
+
+- **DEV-128 hotfix.** Restore `read -rp` for the upgrade `Platforms:` prompt on macOS (v5.3.41 `read -e` hid the prompt and blocked input); UPG-007 regression.
+
+---
+
 ## [5.3.41] — 2026-07-26
 
 Patch release: DEV-128 — Smart Upgrade Platform Selection & Version Guards.

@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-128  
 > **Epic:** DEV-001 — Generator  
-> **Status:** 🏁 Shipped — v5.3.41  
+> **Status:** 🏁 Shipped — v5.3.42 (hotfix: read -rp platform prompt)  
 > **Estimate:** S  
 > **Clarity:** `ready`  
 > **Spec created:** 2026-07-26  
