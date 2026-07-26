@@ -15197,6 +15197,25 @@ PY
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-128.md"
 }
 
+@test "DEV-129 @smoke SR-001: v5.3.43 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.43" ]
+  [ "$ps_ver" = "5.3.43" ]
+  [ "$npm_ver" = "5.3.43" ]
+  [ "$formula_ver" = "5.3.43" ]
+  grep -q '## \[5.3.43\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-129' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-129.md" ]
+  [ -f "$root/docs/archived/review-DEV-129.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-129.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-129.md"
+}
+
 @test "UPG-007: upgrade platform prompt uses read -rp not read -e" {
   local root="$BATS_TEST_DIRNAME/.."
   run grep -n 'read -e' "$root/agtoosa.sh"

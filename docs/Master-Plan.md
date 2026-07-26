@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-26 (/agtoosa-ship — DEV-128 hotfix v5.3.42)
+> **Last updated:** 2026-07-26 (/agtoosa-ship — DEV-129 v5.3.43)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Idle — DEV-128 shipped |
-| Milestone | `v5.3.43` (next) |
+| Current phase | Idle — DEV-129 shipped |
+| Milestone | `v5.3.44` (next) |
 | Active cycle | _(none — cycle idle)_ |
-| Cycle state | Idle — DEV-128 hotfix shipped v5.3.42 |
+| Cycle state | Idle — DEV-129 shipped v5.3.43 |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -118,6 +118,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-123 | Spike: Guarded Portable Execution | Spike | M | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.39 |
 | DEV-124 | Spike: Cross-Framework Interchange | Spike | M | DEV-002 | P2 | 🏁 Shipped — v5.3.40 |
 | DEV-128 | Bugfix: Smart Upgrade Platform & Version Guards | Bugfix | S | DEV-001 | P0 | 🏁 Shipped — v5.3.42 |
+| DEV-129 | Chore: Smart Upgrade UX Polish | Chore | S | DEV-001 | P0 | 🏁 Shipped — v5.3.43 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
 | DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v5.3.10 |
@@ -733,3 +734,6 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-26 22:50 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-128 hotfix — UPG-007; v5.3.42 | AgToosa |
 | 2026-07-26 22:50 | 🚀 Ship complete — v5.3.42 — DEV-128 interactive platform prompt hotfix | AgToosa |
 | 2026-07-26 22:50 | 🚀 Release 5.3.42 shipped — v5.3.42; version parity bash/ps1/npm/formula; Milestone v5.3.43 (next) | AgToosa |
+| 2026-07-26 23:47 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-129 — smoke PASS UPG/CLN gate; v5.3.43 | AgToosa |
+| 2026-07-26 23:47 | 🚀 Ship complete — v5.3.43 — DEV-129 Smart Upgrade UX Polish | AgToosa |
+| 2026-07-26 23:47 | 🚀 Release 5.3.43 shipped — v5.3.43; version parity bash/ps1/npm/formula; Milestone v5.3.44 (next) | AgToosa |

@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.43] — 2026-07-26
+
+Patch release: DEV-129 — Smart Upgrade UX Polish.
+
+### Changed
+
+- **DEV-129 — Upgrade UX polish.** Compact cleanup plan/apply by default (`--cleanup --verbose` for full lists); clearer platform replace prompt with removed-platform echo; narrowing confirmation before apply; backup/gitignore + prepared-vs-updated copy; `/agtoosa-update` nudge on upgrade; UPG-008–UPG-009 and CLN-018–CLN-019 bats.
+
+---
+
 ## [5.3.42] — 2026-07-26
 
 Patch release: DEV-128 hotfix — interactive upgrade platform prompt.
