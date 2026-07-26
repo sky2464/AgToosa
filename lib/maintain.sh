@@ -361,7 +361,7 @@ run_uninstall() {
   local removed=0 f
   for f in "${DOCS_FILES[@]}"; do
     case "$f" in
-      Docs/Master-Plan.md|Docs/Master-Architecture.md|Docs/AgToosa_Changelog.md) continue ;;
+      Docs/Master-Plan.md|Docs/Master-Architecture.md|Docs/AgToosa_Changelog.md|Docs/agtoosa-evidence.jsonl) continue ;;
     esac
     if [[ -f "${target}/${f}" ]]; then
       rm -f "${target}/${f}"
