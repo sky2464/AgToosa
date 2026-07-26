@@ -20,6 +20,13 @@ SMART_UPGRADE_MODE=false
 OLD_INSTALLED_VERSION=""
 SMART_APPLY_USE_UPDATE=false
 APPLY_QUIET=false
+PLATFORM_SELECTION_EXPLICIT=false
+
+# Strip escape sequences and non-menu digits from platform menu input.
+sanitize_platform_menu_input() {
+  local raw="$1"
+  printf '%s' "$raw" | tr -cd '1-8 '
+}
 
 apply_should_echo() {
   [[ "${APPLY_QUIET:-false}" != true ]]

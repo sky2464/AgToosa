@@ -21,7 +21,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.34" ]]
+  [[ "$output" == "AgToosa v5.3.41" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -15082,4 +15082,92 @@ PY
   [ -f "$root/docs/archived/evidence-DEV-124.md" ]
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-124.md"
   [ -f "$root/docs/AgToosa_Cross_Framework_Interchange.md" ]
+}
+
+# -- DEV-128 Smart Upgrade Platform & Version Guards (UPG-001–UPG-006) --------
+
+@test "UPG-001: smart upgrade input 1 replaces multi-platform lock with cursor only" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor,claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  run bash -c "printf '%s\n1\ny\nn\n' '$TEST_PROJECT' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  run python3 - "$TEST_PROJECT/Docs/agtoosa-lock.json" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1]))
+plats = d.get("platforms") or []
+assert plats == ["cursor"], plats
+PY
+  [ "$status" -eq 0 ]
+}
+
+@test "UPG-002: downgrade blocked when installed version is newer than generator" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo "9.9.9" > "$TEST_PROJECT/Docs/.agtoosa-version"
+  run bash -c "printf '%s\n\nn\n' '$TEST_PROJECT' | bash '$SCRIPT'"
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"older than installed"* ]]
+  [[ "$output" == *"9.9.9"* ]]
+}
+
+@test "UPG-003: sanitize_platform_menu_input strips escape garbage" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash -c '
+    source "'"$root"'/lib/apply.sh"
+    sanitize_platform_menu_input $'"'"'\e[A1'"'"'
+  '
+  [ "$status" -eq 0 ]
+  [ "$output" = "1" ]
+}
+
+@test "UPG-004: --platforms cursor on upgrade replaces multi-platform lock" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor,claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --yes < /dev/null
+  [ "$status" -eq 0 ]
+  run python3 - "$TEST_PROJECT/Docs/agtoosa-lock.json" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1]))
+plats = d.get("platforms") or []
+assert plats == ["cursor"], plats
+PY
+  [ "$status" -eq 0 ]
+}
+
+@test "UPG-005: change-platform prompt shown when all platforms installed" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms all --yes < /dev/null
+  [ "$status" -eq 0 ]
+  run bash -c "printf '%s\n\nn\n' '$TEST_PROJECT' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Change platforms?"* ]]
+}
+
+@test "UPG-006: --update path blocks downgrade" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo "9.9.9" > "$TEST_PROJECT/Docs/.agtoosa-version"
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"older than installed"* ]]
+}
+
+# -- DEV-128 ship regression v5.3.41 (SR-001) ---------------------------------
+
+@test "DEV-128 @smoke SR-001: v5.3.41 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.41" ]
+  [ "$ps_ver" = "5.3.41" ]
+  [ "$npm_ver" = "5.3.41" ]
+  [ "$formula_ver" = "5.3.41" ]
+  grep -q '## \[5.3.41\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-128' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-128.md" ]
+  [ -f "$root/docs/archived/review-DEV-128.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-128.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-128.md"
 }

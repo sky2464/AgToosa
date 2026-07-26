@@ -132,7 +132,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 # ── Version ───────────────────────────────────────────────────
-$AGTOOSA_VERSION = "5.3.40"
+$AGTOOSA_VERSION = "5.3.41"
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $TEMPLATE_DIR = Join-Path $SCRIPT_DIR "template"
 $SHIP_DIR = Join-Path $SCRIPT_DIR "ship"
@@ -586,6 +586,51 @@ function Get-AgToosaFileVersion([string]$path) {
 function Compare-AgToosaVersionLt([string]$a, [string]$b) {
     $pa = [version]::Parse($a); $pb = [version]::Parse($b)
     return $pa -lt $pb
+}
+
+function Sanitize-PlatformMenuInput([string]$raw) {
+    return ($raw -replace '[^1-8 ]', '')
+}
+
+function Get-PlatformsFromMenuDigits([string]$selection) {
+    $list = [System.Collections.Generic.List[string]]::new()
+    if ($selection -match '8') {
+        $list.AddRange([string[]]@("cursor", "windsurf", "claude", "gemini", "copilot", "vscode", "opencode"))
+        return ,$list.ToArray()
+    }
+    if ($selection -match '1') { $list.Add('cursor') }
+    if ($selection -match '2') { $list.Add('windsurf') }
+    if ($selection -match '3') { $list.Add('claude') }
+    if ($selection -match '4') { $list.Add('gemini') }
+    if ($selection -match '5') { $list.Add('copilot') }
+    if ($selection -match '6') { $list.Add('vscode') }
+    if ($selection -match '7') { $list.Add('opencode') }
+    return ,$list.ToArray()
+}
+
+function Assert-NotDowngrade([string]$installed, [string]$generator) {
+    if ([string]::IsNullOrWhiteSpace($installed) -or $installed -eq 'unknown') { return }
+    if ([string]::IsNullOrWhiteSpace($generator)) { return }
+    if (-not (Compare-AgToosaVersionLt $generator $installed)) { return }
+    if ($Force) {
+        Write-Color "${YELLOW}⚠️  Warning: generator v${generator} is older than installed v${installed} (-Force override).${NC}"
+        return
+    }
+    Write-Color "${RED}❌ Error: generator v${generator} is older than installed v${installed}.${NC}"
+    Write-Color ""
+    Write-Color "Update your AgToosa generator before applying to this project:"
+    Write-Color "  git pull; .\agtoosa.ps1   # or upgrade via package manager"
+    Write-Color ""
+    Write-Color "Advanced: pass -Force only if you intentionally need a downgrade."
+    exit 1
+}
+
+function Write-UpgradeBanner([string]$installed, [string]$generator) {
+    if ($installed -eq $generator) {
+        Write-Color "${PURPLE}${BOLD}Refreshing AgToosa v${installed}${NC}"
+    } else {
+        Write-Color "${PURPLE}${BOLD}Upgrading AgToosa v${installed} → v${generator}${NC}"
+    }
 }
 
 # Merge-PlatformFile: 4-case merge for AgToosa-owned platform entry-point files.
@@ -1459,10 +1504,12 @@ Write-Color ""
 
 $smartUpgradeMode = Test-ExistingAgToosa $projectPath
 $oldInstalledVersion = "unknown"
+$script:PlatformSelectionExplicit = $false
 if ($smartUpgradeMode) {
     $script:ApplyQuiet = $true
     $oldInstalledVersion = Get-InstalledVersion $projectPath
-    Write-Color "${PURPLE}${BOLD}Upgrading AgToosa v${oldInstalledVersion} → v${AGTOOSA_VERSION}${NC}"
+    Assert-NotDowngrade $oldInstalledVersion $AGTOOSA_VERSION
+    Write-UpgradeBanner $oldInstalledVersion $AGTOOSA_VERSION
     Write-Color ""
 } else {
     Write-Color "${YELLOW}How it works:${NC}"
@@ -1482,22 +1529,13 @@ if ($smartUpgradeMode -and [string]::IsNullOrWhiteSpace($cliPlatforms)) {
         if (-not $selectedPlatforms.Contains($p)) { [void]$selectedPlatforms.Add($p) }
     }
     Write-PlatformLegend $selectedPlatforms.ToArray()
-    if (-not $Yes -and -not (Test-AllPlatformsInstalled $selectedPlatforms.ToArray())) {
-        Write-Color "${CYAN}Add platforms? (Enter to keep, or enter numbers e.g. 2 6)${NC}"
-        $addSelection = Read-Host "Add platforms"
+    if (-not $Yes) {
+        Write-Color "${CYAN}Change platforms? (Enter to keep current, or enter numbers e.g. 1 or 1 3)${NC}"
+        $addSelection = Sanitize-PlatformMenuInput (Read-Host "Platforms")
         if (-not [string]::IsNullOrWhiteSpace($addSelection)) {
-            if ($addSelection -match "8") {
-                $selectedPlatforms.Clear()
-                $selectedPlatforms.AddRange([string[]]@("cursor", "windsurf", "claude", "gemini", "copilot", "vscode", "opencode"))
-            } else {
-                if ($addSelection -match "1") { if (-not $selectedPlatforms.Contains("cursor")) { $selectedPlatforms.Add("cursor") } }
-                if ($addSelection -match "2") { if (-not $selectedPlatforms.Contains("windsurf")) { $selectedPlatforms.Add("windsurf") } }
-                if ($addSelection -match "3") { if (-not $selectedPlatforms.Contains("claude")) { $selectedPlatforms.Add("claude") } }
-                if ($addSelection -match "4") { if (-not $selectedPlatforms.Contains("gemini")) { $selectedPlatforms.Add("gemini") } }
-                if ($addSelection -match "5") { if (-not $selectedPlatforms.Contains("copilot")) { $selectedPlatforms.Add("copilot") } }
-                if ($addSelection -match "6") { if (-not $selectedPlatforms.Contains("vscode")) { $selectedPlatforms.Add("vscode") } }
-                if ($addSelection -match "7") { if (-not $selectedPlatforms.Contains("opencode")) { $selectedPlatforms.Add("opencode") } }
-            }
+            $selectedPlatforms.Clear()
+            $selectedPlatforms.AddRange((Get-PlatformsFromMenuDigits $addSelection))
+            $script:PlatformSelectionExplicit = $true
             Write-Color ""
             Write-Color "${GREEN}Platforms:${NC} $(Get-PlatformDisplayNames $selectedPlatforms.ToArray())"
         }
@@ -1508,13 +1546,9 @@ if ($smartUpgradeMode -and [string]::IsNullOrWhiteSpace($cliPlatforms)) {
             [void]$selectedPlatforms.Add($platformName)
         }
     }
+    $script:PlatformSelectionExplicit = $true
     Write-Color ""
     Write-Color "${BOLD}Platforms (from -Platforms):${NC} $cliPlatforms"
-    if ($smartUpgradeMode) {
-        foreach ($p in (Get-InstalledPlatforms $projectPath)) {
-            if (-not $selectedPlatforms.Contains($p)) { [void]$selectedPlatforms.Add($p) }
-        }
-    }
 } else {
     Write-Color "${YELLOW}Select AI platform(s) — enter numbers separated by spaces (e.g. 1 3):${NC}"
     Write-Color "  1) Cursor"

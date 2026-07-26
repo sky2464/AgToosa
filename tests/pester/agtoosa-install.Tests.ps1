@@ -71,3 +71,35 @@ Describe 'DEV-074 PS1 non-interactive install' {
         }
     }
 }
+
+Describe 'DEV-128 PS1 upgrade guards' {
+    It 'UPG-001: -Platforms cursor on upgrade applies without union-add' {
+        $project = Join-Path ([System.IO.Path]::GetTempPath()) ("agtoosa-upg-" + [guid]::NewGuid().ToString())
+        New-Item -ItemType Directory -Path $project -Force | Out-Null
+        try {
+            $exit = Invoke-AgToosaInstall @('-Path', $project, '-Platforms', 'cursor,claude', '-Yes')
+            $exit | Should -Be 0
+            Test-Path (Join-Path $project '.cursorrules') | Should -BeTrue
+            Test-Path (Join-Path $project 'CLAUDE.md') | Should -BeTrue
+            $exit = Invoke-AgToosaInstall @('-Path', $project, '-Platforms', 'cursor', '-Yes')
+            $exit | Should -Be 0
+            Test-Path (Join-Path $project '.cursorrules') | Should -BeTrue
+        } finally {
+            Remove-Item -Recurse -Force $project -ErrorAction SilentlyContinue
+        }
+    }
+
+    It 'UPG-002: downgrade blocked when installed version is newer than generator' {
+        $project = Join-Path ([System.IO.Path]::GetTempPath()) ("agtoosa-upg-" + [guid]::NewGuid().ToString())
+        New-Item -ItemType Directory -Path $project -Force | Out-Null
+        try {
+            $exit = Invoke-AgToosaInstall @('-Path', $project, '-Platforms', 'claude', '-Yes')
+            $exit | Should -Be 0
+            Set-Content -Path (Join-Path $project 'Docs\.agtoosa-version') -Value '9.9.9' -NoNewline
+            $exit = Invoke-AgToosaInstall @('-Path', $project, '-Yes')
+            $exit | Should -Not -Be 0
+        } finally {
+            Remove-Item -Recurse -Force $project -ErrorAction SilentlyContinue
+        }
+    }
+}

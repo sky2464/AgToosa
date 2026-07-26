@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-26 (/agtoosa-spec tasks — Active Tasks idle hygiene)
+> **Last updated:** 2026-07-26 (/agtoosa-ship — DEV-128 v5.3.41)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Idle — competitive proof portfolio complete |
-| Milestone | `v5.3.41` (next) |
+| Current phase | Idle — DEV-128 shipped |
+| Milestone | `v5.3.42` (next) |
 | Active cycle | _(none — cycle idle)_ |
-| Cycle state | Idle — DEV-124 shipped v5.3.40 |
+| Cycle state | Idle — DEV-128 shipped v5.3.41 |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -24,6 +24,8 @@
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
 | _(none — cycle idle)_ | | | | | |
+
+<!-- Archived to docs/archived/cycle-2026-07-26-release-5.3.41.md (DEV-128 v5.3.41) -->
 
 <!-- Archived to docs/archived/cycle-2026-07-26-release-5.3.40.md (DEV-124 v5.3.40) -->
 <!-- Archived to docs/archived/cycle-2026-07-26-release-5.3.37.md (DEV-120 v5.3.37) -->
@@ -67,7 +69,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for enrolled Active Cycle stories. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-_(No stories enrolled — cycle idle. Shipped task trees live in archived specs under `docs/archived/spec-*.md`. Run `/agtoosa-spec` to enroll the next story, then `/agtoosa-spec tasks` to sync Part 4.)_
+_(No stories enrolled — cycle idle. Shipped task trees live in archived specs under `docs/archived/spec-*.md`. Run `/agtoosa-spec` to enroll the next story.)_
 
 ## Manual / Deferred Tasks
 
@@ -115,6 +117,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-122 | Spike: Change-Aware Adaptive Delivery | Spike | L | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.38 |
 | DEV-123 | Spike: Guarded Portable Execution | Spike | M | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.39 |
 | DEV-124 | Spike: Cross-Framework Interchange | Spike | M | DEV-002 | P2 | 🏁 Shipped — v5.3.40 |
+| DEV-128 | Bugfix: Smart Upgrade Platform & Version Guards | Bugfix | S | DEV-001 | P0 | 🏁 Shipped — v5.3.41 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
 | DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v5.3.10 |
@@ -722,3 +725,8 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-26 22:20 | 🚀 Release 5.3.40 shipped — v5.3.40; version parity bash/ps1/npm/formula; Milestone v5.3.41 (next); competitive proof portfolio complete | AgToosa |
 | 2026-07-26 22:15 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-124 — 0 Critical, 2 Warning | AgToosa |
 | 2026-07-26 22:25 | ✏️ /agtoosa-spec tasks — Active Tasks idle hygiene — removed orphaned DEV-120/123/124 stubs; cycle idle; next `/agtoosa-spec` to enroll | AgToosa |
+| 2026-07-26 22:40 | 🔨 /agtoosa-build — DEV-128 build complete — UPG-001–UPG-006 green; downgrade guard + platform replace semantics | AgToosa |
+| 2026-07-26 22:41 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-128 — 0 Critical, 1 Warning | AgToosa |
+| 2026-07-26 22:42 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-128 — smoke PASS UPG-001–006 + SR-001; v5.3.41; cycle archived | AgToosa |
+| 2026-07-26 22:42 | 🚀 Ship complete — v5.3.41 — DEV-128 Smart Upgrade Platform & Version Guards | AgToosa |
+| 2026-07-26 22:42 | 🚀 Release 5.3.41 shipped — v5.3.41; version parity bash/ps1/npm/formula; Milestone v5.3.42 (next) | AgToosa |

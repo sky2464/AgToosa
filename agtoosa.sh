@@ -10,7 +10,7 @@ set -euo pipefail
 #   bash agtoosa.sh [--force] [--dry-run] [--version] [--help]
 # ──────────────────────────────────────────────────────────────
 
-AGTOOSA_VERSION="5.3.40"
+AGTOOSA_VERSION="5.3.41"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
 SHIP_DIR="${AGTOOSA_SHIP_DIR:-${SCRIPT_DIR}/ship}"
@@ -445,6 +445,7 @@ if [[ "$UPDATE" == true ]]; then
   fi
 
   OLD_VERSION="$(read_installed_version "$PROJECT_PATH")"
+  assert_not_downgrade "$OLD_VERSION" "$AGTOOSA_VERSION"
 
   # DEV-091: MAJOR migration wizard (plan / gate / rollback)
   if declare -F is_major_migration >/dev/null 2>&1 \
@@ -460,7 +461,7 @@ if [[ "$UPDATE" == true ]]; then
   fi
 
   echo ""
-  echo -e "${PURPLE}${BOLD}Updating AgToosa v${OLD_VERSION} → v${AGTOOSA_VERSION}${NC}"
+  print_upgrade_banner "$OLD_VERSION" "$AGTOOSA_VERSION"
   echo -e "${PURPLE}${BOLD}Project: ${PROJECT_PATH}${NC}"
   echo ""
 
@@ -543,8 +544,9 @@ if detect_existing_agtoosa "$PROJECT_PATH"; then
   SMART_UPGRADE_MODE=true
   APPLY_QUIET=true
   OLD_INSTALLED_VERSION="$(read_installed_version "$PROJECT_PATH")"
+  assert_not_downgrade "$OLD_INSTALLED_VERSION" "$AGTOOSA_VERSION"
   if [[ "$PLAN_JSON_MODE" != true ]]; then
-    echo -e "${PURPLE}${BOLD}Upgrading AgToosa v${OLD_INSTALLED_VERSION} → v${AGTOOSA_VERSION}${NC}"
+    print_upgrade_banner "$OLD_INSTALLED_VERSION" "$AGTOOSA_VERSION"
     echo ""
   fi
 else
@@ -564,13 +566,16 @@ if [[ "$SMART_UPGRADE_MODE" == true && -z "$CLI_PLATFORMS" ]]; then
   detect_installed_platforms
   if [[ "$PLAN_JSON_MODE" != true ]]; then
     print_platform_legend
-    if [[ "$ASSUME_YES" != true ]] && ! all_platforms_installed; then
-      echo -e "${CYAN}Add platforms? (Enter to keep, or enter numbers e.g. 2 6)${NC}"
+    if [[ "$ASSUME_YES" != true ]]; then
+      echo -e "${CYAN}Change platforms? (Enter to keep current, or enter numbers e.g. 1 or 1 3)${NC}"
       echo ""
-      read -rp "Add platforms: " ADD_PLATFORM_SELECTION
+      read -e -r -p "Platforms: " ADD_PLATFORM_SELECTION 2>/dev/null \
+        || read -r -p "Platforms: " ADD_PLATFORM_SELECTION
+      ADD_PLATFORM_SELECTION="$(sanitize_platform_menu_input "$ADD_PLATFORM_SELECTION")"
       ADD_PLATFORM_SELECTION="${ADD_PLATFORM_SELECTION//[[:space:]]/}"
       if [[ -n "$ADD_PLATFORM_SELECTION" ]]; then
-        union_platform_selection "$ADD_PLATFORM_SELECTION"
+        apply_platform_selection "$ADD_PLATFORM_SELECTION"
+        PLATFORM_SELECTION_EXPLICIT=true
         echo ""
         echo -e "${GREEN}Platforms:${NC} $(platform_flags_to_names)"
         echo ""
@@ -601,10 +606,7 @@ elif [[ -n "$CLI_PLATFORMS" ]]; then
   done < <(tr ',' '\n' <<< "$CLI_PLATFORMS")
   SELECTION="${SELECTION# }"
   apply_platform_selection "$SELECTION"
-  if [[ "$SMART_UPGRADE_MODE" == true ]]; then
-    detect_installed_platforms
-    union_platform_selection "$SELECTION"
-  fi
+  PLATFORM_SELECTION_EXPLICIT=true
   [[ "$PLAN_JSON_MODE" != true ]] && echo -e "${BOLD}Platforms (from --platforms):${NC} ${CLI_PLATFORMS}"
 else
   echo -e "${BOLD}Which AI coding assistant(s) do you use?${NC}"

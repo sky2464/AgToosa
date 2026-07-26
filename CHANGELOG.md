@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.41] — 2026-07-26
+
+Patch release: DEV-128 — Smart Upgrade Platform Selection & Version Guards.
+
+### Fixed
+
+- **DEV-128 — Smart upgrade UX.** Platform digits on upgrade **replace** the active set (not union-add); downgrade guard blocks when generator is older than installed; menu input sanitizes escape sequences; Bash + PowerShell parity; UPG-001–UPG-006 bats.
+
+---
+
 ## [5.3.40] — 2026-07-26
 
 Patch release: DEV-124 — Cross-Framework Interchange.

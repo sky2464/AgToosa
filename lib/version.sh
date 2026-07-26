@@ -46,3 +46,34 @@ version_lt() {
   (( 10#$a3 < 10#$b3 )) && return 0
   return 1
 }
+
+# Exit when generator is older than installed (downgrade). --force allows with warning.
+assert_not_downgrade() {
+  local installed="$1" generator="$2"
+  [[ -z "$installed" || "$installed" == "unknown" ]] && return 0
+  [[ -z "$generator" ]] && return 0
+  version_lt "$generator" "$installed" || return 0
+
+  if [[ "${FORCE:-false}" == true ]]; then
+    echo -e "${YELLOW}⚠️  Warning: generator v${generator} is older than installed v${installed} (--force override).${NC}" >&2
+    return 0
+  fi
+
+  echo -e "${RED}❌ Error: generator v${generator} is older than installed v${installed}.${NC}" >&2
+  echo "" >&2
+  echo "Update your AgToosa generator before applying to this project:" >&2
+  echo "  git pull && bash agtoosa.sh   # or: brew upgrade agtoosa / npm update -g agtoosa" >&2
+  echo "" >&2
+  echo "Advanced: pass --force only if you intentionally need a downgrade." >&2
+  exit 1
+}
+
+# Print upgrade banner line for installed → generator versions.
+print_upgrade_banner() {
+  local installed="$1" generator="$2"
+  if [[ "$installed" == "$generator" ]]; then
+    echo -e "${PURPLE}${BOLD}Refreshing AgToosa v${installed}${NC}"
+  else
+    echo -e "${PURPLE}${BOLD}Upgrading AgToosa v${installed} → v${generator}${NC}"
+  fi
+}

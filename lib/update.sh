@@ -196,7 +196,9 @@ run_update() {
   echo -e "${YELLOW}Updating platform files...${NC}"
 
   # Step 2: Platform entry-points — smart merge (only if sentinel exists)
-  detect_installed_platforms
+  if [[ "${PLATFORM_SELECTION_EXPLICIT:-false}" != true ]]; then
+    detect_installed_platforms
+  fi
 
   if [[ "$USE_CURSOR" == true ]]; then
     detected_names+=("cursor")

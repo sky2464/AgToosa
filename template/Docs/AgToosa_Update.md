@@ -33,7 +33,7 @@ bash agtoosa.sh --path <dir> --yes # non-interactive apply
 bash agtoosa.sh --update <dir>     # backward-compatible alias (same apply engine)
 ```
 
-When `Docs/.agtoosa-version` or `Docs/AgToosa_Agent.md` exists, the CLI enters **upgrade mode**: auto-detects installed platforms, offers to add more, preserves project-owned files (`Master-Plan`, `Changelog`, filled `Context/`), refreshes unfilled Context stubs, smart-merges entry points, and prints summary buckets (`Updated` / `Preserved` / `Unchanged` / `Merged`).
+When `Docs/.agtoosa-version` or `Docs/AgToosa_Agent.md` exists, the CLI enters **upgrade mode**: auto-detects installed platforms, **Enter keeps the current set**, entering numbers **replaces** the active platform set (cleanup can remove deselected platform files), **refuses apply when the generator is older than the installed version** (unless `--force`), preserves project-owned files (`Master-Plan`, `Changelog`, filled `Context/`), refreshes unfilled Context stubs, smart-merges entry points, and prints summary buckets (`Updated` / `Preserved` / `Unchanged` / `Merged`).
 
 **`--force` (advanced / CI only):** Not shown in interactive copy. Use with `--yes` when you intentionally need full replace on Context or platform entry points (still never overwrites `Master-Plan`, `Changelog`, or `Master-Architecture`). Example: `bash agtoosa.sh --path <dir> --platforms cursor --yes --force`.
 
