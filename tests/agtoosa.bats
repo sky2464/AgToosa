@@ -21,7 +21,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.26" ]]
+  [[ "$output" == "AgToosa v5.3.33" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -3784,16 +3784,18 @@ JSON
 
 @test "DEV-037 TD-002: README uses current competitor decision guide" {
   local readme="$BATS_TEST_DIRNAME/../README.md"
-  ! grep -q "AgToosa v2" "$readme"
-  ! grep -q "Conductor" "$readme"
-  grep -q "Use AgToosa when" "$readme"
-  grep -q "Use another tool when" "$readme"
-  grep -q "GitHub Spec Kit" "$readme"
-  grep -q "OpenSpec" "$readme"
-  grep -q "BMAD" "$readme"
-  grep -q "Task Master" "$readme"
-  grep -q "Spec Kitty" "$readme"
-  grep -q "metaswarm" "$readme"
+  local ref="$BATS_TEST_DIRNAME/../docs/guides/readme-reference.md"
+  grep -q "readme-reference" "$readme"
+  ! grep -q "AgToosa v2" "$ref"
+  ! grep -q "Conductor" "$ref"
+  grep -q "Use AgToosa when" "$ref"
+  grep -q "Use another tool when" "$ref"
+  grep -q "GitHub Spec Kit" "$ref"
+  grep -q "OpenSpec" "$ref"
+  grep -q "BMAD" "$ref"
+  grep -q "Task Master" "$ref"
+  grep -q "Spec Kitty" "$ref"
+  grep -q "metaswarm" "$ref"
 }
 
 @test "DEV-037 TD-003: SECURITY policy names current supported surfaces" {
@@ -4096,11 +4098,13 @@ assert_competitive_story_artifacts() {
 
 @test "DEV-042-060 CW-004: README points to the competitive wave without overpromising" {
   local readme="$BATS_TEST_DIRNAME/../README.md"
+  local ref="$BATS_TEST_DIRNAME/../docs/guides/readme-reference.md"
 
-  grep -q "Competitive execution wave" "$readme"
-  grep -q "DEV-042 through DEV-060" "$readme"
-  grep -q "roadmap specs, not current guarantees" "$readme"
-  grep -q "repo-native proof gates" "$readme"
+  grep -q "readme-reference" "$readme"
+  grep -q "Competitive execution wave" "$ref"
+  grep -q "DEV-042 through DEV-060" "$ref"
+  grep -q "roadmap specs, not current guarantees" "$ref"
+  grep -q "repo-native proof gates" "$ref"
 }
 
 @test "DEV-042 CW-005: Spec Quality Analyzer backlog artifacts exist" {
@@ -9664,6 +9668,65 @@ EOF
   [ "$(grep -E '^## [0-9]+\.' "$first15" | tr '\n' '|')" = "$step_sig_before" ]
 }
 
+# ── DEV-127: README experience refresh (RMH-001–RMH-009) ─────────────────────
+
+rmh_readme_body_lines() {
+  local readme="$1"
+  awk '/<!-- AGTOOSA PRODUCT TRUTH START/{exit} {print}' "$readme" | wc -l | tr -d ' '
+}
+
+@test "DEV-127 @smoke RMH-001: README references hero motion assets" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  local hero_dir="$BATS_TEST_DIRNAME/../docs/media/agtoosa-hero"
+  grep -q 'docs/media/agtoosa-hero/agtoosa-hero.gif' "$readme"
+  grep -q 'docs/media/agtoosa-hero/lifecycle-accent.svg' "$readme"
+  [ -f "$hero_dir/agtoosa-hero.gif" ]
+  [ -f "$hero_dir/agtoosa-hero-poster.png" ]
+  [ -f "$hero_dir/lifecycle-accent.svg" ]
+}
+
+@test "DEV-127 RMH-002: README body stays within line budget" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  local lines
+  lines="$(rmh_readme_body_lines "$readme")"
+  [[ "$lines" -le 180 ]]
+}
+
+@test "DEV-127 RMH-003: readme-reference holds relocated deep content" {
+  local ref="$BATS_TEST_DIRNAME/../docs/guides/readme-reference.md"
+  grep -q '^## Installation' "$ref"
+  grep -q '^## How It Differs' "$ref"
+  grep -q '### Alternative install paths' "$ref"
+  grep -q 'Public launch: pinned release' "$ref"
+}
+
+@test "DEV-127 RMH-004: architecture-overview has full lifecycle mermaid" {
+  local arch="$BATS_TEST_DIRNAME/../docs/guides/architecture-overview.md"
+  grep -q 'PHASE 1 — SPEC & PLANNING' "$arch"
+  grep -q 'PHASE 4 — SHIP & ARCHIVE' "$arch"
+  grep -q '/agtoosa-init' "$arch"
+}
+
+@test "DEV-127 RMH-005: Remotion hero source is present" {
+  local hero_dir="$BATS_TEST_DIRNAME/../docs/media/agtoosa-hero"
+  [ -f "$hero_dir/package.json" ]
+  [ -f "$hero_dir/src/Hero.tsx" ]
+  grep -q 'remotion' "$hero_dir/package.json"
+}
+
+@test "DEV-127 RMH-006: launch checker passes after README refresh" {
+  run prf_run_checker "$BATS_TEST_DIRNAME/.." --mode private
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-127 RMH-009: wiki home indexes new guides without Linear PM claim" {
+  local wiki="$BATS_TEST_DIRNAME/../.wiki/Home.md"
+  local bad='Linear as canonical|syncs with Linear'
+  grep -q 'readme-reference.md' "$wiki"
+  grep -q 'architecture-overview.md' "$wiki"
+  ! grep -qE "$bad" "$wiki"
+}
+
 # ── DEV-105: PowerShell maintain + update parity (PSP-001–PSP-008) ───────────
 
 @test "DEV-105 @smoke PSP-006: agtoosa.ps1 declares maintain switches" {
@@ -14158,4 +14221,26 @@ PY
   grep -q 'transaction-recover' "$root/agtoosa.sh"
   grep -q 'transaction-status' "$root/agtoosa.sh"
   grep -q '\.agtoosa/transactions' "$root/template/.gitignore"
+}
+
+# -- DEV-127 ship regression v5.3.33 (SR-001) --------------------------------
+
+@test "DEV-127 @smoke SR-001: v5.3.33 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.33" ]
+  [ "$ps_ver" = "5.3.33" ]
+  [ "$npm_ver" = "5.3.33" ]
+  [ "$formula_ver" = "5.3.33" ]
+  grep -q '## \[5.3.33\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-127' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-127.md" ]
+  [ -f "$root/docs/archived/review-DEV-127.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-127.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-127.md"
+  grep -q 'docs/media/agtoosa-hero/agtoosa-hero.gif' "$root/README.md"
 }

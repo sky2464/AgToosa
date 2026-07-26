@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-26 (DEV-119 shipped v5.3.32)
+> **Last updated:** 2026-07-26 (DEV-127 shipped v5.3.33)
 
 ## Project Charter
 
@@ -9,8 +9,8 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | DEV-119 shipped — enroll next via `/agtoosa-spec` |
-| Milestone | `v5.3.33` (next) |
+| Current phase | DEV-127 shipped — enroll next via `/agtoosa-spec` |
+| Milestone | `v5.3.34` (next) |
 | Active cycle | Idle — awaiting next scoped story |
 | Cycle state | Idle — awaiting next scoped story |
 | Cycle capacity | `8 story points` |
@@ -25,6 +25,7 @@
 |----|-------|------|----------|--------|-----------|
 | — | (none — cycle idle) | — | — | — | — |
 
+<!-- Archived to docs/archived/cycle-2026-07-26-release-5.3.33.md (DEV-127 v5.3.33) -->
 <!-- Archived to docs/archived/cycle-2026-07-26-release-5.3.32.md (DEV-119 v5.3.32) -->
 <!-- Archived to docs/archived/cycle-2026-07-22-release-5.3.30.md (DEV-118 v5.3.30) -->
 <!-- Archived to docs/archived/cycle-2026-07-14-release-5.3.29.md (DEV-117 v5.3.29) -->
@@ -266,6 +267,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-127 | Docs: README Experience Refresh | 2026-07-26 | [spec-DEV-127.md](archived/spec-DEV-127.md) · [review-DEV-127.md](archived/review-DEV-127.md) · [evidence-DEV-127.md](archived/evidence-DEV-127.md) |
 | DEV-119 | Feature: Recoverable Project Transaction | 2026-07-26 | [spec-DEV-119.md](archived/spec-DEV-119.md) · [review-DEV-119.md](archived/review-DEV-119.md) · [evidence-DEV-119.md](archived/evidence-DEV-119.md) |
 | DEV-118 | Chore: Product Truth & Adapter Contract | 2026-07-22 | [spec-DEV-118.md](archived/spec-DEV-118.md) · [review-DEV-118.md](archived/review-DEV-118.md) · [evidence-DEV-118.md](archived/evidence-DEV-118.md) |
 | DEV-117 | Chore: Cycle Continuity Guard | 2026-07-14 | [spec-DEV-117.md](archived/spec-DEV-117.md) · [review-DEV-117.md](archived/review-DEV-117.md) · [evidence-DEV-117.md](archived/evidence-DEV-117.md) |
@@ -677,3 +679,8 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-26 13:15 | 🔨 /agtoosa-build — DEV-125 build complete — `AgToosa_Next.md`, six platform adapters, product-truth `command.next`, NXT-001–NXT-009 bats green | AgToosa |
 | 2026-07-26 14:00 | 🔨 /agtoosa-build — DEV-125 A+B hybrid — help previews + Next executes; `spec_approved` in route-hint JSON; Quickref Day 1 = init + next; NXT-010–NXT-012 | AgToosa |
 | 2026-07-26 13:30 | 🔨 /agtoosa-build — DEV-126 build complete — spec interview hardening (validation floor, turn-stop, findings artifact, adapter contracts); DEV-126 T-001–T-008 bats green | AgToosa |
+| 2026-07-26 14:30 | 🏗️ /agtoosa-build — DEV-127 build complete — motion-first README; readme-reference + architecture guides; RMH green | AgToosa |
+| 2026-07-26 14:36 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-127 — 0 Critical, 3 Warning | AgToosa |
+| 2026-07-26 14:45 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-127 — smoke PASS; v5.3.33; cycle archived | AgToosa |
+| 2026-07-26 14:45 | 🚀 Ship complete — v5.3.33 — DEV-127 README Experience Refresh | AgToosa |
+| 2026-07-26 14:45 | 🚀 Release 5.3.33 shipped — v5.3.33; version parity bash/ps1/npm/formula; Milestone v5.3.34 (next) | AgToosa |

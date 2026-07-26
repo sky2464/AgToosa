@@ -1,0 +1,23 @@
+{
+  "name": "agtoosa-hero",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Remotion hero loop for AgToosa README",
+  "scripts": {
+    "start": "remotion studio src/index.ts",
+    "render:gif": "remotion render src/index.ts Hero out/agtoosa-hero.gif --every-nth-frame=2",
+    "render:png": "remotion still src/index.ts Hero out/agtoosa-hero-poster.png --frame=90",
+    "render:webp": "remotion render src/index.ts Hero out/agtoosa-hero.webp --codec=webp --every-nth-frame=2",
+    "render:all": "npm run render:png && npm run render:gif && npm run render:webp"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "typescript": "^5.5.4"
+  }
+}

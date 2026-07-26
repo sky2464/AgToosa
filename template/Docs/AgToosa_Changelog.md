@@ -7,6 +7,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.33] — 2026-07-26
+
+Patch release: DEV-127 — README Experience Refresh.
+
+### Added
+
+- **DEV-127 — README Experience Refresh.** Motion-first short README (~121 lines); `docs/guides/readme-reference.md` and `architecture-overview.md` deep dives; Remotion hero GIF + animated SVG under `docs/media/agtoosa-hero/`; RMH-001–009 bats; wiki home refresh.
+
+---
+
 ## [5.3.32] — 2026-07-26
 
 Patch release: DEV-119 — Recoverable Project Transaction.
