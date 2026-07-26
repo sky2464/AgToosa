@@ -29,7 +29,7 @@ if [[ ! -d "${SCRIPT_DIR}/lib" ]]; then
 fi
 
 # ── Source modular libraries ──────────────────────────────────
-for _lib in config version copy apply state lock generate plan dryrun install update migrate provenance registry catalog tracker maintain reinstall cleanup; do
+for _lib in config version copy apply transaction state lock generate plan dryrun install update migrate provenance registry catalog tracker maintain reinstall cleanup; do
   # shellcheck source=/dev/null
   source "${SCRIPT_DIR}/lib/${_lib}.sh"
 done
@@ -99,6 +99,10 @@ VERIFY_STRICT=false
 STATUS_LINE=false
 STATUS_LINE_PATH=""
 ROUTE_HINT=false
+TRANSACTION_RECOVER=false
+TRANSACTION_STATUS=false
+TRANSACTION_RECOVER_PATH=""
+TRANSACTION_ID=""
 PLAN_JSON_MODE=false
 ACCEPT_BREAKING=false
 while [[ $# -gt 0 ]]; do
@@ -112,6 +116,13 @@ while [[ $# -gt 0 ]]; do
     --doctor)              DOCTOR=true ;;
     --status-line)         STATUS_LINE=true ;;
     --route-hint)          ROUTE_HINT=true ;;
+    --transaction-recover) TRANSACTION_RECOVER=true ;;
+    --transaction-status)  TRANSACTION_STATUS=true ;;
+    --transaction-id)
+      if [[ $# -lt 2 ]]; then
+        echo -e "${RED}❌ Error: --transaction-id requires a journal id.${NC}"; exit 1
+      fi
+      TRANSACTION_ID="$2"; shift ;;
     --uninstall)           UNINSTALL=true ;;
     --cleanup)             CLEANUP=true ;;
     --only)
@@ -187,6 +198,10 @@ while [[ $# -gt 0 ]]; do
         DOCTOR_PATH="$arg"
       elif [[ "$STATUS_LINE" == true && -z "$STATUS_LINE_PATH" && "$arg" != --* ]]; then
         STATUS_LINE_PATH="$arg"
+      elif [[ "$TRANSACTION_RECOVER" == true && -z "$TRANSACTION_RECOVER_PATH" && "$arg" != --* ]]; then
+        TRANSACTION_RECOVER_PATH="$arg"
+      elif [[ "$TRANSACTION_STATUS" == true && -z "$TRANSACTION_RECOVER_PATH" && "$arg" != --* ]]; then
+        TRANSACTION_RECOVER_PATH="$arg"
       elif [[ "$UNINSTALL" == true && -z "$UNINSTALL_PATH" && "$arg" != --* ]]; then
         UNINSTALL_PATH="$arg"
       elif [[ "$CLEANUP" == true && -z "$CLEANUP_PATH" && "$arg" != --* ]]; then
@@ -276,6 +291,16 @@ fi
 
 if [[ "$STATUS_LINE" == true ]]; then
   STATUS_LINE_FORMAT="$OUTPUT_FORMAT" run_status_line "${STATUS_LINE_PATH:-$PWD}"
+  exit $?
+fi
+
+if [[ "$TRANSACTION_RECOVER" == true ]]; then
+  transaction_recover_cli "${TRANSACTION_RECOVER_PATH:-$PWD}" "${TRANSACTION_ID:-}"
+  exit $?
+fi
+
+if [[ "$TRANSACTION_STATUS" == true ]]; then
+  transaction_status_cli "${TRANSACTION_RECOVER_PATH:-$PWD}"
   exit $?
 fi
 

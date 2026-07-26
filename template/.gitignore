@@ -1,0 +1,3 @@
+# Downstream project gitignore hints (DEV-119).
+# Installed projects should keep generator operational artifacts out of git.
+.agtoosa/transactions/

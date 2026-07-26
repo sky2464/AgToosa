@@ -182,8 +182,20 @@ After Apply (or when the user invoked **`verify` only** on an already-updated pr
 | Preserved files | `Docs/Context/`, `Docs/Master-Plan.md`, `Docs/AgToosa_Changelog.md`, `Docs/archived/` unchanged |
 | duplicate marker safety | Platform entry points contain a single `<!-- AgToosa START -->` … `END` block (no duplicate injection) |
 | MAJOR rollback (when used) | After `--accept-breaking` apply, `.agtoosa/rollback/<timestamp>.json` exists with `entries` |
+| Transaction journal (DEV-119) | On apply commit, `.agtoosa/transactions/<id>/journal.json` records pre-images; late failure rolls back; recover with `bash agtoosa.sh --transaction-recover <project>` |
 
-Report filenames and pass/fail status only — do not dump secrets, tokens, or full config values.
+### Transaction journal recovery (DEV-119)
+
+Generator-orchestrated install/update commits are journaled under gitignored `.agtoosa/transactions/`. Each journal captures pre-image snapshots (or `absent` markers) before project writes.
+
+| Command | Purpose |
+|---------|---------|
+| `bash agtoosa.sh --transaction-status [path]` | List transaction journals and statuses |
+| `bash agtoosa.sh --transaction-recover [path]` | Restore the newest incomplete (`open`/`aborted`) journal |
+| `bash agtoosa.sh --transaction-recover [path] --transaction-id <id>` | Recover a specific journal |
+
+Recovery is filesystem-only — it does **not** run git commands or edit `Docs/Master-Plan.md`. MAJOR migration rollback manifests (`.agtoosa/rollback/`) remain separate from transaction journals.
+
 
 If verification fails, list failures with **Fix with:** `bash agtoosa.sh --update <project>` or manual review; do not claim success.
 

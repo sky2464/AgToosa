@@ -95,6 +95,8 @@ Product Truth has a separate maintainer flow:
 4. A maintainer may run `render --apply` explicitly. The renderer atomically replaces only existing, well-formed Product Truth blocks and fails closed for missing, duplicate, or malformed markers.
 5. CI runs the checker, renderer check, focused PTC suite, and adjacent PN/WP2/ACC/NET/PSP/CORE regressions before the full Bats suite.
 
+**Install apply data flow (DEV-119):** `apply_commit_staging` opens a gitignored transaction journal under `.agtoosa/transactions/<id>/`, records pre-images before each project write, rolls back on late failure, marks `committed` before DEV-093 `state.json` reconcile, and exposes `--transaction-recover` for operator restore.
+
 ## 6. Deployment
 
 | Environment | Runtime | Build / Release | Configuration |

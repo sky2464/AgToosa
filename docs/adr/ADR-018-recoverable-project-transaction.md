@@ -1,6 +1,6 @@
 # ADR-018: Recoverable Project Transaction Journal
 
-**Status**: Proposed  
+**Status**: Accepted  
 **Date**: 2026-07-26  
 **Deciders**: AI agent + human review (DEV-119 spec)
 

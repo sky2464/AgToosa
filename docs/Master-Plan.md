@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-26 (DEV-125 spec enrolled)
+> **Last updated:** 2026-07-26 (DEV-119 build complete)
 
 ## Project Charter
 
@@ -9,7 +9,7 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | DEV-119 Spec Approved — run `/agtoosa-build` |
+| Current phase | DEV-119 build complete — `/agtoosa-review` |
 | Milestone | `v5.3.32` (next) |
 | Active cycle | DEV-119 — Recoverable Project Transaction |
 | Cycle state | Active |
@@ -23,7 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-119 | Feature: Recoverable Project Transaction | Feature | L | 🟦 Todo — Spec ✅ Approved | 0/12 |
+| DEV-119 | Feature: Recoverable Project Transaction | Feature | L | 🟨 In Progress — Build complete | 12/12 |
 
 <!-- Archived to docs/archived/cycle-2026-07-22-release-5.3.30.md (DEV-118 v5.3.30) -->
 <!-- Archived to docs/archived/cycle-2026-07-14-release-5.3.29.md (DEV-117 v5.3.29) -->
@@ -62,19 +62,19 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 _(DEV-119 — see spec `docs/archived/spec-DEV-119.md` §3.1)_
 
-- [ ] **1.** RED fixtures and schema
-  - [ ] 1.1 Journal schema + gitignore contract — _Requirements: AC-001, AC-008_
-  - [ ] 1.2 Late-failure partial-write fixture (pre-DEV-119 RED) — _Requirements: AC-003, AC-007_
-  - [ ] 1.3 Recovery CLI contract tests — _Requirements: AC-005, AC-010, AC-011_
-- [ ] **2.** Transaction journal implementation
-  - [ ] 2.1 `lib/transaction.sh` open/record/rollback — _Requirements: AC-001, AC-002, AC-003_
-  - [ ] 2.2 Wire `apply_commit_staging` hooks + success path — _Requirements: AC-003, AC-004_
-  - [ ] 2.3 `--transaction-recover` and `--transaction-status` in `agtoosa.sh` — _Requirements: AC-005, AC-010, AC-011_
-- [ ] **3.** Idempotency and docs
-  - [ ] 3.1 Regression: DEV-092 zero-delta + DEV-093 state ordering — _Requirements: AC-006, AC-004_
-  - [ ] 3.2 Update docs + ADR-018 Accepted + architecture note — _Requirements: AC-009_
-- [ ] **4.** Evidence
-  - [ ] 4.1 RPT RED/GREEN + ship regression — _Requirements: AC-012_
+- [x] **1.** RED fixtures and schema
+  - [x] 1.1 Journal schema + gitignore contract — _Requirements: AC-001, AC-008_
+  - [x] 1.2 Late-failure partial-write fixture (pre-DEV-119 RED) — _Requirements: AC-003, AC-007_
+  - [x] 1.3 Recovery CLI contract tests — _Requirements: AC-005, AC-010, AC-011_
+- [x] **2.** Transaction journal implementation
+  - [x] 2.1 `lib/transaction.sh` open/record/rollback — _Requirements: AC-001, AC-002, AC-003_
+  - [x] 2.2 Wire `apply_commit_staging` hooks + success path — _Requirements: AC-003, AC-004_
+  - [x] 2.3 `--transaction-recover` and `--transaction-status` in `agtoosa.sh` — _Requirements: AC-005, AC-010, AC-011_
+- [x] **3.** Idempotency and docs
+  - [x] 3.1 Regression: DEV-092 zero-delta + DEV-093 state ordering — _Requirements: AC-006, AC-004_
+  - [x] 3.2 Update docs + ADR-018 Accepted + architecture note — _Requirements: AC-009_
+- [x] **4.** Evidence
+  - [x] 4.1 RPT RED/GREEN + ship regression — _Requirements: AC-012_
 
 ## Manual / Deferred Tasks
 
@@ -116,6 +116,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-118 | Chore: Product Truth & Adapter Contract | Chore | L | DEV-001 / DEV-002 / DEV-004 | P0 | 🏁 Shipped — v5.3.30 |
 | DEV-119 | Feature: Recoverable Project Transaction | Feature | L | DEV-001 | P0 | 🟦 Todo — Spec ✅ Approved · `ready` |
 | DEV-125 | Feature: /agtoosa-next Lifecycle Dispatcher | Feature | M | DEV-002 | P0 | 🟨 In Progress — Build complete |
+| DEV-126 | Chore: Spec Interview Hardening | Chore | S | DEV-002 | P0 | 🟨 In Progress — Build complete |
 | DEV-120 | Spike: Delivery Proof Fabric | Spike | L | DEV-002 / DEV-004 | P0 | ⬜ Backlog — Draft · needs-interview |
 | DEV-121 | Spike: Behavioral Conformance Lab | Spike | L | DEV-003 / DEV-004 | P0 | ⬜ Backlog — Draft · needs-interview · depends DEV-118, DEV-120 |
 | DEV-122 | Spike: Change-Aware Adaptive Delivery | Spike | L | DEV-002 / DEV-004 | P1 | ⬜ Backlog — Draft · needs-interview · depends DEV-120 |
@@ -679,5 +680,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-25 00:35 | 🚀 Release 5.3.31 shipped — cross-model consent + workflow policy; version parity bash/ps1/npm/formula; Milestone v5.3.32 (next) | AgToosa |
 | 2026-07-26 12:52 | ✏️ /agtoosa-spec — DEV-119 spec + test plan generated — `docs/archived/spec-DEV-119.md`; 12 Must ACs; estimate L; enrolled Active Cycle Todo; **awaiting Spec Approved** | AgToosa |
 | 2026-07-26 13:08 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-119 — `docs/archived/spec-DEV-119.md`; estimate L; enrolled Active Cycle; next `/agtoosa-build` | AgToosa |
+| 2026-07-26 13:32 | 🔨 /agtoosa-build — DEV-119 build complete — `lib/transaction.sh`, apply journal hooks, `--transaction-recover`/`--transaction-status`, RPT-001–RPT-012 green | AgToosa |
 | 2026-07-26 13:10 | ✏️ /agtoosa-spec — DEV-125 spec enrolled — `/agtoosa-next` Lifecycle Dispatcher; ADR-019; test plan `docs/AgToosa_TestPlan-DEV-125.md`; backlog Spec ready; **awaiting Spec Approved** | AgToosa |
 | 2026-07-26 13:15 | 🔨 /agtoosa-build — DEV-125 build complete — `AgToosa_Next.md`, six platform adapters, product-truth `command.next`, NXT-001–NXT-009 bats green | AgToosa |
+| 2026-07-26 13:30 | 🔨 /agtoosa-build — DEV-126 build complete — spec interview hardening (validation floor, turn-stop, findings artifact, adapter contracts); DEV-126 T-001–T-008 bats green | AgToosa |

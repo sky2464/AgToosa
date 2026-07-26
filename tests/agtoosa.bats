@@ -3186,6 +3186,60 @@ PY
   grep -q 'at most \*\*8 core interview questions\*\*' "$f"
 }
 
+# ── DEV-126 Spec interview hardening (DEV-126 T-001–T-008) ───────────────────
+
+@test "DEV-126 T-001: canonical spec requires user prompt is not interview complete" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  grep -q 'User prompt ≠ interview complete' "$f"
+  grep -q 'input material' "$f"
+}
+
+@test "DEV-126 T-002: canonical spec requires minimum validation floor" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  grep -q 'Minimum validation floor' "$f"
+  grep -q 'at least \*\*2 validation questions\*\*' "$f"
+  grep -q 'at least \*\*1\*\* validation question' "$f"
+}
+
+@test "DEV-126 T-003: canonical spec requires interview turn-stop" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  grep -q 'Interview turn-stop' "$f"
+  grep -q 'end the agent turn' "$f"
+  grep -q 'same turn' "$f"
+}
+
+@test "DEV-126 T-004: SPEC-FORMAT requires Plan-Mode Spec Interview findings section" {
+  local f="$TEMPLATE_DIR/Docs/SPEC-FORMAT.md"
+  grep -q 'Plan-Mode Spec Interview (findings)' "$f"
+  grep -q 'Asked & confirmed' "$f"
+}
+
+@test "DEV-126 T-005: Agent Smart Interview documents floor and turn-stop" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Agent.md"
+  grep -q 'Minimum validation floor' "$f"
+  grep -q 'Interview turn-stop' "$f"
+}
+
+@test "DEV-126 T-006: Cursor spec adapter forbids same-turn spec write" {
+  local f="$TEMPLATE_DIR/.cursor/commands/agtoosa-spec.md"
+  grep -q 'Agent Mode Execution Contract' "$f"
+  grep -q 'same turn' "$f"
+  grep -q 'interview-complete' "$f"
+}
+
+@test "DEV-126 T-007: Codex spec skill forbids skipping interview hardening" {
+  local f="$TEMPLATE_DIR/.codex/skills/agtoosa-spec/SKILL.md"
+  grep -q 'interview turn-stop' "$f"
+  grep -q 'Plan-Mode Spec Interview (findings)' "$f"
+  grep -q 'detailed user prompt' "$f"
+}
+
+@test "DEV-126 T-008: maintainer Cursor spec adapter mirrors execution contract" {
+  local f="$BATS_TEST_DIRNAME/../.cursor/commands/agtoosa-spec.md"
+  grep -q 'Agent Mode Execution Contract' "$f"
+  grep -q 'minimum validation floor' "$f"
+}
+
 # ── DEV-029 branch-protection push-safe workflow (DEV-029 T-001–T-005) ────────
 
 @test "DEV-029 T-001: branch-protection workflow display name is PR Hygiene Checks" {
@@ -13759,6 +13813,285 @@ EOF
   [ "$status" -eq 0 ]
   [[ "$output" == *"Docs/AgToosa_Next.md"* ]]
   [[ "$output" == *".cursor/commands/agtoosa-next.md"* ]]
+}
+
+# ── DEV-119: Recoverable Project Transaction (RPT-001–RPT-012) ───────────────────
+
+_rpt_tree_hash() {
+  local proj="$1"
+  find "$proj" \( -path '*/.agtoosa/transactions' -o -path '*/.agtoosa/transactions/*' \) -prune -o -type f -print0 2>/dev/null \
+    | LC_ALL=C sort -z | xargs -0 shasum 2>/dev/null | shasum | awk '{print $1}'
+}
+
+_rpt_apply_three_file_commit() {
+  local root="$1" proj="$2" fail_on="${3:-}"
+  bash -c '
+    set -euo pipefail
+    source "'"$root"'/lib/apply.sh"
+    source "'"$root"'/lib/state.sh"
+    source "'"$root"'/lib/lock.sh"
+    AGTOOSA_VERSION="5.3.31"
+    PROJECT_PATH="'"$proj"'"
+    apply_reset_summary
+    apply_begin_staging "'"$proj"'"
+    mkdir -p "$APPLY_STAGING_ROOT/Docs"
+    echo "new-a" > "$APPLY_STAGING_ROOT/Docs/a.md"
+    echo "new-b" > "$APPLY_STAGING_ROOT/Docs/b.md"
+    echo "new-c" > "$APPLY_STAGING_ROOT/Docs/c.md"
+    AGTOOSA_APPLY_FAIL_ON="'"$fail_on"'" apply_commit_staging "'"$proj"'" "update"
+  '
+}
+
+@test "DEV-119 @smoke RPT-001: journal created before first project write" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local proj="$TEST_PROJECT"
+  mkdir -p "$proj/Docs"
+  echo "keep" > "$proj/Docs/keep.txt"
+
+  run bash -c '
+    set -euo pipefail
+    source "'"$root"'/lib/apply.sh"
+    apply_reset_summary
+    apply_begin_staging "'"$proj"'"
+    mkdir -p "$APPLY_STAGING_ROOT/Docs"
+    echo "payload" > "$APPLY_STAGING_ROOT/Docs/x.md"
+    apply_commit_staging "'"$proj"'" "install"
+  '
+  [ "$status" -eq 0 ]
+  [ -d "$proj/.agtoosa/transactions" ]
+  run find "$proj/.agtoosa/transactions" -name journal.json
+  [ "$status" -eq 0 ]
+  [ "${#lines[@]}" -ge 1 ]
+  run python3 - "${lines[0]}" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1]))
+assert d.get("status") == "committed"
+assert d.get("schema_version") == 1
+assert d.get("transaction_id")
+PY
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-119 @smoke RPT-002: journal records overwrite and create pre-images" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local proj="$TEST_PROJECT"
+  mkdir -p "$proj/Docs"
+  echo "old" > "$proj/Docs/existing.md"
+
+  run bash -c '
+    set -euo pipefail
+    source "'"$root"'/lib/apply.sh"
+    apply_reset_summary
+    apply_begin_staging "'"$proj"'"
+    mkdir -p "$APPLY_STAGING_ROOT/Docs"
+    echo "new" > "$APPLY_STAGING_ROOT/Docs/existing.md"
+    echo "brand-new" > "$APPLY_STAGING_ROOT/Docs/created.md"
+    apply_commit_staging "'"$proj"'" "update"
+  '
+  [ "$status" -eq 0 ]
+  local journal
+  journal="$(find "$proj/.agtoosa/transactions" -name journal.json | head -1)"
+  [ -n "$journal" ]
+  run python3 - "$journal" "$proj" <<'PY'
+import json, os, sys
+journal, project = sys.argv[1], sys.argv[2]
+data = json.load(open(journal))
+entries = {e["path"]: e for e in data.get("entries", [])}
+assert entries["Docs/existing.md"]["op"] == "overwrite"
+assert entries["Docs/existing.md"]["before"] != "absent"
+assert os.path.isfile(os.path.join(os.path.dirname(journal), entries["Docs/existing.md"]["before"]))
+assert entries["Docs/created.md"]["op"] == "create"
+assert entries["Docs/created.md"]["before"] == "absent"
+PY
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-119 @smoke RPT-003: late commit failure rolls back and aborts journal" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local proj="$TEST_PROJECT"
+  mkdir -p "$proj/Docs"
+  echo "KEEP" > "$proj/Docs/keep.txt"
+  local before
+  before="$(_rpt_tree_hash "$proj")"
+
+  run _rpt_apply_three_file_commit "$root" "$proj" "Docs/c.md"
+  [ "$status" -ne 0 ]
+  [ "$(_rpt_tree_hash "$proj")" = "$before" ]
+  [ ! -f "$proj/Docs/a.md" ]
+  [ ! -f "$proj/Docs/b.md" ]
+  [ ! -f "$proj/Docs/c.md" ]
+  [ ! -f "$proj/.agtoosa/state.json" ]
+  local journal
+  journal="$(find "$proj/.agtoosa/transactions" -name journal.json | head -1)"
+  run python3 - "$journal" <<'PY'
+import json, sys
+assert json.load(open(sys.argv[1])).get("status") == "aborted"
+PY
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-119 RPT-004: successful commit marks journal committed before state write" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local proj="$TEST_PROJECT"
+  mkdir -p "$proj/Docs"
+  echo "workflow" > "$proj/Docs/AgToosa_Build.md"
+
+  run bash -c '
+    set -euo pipefail
+    source "'"$root"'/lib/apply.sh"
+    source "'"$root"'/lib/state.sh"
+    source "'"$root"'/lib/lock.sh"
+    AGTOOSA_VERSION="5.3.31"
+    PROJECT_PATH="'"$proj"'"
+    apply_reset_summary
+    apply_begin_staging "'"$proj"'"
+    mkdir -p "$APPLY_STAGING_ROOT/Docs"
+    echo "workflow-v2" > "$APPLY_STAGING_ROOT/Docs/AgToosa_Build.md"
+    apply_commit_staging "'"$proj"'" "install"
+  '
+  [ "$status" -eq 0 ]
+  local journal
+  journal="$(find "$proj/.agtoosa/transactions" -name journal.json | head -1)"
+  run python3 - "$journal" <<'PY'
+import json, sys
+assert json.load(open(sys.argv[1])).get("status") == "committed"
+PY
+  [ "$status" -eq 0 ]
+  [ -f "$proj/.agtoosa/state.json" ]
+}
+
+@test "DEV-119 @smoke RPT-005: transaction-recover restores aborted tree" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local proj="$TEST_PROJECT"
+  mkdir -p "$proj/Docs"
+  echo "old" > "$proj/Docs/existing.md"
+
+  run bash -c '
+    set -euo pipefail
+    source "'"$root"'/lib/apply.sh"
+    apply_reset_summary
+    apply_begin_staging "'"$proj"'"
+    mkdir -p "$APPLY_STAGING_ROOT/Docs"
+    echo "new-existing" > "$APPLY_STAGING_ROOT/Docs/existing.md"
+    echo "new-a" > "$APPLY_STAGING_ROOT/Docs/z-last.md"
+    AGTOOSA_APPLY_FAIL_ON="Docs/z-last.md" apply_commit_staging "'"$proj"'" "update"
+  '
+  [ "$status" -ne 0 ]
+  [ "$(cat "$proj/Docs/existing.md")" = "old" ]
+  [ ! -f "$proj/Docs/z-last.md" ]
+  echo "corrupt" > "$proj/Docs/existing.md"
+
+  run bash "$root/agtoosa.sh" --transaction-recover "$proj"
+  [ "$status" -eq 0 ]
+  [ "$(cat "$proj/Docs/existing.md")" = "old" ]
+}
+
+@test "DEV-119 @smoke RPT-006: second identical apply remains zero delta" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local proj="$TEST_PROJECT"
+  mkdir -p "$proj/Docs"
+  echo "payload" > "$proj/Docs/y.md"
+
+  run bash -c '
+    set -euo pipefail
+    source "'"$root"'/lib/apply.sh"
+    apply_reset_summary
+    apply_begin_staging "'"$proj"'"
+    mkdir -p "$APPLY_STAGING_ROOT/Docs"
+    echo "payload" > "$APPLY_STAGING_ROOT/Docs/y.md"
+    apply_commit_staging "'"$proj"'"
+    apply_reset_summary
+    apply_begin_staging "'"$proj"'"
+    mkdir -p "$APPLY_STAGING_ROOT/Docs"
+    echo "payload" > "$APPLY_STAGING_ROOT/Docs/y.md"
+    apply_commit_staging "'"$proj"'"
+    apply_print_summary
+  '
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"written=0"* ]]
+  [[ "$output" == *"unchanged="* ]]
+}
+
+@test "DEV-119 @smoke RPT-007: injected fail-on middle path triggers rollback" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local proj="$TEST_PROJECT"
+  mkdir -p "$proj/Docs"
+  echo "KEEP" > "$proj/Docs/keep.txt"
+  local before
+  before="$(_rpt_tree_hash "$proj")"
+
+  run _rpt_apply_three_file_commit "$root" "$proj" "Docs/b.md"
+  [ "$status" -ne 0 ]
+  [ "$(_rpt_tree_hash "$proj")" = "$before" ]
+  [ ! -f "$proj/Docs/a.md" ]
+  [ ! -f "$proj/Docs/b.md" ]
+}
+
+@test "DEV-119 RPT-008: transactions directory gitignored and not templated" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -qE '^\.agtoosa/' "$root/.gitignore"
+  grep -q 'transactions' "$root/.gitignore"
+  ! grep -q '\.agtoosa/transactions' "$root/lib/config.sh"
+}
+
+@test "DEV-119 RPT-009: rollback manifest path distinct from transaction journal" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '.agtoosa/rollback' "$root/lib/migrate.sh"
+  grep -q '.agtoosa/transactions' "$root/lib/transaction.sh"
+  ! grep -q '.agtoosa/rollback' "$root/lib/transaction.sh"
+}
+
+@test "DEV-119 RPT-010: recover selects newest incomplete journal" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local proj="$TEST_PROJECT"
+  mkdir -p "$proj/.agtoosa/transactions/old-1" "$proj/.agtoosa/transactions/new-2"
+  cat > "$proj/.agtoosa/transactions/old-1/journal.json" <<'EOF'
+{
+  "schema_version": 1,
+  "transaction_id": "old-1",
+  "status": "aborted",
+  "started_at": "2026-07-26T10:00:00Z",
+  "ended_at": "2026-07-26T10:00:01Z",
+  "agtoosa_version": "5.3.31",
+  "apply_command": "update",
+  "entries": []
+}
+EOF
+  cat > "$proj/.agtoosa/transactions/new-2/journal.json" <<'EOF'
+{
+  "schema_version": 1,
+  "transaction_id": "new-2",
+  "status": "aborted",
+  "started_at": "2026-07-26T12:00:00Z",
+  "ended_at": "2026-07-26T12:00:01Z",
+  "agtoosa_version": "5.3.31",
+  "apply_command": "update",
+  "entries": []
+}
+EOF
+  run bash "$root/agtoosa.sh" --transaction-recover "$proj"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"new-2"* ]]
+  run python3 - "$proj/.agtoosa/transactions/new-2/journal.json" <<'PY'
+import json, sys
+assert json.load(open(sys.argv[1])).get("status") == "recovered"
+PY
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-119 RPT-011: recovery CLI does not invoke git or edit Master-Plan" {
+  local root="$BATS_TEST_DIRNAME/.."
+  ! grep -qE '\bgit\b' "$root/lib/transaction.sh"
+  ! grep -q 'Master-Plan' "$root/lib/transaction.sh"
+  run bash "$root/agtoosa.sh" --transaction-status "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-119 RPT-012: DEV-119 filter and test plan documented" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "DEV-119" "$root/tests/agtoosa.bats"
+  grep -q "RPT-" "$root/docs/AgToosa_TestPlan-DEV-119.md"
+  grep -q 'DEV-119|RPT-' "$root/docs/AgToosa_TestPlan-DEV-119.md"
 }
 
 @test "v5.3.31 SR-001: release pins are aligned" {

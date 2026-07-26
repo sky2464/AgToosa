@@ -2,7 +2,7 @@
 
 > **Spec:** `docs/archived/spec-DEV-119.md`
 > **Focused suite:** `bats tests/agtoosa.bats -f 'DEV-119|RPT-'`
-> **Status:** Spec ready — RED pending build
+> **Status:** Build complete — GREEN pending ship evidence
 > **Coverage threshold:** 100% Must AC mapping (`docs/Context/workflow.md`)
 > **Test prefix:** `RPT`
 

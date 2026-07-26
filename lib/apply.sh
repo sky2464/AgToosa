@@ -5,6 +5,11 @@
 # Globals: APPLY_STAGING_ROOT, APPLY_WRITTEN, APPLY_MERGED, APPLY_UNCHANGED, APPLY_FAILED
 # Inject: AGTOOSA_APPLY_FAIL_ON=<relpath> forces commit failure for tests.
 
+if ! declare -F transaction_open >/dev/null 2>&1; then
+  # shellcheck source=/dev/null
+  source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/transaction.sh"
+fi
+
 APPLY_STAGING_ROOT=""
 APPLY_WRITTEN=0
 APPLY_MERGED=0
@@ -300,12 +305,6 @@ apply_commit_staging() {
 
   while IFS= read -r -d '' staged; do
     rel="${staged#"${APPLY_STAGING_ROOT}/"}"
-    if [[ -n "${AGTOOSA_APPLY_FAIL_ON:-}" && "$rel" == "$AGTOOSA_APPLY_FAIL_ON" ]]; then
-      echo "apply: injected failure on $rel" >&2
-      APPLY_FAILED=$((APPLY_FAILED + 1))
-      apply_abort_staging
-      return 1
-    fi
     if [[ -L "$staged" ]]; then
       echo "apply: refusing symlink in staging: $rel" >&2
       APPLY_FAILED=$((APPLY_FAILED + 1))
@@ -314,6 +313,11 @@ apply_commit_staging() {
     fi
     commit_list+=("$rel")
   done < <(find "$APPLY_STAGING_ROOT" -type f -print0)
+
+  if ((${#commit_list[@]} > 0)); then
+    IFS=$'\n' commit_list=($(printf '%s\n' "${commit_list[@]}" | LC_ALL=C sort))
+    unset IFS
+  fi
 
   for rel in "${commit_list[@]}"; do
     staged="${APPLY_STAGING_ROOT}/${rel}"
@@ -329,6 +333,33 @@ apply_commit_staging() {
     else
       mode="written"
     fi
+
+    if declare -F transaction_open >/dev/null 2>&1; then
+      if ! transaction_open "$project_path" "$apply_command"; then
+        echo "apply: failed to open transaction journal" >&2
+        APPLY_FAILED=$((APPLY_FAILED + 1))
+        apply_abort_staging
+        return 1
+      fi
+      if ! transaction_record_before "$project_path" "$rel"; then
+        echo "apply: failed to record pre-image for $rel" >&2
+        transaction_rollback_active "$project_path"
+        APPLY_FAILED=$((APPLY_FAILED + 1))
+        apply_abort_staging
+        return 1
+      fi
+    fi
+
+    if [[ -n "${AGTOOSA_APPLY_FAIL_ON:-}" && "$rel" == "$AGTOOSA_APPLY_FAIL_ON" ]]; then
+      echo "apply: injected failure on $rel" >&2
+      if declare -F transaction_rollback_active >/dev/null 2>&1; then
+        transaction_rollback_active "$project_path"
+      fi
+      APPLY_FAILED=$((APPLY_FAILED + 1))
+      apply_abort_staging
+      return 1
+    fi
+
     mkdir -p "$(dirname "$target")"
     # Atomic-ish: write via temp in same dir then rename
     local tmp
@@ -336,6 +367,9 @@ apply_commit_staging() {
     if ! cp "$staged" "$tmp"; then
       echo "apply: failed writing $rel" >&2
       rm -f "$tmp" 2>/dev/null || true
+      if declare -F transaction_rollback_active >/dev/null 2>&1; then
+        transaction_rollback_active "$project_path"
+      fi
       APPLY_FAILED=$((APPLY_FAILED + 1))
       apply_abort_staging
       return 1
@@ -343,6 +377,9 @@ apply_commit_staging() {
     if ! mv "$tmp" "$target"; then
       echo "apply: failed committing $rel" >&2
       rm -f "$tmp" 2>/dev/null || true
+      if declare -F transaction_rollback_active >/dev/null 2>&1; then
+        transaction_rollback_active "$project_path"
+      fi
       APPLY_FAILED=$((APPLY_FAILED + 1))
       apply_abort_staging
       return 1
@@ -353,6 +390,10 @@ apply_commit_staging() {
   done
 
   apply_abort_staging
+
+  if declare -F transaction_commit_active >/dev/null 2>&1 && [[ -n "${TRANSACTION_ACTIVE_DIR:-}" ]]; then
+    transaction_commit_active
+  fi
 
   # Post-apply operational state + lock reconcile (DEV-093).
   if declare -F lock_reconcile >/dev/null 2>&1; then

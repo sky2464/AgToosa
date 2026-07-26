@@ -56,6 +56,8 @@ ship/
 .agtoosa/
 # Operational install state (DEV-093) — covered by .agtoosa/ above; never commit.
 # .agtoosa/state.json
+# Project transaction journals (DEV-119) — covered by .agtoosa/ above; never commit.
+# .agtoosa/transactions/
 # MAJOR migration rollback manifests/backups (DEV-091) — .agtoosa/rollback/
 # Template pack ships committed .agtoosa/ examples (DEV-087 config index).
 !template/.agtoosa/
