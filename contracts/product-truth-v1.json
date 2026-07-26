@@ -357,6 +357,40 @@
       ]
     },
     {
+      "id": "command.next",
+      "phase": "utility",
+      "invocation": "/agtoosa-next",
+      "modes": [
+        "full",
+        "dry",
+        "pick"
+      ],
+      "canonical_workflow": "Docs/AgToosa_Next.md",
+      "operating_context": "generated-project",
+      "question_budget": {
+        "max_questions": 0,
+        "quick_max": 0
+      },
+      "mutation_class": "mixed",
+      "approval_gate": false,
+      "phase_stop": true,
+      "lifecycle_close": "none",
+      "state_reads": [
+        "Docs/Master-Plan.md"
+      ],
+      "state_writes": [],
+      "side_effects": [
+        "dispatched-workflow"
+      ],
+      "dependencies": [],
+      "failure_policy": "fail-closed-on-prerequisite-or-approval-gap",
+      "portable_invariants": [
+        "route:Docs/AgToosa_Next.md",
+        "invocation:/agtoosa-next",
+        "mutation:dispatch"
+      ]
+    },
+    {
       "id": "command.import",
       "phase": "build",
       "invocation": "/agtoosa-import",

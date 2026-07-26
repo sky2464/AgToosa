@@ -45,6 +45,7 @@ Run spec → build → review → ship for every story; `/agtoosa-qa` is an opti
 
 - `/agtoosa-help` — static command reference; **do not** read `Docs/Master-Plan.md` or git on the default path.
 - `/agtoosa-help next` — **assistance-only**, read-only: read `Docs/Master-Plan.md` and git status, recommend exactly one next command. **Never modify** files, git state, or Master-Plan. Present mutating commands as **suggestions only** — **do not auto-run** `/agtoosa-spec`, `/agtoosa-build`, `/agtoosa-task`, or `/agtoosa-ship`.
+- `/agtoosa-next` — **lifecycle dispatcher**: run `bash agtoosa.sh --status-line [path] --route-hint --format json`, then **execute** exactly one lifecycle workflow (`spec` · `build` · `review` · `ship`). One phase per invocation; say `/agtoosa-next` again to advance. `dry` previews; `pick` for idle cold-start. See `Docs/AgToosa_Next.md`.
 - Empty Active Cycle → recommend `/agtoosa-spec`.
 - Not part of the 4-phase lifecycle diagram above.
 

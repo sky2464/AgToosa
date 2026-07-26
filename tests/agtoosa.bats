@@ -13695,6 +13695,72 @@ EOF
 
 # -- Cross-model consent ship v5.3.31 (SR-001–SR-002) --------------------------
 
+# ── DEV-125: /agtoosa-next Lifecycle Dispatcher (NXT-001–NXT-008) ─────────────
+
+@test "DEV-125 @smoke NXT-001: AgToosa_Next mandates status-line route-hint json" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '\-\-status-line.*\-\-route-hint.*\-\-format json' "$root/template/Docs/AgToosa_Next.md"
+  grep -q '\-\-status-line.*\-\-route-hint.*\-\-format json' "$root/docs/AgToosa_Next.md"
+}
+
+@test "DEV-125 @smoke NXT-002: AgToosa_Next documents build approval override" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## ✅ Spec Approved' "$root/template/Docs/AgToosa_Next.md"
+  grep -q 'approval override' "$root/template/Docs/AgToosa_Next.md"
+}
+
+@test "DEV-125 @smoke NXT-003: AgToosa_Next documents single-phase dispatch" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'one lifecycle' "$root/template/Docs/AgToosa_Next.md"
+  grep -q 'auto-chain' "$root/template/Docs/AgToosa_Next.md"
+}
+
+@test "DEV-125 NXT-004: AgToosa_Next documents idle backlog scan" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Backlog scan' "$root/template/Docs/AgToosa_Next.md"
+}
+
+@test "DEV-125 NXT-005: AgToosa_Next documents cold-start recommendations" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'up to 3' "$root/template/Docs/AgToosa_Next.md"
+  grep -q 'something in mind' "$root/template/Docs/AgToosa_Next.md"
+}
+
+@test "DEV-125 NXT-006: dry sub-command in workflow and adapters" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '/agtoosa-next dry' "$root/template/Docs/AgToosa_Next.md"
+  grep -q 'dry' "$root/template/.cursor/commands/agtoosa-next.md"
+  grep -q 'dry' "$root/template/.claude/commands/agtoosa-next.md"
+}
+
+@test "DEV-125 NXT-007: command.next in product-truth and six target cells" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '"id": "command.next"' "$root/contracts/product-truth-v1.json"
+  [ -f "$root/template/.cursor/commands/agtoosa-next.md" ]
+  [ -f "$root/template/.claude/commands/agtoosa-next.md" ]
+  [ -f "$root/template/.gemini/commands/agtoosa-next.toml" ]
+  [ -f "$root/template/.github/prompts/agtoosa-next.prompt.md" ]
+  [ -f "$root/template/.windsurf/workflows/agtoosa-next.md" ]
+  [ -f "$root/template/.codex/skills/agtoosa-next/SKILL.md" ]
+}
+
+@test "DEV-125 NXT-008: help-next remains read-only distinct from agtoosa-next" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'does not auto-run' "$root/template/.claude/commands/agtoosa-help.md"
+  grep -q 'executes' "$root/template/Docs/AgToosa_Next.md"
+  grep -q '/agtoosa-next' "$root/template/Docs/AgToosa_Agent.md"
+  ! grep -q 'executes workflows' "$root/template/.claude/commands/agtoosa-help.md"
+}
+
+@test "DEV-125 NXT-009: AgToosa_Next workflow is listed in DOCS_FILES" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '"Docs/AgToosa_Next.md"' "$root/lib/config.sh"
+  run bash "$root/agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Next.md"* ]]
+  [[ "$output" == *".cursor/commands/agtoosa-next.md"* ]]
+}
+
 @test "v5.3.31 SR-001: release pins are aligned" {
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver

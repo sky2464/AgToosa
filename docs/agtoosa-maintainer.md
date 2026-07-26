@@ -234,9 +234,10 @@ This repository commits maintainer Cursor wiring at the repo root using `docs/` 
 
 | Path | Role |
 |------|------|
-| `.cursor/rules/agtoosa-maintainer-core.mdc` | Always-on Project Intake + NL intent map for maintainer work |
+| `.cursor/rules/agtoosa-maintainer-core.mdc` | Always-on Project Intake + Lifecycle Compass for maintainer work |
 | `.cursor/commands/agtoosa-spec.md` | Slash command → `docs/AgToosa_Spec.md` |
 | `.cursor/commands/agtoosa-build.md` | Slash command → `docs/AgToosa_Build.md` |
+| `.cursor/commands/agtoosa-next.md` | Slash command → `docs/AgToosa_Next.md` |
 | `.cursorrules` | Short maintainer entry + intake pointer |
 
 Downstream installs receive the full pack from `template/.cursor/` via `agtoosa.sh`. Use `bash scripts/cursor-intake-fixture.sh` to create a disposable test project — never target the generator source tree.

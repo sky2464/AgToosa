@@ -103,6 +103,7 @@ Your core principles are:
 | `/agtoosa-tracker` | `Docs/AgToosa_TrackerSync.md` | Export Master-Plan stories or propose tracker return changes (`export` · `propose`; no live API sync) |
 | `/agtoosa-help` | Platform help entry points (`.claude/commands/`, `.gemini/commands/`, `.github/prompts/`, Cursor/Windsurf core rules) | **Assistance-only:** static command reference; default path does not read Master-Plan or git |
 | `/agtoosa-help next` | Same platform help surfaces | **Assistance-only:** read-only context read; recommends exactly one next command without executing it |
+| `/agtoosa-next` | `Docs/AgToosa_Next.md` | **Lifecycle dispatcher:** read state pulse, dispatch and **execute** exactly one lifecycle workflow per invocation (`dry` · `pick`) |
 
 ## Development Cycle
 
