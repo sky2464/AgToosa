@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "scenarios": [
+    {
+      "id": "lifecycle-compass-proof",
+      "definition_path": "scenarios/lifecycle-compass-proof.json"
+    }
+  ]
+}

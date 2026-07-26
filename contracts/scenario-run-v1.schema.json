@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/sky2464/AgToosa/contracts/scenario-run-v1.schema.json",
+  "title": "AgToosa Scenario Run Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "scenario_id",
+    "platform",
+    "run_at",
+    "artifact_results",
+    "verifier_exit_code"
+  ],
+  "properties": {
+    "version": { "const": 1 },
+    "scenario_id": { "type": "string", "minLength": 1 },
+    "platform": {
+      "type": "string",
+      "enum": ["cursor", "claude", "codex", "copilot", "windsurf", "gemini"]
+    },
+    "run_at": { "type": "string", "minLength": 1 },
+    "runner_notes": { "type": "string" },
+    "proof_graph_path": { "type": "string" },
+    "verifier_exit_code": { "type": "integer" },
+    "artifact_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "passed"],
+        "properties": {
+          "path": { "type": "string" },
+          "passed": { "type": "boolean" },
+          "detail": { "type": "string" }
+        }
+      }
+    }
+  }
+}

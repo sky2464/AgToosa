@@ -21,7 +21,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.33" ]]
+  [[ "$output" == "AgToosa v5.3.34" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -14243,4 +14243,141 @@ PY
   [ -f "$root/docs/archived/evidence-DEV-127.md" ]
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-127.md"
   grep -q 'docs/media/agtoosa-hero/agtoosa-hero.gif' "$root/README.md"
+}
+
+# -- DEV-121: Behavioral Conformance Lab (BCL-001–BCL-013) --------------------
+
+@test "DEV-121 @smoke BCL-001: Behavioral conformance contract defines runner and claim boundaries" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Behavioral_Conformance.md" "$root/template/Docs/AgToosa_Behavioral_Conformance.md"; do
+    [ -f "$f" ]
+    grep -q "agtoosa-scenario-run.sh" "$f"
+    grep -q "agtoosa-scenario-verify.sh" "$f"
+    grep -qiE 'static|live assistant' "$f"
+    grep -q "Forbidden claims" "$f"
+  done
+}
+
+@test "DEV-121 @smoke BCL-002: Scenario corpus schema and index validate" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/contracts/scenario-corpus-v1.schema.json" ]
+  [ -f "$root/scenarios/corpus-v1.json" ]
+  run bash -c 'source "'"$root"'/lib/scenario.sh"; scenario_validate_corpus "'"$root"'" "'"$root"'/scenarios/corpus-v1.json"'
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-121 BCL-003: Scenario-run schema validates pilot fixture JSON" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/contracts/scenario-run-v1.schema.json" ]
+  run bash -c 'source "'"$root"'/lib/scenario.sh"; scenario_validate_run_json "'"$root"'/tests/fixtures/scenario-corpus/lifecycle-compass-proof/cursor/scenario-run.json"'
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-121 @smoke BCL-004: Scenario runner writes scenario-run JSON on fixture" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local tmp
+  tmp="$(mktemp -d)"
+  cp -R "$root/tests/fixtures/scenario-corpus/lifecycle-compass-proof/cursor/." "$tmp/"
+  rm -f "$tmp/scenario-run.json"
+  run bash "$root/docs/agtoosa-scenario-run.sh" \
+    --scenario lifecycle-compass-proof \
+    --platform cursor \
+    --artifact-root "$tmp"
+  [ "$status" -eq 0 ]
+  [ -f "$tmp/scenario-run.json" ]
+  grep -q '"platform": "cursor"' "$tmp/scenario-run.json"
+  rm -rf "$tmp"
+}
+
+@test "DEV-121 @smoke BCL-005: Scenario verifier passes valid platform fixture" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/docs/agtoosa-scenario-verify.sh" \
+    --scenario lifecycle-compass-proof \
+    --platform windsurf \
+    --root "$root/tests/fixtures/scenario-corpus/lifecycle-compass-proof/windsurf"
+  [ "$status" -eq 0 ]
+  ! grep -qE 'curl |wget ' "$root/docs/agtoosa-scenario-verify.sh"
+}
+
+@test "DEV-121 @smoke BCL-006: Scenario verifier fails on marker mismatch" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/docs/agtoosa-scenario-verify.sh" \
+    --scenario lifecycle-compass-proof \
+    --platform cursor \
+    --root "$root/tests/fixtures/scenario-corpus/lifecycle-compass-proof/fail-marker" 2>&1
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"status-line.txt"* ]] || [[ "$output" == *"marker"* ]]
+}
+
+@test "DEV-121 @smoke BCL-007: Universal scenario lists six platform fixture trees" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/scenarios/lifecycle-compass-proof.json" ]
+  grep -q 'lifecycle-compass-proof' "$root/scenarios/corpus-v1.json"
+  for plat in cursor claude codex copilot windsurf gemini; do
+    [ -d "$root/tests/fixtures/scenario-corpus/lifecycle-compass-proof/$plat" ]
+    [ -f "$root/tests/fixtures/scenario-corpus/lifecycle-compass-proof/$plat/status-line.txt" ]
+  done
+}
+
+@test "DEV-121 BCL-008: Scenario verifier fails on missing required artifact" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/docs/agtoosa-scenario-verify.sh" \
+    --scenario lifecycle-compass-proof \
+    --platform cursor \
+    --root "$root/tests/fixtures/scenario-corpus/lifecycle-compass-proof/fail-missing"
+  [ "$status" -eq 1 ]
+}
+
+@test "DEV-121 BCL-009: Pack behavioral binding documented in registry trust docs" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Registry.md" "$root/template/Docs/AgToosa_Registry.md"; do
+    grep -q "behavioral scenario" "$f"
+    grep -q "lifecycle-compass-proof" "$f"
+    grep -q "DEV-096" "$f"
+  done
+}
+
+@test "DEV-121 BCL-010: Compatibility contract cross-links behavioral corpus" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Compatibility_Contract.md" "$root/template/Docs/AgToosa_Compatibility_Contract.md"; do
+    grep -q "AgToosa_Behavioral_Conformance.md" "$f"
+    grep -q "lifecycle-compass-proof" "$f"
+    ! grep -qiE 'all platforms are Scenario-tested' "$f"
+  done
+}
+
+@test "DEV-121 BCL-011: Behavioral contract notes separate proof-graph verify" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f
+  for f in "$root/docs/AgToosa_Behavioral_Conformance.md" "$root/template/Docs/AgToosa_Behavioral_Conformance.md"; do
+    grep -q "proof_graph_path" "$f"
+    grep -q "does not" "$f"
+    grep -q "agtoosa-proof-verify.sh" "$f"
+  done
+}
+
+@test "DEV-121 BCL-012: config.sh registers BCL surfaces" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run grep -F "Docs/AgToosa_Behavioral_Conformance.md" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+  run grep -F "Docs/agtoosa-scenario-run.sh" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+  run grep -F "Docs/agtoosa-scenario-verify.sh" "$root/lib/config.sh"
+  [ "$status" -eq 0 ]
+  run bash "$root/agtoosa.sh" --list-template-files
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Docs/AgToosa_Behavioral_Conformance.md"* ]]
+}
+
+@test "DEV-121 BCL-013: ACC regression requires scenario corpus pointer language" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local f="$root/docs/AgToosa_Compatibility_Contract.md"
+  grep -qiE 'scenario.*(pointer|evidence|fixture)|pointer.*scenario' "$f"
+  grep -q "AgToosa_Behavioral_Conformance.md" "$f"
+  for plat in Cursor Claude Codex "GitHub Copilot" Windsurf Gemini; do
+    grep -q "$plat" "$f"
+  done
 }

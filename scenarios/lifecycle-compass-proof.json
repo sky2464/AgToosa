@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "id": "lifecycle-compass-proof",
+  "title": "Lifecycle compass status-line proof",
+  "description": "Fixed proof task: run bash agtoosa.sh --status-line, capture SYNC output, and record the platform adapter sentinel path.",
+  "platforms": ["cursor", "claude", "codex", "copilot", "windsurf", "gemini"],
+  "shared_artifacts": [
+    {
+      "path": "status-line.txt",
+      "required": true,
+      "markers": ["SYNC:"]
+    },
+    {
+      "path": "scenario-notes.md",
+      "required": true,
+      "markers": ["lifecycle-compass-proof"]
+    }
+  ],
+  "platform_artifacts": {
+    "cursor": [
+      {
+        "path": "adapter-sentinel.txt",
+        "required": true,
+        "markers": ["platform=cursor", ".cursor/commands"]
+      }
+    ],
+    "claude": [
+      {
+        "path": "adapter-sentinel.txt",
+        "required": true,
+        "markers": ["platform=claude", ".claude/commands"]
+      }
+    ],
+    "codex": [
+      {
+        "path": "adapter-sentinel.txt",
+        "required": true,
+        "markers": ["platform=codex", "codex"]
+      }
+    ],
+    "copilot": [
+      {
+        "path": "adapter-sentinel.txt",
+        "required": true,
+        "markers": ["platform=copilot", "copilot-instructions"]
+      }
+    ],
+    "windsurf": [
+      {
+        "path": "adapter-sentinel.txt",
+        "required": true,
+        "markers": ["platform=windsurf", ".windsurf"]
+      }
+    ],
+    "gemini": [
+      {
+        "path": "adapter-sentinel.txt",
+        "required": true,
+        "markers": ["platform=gemini", "gemini"]
+      }
+    ]
+  },
+  "maintainer_steps": {
+    "shared": [
+      "Install or update AgToosa workflow files for the target platform.",
+      "Run: bash agtoosa.sh --status-line [path] > status-line.txt",
+      "Create scenario-notes.md with heading lifecycle-compass-proof and the run date.",
+      "Record the platform adapter sentinel path in adapter-sentinel.txt (see Behavioral Conformance contract)."
+    ],
+    "cursor": ["Confirm .cursor/commands/agtoosa-status.md exists after install."],
+    "claude": ["Confirm .claude/commands/agtoosa-status.md exists after install."],
+    "codex": ["Confirm Codex skill/prompt inventory includes agtoosa-status."],
+    "copilot": ["Confirm .github/copilot-instructions.md or .github/prompts includes AgToosa routing."],
+    "windsurf": ["Confirm .windsurf/workflows or rules include agtoosa-status."],
+    "gemini": ["Confirm .gemini/commands include agtoosa-status."]
+  }
+}

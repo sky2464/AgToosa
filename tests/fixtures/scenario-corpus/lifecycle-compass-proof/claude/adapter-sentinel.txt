@@ -1,0 +1,2 @@
+platform=claude
+adapter=.claude/commands/agtoosa-status.md

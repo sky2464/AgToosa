@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-26 (DEV-127 shipped v5.3.33)
+> **Last updated:** 2026-07-26 (DEV-121 review approved)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | DEV-127 shipped — enroll next via `/agtoosa-spec` |
+| Current phase | DEV-121 review approved — next `/agtoosa-ship` |
 | Milestone | `v5.3.34` (next) |
-| Active cycle | Idle — awaiting next scoped story |
-| Cycle state | Idle — awaiting next scoped story |
+| Active cycle | DEV-121 — Behavioral Conformance Lab |
+| Cycle state | Active |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -23,7 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| — | (none — cycle idle) | — | — | — | — |
+| DEV-121 | Spike: Behavioral Conformance Lab | Spike | L | 🟨 In Review | 13/13 |
 
 <!-- Archived to docs/archived/cycle-2026-07-26-release-5.3.33.md (DEV-127 v5.3.33) -->
 <!-- Archived to docs/archived/cycle-2026-07-26-release-5.3.32.md (DEV-119 v5.3.32) -->
@@ -62,7 +62,27 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for enrolled Active Cycle stories. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-_(No active story — cycle idle. Enroll via `/agtoosa-spec`.)_
+### DEV-121 — Spike: Behavioral Conformance Lab
+
+- [x] **1.** Contract + ADR
+  - [x] 1.1 `AgToosa_Behavioral_Conformance.md` + template mirror — _Requirements: AC-001, AC-008, AC-010_
+  - [x] 1.2 ADR-021 draft → Accepted on ship — _Requirements: AC-001_
+- [x] **2.** Schemas + corpus
+  - [x] 2.1 `scenario-corpus-v1.schema.json` + `scenario-run-v1.schema.json` — _Requirements: AC-002, AC-003_
+  - [x] 2.2 `scenarios/corpus-v1.json` + `lifecycle-compass-proof.json` — _Requirements: AC-007_
+- [x] **3.** Runner + verifier + library
+  - [x] 3.1 `lib/scenario.sh` helpers — _Requirements: AC-005, AC-006_
+  - [x] 3.2 `docs/agtoosa-scenario-run.sh` + template mirror — _Requirements: AC-004_
+  - [x] 3.3 `docs/agtoosa-scenario-verify.sh` + template mirror — _Requirements: AC-005, AC-006_
+- [x] **4.** Fixtures + pilot evidence
+  - [x] 4.1 Six platform fixture trees + fail cases — _Requirements: AC-007_
+  - [x] 4.2 Pilot `scenario-run.json` for ≥2 platforms — _Requirements: AC-013_
+- [x] **5.** Integration + cross-links
+  - [x] 5.1 Compatibility + registry pack binding cross-links — _Requirements: AC-008, AC-009_
+  - [x] 5.2 `lib/config.sh` registration — _Requirements: AC-011, AC-010_
+- [x] **6.** Bats + ACC regression
+  - [x] 6.1 BCL-001–BCL-013 in `tests/agtoosa.bats` — _Requirements: AC-001–AC-013_
+  - [x] 6.2 ACC Scenario-tested pointer regression — _Requirements: AC-012_
 
 ## Manual / Deferred Tasks
 
@@ -106,7 +126,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-125 | Feature: /agtoosa-next Lifecycle Dispatcher | Feature | L | DEV-002 | P0 | 🟨 In Progress — A+B hybrid build complete |
 | DEV-126 | Chore: Spec Interview Hardening | Chore | S | DEV-002 | P0 | 🟨 In Progress — Build complete |
 | DEV-120 | Spike: Delivery Proof Fabric | Spike | L | DEV-002 / DEV-004 | P0 | ⬜ Backlog — Draft · needs-interview |
-| DEV-121 | Spike: Behavioral Conformance Lab | Spike | L | DEV-003 / DEV-004 | P0 | ⬜ Backlog — Draft · needs-interview · depends DEV-118, DEV-120 |
+| DEV-121 | Spike: Behavioral Conformance Lab | Spike | L | DEV-003 / DEV-004 | P0 | 🟨 In Review — Review ✅ Approved |
 | DEV-122 | Spike: Change-Aware Adaptive Delivery | Spike | L | DEV-002 / DEV-004 | P1 | ⬜ Backlog — Draft · needs-interview · depends DEV-120 |
 | DEV-123 | Spike: Guarded Portable Execution | Spike | M | DEV-002 / DEV-004 | P1 | ⬜ Backlog — Draft · needs-interview · depends DEV-120, DEV-122 |
 | DEV-124 | Spike: Cross-Framework Interchange | Spike | M | DEV-002 | P2 | ⬜ Backlog — Draft · needs-interview · depends DEV-120 |
@@ -684,3 +704,6 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-26 14:45 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-127 — smoke PASS; v5.3.33; cycle archived | AgToosa |
 | 2026-07-26 14:45 | 🚀 Ship complete — v5.3.33 — DEV-127 README Experience Refresh | AgToosa |
 | 2026-07-26 14:45 | 🚀 Release 5.3.33 shipped — v5.3.33; version parity bash/ps1/npm/formula; Milestone v5.3.34 (next) | AgToosa |
+| 2026-07-26 15:41 | ✏️ /agtoosa-spec — DEV-121 enrolled — Behavioral Conformance Lab; Amendment R1 approved | AgToosa |
+| 2026-07-26 15:55 | 🔨 /agtoosa-build — DEV-121 build complete — BCL-001–BCL-013 green | AgToosa |
+| 2026-07-26 16:00 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-121 — 0 Critical, 3 Warning | AgToosa |

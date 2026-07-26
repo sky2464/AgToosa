@@ -255,6 +255,18 @@ Do not report a pack as published or available until that independent confirmati
 
 **Labeling does not bypass** preview, consent, integrity (SHA-256), tar-slip pre-scan, file allowlist, or sensitive-path denylist. Verified and community packs both run the same generator-enforced install gates; `--allow-unverified` only opts into installing `verified: false` index rows after those gates still apply.
 
+### Pack behavioral scenario binding (DEV-121)
+
+Official and verified packs may document **required behavioral scenario ids** from `Docs/AgToosa_Behavioral_Conformance.md` (for example `lifecycle-compass-proof`). This extends — but does not replace — DEV-096 SHA/manifest validation and DEV-101 trust labels.
+
+| Layer | What it proves |
+|-------|----------------|
+| DEV-096 pack validation CI | Manifest + tarball integrity |
+| DEV-101 trust label | Maintainer review state |
+| BCL scenario id + `scenario-run.json` | Fixed proof task artifacts for a platform (maintainer-run; not default CI) |
+
+Pack README or metadata may list `behavioral_scenarios: ["lifecycle-compass-proof"]`. Passing static corpus bats does **not** claim live assistant execution or hosted certification.
+
 ---
 
 ## Official Pack Pilot

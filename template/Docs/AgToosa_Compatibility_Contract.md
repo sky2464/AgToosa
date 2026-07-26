@@ -46,6 +46,7 @@ Define what **Install-tested**, **Render-tested**, and **Scenario-tested** mean 
 
 - Lifecycle routing matrix: `Docs/AgToosa_AgentCapability.md`
 - Proof product journey: README / first-15 examples (DEV-086)
+- **Scenario corpus (DEV-121):** `Docs/AgToosa_Behavioral_Conformance.md` — use `scenarios/lifecycle-compass-proof.json` as the Scenario-tested evidence pointer. Static bats verify corpus integrity only; **do not** label a platform Scenario-tested without maintainer-recorded `last_evidence` and a scenario-run pointer.
 
 <!-- AGTOOSA PRODUCT TRUTH START: claims.surface.template-compatibility -->
 <!-- Static conformance and freshness only; not behavioral or provenance proof. -->

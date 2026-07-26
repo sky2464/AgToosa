@@ -1,0 +1,2 @@
+platform=codex
+adapter=codex/agtoosa-status

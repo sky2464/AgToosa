@@ -1,0 +1,2 @@
+platform=copilot
+adapter=.github/copilot-instructions.md
