@@ -7,6 +7,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.32] — 2026-07-26
+
+Patch release: DEV-119 — Recoverable Project Transaction.
+
+### Added
+
+- **DEV-119 — Recoverable Project Transaction.** Gitignored `.agtoosa/transactions/` journal with pre-image snapshots; late-commit rollback in `apply_commit_staging`; `agtoosa.sh --transaction-recover` and `--transaction-status`; RPT-001–RPT-012 bats; ADR-018 Accepted.
+
+---
+
 ## [5.3.31] — 2026-07-25
 
 Patch release: cross-model review consent and workflow policy.

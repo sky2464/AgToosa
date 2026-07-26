@@ -3,7 +3,7 @@
 > **Story ID:** DEV-119
 > **Type:** Feature
 > **Epic:** DEV-001 — Core Generator Engine
-> **Status:** 🟦 Todo
+> **Status:** 🏁 Shipped (v5.3.32)
 > **Estimate:** L
 > **Priority:** P0
 > **Clarity:** `ready`

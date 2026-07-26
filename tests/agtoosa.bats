@@ -13802,6 +13802,7 @@ EOF
 @test "DEV-125 NXT-008: help-next previews and hands off to agtoosa-next" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q 'To execute: /agtoosa-next' "$root/template/.claude/commands/agtoosa-help.md"
+  grep -q 'To execute: /agtoosa-next' "$root/template/.cursor/commands/agtoosa-help.md"
   grep -q 'Help previews, Next executes' "$root/template/Docs/AgToosa_Next.md"
   grep -q 'Primary sequential driver' "$root/template/Docs/AgToosa_Agent.md"
   ! grep -q 'executes workflows' "$root/template/.claude/commands/agtoosa-help.md"
@@ -14137,4 +14138,33 @@ PY
   grep -q 'User consent and model ceiling' "$root/template/Docs/AgToosa_CrossModelReview.md"
   grep -q 'cross_model: recommended' "$root/template/Docs/Context/workflow.md"
   grep -q 'reviewer_model: parent' "$root/template/Docs/Context/workflow.md"
+}
+
+# -- DEV-119 ship regression v5.3.32 (SR-001–SR-002) --------------------------
+
+@test "DEV-119 SR-001: v5.3.32 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.32" ]
+  [ "$ps_ver" = "5.3.32" ]
+  [ "$npm_ver" = "5.3.32" ]
+  [ "$formula_ver" = "5.3.32" ]
+  grep -q '## \[5.3.32\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-119' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-119.md" ]
+  [ -f "$root/docs/archived/review-DEV-119.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-119.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-119.md"
+}
+
+@test "DEV-119 SR-002: transaction journal module and CLI flags exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/lib/transaction.sh" ]
+  grep -q 'transaction-recover' "$root/agtoosa.sh"
+  grep -q 'transaction-status' "$root/agtoosa.sh"
+  grep -q '\.agtoosa/transactions' "$root/template/.gitignore"
 }
