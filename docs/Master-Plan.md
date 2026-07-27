@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-27 (/agtoosa-ship — DEV-131 v5.3.45)
+> **Last updated:** 2026-07-27 (/agtoosa-build — DEV-132 build complete)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Idle — DEV-131 shipped |
+| Current phase | Build — DEV-132 (4/4 tasks; review pending) |
 | Milestone | `v5.3.46` (next) |
-| Active cycle | _(none — cycle idle)_ |
-| Cycle state | Idle — DEV-131 shipped v5.3.45 |
+| Active cycle | DEV-132 |
+| Cycle state | Active — DEV-132 Evidence JSONL preservation |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -23,7 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| _(none — cycle idle)_ | | | | | |
+| DEV-132 | Fix: Preserve Evidence JSONL on Re-install and Update | Fix | XS | 🟨 In Progress — build complete | 4/4 |
 
 <!-- Archived to docs/archived/cycle-2026-07-27-release-5.3.45.md (DEV-131 v5.3.45) -->
 
@@ -71,7 +71,14 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for enrolled Active Cycle stories. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-_(No stories enrolled — cycle idle. Shipped task trees live in archived specs under `docs/archived/spec-*.md`. Run `/agtoosa-spec` to enroll the next story.)_
+_(No other stories enrolled.)_
+
+### DEV-132 — Preserve Evidence JSONL on Re-install and Update
+
+- [x] **1.** Add `agtoosa_is_project_owned_doc` helper — _AC-001, AC-006_
+- [x] **2.** Wire Bash install/update/reinstall/uninstall/plan preservation — _AC-001–AC-004, AC-006_
+- [x] **3.** Wire PowerShell `Copy-FileWithGuard` parity — _AC-005_
+- [x] **4.** Add bats EVJ-001–EVJ-006 — _AC-007_
 
 ## Manual / Deferred Tasks
 
@@ -123,6 +130,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-129 | Chore: Smart Upgrade UX Polish | Chore | S | DEV-001 | P0 | 🏁 Shipped — v5.3.43 |
 | DEV-130 | Chore: BCL Hardening & CI Wiring | Chore | S | DEV-003 / DEV-004 | P0 | 🏁 Shipped — v5.3.44 |
 | DEV-131 | Chore: Sequential Approval + Release Publication Gate | Chore | S | 🏁 Shipped — v5.3.45 |
+| DEV-132 | Fix: Preserve Evidence JSONL on Re-install and Update | Fix | XS | DEV-001 / DEV-004 | P0 | 🟨 In Progress — build complete |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
 | DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v5.3.10 |
@@ -747,6 +755,8 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-27 21:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-130 — smoke PASS BCL-014/015; v5.3.44 | AgToosa |
 | 2026-07-27 21:55 | 🚀 Ship complete — v5.3.44 — DEV-130 BCL Hardening (+ UPG-010/011 UX follow-up) | AgToosa |
 | 2026-07-27 21:55 | 🚀 Release 5.3.44 shipped — v5.3.44; version parity bash/ps1/npm/formula; Milestone v5.3.45 (next) | AgToosa |
+| 2026-07-27 23:35 | 🏗️ /agtoosa-build — Build complete — DEV-132 — EVJ-001–006 6/6 PASS; project-owned evidence JSONL wired | AgToosa |
+| 2026-07-27 23:30 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-132 — evidence JSONL preservation; `docs/archived/spec-DEV-132.md`; test plan `docs/AgToosa_TestPlan-DEV-132.md`; next `/agtoosa-next` → build | AgToosa |
 | 2026-07-27 23:30 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-131 — smoke PASS NXT/RL gate; v5.3.45 | AgToosa |
 | 2026-07-27 23:30 | 🚀 Release 5.3.45 shipped — v5.3.45; version parity bash/ps1/npm/formula; Milestone v5.3.46 (next) | AgToosa |
 | 2026-07-27 23:30 | 🚀 Ship complete — v5.3.45 — DEV-131 Sequential Approval + Release Publication Gate | AgToosa |

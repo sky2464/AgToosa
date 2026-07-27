@@ -87,7 +87,7 @@ _plan_categorize_file() {
     return
   fi
 
-  if [[ "$rel" == "Docs/Master-Plan.md" || "$rel" == "Docs/AgToosa_Changelog.md" || "$rel" == "Docs/Master-Architecture.md" ]]; then
+  if agtoosa_is_project_owned_doc "$rel"; then
     PLAN_CAT="preserve"
     PLAN_DETAIL="project-owned state preserved"
     return
@@ -174,7 +174,7 @@ _plan_collect_update_files() {
 
   files=()
   for f in "${DOCS_FILES[@]}"; do
-    [[ "$f" == "Docs/Master-Plan.md" || "$f" == "Docs/AgToosa_Changelog.md" || "$f" == "Docs/Master-Architecture.md" ]] && continue
+    agtoosa_is_project_owned_doc "$f" && continue
     src="${TEMPLATE_DIR}/${f}"
     [[ -f "$src" ]] && files+=("$f")
   done

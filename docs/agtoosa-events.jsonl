@@ -260,3 +260,5 @@
 {"ts":"2026-07-27T23:18:00Z","phase":"build","event":"complete","story":"DEV-131","by":"AgToosa","note":"NXT-013–015 + RL-001–004 7/7 PASS"}
 {"ts":"2026-07-27T23:26:00Z","phase":"ship","event":"complete","story":"DEV-131","by":"AgToosa","note":"v5.3.45 tag + release-advanced.yml green"}
 {"ts":"2026-07-27T23:30:00Z","phase":"ship","event":"complete","story":"DEV-131","by":"AgToosa","note":"v5.3.45 smoke PASS 7/7 + SR-001"}
+{"ts":"2026-07-27T23:30:00Z","phase":"spec","event":"enrolled","story":"DEV-132","by":"AgToosa","note":"Spec Approved; evidence JSONL preservation fix; test plan docs/AgToosa_TestPlan-DEV-132.md"}
+{"ts":"2026-07-27T23:35:00Z","phase":"build","event":"complete","story":"DEV-132","by":"AgToosa","note":"EVJ-001–006 6/6 PASS"}

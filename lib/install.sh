@@ -280,20 +280,18 @@ install_files() {
   fi
 
   # Docs/ workflow files overwrite on install except project-owned state
-  # (Master-Plan, Changelog, Master-Architecture — same boundaries as --update).
+  # (Master-Plan, Changelog, Master-Architecture, evidence JSONL — same boundaries as --update).
   # DEV-092: hash-aware apply for Docs overwrites (shared with update via apply_*).
   local file
   for file in "${DOCS_FILES[@]}"; do
     if [[ -f "${SHIP_DIR}/${file}" ]]; then
-      if [[ "$file" == "Docs/Master-Plan.md" || "$file" == "Docs/AgToosa_Changelog.md" || \
-            "$file" == "Docs/Master-Architecture.md" ]]; then
+      if agtoosa_is_project_owned_doc "$file"; then
         if [[ -f "${PROJECT_PATH}/${file}" ]]; then
           if declare -F apply_note_preserved >/dev/null 2>&1; then
             apply_note_preserved
           fi
-          local preserve_reason="your project plan"
-          [[ "$file" == "Docs/AgToosa_Changelog.md" ]] && preserve_reason="your changelog"
-          [[ "$file" == "Docs/Master-Architecture.md" ]] && preserve_reason="your architecture"
+          local preserve_reason
+          preserve_reason="$(agtoosa_project_owned_doc_preserve_reason "$file")"
           echo -e "  ${BLUE}🔒${NC} Preserved ${file} ${CYAN}(${preserve_reason})${NC}"
           SKIPPED=$((SKIPPED + 1))
           continue

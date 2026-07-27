@@ -13,9 +13,7 @@ _reinstall_list_generated_paths() {
   local -a candidates=()
 
   for f in "${DOCS_FILES[@]}"; do
-    case "$f" in
-      Docs/Master-Plan.md|Docs/AgToosa_Changelog.md|Docs/Master-Architecture.md) continue ;;
-    esac
+    agtoosa_is_project_owned_doc "$f" && continue
     candidates+=("$f")
   done
   candidates+=("${OPTIONAL_TEMPLATE_FILES[@]+"${OPTIONAL_TEMPLATE_FILES[@]}"}")
@@ -116,9 +114,7 @@ _reinstall_apply_clean() {
   local -a doc_targets=("${DOCS_FILES[@]}")
   doc_targets+=("Docs/AgToosa_Claude.md" "Docs/AgToosa_Gemini.md")
   for f in "${doc_targets[@]}"; do
-    case "$f" in
-      Docs/Master-Plan.md|Docs/AgToosa_Changelog.md|Docs/Master-Architecture.md) continue ;;
-    esac
+    agtoosa_is_project_owned_doc "$f" && continue
     src="${SHIP_DIR}/${f}"
     dst="${project_path}/${f}"
     [[ -f "$src" ]] || continue

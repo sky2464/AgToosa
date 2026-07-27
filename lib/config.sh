@@ -82,6 +82,33 @@ DOCS_FILES=(
   "Docs/AgToosa_Changelog.md"
 )
 
+# Project-owned Docs/ state (human-edited or append-only). Never overwrite when present.
+_AGTOOSA_PROJECT_OWNED_DOCS=(
+  "Docs/Master-Plan.md"
+  "Docs/AgToosa_Changelog.md"
+  "Docs/Master-Architecture.md"
+  "Docs/agtoosa-evidence.jsonl"
+)
+
+agtoosa_is_project_owned_doc() {
+  local f="$1" entry
+  for entry in "${_AGTOOSA_PROJECT_OWNED_DOCS[@]}"; do
+    [[ "$f" == "$entry" ]] && return 0
+  done
+  return 1
+}
+
+agtoosa_project_owned_doc_preserve_reason() {
+  local f="$1"
+  case "$f" in
+    Docs/Master-Plan.md) echo "your project plan" ;;
+    Docs/AgToosa_Changelog.md) echo "your changelog" ;;
+    Docs/Master-Architecture.md) echo "your architecture" ;;
+    Docs/agtoosa-evidence.jsonl) echo "your evidence ledger" ;;
+    *) echo "your project state" ;;
+  esac
+}
+
 OPTIONAL_TEMPLATE_FILES=(
   "Docs/AgToosa_Claude.md"
   "Docs/AgToosa_Gemini.md"

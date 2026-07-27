@@ -344,7 +344,7 @@ run_uninstall() {
   echo -e "${BOLD}Uninstall AgToosa from: ${target}${NC}"
   echo "Removes AgToosa-owned workflow docs and platform command/rule files."
   echo "Preserves: Master-Plan.md, Master-Architecture.md, AgToosa_Changelog.md,"
-  echo "           Docs/Context/, Docs/archived/, and merged platform entry-point files."
+  echo "           agtoosa-evidence.jsonl, Docs/Context/, Docs/archived/, and merged platform entry-point files."
   echo ""
   local reply
   if [[ "$ASSUME_YES" == true ]]; then
@@ -360,9 +360,7 @@ run_uninstall() {
 
   local removed=0 f
   for f in "${DOCS_FILES[@]}"; do
-    case "$f" in
-      Docs/Master-Plan.md|Docs/Master-Architecture.md|Docs/AgToosa_Changelog.md) continue ;;
-    esac
+    agtoosa_is_project_owned_doc "$f" && continue
     if [[ -f "${target}/${f}" ]]; then
       rm -f "${target}/${f}"
       removed=$((removed + 1))

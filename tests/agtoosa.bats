@@ -15377,6 +15377,84 @@ PY
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-131.md"
 }
 
+# -- DEV-132: Preserve evidence JSONL on re-install/update (EVJ-001–EVJ-006) ----
+
+@test "EVJ-001 @smoke: re-install preserves custom Docs/agtoosa-evidence.jsonl" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo '{"story":"DEV-099","phase":"review"}' > "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  grep -q 'DEV-099' "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
+}
+
+@test "EVJ-002 @smoke: --update preserves Docs/agtoosa-evidence.jsonl" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  echo '{"story":"DEV-100","phase":"ship"}' > "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  grep -q 'DEV-100' "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+}
+
+@test "EVJ-003: --reinstall --clean preserves Docs/agtoosa-evidence.jsonl" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo '{"story":"DEV-101","phase":"build"}' > "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+  run bash "$SCRIPT" --reinstall --clean "$TEST_PROJECT" --yes
+  [ "$status" -eq 0 ]
+  grep -q 'DEV-101' "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+}
+
+@test "EVJ-004: --uninstall retains Docs/agtoosa-evidence.jsonl" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo '{"story":"DEV-102","phase":"review"}' > "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+  run bash "$SCRIPT" --uninstall "$TEST_PROJECT" --yes
+  [ "$status" -eq 0 ]
+  [ ! -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
+  [ -f "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl" ]
+  grep -q 'DEV-102' "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+}
+
+@test "EVJ-005: PowerShell install preserves Docs/agtoosa-evidence.jsonl" {
+  command -v pwsh >/dev/null 2>&1 || skip "pwsh not installed"
+
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo '{"story":"DEV-103","phase":"ship"}' > "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+  rm -rf "$BATS_TEST_DIRNAME/../ship"
+  run pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1" -Path "$TEST_PROJECT" -Platforms claude -Yes
+  [ "$status" -eq 0 ]
+  grep -q 'DEV-103' "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+  [ -f "$TEST_PROJECT/Docs/AgToosa_Agent.md" ]
+}
+
+@test "EVJ-006: plan engine classifies evidence JSONL as preserve when present" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo '{"story":"DEV-104","phase":"build"}' > "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+  run bash -c '
+    set -euo pipefail
+    root="'"$root"'"
+    project="'"$TEST_PROJECT"'"
+    AGTOOSA_VERSION="$(grep -E "^AGTOOSA_VERSION=" "$root/agtoosa.sh" | head -1 | cut -d\" -f2)"
+    source "$root/lib/config.sh"
+    source "$root/lib/version.sh"
+    source "$root/lib/plan.sh"
+    PROJECT_PATH="$project"
+    SHIP_DIR="$root/ship"
+    TEMPLATE_DIR="$root/template"
+    PLAN_OPERATION="install"
+    _plan_categorize_file "Docs/agtoosa-evidence.jsonl"
+    printf "%s|%s\n" "$PLAN_CAT" "$PLAN_DETAIL"
+  '
+  [ "$status" -eq 0 ]
+  [[ "$output" == "preserve|project-owned state preserved" ]]
+}
+
 # -- Sivarena UX review follow-up (UPG-010–UPG-011) ----------------------------
 
 @test "UPG-010: detect copilot from scoped instructions without sentinel" {
