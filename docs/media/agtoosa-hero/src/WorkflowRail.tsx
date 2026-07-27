@@ -124,6 +124,7 @@ type WorkflowRailProps = {
   start?: number;
   compact?: boolean;
   loopPhase?: number;
+  timingScale?: number;
 };
 
 export const WorkflowRail: React.FC<WorkflowRailProps> = ({
@@ -131,6 +132,7 @@ export const WorkflowRail: React.FC<WorkflowRailProps> = ({
   start = 0,
   compact = false,
   loopPhase,
+  timingScale = 1,
 }) => {
   const width = compact ? 158 : 194;
   const height = compact ? 78 : 112;
@@ -156,7 +158,11 @@ export const WorkflowRail: React.FC<WorkflowRailProps> = ({
           const next = positions[index + 1];
           const draw =
             loopPhase === undefined
-              ? progress(frame, start + connectorStarts[index], 42)
+              ? progress(
+                  frame,
+                  start + connectorStarts[index] * timingScale,
+                  42 * timingScale,
+                )
               : 1;
           const pulse =
             loopPhase === undefined
@@ -181,7 +187,14 @@ export const WorkflowRail: React.FC<WorkflowRailProps> = ({
       {phases.map((item, index) => {
         const reveal =
           loopPhase === undefined
-            ? progress(frame, start + (index === 0 ? 12 : connectorStarts[index - 1] + 30), 20)
+            ? progress(
+                frame,
+                start +
+                  (index === 0
+                    ? 12 * timingScale
+                    : (connectorStarts[index - 1] + 30) * timingScale),
+                20 * timingScale,
+              )
             : 1;
         const isLoopActive =
           loopPhase !== undefined &&

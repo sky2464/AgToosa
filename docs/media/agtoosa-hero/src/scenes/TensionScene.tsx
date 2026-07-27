@@ -33,16 +33,19 @@ const StatusRow: React.FC<{
   );
 };
 
-export const TensionScene: React.FC = () => {
+export const TensionScene: React.FC<{timingScale?: number}> = ({
+  timingScale = 1,
+}) => {
   const frame = useCurrentFrame();
   const cueFrame =
     timeline.cues.find((cue) => cue.id === "status-scan")?.frame ?? 54;
-  const cueLocal = cueFrame - timeline.scenes.tension.from;
+  const cueLocal =
+    (cueFrame - timeline.scenes.tension.from) * timingScale;
   const opacity = fadeScene(frame, 165, 10, 18);
-  const commandIn = progress(frame, 16, 25);
-  const panelIn = progress(frame, 45, 30);
-  const scan = progress(frame, cueLocal, 24);
-  const closeIn = progress(frame, 112, 22);
+  const commandIn = progress(frame, 16 * timingScale, 25 * timingScale);
+  const panelIn = progress(frame, 45 * timingScale, 30 * timingScale);
+  const scan = progress(frame, cueLocal, 24 * timingScale);
+  const closeIn = progress(frame, 112 * timingScale, 22 * timingScale);
 
   return (
     <AbsoluteFill style={{opacity}}>
@@ -116,9 +119,24 @@ export const TensionScene: React.FC = () => {
         >
           READ-ONLY PROJECT PULSE
         </div>
-        <StatusRow frame={frame} start={58} label="PLAN" value="where we are" />
-        <StatusRow frame={frame} start={73} label="TASKS" value="what remains" />
-        <StatusRow frame={frame} start={88} label="NEXT" value="one action" />
+        <StatusRow
+          frame={frame}
+          start={58 * timingScale}
+          label="PLAN"
+          value="where we are"
+        />
+        <StatusRow
+          frame={frame}
+          start={73 * timingScale}
+          label="TASKS"
+          value="what remains"
+        />
+        <StatusRow
+          frame={frame}
+          start={88 * timingScale}
+          label="NEXT"
+          value="one action"
+        />
         <div
           style={{
             position: "absolute",
@@ -149,4 +167,3 @@ export const TensionScene: React.FC = () => {
     </AbsoluteFill>
   );
 };
-

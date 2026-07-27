@@ -7,15 +7,18 @@ import timeline from "../timeline.json";
 
 const initSteps = ["SCAN CODEBASE", "ESTABLISH CONTEXT", "WIRE ASSISTANTS"];
 
-export const ReframeScene: React.FC = () => {
+export const ReframeScene: React.FC<{timingScale?: number}> = ({
+  timingScale = 1,
+}) => {
   const frame = useCurrentFrame();
   const cueFrame =
     timeline.cues.find((cue) => cue.id === "init-lock")?.frame ?? 216;
-  const cueLocal = cueFrame - timeline.scenes.reframe.from;
+  const cueLocal =
+    (cueFrame - timeline.scenes.reframe.from) * timingScale;
   const opacity = fadeScene(frame, 210, 15, 22);
-  const commandIn = progress(frame, 18, 27);
-  const stepsIn = progress(frame, 66, 26);
-  const lock = progress(frame, cueLocal, 18);
+  const commandIn = progress(frame, 18 * timingScale, 27 * timingScale);
+  const stepsIn = progress(frame, 66 * timingScale, 26 * timingScale);
+  const lock = progress(frame, cueLocal, 18 * timingScale);
 
   return (
     <AbsoluteFill style={{opacity}}>
@@ -89,7 +92,11 @@ export const ReframeScene: React.FC = () => {
         }}
       >
         {initSteps.map((step, index) => {
-          const itemIn = progress(frame, 70 + index * 19, 18);
+          const itemIn = progress(
+            frame,
+            (70 + index * 19) * timingScale,
+            18 * timingScale,
+          );
           return (
             <div
               key={step}
@@ -137,4 +144,3 @@ export const ReframeScene: React.FC = () => {
     </AbsoluteFill>
   );
 };
-

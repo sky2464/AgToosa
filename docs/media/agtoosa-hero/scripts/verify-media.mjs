@@ -67,8 +67,8 @@ const timeline = JSON.parse(
 check(timeline.fps === 30, "timeline is 30fps");
 check(timeline.durationInFrames === 1320, "master is exactly 1320 frames");
 check(
-  timeline.readmeDurationInFrames === 360,
-  "README loop is exactly 360 frames",
+  timeline.readmeDurationInFrames === 540,
+  "README loop is exactly 540 frames",
 );
 check(timeline.cues?.length === 5, "timeline defines exactly five cues");
 const expectedCueIds = [
@@ -100,8 +100,17 @@ const readmeSource = await readFile(
   "utf8",
 );
 check(
-  readmeSource.includes("(frame / README_FRAMES) * Math.PI * 2"),
-  "README motion is periodic over its exact loop duration",
+  readmeSource.includes("<TensionScene") &&
+    readmeSource.includes("<ReframeScene") &&
+    readmeSource.includes("<WorkflowScene") &&
+    readmeSource.includes("<RoutingScene") &&
+    readmeSource.includes("<VerifyScene") &&
+    readmeSource.includes("<ClosingScene"),
+  "README cut composes the six cinematic story beats",
+);
+check(
+  readmeSource.includes("interpolate(frame, [34, 49], [1, 0]"),
+  "README closing scene fades to the base frame for a clean loop",
 );
 check(!readmeSource.includes("<Audio"), "README composition mounts no audio");
 const audioDesignSource = await readFile(
@@ -164,7 +173,7 @@ for (const scene of [
 
 const checkpointFiles = {
   animatic: join(candidateDir, "agtoosa-marketing-v3-animatic.mp4"),
-  readme: join(candidateDir, "agtoosa-readme-v3.gif"),
+  readme: join(candidateDir, "agtoosa-readme-v4.gif"),
   poster: join(candidateDir, "agtoosa-poster-v3.png"),
   storyboard: join(
     candidateDir,
@@ -249,10 +258,10 @@ if (existsSync(checkpointFiles.readme)) {
   const fileStats = await stat(checkpointFiles.readme);
   check(video?.codec_name === "gif", "README candidate is GIF");
   check(video?.width === 720 && video?.height === 405, "README GIF is 720×405");
-  check(Number(video?.nb_frames) === 360, "README GIF has all 360 frames");
+  check(Number(video?.nb_frames) === 540, "README GIF has all 540 frames");
   check(
-    Math.abs(Number(video?.duration) - 12) < 0.05,
-    "README GIF duration is 12 seconds",
+    Math.abs(Number(video?.duration) - 18) < 0.05,
+    "README GIF duration is 18 seconds",
   );
   check(!audio, "README GIF is silent");
   check(fileStats.size < 8_000_000, "README GIF is below 8 MB");

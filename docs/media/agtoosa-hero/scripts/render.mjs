@@ -111,7 +111,7 @@ const renderReadme = async () => {
     "render",
     entry,
     "ReadmeLoop",
-    join(outputDir, "agtoosa-readme-v3.gif"),
+    join(outputDir, "agtoosa-readme-v4.gif"),
     "--codec=gif",
     "--scale=0.5",
     "--muted",

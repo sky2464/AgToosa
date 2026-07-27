@@ -4,6 +4,7 @@ import {colors, FONT_MONO, FONT_SANS, progress} from "./theme";
 type VerifierTerminalProps = {
   frame: number;
   start?: number;
+  timingScale?: number;
 };
 
 const gates = [
@@ -17,10 +18,19 @@ const gates = [
 export const VerifierTerminal: React.FC<VerifierTerminalProps> = ({
   frame,
   start = 0,
+  timingScale = 1,
 }) => {
-  const terminalIn = progress(frame, start, 20);
-  const commandIn = progress(frame, start + 12, 12);
-  const resultIn = progress(frame, start + 88, 12);
+  const terminalIn = progress(frame, start, 20 * timingScale);
+  const commandIn = progress(
+    frame,
+    start + 12 * timingScale,
+    12 * timingScale,
+  );
+  const resultIn = progress(
+    frame,
+    start + 88 * timingScale,
+    12 * timingScale,
+  );
 
   return (
     <div
@@ -88,7 +98,11 @@ export const VerifierTerminal: React.FC<VerifierTerminalProps> = ({
           }}
         >
           {gates.map((gate, index) => {
-            const gateIn = progress(frame, start + 30 + index * 8, 10);
+            const gateIn = progress(
+              frame,
+              start + (30 + index * 8) * timingScale,
+              10 * timingScale,
+            );
             return (
               <div
                 key={gate}

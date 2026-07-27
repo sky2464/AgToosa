@@ -6,7 +6,7 @@ purpose-built deliverables plus review-only compositions:
 | Composition | Duration | Purpose | Audio |
 | --- | ---: | --- | --- |
 | `MarketingMaster` | 44s | Licensed-score marketing film | Music + five cues |
-| `ReadmeLoop` | 12s | Seamless README motion | Silent |
+| `ReadmeLoop` | 18s | Condensed cinematic README motion | Silent |
 | `MarketingAnimatic` | 44s | Creative checkpoint | Low-fi guide score + five cues |
 | `MarketingStoryboard` | 44s | Still-frame review | None |
 | `StoryboardContactSheet` | 1 frame | Eight-shot overview | None |
@@ -33,8 +33,9 @@ out/candidates/creative-reset-v2/
 - Phase nodes use compact display labels (`/init`, `/spec`, `/build`, `/review`,
   `/ship`). The CTA retains the canonical `/agtoosa-init` and
   `/agtoosa-next` commands.
-- The silent README loop exports all 360 frames at 30fps for smooth inline
-  playback without a separate media link.
+- The silent README loop condenses the film into status, init, workflow,
+  routing, verification, and closing-brand scenes. It exports all 540 frames
+  at 30fps for smooth inline playback without a separate media link.
 - The guide score is built around a low-frequency
   `doom · doom · doom · tek · rest` pulse with a deliberate verifier drop.
 - Each foreground cue has one job: status scan, init lock, phase handoff,
