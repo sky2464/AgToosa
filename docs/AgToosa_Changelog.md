@@ -5,6 +5,17 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.44] — 2026-07-27
+
+Patch release: DEV-130 — BCL Hardening & CI Wiring; Sivarena UX follow-up (UPG-010/011).
+
+### Changed
+
+- **DEV-130 — BCL hardening.** Jsonschema validation for scenario corpus/run JSON; `scenario-run.json` for all six platforms; BCL `@smoke` in CI fast path; `requirements-dev.txt`; BCL-014–BCL-015 bats; DEV-121 test plan sync.
+- **Upgrade UX follow-up.** Staged-count banner with expected update estimate; Copilot detection from `.github/instructions/agtoosa-*`; UPG-010–UPG-011 bats.
+
+---
+
 ## [5.3.43] — 2026-07-26
 
 Patch release: DEV-129 — Smart Upgrade UX Polish.

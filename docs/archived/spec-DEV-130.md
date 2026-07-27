@@ -3,7 +3,7 @@
 > **Story ID:** DEV-130  
 > **Epic:** DEV-003 — Community Template Registry · DEV-004 — Testing & QA Harness  
 > **Type:** Chore  
-> **Status:** 🟦 Todo — spec ready (awaiting approval)  
+> **Status:** 🏁 Shipped — v5.3.44
 > **Estimate:** S  
 > **Clarity:** `ready`  
 > **Priority:** P0  
@@ -77,11 +77,11 @@
 
 ## 3. Tasks
 
-- [ ] **1.** Jsonschema validation in `lib/scenario.sh` — _AC-001–AC-003_
-- [ ] **2.** Six-platform `scenario-run.json` fixtures — _AC-004_
-- [ ] **3.** CI fast-path + jsonschema install — _AC-005, AC-006_
-- [ ] **4.** BCL-014+ bats — _AC-008_
-- [ ] **5.** Sync DEV-121 test plan — _AC-007_
+- [x] **1.** Jsonschema validation in `lib/scenario.sh` — _AC-001–AC-003_
+- [x] **2.** Six-platform `scenario-run.json` fixtures — _AC-004_
+- [x] **3.** CI fast-path + jsonschema install — _AC-005, AC-006_
+- [x] **4.** BCL-014+ bats — _AC-008_
+- [x] **5.** Sync DEV-121 test plan — _AC-007_
 
 ## 4. Test Plan
 
@@ -89,8 +89,6 @@ See `docs/AgToosa_TestPlan-DEV-130.md`.
 
 ---
 
-## Spec Approval
+## ✅ Spec Approved
 
-> **Gate:** Approve this spec before `/agtoosa-build`.
-
-- [ ] **Approved** — maintainer sign-off
+Approved: 2026-07-27 — user selected /agtoosa-build after spec interview.
