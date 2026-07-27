@@ -96,7 +96,7 @@ export const SystemRevealScene: React.FC = () => {
             letterSpacing: "0.18em",
           }}
         >
-          THE SIMPLE LOOP
+          REPO-AWARE PROJECT DRIVER
         </div>
         <div
           style={{
@@ -108,7 +108,7 @@ export const SystemRevealScene: React.FC = () => {
             marginTop: 8,
           }}
         >
-          Read state. Run one phase.
+          One command keeps the project moving.
         </div>
       </div>
       <CommandCard
@@ -121,7 +121,7 @@ export const SystemRevealScene: React.FC = () => {
       <CommandCard
         x={1090}
         command="/next"
-        label="EXECUTE ONE PHASE"
+        label="ROUTE · EXECUTE ONE PHASE"
         color={colors.violet}
         reveal={nextIn}
       />
@@ -201,8 +201,8 @@ export const SystemRevealScene: React.FC = () => {
           textAlign: "center",
         }}
       >
-        Repeat <span style={{color: colors.paper}}>/agtoosa-next</span> after
-        each phase.
+        Repeat <span style={{color: colors.paper}}>/agtoosa-next</span> — it
+        reads SYNC and runs the right phase.
       </div>
     </AbsoluteFill>
   );

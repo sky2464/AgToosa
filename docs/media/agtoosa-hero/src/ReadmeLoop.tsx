@@ -170,7 +170,7 @@ const RoutingScene: React.FC = () => {
             letterSpacing: "0.18em",
           }}
         >
-          THE SIMPLE LOOP
+          REPO-AWARE PROJECT DRIVER
         </div>
         <div
           style={{
@@ -182,20 +182,20 @@ const RoutingScene: React.FC = () => {
             marginTop: 8,
           }}
         >
-          Read state. Run one phase.
+          One command keeps the project moving.
         </div>
       </div>
       <CommandCard
         x={370}
         command="/status"
-        label="READ PROJECT STATE"
+        label="READ CURRENT STATE"
         color={colors.cyan}
         reveal={statusIn}
       />
       <CommandCard
         x={1070}
         command="/next"
-        label="EXECUTE ONE PHASE"
+        label="ROUTE · EXECUTE ONE PHASE"
         color={colors.violet}
         reveal={nextIn}
       />
@@ -229,7 +229,7 @@ const RoutingScene: React.FC = () => {
           textAlign: "center",
         }}
       >
-        /AGTOOSA-NEXT · EXACTLY ONE CLEAR ACTION
+        /AGTOOSA-NEXT · READS SYNC · RUNS THE RIGHT PHASE
       </div>
     </AbsoluteFill>
   );
@@ -315,8 +315,8 @@ const ClosingScene: React.FC = () => {
             opacity: details,
           }}
         >
-          Initialize once.{" "}
-          <span style={{color: colors.cyan}}>Then keep moving.</span>
+          One command.{" "}
+          <span style={{color: colors.cyan}}>The right phase.</span>
         </div>
         <div
           style={{
@@ -328,7 +328,7 @@ const ClosingScene: React.FC = () => {
             opacity: details,
           }}
         >
-          /AGTOOSA-INIT → /AGTOOSA-NEXT
+          /AGTOOSA-NEXT · READ · ROUTE · EXECUTE
         </div>
         <div style={{marginTop: 24, opacity: details}}>
           <BrandCredit />

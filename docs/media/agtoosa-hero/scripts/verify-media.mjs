@@ -109,6 +109,11 @@ check(
   "README cut composes the six cinematic story beats",
 );
 check(
+  readmeSource.includes("REPO-AWARE PROJECT DRIVER") &&
+    readmeSource.includes("/AGTOOSA-NEXT · READS SYNC · RUNS THE RIGHT PHASE"),
+  "README cut presents Next as the state-aware one-phase driver",
+);
+check(
   readmeSource.includes("interpolate(frame, [34, 49], [1, 0]"),
   "README closing scene fades to the base frame for a clean loop",
 );

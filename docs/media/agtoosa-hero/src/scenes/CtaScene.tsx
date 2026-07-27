@@ -61,7 +61,8 @@ export const CtaScene: React.FC = () => {
             opacity: ctaIn,
           }}
         >
-          Initialize once. <span style={{color: colors.cyan}}>Then keep moving.</span>
+          One command.{" "}
+          <span style={{color: colors.cyan}}>The right phase.</span>
         </div>
         <div
           style={{

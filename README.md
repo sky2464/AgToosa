@@ -14,6 +14,11 @@
 
 *Turn your AI coding assistant into a disciplined, security-aware dev team — with specs, evidence, and machine verification.*
 
+**One command keeps the project moving.** `/agtoosa-next` is AgToosa's
+repo-aware sequential driver. Run `/agtoosa-init` once, then repeat Next: it
+reads the repository's SYNC state, routes to the correct lifecycle phase, and
+executes exactly one workflow per invocation while preserving phase stops.
+
 **Primary: 15-minute proof journey**
 
 Follow one path to see AgToosa value: install → open the [proof repository](https://github.com/sky2464/agtoosa-first-15-proof) → init → spec → build → verify.
@@ -42,7 +47,9 @@ Security and scan guidance is **Workflow guidance** — your AI runs the checks;
 bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.44
 ```
 
-Then open your AI assistant and run **Day 1:** `/agtoosa-init` → `/agtoosa-spec` → `/agtoosa-build` → `/agtoosa-review` → `/agtoosa-ship`.
+Then open your AI assistant and run **Day 1:** `/agtoosa-init` once →
+`/agtoosa-next` repeatedly. Use the explicit phase commands only when you need
+advanced control.
 
 ## Lifecycle at a glance
 

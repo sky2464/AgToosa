@@ -49,7 +49,7 @@ out/candidates/creative-reset-v2/
 | 0–5s | Compact `/status` reads plan, tasks, and the next action. |
 | 5–11s | `/init` establishes the one-time project foundation. |
 | 11–27s | Directional handoffs move through `/spec` → `/build` → `/review` → `/ship`. |
-| 27–35s | `/status` routes into `/next`, which selects exactly one phase. |
+| 27–35s | `/status` routes into `/next`, the repo-aware driver that reads SYNC and executes exactly one phase. |
 | 35–40s | A verified repository run executes `bash Docs/agtoosa-verify.sh`. |
 | 40–44s | The canonical `/agtoosa-init` and `/agtoosa-next` close the film. |
 
