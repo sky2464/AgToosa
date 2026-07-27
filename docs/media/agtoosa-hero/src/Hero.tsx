@@ -1,129 +1,41 @@
 import {
   AbsoluteFill,
-  interpolate,
-  spring,
+  Audio,
+  staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-
-const phases = [
-  { label: "Spec", color: "#0284c7" },
-  { label: "Build", color: "#059669" },
-  { label: "Review", color: "#d97706" },
-  { label: "Ship", color: "#dc2626" },
-];
+import { Ambient } from "./Design";
+import { EnergyFx, impactAtFrame } from "./EnergyFx";
+import { FinalScene, IntroScene } from "./IntroFinal";
+import { LifecycleScene, VerifyScene } from "./LifecycleVerify";
 
 export const Hero: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-
-  const titleOpacity = interpolate(frame, [0, 20], [0, 1], {
-    extrapolateRight: "clamp",
-  });
-
+  const impact = impactAtFrame(frame);
+  const shakeX = Math.sin(frame * 2.7) * impact * 5;
+  const shakeY = Math.cos(frame * 3.2) * impact * 3;
   return (
     <AbsoluteFill
       style={{
-        background: "linear-gradient(135deg, #312e81 0%, #1e3a5f 50%, #0e7490 100%)",
-        fontFamily: "ui-sans-serif, system-ui, sans-serif",
+        fontFamily: "Inter, ui-sans-serif, system-ui, -apple-system, sans-serif",
       }}
     >
-      <div
+      <AbsoluteFill
         style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "radial-gradient(circle at 50% 30%, rgba(34,211,238,0.15), transparent 60%)",
-        }}
-      />
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100%",
-          opacity: titleOpacity,
+          transform: `translate(${shakeX}px, ${shakeY}px) scale(${1 + impact * 0.018})`,
         }}
       >
-        <div style={{ fontSize: 42, fontWeight: 800, color: "#e0e7ff" }}>
-          AgToosa
-        </div>
-        <div style={{ fontSize: 16, color: "#94a3b8", marginTop: 8 }}>
-          Spec → Build → Review → Ship
-        </div>
-        <div
-          style={{
-            display: "flex",
-            gap: 24,
-            marginTop: 48,
-          }}
-        >
-          {phases.map((phase, i) => {
-            const delay = i * 12;
-            const scale = spring({
-              frame: frame - delay,
-              fps,
-              config: { damping: 14, stiffness: 120 },
-            });
-            const glow = interpolate(
-              frame,
-              [delay, delay + 30, delay + 60],
-              [0.5, 1, 0.7],
-              { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
-            );
-            return (
-              <div
-                key={phase.label}
-                style={{
-                  width: 120,
-                  height: 56,
-                  borderRadius: 12,
-                  background: phase.color,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#fff",
-                  fontWeight: 700,
-                  fontSize: 16,
-                  transform: `scale(${scale})`,
-                  opacity: glow,
-                  boxShadow: `0 0 24px ${phase.color}55`,
-                }}
-              >
-                {phase.label}
-              </div>
-            );
-          })}
-        </div>
-        <div
-          style={{
-            marginTop: 56,
-            padding: "10px 20px",
-            background: "rgba(15,23,42,0.85)",
-            borderRadius: 8,
-            fontFamily: "ui-monospace, monospace",
-            fontSize: 15,
-            color: "#22d3ee",
-          }}
-        >
-          /agtoosa-spec → spec.md ✓
-        </div>
-        <div
-          style={{
-            marginTop: 32,
-            fontSize: 17,
-            fontWeight: 600,
-            color: "#cbd5e1",
-            opacity: interpolate(frame, [120, 150], [0, 1], {
-              extrapolateLeft: "clamp",
-              extrapolateRight: "clamp",
-            }),
-          }}
-        >
-          Verify. Don't trust the chat.
-        </div>
-      </div>
+        <Ambient frame={frame} />
+        <IntroScene frame={frame} fps={fps} />
+        <LifecycleScene frame={frame} fps={fps} />
+        <VerifyScene frame={frame} fps={fps} />
+        <FinalScene frame={frame} fps={fps} />
+      </AbsoluteFill>
+      <EnergyFx frame={frame} />
+      <Audio src={staticFile("audio/agtoosa-score.wav")} volume={0.62} />
+      <Audio src={staticFile("audio/agtoosa-sfx.wav")} volume={0.7} />
     </AbsoluteFill>
   );
 };

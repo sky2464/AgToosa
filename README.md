@@ -11,7 +11,7 @@
 **A lightweight, repo-native control plane for spec-driven AI development**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-5.3.34-green.svg)](https://github.com/sky2464/AgToosa/releases)
+[![Version](https://img.shields.io/badge/version-5.3.44-green.svg)](https://github.com/sky2464/AgToosa/releases)
 [![CI Status](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Discussions](https://img.shields.io/badge/Discussions-GitHub-blue.svg)](https://github.com/sky2464/AgToosa/discussions)
@@ -43,7 +43,7 @@ Security and scan guidance is **Workflow guidance** — your AI runs the checks;
 ## Quick install
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.34
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.44
 ```
 
 Then open your AI assistant and run **Day 1:** `/agtoosa-init` → `/agtoosa-spec` → `/agtoosa-build` → `/agtoosa-review` → `/agtoosa-ship`.
@@ -94,7 +94,7 @@ Use these when you already know AgToosa and only need an install command.
 
 ```bash
 # Public launch: pinned release (alternative to the proof walkthrough).
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.34
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.44
 
 brew install sky2464/agtoosa/agtoosa
 npx agtoosa

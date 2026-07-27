@@ -1,0 +1,46 @@
+{
+  "fps": 30,
+  "durationInFrames": 1320,
+  "readmeDurationInFrames": 360,
+  "storyboardFrames": [90, 270, 450, 585, 705, 975, 1155, 1260],
+  "scenes": {
+    "tension": {"from": 0, "duration": 165},
+    "reframe": {"from": 135, "duration": 210},
+    "proof": {"from": 315, "duration": 525},
+    "system": {"from": 795, "duration": 270},
+    "verify": {"from": 1035, "duration": 180},
+    "cta": {"from": 1185, "duration": 135}
+  },
+  "cues": [
+    {
+      "id": "status-scan",
+      "frame": 54,
+      "duration": 30,
+      "file": "status-scan.wav"
+    },
+    {
+      "id": "init-lock",
+      "frame": 216,
+      "duration": 30,
+      "file": "init-lock.wav"
+    },
+    {
+      "id": "phase-handoff",
+      "frame": 585,
+      "duration": 36,
+      "file": "phase-handoff.wav"
+    },
+    {
+      "id": "next-route",
+      "frame": 915,
+      "duration": 42,
+      "file": "next-route.wav"
+    },
+    {
+      "id": "proof-resolve",
+      "frame": 1155,
+      "duration": 42,
+      "file": "proof-resolve.wav"
+    }
+  ]
+}

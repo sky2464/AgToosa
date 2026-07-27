@@ -1,2 +1,5 @@
 out/
 node_modules/
+public/render-audio/
+public/storyboard-temp/
+licensed-inputs/
