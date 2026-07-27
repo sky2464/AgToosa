@@ -3,7 +3,7 @@
 > **Story ID:** DEV-132  
 > **Epic:** DEV-001 — Generator & Install · DEV-004 — Testing & QA Harness  
 > **Type:** Fix  
-> **Status:** 🟦 Todo — Spec Approved  
+> **Status:** 🏁 Shipped — v5.3.46  
 > **Estimate:** XS  
 > **Clarity:** `ready`  
 > **Priority:** P0  

@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-27 (/agtoosa-build — DEV-132 build complete)
+> **Last updated:** 2026-07-27 (/agtoosa-ship — DEV-132 v5.3.46)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Build — DEV-132 (4/4 tasks; review pending) |
-| Milestone | `v5.3.46` (next) |
-| Active cycle | DEV-132 |
-| Cycle state | Active — DEV-132 Evidence JSONL preservation |
+| Current phase | Ship ✅ — DEV-132 complete |
+| Milestone | `v5.3.47` (next) |
+| Active cycle | Idle — DEV-132 shipped v5.3.46 |
+| Cycle state | Idle — DEV-132 shipped v5.3.46 |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -23,7 +23,9 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-132 | Fix: Preserve Evidence JSONL on Re-install and Update | Fix | XS | 🟨 In Progress — build complete | 4/4 |
+| — | *No active stories — cycle idle* | — | — | — | — |
+
+<!-- Archived to docs/archived/cycle-2026-07-27-release-5.3.46.md (DEV-132 v5.3.46) -->
 
 <!-- Archived to docs/archived/cycle-2026-07-27-release-5.3.45.md (DEV-131 v5.3.45) -->
 
@@ -130,7 +132,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-129 | Chore: Smart Upgrade UX Polish | Chore | S | DEV-001 | P0 | 🏁 Shipped — v5.3.43 |
 | DEV-130 | Chore: BCL Hardening & CI Wiring | Chore | S | DEV-003 / DEV-004 | P0 | 🏁 Shipped — v5.3.44 |
 | DEV-131 | Chore: Sequential Approval + Release Publication Gate | Chore | S | 🏁 Shipped — v5.3.45 |
-| DEV-132 | Fix: Preserve Evidence JSONL on Re-install and Update | Fix | XS | DEV-001 / DEV-004 | P0 | 🟨 In Progress — build complete |
+| DEV-132 | Fix: Preserve Evidence JSONL on Re-install and Update | Fix | XS | DEV-001 / DEV-004 | P0 | 🟨 In Review — Review ✅ Approved |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
 | DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v5.3.10 |
@@ -288,6 +290,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-132 | Fix: Preserve Evidence JSONL on Re-install and Update | 2026-07-27 | [spec-DEV-132.md](archived/spec-DEV-132.md) · [review-DEV-132.md](archived/review-DEV-132.md) · [evidence-DEV-132.md](archived/evidence-DEV-132.md) |
 | DEV-131 | Chore: Sequential Approval + Release Publication Gate | 2026-07-27 | [spec-DEV-131.md](archived/spec-DEV-131.md) · [review-DEV-131.md](archived/review-DEV-131.md) · [evidence-DEV-131.md](archived/evidence-DEV-131.md) |
 | DEV-124 | Spike: Cross-Framework Interchange | 2026-07-26 | [spec-DEV-124.md](archived/spec-DEV-124.md) · [review-DEV-124.md](archived/review-DEV-124.md) · [evidence-DEV-124.md](archived/evidence-DEV-124.md) |
 | DEV-123 | Spike: Guarded Portable Execution | 2026-07-26 | [spec-DEV-123.md](archived/spec-DEV-123.md) · [review-DEV-123.md](archived/review-DEV-123.md) · [evidence-DEV-123.md](archived/evidence-DEV-123.md) |
@@ -755,6 +758,11 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-27 21:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-130 — smoke PASS BCL-014/015; v5.3.44 | AgToosa |
 | 2026-07-27 21:55 | 🚀 Ship complete — v5.3.44 — DEV-130 BCL Hardening (+ UPG-010/011 UX follow-up) | AgToosa |
 | 2026-07-27 21:55 | 🚀 Release 5.3.44 shipped — v5.3.44; version parity bash/ps1/npm/formula; Milestone v5.3.45 (next) | AgToosa |
+| 2026-07-27 23:40 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-132 — 0 Critical, 2 Warning; next `/agtoosa-next` → ship v5.3.46 | AgToosa |
+| 2026-07-27 23:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-132 — smoke PASS EVJ/SR gate; v5.3.46 | AgToosa |
+| 2026-07-27 23:55 | 🚀 Ship complete — v5.3.46 — DEV-132 Evidence JSONL preservation | AgToosa |
+| 2026-07-27 23:55 | 🚀 Release 5.3.46 shipped — v5.3.46; version parity bash/ps1/npm/formula; Milestone v5.3.47 (next) | AgToosa |
+| 2026-07-27 23:38 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-132 — 4-persona review running | AgToosa |
 | 2026-07-27 23:35 | 🏗️ /agtoosa-build — Build complete — DEV-132 — EVJ-001–006 6/6 PASS; project-owned evidence JSONL wired | AgToosa |
 | 2026-07-27 23:30 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-132 — evidence JSONL preservation; `docs/archived/spec-DEV-132.md`; test plan `docs/AgToosa_TestPlan-DEV-132.md`; next `/agtoosa-next` → build | AgToosa |
 | 2026-07-27 23:30 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-131 — smoke PASS NXT/RL gate; v5.3.45 | AgToosa |

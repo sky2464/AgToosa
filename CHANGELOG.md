@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.46] — 2026-07-27
+
+Patch release: DEV-132 — Preserve Evidence JSONL on re-install and update.
+
+### Fixed
+
+- **DEV-132 — Evidence JSONL preservation.** Centralize project-owned Docs in `agtoosa_is_project_owned_doc()`; preserve `Docs/agtoosa-evidence.jsonl` on install, update, reinstall, uninstall, and plan paths (Bash + PowerShell); EVJ-001–006 bats.
+
+---
+
 ## [5.3.45] — 2026-07-27
 
 Patch release: DEV-131 — Sequential Approval + Release Publication Gate.
