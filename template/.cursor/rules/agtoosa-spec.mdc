@@ -11,7 +11,7 @@ When executing `/agtoosa-spec` or any specification work, follow `Docs/AgToosa_S
 - Always verify dependency versions against live sources — never assume from memory.
 - STRIDE threat model is mandatory for every spec (skip only for `quick`).
 - Output: a single spec file at `Docs/archived/spec-[story-id].md` with embedded architectural blueprint and threat model.
-- **Phase stop:** stop at the approval gate. Do **not** run `/agtoosa-build` automatically. Approval marks readiness only.
+- **Phase stop:** stop at the approval gate for direct `/agtoosa-spec`. When **served by `/agtoosa-next`**, Sequential Approval applies — append approval when quality checks pass.
 - Update `Docs/Master-Plan.md` after the spec is written.
 - For `to-issues`: use vertical slices only — each issue must deliver one complete user-facing behaviour change.
 - On successful completion, print this line verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)

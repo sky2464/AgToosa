@@ -11,9 +11,9 @@ Use when the user asks for `/agtoosa-next`, `$agtoosa-next`, or wants to advance
 
 1. Read `Docs/AgToosa_Next.md` and follow the routing algorithm.
 2. **Mandatory:** run `bash agtoosa.sh --status-line [path] --route-hint --format json` before dispatch.
-3. Trust `spec_approved` from route-hint JSON; when false, dispatch spec approval — not build.
+3. Trust `spec_approved` from route-hint JSON; when false, dispatch spec (Sequential Approval applies when quality checks pass).
 4. Dispatch exactly **one** lifecycle workflow (`spec`, `build`, `review`, `ship`, or tributary).
-5. Honor Phase Stop inside the dispatched workflow.
+5. Honor Phase Stop: one phase per invocation. Apply **Sequential Approval Contract** when served by Next (see `Docs/AgToosa_Next.md`).
 6. **Distinct from `/agtoosa-help next`:** help previews; this skill **executes**.
 7. On successful completion, print dual-line close with `Next: /agtoosa-next` when sequential mode applies.
 

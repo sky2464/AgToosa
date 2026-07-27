@@ -45,8 +45,8 @@ Run spec → build → review → ship for every story; `/agtoosa-qa` is an opti
 
 - `/agtoosa-help` — static command reference; **do not** read `Docs/Master-Plan.md` or git on the default path.
 - `/agtoosa-help next` — **preview only:** same routing as `/agtoosa-next dry`; ends with `To execute: /agtoosa-next`. **Never modify** files or auto-run workflows from help.
-- `/agtoosa-next` — **primary sequential driver**: run status pulse, then **execute** exactly one lifecycle workflow. One phase per invocation. `dry` · `pick` · `fix` · `test` · `docs`. See `Docs/AgToosa_Next.md`.
-- Sequential freeform ("next", continue cycle) → route to `/agtoosa-next`, not raw phase slashes.
+- `/agtoosa-next` — **primary sequential driver**: run status pulse, then **execute** exactly one lifecycle workflow. One phase per invocation; **Sequential Approval** when Next dispatches (spec/review/ship gates). `dry` · `pick` · `fix` · `test` · `docs`. See `Docs/AgToosa_Next.md`.
+- Sequential freeform ("next", "agtoosa next", continue cycle) → route to `/agtoosa-next`, not raw phase slashes.
 - Not part of the 4-phase lifecycle diagram above.
 
 ## Cursor workflow command routing

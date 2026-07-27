@@ -14,6 +14,8 @@ Dispatch based on any arguments after the command: `dry`, `pick`, `fix`, `test`,
 
 **Phase stop:** dispatch exactly **one** lifecycle workflow per invocation. Do **not** auto-chain Spec → Build → Review → Ship.
 
+**Sequential approval:** when Next dispatches a phase, the user's invocation counts as approval at spec/review/ship gates when readiness checks pass. See `Docs/AgToosa_Next.md` → Sequential Approval Contract.
+
 **Distinct from `/agtoosa-help next`:** help **previews** only; this command **executes** workflows.
 
 <!-- AGTOOSA PRODUCT TRUTH START: command.next -->

@@ -153,4 +153,6 @@ Consult `Docs/AgToosa_GovernancePolicy.md` (checker: `Docs/agtoosa-policy-check.
 
     If any 🔴 Critical findings remain, the gate shows `BLOCKED`. Do not proceed to `/agtoosa-ship` without explicit user override. Wait for the user's response.
 
+*   **Served by `/agtoosa-next`:** When this review was dispatched by `/agtoosa-next` and verdict is PASS (no unresolved 🔴 Critical), record Review ✅ Approved in Master-Plan and close with `Next: /agtoosa-next — ship [story-id]`. Do **not** invoke `/agtoosa-ship` in the same invocation. When BLOCKED, stop and report findings — Next does not override critical blockers.
+
 *   Print the **dual-line phase close** per `Docs/AgToosa_Agent.md` → **Lifecycle Next-Step Contract** (`Next:` lifecycle command + `SYNC:` pulse). Optional: `/agtoosa-status` for full health findings.

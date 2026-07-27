@@ -13928,6 +13928,25 @@ EOF
   [[ "$output" == *".cursor/commands/agtoosa-next.md"* ]]
 }
 
+@test "DEV-125 NXT-013: AgToosa_Next documents Sequential Approval Contract" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Sequential Approval Contract' "$root/template/Docs/AgToosa_Next.md"
+  grep -q 'Sequential Approval Contract' "$root/docs/AgToosa_Next.md"
+  grep -q 'Served by `/agtoosa-next`' "$root/template/Docs/AgToosa_Spec.md"
+  grep -q 'Next-served approval' "$root/template/Docs/AgToosa_Agent.md"
+}
+
+@test "DEV-125 NXT-014: AgToosa_Next documents post-ship idle cold-start" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'No spec is planned' "$root/template/Docs/AgToosa_Next.md"
+  grep -q 'enroll.*from backlog' "$root/template/Docs/AgToosa_Ship.md"
+}
+
+@test "DEV-125 NXT-015: ADR-019 documents Sequential Approval amendment" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Sequential Approval' "$root/docs/adr/ADR-019-agtoosa-next-dispatcher.md"
+}
+
 # ── DEV-119: Recoverable Project Transaction (RPT-001–RPT-012) ───────────────────
 
 _rpt_tree_hash() {

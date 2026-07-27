@@ -20,6 +20,7 @@ Most users (~90%) want sequential progress without memorizing phase slash comman
 6. **Preserve Phase Stop:** never chain Spec → Build → Review → Ship inside one `/agtoosa-next` run.
 7. **Compass feeds Next:** freeform sequential intent ("next", advance project) routes to `/agtoosa-next`, not raw phase slashes.
 8. **Generator Must:** `spec_approved` in route-hint JSON; when false, SYNC `next` resolves to `/agtoosa-spec` not build.
+9. **Sequential Approval (amended 2026-07-27):** when `/agtoosa-next` dispatches a phase, the user's Next invocation counts as approval at spec, review, and ship deploy gates when readiness checks pass — still one phase per invocation. Direct phase slashes keep standard gates. Post-ship idle routes to next backlog spec or cold-start recommendations.
 
 ## Consequences
 

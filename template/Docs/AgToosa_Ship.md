@@ -94,6 +94,8 @@ Branch: [branch name] · Story: [ID] · Goal: ✅ · Smoke tests: [N] tagged · 
 
 Wait for explicit user approval before Part 1 (WIP squash, deploy, archive).
 
+**Served by `/agtoosa-next`:** When full ship was dispatched by `/agtoosa-next` and Part 0 passed, treat the user's Next invocation as deploy approval — proceed to Part 1 without a separate approval turn. If Part 0 has 🔴 Critical findings, stop — Next does not override readiness blockers.
+
 ### Part 1 — Pre-Deploy: WIP Commit Squash
 
 Before deploying, clean the branch history using the **non-interactive** squash procedure (interactive rebase is unavailable to most agents):
@@ -218,6 +220,8 @@ Run this step when `Docs/Master-Plan.md` exceeds approximately 200 lines **or** 
 *   Confirm archiving and changelog updates are successful.
 *   Append a phase event to `Docs/agtoosa-events.jsonl`:
     `{"ts":"[ISO-8601 UTC]","phase":"ship","event":"complete","story":"[Story ID]","by":"AgToosa"}`
-*   Present the suggested next Spec to the user.
+*   **Post-ship routing (Next-served or sequential):** Run backlog scan per `Docs/AgToosa_Next.md` Step 3.
+    *   **Candidate found** → suggest that story; close with `Next: /agtoosa-next — enroll [story-id] from backlog`.
+    *   **No candidate** → print `No spec is planned in Master-Plan.` Present up to 3 backlog recommendations OR ask what the next spec should be; close with `Next: /agtoosa-next pick — choose or describe next story`.
 *   Print the **dual-line phase close** per `Docs/AgToosa_Agent.md` → **Lifecycle Next-Step Contract** (`Next:` lifecycle command + `SYNC:` pulse). Optional: `/agtoosa-status` for full health findings.
-*   Ask if they want to run `/agtoosa-spec` for the next story.
+*   Direct `/agtoosa-ship` (not served by Next): ask if the user wants to run `/agtoosa-spec` for the next story.

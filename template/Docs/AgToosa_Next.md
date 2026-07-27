@@ -29,8 +29,27 @@
 
 - One lifecycle command per `/agtoosa-next` invocation.
 - **Never** auto-chain Spec → Build → Review → Ship in a single run.
-- Inner workflows honor their own phase stops (e.g. spec stops at approval gate).
+- Inner workflows honor their own phase stops — except approval gates when **served by Next** (see Sequential Approval Contract).
 - Closure line: `Next: /agtoosa-next — <rationale>` plus SYNC pulse (underlying phase optional in rationale).
+
+## Sequential Approval Contract
+
+When `/agtoosa-next` **dispatches** a lifecycle workflow, the user's `/agtoosa-next` invocation counts as **explicit approval** at phase gates — complete the phase through approval, then stop. Direct phase slashes (`/agtoosa-spec`, `/agtoosa-review`, `/agtoosa-ship`) keep the standard separate approval turns.
+
+| Gate | Next-served behavior |
+|------|---------------------|
+| **Spec** | After Parts 1–4 and Spec Quality Analyzer pass, append `## ✅ Spec Approved`, update Master-Plan, close — do **not** wait for a second approval turn |
+| **Review** | When verdict is PASS (no unresolved 🔴 Critical), record Review ✅ Approved and close — do **not** wait for a second approval turn |
+| **Ship deploy** | After Part 0 passes, run Part 1 deploy/archive in the same invocation — do **not** wait for a separate deploy approval turn |
+
+**Still blocked (no implicit override):**
+
+- Spec Quality Analyzer failures or unresolved Must-AC gaps
+- 🔴 Critical review findings (verdict BLOCKED)
+- Part 0 ship readiness failures (🔴 Critical)
+- Cross-model reviewer model tier above parent session (still needs explicit consent in the same turn)
+
+**Repeat `/agtoosa-next`** after each phase closes to advance: spec approved → build; build complete → review; review approved → ship; ship complete → next backlog spec (or cold-start).
 
 ## Routing Algorithm
 
@@ -76,13 +95,22 @@ AgToosa Next → /agtoosa-<command> (<story-id>) — <one-line rationale>
 SYNC: <paste pulse line>
 ```
 
-### Step 3 — Idle cycle
+### Step 3 — Idle cycle (post-ship or empty Active Cycle)
 
 1. **Backlog scan** — highest-priority (`P0` first) non-shipped row with Draft, Spec ready, needs-interview, or Backlog.
-2. **Candidate exists** → `/agtoosa-spec` for that story (interview, approval, or draft).
-3. **No candidate** — cold start: ask for an idea OR present up to 3 backlog recommendations.
+2. **Candidate exists** → dispatch `/agtoosa-spec` for that story (interview + draft + **Sequential Approval** when quality checks pass).
+3. **No candidate** — cold start:
 
-`/agtoosa-next pick` always uses cold-start presentation (user must confirm).
+```text
+No spec is planned in Master-Plan.
+Recommendations:
+  1. [story-id] — [title] ([priority])
+  2. ...
+  3. ...
+Or describe what the next spec should be, or run /agtoosa-next pick.
+```
+
+`/agtoosa-next pick` always uses cold-start presentation (user must confirm before spec dispatch).
 
 ### Step 4 — Blocked or unclear
 
@@ -94,10 +122,10 @@ Honor explicit phase slashes when the user names them (`/agtoosa-review security
 
 ## Execution Contract
 
-1. Read target workflow doc and execute full flow.
-2. Honor Phase Stop inside dispatched workflow.
+1. Read target workflow doc and execute full flow **as served by `/agtoosa-next`** (Sequential Approval Contract applies).
+2. Honor Phase Stop: one phase per invocation — never chain into the next lifecycle phase in the same run.
 3. Print dual-line close with `Next: /agtoosa-next` when sequential mode applies.
-4. Remind: *"Say `/agtoosa-next` again when ready to advance."*
+4. Remind: *"Say `/agtoosa-next` again to advance to the next phase (or next backlog spec after ship)."*
 
 ## Relationship to Lifecycle Compass
 

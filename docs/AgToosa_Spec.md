@@ -50,8 +50,8 @@ Transform a raw idea, feature, chore, or bug into a researched Specification wit
 
 > See `docs/AgToosa_Agent.md` → **Phase Stop Contract** for the full rules.
 
-- `/agtoosa-spec` may run through Parts 1–4 (spec, architecture, tasks, test plan) but **must stop** at the approval gate below.
-- Do **not** run `/agtoosa-build` automatically after the approval gate — wait for the user to invoke `/agtoosa-build` explicitly.
+- `/agtoosa-spec` may run through Parts 1–4 (spec, architecture, tasks, test plan) but **must stop** at the approval gate below — unless **served by `/agtoosa-next`** (see `docs/AgToosa_Next.md` → Sequential Approval Contract).
+- Do **not** run `/agtoosa-build` automatically after the approval gate — wait for the user to invoke `/agtoosa-build` explicitly, or for a **separate** `/agtoosa-next` invocation after approval.
 - Appending `## ✅ Spec Approved` marks readiness only; it does not start build.
 
 ## Plan-Mode Spec Interview Contract
@@ -386,7 +386,9 @@ Consult `docs/AgToosa_GovernancePolicy.md` (checker: `docs/agtoosa-policy-check.
     → Comment or request changes below
     ```
 
-*   **Stop here** after presenting the approval gate. Do not invoke `/agtoosa-build` until the user explicitly runs it.
+*   **Served by `/agtoosa-next`:** When this spec run was dispatched by `/agtoosa-next`, skip the wait above. If the Spec Quality Analyzer passes, append `## ✅ Spec Approved`, update Master-Plan, and close with `Next: /agtoosa-next — build [story-id]`. Do **not** invoke `/agtoosa-build` in the same invocation.
+
+*   **Stop here** after presenting the approval gate (direct `/agtoosa-spec` only). Do not invoke `/agtoosa-build` until the user explicitly runs it.
 
 *   When the user approves, **append the following section verbatim** to the spec file:
 

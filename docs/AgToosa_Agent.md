@@ -270,7 +270,7 @@ All AgToosa commands that require user input follow this shared protocol. It is 
 | **One question at a time** | Never present the next question until the previous answer is received. |
 | **Bounded question budgets** | Respect the per-command maximum listed below. Quality over quantity. |
 | **Adaptive follow-ups** | Each answer may trigger at most one follow-up question. Never branch into multiple follow-up threads. |
-| **Approval gate always** | Even if zero questions were asked, end every phase with an explicit approval gate before proceeding. |
+| **Approval gate always** | Even if zero questions were asked, end every phase with an explicit approval gate before proceeding. **Exception:** when the phase was **dispatched by `/agtoosa-next`**, the user's Next invocation counts as approval when readiness checks pass (see `docs/AgToosa_Next.md` → Sequential Approval Contract). |
 
 ### Question Format
 
@@ -447,9 +447,10 @@ AgToosa has no hard workflow engine — phase boundaries are enforced by instruc
 
 | Rule | Behavior |
 |------|----------|
-| **Spec ends at approval gate** | `/agtoosa-spec` (full flow or `tasks`) may create the spec, task tree, and test plan skeleton, then **must stop** at the approval gate. |
-| **No auto-build** | Do **not** invoke or chain into `/agtoosa-build` unless the user explicitly runs `/agtoosa-build` after approval. |
-| **Approval marks readiness only** | Appending `## ✅ Spec Approved` records sign-off; it does not start build. |
+| **Spec ends at approval gate** | `/agtoosa-spec` (full flow or `tasks`) may create the spec, task tree, and test plan skeleton, then **must stop** at the approval gate — unless **served by `/agtoosa-next`** (Sequential Approval Contract). |
+| **No auto-build** | Do **not** invoke or chain into `/agtoosa-build` unless the user explicitly runs `/agtoosa-build` after approval — or `/agtoosa-next` dispatches build after spec approval in a **separate** invocation. |
+| **Approval marks readiness only** | Appending `## ✅ Spec Approved` records sign-off; it does not start build in the same invocation. |
+| **Next-served approval** | When `/agtoosa-next` dispatches a phase, the user's Next invocation counts as approval at spec, review, and ship deploy gates when readiness checks pass. Still **one phase per Next** — never chain phases in one run. |
 | **Prerequisite failures stop** | When `/agtoosa-build`, `/agtoosa-review`, or `/agtoosa-qa` prerequisites are unmet, **stop** and tell the user the exact next command. Do **not** auto-run another phase on their behalf. |
 
 ### Terminal Evidence Contract
