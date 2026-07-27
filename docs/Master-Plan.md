@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-27 (/agtoosa-build — DEV-131 build complete)
+> **Last updated:** 2026-07-27 (/agtoosa-ship — DEV-131 v5.3.45)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Build — DEV-131 (2/3 tasks; ship pending) |
-| Milestone | `v5.3.45` (next) |
-| Active cycle | DEV-131 |
-| Cycle state | Active — DEV-131 Sequential Approval + Release Publication |
+| Current phase | Idle — DEV-131 shipped |
+| Milestone | `v5.3.46` (next) |
+| Active cycle | _(none — cycle idle)_ |
+| Cycle state | Idle — DEV-131 shipped v5.3.45 |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -23,7 +23,9 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-131 | Chore: Sequential Approval + Release Publication Gate | Chore | S | 🟨 In Progress — build complete | 2/3 |
+| _(none — cycle idle)_ | | | | | |
+
+<!-- Archived to docs/archived/cycle-2026-07-27-release-5.3.45.md (DEV-131 v5.3.45) -->
 
 <!-- Archived to docs/archived/cycle-2026-07-26-release-5.3.41.md (DEV-128 v5.3.41) -->
 
@@ -70,12 +72,6 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
 _(No stories enrolled — cycle idle. Shipped task trees live in archived specs under `docs/archived/spec-*.md`. Run `/agtoosa-spec` to enroll the next story.)_
-
-### DEV-131 — Sequential Approval + Release Publication Gate
-
-- [x] **1.** Verify doc parity (template + `docs/` mirrors) — _AC-001, AC-003, AC-004_
-- [x] **2.** Run bats NXT-013–015 + RL-001–RL-004 — _AC-007_
-- [ ] **3.** Ship v5.3.45 — version parity, changelog, cycle archive — _AC-004–AC-006_
 
 ## Manual / Deferred Tasks
 
@@ -126,7 +122,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-128 | Bugfix: Smart Upgrade Platform & Version Guards | Bugfix | S | DEV-001 | P0 | 🏁 Shipped — v5.3.42 |
 | DEV-129 | Chore: Smart Upgrade UX Polish | Chore | S | DEV-001 | P0 | 🏁 Shipped — v5.3.43 |
 | DEV-130 | Chore: BCL Hardening & CI Wiring | Chore | S | DEV-003 / DEV-004 | P0 | 🏁 Shipped — v5.3.44 |
-| DEV-131 | Chore: Sequential Approval + Release Publication Gate | Chore | S | DEV-002 / DEV-004 | P0 | 🟨 In Progress — build complete |
+| DEV-131 | Chore: Sequential Approval + Release Publication Gate | Chore | S | 🏁 Shipped — v5.3.45 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
 | DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v5.3.10 |
@@ -284,6 +280,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-131 | Chore: Sequential Approval + Release Publication Gate | 2026-07-27 | [spec-DEV-131.md](archived/spec-DEV-131.md) · [review-DEV-131.md](archived/review-DEV-131.md) · [evidence-DEV-131.md](archived/evidence-DEV-131.md) |
 | DEV-124 | Spike: Cross-Framework Interchange | 2026-07-26 | [spec-DEV-124.md](archived/spec-DEV-124.md) · [review-DEV-124.md](archived/review-DEV-124.md) · [evidence-DEV-124.md](archived/evidence-DEV-124.md) |
 | DEV-123 | Spike: Guarded Portable Execution | 2026-07-26 | [spec-DEV-123.md](archived/spec-DEV-123.md) · [review-DEV-123.md](archived/review-DEV-123.md) · [evidence-DEV-123.md](archived/evidence-DEV-123.md) |
 | DEV-122 | Spike: Change-Aware Adaptive Delivery | 2026-07-26 | [spec-DEV-122.md](archived/spec-DEV-122.md) · [review-DEV-122.md](archived/review-DEV-122.md) · [evidence-DEV-122.md](archived/evidence-DEV-122.md) |
@@ -750,5 +747,9 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-27 21:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-130 — smoke PASS BCL-014/015; v5.3.44 | AgToosa |
 | 2026-07-27 21:55 | 🚀 Ship complete — v5.3.44 — DEV-130 BCL Hardening (+ UPG-010/011 UX follow-up) | AgToosa |
 | 2026-07-27 21:55 | 🚀 Release 5.3.44 shipped — v5.3.44; version parity bash/ps1/npm/formula; Milestone v5.3.45 (next) | AgToosa |
+| 2026-07-27 23:30 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-131 — smoke PASS NXT/RL gate; v5.3.45 | AgToosa |
+| 2026-07-27 23:30 | 🚀 Release 5.3.45 shipped — v5.3.45; version parity bash/ps1/npm/formula; Milestone v5.3.46 (next) | AgToosa |
+| 2026-07-27 23:30 | 🚀 Ship complete — v5.3.45 — DEV-131 Sequential Approval + Release Publication Gate | AgToosa |
+| 2026-07-27 23:23 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-131 — 0 Critical, 3 Warning; next `/agtoosa-next` → ship v5.3.45 | AgToosa |
 | 2026-07-27 23:18 | 🏗️ /agtoosa-build — Build complete — DEV-131 — doc parity verified; NXT-013–015 + RL-001–004 7/7 PASS | AgToosa |
 | 2026-07-27 17:15 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-131 — `docs/archived/spec-DEV-131.md`; estimate S; enrolled Active Cycle; test plan `docs/AgToosa_TestPlan-DEV-131.md`; next `/agtoosa-next` → build | AgToosa |

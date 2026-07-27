@@ -3,7 +3,7 @@
 > **Story ID:** DEV-131  
 > **Epic:** DEV-002 — Workflow Templates · DEV-004 — Testing & QA Harness  
 > **Type:** Chore  
-> **Status:** 🟦 Todo — Spec Approved  
+> **Status:** 🏁 Shipped — v5.3.45  
 > **Estimate:** S  
 > **Clarity:** `ready`  
 > **Priority:** P0  
@@ -101,7 +101,7 @@ User: next again → next phase (separate invocation)
 
 - [x] **1.** Verify doc parity (template + `docs/` mirrors) — _AC-001, AC-003, AC-004_
 - [x] **2.** Run bats NXT-013–015 + RL-001–004 — _AC-007_
-- [ ] **3.** Ship v5.3.45 — version parity, changelog, cycle archive — _AC-004–AC-006_
+- [x] **3.** Ship v5.3.45 — version parity, changelog, cycle archive — _AC-004–AC-006_
 
 ## 4. Test Plan
 

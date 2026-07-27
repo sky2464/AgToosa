@@ -10,7 +10,7 @@ set -euo pipefail
 #   bash agtoosa.sh [--force] [--dry-run] [--version] [--help]
 # ──────────────────────────────────────────────────────────────
 
-AGTOOSA_VERSION="5.3.44"
+AGTOOSA_VERSION="5.3.45"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
 SHIP_DIR="${AGTOOSA_SHIP_DIR:-${SCRIPT_DIR}/ship}"

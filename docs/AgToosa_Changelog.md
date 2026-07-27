@@ -5,6 +5,17 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.45] — 2026-07-27
+
+Patch release: DEV-131 — Sequential Approval + Release Publication Gate.
+
+### Added
+
+- **DEV-131 — Sequential Approval.** `/agtoosa-next` completes spec, review, and ship deploy approval gates in one invocation when readiness checks pass; post-ship idle routing scans backlog or prints cold-start recommendations (NXT-013–015).
+- **Release publication gate.** Maintainer `deploy_command` in tech-stack; ship forbids `Release X shipped` until git tag + `deploy_verify` succeed; `check_release_tag_published` in launch readiness (RL-001–004).
+
+---
+
 ## [5.3.44] — 2026-07-27
 
 Patch release: DEV-130 — BCL Hardening & CI Wiring; Sivarena UX follow-up (UPG-010/011).

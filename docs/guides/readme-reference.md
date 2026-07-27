@@ -30,7 +30,7 @@ Use these when you already know AgToosa and only need an install command.
 
 ```bash
 # Public launch: pinned release (alternative to the proof walkthrough).
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.44
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.45
 
 # Homebrew alternative (formula pinned to the tagged release tarball)
 brew install sky2464/agtoosa/agtoosa
@@ -58,7 +58,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstr
 
 ```powershell
 # Public launch: pinned release.
-$Ref = "v5.3.44"
+$Ref = "v5.3.45"
 $Bootstrap = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/sky2464/AgToosa/$Ref/bootstrap.ps1"
 & ([scriptblock]::Create($Bootstrap)) -Ref $Ref
 .\agtoosa.ps1 -Version
