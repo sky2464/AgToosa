@@ -421,6 +421,15 @@ if [[ -f "$ROOT/agtoosa.sh" && -f "$ROOT/agtoosa.ps1" ]]; then
   pv=$(grep -m1 'AGTOOSA_VERSION' "$ROOT/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || true)
   if [[ -n "$bv" && "$bv" == "$pv" ]]; then
     pass "generator version parity (bash=$bv, ps1=$pv)"
+    tech_stack=""
+    for ts_candidate in "$ROOT/docs/Context/tech-stack.md" "$ROOT/Docs/Context/tech-stack.md"; do
+      [[ -f "$ts_candidate" ]] && tech_stack="$ts_candidate" && break
+    done
+    if [[ -n "$tech_stack" ]] && grep -q '^deploy_command:' "$tech_stack"; then
+      warn "G5-release-tag" "deploy_command is documented — verify the GitHub tag is published before claiming Release shipped" \
+        "Docs-only version bumps without git tag push leave adopters on stale releases." \
+        "Run: bash scripts/check-launch-readiness.sh --mode private (release-tag gate) and deploy_verify from tech-stack." guided
+    fi
   else
     fail "G5-version-mismatch" "generator version mismatch (bash=$bv, ps1=$pv)" \
       "Mismatched generator versions break install/update consistency." \

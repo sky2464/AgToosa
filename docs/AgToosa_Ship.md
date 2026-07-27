@@ -40,6 +40,7 @@ Before any deployment, verify all of the following. If **any** check fails, list
 | ✅ No `WIP:` commits remain | `git log` shows no commits whose **subject line** starts with `WIP:` | `/agtoosa-ship` (Part 1 squash) or manual squash |
 | ✅ QA cleared (when QA phase is enabled) | If `docs/Context/workflow.md` enables a QA gate **or** a `docs/AgToosa_QAReport-[story-id].md` exists, that report contains no open 🔴 findings | `/agtoosa-qa run` then `/agtoosa-qa triage` |
 | ✅ Verifier green | `bash docs/agtoosa-verify.sh` exits 0 (no FAIL findings) | Fix the listed findings, then re-run |
+| ✅ GitHub release published *(when `deploy_command` is documented in `docs/Context/tech-stack.md`)* | After version bump: `gh release view v$VERSION` succeeds; `bash scripts/check-launch-readiness.sh --mode private` passes the release-tag gate; pinned bootstrap URL returns 200 in public mode when applicable | Run `deploy_command` from tech-stack; wait for `release-advanced.yml`; re-run ship |
 | ℹ️ External agent evidence reviewed *(informational — not a verifier FAIL)* | When IMPORT evidence or tasks returned via `/agtoosa-import` exist: confirm verification commands are recorded, ACs are mapped, and no imported claim is counted as evidence without repo-local verification pass | Run `/agtoosa-build import` or review `docs/AgToosa_Import.md` |
 | ℹ️ Evidence ledger finalized *(required by workflow instructions — not a verifier FAIL)* | `docs/archived/evidence-[story-id].md` exists and contains `phase=ship` rows (finalize via `/agtoosa-evidence ship` or `docs/AgToosa_Evidence.md`). **Finalize before marking Shipped.** | Run `/agtoosa-evidence ship` |
 
@@ -110,9 +111,10 @@ Before deploying, clean the branch history using the **non-interactive** squash 
 
 2.  **Deployment (Zero-Downtime):**
     *   Read the deploy target and command from `docs/Context/tech-stack.md` (**Deployment** section). Three cases:
-        - **A documented deploy command exists** (e.g. `vercel deploy --prod`, `fly deploy`, `kubectl apply`, a CI pipeline trigger): run it, capture the Terminal Evidence Contract block, and monitor its health output.
+        - **A documented deploy command exists** (e.g. `vercel deploy --prod`, `fly deploy`, `kubectl apply`, `git tag v$VERSION && git push origin v$VERSION`): run it after explicit user approval, capture the Terminal Evidence Contract block, and monitor its health output. When `deploy_verify` is also documented, run it and record the workflow run URL before proceeding.
         - **Deployment is owned by CI/CD on merge:** do not deploy from the agent; verify the pipeline run for this branch/tag succeeds and record the run URL as evidence.
         - **No deploy target is documented:** treat deployment as a `[manual]` step — present what the human must run, record it in Manual / Deferred, and continue with Parts 3+ (never claim a deploy happened without evidence).
+    *   **Release publication rule:** When `deploy_command` is documented, do **not** write `Release X shipped` Update Log rows, finalize ship-phase evidence with a passing `release` row, or mark the story `🏁 Shipped` until the tag is pushed and `deploy_verify` (or equivalent `gh release view` + CI check) succeeds. If the user has not approved push, stop at Manual / Deferred — do not record a false release.
     *   Monitor post-deployment automated health checks when the stack exposes them.
     *   Trigger automated rollbacks if error rates or latencies spike to ensure zero-downtime. If automated rollback is unavailable, use `/agtoosa-revert` for manual git-aware rollback.
 

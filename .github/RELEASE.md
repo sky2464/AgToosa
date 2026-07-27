@@ -47,12 +47,12 @@ Before tagging a release, the maintainer must confirm all of the following:
 git add agtoosa.sh CHANGELOG.md
 git commit -m "chore: release vX.Y.Z"
 
-# 4. Tag — triggers release-advanced.yml automatically
+# 4. Tag — triggers release-advanced.yml automatically (canonical; do not use release.yml on tag push)
 git tag vX.Y.Z
-git push origin main --tags
+git push origin vX.Y.Z
 ```
 
-The `release-advanced.yml` workflow then:
+The `release-advanced.yml` workflow (canonical for tag pushes; `release.yml` is manual `workflow_dispatch` fallback only) then:
 1. Validates version consistency between the tag and `agtoosa.sh`
 2. Confirms the CHANGELOG entry exists
 3. Extracts release notes from CHANGELOG

@@ -48,7 +48,9 @@ Write to `Docs/archived/evidence-[story-id].md` (sanitize story-id to `[A-Za-z0-
 
 **Required columns:** Phase (`review` \| `ship`), AC, Artifact, Pointer, Verification, Exit, Reviewer, ts.
 
-**Artifact types:** `test-log` · `review` · `cross-model` · `pr` · `branch` · `screenshot` · `spec` · `verifier` · `other`
+**Artifact types:** `test-log` · `review` · `cross-model` · `pr` · `branch` · `screenshot` · `spec` · `verifier` · `release` · `other`
+
+**Ship-phase `release` row (when `deploy_command` is documented in Context tech-stack):** Record remote publication evidence — not changelog grep alone. Required verification: `gh release view v$VERSION` exit 0 **and** a CI/workflow run URL (or `deploy_verify` command output). Pointer should cite the GitHub release URL. Do not mark `release` PASS from local version pins or Master-Plan rows alone.
 
 **Cross-model row (review phase):** When `/agtoosa-review cross-model` runs or is skipped with rationale, add a row with `artifact=cross-model`, pointer to `docs/archived/review-[story-id].md## Cross-Model Review`, and verification noting workflow policy (`cross_model`, `reviewer_model`), consent (`stated` / `user-approved` / `skipped`), reviewer identity, outcome (`completed` / `fallback` / `skipped`), and skip rationale when applicable.
 

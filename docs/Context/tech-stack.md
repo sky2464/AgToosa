@@ -15,7 +15,10 @@ database: "File-based (JSON local lockfiles)"
 
 ## Deployment
 
-deployment: "Git and local filesystems"
+deployment: "Git tag push triggers GitHub Actions release"
+deploy_command: "git tag v$VERSION && git push origin v$VERSION"
+deploy_verify: "gh release view v$VERSION && gh run list --workflow=release-advanced.yml --limit 1"
+release_policy: ".github/RELEASE.md"
 
 ## Test Framework
 

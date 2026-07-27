@@ -205,7 +205,9 @@ Do **not** advance MINOR for every small story. Update Project Charter **Milesto
 - Bump `AGTOOSA_VERSION` in `agtoosa.sh`, `agtoosa.ps1`, and `npm/package.json` to identical values (bats checks parity).
 - Update `README.md` version badge AND any pinned `--ref vX.Y.Z` install snippets — they drift silently across releases.
 - Publish `SHA256SUMS` for bootstrap tarballs; pin `Formula/agtoosa.rb` to the tagged tarball + sha256.
+- **Publish the GitHub release** per [`.github/RELEASE.md`](../.github/RELEASE.md): after version bump commits land on `main`, run `git tag vX.Y.Z && git push origin vX.Y.Z`, then confirm `release-advanced.yml` is green and `gh release view vX.Y.Z` shows notes + assets. Do **not** log `Release X shipped` in Master-Plan until the tag is pushed and CI succeeds.
 - Run `bash agtoosa.sh --verify .` on this repo before shipping generator or template changes that touch lifecycle state.
+- Run `bash scripts/check-launch-readiness.sh --mode private` to confirm the release tag is published on `origin` (fails when local version exceeds the newest remote tag).
 - Prepend a dated `## [X.Y.Z]` block to `CHANGELOG.md`. Move anything from `## [Unreleased]` into the new block.
 - Re-grep every "user-facing string" from the parity table; ensure variants didn't drift.
 - Run `bats tests/agtoosa.bats`. Confirm the version-parity test passes.

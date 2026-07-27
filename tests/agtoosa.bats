@@ -15305,6 +15305,40 @@ PY
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-130.md"
 }
 
+# -- DEV-131: Release publication gate (ship workflow hardening) ---------------
+
+@test "DEV-131 RL-001: maintainer tech-stack documents git tag deploy_command" {
+  local ts="$BATS_TEST_DIRNAME/../docs/Context/tech-stack.md"
+  grep -q '^deploy_command:' "$ts"
+  grep -q 'git tag v' "$ts"
+  grep -q '^deploy_verify:' "$ts"
+  grep -q 'release-advanced.yml' "$ts"
+}
+
+@test "DEV-131 RL-002: AgToosa_Ship requires release publication when deploy_command exists" {
+  local ship="$BATS_TEST_DIRNAME/../docs/AgToosa_Ship.md"
+  grep -q 'deploy_command' "$ship"
+  grep -q 'Release publication rule' "$ship"
+  grep -q 'GitHub release published' "$ship"
+  grep -q 'do \*\*not\*\* write `Release X shipped`' "$ship"
+}
+
+@test "DEV-131 RL-003: launch readiness checker verifies remote release tag" {
+  local checker="$BATS_TEST_DIRNAME/../scripts/check-launch-readiness.sh"
+  grep -q 'check_release_tag_published' "$checker"
+  grep -q 'git ls-remote --tags origin' "$checker"
+  grep -q 'deploy_command' "$checker"
+}
+
+@test "DEV-131 RL-004: release-advanced.yml is canonical tag workflow" {
+  local basic="$BATS_TEST_DIRNAME/../.github/workflows/release.yml"
+  local advanced="$BATS_TEST_DIRNAME/../.github/workflows/release-advanced.yml"
+  ! grep -q $'push:\n    tags:' "$basic"
+  grep -q 'workflow_dispatch' "$basic"
+  grep -q $'push:\n    tags:' "$advanced"
+  grep -q "gh release create" "$advanced"
+}
+
 # -- Sivarena UX review follow-up (UPG-010–UPG-011) ----------------------------
 
 @test "UPG-010: detect copilot from scoped instructions without sentinel" {

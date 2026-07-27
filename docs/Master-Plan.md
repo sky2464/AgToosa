@@ -743,3 +743,4 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-27 21:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-130 — smoke PASS BCL-014/015; v5.3.44 | AgToosa |
 | 2026-07-27 21:55 | 🚀 Ship complete — v5.3.44 — DEV-130 BCL Hardening (+ UPG-010/011 UX follow-up) | AgToosa |
 | 2026-07-27 21:55 | 🚀 Release 5.3.44 shipped — v5.3.44; version parity bash/ps1/npm/formula; Milestone v5.3.45 (next) | AgToosa |
+| 2026-07-27 23:10 | 📝 Correction — v5.3.28–v5.3.43 were docs-only ships (no git tags); catch-up GitHub release v5.3.44 + ship workflow hardening (DEV-131) | AgToosa |

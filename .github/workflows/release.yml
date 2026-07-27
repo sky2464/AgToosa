@@ -1,9 +1,14 @@
 name: Release
 
+# Canonical tag-triggered release automation is release-advanced.yml.
+# This workflow is a manual fallback only — do not add push: tags here (race
+# with release-advanced.yml produced empty release bodies on v5.3.27).
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., v5.3.44)'
+        required: true
 
 jobs:
   create-release:
@@ -16,10 +21,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Extract version from tag
+      - name: Extract version from input
         id: version
         run: |
-          VERSION="${GITHUB_REF#refs/tags/v}"
+          VERSION="${{ github.event.inputs.version }}"
+          VERSION="${VERSION#v}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "tag_name=v$VERSION" >> $GITHUB_OUTPUT
 
@@ -37,19 +43,13 @@ jobs:
         id: changelog
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          # Extract changelog section for this version
-          CHANGELOG=$(awk "/^## \\[?${VERSION}\\]?/,/^## / {print}" CHANGELOG.md | head -n -1)
-          # Escape for GitHub output
-          CHANGELOG="${CHANGELOG//'%'/'%25'}"
-          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
-          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
-          echo "content=$CHANGELOG" >> $GITHUB_OUTPUT
+          awk "/^## \\[$VERSION\\]/,/^## \\[/ { print }" CHANGELOG.md | head -n -1 | sed '1d' > /tmp/release-notes.md
+          cat /tmp/release-notes.md
 
       - name: Create GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          printf '%b\n' "${{ steps.changelog.outputs.content }}" > /tmp/release-notes.md
           if gh release view "${{ steps.version.outputs.tag_name }}" >/dev/null 2>&1; then
             gh release edit "${{ steps.version.outputs.tag_name }}" \
               --title "AgToosa ${{ steps.version.outputs.version }}" \

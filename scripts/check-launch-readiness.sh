@@ -259,6 +259,26 @@ check_proof_journey_consistency() {
   printf 'proof-journey maintenance complete\n'
 }
 
+check_release_tag_published() {
+  local tech_stack="$ROOT_DIR/docs/Context/tech-stack.md"
+  if [[ ! -f "$tech_stack" ]]; then
+    tech_stack="$ROOT_DIR/Docs/Context/tech-stack.md"
+  fi
+  if [[ ! -f "$tech_stack" ]] || ! grep -q '^deploy_command:' "$tech_stack"; then
+    pass "release-tag gate skipped (no deploy_command in tech-stack)"
+    return
+  fi
+
+  printf 'release-tag gate: verifying %s is published on origin\n' "$EXPECTED_TAG"
+  local remote_tag
+  remote_tag="$(git ls-remote --tags origin "refs/tags/${EXPECTED_TAG}" 2>/dev/null | awk '{print $2}' | head -1 || true)"
+  if [[ -z "$remote_tag" ]]; then
+    record_fail "Git tag $EXPECTED_TAG is not published on origin (local AGTOOSA_VERSION=$canonical_version); run deploy_command from Context/tech-stack.md"
+    return
+  fi
+  pass "Git tag $EXPECTED_TAG published on origin"
+}
+
 run_first15_maintenance_gate() {
   printf 'first-15 maintenance gate: validating scoped pins, proof links, and proof repository URL\n'
 
@@ -314,6 +334,7 @@ check_url() {
 printf 'AgToosa launch readiness mode: %s\n' "$MODE"
 
 run_first15_maintenance_gate
+check_release_tag_published
 
 if [[ "$FAILURES" -gt 0 ]]; then
   printf 'Launch readiness failed: %s first-15 maintenance finding(s).\n' "$FAILURES" >&2
