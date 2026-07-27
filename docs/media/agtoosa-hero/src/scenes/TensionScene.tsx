@@ -9,7 +9,8 @@ const StatusRow: React.FC<{
   start: number;
   label: string;
   value: string;
-}> = ({frame, start, label, value}) => {
+  readable?: boolean;
+}> = ({frame, start, label, value, readable = false}) => {
   const reveal = progress(frame, start, 18);
   return (
     <div
@@ -23,19 +24,34 @@ const StatusRow: React.FC<{
         transform: `translateX(${(1 - reveal) * 14}px)`,
       }}
     >
-      <span style={{color: colors.muted, fontFamily: FONT_MONO, fontSize: 15}}>
+      <span
+        style={{
+          color: colors.muted,
+          fontFamily: FONT_MONO,
+          fontSize: readable ? 21 : 15,
+          fontWeight: 500,
+        }}
+      >
         {label}
       </span>
-      <span style={{color: colors.paper, fontFamily: FONT_MONO, fontSize: 16}}>
+      <span
+        style={{
+          color: colors.paper,
+          fontFamily: FONT_MONO,
+          fontSize: readable ? 22 : 16,
+          fontWeight: 500,
+        }}
+      >
         {value}
       </span>
     </div>
   );
 };
 
-export const TensionScene: React.FC<{timingScale?: number}> = ({
-  timingScale = 1,
-}) => {
+export const TensionScene: React.FC<{
+  timingScale?: number;
+  readable?: boolean;
+}> = ({timingScale = 1, readable = false}) => {
   const frame = useCurrentFrame();
   const cueFrame =
     timeline.cues.find((cue) => cue.id === "status-scan")?.frame ?? 54;
@@ -49,7 +65,7 @@ export const TensionScene: React.FC<{timingScale?: number}> = ({
 
   return (
     <AbsoluteFill style={{opacity}}>
-      <FilmBackground frame={frame} coolShift={-5} />
+      <FilmBackground frame={readable ? 0 : frame} coolShift={-5} />
       <div
         style={{
           position: "absolute",
@@ -62,7 +78,7 @@ export const TensionScene: React.FC<{timingScale?: number}> = ({
           style={{
             color: colors.cyan,
             fontFamily: FONT_MONO,
-            fontSize: 14,
+            fontSize: readable ? 20 : 14,
             letterSpacing: "0.18em",
           }}
         >
@@ -71,10 +87,10 @@ export const TensionScene: React.FC<{timingScale?: number}> = ({
         <div
           style={{
             color: colors.paper,
-            fontFamily: FONT_SANS,
-            fontSize: 112,
-            fontWeight: 720,
-            letterSpacing: "-0.07em",
+            fontFamily: FONT_MONO,
+            fontSize: readable ? 120 : 112,
+            fontWeight: 500,
+            letterSpacing: "-0.06em",
             marginTop: 8,
           }}
         >
@@ -84,7 +100,7 @@ export const TensionScene: React.FC<{timingScale?: number}> = ({
           style={{
             color: colors.muted,
             fontFamily: FONT_SANS,
-            fontSize: 31,
+            fontSize: readable ? 36 : 31,
             fontWeight: 560,
             marginTop: 9,
           }}
@@ -112,7 +128,8 @@ export const TensionScene: React.FC<{timingScale?: number}> = ({
           style={{
             color: colors.cyan,
             fontFamily: FONT_MONO,
-            fontSize: 13,
+            fontSize: readable ? 20 : 13,
+            fontWeight: 500,
             letterSpacing: "0.15em",
             marginBottom: 14,
           }}
@@ -124,18 +141,21 @@ export const TensionScene: React.FC<{timingScale?: number}> = ({
           start={58 * timingScale}
           label="PLAN"
           value="where we are"
+          readable={readable}
         />
         <StatusRow
           frame={frame}
           start={73 * timingScale}
           label="TASKS"
           value="what remains"
+          readable={readable}
         />
         <StatusRow
           frame={frame}
           start={88 * timingScale}
           label="NEXT"
           value="one action"
+          readable={readable}
         />
         <div
           style={{
@@ -157,7 +177,7 @@ export const TensionScene: React.FC<{timingScale?: number}> = ({
           bottom: 82,
           color: colors.paper,
           fontFamily: FONT_SANS,
-          fontSize: 28,
+          fontSize: readable ? 34 : 28,
           fontWeight: 620,
           opacity: closeIn,
         }}

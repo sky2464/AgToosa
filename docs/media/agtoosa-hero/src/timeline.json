@@ -1,7 +1,7 @@
 {
   "fps": 30,
   "durationInFrames": 1320,
-  "readmeDurationInFrames": 540,
+  "readmeDurationInFrames": 720,
   "storyboardFrames": [90, 270, 450, 585, 705, 975, 1155, 1260],
   "scenes": {
     "tension": {"from": 0, "duration": 165},

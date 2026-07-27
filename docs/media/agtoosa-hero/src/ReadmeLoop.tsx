@@ -38,7 +38,7 @@ const WorkflowScene: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <AbsoluteFill>
-      <FilmBackground frame={frame + 420} coolShift={3} />
+      <FilmBackground frame={420} coolShift={3} />
       <div
         style={{
           left: 0,
@@ -53,7 +53,8 @@ const WorkflowScene: React.FC = () => {
           style={{
             color: colors.cyan,
             fontFamily: FONT_MONO,
-            fontSize: 13,
+            fontSize: 20,
+            fontWeight: 500,
             letterSpacing: "0.18em",
           }}
         >
@@ -63,7 +64,7 @@ const WorkflowScene: React.FC = () => {
           style={{
             color: colors.paper,
             fontFamily: FONT_SANS,
-            fontSize: 47,
+            fontSize: 52,
             fontWeight: 710,
             letterSpacing: "-0.045em",
             marginTop: 8,
@@ -72,22 +73,22 @@ const WorkflowScene: React.FC = () => {
           One phase. One visible handoff.
         </div>
       </div>
-      <WorkflowRail frame={frame} start={10} timingScale={0.34} />
+      <WorkflowRail frame={frame} start={10} timingScale={0.3} readable />
       <div
         style={{
           bottom: 68,
           color: colors.muted,
           fontFamily: FONT_SANS,
-          fontSize: 25,
+          fontSize: 32,
           left: 0,
-          opacity: progress(frame, 106, 20),
+          opacity: progress(frame, 128, 18),
           position: "absolute",
           right: 0,
           textAlign: "center",
         }}
       >
-        Spec becomes evidence.{" "}
-        <span style={{color: colors.cyan}}>Evidence becomes confidence.</span>
+        Every phase leaves{" "}
+        <span style={{color: colors.cyan}}>reviewable proof.</span>
       </div>
     </AbsoluteFill>
   );
@@ -123,7 +124,8 @@ const CommandCard: React.FC<{
       style={{
         color,
         fontFamily: FONT_MONO,
-        fontSize: 13,
+        fontSize: 20,
+        fontWeight: 500,
         letterSpacing: "0.16em",
       }}
     >
@@ -132,10 +134,10 @@ const CommandCard: React.FC<{
     <div
       style={{
         color: colors.paper,
-        fontFamily: FONT_SANS,
-        fontSize: 56,
-        fontWeight: 720,
-        letterSpacing: "-0.055em",
+        fontFamily: FONT_MONO,
+        fontSize: 68,
+        fontWeight: 500,
+        letterSpacing: "-0.045em",
         marginTop: 8,
       }}
     >
@@ -151,7 +153,7 @@ const RoutingScene: React.FC = () => {
   const route = progress(frame, 42, 34);
   return (
     <AbsoluteFill>
-      <FilmBackground frame={frame + 860} coolShift={11} />
+      <FilmBackground frame={860} coolShift={11} />
       <div
         style={{
           left: 0,
@@ -166,7 +168,8 @@ const RoutingScene: React.FC = () => {
           style={{
             color: colors.cyan,
             fontFamily: FONT_MONO,
-            fontSize: 13,
+            fontSize: 20,
+            fontWeight: 500,
             letterSpacing: "0.18em",
           }}
         >
@@ -176,7 +179,7 @@ const RoutingScene: React.FC = () => {
           style={{
             color: colors.paper,
             fontFamily: FONT_SANS,
-            fontSize: 45,
+            fontSize: 52,
             fontWeight: 700,
             letterSpacing: "-0.045em",
             marginTop: 8,
@@ -188,14 +191,14 @@ const RoutingScene: React.FC = () => {
       <CommandCard
         x={370}
         command="/status"
-        label="READ CURRENT STATE"
+        label="READ STATE"
         color={colors.cyan}
         reveal={statusIn}
       />
       <CommandCard
         x={1070}
         command="/next"
-        label="ROUTE · EXECUTE ONE PHASE"
+        label="ROUTE ONE PHASE"
         color={colors.violet}
         reveal={nextIn}
       />
@@ -220,7 +223,8 @@ const RoutingScene: React.FC = () => {
           bottom: 86,
           color: colors.muted,
           fontFamily: FONT_MONO,
-          fontSize: 15,
+          fontSize: 21,
+          fontWeight: 500,
           left: 0,
           letterSpacing: "0.12em",
           opacity: progress(frame, 58, 18),
@@ -229,7 +233,7 @@ const RoutingScene: React.FC = () => {
           textAlign: "center",
         }}
       >
-        /AGTOOSA-NEXT · READS SYNC · RUNS THE RIGHT PHASE
+        /NEXT · READS SYNC · RUNS THE RIGHT PHASE
       </div>
     </AbsoluteFill>
   );
@@ -239,7 +243,7 @@ const VerifyScene: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <AbsoluteFill>
-      <FilmBackground frame={frame + 1050} coolShift={-5} />
+      <FilmBackground frame={1050} coolShift={-5} />
       <div
         style={{
           left: 0,
@@ -254,7 +258,8 @@ const VerifyScene: React.FC = () => {
           style={{
             color: colors.muted,
             fontFamily: FONT_MONO,
-            fontSize: 13,
+            fontSize: 20,
+            fontWeight: 500,
             letterSpacing: "0.16em",
           }}
         >
@@ -264,7 +269,7 @@ const VerifyScene: React.FC = () => {
           style={{
             color: colors.paper,
             fontFamily: FONT_SANS,
-            fontSize: 40,
+            fontSize: 48,
             fontWeight: 700,
             letterSpacing: "-0.035em",
             marginTop: 7,
@@ -273,8 +278,13 @@ const VerifyScene: React.FC = () => {
           The repository gets the last word.
         </div>
       </div>
-      <div style={{left: 250, position: "absolute", top: 190}}>
-        <VerifierTerminal frame={frame} start={8} timingScale={0.54} />
+      <div style={{left: 230, position: "absolute", top: 188}}>
+        <VerifierTerminal
+          frame={frame}
+          start={8}
+          timingScale={0.62}
+          readable
+        />
       </div>
     </AbsoluteFill>
   );
@@ -284,13 +294,13 @@ const ClosingScene: React.FC = () => {
   const frame = useCurrentFrame();
   const reveal = progress(frame, 2, 14);
   const details = progress(frame, 12, 16);
-  const fadeOut = interpolate(frame, [34, 49], [1, 0], {
+  const fadeOut = interpolate(frame, [68, 85], [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
   return (
     <AbsoluteFill style={{opacity: reveal * fadeOut}}>
-      <FilmBackground frame={frame + 1210} coolShift={14} />
+      <FilmBackground frame={1210} coolShift={14} />
       <div
         style={{
           alignItems: "center",
@@ -308,7 +318,7 @@ const ClosingScene: React.FC = () => {
           style={{
             color: colors.paper,
             fontFamily: FONT_SANS,
-            fontSize: 34,
+            fontSize: 40,
             fontWeight: 640,
             letterSpacing: "-0.03em",
             marginTop: 32,
@@ -322,13 +332,14 @@ const ClosingScene: React.FC = () => {
           style={{
             color: colors.cyan,
             fontFamily: FONT_MONO,
-            fontSize: 16,
+            fontSize: 21,
+            fontWeight: 500,
             letterSpacing: "0.12em",
             marginTop: 18,
             opacity: details,
           }}
         >
-          /AGTOOSA-NEXT · READ · ROUTE · EXECUTE
+          /NEXT · READ · ROUTE · EXECUTE
         </div>
         <div style={{marginTop: 24, opacity: details}}>
           <BrandCredit />
@@ -342,39 +353,39 @@ export const ReadmeLoop: React.FC = () => {
   const frame = useCurrentFrame();
   const baseFrame =
     Math.sin((frame / README_FRAMES) * Math.PI * 2) * 90;
-  const brandOpacity = interpolate(frame, [0, 18, 458, 480], [0, 1, 1, 0], {
+  const brandOpacity = interpolate(frame, [0, 18, 620, 640], [0, 1, 1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
   return (
     <AbsoluteFill style={{background: colors.ink}}>
       <FilmBackground frame={baseFrame} coolShift={4} />
-      <Sequence durationInFrames={96}>
-        <Segment duration={96}>
-          <TensionScene timingScale={0.64} />
+      <Sequence durationInFrames={120}>
+        <Segment duration={120}>
+          <TensionScene timingScale={0.8} readable />
         </Segment>
       </Sequence>
-      <Sequence from={90} durationInFrames={106}>
-        <Segment duration={106}>
-          <ReframeScene timingScale={0.58} />
+      <Sequence from={114} durationInFrames={126}>
+        <Segment duration={126}>
+          <ReframeScene timingScale={0.75} readable />
         </Segment>
       </Sequence>
-      <Sequence from={190} durationInFrames={146}>
-        <Segment duration={146}>
+      <Sequence from={234} durationInFrames={162}>
+        <Segment duration={162}>
           <WorkflowScene />
         </Segment>
       </Sequence>
-      <Sequence from={330} durationInFrames={86}>
-        <Segment duration={86}>
+      <Sequence from={390} durationInFrames={130}>
+        <Segment duration={130}>
           <RoutingScene />
         </Segment>
       </Sequence>
-      <Sequence from={410} durationInFrames={86}>
-        <Segment duration={86}>
+      <Sequence from={514} durationInFrames={126}>
+        <Segment duration={126}>
           <VerifyScene />
         </Segment>
       </Sequence>
-      <Sequence from={490} durationInFrames={50}>
+      <Sequence from={634} durationInFrames={86}>
         <ClosingScene />
       </Sequence>
       <div

@@ -125,6 +125,7 @@ type WorkflowRailProps = {
   compact?: boolean;
   loopPhase?: number;
   timingScale?: number;
+  readable?: boolean;
 };
 
 export const WorkflowRail: React.FC<WorkflowRailProps> = ({
@@ -133,9 +134,10 @@ export const WorkflowRail: React.FC<WorkflowRailProps> = ({
   compact = false,
   loopPhase,
   timingScale = 1,
+  readable = false,
 }) => {
-  const width = compact ? 158 : 194;
-  const height = compact ? 78 : 112;
+  const width = compact ? 158 : readable ? 214 : 194;
+  const height = compact ? 78 : readable ? 122 : 112;
   const connectorStarts = [58, 138, 222, 306];
   const loopPosition =
     loopPhase === undefined
@@ -227,18 +229,19 @@ export const WorkflowRail: React.FC<WorkflowRailProps> = ({
               style={{
                 color: item.color,
                 fontFamily: FONT_MONO,
-                fontSize: compact ? 10 : 12,
+                fontSize: compact ? 10 : readable ? 18 : 12,
+                fontWeight: readable ? 500 : undefined,
                 letterSpacing: "0.16em",
               }}
             >
-              {item.phase} · {item.note}
+              {readable ? item.phase : `${item.phase} · ${item.note}`}
             </div>
             <div
               style={{
                 color: colors.paper,
-                fontFamily: FONT_SANS,
-                fontSize: compact ? 27 : 34,
-                fontWeight: 700,
+                fontFamily: readable ? FONT_MONO : FONT_SANS,
+                fontSize: compact ? 27 : readable ? 42 : 34,
+                fontWeight: readable ? 500 : 700,
                 letterSpacing: "-0.035em",
                 marginTop: compact ? 5 : 8,
               }}

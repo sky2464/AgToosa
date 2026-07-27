@@ -4,7 +4,7 @@ export const FILM_WIDTH = 1440;
 export const FILM_HEIGHT = 810;
 export const FPS = 30;
 export const MASTER_FRAMES = 44 * FPS;
-export const README_FRAMES = 18 * FPS;
+export const README_FRAMES = 24 * FPS;
 
 export const FONT_SANS =
   '"Manrope Variable", Manrope, ui-sans-serif, system-ui, sans-serif';
@@ -16,7 +16,7 @@ export const colors = {
   panel: "#0b1020",
   panelRaised: "#10182b",
   paper: "#f5f7fb",
-  muted: "#8d9ab2",
+  muted: "#a6b1c4",
   faint: "#53617a",
   line: "#26324a",
   cyan: "#22d3ee",

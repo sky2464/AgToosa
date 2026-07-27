@@ -7,9 +7,10 @@ import timeline from "../timeline.json";
 
 const initSteps = ["SCAN CODEBASE", "ESTABLISH CONTEXT", "WIRE ASSISTANTS"];
 
-export const ReframeScene: React.FC<{timingScale?: number}> = ({
-  timingScale = 1,
-}) => {
+export const ReframeScene: React.FC<{
+  timingScale?: number;
+  readable?: boolean;
+}> = ({timingScale = 1, readable = false}) => {
   const frame = useCurrentFrame();
   const cueFrame =
     timeline.cues.find((cue) => cue.id === "init-lock")?.frame ?? 216;
@@ -22,7 +23,7 @@ export const ReframeScene: React.FC<{timingScale?: number}> = ({
 
   return (
     <AbsoluteFill style={{opacity}}>
-      <FilmBackground frame={frame + 120} coolShift={5} />
+      <FilmBackground frame={readable ? 120 : frame + 120} coolShift={5} />
       <div
         style={{
           position: "absolute",
@@ -36,7 +37,7 @@ export const ReframeScene: React.FC<{timingScale?: number}> = ({
           style={{
             color: colors.cyan,
             fontFamily: FONT_MONO,
-            fontSize: 14,
+            fontSize: readable ? 20 : 14,
             letterSpacing: "0.18em",
           }}
         >
@@ -45,10 +46,10 @@ export const ReframeScene: React.FC<{timingScale?: number}> = ({
         <div
           style={{
             color: colors.paper,
-            fontFamily: FONT_SANS,
-            fontSize: 118,
-            fontWeight: 720,
-            letterSpacing: "-0.075em",
+            fontFamily: FONT_MONO,
+            fontSize: readable ? 124 : 118,
+            fontWeight: 500,
+            letterSpacing: "-0.065em",
             marginTop: 6,
           }}
         >
@@ -58,7 +59,7 @@ export const ReframeScene: React.FC<{timingScale?: number}> = ({
           style={{
             color: colors.paper,
             fontFamily: FONT_SANS,
-            fontSize: 38,
+            fontSize: readable ? 43 : 38,
             fontWeight: 650,
             letterSpacing: "-0.035em",
             marginTop: 12,
@@ -70,7 +71,7 @@ export const ReframeScene: React.FC<{timingScale?: number}> = ({
           style={{
             color: colors.muted,
             fontFamily: FONT_SANS,
-            fontSize: 25,
+            fontSize: readable ? 31 : 25,
             marginTop: 9,
           }}
         >
@@ -106,7 +107,8 @@ export const ReframeScene: React.FC<{timingScale?: number}> = ({
                 color: colors.paper,
                 display: "flex",
                 fontFamily: FONT_MONO,
-                fontSize: 17,
+                fontSize: readable ? 22 : 17,
+                fontWeight: 500,
                 gap: 18,
                 opacity: itemIn,
                 padding: "18px 0",
