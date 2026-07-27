@@ -37,7 +37,7 @@ export const VerifierTerminal: React.FC<VerifierTerminalProps> = ({
   return (
     <div
       style={{
-        width: 940,
+        width: readable ? 1120 : 940,
         border: `1px solid ${colors.cyan}4d`,
         borderRadius: 22,
         background:
@@ -72,7 +72,7 @@ export const VerifierTerminal: React.FC<VerifierTerminalProps> = ({
           style={{
             color: colors.muted,
             fontFamily: FONT_MONO,
-            fontSize: readable ? 18 : 13,
+            fontSize: readable ? 22 : 13,
             fontWeight: readable ? 500 : undefined,
           }}
         >
@@ -85,7 +85,7 @@ export const VerifierTerminal: React.FC<VerifierTerminalProps> = ({
           style={{
             color: colors.paper,
             fontFamily: FONT_MONO,
-            fontSize: readable ? 23 : 19,
+            fontSize: readable ? 28 : 19,
             fontWeight: readable ? 500 : undefined,
             marginBottom: 18,
             opacity: commandIn,
@@ -115,7 +115,7 @@ export const VerifierTerminal: React.FC<VerifierTerminalProps> = ({
                   color: colors.muted,
                   display: "flex",
                   fontFamily: FONT_MONO,
-                  fontSize: readable ? 20 : 14,
+                  fontSize: readable ? 24 : 14,
                   fontWeight: readable ? 500 : undefined,
                   gap: 10,
                   opacity: gateIn,
@@ -131,7 +131,7 @@ export const VerifierTerminal: React.FC<VerifierTerminalProps> = ({
           style={{
             color: colors.muted,
             fontFamily: FONT_MONO,
-            fontSize: readable ? 20 : 13,
+            fontSize: readable ? 24 : 13,
             fontWeight: readable ? 500 : undefined,
             marginTop: 18,
             opacity: resultIn,
@@ -154,7 +154,7 @@ export const VerifierTerminal: React.FC<VerifierTerminalProps> = ({
             style={{
               color: colors.success,
               fontFamily: FONT_SANS,
-              fontSize: readable ? 34 : 29,
+              fontSize: readable ? 42 : 29,
               fontWeight: 750,
               letterSpacing: "-0.02em",
             }}
@@ -167,7 +167,7 @@ export const VerifierTerminal: React.FC<VerifierTerminalProps> = ({
               borderRadius: 999,
               color: colors.success,
               fontFamily: FONT_MONO,
-              fontSize: readable ? 16 : 13,
+              fontSize: readable ? 20 : 13,
               fontWeight: readable ? 500 : undefined,
               padding: "7px 11px",
             }}

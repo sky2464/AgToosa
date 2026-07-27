@@ -1,5 +1,5 @@
 import React from "react";
-import {colors, FONT_SANS, progress} from "./theme";
+import {colors, FONT_READABLE, FONT_SANS, progress} from "./theme";
 
 type ProofGlyphProps = {
   frame?: number;
@@ -105,6 +105,7 @@ type WordmarkProps = {
   start?: number;
   compact?: boolean;
   align?: "left" | "center";
+  readable?: boolean;
 };
 
 export const Wordmark: React.FC<WordmarkProps> = ({
@@ -112,6 +113,7 @@ export const Wordmark: React.FC<WordmarkProps> = ({
   start = 0,
   compact = false,
   align = "left",
+  readable = false,
 }) => {
   const reveal = progress(frame, start, 28);
   const glyphSize = compact ? 62 : 104;
@@ -135,10 +137,10 @@ export const Wordmark: React.FC<WordmarkProps> = ({
       <div
         style={{
           color: colors.paper,
-          fontFamily: FONT_SANS,
-          fontSize: compact ? 40 : 78,
-          fontWeight: 780,
-          letterSpacing: "-0.055em",
+          fontFamily: readable ? FONT_READABLE : FONT_SANS,
+          fontSize: compact ? (readable ? 48 : 40) : readable ? 92 : 78,
+          fontWeight: readable ? 800 : 780,
+          letterSpacing: readable ? "-0.045em" : "-0.055em",
           lineHeight: 0.9,
         }}
       >
@@ -148,13 +150,15 @@ export const Wordmark: React.FC<WordmarkProps> = ({
   );
 };
 
-export const BrandCredit: React.FC = () => (
+export const BrandCredit: React.FC<{readable?: boolean}> = ({
+  readable = false,
+}) => (
   <div
     style={{
       color: colors.muted,
-      fontFamily: FONT_SANS,
-      fontSize: 17,
-      fontWeight: 570,
+      fontFamily: readable ? FONT_READABLE : FONT_SANS,
+      fontSize: readable ? 20 : 17,
+      fontWeight: readable ? 600 : 570,
       letterSpacing: "0.02em",
     }}
   >

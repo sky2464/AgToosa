@@ -87,6 +87,11 @@ check(
   "all cue frames are unique",
 );
 const rootSource = await readFile(join(packageDir, "src", "Root.tsx"), "utf8");
+const indexSource = await readFile(join(packageDir, "src", "index.ts"), "utf8");
+check(
+  indexSource.includes('@fontsource-variable/inter'),
+  "Inter is bundled for the readable README typography",
+);
 check(rootSource.includes('id="MarketingMaster"'), "MarketingMaster is registered");
 check(rootSource.includes('id="ReadmeLoop"'), "ReadmeLoop is registered");
 check(rootSource.includes('id="Hero"'), "legacy Hero remains during review");
@@ -98,6 +103,11 @@ check(!marketingSource.includes("EnergyFx"), "new master has no global EnergyFx"
 const readmeSource = await readFile(
   join(packageDir, "src", "ReadmeLoop.tsx"),
   "utf8",
+);
+check(
+  readmeSource.includes("FONT_READABLE") &&
+    !readmeSource.includes("fontFamily: FONT_MONO"),
+  "README display typography uses Inter instead of terminal mono",
 );
 check(
   readmeSource.includes("<TensionScene") &&
@@ -178,7 +188,7 @@ for (const scene of [
 
 const checkpointFiles = {
   animatic: join(candidateDir, "agtoosa-marketing-v3-animatic.mp4"),
-  readme: join(candidateDir, "agtoosa-readme-v5.gif"),
+  readme: join(candidateDir, "agtoosa-readme-v6.gif"),
   poster: join(candidateDir, "agtoosa-poster-v3.png"),
   storyboard: join(
     candidateDir,

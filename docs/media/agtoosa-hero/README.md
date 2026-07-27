@@ -25,7 +25,9 @@ out/candidates/creative-reset-v2/
 - AgToosa is the primary brand at every stage.
 - Directional workflow connectors start and end on visible node anchors. A
   traveling handoff point shows exactly where work moves next.
-- Manrope and IBM Plex Mono are bundled through local Fontsource packages.
+- Inter is bundled for the readable README display hierarchy. Manrope remains
+  the marketing-master face, while IBM Plex Mono is reserved for authentic
+  verifier terminal output.
 - Canonical lifecycle colors retain their README meaning:
   `#0284c7` Spec, `#059669` Build, `#d97706` Review, `#dc2626` Ship.
 - Global speed lines, rings, flashes, repeated impacts, and camera shake are

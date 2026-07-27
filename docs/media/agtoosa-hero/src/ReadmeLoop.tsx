@@ -11,8 +11,7 @@ import {ReframeScene} from "./scenes/ReframeScene";
 import {TensionScene} from "./scenes/TensionScene";
 import {
   colors,
-  FONT_MONO,
-  FONT_SANS,
+  FONT_READABLE,
   progress,
   README_FRAMES,
 } from "./theme";
@@ -52,10 +51,10 @@ const WorkflowScene: React.FC = () => {
         <div
           style={{
             color: colors.cyan,
-            fontFamily: FONT_MONO,
-            fontSize: 20,
-            fontWeight: 500,
-            letterSpacing: "0.18em",
+            fontFamily: FONT_READABLE,
+            fontSize: 26,
+            fontWeight: 700,
+            letterSpacing: "0.1em",
           }}
         >
           REPOSITORY-DRIVEN DELIVERY
@@ -63,10 +62,10 @@ const WorkflowScene: React.FC = () => {
         <div
           style={{
             color: colors.paper,
-            fontFamily: FONT_SANS,
-            fontSize: 52,
-            fontWeight: 710,
-            letterSpacing: "-0.045em",
+            fontFamily: FONT_READABLE,
+            fontSize: 68,
+            fontWeight: 760,
+            letterSpacing: "-0.035em",
             marginTop: 8,
           }}
         >
@@ -78,8 +77,9 @@ const WorkflowScene: React.FC = () => {
         style={{
           bottom: 68,
           color: colors.muted,
-          fontFamily: FONT_SANS,
-          fontSize: 32,
+          fontFamily: FONT_READABLE,
+          fontSize: 40,
+          fontWeight: 550,
           left: 0,
           opacity: progress(frame, 128, 18),
           position: "absolute",
@@ -123,10 +123,10 @@ const CommandCard: React.FC<{
     <div
       style={{
         color,
-        fontFamily: FONT_MONO,
-        fontSize: 20,
-        fontWeight: 500,
-        letterSpacing: "0.16em",
+        fontFamily: FONT_READABLE,
+        fontSize: 28,
+        fontWeight: 700,
+        letterSpacing: "0.08em",
       }}
     >
       {label}
@@ -134,10 +134,10 @@ const CommandCard: React.FC<{
     <div
       style={{
         color: colors.paper,
-        fontFamily: FONT_MONO,
-        fontSize: 68,
-        fontWeight: 500,
-        letterSpacing: "-0.045em",
+        fontFamily: FONT_READABLE,
+        fontSize: 88,
+        fontWeight: 800,
+        letterSpacing: "-0.05em",
         marginTop: 8,
       }}
     >
@@ -167,10 +167,10 @@ const RoutingScene: React.FC = () => {
         <div
           style={{
             color: colors.cyan,
-            fontFamily: FONT_MONO,
-            fontSize: 20,
-            fontWeight: 500,
-            letterSpacing: "0.18em",
+            fontFamily: FONT_READABLE,
+            fontSize: 26,
+            fontWeight: 700,
+            letterSpacing: "0.1em",
           }}
         >
           REPO-AWARE PROJECT DRIVER
@@ -178,10 +178,10 @@ const RoutingScene: React.FC = () => {
         <div
           style={{
             color: colors.paper,
-            fontFamily: FONT_SANS,
-            fontSize: 52,
-            fontWeight: 700,
-            letterSpacing: "-0.045em",
+            fontFamily: FONT_READABLE,
+            fontSize: 68,
+            fontWeight: 760,
+            letterSpacing: "-0.035em",
             marginTop: 8,
           }}
         >
@@ -222,11 +222,11 @@ const RoutingScene: React.FC = () => {
         style={{
           bottom: 86,
           color: colors.muted,
-          fontFamily: FONT_MONO,
-          fontSize: 21,
-          fontWeight: 500,
+          fontFamily: FONT_READABLE,
+          fontSize: 32,
+          fontWeight: 650,
           left: 0,
-          letterSpacing: "0.12em",
+          letterSpacing: "0.08em",
           opacity: progress(frame, 58, 18),
           position: "absolute",
           right: 0,
@@ -257,10 +257,10 @@ const VerifyScene: React.FC = () => {
         <div
           style={{
             color: colors.muted,
-            fontFamily: FONT_MONO,
-            fontSize: 20,
-            fontWeight: 500,
-            letterSpacing: "0.16em",
+            fontFamily: FONT_READABLE,
+            fontSize: 26,
+            fontWeight: 700,
+            letterSpacing: "0.1em",
           }}
         >
           DETERMINISTIC VERIFICATION
@@ -268,17 +268,17 @@ const VerifyScene: React.FC = () => {
         <div
           style={{
             color: colors.paper,
-            fontFamily: FONT_SANS,
-            fontSize: 48,
-            fontWeight: 700,
-            letterSpacing: "-0.035em",
+            fontFamily: FONT_READABLE,
+            fontSize: 64,
+            fontWeight: 760,
+            letterSpacing: "-0.03em",
             marginTop: 7,
           }}
         >
           The repository gets the last word.
         </div>
       </div>
-      <div style={{left: 230, position: "absolute", top: 188}}>
+      <div style={{left: 160, position: "absolute", top: 188}}>
         <VerifierTerminal
           frame={frame}
           start={8}
@@ -313,14 +313,14 @@ const ClosingScene: React.FC = () => {
           transform: `translateY(${(1 - reveal) * 18}px)`,
         }}
       >
-        <Wordmark frame={frame} start={0} align="center" />
+        <Wordmark frame={frame} start={0} align="center" readable />
         <div
           style={{
             color: colors.paper,
-            fontFamily: FONT_SANS,
-            fontSize: 40,
-            fontWeight: 640,
-            letterSpacing: "-0.03em",
+            fontFamily: FONT_READABLE,
+            fontSize: 60,
+            fontWeight: 700,
+            letterSpacing: "-0.025em",
             marginTop: 32,
             opacity: details,
           }}
@@ -331,10 +331,10 @@ const ClosingScene: React.FC = () => {
         <div
           style={{
             color: colors.cyan,
-            fontFamily: FONT_MONO,
-            fontSize: 21,
-            fontWeight: 500,
-            letterSpacing: "0.12em",
+            fontFamily: FONT_READABLE,
+            fontSize: 32,
+            fontWeight: 650,
+            letterSpacing: "0.08em",
             marginTop: 18,
             opacity: details,
           }}
@@ -342,7 +342,7 @@ const ClosingScene: React.FC = () => {
           /NEXT · READ · ROUTE · EXECUTE
         </div>
         <div style={{marginTop: 24, opacity: details}}>
-          <BrandCredit />
+          <BrandCredit readable />
         </div>
       </div>
     </AbsoluteFill>
@@ -394,11 +394,11 @@ export const ReadmeLoop: React.FC = () => {
           opacity: brandOpacity,
           position: "absolute",
           top: 28,
-          transform: "scale(.72)",
+          transform: "scale(.82)",
           transformOrigin: "top left",
         }}
       >
-        <Wordmark frame={frame} start={0} compact />
+        <Wordmark frame={frame} start={0} compact readable />
       </div>
     </AbsoluteFill>
   );

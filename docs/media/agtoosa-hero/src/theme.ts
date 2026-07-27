@@ -8,6 +8,8 @@ export const README_FRAMES = 24 * FPS;
 
 export const FONT_SANS =
   '"Manrope Variable", Manrope, ui-sans-serif, system-ui, sans-serif';
+export const FONT_READABLE =
+  '"Inter Variable", Inter, ui-sans-serif, system-ui, sans-serif';
 export const FONT_MONO =
   '"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace';
 

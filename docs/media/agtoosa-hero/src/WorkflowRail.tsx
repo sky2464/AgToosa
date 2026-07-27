@@ -1,5 +1,11 @@
 import React from "react";
-import {colors, FONT_MONO, FONT_SANS, progress} from "./theme";
+import {
+  colors,
+  FONT_MONO,
+  FONT_READABLE,
+  FONT_SANS,
+  progress,
+} from "./theme";
 
 export type FlowPoint = {x: number; y: number};
 
@@ -228,10 +234,10 @@ export const WorkflowRail: React.FC<WorkflowRailProps> = ({
             <div
               style={{
                 color: item.color,
-                fontFamily: FONT_MONO,
-                fontSize: compact ? 10 : readable ? 18 : 12,
-                fontWeight: readable ? 500 : undefined,
-                letterSpacing: "0.16em",
+                fontFamily: readable ? FONT_READABLE : FONT_MONO,
+                fontSize: compact ? 10 : readable ? 24 : 12,
+                fontWeight: readable ? 700 : undefined,
+                letterSpacing: readable ? "0.1em" : "0.16em",
               }}
             >
               {readable ? item.phase : `${item.phase} · ${item.note}`}
@@ -239,10 +245,10 @@ export const WorkflowRail: React.FC<WorkflowRailProps> = ({
             <div
               style={{
                 color: colors.paper,
-                fontFamily: readable ? FONT_MONO : FONT_SANS,
-                fontSize: compact ? 27 : readable ? 42 : 34,
-                fontWeight: readable ? 500 : 700,
-                letterSpacing: "-0.035em",
+                fontFamily: readable ? FONT_READABLE : FONT_SANS,
+                fontSize: compact ? 27 : readable ? 48 : 34,
+                fontWeight: readable ? 750 : 700,
+                letterSpacing: readable ? "-0.04em" : "-0.035em",
                 marginTop: compact ? 5 : 8,
               }}
             >

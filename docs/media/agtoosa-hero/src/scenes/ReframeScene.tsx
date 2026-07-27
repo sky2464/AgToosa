@@ -2,7 +2,14 @@ import React from "react";
 import {AbsoluteFill, useCurrentFrame} from "remotion";
 import {ProofGlyph} from "../Brand";
 import {FilmBackground} from "../FilmBackground";
-import {colors, fadeScene, FONT_MONO, FONT_SANS, progress} from "../theme";
+import {
+  colors,
+  fadeScene,
+  FONT_MONO,
+  FONT_READABLE,
+  FONT_SANS,
+  progress,
+} from "../theme";
 import timeline from "../timeline.json";
 
 const initSteps = ["SCAN CODEBASE", "ESTABLISH CONTEXT", "WIRE ASSISTANTS"];
@@ -36,9 +43,10 @@ export const ReframeScene: React.FC<{
         <div
           style={{
             color: colors.cyan,
-            fontFamily: FONT_MONO,
-            fontSize: readable ? 20 : 14,
-            letterSpacing: "0.18em",
+            fontFamily: readable ? FONT_READABLE : FONT_MONO,
+            fontSize: readable ? 26 : 14,
+            fontWeight: readable ? 700 : undefined,
+            letterSpacing: readable ? "0.1em" : "0.18em",
           }}
         >
           ONE-TIME SETUP
@@ -46,10 +54,10 @@ export const ReframeScene: React.FC<{
         <div
           style={{
             color: colors.paper,
-            fontFamily: FONT_MONO,
-            fontSize: readable ? 124 : 118,
-            fontWeight: 500,
-            letterSpacing: "-0.065em",
+            fontFamily: readable ? FONT_READABLE : FONT_MONO,
+            fontSize: readable ? 104 : 118,
+            fontWeight: readable ? 800 : 500,
+            letterSpacing: readable ? "-0.055em" : "-0.065em",
             marginTop: 6,
           }}
         >
@@ -58,10 +66,10 @@ export const ReframeScene: React.FC<{
         <div
           style={{
             color: colors.paper,
-            fontFamily: FONT_SANS,
-            fontSize: readable ? 43 : 38,
-            fontWeight: 650,
-            letterSpacing: "-0.035em",
+            fontFamily: readable ? FONT_READABLE : FONT_SANS,
+            fontSize: readable ? 52 : 38,
+            fontWeight: readable ? 700 : 650,
+            letterSpacing: readable ? "-0.025em" : "-0.035em",
             marginTop: 12,
           }}
         >
@@ -70,8 +78,9 @@ export const ReframeScene: React.FC<{
         <div
           style={{
             color: colors.muted,
-            fontFamily: FONT_SANS,
-            fontSize: readable ? 31 : 25,
+            fontFamily: readable ? FONT_READABLE : FONT_SANS,
+            fontSize: readable ? 38 : 25,
+            fontWeight: readable ? 500 : undefined,
             marginTop: 9,
           }}
         >
@@ -106,9 +115,9 @@ export const ReframeScene: React.FC<{
                 borderTop: index === 0 ? undefined : `1px solid ${colors.line}`,
                 color: colors.paper,
                 display: "flex",
-                fontFamily: FONT_MONO,
-                fontSize: readable ? 22 : 17,
-                fontWeight: 500,
+                fontFamily: readable ? FONT_READABLE : FONT_MONO,
+                fontSize: readable ? 30 : 17,
+                fontWeight: readable ? 650 : 500,
                 gap: 18,
                 opacity: itemIn,
                 padding: "18px 0",
@@ -132,16 +141,18 @@ export const ReframeScene: React.FC<{
             </div>
           );
         })}
-        <div
-          style={{
-            position: "absolute",
-            right: 24,
-            bottom: 22,
-            opacity: 0.15 + lock * 0.75,
-          }}
-        >
-          <ProofGlyph frame={100} size={68} />
-        </div>
+        {!readable ? (
+          <div
+            style={{
+              position: "absolute",
+              right: 24,
+              bottom: 22,
+              opacity: 0.15 + lock * 0.75,
+            }}
+          >
+            <ProofGlyph frame={100} size={68} />
+          </div>
+        ) : null}
       </div>
     </AbsoluteFill>
   );
