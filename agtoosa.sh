@@ -10,7 +10,7 @@ set -euo pipefail
 #   bash agtoosa.sh [--force] [--dry-run] [--version] [--help]
 # ──────────────────────────────────────────────────────────────
 
-AGTOOSA_VERSION="5.3.43"
+AGTOOSA_VERSION="5.3.44"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
 SHIP_DIR="${AGTOOSA_SHIP_DIR:-${SCRIPT_DIR}/ship}"
@@ -688,8 +688,13 @@ fi
 if [[ "$PLAN_JSON_MODE" != true ]]; then
   echo ""
   if [[ "$SMART_UPGRADE_MODE" == true ]]; then
-    echo -e "${GREEN}${BOLD}Prepared ${GENERATED} files for upgrade.${NC}"
-    echo -e "${CYAN}(Apply updates only what changed.)${NC}"
+    UPGRADE_CHANGE_COUNT="$(plan_count_install_changes "$PROJECT_PATH" 2>/dev/null || echo "")"
+    if [[ -n "$UPGRADE_CHANGE_COUNT" ]]; then
+      echo -e "${GREEN}${BOLD}Staged ${GENERATED} files · expect ~${UPGRADE_CHANGE_COUNT} to update${NC}"
+    else
+      echo -e "${GREEN}${BOLD}Staged ${GENERATED} files for upgrade.${NC}"
+    fi
+    echo -e "${CYAN}Only changed files will be written; the rest stay as-is.${NC}"
   else
     echo -e "${GREEN}${BOLD}Generated ${GENERATED} files.${NC}"
   fi

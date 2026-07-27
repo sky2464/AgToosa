@@ -33,6 +33,12 @@ detect_installed_platforms() {
   [[ -f "${PROJECT_PATH}/CLAUDE.md" ]]                       && USE_CLAUDE=true
   [[ -f "${PROJECT_PATH}/AGENTS.md" ]]                       && USE_GEMINI=true
   [[ -f "${PROJECT_PATH}/.github/copilot-instructions.md" ]] && USE_COPILOT=true
+  # Copilot scoped instructions without the sentinel (partial/legacy installs).
+  if [[ "$USE_COPILOT" != true && -d "${PROJECT_PATH}/.github/instructions" ]] \
+     && find "${PROJECT_PATH}/.github/instructions" -maxdepth 1 -name 'agtoosa-*' \
+          -print -quit 2>/dev/null | grep -q .; then
+    USE_COPILOT=true
+  fi
   [[ -f "${PROJECT_PATH}/OPENCODE.md" ]]                     && USE_OPENCODE=true
 
   # Never propagate a non-zero status from probe checks under set -e.

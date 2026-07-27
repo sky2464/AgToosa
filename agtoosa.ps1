@@ -132,7 +132,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 # ── Version ───────────────────────────────────────────────────
-$AGTOOSA_VERSION = "5.3.43"
+$AGTOOSA_VERSION = "5.3.44"
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $TEMPLATE_DIR = Join-Path $SCRIPT_DIR "template"
 $SHIP_DIR = Join-Path $SCRIPT_DIR "ship"
@@ -827,6 +827,10 @@ function Get-InstalledPlatforms([string]$projectPath) {
     if ((Test-Path (Join-Path $projectPath "CLAUDE.md")) -or (Test-Path (Join-Path $projectPath ".claude"))) { $platforms.Add("claude") }
     if ((Test-Path (Join-Path $projectPath "AGENTS.md")) -or (Test-Path (Join-Path $projectPath ".gemini"))) { $platforms.Add("gemini") }
     if ((Test-Path (Join-Path $projectPath ".github\copilot-instructions.md")) -or (Test-Path (Join-Path $projectPath ".github\prompts")) -or (Test-Path (Join-Path $projectPath ".github\agents"))) { $platforms.Add("copilot") }
+    $instrDir = Join-Path $projectPath ".github\instructions"
+    if ((Test-Path $instrDir) -and (Get-ChildItem -Path $instrDir -Filter 'agtoosa-*' -File -ErrorAction SilentlyContinue | Select-Object -First 1)) {
+        if (-not $platforms.Contains("copilot")) { $platforms.Add("copilot") }
+    }
     if ((Test-Path (Join-Path $projectPath "OPENCODE.md")) -or (Test-Path (Join-Path $projectPath ".codex"))) { $platforms.Add("opencode") }
     return $platforms.ToArray()
 }
@@ -1645,8 +1649,8 @@ try {
 
     Write-Color ""
     if ($smartUpgradeMode) {
-        Write-Color "${GREEN}${BOLD}Prepared files for upgrade.${NC}"
-        Write-Color "${CYAN}(Apply updates only what changed.)${NC}"
+        Write-Color "${GREEN}${BOLD}Staged files for upgrade.${NC}"
+        Write-Color "${CYAN}Only changed files will be written; the rest stay as-is.${NC}"
     } else {
         Write-Color "${GREEN}${BOLD}Generated files staged.${NC}"
     }

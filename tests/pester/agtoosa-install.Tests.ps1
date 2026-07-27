@@ -116,4 +116,18 @@ Describe 'DEV-128 PS1 upgrade guards' {
         Get-Content $ps1 -Raw | Should -Match 'CleanupVerbose'
         Get-Content $ps1 -Raw | Should -Match "--verbose"
     }
+
+    It 'UPG-010: Get-InstalledPlatforms detects copilot scoped instructions' {
+        $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+        $ps1 = Join-Path $root 'agtoosa.ps1'
+        Get-Content $ps1 -Raw | Should -Match 'agtoosa-\*'
+        Get-Content $ps1 -Raw | Should -Match '\.github\\instructions'
+    }
+
+    It 'UPG-011: smart upgrade banner copy in agtoosa.ps1' {
+        $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+        $ps1 = Join-Path $root 'agtoosa.ps1'
+        Get-Content $ps1 -Raw | Should -Match 'Only changed files will be written'
+        Get-Content $ps1 -Raw | Should -Match 'Staged files for upgrade'
+    }
 }

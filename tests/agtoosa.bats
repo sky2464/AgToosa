@@ -21,7 +21,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.42" ]]
+  [[ "$output" == "AgToosa v5.3.44" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -13207,7 +13207,8 @@ PY
   run bash -c "printf '$TEST_PROJECT\n\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   [[ "$output" != *"(unchanged)"* ]]
-  [[ "$output" == *"Prepared "*" files for upgrade"* ]]
+  [[ "$output" == *"Staged "* ]]
+  [[ "$output" == *"Only changed files will be written"* ]]
 }
 
 @test "SAU-012: upgrade shows numbered platform legend with installed checkmarks" {
@@ -14429,6 +14430,36 @@ PY
   done
 }
 
+# -- DEV-130: BCL Hardening & CI Wiring (BCL-014–BCL-015) -----------------------
+
+@test "DEV-130 BCL-014: scenario_validate_run_json rejects schema-invalid run JSON" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local tmp
+  tmp="$(mktemp)"
+  cp "$root/tests/fixtures/scenario-corpus/lifecycle-compass-proof/cursor/scenario-run.json" "$tmp"
+  python3 -c "import json; d=json.load(open('$tmp')); del d['platform']; json.dump(d, open('$tmp','w'))"
+  run bash -c 'source "'"$root"'/lib/scenario.sh"; scenario_validate_run_json "'"$tmp"'" "'"$root"'"'
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"schema"* ]]
+  rm -f "$tmp"
+}
+
+@test "DEV-130 @smoke BCL-015: all six platform fixtures have valid scenario-run.json" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local plat
+  for plat in cursor claude codex copilot windsurf gemini; do
+    [ -f "$root/tests/fixtures/scenario-corpus/lifecycle-compass-proof/$plat/scenario-run.json" ]
+    run bash -c 'source "'"$root"'/lib/scenario.sh"; scenario_validate_run_json "'"$root"'/tests/fixtures/scenario-corpus/lifecycle-compass-proof/'"$plat"'/scenario-run.json" "'"$root"'"'
+    [ "$status" -eq 0 ]
+  done
+}
+
+@test "DEV-130: CI fast path wires BCL smokes and jsonschema" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'requirements-dev.txt' "$root/.github/workflows/ci.yml"
+  grep -q '@smoke BCL' "$root/.github/workflows/ci.yml"
+}
+
 # -- DEV-120: Delivery Proof Fabric (DPF-001–DPF-012) ----------------------------
 
 @test "DEV-120 @smoke DPF-001: Provenance contract defines node and edge types" {
@@ -15253,4 +15284,63 @@ plats = sorted(d.get("platforms") or [])
 assert plats == ["claude", "cursor"], plats
 PY
   [ "$status" -eq 0 ]
+}
+
+@test "DEV-130 @smoke SR-001: v5.3.44 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.44" ]
+  [ "$ps_ver" = "5.3.44" ]
+  [ "$npm_ver" = "5.3.44" ]
+  [ "$formula_ver" = "5.3.44" ]
+  grep -q '## \[5.3.44\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-130' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-130.md" ]
+  [ -f "$root/docs/archived/review-DEV-130.md" ]
+  [ -f "$root/docs/archived/evidence-DEV-130.md" ]
+  grep -q '| ship |' "$root/docs/archived/evidence-DEV-130.md"
+}
+
+# -- Sivarena UX review follow-up (UPG-010–UPG-011) ----------------------------
+
+@test "UPG-010: detect copilot from scoped instructions without sentinel" {
+  local root="$BATS_TEST_DIRNAME/.."
+  mkdir -p "$TEST_PROJECT/.github/instructions"
+  echo "cursor" > "$TEST_PROJECT/.cursorrules"
+  echo "scoped" > "$TEST_PROJECT/.github/instructions/agtoosa-core.instructions.md"
+  run bash -c '
+    source "'"$root"'/lib/config.sh"
+    source "'"$root"'/lib/update.sh"
+    PROJECT_PATH="'"$TEST_PROJECT"'"
+    detect_installed_platforms
+    printf "cursor=%s copilot=%s\n" "$USE_CURSOR" "$USE_COPILOT"
+  '
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"cursor=true"* ]]
+  [[ "$output" == *"copilot=true"* ]]
+}
+
+@test "UPG-010b: copilot instructions trigger narrowing when replaced with cursor only" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --yes < /dev/null
+  [ "$status" -eq 0 ]
+  mkdir -p "$TEST_PROJECT/.github/instructions"
+  echo "scoped" > "$TEST_PROJECT/.github/instructions/agtoosa-core.instructions.md"
+  run bash -c "printf '%s\n1\nn\n' '$TEST_PROJECT' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"deselecting"* ]]
+  [[ "$output" == *"Copilot"* ]]
+}
+
+@test "UPG-011: smart upgrade banner shows staged count and expected updates" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms cursor --yes < /dev/null
+  [ "$status" -eq 0 ]
+  run bash -c "printf '%s\n\nn\n' '$TEST_PROJECT' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"Staged "* ]]
+  [[ "$output" == *"expect ~"* ]]
+  [[ "$output" == *"Only changed files will be written"* ]]
 }

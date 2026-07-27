@@ -412,3 +412,20 @@ doc = {
 print(json.dumps(doc, ensure_ascii=False, separators=(",", ":")))
 PY
 }
+
+# Count install-plan actions that would write or merge into the project (excludes
+# up_to_date, preserve, skip). Requires SHIP_DIR staged and PROJECT_PATH set.
+plan_count_install_changes() {
+  local project_path="$1"
+  local count=0 entry rel cat _detail
+
+  compute_agtoosa_plan "$project_path" "install" || return 1
+  for entry in "${PLAN_ACTIONS[@]}"; do
+    IFS='|' read -r rel cat _detail <<< "$entry"
+    case "$cat" in
+      up_to_date|preserve|skip|manual) ;;
+      *) count=$((count + 1)) ;;
+    esac
+  done
+  printf '%s' "$count"
+}
