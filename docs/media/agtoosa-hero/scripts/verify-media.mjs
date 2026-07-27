@@ -249,7 +249,7 @@ if (existsSync(checkpointFiles.readme)) {
   const fileStats = await stat(checkpointFiles.readme);
   check(video?.codec_name === "gif", "README candidate is GIF");
   check(video?.width === 720 && video?.height === 405, "README GIF is 720×405");
-  check(Number(video?.nb_frames) === 120, "README GIF has 120 sampled frames");
+  check(Number(video?.nb_frames) === 360, "README GIF has all 360 frames");
   check(
     Math.abs(Number(video?.duration) - 12) < 0.05,
     "README GIF duration is 12 seconds",

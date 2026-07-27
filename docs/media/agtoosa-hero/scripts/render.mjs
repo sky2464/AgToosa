@@ -113,7 +113,6 @@ const renderReadme = async () => {
     "ReadmeLoop",
     join(outputDir, "agtoosa-readme-v3.gif"),
     "--codec=gif",
-    "--every-nth-frame=3",
     "--scale=0.5",
     "--muted",
     "--color-space=bt709",

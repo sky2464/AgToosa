@@ -33,6 +33,8 @@ out/candidates/creative-reset-v2/
 - Phase nodes use compact display labels (`/init`, `/spec`, `/build`, `/review`,
   `/ship`). The CTA retains the canonical `/agtoosa-init` and
   `/agtoosa-next` commands.
+- The silent README loop exports all 360 frames at 30fps for smooth inline
+  playback without a separate media link.
 - The guide score is built around a low-frequency
   `doom · doom · doom · tek · rest` pulse with a deliberate verifier drop.
 - Each foreground cue has one job: status scan, init lock, phase handoff,
