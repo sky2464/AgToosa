@@ -137,9 +137,7 @@ jobs:
           VERSION="${{ needs.version-validation.outputs.version }}"
           
           # Extract changelog section between current version and next version marker
-          awk "/## \[$VERSION\]/,/## \[/ { print }" CHANGELOG.md | \
-          head -n -1 | \
-          sed '1d' > /tmp/release-notes.txt
+          sed -n "/^## \\[$VERSION\\]/,/^## \\[/p" CHANGELOG.md | sed '1d;$d' | sed '/^---$/d' > /tmp/release-notes.txt
           
           # Remove markdown comments
           sed -i '/^---$/d' /tmp/release-notes.txt
@@ -159,7 +157,7 @@ jobs:
     environment: release
     permissions:
       contents: write
-    needs: [version-validation, extract-changelog]
+    needs: [version-validation]
     if: success()
     steps:
       - name: Checkout code
@@ -169,19 +167,26 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          printf '%b\n' "${{ needs.extract-changelog.outputs.release-notes }}" > /tmp/release-notes.md
+          set -euo pipefail
+          VERSION="${{ needs.version-validation.outputs.version }}"
+          TAG="${{ needs.version-validation.outputs.tag }}"
+          sed -n "/^## \\[$VERSION\\]/,/^## \\[/p" CHANGELOG.md | sed '1d;$d' | sed '/^---$/d' > /tmp/release-notes.md
+          if [[ ! -s /tmp/release-notes.md ]]; then
+            echo "❌ No CHANGELOG release notes extracted for version $VERSION"
+            exit 1
+          fi
           args=()
           if [[ "${{ github.event.inputs.prerelease || false }}" == "true" ]]; then
             args+=(--prerelease)
           fi
-          if gh release view "${{ needs.version-validation.outputs.tag }}" >/dev/null 2>&1; then
-            gh release edit "${{ needs.version-validation.outputs.tag }}" \
-              --title "Release ${{ needs.version-validation.outputs.tag }}" \
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release edit "$TAG" \
+              --title "Release $TAG" \
               --notes-file /tmp/release-notes.md \
               "${args[@]}"
           else
-            gh release create "${{ needs.version-validation.outputs.tag }}" \
-              --title "Release ${{ needs.version-validation.outputs.tag }}" \
+            gh release create "$TAG" \
+              --title "Release $TAG" \
               --notes-file /tmp/release-notes.md \
               "${args[@]}"
           fi
