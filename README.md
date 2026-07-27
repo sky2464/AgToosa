@@ -90,6 +90,7 @@ Use these when you already know AgToosa and only need an install command.
 
 ```bash
 # Public launch: pinned release (alternative to the proof walkthrough).
+# Pin any release: bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref vX.Y.Z
 bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.44
 
 brew install sky2464/agtoosa/agtoosa
