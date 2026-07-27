@@ -1,6 +1,10 @@
 <div align="center">
 
-<img src="docs/media/agtoosa-hero/agtoosa-hero.gif" alt="AgToosa lifecycle animation: Spec, Build, Review, Ship" width="720"/>
+<a href="docs/media/agtoosa-hero/agtoosa-hero.mp4">
+  <img src="docs/media/agtoosa-hero/agtoosa-hero.gif" alt="AgToosa workflow: init, spec, build, review, ship, status, and next" width="720"/>
+</a>
+
+[▶ Watch the 44-second AgToosa film with sound](docs/media/agtoosa-hero/agtoosa-hero.mp4)
 
 # AgToosa
 
