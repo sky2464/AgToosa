@@ -6688,6 +6688,18 @@ JSON
   [[ "$output" == *"Unknown platform 'not-a-tool'"* ]]
 }
 
+@test "DEV-049 EL-006: re-install and --update preserve project-owned agtoosa-evidence.jsonl" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  printf '%s\n' '{"story_id":"DEV-001","event":"review"}' > "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  grep -q 'DEV-001' "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+  run bash "$SCRIPT" --update "$TEST_PROJECT" --yes < /dev/null
+  [ "$status" -eq 0 ]
+  grep -q 'DEV-001' "$TEST_PROJECT/Docs/agtoosa-evidence.jsonl"
+}
+
 @test "DEV-071 NI-003: re-install preserves project-owned Master-Plan and Changelog" {
   run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
   [ "$status" -eq 0 ]
