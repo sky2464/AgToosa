@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "scenario_id": "lifecycle-compass-proof",
+  "platform": "codex",
+  "run_at": "2026-07-27T21:42:08Z",
+  "artifact_results": [
+    {
+      "path": "status-line.txt",
+      "passed": true,
+      "detail": "ok"
+    },
+    {
+      "path": "scenario-notes.md",
+      "passed": true,
+      "detail": "ok"
+    },
+    {
+      "path": "adapter-sentinel.txt",
+      "passed": true,
+      "detail": "ok"
+    }
+  ],
+  "verifier_exit_code": 0
+}

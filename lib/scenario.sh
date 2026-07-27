@@ -114,57 +114,89 @@ scenario_validate_corpus() {
 import json, os, sys
 
 corpus_path, root = sys.argv[1], sys.argv[2]
+schema_path = os.path.join(root, "contracts", "scenario-corpus-v1.schema.json")
+
+def fail(msg):
+    print(f"Error: {msg}", file=sys.stderr)
+    sys.exit(1)
+
 try:
-    with open(corpus_path, encoding="utf-8") as f:
-        corpus = json.load(f)
+    import jsonschema
+except ImportError:
+    fail("jsonschema required (pip install jsonschema)")
+
+if not os.path.isfile(schema_path):
+    fail(f"schema missing: {schema_path}")
+
+try:
+    with open(schema_path, encoding="utf-8") as sf:
+        schema = json.load(sf)
+    with open(corpus_path, encoding="utf-8") as cf:
+        corpus = json.load(cf)
 except (OSError, json.JSONDecodeError) as e:
-    print(f"Error: cannot read corpus: {e}", file=sys.stderr)
-    sys.exit(1)
-if corpus.get("version") != 1:
-    print("Error: unsupported corpus version", file=sys.stderr)
-    sys.exit(1)
-scenarios = corpus.get("scenarios", [])
-if not scenarios:
-    print("Error: corpus has no scenarios", file=sys.stderr)
-    sys.exit(1)
-for entry in scenarios:
-    if "id" not in entry or "definition_path" not in entry:
-        print("Error: corpus entry missing id or definition_path", file=sys.stderr)
-        sys.exit(1)
+    fail(f"cannot read corpus or schema: {e}")
+
+validator = jsonschema.Draft202012Validator(schema)
+errors = sorted(validator.iter_errors(corpus), key=lambda e: list(e.path))
+if errors:
+    fail(f"corpus schema: {errors[0].message}")
+
+for entry in corpus.get("scenarios", []):
     def_path = os.path.join(root, entry["definition_path"])
     if not os.path.isfile(def_path):
-        print(f"Error: definition missing: {def_path}", file=sys.stderr)
-        sys.exit(1)
+        fail(f"definition missing: {def_path}")
 PY
+}
+
+# Locate repo root containing contracts/ from any path under the tree.
+scenario_resolve_contracts_root() {
+  local start_path="$1"
+  local dir
+  dir="$(cd "$(dirname "$start_path")" && pwd)"
+  while [[ "$dir" != "/" ]]; do
+    if [[ -f "$dir/contracts/scenario-run-v1.schema.json" ]]; then
+      printf '%s' "$dir"
+      return 0
+    fi
+    dir="$(dirname "$dir")"
+  done
+  echo "Error: cannot locate contracts/scenario-run-v1.schema.json" >&2
+  return 1
 }
 
 scenario_validate_run_json() {
   local run_file="$1"
-  python3 - "$run_file" <<'PY'
-import json, sys
+  local root="${2:-}"
+  [[ -n "$root" ]] || root="$(scenario_resolve_contracts_root "$run_file")" || return 1
+  python3 - "$run_file" "$root" <<'PY'
+import json, os, sys
 
-path = sys.argv[1]
-platforms = {"cursor", "claude", "codex", "copilot", "windsurf", "gemini"}
-required = {"version", "scenario_id", "platform", "run_at", "artifact_results", "verifier_exit_code"}
+run_path, root = sys.argv[1], sys.argv[2]
+schema_path = os.path.join(root, "contracts", "scenario-run-v1.schema.json")
+
+def fail(msg):
+    print(f"Error: {msg}", file=sys.stderr)
+    sys.exit(1)
+
 try:
-    with open(path, encoding="utf-8") as f:
-        data = json.load(f)
+    import jsonschema
+except ImportError:
+    fail("jsonschema required (pip install jsonschema)")
+
+if not os.path.isfile(schema_path):
+    fail(f"schema missing: {schema_path}")
+
+try:
+    with open(schema_path, encoding="utf-8") as sf:
+        schema = json.load(sf)
+    with open(run_path, encoding="utf-8") as rf:
+        data = json.load(rf)
 except (OSError, json.JSONDecodeError) as e:
-    print(f"Error: invalid run json: {e}", file=sys.stderr)
-    sys.exit(1)
-missing = required - set(data.keys())
-if missing:
-    print(f"Error: run json missing fields: {sorted(missing)}", file=sys.stderr)
-    sys.exit(1)
-if data.get("version") != 1:
-    print("Error: unsupported run version", file=sys.stderr)
-    sys.exit(1)
-if data.get("platform") not in platforms:
-    print("Error: invalid platform", file=sys.stderr)
-    sys.exit(1)
-for item in data.get("artifact_results", []):
-    if "path" not in item or "passed" not in item:
-        print("Error: artifact_results entry incomplete", file=sys.stderr)
-        sys.exit(1)
+    fail(f"cannot read run json or schema: {e}")
+
+validator = jsonschema.Draft202012Validator(schema)
+errors = sorted(validator.iter_errors(data), key=lambda e: list(e.path))
+if errors:
+    fail(f"run json schema: {errors[0].message}")
 PY
 }

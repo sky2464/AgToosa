@@ -1,0 +1,2 @@
+# Maintainer test dependencies (CI + local bats for BCL jsonschema gates)
+jsonschema>=4.21,<5

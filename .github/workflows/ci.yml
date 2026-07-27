@@ -103,6 +103,9 @@ jobs:
           sudo "./bats-core-${BATS_VERSION#v}/install.sh" /usr/local
           bats --version
 
+      - name: Install Python test dependencies
+        run: pip install -r requirements-dev.txt
+
       - name: Product Truth contract and adjacent regressions
         run: |
           python3 scripts/product-truth.py check \
@@ -114,7 +117,7 @@ jobs:
             --contract contracts/product-truth-v1.json \
             --as-of 2026-07-14
           bats tests/product-truth.bats
-          bats tests/agtoosa.bats -f 'PN|WP2|ACC|NET|PSP|CORE'
+          bats tests/agtoosa.bats -f '@smoke BCL|PN|WP2|ACC|NET|PSP|CORE'
 
       - name: Run generator smoke tests
         run: bats tests/agtoosa.bats
