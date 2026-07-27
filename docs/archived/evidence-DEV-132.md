@@ -8,5 +8,6 @@
 | build | test | bats | EVJ-001–006 | 6/6 green | PASS | AgToosa | 2026-07-27T23:35:00Z |
 | review | gate | review-DEV-132.md | 0 Critical | PASS | AgToosa | 2026-07-27T23:40:00Z |
 | ship | test | bats | DEV-132 SR-001 | version pins 5.3.46 | PASS | AgToosa | 2026-07-27T23:55:00Z |
+| ship | release | github | https://github.com/sky2464/AgToosa/releases/tag/v5.3.46 | `gh release view v5.3.46`; workflow run 30315170492 | PASS | AgToosa | 2026-07-27T23:46:00Z |
 | ship | version parity | other | agtoosa.sh · agtoosa.ps1 · npm/package.json · Formula/agtoosa.rb | pins 5.3.46 | PASS | AgToosa | 2026-07-27T23:55:00Z |
 | ship | all Must | other | docs/Master-Plan.md | Ship complete — v5.3.46 | PASS | AgToosa | 2026-07-27T23:55:00Z |
