@@ -143,10 +143,10 @@ PY
     "$ROOT/scripts/product_truth_schema.py"
 }
 
-@test "DEV-118 @smoke PTC-002: dynamic inventory covers 19 commands on six targets" {
+@test "DEV-118 @smoke PTC-002: dynamic inventory covers 20 commands on six targets" {
   run_check --only inventory
   [ "$status" -eq 0 ]
-  [[ "$output" == *"19 commands x 6 targets"* ]]
+  [[ "$output" == *"20 commands x 6 targets"* ]]
 
   copy_contract
   copy_targets

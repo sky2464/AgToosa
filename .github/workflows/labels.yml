@@ -46,6 +46,8 @@ jobs:
               { name: 'wontfix', color: 'ffffff', description: 'Will not be fixed' },
               { name: 'invalid', color: 'e6e6e6', description: 'Invalid issue' },
               { name: 'stale', color: '9ca3af', description: 'Inactive for 30 days' },
+              { name: 'source:agtoosa-sync', color: '1d76db', description: 'Mirrored from Master-Plan by AgToosa sync' },
+              { name: 'source:community', color: '5319e7', description: 'Filed by a community contributor' },
             ];
             
             for (const label of labels) {

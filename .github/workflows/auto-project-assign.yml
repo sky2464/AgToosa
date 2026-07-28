@@ -1,117 +1,18 @@
-name: Auto-Assign to Project
+# Retired: classic GitHub Projects auto-assign (DEV-139)
+#
+# Replaced by `.github/workflows/agtoosa-issues-sync.yml` which mirrors
+# `docs/Master-Plan.md` to GitHub Issues with AgToosa lifecycle labels.
+#
+# This workflow is intentionally disabled. Delete this file after one release cycle
+# if no downstream forks depend on the classic Projects API behavior.
+
+name: Auto-Assign to Project (retired)
 
 on:
-  issues:
-    types: [opened]
-  pull_request:
-    types: [opened]
+  workflow_dispatch:
 
 jobs:
-  assign-issue:
-    if: github.event_name == 'issues'
+  retired:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
-
     steps:
-      - name: Auto-assign new issues to GitHub Project
-        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
-        with:
-          script: |
-            const issue = context.payload.issue;
-
-            try {
-              const projects = await github.rest.projects.listForRepo({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                state: 'open'
-              });
-
-              const agtoosaProject = projects.data.find(p =>
-                p.name.toLowerCase().includes('agtoosa')
-              );
-
-              if (!agtoosaProject) {
-                console.log('AgToosa project not found');
-                return;
-              }
-
-              const columns = await github.rest.projects.listColumns({
-                project_id: agtoosaProject.id
-              });
-
-              const backlogColumn = columns.data.find(c =>
-                c.name.toLowerCase() === 'backlog' ||
-                c.name.toLowerCase() === 'todo'
-              );
-
-              if (!backlogColumn) {
-                console.log('Backlog column not found');
-                return;
-              }
-
-              await github.rest.projects.createCard({
-                column_id: backlogColumn.id,
-                content_id: issue.id,
-                content_type: 'Issue'
-              });
-
-              console.log(`Issue #${issue.number} assigned to project ${agtoosaProject.name}`);
-            } catch (error) {
-              console.error('Error assigning issue to project:', error);
-            }
-
-  assign-pr:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-
-    steps:
-      - name: Auto-assign new PRs to GitHub Project (In Review column)
-        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7
-        with:
-          script: |
-            const pr = context.payload.pull_request;
-
-            try {
-              const projects = await github.rest.projects.listForRepo({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                state: 'open'
-              });
-
-              const agtoosaProject = projects.data.find(p =>
-                p.name.toLowerCase().includes('agtoosa')
-              );
-
-              if (!agtoosaProject) {
-                console.log('AgToosa project not found');
-                return;
-              }
-
-              const columns = await github.rest.projects.listColumns({
-                project_id: agtoosaProject.id
-              });
-
-              const inReviewColumn = columns.data.find(c =>
-                c.name.toLowerCase() === 'in review' ||
-                c.name.toLowerCase() === 'in-review' ||
-                c.name.toLowerCase() === 'review'
-              );
-
-              if (!inReviewColumn) {
-                console.log('In Review column not found');
-                return;
-              }
-
-              await github.rest.projects.createCard({
-                column_id: inReviewColumn.id,
-                content_id: pr.id,
-                content_type: 'PullRequest'
-              });
-
-              console.log(`PR #${pr.number} assigned to project ${agtoosaProject.name} (In Review)`);
-            } catch (error) {
-              console.error('Error assigning PR to project:', error);
-            }
+      - run: echo "Retired — use agtoosa-issues-sync.yml instead."

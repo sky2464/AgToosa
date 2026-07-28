@@ -29,7 +29,7 @@ if [[ ! -d "${SCRIPT_DIR}/lib" ]]; then
 fi
 
 # ── Source modular libraries ──────────────────────────────────
-for _lib in config version copy apply transaction state lock generate plan dryrun install update migrate provenance registry catalog tracker maintain reinstall cleanup; do
+for _lib in config version copy apply transaction state lock generate plan dryrun install update migrate provenance registry catalog tracker github-issues maintain reinstall cleanup; do
   # shellcheck source=/dev/null
   source "${SCRIPT_DIR}/lib/${_lib}.sh"
 done
@@ -77,6 +77,7 @@ TRACKER_COMMAND=""
 TRACKER_PATH=""
 TRACKER_INPUT=""
 TRACKER_OUTPUT=""
+TRACKER_README=""
 _PATH_ARG=""
 ALLOW_UNVERIFIED=false
 ASSUME_YES=false
@@ -173,6 +174,11 @@ while [[ $# -gt 0 ]]; do
         echo -e "${RED}❌ Error: --output requires a file argument.${NC}"; exit 1
       fi
       TRACKER_OUTPUT="$2"; shift ;;
+    --readme)
+      if [[ $# -lt 2 ]]; then
+        echo -e "${RED}❌ Error: --readme requires a file argument.${NC}"; exit 1
+      fi
+      TRACKER_README="$2"; shift ;;
     --platforms)
       if [[ $# -lt 2 ]]; then
         echo -e "${RED}❌ Error: --platforms requires a comma-separated list (e.g. cursor,claude).${NC}"; exit 1
@@ -409,9 +415,23 @@ if [[ "$TRACKER" == true ]]; then
       fi
       tracker_propose "$_tracker_project" "$TRACKER_INPUT" "$TRACKER_OUTPUT"
       exit $? ;;
+    publish)
+      if [[ -z "$TRACKER_OUTPUT" ]]; then
+        echo -e "${RED}❌ Error: --tracker publish requires --output <file>.${NC}" >&2
+        exit 1
+      fi
+      tracker_publish "$_tracker_project" "$TRACKER_OUTPUT" "$TRACKER_README"
+      exit $? ;;
+    intake)
+      if [[ -z "$TRACKER_INPUT" || -z "$TRACKER_OUTPUT" ]]; then
+        echo -e "${RED}❌ Error: --tracker intake requires --input <file> and --output <file>.${NC}" >&2
+        exit 1
+      fi
+      tracker_propose_intake "$_tracker_project" "$TRACKER_INPUT" "$TRACKER_OUTPUT"
+      exit $? ;;
     *)
       echo -e "${RED}❌ Error: Unknown tracker command '${TRACKER_COMMAND}'.${NC}" >&2
-      echo "Available commands: export, propose" >&2
+      echo "Available commands: export, propose, publish, intake" >&2
       exit 1
       ;;
   esac

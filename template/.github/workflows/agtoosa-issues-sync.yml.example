@@ -1,0 +1,27 @@
+# Copy to `.github/workflows/agtoosa-issues-sync.yml` to enable Master-Plan → GitHub Issues sync.
+# Requires: AgToosa installed, `gh` CLI in CI, issues:write permission.
+
+name: AgToosa Issues Sync
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/Master-Plan.md'
+      - 'Docs/Master-Plan.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  sync-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y jq
+      - name: Sync issues
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/agtoosa-issues-sync.sh --path .

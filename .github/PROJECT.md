@@ -1,68 +1,42 @@
-# GitHub Project Configuration
+# GitHub Issues & Public Roadmap
 
-This document describes the AgToosa GitHub Project setup for issue tracking and project management.
+AgToosa uses **`docs/Master-Plan.md` as the sole PM authority**. GitHub Issues are a **public mirror** for contributors — not a second source of truth.
 
-## Project: AgToosa Development
+## Public surfaces
 
-**View:** https://github.com/orgs/sky2464/projects/X
+| Surface | Purpose |
+|---------|---------|
+| [GitHub Issues](https://github.com/sky2464/AgToosa/issues) | Live backlog mirror (active cycle + open backlog) |
+| README `AGTOOSA-ROADMAP` block | Auto-generated summary on Master-Plan sync |
+| Milestones | Align to Project Charter release (e.g. `v5.3.52`) |
 
-### Boards
+## Automation (DEV-139)
 
-**Main Board** — Kanban workflow
-- **Backlog** — Ideas, future work, research spikes
-- **Ready** — Prioritized, ready to start
-- **In Progress** — Currently being worked on
-- **In Review** — PR open, awaiting review
-- **Done** — Merged and shipped
+**Outbound sync** — `.github/workflows/agtoosa-issues-sync.yml`
 
-### Automation
+- Triggers on `main` when `docs/Master-Plan.md` changes
+- Runs `scripts/agtoosa-issues-sync.sh` to upsert Issues via `gh`
+- AgToosa-synced issues carry label `agtoosa:DEV-XXX` and `source:agtoosa-sync`
+- Titles use GitHub conventions (`feat:`, `fix:`, `chore:`) — no `DEV-` title prefix
 
-**Auto-add issues:**
-- All issues in AgToosa repo → Backlog
-- All PRs in AgToosa repo → In Review
+**Inbound intake** — `.github/workflows/agtoosa-issues-intake.yml`
 
-**Auto-close issues:**
-- PR merged with "Closes #123" → Done
-
-**Auto-archive:**
-- Issues closed without PR after 30 days → Archive
-
-### Custom Fields
-
-- **Priority:** None, Low, Medium, High, Urgent
-- **Type:** Feature, Bug, Chore, Documentation, Research, Testing
-- **Estimate:** S, M, L, XL (story points)
-- **Team:** Backend, Docs, DX, QA, Release
-
-### Views
-
-**By Priority** — High priority first
-**By Type** — Features, then bugs, then chores
-**By Sprint** — (when using GitHub's sprint field)
-**Blocked Items** — Issues with blocking dependencies
-
-## Syncing with Linear
-
-AgToosa maintains dual PM:
-- **Linear** — Authority for AgToosa development (internal)
-- **GitHub Project** — Public discovery board for contributors
-
-Manual sync workflow:
-1. Create issue in Linear (primary)
-2. File corresponding GitHub issue (if public contribution)
-3. Link in description: "See LINEAR-XXX in AgToosa workspace"
+- Community issues (no `agtoosa:DEV-*` label) → intake proposal artifact + triage comment
+- Maintainer accepts via `/agtoosa-task` or explicit Master-Plan edit
+- Label `source:community` distinguishes contributor-filed issues
 
 ## Contributing via GitHub
 
-Contributors can:
-1. Pick an issue from "Ready" board
-2. Comment to claim work
-3. Open PR, reference issue
-4. PR merged → auto-closes issue → moves to Done
+1. Browse [open issues](https://github.com/sky2464/AgToosa/issues) or file a new feature/bug from templates
+2. Maintainer triages per [.github/TRIAGE.md](TRIAGE.md)
+3. Accepted work is enrolled in Master-Plan; sync updates the public mirror
+4. Open a PR referencing the issue; merge closes linked work when applicable
 
-## Release Planning
+## Release planning
 
-Upcoming releases tracked in:
-- **Milestones** — current open milestone matches `docs/Master-Plan.md` Project Charter (e.g. `v5.3.1` after `v5.3.0` ships); `release-advanced.yml` auto-creates the next PATCH milestone on tag push
-- **Labels** — release-v2.5.0 for tracking commits
-- **Projects** — Separate project per major release
+- **Milestones** — match `docs/Master-Plan.md` Project Charter; `release-advanced.yml` creates next PATCH on tag push
+- **Labels** — see [.github/TRIAGE.md](TRIAGE.md) taxonomy + `agtoosa:DEV-*` sync labels
+
+## Downstream installs
+
+Copy `template/.github/workflows/agtoosa-issues-sync.yml.example` to enable the same pattern in generated projects. See `Docs/AgToosa_TrackerSync.md` → **publish** and **intake** workflows.

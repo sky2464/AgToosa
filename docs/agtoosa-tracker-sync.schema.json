@@ -4,7 +4,9 @@
   "description": "Provider-neutral export and return envelopes for agtoosa.tracker-bridge/v1",
   "oneOf": [
     { "$ref": "#/$defs/export_envelope" },
-    { "$ref": "#/$defs/return_envelope" }
+    { "$ref": "#/$defs/return_envelope" },
+    { "$ref": "#/$defs/publish_manifest" },
+    { "$ref": "#/$defs/intake_envelope" }
   ],
   "$defs": {
     "schema_version": {
@@ -141,6 +143,63 @@
           "type": "array",
           "maxItems": 256,
           "items": { "$ref": "#/$defs/change_record" }
+        }
+      }
+    },
+    "issue_payload": {
+      "type": "object",
+      "required": ["story_id", "upsert_key", "title", "body", "state", "labels"],
+      "additionalProperties": false,
+      "properties": {
+        "story_id": { "$ref": "#/$defs/story_id" },
+        "upsert_key": { "type": "string", "maxLength": 64 },
+        "title": { "type": "string", "maxLength": 256 },
+        "body": { "type": "string", "maxLength": 65536 },
+        "state": { "type": "string", "enum": ["open", "closed"] },
+        "milestone": { "type": ["string", "null"], "maxLength": 64 },
+        "labels": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "type": "string", "maxLength": 64 }
+        }
+      }
+    },
+    "publish_manifest": {
+      "type": "object",
+      "required": ["schema_version", "export_id", "generated_at", "issues"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "agtoosa.github-issues-manifest/v1"
+        },
+        "export_id": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "milestone": { "type": ["string", "null"], "maxLength": 64 },
+        "issues": {
+          "type": "array",
+          "maxItems": 128,
+          "items": { "$ref": "#/$defs/issue_payload" }
+        }
+      }
+    },
+    "intake_envelope": {
+      "type": "object",
+      "required": ["schema_version", "issue_number", "title"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "agtoosa.github-issues-intake/v1"
+        },
+        "issue_number": { "type": "integer", "minimum": 1 },
+        "title": { "type": "string", "maxLength": 256 },
+        "body": { "type": "string", "maxLength": 65536 },
+        "url": { "type": "string", "maxLength": 512 },
+        "labels": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "type": "string", "maxLength": 64 }
         }
       }
     }

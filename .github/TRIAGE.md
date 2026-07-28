@@ -35,6 +35,17 @@ Every triaged issue must have at least one label from each category:
 | **Status** | `status-needs-triage` · `status-confirmed` · `status-blocked` · `status-wont-fix` |
 | **Contributor** | `good-first-issue` · `help-wanted` · `needs-repro` |
 | **Area** | `area-generator` · `area-template` · `area-ci` · `area-docs` · `area-security` |
+| **Source** | `source:agtoosa-sync` (Master-Plan mirror) · `source:community` (contributor-filed) |
+
+## AgToosa-synced vs community issues
+
+| Label | Meaning | Intake workflow |
+|-------|---------|-----------------|
+| `agtoosa:DEV-XXX` | Mirror of a Master-Plan story | Skip intake — updated by `agtoosa-issues-sync.yml` |
+| `source:agtoosa-sync` | Outbound sync from Master-Plan | Maintainer edits Master-Plan, not the Issue directly |
+| `source:community` | Filed by a contributor | `agtoosa-issues-intake.yml` → proposal → `/agtoosa-task` |
+
+**Do not** edit AgToosa-synced issue titles to change scope — update `docs/Master-Plan.md` and let CI sync.
 
 ## Triage Workflow
 
@@ -45,8 +56,9 @@ Every triaged issue must have at least one label from each category:
    - Assign type and area labels
    - Remove `status-needs-triage`, add `status-confirmed`
    - Assign to a milestone (or `Backlog` if unscheduled)
-3. **If duplicate** → add `duplicate` label, close with a link to the canonical issue
-4. **If won't fix** → add `status-wont-fix`, close with a brief explanation
+3. **If accepted from community intake** → use backlog draft from intake proposal artifact; run `/agtoosa-task` or edit Master-Plan; sync updates the public mirror on next `main` push
+4. **If duplicate** → add `duplicate` label, close with a link to the canonical issue
+5. **If won't fix** → add `status-wont-fix`, close with a brief explanation
 
 ## Closing Stale Issues
 

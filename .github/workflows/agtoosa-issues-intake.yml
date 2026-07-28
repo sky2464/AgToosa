@@ -1,0 +1,75 @@
+name: AgToosa Issues Intake
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  issues: write
+
+jobs:
+  intake-proposal:
+    if: github.event.issue.pull_request == null
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364e1ed16d # v4
+
+      - name: Skip AgToosa-synced issues
+        id: skip
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh issue view "${{ github.event.issue.number }}" --json labels --jq '.labels[].name' | grep -q '^agtoosa:DEV-'; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build intake envelope
+        if: steps.skip.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue view "${{ github.event.issue.number }}" --json number,title,body,url,labels > /tmp/issue.json
+          jq -n \
+            --arg schema_version "agtoosa.github-issues-intake/v1" \
+            --slurpfile issue /tmp/issue.json \
+            '{
+              schema_version: $schema_version,
+              issue_number: $issue[0].number,
+              title: $issue[0].title,
+              body: ($issue[0].body // ""),
+              url: $issue[0].url,
+              labels: [ $issue[0].labels[].name ]
+            }' > /tmp/intake.json
+
+      - name: Render intake proposal
+        if: steps.skip.outputs.skip != 'true'
+        run: |
+          bash agtoosa.sh --tracker intake --path . --input /tmp/intake.json --output /tmp/intake-proposal.md
+
+      - name: Comment triage guidance
+        if: steps.skip.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" --body-file - <<'EOF'
+          ## AgToosa intake proposal
+
+          Thanks for filing this! `docs/Master-Plan.md` is the source of truth — this issue is queued for maintainer triage.
+
+          **Maintainer next steps:**
+          1. Download the intake proposal artifact from this workflow run
+          2. Accept via `/agtoosa-task` or paste the suggested backlog row
+          3. Issues sync runs automatically when Master-Plan changes on `main`
+
+          See [.github/TRIAGE.md](.github/TRIAGE.md).
+          EOF
+
+      - name: Upload proposal artifact
+        if: steps.skip.outputs.skip != 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: intake-proposal-${{ github.event.issue.number }}
+          path: /tmp/intake-proposal.md

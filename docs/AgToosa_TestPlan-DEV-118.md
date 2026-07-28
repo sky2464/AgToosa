@@ -51,7 +51,7 @@ The checker receives an explicit `--as-of` date for freshness tests. Fixtures us
 | Fixture family | Positive baseline | Required mutations |
 | ---------------- | ------------------- | -------------------- |
 | `contract/` | Minimal valid closed v1 contract | Unknown field, bad enum/ID, interpolation, include, bounds, absolute/traversal path, symlink escape |
-| `inventory/` | Derived 19 commands × six targets | Missing, duplicate, extra command, missing target, undeclared auxiliary kind |
+| `inventory/` | Derived 20 commands × six targets | Missing, duplicate, extra command, missing target, undeclared auxiliary kind |
 | `render/` | One marked block with stable output | No marker, duplicate marker, malformed marker, outside-block prose, check-mode hash sentinel |
 | `adapters/` | Portable invariants plus five lifecycle goldens | Quick-budget drift, routing drift, mutation drift, missing approval/Phase Stop/close |
 | `paths/` | Exact-case generated tree | Lowercase local path, missing target, unowned exemption, remote URL, dual-root resolver |
@@ -161,7 +161,7 @@ Every evidence block records: story and package ID, command, repository SHA, UTC
 
 - All 12 Must ACs have a passing positive assertion and a passing negative/edge assertion.
 - The focused Product Truth suite is required by CI and all `@smoke` mappings are discoverable.
-- Inventory is derived from the repository and confirms 19 commands on each of six native surfaces at the baseline.
+- Inventory is derived from the repository and confirms 20 commands on each of six native surfaces at the baseline.
 - `check` and `render --check` produce no repository changes; `render --apply` changes only marked blocks.
 - Exact-case path, platform identity, dependency preflight, Windows ref, freshness, contradiction, and claim-boundary fixtures pass.
 - PN, WP2, ACC, NET, PSP, and CORE regressions retain their intended ownership and pass or have an evidence-backed pre-existing classification.

@@ -20,12 +20,48 @@ bash agtoosa.sh --tracker propose --path /path/to/project \
   --output /tmp/tracker-proposal.md
 ```
 
+**Publish GitHub Issues manifest from Master-Plan (local render; CI applies `gh`):**
+```bash
+bash agtoosa.sh --tracker publish --path /path/to/project \
+  --output /tmp/issues-manifest.json \
+  --readme README.md
+```
+
+**Community issue intake → backlog draft proposal:**
+```bash
+bash agtoosa.sh --tracker intake --path /path/to/project \
+  --input /path/to/intake-envelope.json \
+  --output /tmp/intake-proposal.md
+```
+
 PowerShell (delegates to Bash — Git Bash or WSL required):
 ```powershell
 .\agtoosa.ps1 -Tracker -TrackerCommand export -Path C:\Projects\MyApp -TrackerOutput $env:TEMP\export.json
 ```
 
-Run `/agtoosa-tracker export` or `/agtoosa-tracker propose` in your AI assistant for the full workflow. Substantive rules live in this document; platform adapters delegate here.
+Run `/agtoosa-tracker export`, `propose`, `publish`, or `intake` in your AI assistant for the full workflow. Substantive rules live in this document; platform adapters delegate here.
+
+---
+
+## Workflow: `/agtoosa-tracker publish` (DEV-139)
+
+1. Export Master-Plan stories via the DEV-051 envelope (local only).
+2. Render `agtoosa.github-issues-manifest/v1` with GitHub-standard titles (`feat:`, `fix:`, `chore:`) — **no `DEV-XXX:` title prefix**.
+3. Attach labels `agtoosa:DEV-XXX`, `source:agtoosa-sync`, status/area labels; upsert key is the `agtoosa:DEV-XXX` label + `<!-- agtoosa-story-id: DEV-XXX -->` body comment.
+4. Optionally update the README `AGTOOSA-ROADMAP` block via `--readme`.
+5. CI (`agtoosa-issues-sync.yml`) or `scripts/agtoosa-issues-sync.sh` applies the manifest with `gh` — **not** the core generator.
+
+**Rows mirrored:** active cycle + non-shipped backlog. Shipped active-cycle rows emit `state: closed`.
+
+---
+
+## Workflow: `/agtoosa-tracker intake` (DEV-139)
+
+1. Skip issues that already carry an `agtoosa:DEV-*` label (AgToosa-synced mirror).
+2. Build `agtoosa.github-issues-intake/v1` envelope from the community issue.
+3. Write a proposal artifact with a suggested Master-Plan backlog row and `/agtoosa-task` hint.
+4. **Never** modify `docs/Master-Plan.md` during intake.
+5. Maintainer accepts via `/agtoosa-task` or explicit edit; Issues sync runs on the next Master-Plan push to `main`.
 
 ---
 
@@ -78,13 +114,14 @@ AgToosa defines **translation guidance only**. Transport and provider-side creat
 
 | AgToosa field | GitHub Issues | Unsupported behavior |
 |---------------|---------------|----------------------|
-| `story_id` | Issue title prefix or label `agtoosa:DEV-XXX` | Store in `external_ref`; warn if label missing |
-| `title` | Issue title (after ID prefix) | — |
-| `status` | Open / closed + optional `status:` labels | Map 🟦 Todo→open, 🟨 In Progress→open+label, ✅ Done→closed; unmapped → `unsupported` |
-| `estimate` | Issue body field or `estimate:` label | S/M/L/XL only; provider-only sizes → `unmapped` |
-| `epic` | Milestone or `epic:` label | — |
+| `story_id` | Label `agtoosa:DEV-XXX` + HTML comment in body | **Not** in issue title |
+| `title` | `feat:` / `fix:` / `chore:` / `docs:` + story title | DEV- prefix in title → rejected |
+| `status` | Open / closed + `status-*` labels | Map lifecycle emojis to labels; shipped → closed |
+| `estimate` | Issue body table field | S/M/L/XL in body |
+| `epic` | `area-*` label heuristic | — |
 | `spec_path` | Issue body link | — |
 | `acceptance_criteria` | Issue body checklist (read-only mirror) | No AC round-trip in v1 |
+| Community intake | `source:community` label; intake proposal | No auto backlog write |
 
 ### Linear
 
@@ -132,18 +169,25 @@ When a provider field has no AgToosa equivalent, preserve the original value in 
 |---------|----------------|----------|
 | Schema validation, digest, mutation refusal | generator-enforced | Local files only |
 | `/agtoosa-tracker export` and `propose` workflow | agent-instructed | This document is canonical |
+| `/agtoosa-tracker publish` manifest render | generator-enforced | Local files only |
+| `/agtoosa-tracker intake` proposal render | generator-enforced | Local files only |
+| `agtoosa-issues-sync.yml` gh upsert | provider-enforced | GitHub Actions + `GITHUB_TOKEN` |
+| `agtoosa-issues-intake.yml` comment + artifact | provider-enforced | GitHub Actions |
 | Provider field mapping tables | agent-instructed | Translation guidance, not API guarantee |
 | Transporting envelopes to/from trackers | manual / provider-enforced | Human, provider tool, or authorized integration |
 | Accepting a proposal | manual authorization | `/agtoosa-task`, `/agtoosa-spec amend`, or explicit edit |
-| Live API sync, webhooks, polling | **not in v1** | Do not claim two-way sync |
+| Live bidirectional webhook sync | **roadmap (Phase 3)** | Do not claim silent two-way sync |
 | `docs/Master-Plan.md` | repo-local source of truth | Wins every tracker conflict |
 
-**v1 does not:**
+**Core generator does not:**
 
-- Call GitHub, Linear, Jira, or TaskMaster APIs
+- Call GitHub, Linear, Jira, or TaskMaster APIs directly
 - Store OAuth tokens or API credentials
-- Auto-create, update, or delete external issues
-- Apply returned status or title changes without human approval
+- Auto-apply returned status or title changes without human approval
+
+**CI may (opt-in):**
+
+- Upsert GitHub Issues from a publish manifest when `agtoosa-issues-sync.yml` is enabled
 
 ---
 
@@ -162,3 +206,5 @@ When a provider field has no AgToosa equivalent, preserve the original value in 
 - **Fast backlog edits:** `docs/AgToosa_Task.md`
 - **Spec amendments:** `docs/AgToosa_Spec.md` (`amend` sub-command)
 - **Envelope schema:** `docs/agtoosa-tracker-sync.schema.json`
+- **Issues sync script:** `scripts/agtoosa-issues-sync.sh`
+- **CI workflows:** `.github/workflows/agtoosa-issues-sync.yml`, `.github/workflows/agtoosa-issues-intake.yml`

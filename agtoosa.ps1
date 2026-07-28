@@ -61,7 +61,7 @@
     Tracker Sync Bridge — local export and proposal-only import (delegates to Bash).
 
 .PARAMETER TrackerCommand
-    Tracker sub-command: export or propose.
+    Tracker sub-command: export, propose, publish, or intake.
 
 .PARAMETER TrackerInput
     Return envelope path (with -Tracker propose).
@@ -627,7 +627,7 @@ function Compare-AgToosaVersionLt([string]$a, [string]$b) {
     return $pa -lt $pb
 }
 
-function Sanitize-PlatformMenuInput([string]$raw) {
+function ConvertTo-PlatformMenuInput([string]$raw) {
     return ($raw -replace '[^1-8 ]', '')
 }
 
@@ -1577,7 +1577,7 @@ if ($smartUpgradeMode -and [string]::IsNullOrWhiteSpace($cliPlatforms)) {
     if (-not $Yes) {
         Write-Color "${CYAN}Change platforms? (Enter = keep all checked above)${NC}"
         Write-Color "${CYAN}To replace the active set, enter the full list you want (e.g. 1  or  1 3 5)${NC}"
-        $addSelection = Sanitize-PlatformMenuInput (Read-Host "Platforms")
+        $addSelection = ConvertTo-PlatformMenuInput (Read-Host "Platforms")
         if (-not [string]::IsNullOrWhiteSpace($addSelection)) {
             $selectedPlatforms.Clear()
             $selectedPlatforms.AddRange((Get-PlatformsFromMenuDigits $addSelection))

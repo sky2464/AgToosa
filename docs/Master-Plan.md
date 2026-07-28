@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-28 (/agtoosa-ship — DEV-137 v5.3.51)
+> **Last updated:** 2026-07-28 (/agtoosa-build — DEV-139 build complete)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Idle — DEV-137 shipped v5.3.51 |
+| Current phase | Build — DEV-139 GitHub Issues PM bridge (review next) |
 | Milestone | `v5.3.52` (next) |
-| Active cycle | _(none)_ |
-| Cycle state | Idle — post-ship |
+| Active cycle | DEV-139 |
+| Cycle state | Active |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -23,7 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| _(none — cycle archived)_ | | | | | |
+| DEV-139 | Feature: GitHub Issues PM Bridge | Feature | L | 🟨 In Progress | 5/5 |
 
 <!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.51.md (DEV-137 v5.3.51) -->
 
@@ -83,9 +83,13 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for enrolled Active Cycle stories. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-_(No stories enrolled.)_
+### DEV-139 — GitHub Issues PM Bridge
 
-<!-- DEV-137 tasks archived with cycle-2026-07-28-release-5.3.51.md -->
+- [x] **1.** GIS-001–GIS-010 RED contract tests + publish/intake fixtures — _AC-009_
+- [x] **2.** `lib/github-issues.sh` + `--tracker publish`/`intake` CLI — _AC-001, AC-002, AC-005_
+- [x] **3.** Outbound CI: `agtoosa-issues-sync.yml` + README roadmap — _AC-003, AC-004_
+- [x] **4.** Inbound CI: `agtoosa-issues-intake.yml` + backlog draft proposals — _AC-005, AC-006_
+- [x] **5.** Template mirrors + TRIAGE/PROJECT/TrackerSync docs — _AC-007, AC-008, AC-010_
 
 ## Manual / Deferred Tasks
 
@@ -143,6 +147,8 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-135 | Chore: Natural-Language Continuation → `/agtoosa-next` | Chore | S | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.49 |
 | DEV-136 | Chore: IDE Host Mode Bridge for Spec and Review | Chore | M | DEV-028 / DEV-116 | P1 | 🏁 Shipped — v5.3.50 |
 | DEV-137 | Chore: Security Scanning CI Health (ShellCheck + workflow re-verify) | Chore | XS | DEV-004 | P1 | 🏁 Shipped — v5.3.51 |
+| DEV-138 | Chore: Main CI Health (Product Truth + PSScriptAnalyzer) | Chore | XS | DEV-004 | P1 | 🔍 In Review — v5.3.52 |
+| DEV-139 | Feature: GitHub Issues PM Bridge (Phased B) | Feature | L | DEV-051 / DEV-004 | P1 | 🟨 In Progress — enrolled |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
 | DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v5.3.10 |
@@ -424,6 +430,11 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-07-28 22:35 | 🏗️ /agtoosa-build — Build complete — DEV-139 — GIS-001–010 10/10 PASS; next `/agtoosa-next` → review | AgToosa |
+| 2026-07-28 22:32 | 🏗️ /agtoosa-build — Build 🏗️ Started — DEV-139 — GitHub Issues PM bridge | AgToosa |
+| 2026-07-28 21:58 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-138 — 0 Critical, 1 Warning (AC-003 verify at ship); PTC-002 + CIH-001–004 green; next `/agtoosa-next` → ship v5.3.52 | AgToosa |
+| 2026-07-28 21:57 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-138 — main CI health | AgToosa |
+| 2026-07-28 21:50 | 🏗️ /agtoosa-build — Build 🏗️ Started — DEV-138 — main CI health; scope: product-truth.bats, agtoosa.ps1, CIH bats | AgToosa |
 | 2026-07-28 21:42 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-137 — smoke PASS SSC/SR gate; v5.3.51 | AgToosa |
 | 2026-07-28 21:42 | 🚀 Ship complete — v5.3.51 — DEV-137 Security Scanning CI health | AgToosa |
 | 2026-07-28 21:42 | 🚀 Release 5.3.51 shipped — v5.3.51; version parity bash/ps1/npm/formula; Milestone v5.3.52 (next) | AgToosa |

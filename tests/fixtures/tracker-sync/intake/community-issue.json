@@ -1,0 +1,8 @@
+{
+  "schema_version": "agtoosa.github-issues-intake/v1",
+  "issue_number": 99,
+  "title": "feat: add dark mode to status dashboard",
+  "body": "Would love a dark mode toggle on /agtoosa-status output.\n\n- [ ] readable in terminal\n- [ ] respects NO_COLOR",
+  "labels": ["enhancement", "source:community", "status-needs-triage"],
+  "url": "https://github.com/example/AgToosa/issues/99"
+}

@@ -1,0 +1,43 @@
+name: AgToosa Issues Sync
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/Master-Plan.md'
+      - 'Docs/Master-Plan.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  sync-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364e1ed16d # v4
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Dry-run publish manifest
+        run: bash scripts/agtoosa-issues-sync.sh --dry-run --path .
+
+      - name: Sync GitHub Issues from Master-Plan
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/agtoosa-issues-sync.sh --path .
+
+      - name: Commit README roadmap if changed
+        run: |
+          if git diff --quiet README.md; then
+            echo "README unchanged"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "chore: sync AGTOOSA-ROADMAP from Master-Plan [skip ci]"
+          git push

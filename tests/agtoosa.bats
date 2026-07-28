@@ -4199,6 +4199,37 @@ JSON
   grep -q "local platform_found=0" "$catalog"
 }
 
+# -- DEV-138 Main CI health (CIH-001-CIH-004) ----------------------------------
+
+@test "CIH-001: product truth inventory reports 20 commands on six targets" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run python3 "$root/scripts/product-truth.py" check \
+    --root "$root" \
+    --contract "$root/contracts/product-truth-v1.json" \
+    --as-of 2026-07-28 \
+    --only inventory
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"20 commands x 6 targets"* ]]
+}
+
+@test "CIH-002: agtoosa.ps1 avoids Sanitize- unapproved verb" {
+  local ps1="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  ! grep -q "function Sanitize-" "$ps1"
+  ! grep -q "Sanitize-PlatformMenuInput" "$ps1"
+}
+
+@test "CIH-003: ci.yml runs product-truth bats in validate job" {
+  local workflow="$BATS_TEST_DIRNAME/../.github/workflows/ci.yml"
+  grep -q "bats tests/product-truth.bats" "$workflow"
+  grep -q "product-truth.py check" "$workflow"
+}
+
+@test "CIH-004: agtoosa.ps1 uses ConvertTo-PlatformMenuInput approved verb" {
+  local ps1="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  grep -q "function ConvertTo-PlatformMenuInput" "$ps1"
+  grep -q "ConvertTo-PlatformMenuInput (Read-Host" "$ps1"
+}
+
 # -- DEV-042-DEV-060 Competitive spec wave (CW-001-CW-004) -------------------
 
 assert_competitive_story_artifacts() {
@@ -15917,4 +15948,119 @@ PY
   [[ "$output" == *"Staged "* ]]
   [[ "$output" == *"expect ~"* ]]
   [[ "$output" == *"Only changed files will be written"* ]]
+}
+
+# ── DEV-139: GitHub Issues PM Bridge (GIS-001–GIS-010) ────────────────────────
+
+@test "DEV-139 GIS-001: publish manifest is deterministic from fixture export" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local out1="$TEST_PROJECT/gis-manifest-1.json"
+  local out2="$TEST_PROJECT/gis-manifest-2.json"
+  run bash "$SCRIPT" --tracker publish --path "$fixture" --output "$out1"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --tracker publish --path "$fixture" --output "$out2"
+  [ "$status" -eq 0 ]
+  run jq -e '.schema_version == "agtoosa.github-issues-manifest/v1" and (.issues|length >= 1)' "$out1"
+  [ "$status" -eq 0 ]
+  run jq -c 'del(.generated_at)' "$out1"
+  local snap1="$output"
+  run jq -c 'del(.generated_at)' "$out2"
+  [ "$snap1" = "$output" ]
+}
+
+@test "DEV-139 GIS-002: issue titles use GitHub prefixes without DEV title prefix" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local out="$TEST_PROJECT/gis-titles.json"
+  run bash "$SCRIPT" --tracker publish --path "$fixture" --output "$out"
+  [ "$status" -eq 0 ]
+  run jq -r '.issues[].title' "$out"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"feat:"* ]] || [[ "$output" == *"chore:"* ]]
+  ! [[ "$output" =~ ^DEV- ]]
+  ! jq -e '.issues[].title | test("^DEV-[0-9]+:")' "$out" >/dev/null 2>&1
+}
+
+@test "DEV-139 GIS-003: manifest labels include agtoosa story and sync source" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local out="$TEST_PROJECT/gis-labels.json"
+  run bash "$SCRIPT" --tracker publish --path "$fixture" --output "$out"
+  [ "$status" -eq 0 ]
+  run jq -e '.issues[] | select(.labels | index("source:agtoosa-sync")) and (.labels | any(startswith("agtoosa:DEV-")))' "$out"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-139 GIS-004: upsert key and HTML comment stable in issue body" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local out="$TEST_PROJECT/gis-upsert.json"
+  run bash "$SCRIPT" --tracker publish --path "$fixture" --output "$out"
+  [ "$status" -eq 0 ]
+  run jq -e '.issues[] | select(.story_id == "DEV-Alpha") | .upsert_key == "agtoosa:DEV-Alpha"' "$out"
+  [ "$status" -eq 0 ]
+  run jq -r '.issues[] | select(.story_id == "DEV-Alpha") | .body' "$out"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"<!-- agtoosa-story-id: DEV-Alpha -->"* ]]
+}
+
+@test "DEV-139 GIS-005: shipped active-cycle story renders closed state" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project-shipped"
+  local out="$TEST_PROJECT/gis-shipped.json"
+  run bash "$SCRIPT" --tracker publish --path "$fixture" --output "$out"
+  [ "$status" -eq 0 ]
+  run jq -e '.issues[] | select(.story_id == "DEV-Gamma") | .state == "closed"' "$out"
+  [ "$status" -eq 0 ]
+  run jq -e '.issues[] | select(.story_id == "DEV-Delta") | .state == "open"' "$out"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-139 GIS-006: intake proposal leaves Master-Plan unchanged" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local intake="$BATS_TEST_DIRNAME/fixtures/tracker-sync/intake/community-issue.json"
+  local mp="$fixture/docs/Master-Plan.md"
+  local before after proposal="$TEST_PROJECT/gis-intake.md"
+  before=$(sha256sum "$mp" | awk '{print $1}')
+  run bash "$SCRIPT" --tracker intake --path "$fixture" --input "$intake" --output "$proposal"
+  [ "$status" -eq 0 ]
+  after=$(sha256sum "$mp" | awk '{print $1}')
+  [ "$before" = "$after" ]
+  [ -f "$proposal" ]
+}
+
+@test "DEV-139 GIS-007: intake proposal includes backlog draft and agtoosa-task hint" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local intake="$BATS_TEST_DIRNAME/fixtures/tracker-sync/intake/community-issue.json"
+  local proposal="$TEST_PROJECT/gis-draft.md"
+  run bash "$SCRIPT" --tracker intake --path "$fixture" --input "$intake" --output "$proposal"
+  [ "$status" -eq 0 ]
+  grep -q 'Suggested Master-Plan backlog row' "$proposal"
+  grep -q '/agtoosa-task' "$proposal"
+  grep -q '⬜ Backlog' "$proposal"
+}
+
+@test "DEV-139 GIS-008: publish --readme updates AGTOOSA-ROADMAP block" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local readme="$TEST_PROJECT/gis-readme.md"
+  printf '# Test README\n\nBody.\n' >"$readme"
+  run bash "$SCRIPT" --tracker publish --path "$fixture" --output "$TEST_PROJECT/gis-rm.json" --readme "$readme"
+  [ "$status" -eq 0 ]
+  grep -q 'AGTOOSA-ROADMAP:START' "$readme"
+  grep -q 'AGTOOSA-ROADMAP:END' "$readme"
+  grep -q 'DEV-Alpha' "$readme"
+}
+
+@test "DEV-139 GIS-009: unsafe intake body is redacted in proposal" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local intake="$BATS_TEST_DIRNAME/fixtures/tracker-sync/intake/secret-issue.json"
+  local proposal="$TEST_PROJECT/gis-secret.md"
+  run bash "$SCRIPT" --tracker intake --path "$fixture" --input "$intake" --output "$proposal"
+  [ "$status" -eq 0 ]
+  ! grep -q 'supersecretvalue' "$proposal"
+  grep -q 'redacted' "$proposal"
+}
+
+@test "DEV-139 GIS-010: template issues sync example and TrackerSync publish docs exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/template/.github/workflows/agtoosa-issues-sync.yml.example" ]
+  grep -q 'publish' "$root/docs/AgToosa_TrackerSync.md"
+  grep -q 'intake' "$root/docs/AgToosa_TrackerSync.md"
+  grep -q 'publish' "$root/template/Docs/AgToosa_TrackerSync.md"
 }
