@@ -9927,7 +9927,7 @@ rmh_readme_body_lines() {
   grep -q '## Quick install' "$readme"
   grep -q 'Windows (PowerShell)' "$readme"
   grep -q 'bootstrap.ps1' "$readme"
-  grep -q '\$Ref = "v5.3.58"' "$readme"
+  grep -q '\$Ref = "v5.3.59"' "$readme"
 }
 
 @test "DEV-146 RMF-002: README presents confirmed first-visit tagline" {
@@ -16841,4 +16841,28 @@ PY
   grep -q 'DEV-145|TBA-' "$root/docs/AgToosa_TestPlan-DEV-145.md"
   run bats "$BATS_TEST_DIRNAME/agtoosa.bats" -f "DEV-145 TBA-00[1-9]"
   [ "$status" -eq 0 ]
+}
+
+@test "DEV-146 @smoke SR-001: v5.3.59 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.59" ]
+  [ "$ps_ver" = "5.3.59" ]
+  [ "$npm_ver" = "5.3.59" ]
+  [ "$formula_ver" = "5.3.59" ]
+  grep -q '## \[5.3.59\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-146' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-146.md" ]
+  [ -f "$root/docs/archived/review-DEV-146.md" ]
+}
+
+@test "DEV-145 @smoke SR-001: v5.3.59 release includes bootstrap apply" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'DEV-145' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-145.md" ]
+  grep -q 'tracker_bootstrap_apply' "$root/lib/tracker-discover.sh"
 }

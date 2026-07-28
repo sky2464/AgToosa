@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-145
 > **Epic:** DEV-051 — Tracker Sync Bridge / DEV-003 — Community Template Registry
-> **Status:** 🟦 Todo
+> **Status:** 🏁 Shipped — v5.3.59
 > **Estimate:** M
 > **Clarity:** `ready`
 > **Spec created:** 2026-07-28

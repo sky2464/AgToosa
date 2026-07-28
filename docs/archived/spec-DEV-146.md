@@ -3,7 +3,7 @@
 > **Story ID:** DEV-146  
 > **Epic:** DEV-002 — Workflow Templates  
 > **Type:** Docs  
-> **Status:** 🟦 Todo  
+> **Status:** 🏁 Shipped — v5.3.59  
 > **Estimate:** S  
 > **Clarity:** `ready`  
 > **Priority:** P1  

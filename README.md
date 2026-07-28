@@ -5,7 +5,7 @@
 **The repo-native AI project manager for spec-driven development**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-5.3.58-green.svg)](https://github.com/sky2464/AgToosa/releases)
+[![Version](https://img.shields.io/badge/version-5.3.59-green.svg)](https://github.com/sky2464/AgToosa/releases)
 [![CI Status](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Discussions](https://img.shields.io/badge/Discussions-GitHub-blue.svg)](https://github.com/sky2464/AgToosa/discussions)
@@ -17,13 +17,13 @@
 **macOS / Linux**
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.58
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.59
 ```
 
 **Windows (PowerShell)**
 
 ```powershell
-$Ref = "v5.3.58"
+$Ref = "v5.3.59"
 $Bootstrap = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/sky2464/AgToosa/$Ref/bootstrap.ps1"
 & ([scriptblock]::Create($Bootstrap)) -Ref $Ref
 ```
@@ -91,7 +91,7 @@ Use these when you already know AgToosa and only need an install command.
 ```bash
 # Public launch: pinned release (alternative to the proof walkthrough).
 # Pin any release: bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref vX.Y.Z
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.58
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.59
 
 brew install sky2464/agtoosa/agtoosa
 npx agtoosa

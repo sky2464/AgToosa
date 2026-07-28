@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-28 (/agtoosa-spec — DEV-146 enrolled)
+> **Last updated:** 2026-07-28 (/agtoosa-ship — DEV-146 v5.3.59)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Build — DEV-146 |
-| Milestone | `v5.3.59` (target) |
-| Active cycle | DEV-146 |
-| Cycle state | Active |
+| Current phase | Idle — DEV-146 shipped v5.3.59 |
+| Milestone | `v5.3.60` (next) |
+| Active cycle | — |
+| Cycle state | Idle — cycle complete |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -23,7 +23,8 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-146 | Docs: README First-Visit Simplification | Docs | S | 🟨 In Progress | 3/3 |
+
+<!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.59.md (DEV-145 + DEV-146 v5.3.59) -->
 
 <!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.58.md (DEV-144 v5.3.58) -->
 
@@ -113,6 +114,14 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 <!-- Shipped v5.3.58 — tasks archived in docs/archived/cycle-2026-07-28-release-5.3.58.md -->
 
+### DEV-145 — Tracker Bootstrap Apply
+
+<!-- Shipped v5.3.59 — tasks archived in docs/archived/cycle-2026-07-28-release-5.3.59.md -->
+
+### DEV-146 — README First-Visit Simplification
+
+<!-- Shipped v5.3.59 — tasks archived in docs/archived/cycle-2026-07-28-release-5.3.59.md -->
+
 ## Manual / Deferred Tasks
 
 > Tasks that require a human action outside the agent. These are **not** counted against the health score.
@@ -141,7 +150,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 |----|-------|-----------|-------|
 | — | (none) | — | — |
 
-Conflict playbook: _DEV-143 shipped v5.3.57; DEV-144 shipped v5.3.58; milestone v5.3.59; demand-gated DEV-057 deferred._
+Conflict playbook: _DEV-144 shipped v5.3.58; DEV-145 + DEV-146 shipped v5.3.59; milestone v5.3.60; demand-gated DEV-057 deferred._
 
 ## Backlog
 
@@ -175,7 +184,8 @@ Conflict playbook: _DEV-143 shipped v5.3.57; DEV-144 shipped v5.3.58; milestone 
 | DEV-142 | Chore: GitHub Surface Audit & Community Profile | Chore | M | DEV-139 / DEV-076 | P1 | 🏁 Shipped — v5.3.56 |
 | DEV-143 | Chore: Tracker Unlinked Status Finding | Chore | S | DEV-141 / DEV-051 | P1 | 🏁 Shipped — v5.3.57 |
 | DEV-144 | Chore: Operational Gitignore Auto-Merge | Chore | S | DEV-093 / DEV-119 | P1 | 🏁 Shipped — v5.3.58 |
-| DEV-146 | Docs: README First-Visit Simplification | Docs | S | DEV-127 / DEV-134 | P1 | 🟨 In Progress |
+| DEV-145 | Feature: Tracker Bootstrap Apply | Feature | M | DEV-141 / DEV-051 | P1 | 🏁 Shipped — v5.3.59 |
+| DEV-146 | Docs: README First-Visit Simplification | Docs | S | DEV-127 / DEV-134 | P1 | 🏁 Shipped — v5.3.59 |
 | DEV-139 | Feature: GitHub Issues PM Bridge (Phased B) | Feature | L | DEV-051 / DEV-004 | P1 | 🏁 Shipped — v5.3.52 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
@@ -334,6 +344,8 @@ Conflict playbook: _DEV-143 shipped v5.3.57; DEV-144 shipped v5.3.58; milestone 
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-146 | Docs: README First-Visit Simplification | 2026-07-28 | [spec-DEV-146.md](archived/spec-DEV-146.md) · [review-DEV-146.md](archived/review-DEV-146.md) · [evidence-DEV-146.md](archived/evidence-DEV-146.md) |
+| DEV-145 | Feature: Tracker Bootstrap Apply | 2026-07-28 | [spec-DEV-145.md](archived/spec-DEV-145.md) · [review-DEV-145.md](archived/review-DEV-145.md) · [evidence-DEV-145.md](archived/evidence-DEV-145.md) |
 | DEV-144 | Chore: Operational Gitignore Auto-Merge | 2026-07-28 | [spec-DEV-144.md](archived/spec-DEV-144.md) · [review-DEV-144.md](archived/review-DEV-144.md) · [evidence-DEV-144.md](archived/evidence-DEV-144.md) |
 | DEV-143 | Chore: Tracker Unlinked Status Finding | 2026-07-28 | [spec-DEV-143.md](archived/spec-DEV-143.md) · [review-DEV-143.md](archived/review-DEV-143.md) · [evidence-DEV-143.md](archived/evidence-DEV-143.md) |
 | DEV-142 | Chore: GitHub Surface Audit & Community Profile | 2026-07-28 | [spec-DEV-142.md](archived/spec-DEV-142.md) · [review-DEV-142.md](archived/review-DEV-142.md) · [evidence-DEV-142.md](archived/evidence-DEV-142.md) |
@@ -465,6 +477,10 @@ Conflict playbook: _DEV-143 shipped v5.3.57; DEV-144 shipped v5.3.58; milestone 
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-07-28 12:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-146 (+ DEV-145 batched) — smoke PASS RMF/TBA/SR gate; v5.3.59 | AgToosa |
+| 2026-07-28 12:55 | 🚀 Ship complete — v5.3.59 — DEV-145 Tracker Bootstrap Apply + DEV-146 README First-Visit | AgToosa |
+| 2026-07-28 12:45 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-146 — 0 Critical; RMF-001–003 green; launch-tag gate 🟡 deferred to ship; next `/agtoosa-next` → ship v5.3.59 | AgToosa |
+| 2026-07-28 12:44 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-146 — 4-persona review (served by `/agtoosa-next`) | AgToosa |
 | 2026-07-28 12:40 | 🏗️ /agtoosa-build — Build complete — DEV-146 — README first-visit simplification; RMF-001–003; next `/agtoosa-review` | AgToosa |
 | 2026-07-28 12:35 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-146 — `docs/archived/spec-DEV-146.md`; enrolled Active Cycle | AgToosa |
 | 2026-07-28 00:35 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-144 — smoke PASS GIG/SR gate; v5.3.58 | AgToosa |

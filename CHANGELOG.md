@@ -5,6 +5,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.59] — 2026-07-28
+
+Patch release: DEV-145 — Tracker Bootstrap Apply; DEV-146 — README First-Visit Simplification.
+
+### Added
+
+- **DEV-145 — Tracker bootstrap apply.** `bootstrap --apply` dry-run/`--yes` merge path; `agtoosa.tracker-bootstrap-proposal/v1` JSON; DEV ID allocation; GitHub-standard title prefixes; DEV-119 transaction journal; TBA-001–TBA-010 bats.
+
+### Changed
+
+- **DEV-146 — README first-visit simplification.** Tagline → Mac/Windows quick install → hero demo → essentials; depth relocated to `readme-reference`; RMF-001–003 bats.
+
+---
+
 ## [5.3.58] — 2026-07-28
 
 Patch release: DEV-144 — Operational Gitignore Auto-Merge.

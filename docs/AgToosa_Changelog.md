@@ -5,6 +5,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.59] — 2026-07-28
+
+Patch release: DEV-145 — Tracker Bootstrap Apply; DEV-146 — README First-Visit Simplification.
+
+### Added
+
+- **DEV-145 — Tracker bootstrap apply.** `bootstrap --apply` with dry-run default, selective `accept`, `--apply-all-new-external`, DEV ID allocation, title normalization, transaction journal; TBA-001–TBA-010 bats.
+
+### Changed
+
+- **DEV-146 — README first-visit simplification.** Tagline, Windows quick install, section reorder; readme-reference depth; RMF-001–003 bats.
+
+---
+
 ## [5.3.58] — 2026-07-28
 
 Patch release: DEV-144 — Operational Gitignore Auto-Merge.
