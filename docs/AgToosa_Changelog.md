@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.53] — 2026-07-28
+
+Patch release: DEV-138 — Main CI Health.
+
+### Fixed
+
+- **DEV-138 — Main CI health.** Product Truth inventory `20 commands x 6 targets` (PTC-002); rename `Sanitize-PlatformMenuInput` → `ConvertTo-PlatformMenuInput` for PSScriptAnalyzer PSUseApprovedVerbs; CIH-001–004 bats.
+
+---
+
 ## [5.3.52] — 2026-07-28
 
 Patch release: DEV-139 — GitHub Issues PM Bridge (Phased B).

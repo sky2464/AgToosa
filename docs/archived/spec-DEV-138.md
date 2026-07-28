@@ -3,7 +3,7 @@
 > **Story ID:** DEV-138  
 > **Epic:** DEV-004 — Testing & QA Harness  
 > **Type:** Chore  
-> **Status:** 🟦 Todo  
+> **Status:** 🏁 Shipped — v5.3.53  
 > **Estimate:** XS  
 > **Clarity:** `ready`  
 > **Priority:** P1  
@@ -61,7 +61,7 @@
 - [x] **1.** Update PTC-002 and product-truth baseline docs for 20 commands — _AC-001_
 - [x] **2.** Rename unapproved PS1 verb; update call site — _AC-002_
 - [x] **3.** Add bats CIH-001–004 — _AC-004_
-- [ ] **4.** Verify CI green; review + ship v5.3.52 — _AC-003_
+- [x] **4.** Verify CI green; review + ship v5.3.53 — _AC-003_
 
 ## 4. Test Plan
 

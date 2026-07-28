@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-28 (/agtoosa-ship — DEV-139 v5.3.52)
+> **Last updated:** 2026-07-28 (/agtoosa-ship — DEV-138 v5.3.53)
 
 ## Project Charter
 
@@ -9,8 +9,8 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Idle — DEV-139 shipped v5.3.52 |
-| Milestone | `v5.3.53` (next) |
+| Current phase | Idle — DEV-138 shipped v5.3.53 |
+| Milestone | `v5.3.54` (next) |
 | Active cycle | — |
 | Cycle state | Idle — post-ship |
 | Cycle capacity | `8 story points` |
@@ -24,6 +24,8 @@
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
 | — | (none) | — | — | — | — |
+
+<!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.53.md (DEV-138 v5.3.53) -->
 
 <!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.52.md (DEV-139 v5.3.52) -->
 
@@ -145,7 +147,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-135 | Chore: Natural-Language Continuation → `/agtoosa-next` | Chore | S | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.49 |
 | DEV-136 | Chore: IDE Host Mode Bridge for Spec and Review | Chore | M | DEV-028 / DEV-116 | P1 | 🏁 Shipped — v5.3.50 |
 | DEV-137 | Chore: Security Scanning CI Health (ShellCheck + workflow re-verify) | Chore | XS | DEV-004 | P1 | 🏁 Shipped — v5.3.51 |
-| DEV-138 | Chore: Main CI Health (Product Truth + PSScriptAnalyzer) | Chore | XS | DEV-004 | P1 | 🔍 In Review — v5.3.53 |
+| DEV-138 | Chore: Main CI Health (Product Truth + PSScriptAnalyzer) | Chore | XS | DEV-004 | P1 | 🏁 Shipped — v5.3.53 |
 | DEV-139 | Feature: GitHub Issues PM Bridge (Phased B) | Feature | L | DEV-051 / DEV-004 | P1 | 🏁 Shipped — v5.3.52 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
@@ -304,6 +306,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-138 | Chore: Main CI Health | 2026-07-28 | [spec-DEV-138.md](archived/spec-DEV-138.md) · [review-DEV-138.md](archived/review-DEV-138.md) · [evidence-DEV-138.md](archived/evidence-DEV-138.md) |
 | DEV-139 | Feature: GitHub Issues PM Bridge | 2026-07-28 | [spec-DEV-139.md](archived/spec-DEV-139.md) · [review-DEV-139.md](archived/review-DEV-139.md) · [evidence-DEV-139.md](archived/evidence-DEV-139.md) |
 | DEV-137 | Chore: Security Scanning CI Health | 2026-07-28 | [spec-DEV-137.md](archived/spec-DEV-137.md) · [review-DEV-137.md](archived/review-DEV-137.md) · [evidence-DEV-137.md](archived/evidence-DEV-137.md) |
 | DEV-135 | Chore: Natural-Language Continuation → `/agtoosa-next` | 2026-07-28 | [spec-DEV-135.md](archived/spec-DEV-135.md) · [review-DEV-135.md](archived/review-DEV-135.md) · [evidence-DEV-135.md](archived/evidence-DEV-135.md) |
@@ -429,6 +432,9 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-07-28 23:10 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-138 — smoke PASS CIH/SR gate; v5.3.53 | AgToosa |
+| 2026-07-28 23:10 | 🚀 Ship complete — v5.3.53 — DEV-138 Main CI Health | AgToosa |
+| 2026-07-28 23:10 | 🚀 Release 5.3.53 shipped — v5.3.53; version parity bash/ps1/npm/formula; Milestone v5.3.54 (next) | AgToosa |
 | 2026-07-28 23:05 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-139 — smoke PASS GIS/SR gate; v5.3.52 | AgToosa |
 | 2026-07-28 23:05 | 🚀 Ship complete — v5.3.52 — DEV-139 GitHub Issues PM Bridge | AgToosa |
 | 2026-07-28 23:05 | 🚀 Release 5.3.52 shipped — v5.3.52; version parity bash/ps1/npm/formula; Milestone v5.3.53 (next) | AgToosa |
