@@ -281,3 +281,6 @@
 {"ts":"2026-07-28T21:10:00Z","phase":"ship","event":"complete","story":"DEV-135","by":"AgToosa","note":"v5.3.49; NLX/SR smoke PASS"}
 {"ts":"2026-07-27T21:00:00Z","phase":"review","event":"start","story":"DEV-135","by":"AgToosa","note":"4-persona review; NL continuation PROGRESS routing"}
 {"ts":"2026-07-27T21:05:00Z","phase":"review","event":"approved","story":"DEV-135","by":"AgToosa","note":"0 Critical; NLX-001–008 green; ship v5.3.49"}
+{"ts":"2026-07-28T21:15:00Z","phase":"spec","event":"approved","story":"DEV-136","by":"AgToosa","note":"IDE Host Mode Bridge catch-up; build complete 4882506; await review"}
+{"ts":"2026-07-28T21:12:00Z","phase":"review","event":"start","story":"DEV-136","by":"AgToosa"}
+{"ts":"2026-07-28T21:12:00Z","phase":"review","event":"approved","story":"DEV-136","by":"AgToosa","note":"0 Critical; IDE-001–012 green"}
