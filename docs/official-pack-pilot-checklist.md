@@ -3,7 +3,7 @@
 > **Stories:** DEV-080 (three pilots), DEV-095 (five-pack expansion)  
 > **Catalog contract consumed:** `schema_version` **1.0** (`catalog/catalog.schema.json` / DEV-053)  
 > **Maintainer:** sky2464  
-> **Publication status (all five):** **local candidate** — not externally published
+> **Publication status:** DEV-080 trio **published** in external registry (`verified: false`); `official-react` / `official-security` remain **local candidate**
 
 Trust label vocabulary (verified / community / official pilot): see `docs/AgToosa_Registry.md` → **Trust surface**.
 
@@ -11,9 +11,9 @@ Trust label vocabulary (verified / community / official pilot): see `docs/AgToos
 
 | Pack root | Primary domain | Manifest | Fixture | Status |
 |-----------|----------------|----------|---------|--------|
-| `packs/official-web/` | web (stack-agnostic SPA) | `packs/official-web/manifest.json` | `tests/fixtures/registry-packs/official-web/` | local candidate |
-| `packs/official-api/` | api | `packs/official-api/manifest.json` | `tests/fixtures/registry-packs/official-api/` | local candidate |
-| `packs/official-infra/` | infrastructure | `packs/official-infra/manifest.json` | `tests/fixtures/registry-packs/official-infra/` | local candidate |
+| `packs/official-web/` | web (stack-agnostic SPA) | `packs/official-web/manifest.json` | `tests/fixtures/registry-packs/official-web/` | **published** — [registry](https://github.com/sky2464/agtoosa-registry) · `verified: false` |
+| `packs/official-api/` | api | `packs/official-api/manifest.json` | `tests/fixtures/registry-packs/official-api/` | **published** — [registry](https://github.com/sky2464/agtoosa-registry) · `verified: false` |
+| `packs/official-infra/` | infrastructure | `packs/official-infra/manifest.json` | `tests/fixtures/registry-packs/official-infra/` | **published** — [registry](https://github.com/sky2464/agtoosa-registry) · `verified: false` |
 | `packs/official-react/` | react (React/Next/Vite) | `packs/official-react/manifest.json` | `tests/fixtures/registry-packs/official-react/` | local candidate |
 | `packs/official-security/` | security | `packs/official-security/manifest.json` | `tests/fixtures/registry-packs/official-security/` | local candidate |
 
@@ -49,6 +49,26 @@ DEV-080 shipped the first three pilots. DEV-095 expands to the five-pack maximum
 | **published** | Accepted external registry record independently confirmed | “externally published” / “available” in registry |
 
 **Rule:** `published` requires confirmed external record. A local artifact or open PR is not proof of publication. Tasks **4.2** (submit) and **4.3** (confirm) remain manual — follow the canonical procedure: [`docs/registry-external-publication-runbook.md`](registry-external-publication-runbook.md) (pre-submit → submit → confirm).
+
+## External submission record (DEV-080 task 4.2)
+
+| Date | Action | Artifact |
+|------|--------|----------|
+| 2026-07-28 | Submitted three pilot packs | [agtoosa-registry PR #1](https://github.com/sky2464/agtoosa-registry/pull/1) |
+| 2026-07-28 | Release tarballs on AgToosa `v5.3.53` | `official-{web,api,infra}-0.1.0.tar.gz` |
+
+**Allowed claim:** **published** / available via `bash agtoosa.sh --registry list` — official pilot; `verified: false` until separate review sets verified.
+
+## External confirmation record (DEV-080 task 4.3)
+
+| Date | Check | Result |
+|------|-------|--------|
+| 2026-07-28 | [agtoosa-registry#1](https://github.com/sky2464/agtoosa-registry/pull/1) merged | PASS |
+| 2026-07-28 | `registry.json` on `main` lists web/api/infra 0.1.0 | PASS |
+| 2026-07-28 | Raw index `raw.githubusercontent.com/.../registry.json` | PASS |
+| 2026-07-28 | `bash agtoosa.sh --registry list` (fresh cache) | PASS — 3 packs |
+| 2026-07-28 | Tarball SHA-256 matches registry entry (`official-web`) | PASS |
+| 2026-07-28 | `sky2464/agtoosa-registry` visibility | **public** (required for anonymous consumer path) |
 
 ## Pack validation CI gate (DEV-096)
 

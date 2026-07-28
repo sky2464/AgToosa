@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Idle — DEV-140 shipped v5.3.54 |
+| Current phase | Active — DEV-141 spec approved |
 | Milestone | `v5.3.55` (next) |
-| Active cycle | — |
-| Cycle state | Idle — post-ship |
+| Active cycle | DEV-141 |
+| Cycle state | Active |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -23,7 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| — | (none) | — | — | — | — |
+| DEV-141 | Feature: Tracker Discovery & Bootstrap | Feature | L | 🟦 Todo | 0/5 |
 
 <!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.54.md (DEV-140 v5.3.54) -->
 
@@ -93,6 +93,20 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 <!-- Shipped v5.3.52 — tasks archived in docs/archived/cycle-2026-07-28-release-5.3.52.md -->
 
+### DEV-141 — Tracker Discovery & Bootstrap
+
+- [ ] **1.** Schema and discover core
+  - [ ] 1.1 Discovery + fetch envelope schemas
+  - [ ] 1.2 `tracker_discover` local signals + repo-plans
+- [ ] **2.** Bootstrap proposal
+  - [ ] 2.1 `tracker_bootstrap` classify + render + mutation guard
+- [ ] **3.** GitHub bulk merge
+  - [ ] 3.1 `github_issues_items_from_fetch` + discover `--input`
+- [ ] **4.** Docs and init
+  - [ ] 4.1 TrackerSync + Init tributary + Linear MCP recipe
+  - [ ] 4.2 Workflow example `agtoosa-issues-bootstrap.yml.example`
+- [ ] **5.** Bats TBS-001–TBS-010
+
 ## Manual / Deferred Tasks
 
 > Tasks that require a human action outside the agent. These are **not** counted against the health score.
@@ -100,8 +114,8 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 | Story | Task # | Deferred Since | Description |
 |-------|--------|----------------|-------------|
-| DEV-080 | 4.2 | 2026-07-11 | Submit three official packs to external agtoosa-registry `[manual-deferred]` |
-| DEV-080 | 4.3 | 2026-07-11 | Confirm accepted external registry records `[manual-deferred]` |
+| DEV-080 | 4.2 | 2026-07-28 | Submit three official packs to external agtoosa-registry — **done** ([agtoosa-registry#1](https://github.com/sky2464/agtoosa-registry/pull/1)) |
+| DEV-080 | 4.3 | 2026-07-28 | Confirm accepted external registry records — **done** (see `docs/official-pack-pilot-checklist.md` §4.3) |
 | DEV-084 | M-1 | 2026-07-11 | Confirm GitHub Sponsors for @sky2464 is active (OSS-007) `[manual-deferred]` |
 | DEV-071 | M-1 | 2026-06-09 | Publish the npm wrapper: `cd npm && npm publish` (requires npm account/2FA) `[manual]` |
 | DEV-062 | M-1 | 2026-06-09 | Optional: publish the gate as a GitHub Marketplace Action for discoverability `[manual]` |
@@ -151,7 +165,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-137 | Chore: Security Scanning CI Health (ShellCheck + workflow re-verify) | Chore | XS | DEV-004 | P1 | 🏁 Shipped — v5.3.51 |
 | DEV-138 | Chore: Main CI Health (Product Truth + PSScriptAnalyzer) | Chore | XS | DEV-004 | P1 | 🏁 Shipped — v5.3.53 |
 | DEV-140 | Chore: Help vs Next Disambiguation Hardening | Chore | S | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.54 |
-| DEV-141 | Feature: Tracker Discovery & Bootstrap | Feature | L | DEV-051 / DEV-003 | P1 | 🟦 Todo |
+| DEV-141 | Feature: Tracker Discovery & Bootstrap | Feature | L | DEV-051 / DEV-003 | P1 | 🟦 Todo — spec approved |
 | DEV-139 | Feature: GitHub Issues PM Bridge (Phased B) | Feature | L | DEV-051 / DEV-004 | P1 | 🏁 Shipped — v5.3.52 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
@@ -437,6 +451,8 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-07-28 23:16 | ✅ DEV-080 tasks 4.2/4.3 — External registry publish confirmed — [agtoosa-registry#1](https://github.com/sky2464/agtoosa-registry/pull/1) merged; `registry list` shows 3 packs; checklist updated | AgToosa |
+| 2026-07-28 23:25 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-141 — `docs/archived/spec-DEV-141.md`; estimate L; enrolled Active Cycle; TBS-001–010 green; next `/agtoosa-next` → build | AgToosa |
 | 2026-07-28 23:20 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-140 — smoke PASS NLX/SR gate; v5.3.54 | AgToosa |
 | 2026-07-28 23:20 | 🚀 Ship complete — v5.3.54 — DEV-140 Help vs Next disambiguation | AgToosa |
 | 2026-07-28 23:15 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-140 — 0 Critical; NLX-009–013 green; next `/agtoosa-next` → ship v5.3.54 | AgToosa |
