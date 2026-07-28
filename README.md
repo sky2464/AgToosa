@@ -1,10 +1,8 @@
 <div align="center">
 
-<img src="docs/media/agtoosa-hero/agtoosa-hero.gif" alt="AgToosa workflow: init, spec, build, review, ship, status, and next" width="720"/>
-
 # AgToosa
 
-**A lightweight, repo-native control plane for spec-driven AI development**
+**The repo-native AI project manager for spec-driven development**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-5.3.58-green.svg)](https://github.com/sky2464/AgToosa/releases)
@@ -12,46 +10,30 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Discussions](https://img.shields.io/badge/Discussions-GitHub-blue.svg)](https://github.com/sky2464/AgToosa/discussions)
 
-*Turn your AI coding assistant into a disciplined, security-aware dev team — with specs, evidence, and machine verification.*
-
-**One command keeps the project moving.** `/agtoosa-next` is AgToosa's
-repo-aware sequential driver. Run `/agtoosa-init` once, then repeat Next: it
-reads the repository's SYNC state, routes to the correct lifecycle phase, and
-executes exactly one workflow per invocation while preserving phase stops.
-
-**Primary: 15-minute proof journey**
-
-Follow one path to see AgToosa value: install → open the [proof repository](https://github.com/sky2464/agtoosa-first-15-proof) → init → spec → build → verify.
-
-[Start the first 15 minutes proof walkthrough](docs/examples/first-15-minutes.md) for a clean-repo guide with expected spec, test-plan, review, and ship-check artifacts.
-
-**Public launch status:** AgToosa is public — bootstrap, releases, registry, and the [proof repository](https://github.com/sky2464/agtoosa-first-15-proof) are anonymously accessible.
-
 </div>
 
----
-
-## Why AgToosa?
-
-- **Spec first** — research, architecture, and STRIDE threat modeling before code
-- **Evidence, not vibes** — deterministic `agtoosa-verify.sh` checks what the chat claimed
-- **Any assistant** — Cursor, Claude Code, Copilot, Windsurf, Codex, and more from one repo-native workflow
-
-**No target-app runtime. No SDK to link.** AgToosa installs markdown workflows and platform adapters into your repo. **Generator prerequisites:** the installer uses standard CLI tools such as Bash or PowerShell, Git, curl/web requests, tar, and jq for registry commands.
-
-Security and scan guidance is **Workflow guidance** — your AI runs the checks; AgToosa does not execute them. The lifecycle verifier and registry containment are **Generator enforces** controls. See [enforcement comparison](docs/enforcement-comparison.md).
-
 ## Quick install
+
+**macOS / Linux**
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.58
 ```
 
-Then open your AI assistant and run **Day 1:** `/agtoosa-init` once →
-`/agtoosa-next` repeatedly. Use the explicit phase commands only when you need
-advanced control.
+**Windows (PowerShell)**
 
-## Lifecycle at a glance
+```powershell
+$Ref = "v5.3.58"
+$Bootstrap = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/sky2464/AgToosa/$Ref/bootstrap.ps1"
+& ([scriptblock]::Create($Bootstrap)) -Ref $Ref
+```
+
+Then open your AI assistant: `/agtoosa-init` once → `/agtoosa-next` repeatedly.
+[Full install matrix, flags, and troubleshooting →](docs/guides/readme-reference.md)
+
+## See it in action
+
+<img src="docs/media/agtoosa-hero/agtoosa-hero.gif" alt="AgToosa workflow: init, spec, build, review, ship, status, and next" width="720"/>
 
 ```mermaid
 flowchart LR
@@ -68,26 +50,37 @@ flowchart LR
 
 <img src="docs/media/agtoosa-hero/lifecycle-accent.svg" alt="" width="480"/>
 
-[Full architecture diagram →](docs/guides/architecture-overview.md)
+[Full architecture diagram →](docs/guides/architecture-overview.md) · [First 15 minutes walkthrough](docs/examples/first-15-minutes.md) · proof video `[manual]`
 
-## Trust, but verify
+## Essentials
+
+- **Spec first** — research, architecture, and STRIDE threat modeling before code
+- **Evidence, not vibes** — deterministic `agtoosa-verify.sh` checks what the chat claimed
+- **Any assistant** — Cursor, Claude Code, Copilot, Windsurf, Codex, and more from one repo-native workflow
+
+**No target-app runtime. No SDK to link.** AgToosa installs markdown workflows and platform adapters into your repo. **Generator prerequisites:** the installer uses standard CLI tools such as Bash or PowerShell, Git, curl/web requests, tar, and jq for registry commands.
+
+Security and scan guidance is **Workflow guidance** — your AI runs the checks; AgToosa does not execute them. The lifecycle verifier and registry containment are **Generator enforces** controls. See [enforcement comparison](docs/enforcement-comparison.md).
 
 ```bash
 bash Docs/agtoosa-verify.sh    # spec approval, EARS ACs, threat model, TDD evidence
 ```
 
-## Read more
+**Primary: 15-minute proof journey**
+
+Follow one path to see AgToosa value: install → open the [proof repository](https://github.com/sky2464/agtoosa-first-15-proof) → init → spec → build → verify.
+
+[Start the first 15 minutes proof walkthrough](docs/examples/first-15-minutes.md) · [public launch proof](docs/examples/public-launch-proof.md)
 
 | Topic | Link |
 |-------|------|
-| Full install matrix, flags, Windows, troubleshooting | [README reference](docs/guides/readme-reference.md) |
+| Install matrix, `/agtoosa-next` driver, troubleshooting | [README reference](docs/guides/readme-reference.md) |
 | Architecture deep dive | [architecture-overview.md](docs/guides/architecture-overview.md) |
-| First 15 minutes + proof video `[manual]` | [first-15-minutes.md](docs/examples/first-15-minutes.md) · [public launch proof](docs/examples/public-launch-proof.md) |
 | Compare to alternatives | [readme-reference § How it differs](docs/guides/readme-reference.md#how-it-differs) |
-| Subagent & audience guides | [handoff](docs/examples/subagent-handoff-review.md) · [subagent-heavy](docs/guides/subagent-heavy-workflows.md) · [security-sensitive](docs/guides/security-sensitive-projects.md) · [solo-dev](docs/guides/solo-developer-workflows.md) |
-| Team assurance roadmap | [AgToosa_Team_Trust_Roadmap.md](docs/AgToosa_Team_Trust_Roadmap.md) |
-| Authoring | [extension-authoring-guide.md](docs/extension-authoring-guide.md) · [registry-pack-authoring.md](docs/registry-pack-authoring.md) · [core contract](docs/AgToosa_Core_Contract.md) |
+| Audience guides | [solo-dev](docs/guides/solo-developer-workflows.md) · [security-sensitive](docs/guides/security-sensitive-projects.md) · [subagent-heavy](docs/guides/subagent-heavy-workflows.md) |
 | Wiki | [GitHub Wiki](https://github.com/sky2464/AgToosa/wiki) |
+
+---
 
 ### Alternative install paths
 

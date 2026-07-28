@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-28 (/agtoosa-build — DEV-145 build complete)
+> **Last updated:** 2026-07-28 (/agtoosa-spec — DEV-146 enrolled)
 
 ## Project Charter
 
@@ -9,9 +9,9 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Review — DEV-145 |
+| Current phase | Build — DEV-146 |
 | Milestone | `v5.3.59` (target) |
-| Active cycle | DEV-145 |
+| Active cycle | DEV-146 |
 | Cycle state | Active |
 | Cycle capacity | `8 story points` |
 
@@ -23,7 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-145 | Feature: Tracker Bootstrap Apply | Feature | M | 🟨 In Progress | 4/4 |
+| DEV-146 | Docs: README First-Visit Simplification | Docs | S | 🟨 In Progress | 3/3 |
 
 <!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.58.md (DEV-144 v5.3.58) -->
 
@@ -175,6 +175,7 @@ Conflict playbook: _DEV-143 shipped v5.3.57; DEV-144 shipped v5.3.58; milestone 
 | DEV-142 | Chore: GitHub Surface Audit & Community Profile | Chore | M | DEV-139 / DEV-076 | P1 | 🏁 Shipped — v5.3.56 |
 | DEV-143 | Chore: Tracker Unlinked Status Finding | Chore | S | DEV-141 / DEV-051 | P1 | 🏁 Shipped — v5.3.57 |
 | DEV-144 | Chore: Operational Gitignore Auto-Merge | Chore | S | DEV-093 / DEV-119 | P1 | 🏁 Shipped — v5.3.58 |
+| DEV-146 | Docs: README First-Visit Simplification | Docs | S | DEV-127 / DEV-134 | P1 | 🟨 In Progress |
 | DEV-139 | Feature: GitHub Issues PM Bridge (Phased B) | Feature | L | DEV-051 / DEV-004 | P1 | 🏁 Shipped — v5.3.52 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
@@ -464,6 +465,8 @@ Conflict playbook: _DEV-143 shipped v5.3.57; DEV-144 shipped v5.3.58; milestone 
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-07-28 12:40 | 🏗️ /agtoosa-build — Build complete — DEV-146 — README first-visit simplification; RMF-001–003; next `/agtoosa-review` | AgToosa |
+| 2026-07-28 12:35 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-146 — `docs/archived/spec-DEV-146.md`; enrolled Active Cycle | AgToosa |
 | 2026-07-28 00:35 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-144 — smoke PASS GIG/SR gate; v5.3.58 | AgToosa |
 | 2026-07-28 00:35 | 🚀 Ship complete — v5.3.58 — DEV-144 Operational Gitignore Auto-Merge | AgToosa |
 | 2026-07-28 00:32 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-143 — smoke PASS TUS/SR gate; v5.3.57 | AgToosa |

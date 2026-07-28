@@ -1,6 +1,16 @@
 # AgToosa README Reference
 
-> **Read more:** full install matrix, command reference, security tables, and competitive positioning. The [README](../README.md) is the 3–5 minute onboarding path.
+> **Read more:** full install matrix, command reference, security tables, and competitive positioning. The [README](../README.md) is the first-visit onboarding path — tagline, quick install, demo, and essentials.
+
+## `/agtoosa-next` — sequential driver
+
+**One command keeps the project moving.** `/agtoosa-next` is AgToosa's repo-aware sequential driver. Run `/agtoosa-init` once, then repeat Next: it reads the repository's SYNC state, routes to the correct lifecycle phase, and executes exactly one workflow per invocation while preserving phase stops.
+
+Use explicit phase commands (`/agtoosa-spec`, `/agtoosa-build`, `/agtoosa-review`, `/agtoosa-ship`) only when you need advanced control. Freeform `next` / `okay` / `do it` utterances route to `/agtoosa-next`, not `/agtoosa-help next`.
+
+## Public launch status
+
+AgToosa is public — bootstrap, releases, registry, and the [proof repository](https://github.com/sky2464/agtoosa-first-15-proof) are anonymously accessible. See [public launch proof](../examples/public-launch-proof.md) for the publication checklist.
 
 ---
 

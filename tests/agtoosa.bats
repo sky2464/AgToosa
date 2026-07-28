@@ -9920,6 +9920,31 @@ rmh_readme_body_lines() {
   ! grep -qE "$bad" "$wiki"
 }
 
+# ── DEV-146: README first-visit simplification (RMF-001–RMF-003) ─────────────
+
+@test "DEV-146 RMF-001: README quick install includes Windows PowerShell block" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  grep -q '## Quick install' "$readme"
+  grep -q 'Windows (PowerShell)' "$readme"
+  grep -q 'bootstrap.ps1' "$readme"
+  grep -q '\$Ref = "v5.3.58"' "$readme"
+}
+
+@test "DEV-146 RMF-002: README presents confirmed first-visit tagline" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  grep -q 'The repo-native AI project manager for spec-driven development' "$readme"
+}
+
+@test "DEV-146 RMF-003: README quick install precedes hero motion asset" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  local install_line hero_line
+  install_line="$(grep -n '^## Quick install' "$readme" | head -n1 | cut -d: -f1)"
+  hero_line="$(grep -n 'docs/media/agtoosa-hero/agtoosa-hero.gif' "$readme" | head -n1 | cut -d: -f1)"
+  [[ -n "$install_line" ]]
+  [[ -n "$hero_line" ]]
+  [[ "$install_line" -lt "$hero_line" ]]
+}
+
 # ── DEV-105: PowerShell maintain + update parity (PSP-001–PSP-008) ───────────
 
 @test "DEV-105 @smoke PSP-006: agtoosa.ps1 declares maintain switches" {
