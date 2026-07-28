@@ -3,7 +3,7 @@
 > **Story ID:** DEV-135  
 > **Epic:** DEV-002 — Workflow Templates · DEV-004 — Testing & QA Harness  
 > **Type:** Chore  
-> **Status:** 🟨 In Progress — build complete (parked; not active cycle)  
+> **Status:** 🏁 Shipped — v5.3.49  
 > **Estimate:** S  
 > **Clarity:** `ready`  
 > **Priority:** P1  
@@ -58,6 +58,7 @@
 - [x] **3.** Align `agtoosa-core.mdc` and `agtoosa-maintainer-core.mdc` — _AC-005_
 - [x] **4.** Update `agtoosa-next` skill + platform adapters; amend ADR-019 — _AC-005, AC-006_
 - [x] **5.** Add bats NLX-001–008 — _AC-006_
+- [x] **6.** Ship v5.3.49 — changelog + version parity — _AC-006_
 
 ## 4. Test Plan
 

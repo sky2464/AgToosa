@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.49] — 2026-07-28
+
+Patch release: DEV-135 — natural-language continuation routes to `/agtoosa-next`.
+
+### Changed
+
+- **DEV-135 — NL continuation.** `PROGRESS` semantic class and Continuation Context Contract in Agent, Next, core rules, and ADR-019; context-aware disambiguation for `next`/`okay`/`do it`; blocked-state routing in Next Step 1b; NLX-001–008 bats.
+
+---
+
 ## [5.3.48] — 2026-07-28
 
 Patch release: DEV-134 — README hero media pass (catch-up formalization).
