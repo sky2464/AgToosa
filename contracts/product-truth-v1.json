@@ -759,7 +759,8 @@
         "publish",
         "intake",
         "discover",
-        "bootstrap"
+        "bootstrap",
+        "status-check"
       ],
       "canonical_workflow": "Docs/AgToosa_TrackerSync.md",
       "operating_context": "generated-project",

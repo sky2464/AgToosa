@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-28 (/agtoosa-ship — DEV-142 v5.3.56)
+> **Last updated:** 2026-07-28 (/agtoosa-ship — DEV-144 v5.3.58)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Idle — DEV-142 shipped v5.3.56 |
-| Milestone | `v5.3.57` (next) |
+| Current phase | Idle — DEV-144 shipped v5.3.58 |
+| Milestone | `v5.3.59` (next) |
 | Active cycle | — |
-| Cycle state | Idle — post-ship |
+| Cycle state | Idle — cycle complete |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -23,7 +23,10 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| — | (none) | — | — | — | — |
+
+<!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.58.md (DEV-144 v5.3.58) -->
+
+<!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.57.md (DEV-143 v5.3.57) -->
 
 <!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.56.md (DEV-142 v5.3.56) -->
 
@@ -101,6 +104,14 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 <!-- Shipped v5.3.56 — tasks archived in docs/archived/cycle-2026-07-28-release-5.3.56.md -->
 
+### DEV-143 — Tracker Unlinked Status Finding
+
+<!-- Shipped v5.3.57 — tasks archived in docs/archived/cycle-2026-07-28-release-5.3.57.md -->
+
+### DEV-144 — Operational Gitignore Auto-Merge
+
+<!-- Shipped v5.3.58 — tasks archived in docs/archived/cycle-2026-07-28-release-5.3.58.md -->
+
 ## Manual / Deferred Tasks
 
 > Tasks that require a human action outside the agent. These are **not** counted against the health score.
@@ -129,7 +140,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 |----|-------|-----------|-------|
 | — | (none) | — | — |
 
-Conflict playbook: _DEV-142 shipped v5.3.56; milestone v5.3.57; DEV-080 external publish complete; demand-gated DEV-057 deferred until Demand Evidence Record accepted._
+Conflict playbook: _DEV-143 shipped v5.3.57; DEV-144 shipped v5.3.58; milestone v5.3.59; demand-gated DEV-057 deferred._
 
 ## Backlog
 
@@ -161,6 +172,8 @@ Conflict playbook: _DEV-142 shipped v5.3.56; milestone v5.3.57; DEV-080 external
 | DEV-140 | Chore: Help vs Next Disambiguation Hardening | Chore | S | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.54 |
 | DEV-141 | Feature: Tracker Discovery & Bootstrap | Feature | L | DEV-051 / DEV-003 | P1 | 🏁 Shipped — v5.3.55 |
 | DEV-142 | Chore: GitHub Surface Audit & Community Profile | Chore | M | DEV-139 / DEV-076 | P1 | 🏁 Shipped — v5.3.56 |
+| DEV-143 | Chore: Tracker Unlinked Status Finding | Chore | S | DEV-141 / DEV-051 | P1 | 🏁 Shipped — v5.3.57 |
+| DEV-144 | Chore: Operational Gitignore Auto-Merge | Chore | S | DEV-093 / DEV-119 | P1 | 🏁 Shipped — v5.3.58 |
 | DEV-139 | Feature: GitHub Issues PM Bridge (Phased B) | Feature | L | DEV-051 / DEV-004 | P1 | 🏁 Shipped — v5.3.52 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
@@ -319,6 +332,8 @@ Conflict playbook: _DEV-142 shipped v5.3.56; milestone v5.3.57; DEV-080 external
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-144 | Chore: Operational Gitignore Auto-Merge | 2026-07-28 | [spec-DEV-144.md](archived/spec-DEV-144.md) · [review-DEV-144.md](archived/review-DEV-144.md) · [evidence-DEV-144.md](archived/evidence-DEV-144.md) |
+| DEV-143 | Chore: Tracker Unlinked Status Finding | 2026-07-28 | [spec-DEV-143.md](archived/spec-DEV-143.md) · [review-DEV-143.md](archived/review-DEV-143.md) · [evidence-DEV-143.md](archived/evidence-DEV-143.md) |
 | DEV-142 | Chore: GitHub Surface Audit & Community Profile | 2026-07-28 | [spec-DEV-142.md](archived/spec-DEV-142.md) · [review-DEV-142.md](archived/review-DEV-142.md) · [evidence-DEV-142.md](archived/evidence-DEV-142.md) |
 | DEV-141 | Feature: Tracker Discovery & Bootstrap | 2026-07-28 | [spec-DEV-141.md](archived/spec-DEV-141.md) · [review-DEV-141.md](archived/review-DEV-141.md) · [evidence-DEV-141.md](archived/evidence-DEV-141.md) |
 | DEV-140 | Chore: Help vs Next Disambiguation Hardening | 2026-07-28 | [spec-DEV-140.md](archived/spec-DEV-140.md) · [review-DEV-140.md](archived/review-DEV-140.md) · [evidence-DEV-140.md](archived/evidence-DEV-140.md) |
@@ -448,6 +463,17 @@ Conflict playbook: _DEV-142 shipped v5.3.56; milestone v5.3.57; DEV-080 external
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-07-28 00:35 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-144 — smoke PASS GIG/SR gate; v5.3.58 | AgToosa |
+| 2026-07-28 00:35 | 🚀 Ship complete — v5.3.58 — DEV-144 Operational Gitignore Auto-Merge | AgToosa |
+| 2026-07-28 00:32 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-143 — smoke PASS TUS/SR gate; v5.3.57 | AgToosa |
+| 2026-07-28 00:32 | 🚀 Ship complete — v5.3.57 — DEV-143 Tracker Unlinked Status Finding | AgToosa |
+| 2026-07-28 00:30 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-144 — 0 Critical; GIG-001–008 green; next `/agtoosa-next` → ship v5.3.57 | AgToosa |
+| 2026-07-28 00:28 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-144 — 4-persona review (served by `/agtoosa-next`) | AgToosa |
+| 2026-07-28 00:25 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-143 — 0 Critical; TUS-001–008 green; next `/agtoosa-next` → ship v5.3.57 | AgToosa |
+| 2026-07-28 00:24 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-143 — 4-persona review (served by `/agtoosa-next`) | AgToosa |
+| 2026-07-28 00:20 | 🏗️ /agtoosa-build — Build complete — DEV-143 — 5/5 tasks; TUS-001–TUS-008 exit 0; next `/agtoosa-next` → review | AgToosa |
+| 2026-07-28 00:12 | 🏗️ /agtoosa-build — Build 🏗️ Started — DEV-143 — status-check CLI + status doc + TUS suite | AgToosa |
+| 2026-07-28 00:10 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-143 — `docs/archived/spec-DEV-143.md`; estimate S; enrolled Active Cycle; TUS-001–008 planned; renumbered from cold-start pick (DEV-142 taken); next `/agtoosa-next` → build | AgToosa |
 | 2026-07-28 00:05 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-142 — smoke PASS GSA/SR gate; v5.3.56 | AgToosa |
 | 2026-07-28 00:05 | 🚀 Ship complete — v5.3.56 — DEV-142 GitHub Surface Audit & Community Profile | AgToosa |
 | 2026-07-28 23:58 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-142 — 0 Critical; GSA-001–010 green; live audit manual-deferred; next `/agtoosa-ship` v5.3.56 | AgToosa |

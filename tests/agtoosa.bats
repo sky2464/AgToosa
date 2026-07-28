@@ -422,7 +422,8 @@ EOF
   printf '# AgToosa v1.0.0\nold\n' > "$TEST_PROJECT/.cursorrules"
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT' --force"
   [ "$status" -eq 0 ]
-  [[ "$output" == *"Backup files created"* ]]
+  [[ "$output" == *"Merge backup created"* ]]
+  [[ "$output" == *"Operational paths"* ]]
 }
 # ── Native platform command/rule tests ───────────────────────────────────────
 @test "Claude option installs .claude/commands/ slash commands" {
@@ -712,14 +713,14 @@ print(sum(1 for c in cmds if 'Master-Plan' in c))
 @test "gitignore warning NOT shown on clean install with no backups" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
-  [[ "$output" != *"Backup files created"* ]]
+  [[ "$output" != *"Merge backup created"* ]]
 }
 @test "gitignore warning NOT shown on same-version re-run" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]
-  [[ "$output" != *"Backup files created"* ]]
+  [[ "$output" != *"Merge backup created"* ]]
 }
 # ── Generator: merge_settings_json invalid JSON fallback ───────
 @test "merge_settings_json: invalid JSON in existing settings.json skips gracefully" {
@@ -14419,6 +14420,106 @@ PY
   grep -q 'DEV-119|RPT-' "$root/docs/AgToosa_TestPlan-DEV-119.md"
 }
 
+# ── DEV-144: Operational Gitignore Auto-Merge (GIG-001–GIG-008) ───────────────
+
+_gig_install_cursor_only() {
+  local proj="$1"
+  run bash -c "printf '${proj}\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-144 @smoke GIG-001: Clean install creates .gitignore with marker" {
+  _gig_install_cursor_only "$TEST_PROJECT"
+  [ -f "$TEST_PROJECT/.gitignore" ]
+  grep -qF 'BEGIN AgToosa operational' "$TEST_PROJECT/.gitignore"
+  grep -qE '^\.agtoosa/' "$TEST_PROJECT/.gitignore"
+  grep -qE '^\*\.bak\.\*$' "$TEST_PROJECT/.gitignore"
+  grep -qE '^\.worktrees/' "$TEST_PROJECT/.gitignore"
+}
+
+@test "DEV-144 GIG-002: Update re-run replaces inner block without duplication" {
+  _gig_install_cursor_only "$TEST_PROJECT"
+  run bash -c "printf '${TEST_PROJECT}\n1\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [ "$(grep -c 'BEGIN AgToosa operational' "$TEST_PROJECT/.gitignore")" -eq 1 ]
+  [ "$(grep -c '\.agtoosa/' "$TEST_PROJECT/.gitignore")" -eq 1 ]
+}
+
+@test "DEV-144 GIG-003: Pre-existing user rules outside markers preserved" {
+  echo "node_modules/" > "$TEST_PROJECT/.gitignore"
+  _gig_install_cursor_only "$TEST_PROJECT"
+  grep -q '^node_modules/' "$TEST_PROJECT/.gitignore"
+  grep -qF 'BEGIN AgToosa operational' "$TEST_PROJECT/.gitignore"
+}
+
+@test "DEV-144 @smoke GIG-004: Install into repo with no .gitignore creates block" {
+  [ ! -f "$TEST_PROJECT/.gitignore" ]
+  _gig_install_cursor_only "$TEST_PROJECT"
+  [ -f "$TEST_PROJECT/.gitignore" ]
+  grep -qF 'END AgToosa operational' "$TEST_PROJECT/.gitignore"
+}
+
+@test "DEV-144 GIG-005: Doctor warns when marker missing" {
+  _gig_install_cursor_only "$TEST_PROJECT"
+  python3 - "$TEST_PROJECT/.gitignore" <<'PY'
+import sys
+path = sys.argv[1]
+lines = open(path, encoding="utf-8").read().splitlines()
+out = []
+skip = False
+for line in lines:
+    if line.strip() == "# BEGIN AgToosa operational (managed — do not edit)":
+        skip = True
+        continue
+    if line.strip() == "# END AgToosa operational":
+        skip = False
+        continue
+    if not skip:
+        out.append(line)
+open(path, "w", encoding="utf-8").write("\n".join(out) + ("\n" if out else ""))
+PY
+  run bash "$SCRIPT" --doctor "$TEST_PROJECT" --format json
+  [ "$status" -eq 1 ]
+  echo "$output" | jq -e '.findings[] | select(.id == "GIG-003")' >/dev/null
+}
+
+@test "DEV-144 GIG-006: Doctor warns with rm --cached when state tracked" {
+  _gig_install_cursor_only "$TEST_PROJECT"
+  (
+    cd "$TEST_PROJECT"
+    git init -q
+    git add Docs/.agtoosa-version .agtoosa/state.json 2>/dev/null || git add -f .agtoosa/state.json
+    git -c user.email=test@test.com -c user.name=test commit -q -m "track operational"
+  )
+  run bash "$SCRIPT" --doctor "$TEST_PROJECT" --format json
+  [ "$status" -eq 1 ]
+  echo "$output" | jq -e '.findings[] | select(.id == "GIG-004")' >/dev/null
+  echo "$output" | jq -e '.findings[] | select(.id == "GIG-004").fix | test("git rm")' >/dev/null
+}
+
+@test "DEV-144 GIG-007: Ignore block excludes Docs/ and .cursor/" {
+  _gig_install_cursor_only "$TEST_PROJECT"
+  run python3 - "$TEST_PROJECT/.gitignore" <<'PY'
+import sys
+text = open(sys.argv[1], encoding="utf-8").read()
+start = text.index("# BEGIN AgToosa operational")
+end = text.index("# END AgToosa operational")
+block = text[start:end]
+assert "Docs/" not in block
+assert ".cursor/" not in block
+assert ".agtoosa/" in block
+PY
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-144 @smoke GIG-008: DEV-144 filter and test plan documented" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "DEV-144" "$root/tests/agtoosa.bats"
+  grep -q "GIG-" "$root/docs/AgToosa_TestPlan-DEV-144.md"
+  grep -q 'DEV-144|GIG-' "$root/docs/AgToosa_TestPlan-DEV-144.md"
+  grep -q "gitignore_merge_operational" "$root/lib/gitignore.sh"
+}
+
 @test "v5.3.31 SR-001: v5.3.31 changelog and cross-model consent release recorded" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q '## \[5.3.31\]' "$root/CHANGELOG.md"
@@ -16386,4 +16487,138 @@ PY
   grep -q 'DEV-142' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-142.md" ]
   [ -f "$root/docs/archived/review-DEV-142.md" ]
+}
+
+# ── DEV-143: Tracker Unlinked Status Finding (TUS-001–TUS-008) ───────────────
+
+@test "DEV-143 TUS-001: status-check emits tracker-status-check v1 schema" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/project"
+  local root="$BATS_TEST_DIRNAME/.."
+  local json
+  run bash "$SCRIPT" --tracker status-check --path "$fixture"
+  [ "$status" -eq 0 ]
+  json="$output"
+  run jq -e '.schema_version == "agtoosa.tracker-status-check/v1" and (.counts | type) == "object"' <<<"$json"
+  [ "$status" -eq 0 ]
+  ! grep -qE 'curl |wget |fetch http' "$root/lib/tracker-discover.sh"
+}
+
+@test "DEV-143 TUS-002: status-check auto-merges gh-issues cache" {
+  local fixture="$TEST_PROJECT/tus-cache-project"
+  local src="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/project"
+  local gh="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/github-issues-fetch.json"
+  local json
+  rm -rf "$fixture"
+  cp -R "$src" "$fixture"
+  mkdir -p "$fixture/.agtoosa/tracker"
+  cp "$gh" "$fixture/.agtoosa/tracker/gh-issues.json"
+  run bash "$SCRIPT" --tracker status-check --path "$fixture"
+  [ "$status" -eq 0 ]
+  json="$output"
+  run jq -e '.merged_inputs | index(".agtoosa/tracker/gh-issues.json")' <<<"$json"
+  [ "$status" -eq 0 ]
+  run jq -e '.counts.new_external >= 1' <<<"$json"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-143 TUS-003: new_external items listed with finding emit true" {
+  local fixture="$TEST_PROJECT/tus-unlinked-project"
+  local src="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/project"
+  local gh="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/github-issues-fetch.json"
+  local json
+  rm -rf "$fixture"
+  cp -R "$src" "$fixture"
+  mkdir -p "$fixture/.agtoosa/tracker"
+  cp "$gh" "$fixture/.agtoosa/tracker/gh-issues.json"
+  run bash "$SCRIPT" --tracker status-check --path "$fixture"
+  [ "$status" -eq 0 ]
+  json="$output"
+  run jq -e '.finding.emit == true and (.unlinked_external | length) >= 1' <<<"$json"
+  [ "$status" -eq 0 ]
+  run jq -e '.unlinked_external[0].external_ref == "github:example/bootstrap-fixture#42"' <<<"$json"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-143 TUS-004: mirror-labeled github issue not counted unlinked" {
+  local fixture="$TEST_PROJECT/tus-mirror-project"
+  local src="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/project"
+  local gh="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/github-issues-fetch.json"
+  local json
+  rm -rf "$fixture"
+  cp -R "$src" "$fixture"
+  mkdir -p "$fixture/.agtoosa/tracker"
+  cp "$gh" "$fixture/.agtoosa/tracker/gh-issues.json"
+  run bash "$SCRIPT" --tracker status-check --path "$fixture"
+  [ "$status" -eq 0 ]
+  json="$output"
+  run jq -e '[.unlinked_external[].external_ref] | index("github:example/bootstrap-fixture#7") | not' <<<"$json"
+  [ "$status" -eq 0 ]
+  run jq -e '.counts.closed_external >= 1' <<<"$json"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-143 TUS-005: greenfield fixture silent skip finding emit false" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/status-check/greenfield"
+  local json
+  run bash "$SCRIPT" --tracker status-check --path "$fixture"
+  [ "$status" -eq 0 ]
+  json="$output"
+  run jq -e '.finding.emit == false and .has_tracker_signals == false' <<<"$json"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-143 TUS-006: finding severity is info when emit true" {
+  local fixture="$TEST_PROJECT/tus-severity-project"
+  local src="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/project"
+  local gh="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/github-issues-fetch.json"
+  local json
+  rm -rf "$fixture"
+  cp -R "$src" "$fixture"
+  mkdir -p "$fixture/.agtoosa/tracker"
+  cp "$gh" "$fixture/.agtoosa/tracker/gh-issues.json"
+  run bash "$SCRIPT" --tracker status-check --path "$fixture"
+  [ "$status" -eq 0 ]
+  json="$output"
+  run jq -e '.finding.emit == true and .finding.severity == "info"' <<<"$json"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-143 TUS-007: AgToosa_Status documents tracker unlinked info finding" {
+  local doc="$BATS_TEST_DIRNAME/../docs/AgToosa_Status.md"
+  grep -q 'Tracker unlinked external items' "$doc"
+  grep -q 'status-check' "$doc"
+  grep -q 'No Plan Completeness deduction' "$doc"
+  grep -q '/agtoosa-tracker discover' "$doc"
+  grep -q 'Unlinked external tracker items' "$doc"
+}
+
+@test "DEV-143 TUS-008: DEV-143 filter suite green" {
+  run bats "$BATS_TEST_DIRNAME/agtoosa.bats" -f "DEV-143 TUS-00[1-7]$"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-143 @smoke SR-001: v5.3.57 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q '## \[5.3.57\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-143' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-143.md" ]
+  [ -f "$root/docs/archived/review-DEV-143.md" ]
+  [ -f "$root/docs/archived/ship-check-DEV-143.md" ]
+}
+
+@test "DEV-144 @smoke SR-001: v5.3.58 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.58" ]
+  [ "$ps_ver" = "5.3.58" ]
+  [ "$npm_ver" = "5.3.58" ]
+  [ "$formula_ver" = "5.3.58" ]
+  grep -q '## \[5.3.58\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-144' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-144.md" ]
+  [ -f "$root/docs/archived/review-DEV-144.md" ]
 }

@@ -5,6 +5,9 @@
 
 TRACKER_DISCOVERY_VERSION="agtoosa.tracker-discovery/v1"
 TRACKER_BOOTSTRAP_INPUT_VERSION="agtoosa.tracker-bootstrap-input/v1"
+TRACKER_STATUS_CHECK_VERSION="agtoosa.tracker-status-check/v1"
+TRACKER_CACHE_GH_REL=".agtoosa/tracker/gh-issues.json"
+TRACKER_CACHE_LINEAR_REL=".agtoosa/tracker/linear-fetch.json"
 TRACKER_MAX_DISCOVERY_ITEMS=256
 _DISCOVER_SIGNALS_BUF=()
 
@@ -450,5 +453,136 @@ tracker_bootstrap() {
   mkdir -p "$(dirname "$output_path")"
   _bootstrap_render_proposal "$discovery_json" "$classified_json" "$generated_at" >"$output_path"
   echo "Tracker bootstrap proposal written: $output_path"
+  return 0
+}
+
+tracker_status_check() {
+  local project_path="$1" output_path="${2:-}"
+  _tracker_require_jq || return 1
+
+  local mp
+  mp=$(_tracker_find_master_plan "$project_path") || return 1
+
+  local signals items='[]' merged_inputs='["local"]'
+  local gh_cache="${project_path}/${TRACKER_CACHE_GH_REL}"
+  local lin_cache="${project_path}/${TRACKER_CACHE_LINEAR_REL}"
+  local has_tracker_signals=0
+  local generated_at project_resolved
+
+  signals=$(_discover_scan_signals "$project_path")
+  items=$(_discover_repo_plan_items "$project_path")
+  generated_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || date -u +"%Y-%m-%dT%H:%M:%SZ")
+  project_resolved=$(_tracker_resolve_path "$project_path")
+
+  if [[ "$(echo "$signals" | jq 'length')" -gt 0 ]]; then
+    has_tracker_signals=1
+  fi
+
+  if [[ -f "$gh_cache" ]]; then
+    local merge_json gh_items
+    merge_json=$(_tracker_load_bounded_json "$gh_cache") || return 1
+    gh_items=$(github_issues_items_from_fetch "$merge_json") || return 1
+    items=$(discovery_merge_items "$items" "$gh_items")
+    merged_inputs=$(echo "$merged_inputs" | jq -c --arg p "$TRACKER_CACHE_GH_REL" '. + [$p]')
+    has_tracker_signals=1
+  fi
+
+  if [[ -f "$lin_cache" ]]; then
+    local merge_json lin_items
+    merge_json=$(_tracker_load_bounded_json "$lin_cache") || return 1
+    lin_items=$(linear_items_from_fetch "$merge_json") || return 1
+    items=$(discovery_merge_items "$items" "$lin_items")
+    merged_inputs=$(echo "$merged_inputs" | jq -c --arg p "$TRACKER_CACHE_LINEAR_REL" '. + [$p]')
+    has_tracker_signals=1
+  fi
+
+  local item_count
+  item_count=$(echo "$items" | jq 'length')
+  if [[ "$item_count" -gt $TRACKER_MAX_DISCOVERY_ITEMS ]]; then
+    echo "Error: status-check items exceed bound (${TRACKER_MAX_DISCOVERY_ITEMS})." >&2
+    return 1
+  fi
+
+  _bootstrap_collect_mp_index "$mp"
+  local mp_has_backlog=0
+  [[ ${#_BOOTSTRAP_MP_IDS[@]} -gt 0 ]] && mp_has_backlog=1
+
+  local mirror_skip=0 new_ext=0 repo_plan=0 closed_ext=0 unchanged=0 unsupported=0
+  local -a unlinked_items=()
+  local item_json disposition
+
+  while IFS= read -r item_json; do
+    [[ -z "$item_json" ]] && continue
+    if unsafe=$(_tracker_unsafe_reason "$(echo "$item_json" | jq -r '.title + (.body_excerpt // "")')"); then
+      unsupported=$((unsupported + 1))
+      continue
+    fi
+    disposition=$(_bootstrap_classify_item "$item_json" "$mp_has_backlog" "${_BOOTSTRAP_MP_TITLES[@]}")
+    case "$disposition" in
+      mirror_skip) mirror_skip=$((mirror_skip + 1)) ;;
+      new_external)
+        new_ext=$((new_ext + 1))
+        unlinked_items+=("$item_json")
+        ;;
+      repo_plan) repo_plan=$((repo_plan + 1)) ;;
+      closed_external) closed_ext=$((closed_ext + 1)) ;;
+      unchanged) unchanged=$((unchanged + 1)) ;;
+      *) unsupported=$((unsupported + 1)) ;;
+    esac
+  done < <(echo "$items" | jq -c '.[]?')
+
+  local unlinked_json='[]' sample_refs='[]' emit=0 severity="info"
+  if [[ ${#unlinked_items[@]} -gt 0 ]]; then
+    unlinked_json=$(printf '%s\n' "${unlinked_items[@]}" | jq -s .)
+    sample_refs=$(echo "$unlinked_json" | jq '[.[].external_ref] | .[0:5]')
+  fi
+  if [[ "$has_tracker_signals" -eq 1 && "$new_ext" -gt 0 ]]; then
+    emit=1
+  fi
+
+  local counts_json finding_json envelope
+  counts_json=$(jq -nc \
+    --argjson mirror_skip "$mirror_skip" \
+    --argjson new_external "$new_ext" \
+    --argjson repo_plan "$repo_plan" \
+    --argjson closed_external "$closed_ext" \
+    --argjson unchanged "$unchanged" \
+    --argjson unsupported "$unsupported" \
+    '{mirror_skip: $mirror_skip, new_external: $new_external, repo_plan: $repo_plan, closed_external: $closed_external, unchanged: $unchanged, unsupported: $unsupported}')
+
+  finding_json=$(jq -nc \
+    --argjson emit "$emit" \
+    --arg severity "$severity" \
+    --argjson count "$new_ext" \
+    --argjson sample_refs "$sample_refs" \
+    '{emit: ($emit == 1), severity: $severity, count: $count, sample_refs: $sample_refs}')
+
+  envelope=$(jq -nc \
+    --arg schema_version "$TRACKER_STATUS_CHECK_VERSION" \
+    --arg generated_at "$generated_at" \
+    --arg project_path "$project_resolved" \
+    --argjson has_tracker_signals "$([[ "$has_tracker_signals" -eq 1 ]] && echo true || echo false)" \
+    --argjson merged_inputs "$merged_inputs" \
+    --argjson counts "$counts_json" \
+    --argjson unlinked_external "$unlinked_json" \
+    --argjson finding "$finding_json" \
+    '{
+      schema_version: $schema_version,
+      generated_at: $generated_at,
+      project_path: $project_path,
+      has_tracker_signals: $has_tracker_signals,
+      merged_inputs: $merged_inputs,
+      counts: $counts,
+      unlinked_external: $unlinked_external,
+      finding: $finding
+    }')
+
+  if [[ -n "$output_path" ]]; then
+    mkdir -p "$(dirname "$output_path")"
+    printf '%s\n' "$envelope" >"$output_path"
+    echo "Tracker status-check written: $output_path (${new_ext} unlinked external)" >&2
+  else
+    printf '%s\n' "$envelope"
+  fi
   return 0
 }

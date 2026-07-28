@@ -1,3 +1,7 @@
-# Downstream project gitignore hints (DEV-119).
-# Installed projects should keep generator operational artifacts out of git.
-.agtoosa/transactions/
+# Downstream project gitignore hints (DEV-119 / DEV-144).
+# Installed projects receive this block via gitignore_merge_operational on install/update.
+# BEGIN AgToosa operational (managed — do not edit)
+.agtoosa/
+*.bak.*
+.worktrees/
+# END AgToosa operational

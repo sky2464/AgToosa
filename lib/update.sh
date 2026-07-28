@@ -345,7 +345,7 @@ print_update_summary() {
     for bak in "${BAK_FILES[@]}"; do
       echo -e "    ${CYAN}${bak#"${PROJECT_PATH}/"}${NC}"
     done
-    echo -e "${CYAN}Cleanup can remove *.bak.* files, or add them to .gitignore if you keep backups.${NC}"
+    echo -e "${CYAN}Operational paths (*.bak.*) are in .gitignore — run --cleanup to remove backups.${NC}"
   fi
 
   if declare -F offer_cleanup_after_apply >/dev/null 2>&1; then

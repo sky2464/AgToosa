@@ -8,6 +8,10 @@ Optional project-local YAML for AgToosa governance and delivery evidence. Files 
 | `policy.yaml` example | Prefer `Docs/Context/agtoosa-policy.example.yaml` — copy to `.agtoosa/policy.yaml` after review | DEV-059 |
 | `evidence.yml` | Delivery evidence profiles (`standard`, `security-sensitive`, `release`) | DEV-087 |
 | `evidence.yml.example` | Commented profile templates — copy to `evidence.yml` to activate | DEV-087 |
+| `tracker/gh-issues.json` | Optional GitHub Issues fetch cache for `status-check` auto-merge (DEV-143) | DEV-143 |
+| `tracker/linear-fetch.json` | Optional Linear MCP export cache for `status-check` auto-merge (DEV-143) | DEV-143 |
+
+> `tracker/` caches are gitignored operational data — refresh via `gh` or Linear MCP outside core.
 
 ## Verifier gate order
 

@@ -5,6 +5,26 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.58] — 2026-07-28
+
+Patch release: DEV-144 — Operational Gitignore Auto-Merge.
+
+### Added
+
+- **DEV-144 — Gitignore auto-merge.** `lib/gitignore.sh` marker-bounded operational ignore block on install/update; doctor GIG-003/GIG-004 findings with `git rm --cached` guidance; `template/.gitignore` operational entries; GIG-001–GIG-008 bats.
+
+---
+
+## [5.3.57] — 2026-07-28
+
+Patch release: DEV-143 — Tracker Unlinked Status Finding.
+
+### Added
+
+- **DEV-143 — Tracker status-check.** `agtoosa.sh --tracker status-check` emits `agtoosa.tracker-status-check/v1`; auto-merge `.agtoosa/tracker/` fetch caches; `/agtoosa-status` ℹ️ Info finding (no health-score deduction); TUS-001–TUS-008 bats.
+
+---
+
 ## [5.3.56] — 2026-07-28
 
 Patch release: DEV-142 — GitHub Surface Audit & Community Profile.

@@ -272,6 +272,11 @@ PY
     fi
   fi
 
+  # Operational .gitignore contract (DEV-144).
+  if declare -F gitignore_doctor_check >/dev/null 2>&1; then
+    gitignore_doctor_check "$target" _doc_pass _doc_finding
+  fi
+
   # Pending pack queue in the generator checkout.
   if [[ -d "$PACK_QUEUE_DIR" ]] && find "$PACK_QUEUE_DIR" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | grep -q .; then
     if [[ "$format" == "text" ]]; then

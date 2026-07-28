@@ -61,7 +61,7 @@
     Tracker Sync Bridge — local export and proposal-only import (delegates to Bash).
 
 .PARAMETER TrackerCommand
-    Tracker sub-command: export, propose, publish, intake, discover, or bootstrap.
+    Tracker sub-command: export, propose, publish, intake, discover, bootstrap, or status-check.
 
 .PARAMETER TrackerInput
     Return envelope path (with -Tracker propose).
@@ -132,7 +132,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 # ── Version ───────────────────────────────────────────────────
-$AGTOOSA_VERSION = "5.3.56"
+$AGTOOSA_VERSION = "5.3.58"
 $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 $TEMPLATE_DIR = Join-Path $SCRIPT_DIR "template"
 $SHIP_DIR = Join-Path $SCRIPT_DIR "ship"
@@ -233,6 +233,7 @@ ${BOLD}Tracker:${NC}
   -Tracker -TrackerCommand export -Path <dir> -TrackerOutput <file>  Export stories to JSON
   -Tracker -TrackerCommand discover -Path <dir> -TrackerOutput <file>  Discovery envelope
   -Tracker -TrackerCommand bootstrap -Path <dir> -TrackerInput <file> -TrackerOutput <file>  Bootstrap proposal
+  -Tracker -TrackerCommand status-check -Path <dir>  Unlinked external tracker JSON (stdout)
 
 ${BOLD}Examples:${NC}
   .\agtoosa.ps1

@@ -103,6 +103,18 @@ Gather installed project state without mutating files (read-only file reads and 
 
 Prefer the lock for committed reproducibility fields; prefer state for operational `generated_file_hashes`. Do not treat either file as the other's authority.
 
+**Operational gitignore (DEV-144):** On every successful install or `--update` apply, the generator merges an idempotent marker block into the project `.gitignore`:
+
+```gitignore
+# BEGIN AgToosa operational (managed — do not edit)
+.agtoosa/
+*.bak.*
+.worktrees/
+# END AgToosa operational
+```
+
+User rules outside the markers are preserved. `bash agtoosa.sh --doctor` emits **GIG-003** when the marker is missing and **GIG-004** when `.agtoosa/` or `*.bak.*` paths are already tracked (with manual `git rm --cached` guidance — no auto git mutations).
+
 For **`/agtoosa-update check`** in Generated Project Mode, continue to the briefing below and **stop**. Do not run shell commands or mutate files.
 
 ### Stage 2 — Plan

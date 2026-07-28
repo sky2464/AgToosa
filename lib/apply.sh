@@ -512,6 +512,9 @@ apply_commit_staging() {
   if declare -F state_write_after_apply >/dev/null 2>&1; then
     state_write_after_apply "$project_path" "$apply_command" "${commit_list[@]+"${commit_list[@]}"}"
   fi
+  if declare -F gitignore_merge_operational >/dev/null 2>&1; then
+    gitignore_merge_operational "$project_path"
+  fi
   return 0
 }
 

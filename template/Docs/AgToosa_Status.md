@@ -6,27 +6,27 @@
 |-------------|------|
 | `/agtoosa-status` | Full dashboard: Master-Plan parsing → initial readiness → git cross-reference → orphan detection → health score → dashboard |
 | `/agtoosa-status plan` | Part 1 only — Master-Plan.md health check |
-| `/agtoosa-status readiness` | Part 1.5 only — initial product readiness gates (`Docs/AgToosa_Readiness.md`) |
+| `/agtoosa-status readiness` | Part 1.5 only — initial product readiness gates (`docs/AgToosa_Readiness.md`) |
 | `/agtoosa-status git` | Part 2 only — git cross-reference |
 | `/agtoosa-status orphans` | Part 3 only — orphan detection |
 
 ## Objective
 
-Produce a read-only health dashboard by parsing `Docs/Master-Plan.md`, cross-referencing git history, and detecting orphaned work — then present actionable findings with a composite health score.
+Produce a read-only health dashboard by parsing `docs/Master-Plan.md`, cross-referencing git history, and detecting orphaned work — then present actionable findings with a composite health score.
 
-> **Generated Project Mode:** The dashboard reports health for **the project** in this repository — `Docs/Master-Plan.md` is **this product's** source of truth, not AgToosa maintainer backlog. See `Docs/AgToosa_Agent.md` → **Operating Contexts**.
+> **Maintainer Dogfood Mode:** This repository is the AgToosa **generator** (maintainer dogfood). The dashboard reports health for AgToosa development work tracked in `docs/Master-Plan.md` — not a generic downstream product install. See `docs/agtoosa-maintainer.md` and `docs/AgToosa_Agent.md` → **Operating Contexts**.
 
 > **Prerequisites:** None. This command can be run at any time, in any phase.
 >
-> **🔒 Read-only guarantee:** This command **never** modifies `Docs/Master-Plan.md`, git state, or any file. It only reads and reports. Every finding includes a "Fix with" suggestion pointing to the appropriate AgToosa command.
+> **🔒 Read-only guarantee:** This command **never** modifies `docs/Master-Plan.md`, git state, or any file. It only reads and reports. Every finding includes a "Fix with" suggestion pointing to the appropriate AgToosa command.
 
-> **Local script alternative:** For a dependency-light Markdown/HTML state projection without health scoring, run `bash Docs/agtoosa-dashboard.sh` (see `Docs/AgToosa_Dashboard.md`). That renderer does **not** replace this workflow's composite health score, git cross-reference, or fix ranking.
+> **Local script alternative:** For a dependency-light Markdown/HTML state projection without health scoring, run `bash docs/agtoosa-dashboard.sh` (see `docs/AgToosa_Dashboard.md`). That renderer does **not** replace this workflow's composite health score, git cross-reference, or fix ranking.
 
 ## Workflow
 
 ### Part 1 — Master-Plan.md Parsing (`/agtoosa-status plan` runs this exclusively)
 
-1.  **Read** `Docs/Master-Plan.md` in full.
+1.  **Read** `docs/Master-Plan.md` in full.
 
 2.  **Parse Project Charter:**
     *   Extract: Product name, Milestone, Active cycle name, **Cycle state**, Cycle capacity, Current phase emoji.
@@ -75,23 +75,29 @@ Produce a read-only health dashboard by parsing `Docs/Master-Plan.md`, cross-ref
     *   **Awaiting Manual — not a stuck state:** For each story with status 🔧 Awaiting Manual, do **not** flag it as stuck or stale. Record as ℹ️ Info — "`[ID]` is awaiting `[N]` manual task(s). No action needed from the agent until the user completes those steps."
     *   **Dangling Blocked:** For each ID in the Blocked table, verify it appears in Active Cycle or Backlog. If not, record: 🟡 Warning — "Blocked item `[ID]` is not tracked in Active Cycle or Backlog. *Fix with:* `/agtoosa-task`".
 
+9.  **Tracker unlinked external items (DEV-143):**
+    *   Run `bash agtoosa.sh --tracker status-check --path <project-root>` (JSON on stdout). The command performs **local-only** discovery and auto-merges optional caches at `.agtoosa/tracker/gh-issues.json` and `.agtoosa/tracker/linear-fetch.json` when present — **no network calls in lib**.
+    *   Parse `finding.emit` from `agtoosa.tracker-status-check/v1`. When `true`, record: ℹ️ Info — "`[N]` unlinked external tracker item(s) (e.g. `[ref1]`, `[ref2]`, … — up to 5 samples). *Fix with:* `/agtoosa-tracker discover` then `bootstrap` to review a proposal; accept rows via `/agtoosa-task` only."
+    *   When `finding.emit` is `false`, record nothing (silent skip for greenfield repos or fully linked trackers).
+    *   **No Plan Completeness deduction** — this finding is informational only (same contract as intentional idle cycle, DEV-117).
+
 ### Part 1.5 — Initial Product Readiness (`/agtoosa-status readiness` runs this exclusively)
 
-Audit the seven gates in `Docs/AgToosa_Readiness.md`. For each failed gate, record a 🟡 Warning (or 🔴 Error if the active story is 🟨 In Progress and the gap blocks build) with the **Fix with** command from that doc.
+Audit the seven gates in `docs/AgToosa_Readiness.md`. For each failed gate, record a 🟡 Warning (or 🔴 Error if the active story is 🟨 In Progress and the gap blocks build) with the **Fix with** command from that doc.
 
-1.  **Context files populated** — Inspect `Docs/Context/product.md`, `tech-stack.md`, `workflow.md`. Flag placeholder patterns (`[name]`, `[url]`, `[e.g.`, `[N]`, `[YYYY-MM-DD]`). *Fix with:* `/agtoosa-init`.
+1.  **Context files populated** — Inspect `docs/Context/product.md`, `tech-stack.md`, `workflow.md`. Flag placeholder patterns (`[name]`, `[url]`, `[e.g.`, `[N]`, `[YYYY-MM-DD]`). *Fix with:* `/agtoosa-init`.
 
 2.  **Epics present** — `## Epics` must contain at least one non-placeholder Epic. *Fix with:* `/agtoosa-init`.
 
 3.  **Active story has approved spec** — For each 🟨 In Progress or 🟦 Todo row in `## Active Cycle`, require a matching spec file with `## ✅ Spec Approved`. *Fix with:* `/agtoosa-spec`.
 
-4.  **Must ACs mapped to tests** — For the active story's spec, every **Must** `AC-NNN` must appear in `Docs/AgToosa_TestPlan-*.md`. *Fix with:* `/agtoosa-spec tasks` or `/agtoosa-qa plan`.
+4.  **Must ACs mapped to tests** — For the active story's spec, every **Must** `AC-NNN` must appear in `docs/AgToosa_TestPlan-*.md`. *Fix with:* `/agtoosa-spec tasks` or `/agtoosa-qa plan`.
 
-5.  **Security / threat model present** — Active spec must include threat model content per `Docs/SPEC-FORMAT.md`. *Fix with:* `/agtoosa-spec plan`.
+5.  **Security / threat model present** — Active spec must include threat model content per `docs/SPEC-FORMAT.md`. *Fix with:* `/agtoosa-spec plan`.
 
 6.  **Task tree and wave plan present** — `## Active Tasks` must have checkboxes for the In Progress story; spec `## 3. Tasks` must include `### Wave Plan`. *Fix with:* `/agtoosa-spec tasks`.
 
-7.  **Release / version parity** — When `package.json`, `pyproject.toml`, or `VERSION` declares a version, it must match `Docs/Master-Plan.md` **Milestone** and the latest `Docs/AgToosa_Changelog.md` version heading (ignore leading `v`). *Fix with:* align versions manually or `/agtoosa-ship docs`.
+7.  **Release / version parity** — `AGTOOSA_VERSION` in `agtoosa.sh` and `agtoosa.ps1` must match the latest **released** version heading in root `CHANGELOG.md` (ignore leading `v`). Planned milestones in `docs/Master-Plan.md` may differ if explicitly labeled planned. *Fix with:* align versions manually or `/agtoosa-ship docs`.
 
 Present a compact **Initial Product Readiness** table in the dashboard (gate name · pass/fail · Fix with). On the full dashboard, include this table after Plan Completeness findings and before Git Activity.
 
@@ -105,7 +111,7 @@ Present a compact **Initial Product Readiness** table in the dashboard (gate nam
 
 2.  **Unreported progress detection:**
     *   Extract story IDs from recent commit messages (pattern: `DEV-\d+` or project-specific ID prefix).
-    *   Cross-reference each extracted ID against the Active Cycle table in `Docs/Master-Plan.md`.
+    *   Cross-reference each extracted ID against the Active Cycle table in `docs/Master-Plan.md`.
     *   For any commit referencing an ID **not** found in Active Cycle or Backlog, record: 🟡 Warning — "Commit `[hash]` references `[ID]` which is not tracked in Master-Plan.md. *Fix with:* `/agtoosa-task`".
     *   For any commit referencing an In Progress story but whose task checkboxes haven't been updated, record: ℹ️ Info — "Recent commits touch `[ID]` files but Active Tasks checkboxes may be out of date. *Fix with:* `/agtoosa-build`".
 
@@ -121,11 +127,11 @@ Present a compact **Initial Product Readiness** table in the dashboard (gate nam
 ### Part 3 — Orphan Detection (`/agtoosa-status orphans` runs this exclusively)
 
 1.  **Spec file inventory:**
-    *   List all spec files matching patterns: `Docs/AgToosa_Spec-*.md`, `Docs/archived/spec-*.md`.
+    *   List all spec files matching patterns: `docs/AgToosa_Spec-*.md`, `docs/archived/spec-*.md`.
     *   Extract story IDs from each filename.
 
 2.  **Cross-reference spec files against Master-Plan.md:**
-    *   Collect all IDs referenced anywhere in `Docs/Master-Plan.md` (Active Cycle, Backlog, Completed This Cycle, Blocked, Epics).
+    *   Collect all IDs referenced anywhere in `docs/Master-Plan.md` (Active Cycle, Backlog, Completed This Cycle, Blocked, Epics).
     *   Compare the two sets.
 
 3.  **Flag orphaned specs:**
@@ -254,7 +260,8 @@ The dashboard MUST emit a deterministic, ranked, deduplicated "Recommended Next 
 | Tasks Done counter mismatch; stale checkboxes referenced by recent commits | `/agtoosa-build` |
 | Blocked item > 7d (Warning) or > 30d (Error); Dangling Blocked ID not in Active Cycle/Backlog; Commit references untracked story ID; Orphaned spec file not referenced in Master-Plan | `/agtoosa-task` |
 | WIP / fixup / squash commits; Stuck-Done story (Done in Active Cycle but not in Completed) | `/agtoosa-ship` |
-| Failed Initial Product Readiness gate (context, epics, approved spec, Must AC tests, threat model, task tree/wave, version parity) | See gate row in `Docs/AgToosa_Readiness.md` — typically `/agtoosa-init`, `/agtoosa-spec`, `/agtoosa-spec tasks`, `/agtoosa-spec plan`, or `/agtoosa-qa plan` |
+| Unlinked external tracker items (`status-check` `finding.emit` true) | `/agtoosa-tracker discover` (then `bootstrap`) |
+| Failed Initial Product Readiness gate (context, epics, approved spec, Must AC tests, threat model, task tree/wave, version parity) | See gate row in `docs/AgToosa_Readiness.md` — typically `/agtoosa-init`, `/agtoosa-spec`, `/agtoosa-spec tasks`, `/agtoosa-spec plan`, or `/agtoosa-qa plan` |
 
 **Step 2 — Sort findings by priority:**
 
@@ -283,6 +290,7 @@ Use these verb-phrases verbatim:
 - `/agtoosa-build` → "reconcile task counters and stale checkboxes"
 - `/agtoosa-task` → "resolve blocked, dangling, untracked, or orphan items"
 - `/agtoosa-ship` → "clean up WIP commits and stuck-Done stories"
+- `/agtoosa-tracker discover` → "review unlinked external tracker items via bootstrap proposal"
 - `/agtoosa-qa plan` → "map Must ACs to test IDs in the test plan"
 
 Rationale lines:
@@ -332,7 +340,7 @@ Then run the full dashboard as usual. This replaces any generic "unknown sub-com
 
 ## Rules
 
-1.  **Read-only.** Never modify `Docs/Master-Plan.md`, git state, or any other file. If tempted to fix something, report it as a finding instead.
+1.  **Read-only.** Never modify `docs/Master-Plan.md`, git state, or any other file. If tempted to fix something, report it as a finding instead.
 2.  **Zero questions.** Run immediately and produce output. Do not ask the user anything.
 3.  **Actionable findings.** Every 🔴 Error and 🟡 Warning must include a "Fix with" suggestion pointing to an existing AgToosa command.
 4.  **Placeholder awareness.** Master-Plan.md ships as a template with placeholder values (`[DEV-XX]`, `[YYYY-MM-DD]`, `[name]`, etc.). Detect these and report them — do not treat them as real data.

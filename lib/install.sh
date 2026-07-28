@@ -587,6 +587,11 @@ install_files() {
     state_write_after_apply "$PROJECT_PATH" "install"
   fi
 
+  # DEV-144: operational .gitignore marker block
+  if declare -F gitignore_merge_operational >/dev/null 2>&1; then
+    gitignore_merge_operational "$PROJECT_PATH"
+  fi
+
   # Summary
   echo ""
   local summary_verb="installed"
@@ -613,7 +618,7 @@ install_files() {
     else
       echo -e "    ${CYAN}${#BAK_FILES[@]} backup files in project root${NC}"
     fi
-    echo -e "${CYAN}Cleanup can remove *.bak.* files, or add them to .gitignore if you keep backups.${NC}"
+    echo -e "${CYAN}Operational paths (*.bak.*) are in .gitignore — run --cleanup to remove backups.${NC}"
   fi
 
   if declare -F offer_cleanup_after_apply >/dev/null 2>&1; then

@@ -77,6 +77,7 @@ Inline comments in `lib/*.sh` and `agtoosa.sh` should describe behavior in plain
 - `install.sh` is deprecated and should not be modified.
 - `ship/` is temporary staging output and must never be treated as durable project state.
 - `.agtoosa/pack-queue/` is the durable staging area for `--registry install` packs until the next project install merges them.
+- Downstream installs merge an operational `.gitignore` marker block via `lib/gitignore.sh` (DEV-144) — `.agtoosa/`, `*.bak.*`, `.worktrees/` only; workflow docs and provenance markers stay committed.
 - The canonical version lives in `AGTOOSA_VERSION` at the top of `agtoosa.sh` and must match `agtoosa.ps1` and `npm/package.json`.
 - `lib/maintain.sh` owns `--verify`, `--doctor`, and `--uninstall` (sourced by `agtoosa.sh`).
 - `lib/cleanup.sh` owns `--cleanup` (merge backups, orphan docs, deselected platform files).
@@ -90,7 +91,7 @@ Beyond the interactive install wizard, `agtoosa.sh` exposes these maintainer-rel
 | Flag | Owning code | Purpose | Exit / notes |
 |------|-------------|---------|--------------|
 | `--verify [path]` | `lib/maintain.sh:run_verify` | Run the deterministic lifecycle verifier (prefers the target's installed `Docs/agtoosa-verify.sh` or `docs/agtoosa-verify.sh`, falls back to template copy) | Verifier exit code (0 pass, 1 findings, 2 usage) |
-| `--doctor [path]` | `lib/maintain.sh:run_doctor` | Report version skew (`Docs/.agtoosa-version` vs generator), missing workflow docs, platform wiring gaps, context placeholders, queued packs, stale unnecessary files | 0 healthy, 1 issues found, 2 bad path |
+| `--doctor [path]` | `lib/maintain.sh:run_doctor` | Report version skew (`Docs/.agtoosa-version` vs generator), missing workflow docs, platform wiring gaps, context placeholders, operational gitignore (GIG-003/004), queued packs, stale unnecessary files | 0 healthy, 1 issues found, 2 bad path |
 | `--status-line [path]` | `lib/maintain.sh:run_status_line` | Print one executive `SYNC:` pulse from Master-Plan (read-only) | 0 ok, 2 missing path or Master-Plan |
 | `--uninstall [path]` | `lib/maintain.sh:run_uninstall` | Remove AgToosa-owned files; preserves Master-Plan, Context/, archived/, and merged entry points | Blocks uninstall on the generator source tree; prompts unless `--yes` |
 | `--cleanup [path]` | `lib/cleanup.sh:run_cleanup` | Remove merge backups (`*.bak.*`), removed workflow docs, and deselected platform outputs; `--only backups` limits to merge backups | Plan with `--dry-run` or `--format json`; apply requires confirmation (`--yes` non-interactive) |

@@ -10,7 +10,8 @@
     { "$ref": "#/$defs/discovery_envelope" },
     { "$ref": "#/$defs/bootstrap_input_envelope" },
     { "$ref": "#/$defs/github_issues_fetch_envelope" },
-    { "$ref": "#/$defs/linear_fetch_envelope" }
+    { "$ref": "#/$defs/linear_fetch_envelope" },
+    { "$ref": "#/$defs/status_check_envelope" }
   ],
   "$defs": {
     "schema_version": {
@@ -329,6 +330,74 @@
               "title": { "type": "string", "maxLength": 256 },
               "state": { "type": "string", "maxLength": 64 },
               "url": { "type": "string", "maxLength": 512 }
+            }
+          }
+        }
+      }
+    },
+    "status_check_envelope": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "generated_at",
+        "project_path",
+        "has_tracker_signals",
+        "merged_inputs",
+        "counts",
+        "unlinked_external",
+        "finding"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "agtoosa.tracker-status-check/v1"
+        },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "project_path": { "type": "string", "maxLength": 512 },
+        "has_tracker_signals": { "type": "boolean" },
+        "merged_inputs": {
+          "type": "array",
+          "maxItems": 8,
+          "items": { "type": "string", "maxLength": 128 }
+        },
+        "counts": {
+          "type": "object",
+          "required": [
+            "mirror_skip",
+            "new_external",
+            "repo_plan",
+            "closed_external",
+            "unchanged",
+            "unsupported"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "mirror_skip": { "type": "integer", "minimum": 0 },
+            "new_external": { "type": "integer", "minimum": 0 },
+            "repo_plan": { "type": "integer", "minimum": 0 },
+            "closed_external": { "type": "integer", "minimum": 0 },
+            "unchanged": { "type": "integer", "minimum": 0 },
+            "unsupported": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "unlinked_external": {
+          "type": "array",
+          "maxItems": 256,
+          "items": { "$ref": "#/$defs/discovery_item" }
+        },
+        "finding": {
+          "type": "object",
+          "required": ["emit", "severity", "count", "sample_refs"],
+          "additionalProperties": false,
+          "properties": {
+            "emit": { "type": "boolean" },
+            "severity": { "type": "string", "enum": ["info"] },
+            "count": { "type": "integer", "minimum": 0 },
+            "sample_refs": {
+              "type": "array",
+              "maxItems": 5,
+              "items": { "type": "string", "maxLength": 256 }
             }
           }
         }

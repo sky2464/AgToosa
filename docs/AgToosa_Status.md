@@ -75,6 +75,12 @@ Produce a read-only health dashboard by parsing `docs/Master-Plan.md`, cross-ref
     *   **Awaiting Manual — not a stuck state:** For each story with status 🔧 Awaiting Manual, do **not** flag it as stuck or stale. Record as ℹ️ Info — "`[ID]` is awaiting `[N]` manual task(s). No action needed from the agent until the user completes those steps."
     *   **Dangling Blocked:** For each ID in the Blocked table, verify it appears in Active Cycle or Backlog. If not, record: 🟡 Warning — "Blocked item `[ID]` is not tracked in Active Cycle or Backlog. *Fix with:* `/agtoosa-task`".
 
+9.  **Tracker unlinked external items (DEV-143):**
+    *   Run `bash agtoosa.sh --tracker status-check --path <project-root>` (JSON on stdout). The command performs **local-only** discovery and auto-merges optional caches at `.agtoosa/tracker/gh-issues.json` and `.agtoosa/tracker/linear-fetch.json` when present — **no network calls in lib**.
+    *   Parse `finding.emit` from `agtoosa.tracker-status-check/v1`. When `true`, record: ℹ️ Info — "`[N]` unlinked external tracker item(s) (e.g. `[ref1]`, `[ref2]`, … — up to 5 samples). *Fix with:* `/agtoosa-tracker discover` then `bootstrap` to review a proposal; accept rows via `/agtoosa-task` only."
+    *   When `finding.emit` is `false`, record nothing (silent skip for greenfield repos or fully linked trackers).
+    *   **No Plan Completeness deduction** — this finding is informational only (same contract as intentional idle cycle, DEV-117).
+
 ### Part 1.5 — Initial Product Readiness (`/agtoosa-status readiness` runs this exclusively)
 
 Audit the seven gates in `docs/AgToosa_Readiness.md`. For each failed gate, record a 🟡 Warning (or 🔴 Error if the active story is 🟨 In Progress and the gap blocks build) with the **Fix with** command from that doc.
@@ -254,6 +260,7 @@ The dashboard MUST emit a deterministic, ranked, deduplicated "Recommended Next 
 | Tasks Done counter mismatch; stale checkboxes referenced by recent commits | `/agtoosa-build` |
 | Blocked item > 7d (Warning) or > 30d (Error); Dangling Blocked ID not in Active Cycle/Backlog; Commit references untracked story ID; Orphaned spec file not referenced in Master-Plan | `/agtoosa-task` |
 | WIP / fixup / squash commits; Stuck-Done story (Done in Active Cycle but not in Completed) | `/agtoosa-ship` |
+| Unlinked external tracker items (`status-check` `finding.emit` true) | `/agtoosa-tracker discover` (then `bootstrap`) |
 | Failed Initial Product Readiness gate (context, epics, approved spec, Must AC tests, threat model, task tree/wave, version parity) | See gate row in `docs/AgToosa_Readiness.md` — typically `/agtoosa-init`, `/agtoosa-spec`, `/agtoosa-spec tasks`, `/agtoosa-spec plan`, or `/agtoosa-qa plan` |
 
 **Step 2 — Sort findings by priority:**
@@ -283,6 +290,7 @@ Use these verb-phrases verbatim:
 - `/agtoosa-build` → "reconcile task counters and stale checkboxes"
 - `/agtoosa-task` → "resolve blocked, dangling, untracked, or orphan items"
 - `/agtoosa-ship` → "clean up WIP commits and stuck-Done stories"
+- `/agtoosa-tracker discover` → "review unlinked external tracker items via bootstrap proposal"
 - `/agtoosa-qa plan` → "map Must ACs to test IDs in the test plan"
 
 Rationale lines:

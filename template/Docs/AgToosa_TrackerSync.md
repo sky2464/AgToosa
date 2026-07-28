@@ -49,7 +49,32 @@ PowerShell (delegates to Bash — Git Bash or WSL required):
 .\agtoosa.ps1 -Tracker -TrackerCommand export -Path C:\Projects\MyApp -TrackerOutput $env:TEMP\export.json
 ```
 
-Run `/agtoosa-tracker export`, `propose`, `publish`, `intake`, `discover`, or `bootstrap` in your AI assistant for the full workflow. Substantive rules live in this document; platform adapters delegate here.
+Run `/agtoosa-tracker export`, `propose`, `publish`, `intake`, `discover`, `bootstrap`, or `status-check` in your AI assistant for the full workflow. Substantive rules live in this document; platform adapters delegate here.
+
+**Status-check cache paths (DEV-143):** optional fetch artifacts for auto-merge (gitignored under `.agtoosa/`):
+
+| Path | Format |
+|------|--------|
+| `.agtoosa/tracker/gh-issues.json` | `agtoosa.github-issues-fetch/v1` or raw `gh issue list --json` |
+| `.agtoosa/tracker/linear-fetch.json` | `agtoosa.linear-fetch-envelope/v1` |
+
+Refresh caches via `gh issue list`, Linear MCP export, or CI — AgToosa does not fetch them in core.
+
+---
+
+## Workflow: `/agtoosa-tracker status-check` (DEV-143)
+
+1. Run local discovery (repo signals + repo-plans) — **no network calls**.
+2. Auto-merge `.agtoosa/tracker/gh-issues.json` and `.agtoosa/tracker/linear-fetch.json` when present.
+3. Classify items using DEV-141 bootstrap semantics; count only `new_external` as unlinked.
+4. Emit `agtoosa.tracker-status-check/v1` JSON (`finding.emit` true when unlinked count > 0 and tracker context exists).
+
+```bash
+bash agtoosa.sh --tracker status-check --path /path/to/project
+# optional: --output /tmp/status-check.json
+```
+
+`/agtoosa-status` invokes this CLI and surfaces an ℹ️ Info finding when `finding.emit` is true — **no health-score deduction**. Fix path: `discover` → `bootstrap` → `/agtoosa-task` for accepted rows.
 
 ---
 
