@@ -1,0 +1,105 @@
+{
+  "schema_version": "agtoosa.github-surface-manifest/v1",
+  "repository": "sky2464/AgToosa",
+  "about": {
+    "description": "A lightweight, repo-native control plane for spec-driven AI development",
+    "homepage_url": "https://sky2464.github.io/AgToosa/",
+    "topics": [
+      "ai",
+      "bash",
+      "claude",
+      "cursor",
+      "developer-tools",
+      "spec-driven-development",
+      "workflow"
+    ]
+  },
+  "pages": {
+    "enabled": true,
+    "source_path": "/docs",
+    "source_branch": "main",
+    "url": "https://sky2464.github.io/AgToosa/"
+  },
+  "features": {
+    "has_issues": true,
+    "has_wiki": true,
+    "has_discussions": true,
+    "has_projects": true,
+    "projects_v2_board_required": false
+  },
+  "discussions": {
+    "min_categories": 4
+  },
+  "community_profile": {
+    "min_health_percentage": 95
+  },
+  "wiki": {
+    "home_page": "Home.md"
+  },
+  "funding": {
+    "github": ["sky2464"]
+  },
+  "labels": [
+    "area-ci",
+    "area-docs",
+    "area-generator",
+    "area-security",
+    "area-template",
+    "bug",
+    "chore",
+    "documentation",
+    "duplicate",
+    "enhancement",
+    "good-first-issue",
+    "help-wanted",
+    "invalid",
+    "needs-repro",
+    "priority-critical",
+    "priority-high",
+    "priority-low",
+    "priority-medium",
+    "question",
+    "security",
+    "source:agtoosa-sync",
+    "source:community",
+    "stale",
+    "status-backlog",
+    "status-blocked",
+    "status-confirmed",
+    "status-in-progress",
+    "status-needs-triage",
+    "status-review",
+    "status-wont-fix",
+    "testing",
+    "wontfix"
+  ],
+  "required_files": [
+    ".github/CODEOWNERS",
+    ".github/DISCUSSIONS.md",
+    ".github/FUNDING.yml",
+    ".github/GITHUB-SURFACES.md",
+    ".github/ISSUE_TEMPLATE/bug.yml",
+    ".github/ISSUE_TEMPLATE/config.yml",
+    ".github/ISSUE_TEMPLATE/feature.yml",
+    ".github/PROJECT.md",
+    ".github/PULL_REQUEST_TEMPLATE.md",
+    ".github/SUPPORT.md",
+    ".github/TRIAGE.md",
+    ".github/workflows/github-surface-audit.yml",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "SECURITY.md",
+    "docs/github-surface-manifest.json",
+    "scripts/github-surface-audit.sh",
+    "scripts/github-labels-sync.sh"
+  ],
+  "non_goals": [
+    "branch-protection",
+    "secrets-environments",
+    "marketplace-action",
+    "github-packages",
+    "codespaces",
+    "agents-tab"
+  ]
+}

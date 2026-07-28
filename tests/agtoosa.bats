@@ -8281,9 +8281,13 @@ site076_jekyll_build() {
     ! grep -qiE 'express\(|fastapi|django\.|flask\.|rails' "$f"
   done
 
-  # Proof is build-only — no automatic production deploy step
-  ! grep -q "actions/deploy-pages" "$wf"
-  ! grep -qE 'pages:[[:space:]]*write' "$wf"
+  # Proof is build-only by default — optional deploy only when PAGES_ENABLED=true (DEV-142)
+  if grep -q "actions/deploy-pages" "$wf"; then
+    grep -q "vars.PAGES_ENABLED == 'true'" "$wf"
+  fi
+  if grep -qE 'pages:[[:space:]]*write' "$wf"; then
+    grep -q "vars.PAGES_ENABLED == 'true'" "$wf"
+  fi
 }
 
 @test "DEV-076 SITE-008: Docs workflow is pinned and least privilege" {
@@ -8292,8 +8296,14 @@ site076_jekyll_build() {
 
   grep -qE 'permissions:' "$wf"
   grep -qE 'contents:[[:space:]]*read' "$wf"
+  # pages:write and id-token:write allowed only for optional guarded deploy (DEV-142)
+  if grep -qE 'pages:[[:space:]]*write' "$wf"; then
+    grep -q "vars.PAGES_ENABLED == 'true'" "$wf"
+  fi
+  if grep -qE 'id-token:[[:space:]]*write' "$wf"; then
+    grep -q "vars.PAGES_ENABLED == 'true'" "$wf"
+  fi
   ! grep -qE 'contents:[[:space:]]*write' "$wf"
-  ! grep -qE 'id-token:[[:space:]]*write' "$wf"
 
   # Every third-party action must be immutable-pinned (40-char SHA)
   local uses_line
@@ -16276,4 +16286,104 @@ PY
   grep -q 'DEV-141' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-141.md" ]
   [ -f "$root/docs/archived/review-DEV-141.md" ]
+}
+
+# ── DEV-142: GitHub Surface Audit & Community Profile (GSA-001–GSA-010) ─────
+
+@test "DEV-142 @smoke GSA-001: surface manifest schema is valid" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local manifest="$root/docs/github-surface-manifest.json"
+  [ -f "$manifest" ]
+  run jq -e '.schema_version == "agtoosa.github-surface-manifest/v1"' "$manifest"
+  [ "$status" -eq 0 ]
+  run jq -e '.repository == "sky2464/AgToosa"' "$manifest"
+  [ "$status" -eq 0 ]
+  run jq -e '(.about.topics | length) >= 5' "$manifest"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-142 GSA-002: local surface audit passes in fixture repo" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash "$root/scripts/github-surface-audit.sh" --mode local --repo sky2464/AgToosa
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"manifest schema valid"* ]]
+}
+
+@test "DEV-142 GSA-003: ISSUE_TEMPLATE config disables blank issues" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local config="$root/.github/ISSUE_TEMPLATE/config.yml"
+  [ -f "$config" ]
+  grep -q 'blank_issues_enabled: false' "$config"
+  grep -q 'security/advisories' "$config"
+  grep -q 'discussions' "$config"
+}
+
+@test "DEV-142 GSA-004: manifest declares full TRIAGE label taxonomy" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local manifest="$root/docs/github-surface-manifest.json"
+  for label in status-needs-triage status-confirmed source:agtoosa-sync source:community \
+    priority-critical priority-medium area-security needs-repro; do
+    run jq -e --arg l "$label" '.labels | index($l)' "$manifest"
+    [ "$status" -eq 0 ]
+  done
+}
+
+@test "DEV-142 GSA-005: GITHUB-SURFACES runbook documents Projects v2 non-goal" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local doc="$root/.github/GITHUB-SURFACES.md"
+  [ -f "$doc" ]
+  grep -q 'Projects v2' "$doc"
+  grep -q 'non-goal' "$doc"
+  grep -q 'github-surface-audit.sh' "$doc"
+}
+
+@test "DEV-142 GSA-006: github-surface-audit workflow exists and uses local on PR" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/github-surface-audit.yml"
+  [ -f "$wf" ]
+  grep -q 'github-surface-audit.sh' "$wf"
+  grep -q 'pull_request' "$wf"
+  grep -q 'value=local' "$wf"
+}
+
+@test "DEV-142 GSA-007: pre-release checklist runs live surface audit" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/pre-release-checklist.yml"
+  grep -q 'github-surface-audit.sh' "$wf"
+  grep -q '\-\-mode live' "$wf"
+}
+
+@test "DEV-142 GSA-008: labels workflow syncs from manifest" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local wf="$root/.github/workflows/labels.yml"
+  [ -f "$root/scripts/github-labels-sync.sh" ]
+  grep -q 'github-labels-sync.sh' "$wf"
+}
+
+@test "DEV-142 GSA-009: wiki-sync seeds Home.md" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/wiki-sync.yml"
+  grep -q 'Home.md' "$wf"
+  grep -q 'AgToosa Documentation Hub' "$wf"
+}
+
+@test "DEV-142 GSA-010: docs-pages deploy guarded by PAGES_ENABLED" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/docs-pages-proof.yml"
+  grep -q 'vars.PAGES_ENABLED' "$wf"
+  grep -q 'upload-pages-artifact' "$wf"
+  grep -q 'deploy-pages' "$wf"
+}
+
+@test "DEV-142 @smoke SR-001: v5.3.56 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.56" ]
+  [ "$ps_ver" = "5.3.56" ]
+  [ "$npm_ver" = "5.3.56" ]
+  [ "$formula_ver" = "5.3.56" ]
+  grep -q '## \[5.3.56\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-142' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-142.md" ]
+  [ -f "$root/docs/archived/review-DEV-142.md" ]
 }

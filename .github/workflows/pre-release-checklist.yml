@@ -62,6 +62,17 @@ jobs:
       - name: Run BATS test suite
         run: bats tests/agtoosa.bats
 
+      - name: Install jq and gh for surface audit
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq jq
+          type -p gh >/dev/null || sudo apt-get install -y -qq gh
+
+      - name: GitHub surface audit (live)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/github-surface-audit.sh --mode live --repo "${{ github.repository }}"
+
       - name: Validate template completeness
         run: |
           set -euo pipefail

@@ -1,5 +1,5 @@
 # DEV-076 — build-only GitHub Pages proof from canonical docs/.
-# Ephemeral artifact only; no automatic production deployment.
+# Optional production deploy when repository variable PAGES_ENABLED=true (DEV-142).
 name: Docs Pages Proof
 
 on:
@@ -16,6 +16,8 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 defaults:
   run:
@@ -54,3 +56,22 @@ jobs:
           path: _site
           retention-days: 7
           if-no-files-found: error
+
+      - name: Upload Pages artifact
+        if: vars.PAGES_ENABLED == 'true'
+        uses: actions/upload-pages-artifact@56afcaa8a0e509364ef7d0e8c4d4baf6a5a0c0e # v3
+        with:
+          path: _site
+
+  deploy:
+    name: Deploy GitHub Pages
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.PAGES_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed77f7a3fbce4df8f38fc9c8c8e0 # v4

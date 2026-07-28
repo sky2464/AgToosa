@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.56] — 2026-07-28
+
+Patch release: DEV-142 — GitHub Surface Audit & Community Profile.
+
+### Added
+
+- **DEV-142 — GitHub surface audit.** `docs/github-surface-manifest.json` expected-state contract; `scripts/github-surface-audit.sh` (local + live modes); `scripts/github-labels-sync.sh`; `.github/GITHUB-SURFACES.md` runbook; `ISSUE_TEMPLATE/config.yml`; `github-surface-audit.yml` CI gate; pre-release live audit hook; optional guarded Pages deploy; GSA-001–GSA-010 bats.
+
+---
+
 ## [5.3.55] — 2026-07-28
 
 Patch release: DEV-141 — Tracker Discovery & Bootstrap.

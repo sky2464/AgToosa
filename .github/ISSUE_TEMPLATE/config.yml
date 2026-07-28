@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security Advisories
+    url: https://github.com/sky2464/AgToosa/security/advisories/new
+    about: Report a security vulnerability privately — do not open a public issue
+  - name: GitHub Discussions
+    url: https://github.com/sky2464/AgToosa/discussions
+    about: Ask questions, share ideas, and get community help
+  - name: Support Policy
+    url: https://github.com/sky2464/AgToosa/blob/main/.github/SUPPORT.md
+    about: Read the support channel matrix and response expectations

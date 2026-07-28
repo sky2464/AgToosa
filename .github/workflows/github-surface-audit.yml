@@ -1,0 +1,80 @@
+name: GitHub Surface Audit
+
+on:
+  pull_request:
+    paths:
+      - "docs/github-surface-manifest.json"
+      - "scripts/github-surface-audit.sh"
+      - "scripts/github-labels-sync.sh"
+      - ".github/GITHUB-SURFACES.md"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".github/workflows/github-surface-audit.yml"
+      - ".github/workflows/labels.yml"
+      - ".github/workflows/wiki-sync.yml"
+  push:
+    branches: [main]
+    paths:
+      - "docs/github-surface-manifest.json"
+      - "scripts/github-surface-audit.sh"
+      - ".github/GITHUB-SURFACES.md"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".github/workflows/github-surface-audit.yml"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Audit mode (local or live)"
+        required: false
+        default: live
+        type: choice
+        options:
+          - local
+          - live
+
+permissions:
+  contents: read
+  issues: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  surface-audit:
+    name: GitHub Surface Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Install jq
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq jq
+
+      - name: Determine audit mode
+        id: mode
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "value=local" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "value=${{ github.event.inputs.mode }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=live" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run surface audit
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          MODE="${{ steps.mode.outputs.value }}"
+          echo "Running github-surface-audit.sh --mode $MODE"
+          if [[ "$MODE" == "live" ]]; then
+            if ! command -v gh >/dev/null 2>&1; then
+              type -p curl >/dev/null || sudo apt-get install -y -qq curl
+              curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+              echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+              sudo apt-get update -qq
+              sudo apt-get install -y -qq gh
+            fi
+          fi
+          bash scripts/github-surface-audit.sh --mode "$MODE" --repo "${{ github.repository }}"
