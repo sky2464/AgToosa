@@ -3,7 +3,7 @@
 > **Story ID:** DEV-136  
 > **Epic:** DEV-002 — Workflow Templates · DEV-004 — Testing & QA Harness  
 > **Type:** Chore  
-> **Status:** 🟨 In Progress — build complete (catch-up formalization)  
+> **Status:** 🏁 Shipped — v5.3.50  
 > **Estimate:** M  
 > **Clarity:** `ready`  
 > **Priority:** P1  
@@ -80,7 +80,7 @@
 - [x] **3.** Platform adapter Host Mode Execution blocks — _AC-007_
 - [x] **4.** Supersede Compass plan-mode block in core rules — _AC-006_
 - [x] **5.** Bats IDE-001–012 + test plan — _AC-008_
-- [ ] **6.** Review + ship v5.3.50 — _AC-008_ (review ✅ approved; ship pending)
+- [x] **6.** Review + ship v5.3.50 — _AC-008_
 
 ## 4. Test Plan
 

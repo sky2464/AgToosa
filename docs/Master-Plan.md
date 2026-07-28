@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-28 (/agtoosa-review — DEV-136 Review Approved)
+> **Last updated:** 2026-07-28 (/agtoosa-ship — DEV-136 v5.3.50)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Idle — DEV-136 review approved; ship v5.3.50 pending |
-| Milestone | `v5.3.50` (next) |
+| Current phase | Idle — DEV-136 shipped v5.3.50 |
+| Milestone | `v5.3.51` (next) |
 | Active cycle | _(none)_ |
-| Cycle state | Idle — DEV-136 catch-up; review approved; await ship |
+| Cycle state | Idle — post-ship |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -24,6 +24,8 @@
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
 | _(none — cycle archived)_ | | | | | |
+
+<!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.50.md (DEV-136 v5.3.50) -->
 
 <!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.49.md (DEV-135 v5.3.49) -->
 
@@ -137,7 +139,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-133 | Chore: GitHub Branch Hygiene for Cursor Agent Sprawl | Chore | S | DEV-004 | P1 | 🏁 Shipped — v5.3.47 |
 | DEV-134 | Chore: README Hero Media Pass (Catch-up Formalization) | Chore | XS | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.48 |
 | DEV-135 | Chore: Natural-Language Continuation → `/agtoosa-next` | Chore | S | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.49 |
-| DEV-136 | Chore: IDE Host Mode Bridge for Spec and Review | Chore | M | DEV-028 / DEV-116 | P1 | 🔍 Review ✅ Approved — ship v5.3.50 |
+| DEV-136 | Chore: IDE Host Mode Bridge for Spec and Review | Chore | M | DEV-028 / DEV-116 | P1 | 🏁 Shipped — v5.3.50 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
 | DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v5.3.10 |
@@ -295,6 +297,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-136 | Chore: IDE Host Mode Bridge for Spec and Review | 2026-07-28 | [spec-DEV-136.md](archived/spec-DEV-136.md) · [review-DEV-136.md](archived/review-DEV-136.md) · [evidence-DEV-136.md](archived/evidence-DEV-136.md) |
 | DEV-135 | Chore: Natural-Language Continuation → `/agtoosa-next` | 2026-07-28 | [spec-DEV-135.md](archived/spec-DEV-135.md) · [review-DEV-135.md](archived/review-DEV-135.md) · [evidence-DEV-135.md](archived/evidence-DEV-135.md) |
 | DEV-134 | Chore: README Hero Media Pass (Catch-up Formalization) | 2026-07-28 | [spec-DEV-134.md](archived/spec-DEV-134.md) · [review-DEV-134.md](archived/review-DEV-134.md) · [evidence-DEV-134.md](archived/evidence-DEV-134.md) |
 | DEV-133 | Chore: GitHub Branch Hygiene for Cursor Agent Sprawl | 2026-07-28 | [spec-DEV-133.md](archived/spec-DEV-133.md) · [review-DEV-133.md](archived/review-DEV-133.md) · [evidence-DEV-133.md](archived/evidence-DEV-133.md) |
@@ -769,6 +772,9 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-27 23:40 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-132 — 0 Critical, 2 Warning; next `/agtoosa-next` → ship v5.3.46 | AgToosa |
 | 2026-07-27 23:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-132 — smoke PASS EVJ/SR gate; v5.3.46 | AgToosa |
 | 2026-07-27 23:55 | 🚀 Ship complete — v5.3.46 — DEV-132 Evidence JSONL preservation | AgToosa |
+| 2026-07-28 21:18 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-136 — smoke PASS IDE/SR gate; v5.3.50 | AgToosa |
+| 2026-07-28 21:18 | 🚀 Ship complete — v5.3.50 — DEV-136 IDE host mode bridge | AgToosa |
+| 2026-07-28 21:18 | 🚀 Release 5.3.50 shipped — v5.3.50; version parity bash/ps1/npm/formula; Milestone v5.3.51 (next) | AgToosa |
 | 2026-07-27 21:05 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-135 — 0 Critical; NLX-001–008 green; next `/agtoosa-next` → ship v5.3.49 | AgToosa |
 | 2026-07-27 21:00 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-135 — NL continuation PROGRESS routing | AgToosa |
 | 2026-07-28 21:10 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-135 — smoke PASS NLX/SR gate; v5.3.49 | AgToosa |

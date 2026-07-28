@@ -284,3 +284,4 @@
 {"ts":"2026-07-28T21:15:00Z","phase":"spec","event":"approved","story":"DEV-136","by":"AgToosa","note":"IDE Host Mode Bridge catch-up; build complete 4882506; await review"}
 {"ts":"2026-07-28T21:12:00Z","phase":"review","event":"start","story":"DEV-136","by":"AgToosa"}
 {"ts":"2026-07-28T21:12:00Z","phase":"review","event":"approved","story":"DEV-136","by":"AgToosa","note":"0 Critical; IDE-001–012 green"}
+{"ts":"2026-07-28T21:18:00Z","phase":"ship","event":"complete","story":"DEV-136","by":"AgToosa","note":"v5.3.50; IDE/SR smoke PASS"}

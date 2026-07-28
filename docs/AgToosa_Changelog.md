@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.50] — 2026-07-28
+
+Patch release: DEV-136 — IDE host mode bridge for spec and review.
+
+### Changed
+
+- **DEV-136 — IDE Host Mode Bridge.** Map `/agtoosa-spec` and `/agtoosa-review` planning windows to native IDE plan mode; auditable `HOST-MODE:` handoff to Agent/Auto for artifact writes; ADR-020; product-truth `host_mode_policy`; supersede Compass plan-mode block; IDE-001–012 bats.
+
+---
+
 ## [5.3.49] — 2026-07-28
 
 Patch release: DEV-135 — natural-language continuation routes to `/agtoosa-next`.
