@@ -422,8 +422,11 @@ apply_commit_staging() {
   done < <(find "$APPLY_STAGING_ROOT" -type f -print0)
 
   if ((${#commit_list[@]} > 0)); then
-    IFS=$'\n' commit_list=($(printf '%s\n' "${commit_list[@]}" | LC_ALL=C sort))
-    unset IFS
+    local sorted_commit_list=()
+    while IFS= read -r _sorted_line; do
+      sorted_commit_list+=("$_sorted_line")
+    done < <(printf '%s\n' "${commit_list[@]}" | LC_ALL=C sort)
+    commit_list=("${sorted_commit_list[@]}")
   fi
 
   for rel in "${commit_list[@]}"; do

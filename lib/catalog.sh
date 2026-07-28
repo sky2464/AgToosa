@@ -272,11 +272,11 @@ _catalog_evaluate_compatibility() {
   local req_platform missing=0 p
   while IFS= read -r req_platform; do
     [[ -z "$req_platform" ]] && continue
-    local found=0
+    local platform_found=0
     while IFS= read -r installed; do
-      [[ "$installed" == "$req_platform" ]] && found=1
+      [[ "$installed" == "$req_platform" ]] && platform_found=1
     done < <(_catalog_detect_platforms "$project")
-    if [[ $found -eq 0 ]]; then
+    if [[ $platform_found -eq 0 ]]; then
       reasons+=("missing platform: $req_platform")
       status="incompatible"
       missing=1
