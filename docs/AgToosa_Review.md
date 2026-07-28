@@ -24,6 +24,27 @@ Ensure code quality, security, and simplicity through multi-persona review.
 
 Each reviewer persona (or parallel subagent) must report command run, exit code, pass/fail, warnings, errors, changed files, and next action for every test, scan, or command executed. Nonzero exits and tool warnings block a 🟢 Passed verdict unless explicitly accepted with evidence. The orchestrator summarizes unresolved terminal output before presenting the review approval gate.
 
+## IDE Host Mode Bridge
+
+> Canonical auto-switch rules: `docs/AgToosa_Agent.md` → **IDE Host Mode Bridge**. Per-platform enter/switch: `docs/AgToosa_AgentCapability.md` → **IDE Host Mode Matrix**.
+
+| Sub-command | Plan-mode window | Agent/Auto window |
+|-------------|------------------|-------------------|
+| Full (no arg) | Persona analysis, Iron Law hypotheses, cross-model gate planning, findings synthesis as structured plan | Write `docs/archived/review-*.md`, evidence ledger, Master-Plan status, simplification refactors, verdict gate |
+| `security`, `arch`, `debug` | Analysis and hypothesis work for the sub-command | Sub-command writes and fixes |
+| `cross`, `cross-model` | Planning and comparison strategy | Merge findings into review report |
+
+Before persona fan-out, ensure the host is in **native IDE plan mode** when available. Produce persona findings tables, Iron Law hypotheses, and cross-model gate decisions as **plan sections** inside plan mode. When briefing is complete, print `HOST-MODE: plan complete → switching to agent for AgToosa artifacts`, switch to Agent/Auto, then write review artifacts.
+
+Every review report must include `### Plan-Mode Review Briefing (findings)` before the structured findings table:
+
+| Subsection | Content |
+|------------|---------|
+| **Persona synthesis** | Security / EM / CEO / QA summary rows |
+| **Iron Law hypotheses** | Hypothesis log for any 🔴 Critical or debug sub-command |
+| **Cross-model gate** | Tier, consent, skip rationale, or delegation decision |
+| **Host mode handoff** | Timestamp or turn when plan → agent switch occurred |
+
 ### Part 1 — Virtual Specialist Reviews
 
 **Orchestration Brain step 0:** Before persona, specialist, and cross-model fan-out, read `docs/AgToosa_Orchestration.md` and run Capability Inventory → lane plan → parallel or sequential dispatch → orchestrator merge.

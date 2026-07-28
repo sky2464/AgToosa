@@ -15,4 +15,5 @@ When executing `/agtoosa-review` or any review work, follow `Docs/AgToosa_Review
 - The Simplifier pass is not optional — always refactor the top 3 complex sections.
 - Apply the Iron Law root-cause protocol for every failing test or bug found during review.
 - Update `Docs/Master-Plan.md` with review status after each run.
+- **IDE Host Mode Bridge:** prefer native IDE plan mode for persona/findings synthesis; switch to Agent/Auto at briefing complete per `Docs/AgToosa_AgentCapability.md` → **IDE Host Mode Matrix** (Cursor row). Print `HOST-MODE: plan complete → switching to agent for AgToosa artifacts` before writing `review-*.md`. Include `### Plan-Mode Review Briefing (findings)` in every review report.
 - **Cross-model:** Read `Docs/Context/workflow.md` (`cross_model`, `reviewer_model`); print the consent line before reviewer subagents; never upgrade reviewer model above the parent session without explicit user approval.

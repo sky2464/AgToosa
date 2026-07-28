@@ -3240,6 +3240,123 @@ PY
   grep -q 'minimum validation floor' "$f"
 }
 
+# ── DEV-136 IDE Host Mode Bridge (IDE-001–IDE-012) ───────────────────────────
+
+@test "IDE-001: canonical spec workflow contains IDE Host Mode Bridge" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Spec.md"
+  grep -q '## IDE Host Mode Bridge' "$f"
+  grep -q 'native IDE plan mode' "$f"
+  grep -q 'HOST-MODE: plan complete' "$f"
+}
+
+@test "IDE-002: canonical review workflow contains IDE Host Mode Bridge" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Review.md"
+  grep -q '## IDE Host Mode Bridge' "$f"
+  grep -q 'Plan-Mode Review Briefing (findings)' "$f"
+}
+
+@test "IDE-003: Agent mirrors prefer native IDE plan mode for spec and review" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Agent.md"
+  grep -q '### IDE Host Mode Bridge' "$f"
+  grep -q 'prefer native IDE plan mode' "$f"
+  grep -q 'Never auto-switch' "$f"
+}
+
+@test "IDE-004: AgentCapability documents IDE Host Mode Matrix" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_AgentCapability.md"
+  grep -q '## IDE Host Mode Matrix' "$f"
+  grep -q 'SwitchMode' "$f"
+  grep -q 'Start Implementation' "$f"
+}
+
+@test "IDE-005: ADR-020 IDE Host Mode Bridge exists" {
+  local f="$BATS_TEST_DIRNAME/../docs/adr/ADR-020-ide-host-mode-bridge.md"
+  [ -f "$f" ]
+  grep -q 'IDE Host Mode Bridge' "$f"
+  grep -q 'DEV-028' "$f"
+}
+
+@test "IDE-006: maintainer Agent mirror contains IDE Host Mode Bridge" {
+  local f="$BATS_TEST_DIRNAME/../docs/AgToosa_Agent.md"
+  grep -q 'IDE Host Mode Bridge' "$f"
+  grep -q 'HOST-MODE: plan complete' "$f"
+}
+
+@test "IDE-007: native spec adapters reference Host Mode Execution" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local adapters=(
+    "$root/template/.cursor/commands/agtoosa-spec.md"
+    "$root/template/.codex/skills/agtoosa-spec/SKILL.md"
+    "$root/template/.codex/prompts/agtoosa-spec.md"
+    "$root/template/.github/prompts/agtoosa-spec.prompt.md"
+    "$root/template/.claude/commands/agtoosa-spec.md"
+    "$root/template/.windsurf/workflows/agtoosa-spec.md"
+    "$root/template/.gemini/commands/agtoosa-spec.toml"
+    "$root/.cursor/commands/agtoosa-spec.md"
+  )
+  for f in "${adapters[@]}"; do
+    grep -q 'Host Mode Execution' "$f" || {
+      echo "Missing Host Mode Execution in $f"
+      return 1
+    }
+    grep -q 'IDE Host Mode Bridge' "$f" || {
+      echo "Missing IDE Host Mode Bridge reference in $f"
+      return 1
+    }
+  done
+}
+
+@test "IDE-008: native review adapters reference Host Mode Execution" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local adapters=(
+    "$root/template/.cursor/commands/agtoosa-review.md"
+    "$root/template/.codex/skills/agtoosa-review/SKILL.md"
+    "$root/template/.codex/prompts/agtoosa-review.md"
+    "$root/template/.github/prompts/agtoosa-review.prompt.md"
+    "$root/template/.claude/commands/agtoosa-review.md"
+    "$root/template/.windsurf/workflows/agtoosa-review.md"
+    "$root/template/.gemini/commands/agtoosa-review.toml"
+  )
+  for f in "${adapters[@]}"; do
+    grep -q 'Host Mode Execution' "$f" || {
+      echo "Missing Host Mode Execution in $f"
+      return 1
+    }
+    grep -q 'IDE Host Mode Bridge' "$f" || {
+      echo "Missing IDE Host Mode Bridge reference in $f"
+      return 1
+    }
+  done
+}
+
+@test "IDE-009: product-truth spec and review declare host_mode_policy" {
+  local f="$BATS_TEST_DIRNAME/../contracts/product-truth-v1.json"
+  grep -q '"host_mode_policy"' "$f"
+  grep -q '"auto_switch": true' "$f"
+  grep -q 'interview' "$f"
+  grep -q 'persona_analysis' "$f"
+}
+
+@test "IDE-010: rendered spec adapter includes host mode product-truth lines" {
+  local f="$TEMPLATE_DIR/.cursor/commands/agtoosa-spec.md"
+  grep -q 'Host mode: auto-switch true' "$f"
+  grep -q 'Plan phases:' "$f"
+  grep -q 'Agent phases:' "$f"
+}
+
+@test "IDE-011: agtoosa-core and maintainer-core reference IDE Host Mode Bridge" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'IDE Host Mode Bridge' "$root/template/.cursor/rules/agtoosa-core.mdc"
+  grep -q 'IDE Host Mode Bridge' "$root/.cursor/rules/agtoosa-maintainer-core.mdc"
+}
+
+@test "IDE-012: contract forbids mid-interview auto-switch" {
+  local f="$TEMPLATE_DIR/Docs/AgToosa_Agent.md"
+  grep -q 'Never auto-switch' "$f"
+  grep -q 'mid-interview' "$f"
+  grep -q 'PROGRESS utterances' "$f"
+}
+
 # ── DEV-029 branch-protection push-safe workflow (DEV-029 T-001–T-005) ────────
 
 @test "DEV-029 T-001: branch-protection workflow display name is PR Hygiene Checks" {
@@ -13049,7 +13166,8 @@ PY
   grep -q '#### AgToosa Lifecycle Compass' "$root/template/Docs/AgToosa_Agent.md"
   grep -q '#### AgToosa Lifecycle Compass' "$root/docs/AgToosa_Agent.md"
   grep -q 'semantic intent' "$root/template/Docs/AgToosa_Agent.md"
-  grep -q 'Do not use Cursor native Plan mode' "$root/docs/AgToosa_Agent.md"
+  grep -q 'IDE Host Mode Bridge' "$root/docs/AgToosa_Agent.md"
+  grep -q 'prefer native IDE plan mode' "$root/docs/AgToosa_Agent.md"
 }
 
 @test "NLM-002: Lifecycle Compass in template agtoosa-core.mdc" {
@@ -15558,6 +15676,43 @@ PY
   grep -q 'DEV-133' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-133.md" ]
   [ -f "$root/docs/archived/review-DEV-133.md" ]
+}
+
+# -- DEV-134: README hero media catch-up (MED-001–004) --------------------------
+
+@test "DEV-134 @smoke MED-001: ReadmeLoop composes WorkflowSummaryScene and seven beats" {
+  local hero_dir="$BATS_TEST_DIRNAME/../docs/media/agtoosa-hero"
+  [ -f "$hero_dir/src/scenes/WorkflowSummaryScene.tsx" ]
+  grep -q 'WorkflowSummaryScene' "$hero_dir/src/ReadmeLoop.tsx"
+  grep -q '<TensionScene' "$hero_dir/src/ReadmeLoop.tsx"
+  grep -q '<ReframeScene' "$hero_dir/src/ReadmeLoop.tsx"
+  grep -q '<WorkflowScene' "$hero_dir/src/ReadmeLoop.tsx"
+  grep -q '<RoutingScene' "$hero_dir/src/ReadmeLoop.tsx"
+  grep -q '<VerifyScene' "$hero_dir/src/ReadmeLoop.tsx"
+  grep -q '<ClosingScene' "$hero_dir/src/ReadmeLoop.tsx"
+}
+
+@test "DEV-134 MED-002: WorkflowRail captions and verify script check summary scene" {
+  local hero_dir="$BATS_TEST_DIRNAME/../docs/media/agtoosa-hero"
+  grep -q 'showCaptions' "$hero_dir/src/WorkflowRail.tsx"
+  grep -q 'Set repository context' "$hero_dir/src/WorkflowRail.tsx"
+  grep -q 'WorkflowSummaryScene' "$hero_dir/scripts/verify-media.mjs"
+  grep -q 'captioned full-workflow summary' "$hero_dir/scripts/verify-media.mjs"
+}
+
+@test "DEV-134 @smoke MED-003: README references published hero GIF assets" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  local hero_dir="$BATS_TEST_DIRNAME/../docs/media/agtoosa-hero"
+  grep -q 'docs/media/agtoosa-hero/agtoosa-hero.gif' "$readme"
+  [ -f "$hero_dir/agtoosa-hero.gif" ]
+  [ -f "$hero_dir/agtoosa-hero-poster.png" ]
+}
+
+@test "DEV-134 MED-004: verify:checkpoint passes for hero media package" {
+  local hero_dir="$BATS_TEST_DIRNAME/../docs/media/agtoosa-hero"
+  run bash -c 'cd "'"$hero_dir"'" && npm run verify:checkpoint'
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"media verification complete"* ]]
 }
 
 # -- DEV-135: NL continuation → /agtoosa-next (NLX-001–008) --------------------

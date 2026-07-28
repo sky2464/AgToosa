@@ -21,7 +21,7 @@ When the user omits `/agtoosa-*`, run **AgToosa Lifecycle Compass** per `Docs/Ag
 - Soft: `Compass: soft → <phase> — <why>` · Hard: `**AgToosa Lifecycle Compass**` + `ANCHOR: <phase>`.
 - Progress: `Compass: progress → /agtoosa-next — <SYNC one-liner>` — apply **Continuation Context Contract** in `Docs/AgToosa_Agent.md` (pending interview Q → answer; post-closure → dispatch Next; never raw phase slash on PROGRESS alone).
 - Tributary (explore/fix/track): `serving <phase>` then `When done: return to /agtoosa-<phase>`.
-- Explicit `/agtoosa-*` bypasses Compass ceremony. **Phase Stop:** never auto-chain Spec → Build → Review → Ship.
+- Explicit `/agtoosa-*` bypasses Compass ceremony. **IDE Host Mode Bridge:** for `/agtoosa-spec` and `/agtoosa-review`, prefer native IDE plan mode during planning windows; switch to Agent/Auto only at the auto-switch trigger (`Docs/AgToosa_Agent.md`). **Phase Stop:** never auto-chain Spec → Build → Review → Ship.
 
 ## Non-Negotiable Principles
 

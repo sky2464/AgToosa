@@ -22,6 +22,8 @@ Sub-command dispatch (include the sub-command after selecting this prompt):
 
 **Agent Mode Execution Contract:** read Docs/AgToosa_Spec.md in full before outputs. **Forbidden:** skipping interview; treating a detailed user prompt as interview-complete; writing spec/test-plan/Master-Plan rows in the same turn as Q1; omitting `### Plan-Mode Spec Interview (findings)`; build artifacts before approval; auto-build or auto-approve.
 
+**Host Mode Execution (IDE Host Mode Bridge):** follow Docs/AgToosa_Spec.md → **IDE Host Mode Bridge** and Docs/AgToosa_AgentCapability.md → **IDE Host Mode Matrix** (GitHub Copilot / VS Code row). Select **Plan** agent or `/plan` prefix. At auto-switch trigger, print `HOST-MODE: plan complete → switching to agent for AgToosa artifacts`, then **Start Implementation** / **Implement plan**.
+
 On successful completion, print this line verbatim: `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract)
 
 <!-- AGTOOSA PRODUCT TRUTH START: command.spec -->
@@ -34,4 +36,7 @@ On successful completion, print this line verbatim: `Next: /agtoosa-<command> �
 - Approval gate: required
 - Phase stop: required
 - Lifecycle close: `build`
+- Host mode: auto-switch true
+- Plan phases: `research`, `interview`, `architecture_draft`, `stride_draft`
+- Agent phases: `spec_artifact_write`, `test_plan_write`, `master_plan_write`, `approval_gate`
 <!-- AGTOOSA PRODUCT TRUTH END: command.spec -->

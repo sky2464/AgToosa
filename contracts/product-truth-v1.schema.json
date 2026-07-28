@@ -252,6 +252,26 @@
         }
       }
     },
+    "hostModePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "auto_switch",
+        "plan_phases",
+        "agent_phases"
+      ],
+      "properties": {
+        "auto_switch": {
+          "type": "boolean"
+        },
+        "plan_phases": {
+          "$ref": "#/$defs/stringList"
+        },
+        "agent_phases": {
+          "$ref": "#/$defs/stringList"
+        }
+      }
+    },
     "command": {
       "type": "object",
       "additionalProperties": false,
@@ -346,6 +366,9 @@
         },
         "portable_invariants": {
           "$ref": "#/$defs/stringList"
+        },
+        "host_mode_policy": {
+          "$ref": "#/$defs/hostModePolicy"
         }
       }
     },

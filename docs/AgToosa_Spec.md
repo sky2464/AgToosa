@@ -101,6 +101,25 @@ After research (and optional findings summary), **end the agent turn** on the fi
 
 Wait for the user's answer before the next question or any spec artifacts. Use `/agtoosa-spec research` when the user wants findings-only output without advancing to Q&A in the same session.
 
+**Host mode:** Before the first interview question, ensure the host is in **native IDE plan mode** (or instruct the user to switch). Remain in plan mode for research, interview, and architecture/STRIDE drafting as a **plan artifact**. Do not write spec files until the **IDE Host Mode Bridge** auto-switch trigger in `docs/AgToosa_Agent.md` is satisfied.
+
+## IDE Host Mode Bridge
+
+> Canonical auto-switch rules: `docs/AgToosa_Agent.md` → **IDE Host Mode Bridge**. Per-platform enter/switch: `docs/AgToosa_AgentCapability.md` → **IDE Host Mode Matrix**.
+
+| Sub-command | Plan-mode window | Agent/Auto window |
+|-------------|------------------|-------------------|
+| Full (no arg) | Research, Plan-Mode Spec Interview, Goal Contract, architecture/STRIDE plan | `docs/archived/spec-*.md`, test plan skeleton, Master-Plan enrollment, approval gate |
+| `research` | Entire sub-command | — |
+| `quick` | Interview (cap 2) + plan draft | Spec file + tasks |
+| `plan`, `tasks`, `amend`, `to-issues` | Read-only / planning slices per sub-command | Writes per sub-command scope |
+
+Plan mode is the host's planning surface — produce rich structured plans (Goal Contract tables, STRIDE drafts, EARS AC tables as plan sections) inside plan mode, then switch to Agent/Auto to normalize into AgToosa spec artifacts.
+
+**Forbidden in plan mode:** writing or updating `docs/archived/spec-*.md`, enrolling Master-Plan story rows, generating test plans, or implementing build artifacts.
+
+**Handoff:** when decision-complete (or assumptions accepted) and minimum validation floor met, print `HOST-MODE: plan complete → switching to agent for AgToosa artifacts`, switch to Agent/Auto per the IDE Host Mode Matrix, then write spec artifacts.
+
 ### Plan-Mode Spec Interview (findings) — required spec section
 
 Before the approval gate, every spec file must include `### Plan-Mode Spec Interview (findings)` (see `docs/SPEC-FORMAT.md`) with:

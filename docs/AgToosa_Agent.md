@@ -414,7 +414,27 @@ Never substitute a raw phase slash (`/agtoosa-build`, `/agtoosa-ship`, etc.) whe
 | PROGRESS intent (continuation utterance) | Route to `/agtoosa-next` — not a raw phase slash; apply Continuation Context Contract |
 | Low confidence | One multiple-choice question (plan / build / fix / review) |
 
-Explicit `/agtoosa-*` bypasses Compass ceremony. **Do not use Cursor native Plan mode** for in-scope product work — execute AgToosa workflow files. On hard-path confirm, begin the named workflow immediately; Compass is not permission to skip it. Never auto-chain Spec → Build → Review → Ship.
+Explicit `/agtoosa-*` bypasses Compass ceremony. **IDE Host Mode Bridge:** for `/agtoosa-spec` and `/agtoosa-review`, **prefer native IDE plan mode** during planning windows (see below and `docs/AgToosa_AgentCapability.md` → **IDE Host Mode Matrix**). Execute AgToosa workflow files inside that mode. Switch to Agent/Auto only at the auto-switch trigger. Other phases (`/agtoosa-build`, `/agtoosa-ship`, freeform coding) default to Agent/Auto unless the user explicitly requests plan. On hard-path confirm, begin the named workflow immediately; Compass is not permission to skip it. Never auto-chain Spec → Build → Review → Ship.
+
+### IDE Host Mode Bridge
+
+Maps AgToosa spec and review planning phases onto native IDE plan modes, then auto-switches to Agent/Auto for artifact writes. Canonical detail: `docs/AgToosa_Spec.md` and `docs/AgToosa_Review.md` → **IDE Host Mode Bridge**; per-platform enter/switch: `docs/AgToosa_AgentCapability.md` → **IDE Host Mode Matrix**.
+
+| Phase command | Native plan-mode window | Agent/Auto window |
+|---------------|------------------------|-------------------|
+| `/agtoosa-spec` (full) | Research, Plan-Mode Spec Interview, Goal Contract, architecture/STRIDE as plan artifact | Write `docs/archived/spec-*.md`, test plan, Master-Plan enrollment, approval marker |
+| `/agtoosa-spec research` | Entire sub-command | — |
+| `/agtoosa-spec quick` | Interview (cap 2) + plan draft | Spec file + tasks |
+| `/agtoosa-review` (full) | Persona analysis, Iron Law hypotheses, cross-model gate planning, findings synthesis | Write `review-*.md`, Master-Plan status, simplification refactors, verdict gate |
+| `/agtoosa-review debug` | Hypothesis + reproduction plan | Regression test + fix (build tributary) |
+
+**Auto-switch trigger** (all required): decision-complete checklist satisfied **or** user opts into documented assumptions; minimum validation floor met (spec: 2 full / 1 quick); no pending interview question or budget menu; print before first artifact write:
+
+```
+HOST-MODE: plan complete → switching to agent for AgToosa artifacts
+```
+
+**Never auto-switch** mid-interview, on PROGRESS utterances (`okay`, `do it`), or before user confirms assumptions. Finish the current plan-mode turn before switching — do not queue mixed-mode requests.
 
 ### Discovery Triage Protocol
 

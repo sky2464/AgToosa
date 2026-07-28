@@ -27,3 +27,12 @@ Dispatch based on any arguments after the command: `research`, `plan`, `quick`, 
 - Omitting `### Plan-Mode Spec Interview (findings)` from the spec file
 - Implementing build artifacts (code, adapters, bats) before spec approval
 - Auto-running `/agtoosa-build` or auto-approving the spec
+
+## Host Mode Execution (IDE Host Mode Bridge)
+
+Follow `docs/AgToosa_Spec.md` → **IDE Host Mode Bridge** and `docs/AgToosa_AgentCapability.md` → **IDE Host Mode Matrix** (Cursor row).
+
+- **Enter plan:** `SwitchMode` → `plan` if not already in plan; user fallback: Shift+Tab
+- **Plan window:** research, Plan-Mode Spec Interview, Goal Contract / architecture / STRIDE as plan artifact
+- **Switch to agent:** when auto-switch trigger satisfied, print `HOST-MODE: plan complete → switching to agent for AgToosa artifacts`, then `SwitchMode` → `agent`
+- **Forbidden in plan mode:** writing `docs/archived/spec-*.md`, test plans, or Master-Plan story rows; never queue plan→agent in the same turn

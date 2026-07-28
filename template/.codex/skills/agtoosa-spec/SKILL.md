@@ -36,4 +36,13 @@ Use when the user asks for `/agtoosa-spec`, `$agtoosa-spec`, or wants a new or u
 
 **Forbidden for the full flow:** skipping Plan-Mode Spec Interview or research; treating a detailed user prompt as interview-complete; writing spec/test-plan/Master-Plan rows in the **same turn** as the first interview question; omitting `### Plan-Mode Spec Interview (findings)`; implementing build artifacts before spec approval; skipping Goal Contract, task planning, or the test plan skeleton; copying divergent Part 1 / Part 2 workflow section bodies from `Docs/AgToosa_Spec.md` into this skill; auto-running `/agtoosa-build` after spec.
 
+## Host Mode Execution (IDE Host Mode Bridge)
+
+Follow `Docs/AgToosa_Spec.md` → **IDE Host Mode Bridge** and `Docs/AgToosa_AgentCapability.md` → **IDE Host Mode Matrix** (Codex / OpenCode row).
+
+- **Enter plan:** host plan skill or behavioral plan-only turn-stop when native plan mode is unavailable
+- **Plan window:** research, Plan-Mode Spec Interview, Goal Contract / architecture / STRIDE as plan artifact
+- **Switch to agent:** when auto-switch trigger satisfied, print `HOST-MODE: plan complete → switching to agent for AgToosa artifacts`, then switch to agent execution mode (or print manual switch instruction)
+- **Forbidden in plan mode:** writing spec files, test plans, or Master-Plan story rows before handoff
+
 **Sub-commands:** when the user passes `research`, `plan`, `quick`, `tasks`, `amend`, or `to-issues`, dispatch that slice only while preserving the canonical phase obligations and stop conditions from `Docs/AgToosa_Spec.md`.

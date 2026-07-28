@@ -52,6 +52,21 @@ Also consult `.agtoosa-lock.json` / install lock when present. Recommend targets
 | Fallbacks | Honest path when preferred capability is missing |
 | Enforcement | generator-enforced / CI-enforced / agent-instructed / manual / roadmap |
 
+## IDE Host Mode Matrix
+
+Per-platform enter/switch instructions for `/agtoosa-spec` and `/agtoosa-review`. Canonical planning windows and auto-switch triggers: `Docs/AgToosa_Agent.md` → **IDE Host Mode Bridge**.
+
+| Platform | Enter plan mode | Switch to agent/auto | Notes |
+|----------|----------------|----------------------|-------|
+| **Cursor** | `SwitchMode` → `plan` if not already in plan; user fallback: Shift+Tab | `SwitchMode` → `agent` at auto-switch trigger; print `HOST-MODE:` handoff first | Do not queue plan→agent requests — finish the plan turn before switching |
+| **GitHub Copilot / VS Code** | Select **Plan** agent or `/plan` prefix | **Start Implementation** / **Implement plan** at trigger | Plans may land in `.copilot/plans/`; map AgToosa sections before artifact write |
+| **Claude Code** | `Shift+Tab` to plan, `/plan` prefix, or `--permission-mode plan` | Approve plan → `auto` or `acceptEdits` per user preference | `useAutoModeDuringPlan` is optional; AgToosa does not require it |
+| **Codex / OpenCode** | Host plan skill when present; else behavioral plan-only turn-stop | Switch to agent execution mode when host exposes it | Print manual switch instruction when host API unavailable |
+| **Windsurf** | Plan/workflow mode when available | Agent/workflow execution mode | Same sequential fallback pattern |
+| **Gemini CLI** | Host plan equivalent or behavioral fallback | Agent mode for writes | Install-tested only until scenario proof |
+
+**Claim Boundary:** Host mode enter/switch is **agent-instructed**. AgToosa does not call IDE APIs from shell. Manual fallback (Shift+Tab, mode picker) is always valid when auto-switch fails.
+
 ## Claim Boundary
 
 | Control | Classification |
