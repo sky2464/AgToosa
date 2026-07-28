@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-28 (/agtoosa-ship — DEV-144 v5.3.58)
+> **Last updated:** 2026-07-28 (/agtoosa-build — DEV-145 build complete)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Idle — DEV-144 shipped v5.3.58 |
-| Milestone | `v5.3.59` (next) |
-| Active cycle | — |
-| Cycle state | Idle — cycle complete |
+| Current phase | Review — DEV-145 |
+| Milestone | `v5.3.59` (target) |
+| Active cycle | DEV-145 |
+| Cycle state | Active |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -23,6 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
+| DEV-145 | Feature: Tracker Bootstrap Apply | Feature | M | 🟨 In Progress | 4/4 |
 
 <!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.58.md (DEV-144 v5.3.58) -->
 

@@ -96,9 +96,51 @@ bash agtoosa.sh --tracker status-check --path /path/to/project
 2. Classify each item: `mirror_skip`, `new_external`, `repo_plan`, `closed_external`, `unchanged`, `unsupported`.
 3. Assign draft IDs (`DRAFT-001`, …) for proposed backlog rows only.
 4. Write Markdown proposal to `--output` with `/agtoosa-task` hints and suggested `tracker_mirror` workflow config.
-5. **Never** modify `docs/Master-Plan.md` during bootstrap.
+5. Emit companion `agtoosa.tracker-bootstrap-proposal/v1` JSON (same basename as `.md` output) with per-item `accept: false` default.
+6. **Never** modify `docs/Master-Plan.md` during bootstrap (proposal-only).
 
-**Acceptance:** User applies chosen rows via `/agtoosa-task` or explicit edit; then steady-state outbound sync via `publish` if desired.
+**Acceptance:** Review proposal JSON, set `accept: true` on chosen rows (or use `--apply-all-new-external`), then `bootstrap --apply` (DEV-145).
+
+---
+
+## Workflow: `/agtoosa-tracker bootstrap --apply` (DEV-145)
+
+1. Load `agtoosa.tracker-bootstrap-proposal/v1` via `--input`.
+2. Resolve accept set: rows with `accept: true`, plus all `new_external` when `--apply-all-new-external`.
+3. **Dry-run default:** print unified diff of Master-Plan backlog changes; no mutation.
+4. **`--yes`:** open DEV-119 transaction journal pre-image → append rows under `## Backlog` → commit journal.
+5. Allocate next free `DEV-NNN` ID; normalize titles to GitHub-standard prefixes (`feat:`/`fix:`/`chore:`/`docs:`) — **no `DEV-` in Title column**.
+6. Status column records `provider` + `external_ref` for traceability.
+
+```bash
+# Proposal (writes .md + .json)
+bash agtoosa.sh --tracker bootstrap --path . \
+  --input discovery.json --output bootstrap-proposal.md
+
+# Dry-run apply
+bash agtoosa.sh --tracker bootstrap --apply --path . \
+  --input bootstrap-proposal.json
+
+# Write accepted rows
+bash agtoosa.sh --tracker bootstrap --apply --path . \
+  --input bootstrap-proposal.json --yes
+
+# Auto-accept all new_external
+bash agtoosa.sh --tracker bootstrap --apply --path . \
+  --input bootstrap-proposal.json --apply-all-new-external --yes
+```
+
+| Source signal | Master-Plan `Title` | `Type` column |
+|---------------|---------------------|---------------|
+| `feat:` / feature | `feat: <clean title>` | Feature |
+| `fix:` / bug | `fix: <clean title>` | Bug |
+| `chore:` / maintenance | `chore: <clean title>` | Chore |
+| `docs:` | `docs: <clean title>` | Docs |
+| No prefix | `feat: <clean title>` (default) | Feature |
+
+Batch cap: 50 rows per apply invocation.
+
+**Legacy acceptance:** `/agtoosa-task` or explicit edit remains valid for proposal-only bootstrap (DEV-141).
 
 ---
 

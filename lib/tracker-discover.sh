@@ -5,7 +5,10 @@
 
 TRACKER_DISCOVERY_VERSION="agtoosa.tracker-discovery/v1"
 TRACKER_BOOTSTRAP_INPUT_VERSION="agtoosa.tracker-bootstrap-input/v1"
+TRACKER_BOOTSTRAP_PROPOSAL_VERSION="agtoosa.tracker-bootstrap-proposal/v1"
+TRACKER_BOOTSTRAP_APPLY_REPORT_VERSION="agtoosa.tracker-bootstrap-apply/v1"
 TRACKER_STATUS_CHECK_VERSION="agtoosa.tracker-status-check/v1"
+TRACKER_BOOTSTRAP_APPLY_MAX=50
 TRACKER_CACHE_GH_REL=".agtoosa/tracker/gh-issues.json"
 TRACKER_CACHE_LINEAR_REL=".agtoosa/tracker/linear-fetch.json"
 TRACKER_MAX_DISCOVERY_ITEMS=256
@@ -305,6 +308,43 @@ _bootstrap_next_draft_id() {
   printf 'DRAFT-%03d' "$n"
 }
 
+_bootstrap_companion_json_path() {
+  local output_path="$1"
+  if [[ "$output_path" == *.md ]]; then
+    printf '%s' "${output_path%.md}.json"
+  else
+    printf '%s.json' "$output_path"
+  fi
+}
+
+_bootstrap_write_proposal_json() {
+  local project_path="$1" mp="$2" classified_json="$3" generated_at="$4" json_path="$5"
+  local project_resolved mp_rel
+  project_resolved=$(_tracker_resolve_path "$project_path")
+  mp_rel="${mp#"$project_path"/}"
+  jq -nc \
+    --arg schema_version "$TRACKER_BOOTSTRAP_PROPOSAL_VERSION" \
+    --arg generated_at "$generated_at" \
+    --arg project_path "$project_resolved" \
+    --arg master_plan_path "$mp_rel" \
+    --argjson items "$(echo "$classified_json" | jq '[.[] | {
+      accept: false,
+      disposition: .disposition,
+      external_ref: (.external_ref // ""),
+      provider: (.provider // ""),
+      title: (.title // ""),
+      draft_id: .draft_id,
+      labels: (.labels // [])
+    }]')" \
+    '{
+      schema_version: $schema_version,
+      generated_at: $generated_at,
+      project_path: $project_path,
+      master_plan_path: $master_plan_path,
+      items: $items
+    }' >"$json_path"
+}
+
 _bootstrap_render_proposal() {
   local discovery_json="$1" classified_json="$2" generated_at="$3"
   local total mirror_skip new_ext repo_plan closed_ext unchanged
@@ -450,9 +490,232 @@ tracker_bootstrap() {
 
   local generated_at
   generated_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || date -u +"%Y-%m-%dT%H:%M:%SZ")
+  local json_path
+  json_path=$(_bootstrap_companion_json_path "$output_path")
   mkdir -p "$(dirname "$output_path")"
   _bootstrap_render_proposal "$discovery_json" "$classified_json" "$generated_at" >"$output_path"
+  _bootstrap_write_proposal_json "$project_path" "$mp" "$classified_json" "$generated_at" "$json_path"
   echo "Tracker bootstrap proposal written: $output_path"
+  echo "Tracker bootstrap proposal JSON: $json_path (set accept: true per row, then bootstrap --apply)"
+  return 0
+}
+
+tracker_bootstrap_apply() {
+  local project_path="$1" input_path="$2" write="${3:-false}" apply_all_new_external="${4:-false}" report_path="${5:-}"
+  _tracker_require_jq || return 1
+
+  local mp mp_resolved mp_rel
+  mp=$(_tracker_find_master_plan "$project_path") || return 1
+  mp_resolved=$(_tracker_resolve_path "$mp")
+  mp_rel="${mp#"$project_path"/}"
+  if [[ -n "$report_path" ]]; then
+    local report_resolved
+    report_resolved=$(_tracker_resolve_path "$report_path")
+    if [[ "$report_resolved" == "$mp_resolved" ]]; then
+      echo "Error: Bootstrap apply report output must not target Master-Plan.md." >&2
+      return 1
+    fi
+  fi
+
+  local proposal_json
+  proposal_json=$(_tracker_load_bounded_json "$input_path") || return 1
+  local schema
+  schema=$(echo "$proposal_json" | jq -r '.schema_version // empty')
+  if [[ "$schema" != "$TRACKER_BOOTSTRAP_PROPOSAL_VERSION" ]]; then
+    echo "Error: expected schema_version ${TRACKER_BOOTSTRAP_PROPOSAL_VERSION}." >&2
+    return 1
+  fi
+
+  local apply_all_flag="0"
+  [[ "$apply_all_new_external" == true || "$apply_all_new_external" == 1 ]] && apply_all_flag="1"
+
+  local proposal_tmp result
+  proposal_tmp=$(mktemp)
+  printf '%s' "$proposal_json" >"$proposal_tmp"
+  result=$(python3 - "$mp" "$apply_all_flag" "$TRACKER_BOOTSTRAP_APPLY_MAX" "$proposal_tmp" <<'PY'
+import difflib, json, re, sys
+
+mp_path, apply_all_flag, max_batch, proposal_path = sys.argv[1], sys.argv[2], int(sys.argv[3]), sys.argv[4]
+apply_all = apply_all_flag == "1"
+proposal = json.load(open(proposal_path, encoding="utf-8"))
+text = open(mp_path, encoding="utf-8").read()
+
+APPLY_DISPOSITIONS = {"new_external", "repo_plan"}
+
+def max_dev_id(body):
+    nums = [int(n) for n in re.findall(r"\bDEV-(\d+)\b", body)]
+    return max(nums) if nums else 0
+
+def normalize_title(raw_title, labels=None):
+    t = (raw_title or "").strip()
+    t = re.sub(r"^DEV-\d+:\s*", "", t, flags=re.I)
+    t = re.sub(r"^\[[^\]]+\]\s*", "", t)
+    m = re.match(r"^(feat|fix|chore|docs):\s*(.+)$", t, re.I)
+    if m:
+        prefix, rest = m.group(1).lower(), m.group(2).strip()
+    else:
+        lower = t.lower()
+        label_blob = " ".join(labels or []).lower()
+        if "bug" in lower or "fix" in lower or "bug" in label_blob:
+            prefix = "fix"
+        elif "doc" in lower or "docs" in label_blob:
+            prefix = "docs"
+        elif "chore" in lower or "spike" in lower or "chore" in label_blob:
+            prefix = "chore"
+        else:
+            prefix = "feat"
+        rest = t
+    return f"{prefix}: {rest}"
+
+def type_for_prefix(title):
+    lower = title.lower()
+    if lower.startswith("fix:"):
+        return "Bug"
+    if lower.startswith("chore:"):
+        return "Chore"
+    if lower.startswith("docs:"):
+        return "Docs"
+    return "Feature"
+
+def should_accept(item):
+    if item.get("accept") is True:
+        return True
+    if apply_all and item.get("disposition") == "new_external":
+        return True
+    return False
+
+accepted = []
+for item in proposal.get("items", []):
+    if not should_accept(item):
+        continue
+    if item.get("disposition") not in APPLY_DISPOSITIONS:
+        continue
+    accepted.append(item)
+
+if len(accepted) > max_batch:
+    raise SystemExit(f"Error: apply batch exceeds cap ({max_batch} rows).")
+
+next_id = max_dev_id(text) + 1
+rows = []
+for item in accepted:
+    labels = item.get("labels") or []
+    if isinstance(labels, str):
+        labels = [labels]
+    title = normalize_title(item.get("title", ""), labels)
+    if re.search(r"\bDEV-\d+\b", title, re.I):
+        raise SystemExit("Error: normalized title must not contain DEV- id prefix.")
+    story_id = f"DEV-{next_id:03d}"
+    next_id += 1
+    item_type = type_for_prefix(title)
+    provider = item.get("provider") or "other"
+    external_ref = item.get("external_ref") or ""
+    status = f"⬜ Backlog — {provider} {external_ref}".strip()
+    row = f"| {story_id} | {title} | {item_type} | M | DEV-003 | P2 | {status} |"
+    rows.append({
+        "story_id": story_id,
+        "title": title,
+        "type": item_type,
+        "provider": provider,
+        "external_ref": external_ref,
+        "row": row,
+    })
+
+def append_backlog_rows(body, row_objs):
+    if not row_objs:
+        return body
+    m = re.search(r"^(## Backlog\s*\n)(.*?)(?=^## |\Z)", body, re.M | re.S)
+    if not m:
+        raise SystemExit("Error: Master-Plan Backlog section not found.")
+    header, bl_body = m.group(1), m.group(2)
+    lines = bl_body.splitlines(keepends=True)
+    insert_idx = len(lines)
+    for i, line in enumerate(lines):
+        if re.match(r"^\|\s*DEV-", line):
+            insert_idx = i + 1
+    row_text = "".join(r["row"] + "\n" for r in row_objs)
+    new_bl = "".join(lines[:insert_idx]) + row_text + "".join(lines[insert_idx:])
+    return body[: m.start()] + header + new_bl + body[m.end() :]
+
+new_text = append_backlog_rows(text, rows)
+diff = "".join(
+    difflib.unified_diff(
+        text.splitlines(keepends=True),
+        new_text.splitlines(keepends=True),
+        fromfile="a/" + mp_path.rsplit("/", 1)[-1],
+        tofile="b/" + mp_path.rsplit("/", 1)[-1],
+    )
+)
+
+print(json.dumps({
+    "diff": diff,
+    "new_text": new_text,
+    "rows": rows,
+    "accepted_count": len(accepted),
+}))
+PY
+) || { rm -f "$proposal_tmp"; return 1; }
+  rm -f "$proposal_tmp"
+
+  local diff accepted_count
+  diff=$(echo "$result" | jq -r '.diff')
+  accepted_count=$(echo "$result" | jq -r '.accepted_count')
+
+  if [[ "$accepted_count" -eq 0 ]]; then
+    echo "Tracker bootstrap apply: no rows selected (set accept: true or use --apply-all-new-external)." >&2
+    return 0
+  fi
+
+  if [[ -n "$diff" ]]; then
+    printf '%s' "$diff"
+  else
+    echo "Tracker bootstrap apply: no Master-Plan changes." >&2
+  fi
+
+  if [[ "$write" != true && "$write" != 1 ]]; then
+    echo "Tracker bootstrap apply: dry-run only (pass --yes to write)." >&2
+    return 0
+  fi
+
+  if ! transaction_open "$project_path" "tracker bootstrap --apply"; then
+    echo "Error: failed to open transaction journal." >&2
+    return 1
+  fi
+  if ! transaction_record_before "$project_path" "$mp_rel"; then
+    transaction_rollback_active "$project_path"
+    echo "Error: failed to record Master-Plan pre-image." >&2
+    return 1
+  fi
+
+  local new_text
+  new_text=$(echo "$result" | jq -r '.new_text')
+  if ! printf '%s' "$new_text" >"$mp"; then
+    transaction_rollback_active "$project_path"
+    echo "Error: failed to write Master-Plan." >&2
+    return 1
+  fi
+
+  if ! transaction_commit_active; then
+    transaction_rollback_active "$project_path"
+    echo "Error: failed to commit transaction journal." >&2
+    return 1
+  fi
+
+  local applied_json generated_at
+  generated_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || date -u +"%Y-%m-%dT%H:%M:%SZ")
+  applied_json=$(echo "$result" | jq -nc \
+    --arg schema_version "$TRACKER_BOOTSTRAP_APPLY_REPORT_VERSION" \
+    --arg generated_at "$generated_at" \
+    --arg master_plan_path "$mp_rel" \
+    --argjson rows "$(echo "$result" | jq '.rows')" \
+    '{schema_version: $schema_version, generated_at: $generated_at, master_plan_path: $master_plan_path, applied_rows: $rows}')
+
+  if [[ -n "$report_path" ]]; then
+    mkdir -p "$(dirname "$report_path")"
+    printf '%s\n' "$applied_json" >"$report_path"
+    echo "Tracker bootstrap apply report: $report_path"
+  fi
+
+  echo "Tracker bootstrap apply: appended ${accepted_count} row(s) to Master-Plan."
   return 0
 }
 

@@ -11,7 +11,9 @@
     { "$ref": "#/$defs/bootstrap_input_envelope" },
     { "$ref": "#/$defs/github_issues_fetch_envelope" },
     { "$ref": "#/$defs/linear_fetch_envelope" },
-    { "$ref": "#/$defs/status_check_envelope" }
+    { "$ref": "#/$defs/status_check_envelope" },
+    { "$ref": "#/$defs/bootstrap_proposal_envelope" },
+    { "$ref": "#/$defs/bootstrap_apply_report_envelope" }
   ],
   "$defs": {
     "schema_version": {
@@ -398,6 +400,71 @@
               "type": "array",
               "maxItems": 5,
               "items": { "type": "string", "maxLength": 256 }
+            }
+          }
+        }
+      }
+    },
+    "bootstrap_proposal_envelope": {
+      "type": "object",
+      "required": ["schema_version", "generated_at", "project_path", "master_plan_path", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "agtoosa.tracker-bootstrap-proposal/v1"
+        },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "project_path": { "type": "string", "maxLength": 512 },
+        "master_plan_path": { "type": "string", "maxLength": 256 },
+        "items": {
+          "type": "array",
+          "maxItems": 256,
+          "items": {
+            "type": "object",
+            "required": ["accept", "disposition", "external_ref", "provider", "title"],
+            "additionalProperties": true,
+            "properties": {
+              "accept": { "type": "boolean" },
+              "disposition": { "type": "string", "maxLength": 64 },
+              "external_ref": { "type": "string", "maxLength": 256 },
+              "provider": { "type": "string", "maxLength": 64 },
+              "title": { "type": "string", "maxLength": 256 },
+              "draft_id": { "type": ["string", "null"], "maxLength": 32 },
+              "labels": {
+                "type": "array",
+                "items": { "type": "string", "maxLength": 128 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "bootstrap_apply_report_envelope": {
+      "type": "object",
+      "required": ["schema_version", "generated_at", "master_plan_path", "applied_rows"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "agtoosa.tracker-bootstrap-apply/v1"
+        },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "master_plan_path": { "type": "string", "maxLength": 256 },
+        "applied_rows": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "type": "object",
+            "required": ["story_id", "title", "type", "provider", "external_ref", "row"],
+            "additionalProperties": false,
+            "properties": {
+              "story_id": { "type": "string", "pattern": "^DEV-[0-9]{3}$" },
+              "title": { "type": "string", "maxLength": 256 },
+              "type": { "type": "string", "maxLength": 32 },
+              "provider": { "type": "string", "maxLength": 64 },
+              "external_ref": { "type": "string", "maxLength": 256 },
+              "row": { "type": "string", "maxLength": 512 }
             }
           }
         }

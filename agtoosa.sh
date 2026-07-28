@@ -78,6 +78,8 @@ TRACKER_PATH=""
 TRACKER_INPUT=""
 TRACKER_OUTPUT=""
 TRACKER_README=""
+TRACKER_BOOTSTRAP_APPLY=false
+TRACKER_APPLY_ALL_NEW_EXTERNAL=false
 _PATH_ARG=""
 ALLOW_UNVERIFIED=false
 ASSUME_YES=false
@@ -144,6 +146,8 @@ while [[ $# -gt 0 ]]; do
     --dry-run)             DRY_RUN=true ;;
     --allow-unverified)    ALLOW_UNVERIFIED=true ;;
     --yes|-y)              ASSUME_YES=true ;;
+    --apply)               TRACKER_BOOTSTRAP_APPLY=true ;;
+    --apply-all-new-external) TRACKER_APPLY_ALL_NEW_EXTERNAL=true ;;
     --accept-breaking)     ACCEPT_BREAKING=true ;;
     # DEV-091 AC-007: --json is required on the migration path (alias of --format json).
     --json)                OUTPUT_FORMAT="json" ;;
@@ -437,6 +441,14 @@ if [[ "$TRACKER" == true ]]; then
       tracker_discover "$_tracker_project" "$TRACKER_OUTPUT" "$TRACKER_INPUT"
       exit $? ;;
     bootstrap)
+      if [[ "$TRACKER_BOOTSTRAP_APPLY" == true ]]; then
+        if [[ -z "$TRACKER_INPUT" ]]; then
+          echo -e "${RED}❌ Error: --tracker bootstrap --apply requires --input <proposal.json>.${NC}" >&2
+          exit 1
+        fi
+        tracker_bootstrap_apply "$_tracker_project" "$TRACKER_INPUT" "$ASSUME_YES" "$TRACKER_APPLY_ALL_NEW_EXTERNAL" "$TRACKER_OUTPUT"
+        exit $?
+      fi
       if [[ -z "$TRACKER_INPUT" || -z "$TRACKER_OUTPUT" ]]; then
         echo -e "${RED}❌ Error: --tracker bootstrap requires --input <file> and --output <file>.${NC}" >&2
         exit 1

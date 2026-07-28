@@ -16622,3 +16622,198 @@ PY
   [ -f "$root/docs/archived/spec-DEV-144.md" ]
   [ -f "$root/docs/archived/review-DEV-144.md" ]
 }
+
+# ── DEV-145: Tracker Bootstrap Apply (TBA-001–TBA-010) ─────────────────────
+
+@test "DEV-145 TBA-001: Bootstrap emits proposal JSON with accept default false" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/bootstrap-apply/project"
+  local gh="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/github-issues-fetch.json"
+  local discover="$TEST_PROJECT/tba-disc.json"
+  local proposal="$TEST_PROJECT/tba-proposal.md"
+  local proposal_json="$TEST_PROJECT/tba-proposal.json"
+  run bash "$SCRIPT" --tracker discover --path "$fixture" --input "$gh" --output "$discover"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --tracker bootstrap --path "$fixture" --input "$discover" --output "$proposal"
+  [ "$status" -eq 0 ]
+  [ -f "$proposal_json" ]
+  run jq -e '.schema_version == "agtoosa.tracker-bootstrap-proposal/v1" and ([.items[].accept] | all(. == false))' "$proposal_json"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-145 @smoke TBA-002: Apply without --yes is dry-run only" {
+  local src="$BATS_TEST_DIRNAME/fixtures/tracker-sync/bootstrap-apply/project"
+  local proj="$TEST_PROJECT/tba-dry"
+  local gh="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/github-issues-fetch.json"
+  local discover="$TEST_PROJECT/tba-dry-disc.json"
+  local proposal="$TEST_PROJECT/tba-dry-proposal.md"
+  local proposal_json="$TEST_PROJECT/tba-dry-proposal.json"
+  local mp
+  rm -rf "$proj"
+  cp -a "$src" "$proj"
+  mp="$proj/docs/Master-Plan.md"
+  run bash "$SCRIPT" --tracker discover --path "$proj" --input "$gh" --output "$discover"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --tracker bootstrap --path "$proj" --input "$discover" --output "$proposal"
+  [ "$status" -eq 0 ]
+  jq '.items |= map(if .disposition == "new_external" then .accept = true else . end)' \
+    "$proposal_json" >"$TEST_PROJECT/tba-dry-accepted.json"
+  local before after
+  before=$(sha256sum "$mp" | awk '{print $1}')
+  run bash "$SCRIPT" --tracker bootstrap --apply --path "$proj" --input "$TEST_PROJECT/tba-dry-accepted.json"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"---"* ]]
+  after=$(sha256sum "$mp" | awk '{print $1}')
+  [ "$before" = "$after" ]
+}
+
+@test "DEV-145 TBA-003: Apply --yes merges accept:true rows only" {
+  local src="$BATS_TEST_DIRNAME/fixtures/tracker-sync/bootstrap-apply/project"
+  local proj="$TEST_PROJECT/tba-select"
+  local gh="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/github-issues-fetch.json"
+  local discover="$TEST_PROJECT/tba-select-disc.json"
+  local proposal="$TEST_PROJECT/tba-select-proposal.md"
+  local proposal_json="$TEST_PROJECT/tba-select-proposal.json"
+  local accepted="$TEST_PROJECT/tba-select-accepted.json"
+  rm -rf "$proj"
+  cp -a "$src" "$proj"
+  run bash "$SCRIPT" --tracker discover --path "$proj" --input "$gh" --output "$discover"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --tracker bootstrap --path "$proj" --input "$discover" --output "$proposal"
+  [ "$status" -eq 0 ]
+  jq '.items |= map(if .external_ref == "github:example/bootstrap-fixture#42" then .accept = true else . end)' \
+    "$proposal_json" >"$accepted"
+  run bash "$SCRIPT" --tracker bootstrap --apply --path "$proj" --input "$accepted" --yes
+  [ "$status" -eq 0 ]
+  grep -q 'DEV-011' "$proj/docs/Master-Plan.md"
+  grep -q 'feat: add OAuth provider' "$proj/docs/Master-Plan.md"
+  ! grep -q 'repo-plan:' "$proj/docs/Master-Plan.md" || true
+  run jq -e '[.items[] | select(.accept == true)] | length == 1' "$accepted"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-145 TBA-004: --apply-all-new-external accepts all new_external" {
+  local src="$BATS_TEST_DIRNAME/fixtures/tracker-sync/bootstrap-apply/project"
+  local proj="$TEST_PROJECT/tba-all"
+  local gh="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/github-issues-fetch.json"
+  local discover="$TEST_PROJECT/tba-all-disc.json"
+  local proposal="$TEST_PROJECT/tba-all-proposal.md"
+  local proposal_json="$TEST_PROJECT/tba-all-proposal.json"
+  rm -rf "$proj"
+  cp -a "$src" "$proj"
+  run bash "$SCRIPT" --tracker discover --path "$proj" --input "$gh" --output "$discover"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --tracker bootstrap --path "$proj" --input "$discover" --output "$proposal"
+  [ "$status" -eq 0 ]
+  local new_ext
+  new_ext=$(jq '[.items[] | select(.disposition == "new_external")] | length' "$proposal_json")
+  [ "$new_ext" -ge 1 ]
+  run bash "$SCRIPT" --tracker bootstrap --apply --path "$proj" --input "$proposal_json" --apply-all-new-external --yes
+  [ "$status" -eq 0 ]
+  grep -q 'DEV-011' "$proj/docs/Master-Plan.md"
+  grep -q 'feat: add OAuth provider' "$proj/docs/Master-Plan.md"
+}
+
+@test "DEV-145 @smoke TBA-005: Allocates next free DEV ID" {
+  local src="$BATS_TEST_DIRNAME/fixtures/tracker-sync/bootstrap-apply/project"
+  local proj="$TEST_PROJECT/tba-id"
+  local gh="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/github-issues-fetch.json"
+  local discover="$TEST_PROJECT/tba-id-disc.json"
+  local proposal="$TEST_PROJECT/tba-id-proposal.md"
+  local proposal_json="$TEST_PROJECT/tba-id-proposal.json"
+  rm -rf "$proj"
+  cp -a "$src" "$proj"
+  run bash "$SCRIPT" --tracker discover --path "$proj" --input "$gh" --output "$discover"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --tracker bootstrap --path "$proj" --input "$discover" --output "$proposal"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --tracker bootstrap --apply --path "$proj" --input "$proposal_json" --apply-all-new-external --yes
+  [ "$status" -eq 0 ]
+  grep -q '| DEV-011 |' "$proj/docs/Master-Plan.md"
+  ! grep -q '| DEV-010 | feat: add OAuth' "$proj/docs/Master-Plan.md"
+}
+
+@test "DEV-145 TBA-006: Title uses feat prefix not DEV in title column" {
+  local src="$BATS_TEST_DIRNAME/fixtures/tracker-sync/bootstrap-apply/project"
+  local proj="$TEST_PROJECT/tba-title"
+  local gh="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/github-issues-fetch.json"
+  local discover="$TEST_PROJECT/tba-title-disc.json"
+  local proposal="$TEST_PROJECT/tba-title-proposal.md"
+  local proposal_json="$TEST_PROJECT/tba-title-proposal.json"
+  rm -rf "$proj"
+  cp -a "$src" "$proj"
+  run bash "$SCRIPT" --tracker discover --path "$proj" --input "$gh" --output "$discover"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --tracker bootstrap --path "$proj" --input "$discover" --output "$proposal"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --tracker bootstrap --apply --path "$proj" --input "$proposal_json" --apply-all-new-external --yes
+  [ "$status" -eq 0 ]
+  grep -q '| DEV-011 | feat: add OAuth provider |' "$proj/docs/Master-Plan.md"
+  ! grep -qE '\| DEV-[0-9]+ \| DEV-' "$proj/docs/Master-Plan.md"
+}
+
+@test "DEV-145 TBA-007: Status column records external_ref" {
+  local src="$BATS_TEST_DIRNAME/fixtures/tracker-sync/bootstrap-apply/project"
+  local proj="$TEST_PROJECT/tba-status"
+  local gh="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/github-issues-fetch.json"
+  local discover="$TEST_PROJECT/tba-status-disc.json"
+  local proposal="$TEST_PROJECT/tba-status-proposal.md"
+  local proposal_json="$TEST_PROJECT/tba-status-proposal.json"
+  rm -rf "$proj"
+  cp -a "$src" "$proj"
+  run bash "$SCRIPT" --tracker discover --path "$proj" --input "$gh" --output "$discover"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --tracker bootstrap --path "$proj" --input "$discover" --output "$proposal"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --tracker bootstrap --apply --path "$proj" --input "$proposal_json" --apply-all-new-external --yes
+  [ "$status" -eq 0 ]
+  grep -q 'github:example/bootstrap-fixture#42' "$proj/docs/Master-Plan.md"
+}
+
+@test "DEV-145 TBA-008: Transaction journal pre-image on apply" {
+  local src="$BATS_TEST_DIRNAME/fixtures/tracker-sync/bootstrap-apply/project"
+  local proj="$TEST_PROJECT/tba-txn"
+  local gh="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/github-issues-fetch.json"
+  local discover="$TEST_PROJECT/tba-txn-disc.json"
+  local proposal="$TEST_PROJECT/tba-txn-proposal.md"
+  local proposal_json="$TEST_PROJECT/tba-txn-proposal.json"
+  rm -rf "$proj"
+  cp -a "$src" "$proj"
+  run bash "$SCRIPT" --tracker discover --path "$proj" --input "$gh" --output "$discover"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --tracker bootstrap --path "$proj" --input "$discover" --output "$proposal"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --tracker bootstrap --apply --path "$proj" --input "$proposal_json" --apply-all-new-external --yes
+  [ "$status" -eq 0 ]
+  local journal
+  journal=$(find "$proj/.agtoosa/transactions" -name journal.json | head -1)
+  [ -n "$journal" ]
+  run jq -e '.status == "committed" and ([.entries[].path] | index("docs/Master-Plan.md"))' "$journal"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-145 TBA-009: Mutation guard rejects output targeting Master-Plan" {
+  local src="$BATS_TEST_DIRNAME/fixtures/tracker-sync/bootstrap-apply/project"
+  local proj="$TEST_PROJECT/tba-guard"
+  local gh="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/github-issues-fetch.json"
+  local discover="$TEST_PROJECT/tba-guard-disc.json"
+  local proposal="$TEST_PROJECT/tba-guard-proposal.md"
+  local proposal_json="$TEST_PROJECT/tba-guard-proposal.json"
+  local mp="$proj/docs/Master-Plan.md"
+  rm -rf "$proj"
+  cp -a "$src" "$proj"
+  run bash "$SCRIPT" --tracker discover --path "$proj" --input "$gh" --output "$discover"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --tracker bootstrap --path "$proj" --input "$discover" --output "$proposal"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --tracker bootstrap --apply --path "$proj" --input "$proposal_json" --output "$mp"
+  [ "$status" -ne 0 ]
+}
+
+@test "DEV-145 @smoke TBA-010: DEV-145 filter suite green" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q "DEV-145" "$root/tests/agtoosa.bats"
+  grep -q "TBA-" "$root/docs/AgToosa_TestPlan-DEV-145.md"
+  grep -q 'DEV-145|TBA-' "$root/docs/AgToosa_TestPlan-DEV-145.md"
+  run bats "$BATS_TEST_DIRNAME/agtoosa.bats" -f "DEV-145 TBA-00[1-9]"
+  [ "$status" -eq 0 ]
+}

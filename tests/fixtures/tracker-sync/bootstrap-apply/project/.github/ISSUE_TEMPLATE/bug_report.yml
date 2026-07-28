@@ -1,0 +1,8 @@
+name: Bug Report
+about: Report a bug
+title: ''
+labels: ''
+body:
+  - type: textarea
+    attributes:
+      label: Description
