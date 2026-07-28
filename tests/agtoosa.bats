@@ -16098,3 +16098,165 @@ PY
   grep -q 'intake' "$root/docs/AgToosa_TrackerSync.md"
   grep -q 'publish' "$root/template/Docs/AgToosa_TrackerSync.md"
 }
+
+# -- DEV-140: Help vs Next disambiguation (NLX-009–012) -------------------------
+
+@test "DEV-140 @smoke NLX-009: Agent documents PROGRESS vs help-next disambiguation" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'PROGRESS vs `/agtoosa-help next` disambiguation' "$root/docs/AgToosa_Agent.md"
+  grep -q 'PROGRESS vs `/agtoosa-help next` disambiguation' "$root/template/Docs/AgToosa_Agent.md"
+  grep -q 'Anti-pattern' "$root/docs/AgToosa_Agent.md"
+  grep -q 'Anti-pattern' "$root/template/Docs/AgToosa_Agent.md"
+}
+
+@test "DEV-140 @smoke NLX-010: AgToosa_Next documents forbidden closure anti-patterns" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Forbidden closure anti-patterns' "$root/docs/AgToosa_Next.md"
+  grep -q 'Forbidden closure anti-patterns' "$root/template/Docs/AgToosa_Next.md"
+  grep -q 'Next: /agtoosa-next' "$root/docs/AgToosa_Next.md"
+  grep -q 'Never.*end with' "$root/docs/AgToosa_Next.md"
+}
+
+@test "DEV-140 NLX-011: help adapters warn; next adapters state PROGRESS executes" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'freeform `next`' "$root/template/.cursor/commands/agtoosa-help.md"
+  grep -q 'PROGRESS utterances execute here' "$root/template/.cursor/commands/agtoosa-next.md"
+  grep -q 'freeform `next`' "$root/template/.cursor/rules/agtoosa-core.mdc"
+  grep -q 'Help vs Next' "$root/.cursor/rules/agtoosa-maintainer-core.mdc"
+  grep -q 'freeform `next`' "$root/template/.codex/skills/agtoosa-help/SKILL.md"
+  grep -q 'Never.*substitute `/agtoosa-help next`' "$root/template/.codex/skills/agtoosa-next/SKILL.md"
+}
+
+@test "DEV-140 @smoke NLX-012: progress-continuation-proof BCL scenario in corpus" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/scenarios/progress-continuation-proof.json" ]
+  grep -q 'progress-continuation-proof' "$root/scenarios/corpus-v1.json"
+  for plat in cursor claude codex copilot windsurf gemini; do
+    [ -d "$root/tests/fixtures/scenario-corpus/progress-continuation-proof/$plat" ]
+    [ -f "$root/tests/fixtures/scenario-corpus/progress-continuation-proof/$plat/continuation-routing.md" ]
+    grep -q 'help-next-disambiguation' "$root/tests/fixtures/scenario-corpus/progress-continuation-proof/$plat/continuation-routing.md"
+  done
+  run bash -c 'source "'"$root"'/lib/scenario.sh"; scenario_validate_run_json "'"$root"'/tests/fixtures/scenario-corpus/progress-continuation-proof/cursor/scenario-run.json" "'"$root"'"'
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-140 NLX-013: ADR-019 amended with help-next disambiguation" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Help vs Next disambiguation' "$root/docs/adr/ADR-019-agtoosa-next-dispatcher.md"
+  grep -q 'DEV-140' "$root/docs/adr/ADR-019-agtoosa-next-dispatcher.md"
+}
+
+@test "DEV-140 @smoke SR-001: v5.3.54 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.54" ]
+  [ "$ps_ver" = "5.3.54" ]
+  [ "$npm_ver" = "5.3.54" ]
+  [ "$formula_ver" = "5.3.54" ]
+  grep -q '## \[5.3.54\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-140' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-140.md" ]
+}
+
+# ── DEV-141: Tracker Discovery & Bootstrap (TBS-001–TBS-010) ─────────────────
+
+@test "DEV-141 TBS-001: discover emits tracker-discovery v1 with signals" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/project"
+  local out="$TEST_PROJECT/tbs-discover.json"
+  run bash "$SCRIPT" --tracker discover --path "$fixture" --output "$out"
+  [ "$status" -eq 0 ]
+  run jq -e '.schema_version == "agtoosa.tracker-discovery/v1" and (.signals | length) >= 1' "$out"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-141 TBS-002: discover lib has no network fetch" {
+  local root="$BATS_TEST_DIRNAME/.."
+  ! grep -qE 'curl |wget |fetch http' "$root/lib/tracker-discover.sh"
+  ! grep -qE 'curl |wget |fetch http' "$root/lib/github-issues-discover.sh"
+}
+
+@test "DEV-141 TBS-003: bootstrap mutation guard leaves Master-Plan unchanged" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/project"
+  local discover="$TEST_PROJECT/tbs-boot-disc.json"
+  local mp="$fixture/docs/Master-Plan.md"
+  local before after proposal="$TEST_PROJECT/tbs-boot.md"
+  run bash "$SCRIPT" --tracker discover --path "$fixture" --output "$discover"
+  [ "$status" -eq 0 ]
+  before=$(sha256sum "$mp" | awk '{print $1}')
+  run bash "$SCRIPT" --tracker bootstrap --path "$fixture" --input "$discover" --output "$proposal"
+  [ "$status" -eq 0 ]
+  after=$(sha256sum "$mp" | awk '{print $1}')
+  [ "$before" = "$after" ]
+  run bash "$SCRIPT" --tracker bootstrap --path "$fixture" --input "$discover" --output "$mp"
+  [ "$status" -ne 0 ]
+}
+
+@test "DEV-141 TBS-004: github mirror issues excluded from discovery merge" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/project"
+  local gh="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/github-issues-fetch.json"
+  local out="$TEST_PROJECT/tbs-gh-merge.json"
+  run bash "$SCRIPT" --tracker discover --path "$fixture" --input "$gh" --output "$out"
+  [ "$status" -eq 0 ]
+  run jq -e '[.items[].external_ref] | index("github:example/bootstrap-fixture#7") | not' "$out"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-141 TBS-005: bootstrap proposes github backlog row and agtoosa-task hint" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/project"
+  local gh="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/github-issues-fetch.json"
+  local discover="$TEST_PROJECT/tbs-gh-disc.json"
+  local proposal="$TEST_PROJECT/tbs-gh-boot.md"
+  run bash "$SCRIPT" --tracker discover --path "$fixture" --input "$gh" --output "$discover"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --tracker bootstrap --path "$fixture" --input "$discover" --output "$proposal"
+  [ "$status" -eq 0 ]
+  grep -q 'feat: add OAuth provider' "$proposal"
+  grep -q '/agtoosa-task' "$proposal"
+  grep -q 'DRAFT-' "$proposal"
+}
+
+@test "DEV-141 TBS-006: repo-plans items discovered from ROADMAP" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/project"
+  local out="$TEST_PROJECT/tbs-roadmap.json"
+  run bash "$SCRIPT" --tracker discover --path "$fixture" --output "$out"
+  [ "$status" -eq 0 ]
+  run jq -e '[.items[] | select(.provider == "repo-plans")] | length >= 1' "$out"
+  [ "$status" -eq 0 ]
+}
+
+@test "DEV-141 TBS-007: closed github issue classified closed_external" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/project"
+  local gh="$BATS_TEST_DIRNAME/fixtures/tracker-sync/discovery/github-issues-fetch.json"
+  local discover="$TEST_PROJECT/tbs-closed-disc.json"
+  local proposal="$TEST_PROJECT/tbs-closed-boot.md"
+  run bash "$SCRIPT" --tracker discover --path "$fixture" --input "$gh" --output "$discover"
+  run bash "$SCRIPT" --tracker bootstrap --path "$fixture" --input "$discover" --output "$proposal"
+  [ "$status" -eq 0 ]
+  grep -q 'closed_external' "$proposal"
+  grep -q 'github:example/bootstrap-fixture#3' "$proposal"
+}
+
+@test "DEV-141 TBS-008: init tributary and TrackerSync discover docs exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Phase B.5' "$root/template/Docs/AgToosa_Init.md"
+  grep -q 'discover' "$root/docs/AgToosa_TrackerSync.md"
+  grep -q 'bootstrap' "$root/docs/AgToosa_TrackerSync.md"
+  grep -q 'Linear MCP' "$root/docs/AgToosa_TrackerSync.md"
+}
+
+@test "DEV-141 TBS-009: claim boundary documents discover bootstrap without API sync" {
+  local doc="$BATS_TEST_DIRNAME/../docs/AgToosa_TrackerSync.md"
+  grep -q 'discover' "$doc"
+  grep -q 'bootstrap' "$doc"
+  grep -q 'repo-local source of truth' "$doc"
+  ! grep -qi 'bidirectional sync' "$doc" || grep -q 'roadmap' "$doc"
+}
+
+@test "DEV-141 TBS-010: DEV-141 filter suite green" {
+  run bats "$BATS_TEST_DIRNAME/agtoosa.bats" -f "DEV-141 TBS-00[1-9]"
+  [ "$status" -eq 0 ]
+}

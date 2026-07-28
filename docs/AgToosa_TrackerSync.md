@@ -34,12 +34,78 @@ bash agtoosa.sh --tracker intake --path /path/to/project \
   --output /tmp/intake-proposal.md
 ```
 
+**Brownfield discovery → bootstrap proposal (DEV-141):**
+```bash
+bash agtoosa.sh --tracker discover --path /path/to/project --output /tmp/discovery.json
+# Optional: merge gh issue list JSON at discover time
+bash agtoosa.sh --tracker discover --path /path/to/project \
+  --input /tmp/gh-issues.json --output /tmp/discovery.json
+bash agtoosa.sh --tracker bootstrap --path /path/to/project \
+  --input /tmp/discovery.json --output /tmp/bootstrap-proposal.md
+```
+
 PowerShell (delegates to Bash — Git Bash or WSL required):
 ```powershell
 .\agtoosa.ps1 -Tracker -TrackerCommand export -Path C:\Projects\MyApp -TrackerOutput $env:TEMP\export.json
 ```
 
-Run `/agtoosa-tracker export`, `propose`, `publish`, or `intake` in your AI assistant for the full workflow. Substantive rules live in this document; platform adapters delegate here.
+Run `/agtoosa-tracker export`, `propose`, `publish`, `intake`, `discover`, or `bootstrap` in your AI assistant for the full workflow. Substantive rules live in this document; platform adapters delegate here.
+
+---
+
+## Workflow: `/agtoosa-tracker discover` (DEV-141)
+
+1. Scan the repo for PM signals (`.github/ISSUE_TEMPLATE/`, `agtoosa-issues-sync` workflow, `ROADMAP.md`, `docs/plans/`, Linear references) — **no network calls**.
+2. Parse repo-local plan markdown into `items[]` (`provider: repo-plans`).
+3. Optionally merge `--input`:
+   - `agtoosa.github-issues-fetch/v1` or raw `gh issue list --json` array
+   - `agtoosa.linear-fetch-envelope/v1` (agent/MCP export)
+4. Emit `agtoosa.tracker-discovery/v1` to `--output`.
+5. Skip `agtoosa:DEV-*` / `source:agtoosa-sync` GitHub issues at merge time (already mirrored).
+
+---
+
+## Workflow: `/agtoosa-tracker bootstrap` (DEV-141)
+
+1. Load discovery or `agtoosa.tracker-bootstrap-input/v1` (discovery + optional fetch envelopes).
+2. Classify each item: `mirror_skip`, `new_external`, `repo_plan`, `closed_external`, `unchanged`, `unsupported`.
+3. Assign draft IDs (`DRAFT-001`, …) for proposed backlog rows only.
+4. Write Markdown proposal to `--output` with `/agtoosa-task` hints and suggested `tracker_mirror` workflow config.
+5. **Never** modify `docs/Master-Plan.md` during bootstrap.
+
+**Acceptance:** User applies chosen rows via `/agtoosa-task` or explicit edit; then steady-state outbound sync via `publish` if desired.
+
+---
+
+## Linear MCP bootstrap recipe (agent-instructed)
+
+AgToosa does **not** call Linear APIs from the core generator. Use this agent/MCP path:
+
+1. **Fetch** open issues from Linear (MCP or export) for the relevant team/project.
+2. **Normalize** to `agtoosa.linear-fetch-envelope/v1`:
+
+```json
+{
+  "schema_version": "agtoosa.linear-fetch-envelope/v1",
+  "fetched_at": "2026-07-28T12:00:00Z",
+  "team": "Platform",
+  "issues": [
+    {
+      "identifier": "PLAT-12",
+      "title": "Migrate billing webhooks",
+      "state": "In Progress",
+      "url": "https://linear.app/example/issue/PLAT-12"
+    }
+  ]
+}
+```
+
+3. **Discover** with merge: `bash agtoosa.sh --tracker discover --path . --input linear-fetch.json --output discovery.json`
+   - Or wrap in `agtoosa.tracker-bootstrap-input/v1` with a prior local `discovery` object.
+4. **Bootstrap:** `bash agtoosa.sh --tracker bootstrap --path . --input discovery.json --output bootstrap-proposal.md`
+5. **Accept** proposed rows via `/agtoosa-task`; record `tracker_mirror.provider: linear` in `Docs/Context/workflow.md` if continuing to mirror outbound.
+
+Unmapped Linear fields (cycles, dependencies, custom fields) appear as `unsupported` in proposals — repo state unchanged.
 
 ---
 
@@ -171,6 +237,9 @@ When a provider field has no AgToosa equivalent, preserve the original value in 
 | `/agtoosa-tracker export` and `propose` workflow | agent-instructed | This document is canonical |
 | `/agtoosa-tracker publish` manifest render | generator-enforced | Local files only |
 | `/agtoosa-tracker intake` proposal render | generator-enforced | Local files only |
+| `/agtoosa-tracker discover` local scan | generator-enforced | Repo signals only; no network |
+| `/agtoosa-tracker bootstrap` proposal render | generator-enforced | Local files only; no Master-Plan mutation |
+| Linear/GitHub fetch via MCP or `gh` | manual / agent-instructed | Outside core generator |
 | `agtoosa-issues-sync.yml` gh upsert | provider-enforced | GitHub Actions + `GITHUB_TOKEN` |
 | `agtoosa-issues-intake.yml` comment + artifact | provider-enforced | GitHub Actions |
 | Provider field mapping tables | agent-instructed | Translation guidance, not API guarantee |
@@ -184,6 +253,7 @@ When a provider field has no AgToosa equivalent, preserve the original value in 
 - Call GitHub, Linear, Jira, or TaskMaster APIs directly
 - Store OAuth tokens or API credentials
 - Auto-apply returned status or title changes without human approval
+- Do not claim two-way sync or live provider API synchronization from the core bridge
 
 **CI may (opt-in):**
 

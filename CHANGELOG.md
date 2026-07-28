@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.54] — 2026-07-28
+
+Patch release: DEV-140 — Help vs Next disambiguation hardening.
+
+### Fixed
+
+- **DEV-140 — Help vs Next disambiguation.** PROGRESS utterances (`next`, `do it`) execute `/agtoosa-next`; `/agtoosa-help next` remains preview-only; forbidden closure anti-patterns; `progress-continuation-proof` BCL scenario; NLX-009–013 bats; ADR-019 amended.
+
+---
+
 ## [5.3.53] — 2026-07-28
 
 Patch release: DEV-138 — Main CI Health.

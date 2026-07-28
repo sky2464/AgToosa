@@ -45,9 +45,9 @@ Run spec → build → review → ship for every story; `/agtoosa-qa` is an opti
 ## On-demand assistance (`/agtoosa-help`)
 
 - `/agtoosa-help` — static command reference; **do not** read `Docs/Master-Plan.md` or git on the default path.
-- `/agtoosa-help next` — **preview only:** same routing as `/agtoosa-next dry`; ends with `To execute: /agtoosa-next`. **Never modify** files or auto-run workflows from help.
+- `/agtoosa-help next` — **preview only:** same routing as `/agtoosa-next dry`; ends with `To execute: /agtoosa-next`. **Never modify** files or auto-run workflows from help. **Do not** use for freeform `next` — that executes `/agtoosa-next`.
 - `/agtoosa-next` — **primary sequential driver**: run status pulse, then **execute** exactly one lifecycle workflow. One phase per invocation; **Sequential Approval** when Next dispatches (spec/review/ship gates). `dry` · `pick` · `fix` · `test` · `docs`. See `Docs/AgToosa_Next.md` → **Continuation Context Contract** and Step 1b blocked routing.
-- PROGRESS freeform (`next`, `continue`, `okay`, `do it`, `go ahead`, `yes`, `proceed`, etc.) → route to `/agtoosa-next`, not raw phase slashes — unless a pending interview question is open (answer first).
+- PROGRESS freeform (`next`, `continue`, `okay`, `do it`, `go ahead`, `yes`, `proceed`, etc.) → route to `/agtoosa-next`, not raw phase slashes or `/agtoosa-help next` — unless a pending interview question is open (answer first).
 - Not part of the 4-phase lifecycle diagram above.
 
 ## Cursor workflow command routing

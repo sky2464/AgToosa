@@ -6,6 +6,8 @@ description: AgToosa next lifecycle dispatcher
 
 This file is the native Cursor project command for `/agtoosa-next`. When the user invokes `/agtoosa-next`, execute the AgToosa workflow below — do **not** route to `/create-skill` or generate a project skill for AgToosa workflow names.
 
+**PROGRESS utterances execute here:** bare `next`, `do it`, `okay`, `continue`, etc. route to this command — **not** `/agtoosa-help next` (preview only). Print the dispatch banner before executing.
+
 Read `Docs/AgToosa_Next.md` and execute the `/agtoosa-next` workflow. **Generated Project Mode** — see `Docs/AgToosa_Agent.md` → **Operating Contexts**.
 
 **Mandatory:** run `bash agtoosa.sh --status-line [path] --route-hint --format json` before dispatch.

@@ -1,0 +1,2 @@
+platform=windsurf
+adapter=.windsurf/workflows/agtoosa-next.md

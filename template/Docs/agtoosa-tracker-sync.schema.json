@@ -6,7 +6,11 @@
     { "$ref": "#/$defs/export_envelope" },
     { "$ref": "#/$defs/return_envelope" },
     { "$ref": "#/$defs/publish_manifest" },
-    { "$ref": "#/$defs/intake_envelope" }
+    { "$ref": "#/$defs/intake_envelope" },
+    { "$ref": "#/$defs/discovery_envelope" },
+    { "$ref": "#/$defs/bootstrap_input_envelope" },
+    { "$ref": "#/$defs/github_issues_fetch_envelope" },
+    { "$ref": "#/$defs/linear_fetch_envelope" }
   ],
   "$defs": {
     "schema_version": {
@@ -200,6 +204,133 @@
           "type": "array",
           "maxItems": 32,
           "items": { "type": "string", "maxLength": 64 }
+        }
+      }
+    },
+    "discovery_signal": {
+      "type": "object",
+      "required": ["provider", "confidence", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": ["github-issues", "linear", "repo-plans", "master-plan", "other"]
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["high", "medium", "low"]
+        },
+        "evidence": { "type": "string", "maxLength": 512 }
+      }
+    },
+    "discovery_item": {
+      "type": "object",
+      "required": ["external_ref", "provider", "title", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "external_ref": { "type": "string", "maxLength": 256 },
+        "provider": {
+          "type": "string",
+          "enum": ["github-issues", "linear", "repo-plans", "other"]
+        },
+        "title": { "type": "string", "maxLength": 256 },
+        "status": {
+          "type": "string",
+          "enum": ["open", "closed", "unknown"]
+        },
+        "labels": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "type": "string", "maxLength": 64 }
+        },
+        "linked_story_id": { "type": ["string", "null"], "maxLength": 32 },
+        "body_excerpt": { "type": "string", "maxLength": 1024 }
+      }
+    },
+    "discovery_envelope": {
+      "type": "object",
+      "required": ["schema_version", "discovered_at", "signals", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "agtoosa.tracker-discovery/v1"
+        },
+        "discovered_at": { "type": "string", "format": "date-time" },
+        "repository": { "type": "string", "maxLength": 512 },
+        "signals": {
+          "type": "array",
+          "maxItems": 32,
+          "items": { "$ref": "#/$defs/discovery_signal" }
+        },
+        "items": {
+          "type": "array",
+          "maxItems": 256,
+          "items": { "$ref": "#/$defs/discovery_item" }
+        }
+      }
+    },
+    "bootstrap_input_envelope": {
+      "type": "object",
+      "required": ["schema_version", "discovery"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "agtoosa.tracker-bootstrap-input/v1"
+        },
+        "discovery": { "$ref": "#/$defs/discovery_envelope" },
+        "github_issues_fetch": { "$ref": "#/$defs/github_issues_fetch_envelope" },
+        "linear_fetch": { "$ref": "#/$defs/linear_fetch_envelope" }
+      }
+    },
+    "github_issues_fetch_envelope": {
+      "type": "object",
+      "required": ["schema_version", "issues"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "agtoosa.github-issues-fetch/v1"
+        },
+        "fetched_at": { "type": "string", "format": "date-time" },
+        "repository": { "type": "string", "maxLength": 256 },
+        "issues": {
+          "type": "array",
+          "maxItems": 256,
+          "items": {
+            "type": "object",
+            "required": ["number", "title", "state"],
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "linear_fetch_envelope": {
+      "type": "object",
+      "required": ["schema_version", "issues"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "agtoosa.linear-fetch-envelope/v1"
+        },
+        "fetched_at": { "type": "string", "format": "date-time" },
+        "team": { "type": "string", "maxLength": 128 },
+        "issues": {
+          "type": "array",
+          "maxItems": 256,
+          "items": {
+            "type": "object",
+            "required": ["identifier", "title"],
+            "additionalProperties": true,
+            "properties": {
+              "identifier": { "type": "string", "maxLength": 32 },
+              "title": { "type": "string", "maxLength": 256 },
+              "state": { "type": "string", "maxLength": 64 },
+              "url": { "type": "string", "maxLength": 512 }
+            }
+          }
         }
       }
     }

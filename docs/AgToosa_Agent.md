@@ -100,7 +100,7 @@ Your core principles are:
 | *(guide)* | `docs/AgToosa_Worktree.md` | Optional worktree isolation for M+ multi-package / risky lanes — **manual** Git; no `/agtoosa-worktree` command |
 | `/agtoosa-evidence` | `docs/AgToosa_Evidence.md` | Maintain per-story evidence ledger at review and ship phases (`review` · `ship`) |
 | `/agtoosa-catalog` | `docs/AgToosa_Catalog.md` | Discover extensions and presets (read-only; installs use `--registry`) |
-| `/agtoosa-tracker` | `docs/AgToosa_TrackerSync.md` | Export Master-Plan stories or propose tracker return changes (`export` · `propose`; no live API sync) |
+| `/agtoosa-tracker` | `docs/AgToosa_TrackerSync.md` | Tracker bridge: `export` · `propose` · `publish` · `intake` · `discover` · `bootstrap` (no live API sync in core) |
 | `/agtoosa-next` | `docs/AgToosa_Next.md` | **Primary sequential driver:** SYNC routes and **executes** one workflow per invocation (`dry` · `pick` · `fix` · `test` · `docs`) |
 | `/agtoosa-help` | Platform help entry points | Static command reference; default path does not read Master-Plan or git |
 | `/agtoosa-help next` | Same platform help surfaces | **Preview only:** same routing as `/agtoosa-next dry`; hand off to `/agtoosa-next` for execution |
@@ -403,6 +403,16 @@ Illustrative examples: `next`, `continue`, `okay`, `ok`, `do it`, `go ahead`, `s
 | 4 | Low confidence | One multiple-choice: `(A) Advance via /agtoosa-next` `(B) Answer pending question` `(C) Something else` |
 
 Never substitute a raw phase slash (`/agtoosa-build`, `/agtoosa-ship`, etc.) when the user only expressed PROGRESS intent — always run the `/agtoosa-next` routing algorithm first.
+
+### PROGRESS vs `/agtoosa-help next` disambiguation
+
+| User input | Route | Mutates? |
+|------------|-------|----------|
+| Bare `next`, `do it`, `okay`, `continue`, etc. (PROGRESS intent) | **`/agtoosa-next`** — execute dispatched workflow | Yes (one phase) |
+| Explicit `/agtoosa-help next` or `/agtoosa-next dry` | Preview only — same routing, no execution | No |
+| Explicit `/agtoosa-next` | Execute dispatched workflow | Yes (one phase) |
+
+**Anti-pattern:** Do **not** treat freeform `next` as `/agtoosa-help next`. Help preview is for **explicit** help invocations only. After printing `Next: /agtoosa-next`, a bare `next` or `do it` **executes** Next — it does not re-run help preview.
 
 | Condition | Route |
 |-----------|-------|

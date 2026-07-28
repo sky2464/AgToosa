@@ -1,0 +1,2 @@
+platform=copilot
+adapter=.github/prompts/agtoosa-next.prompt.md

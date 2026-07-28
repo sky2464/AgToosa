@@ -22,6 +22,7 @@ Most users (~90%) want sequential progress without memorizing phase slash comman
 8. **Generator Must:** `spec_approved` in route-hint JSON; when false, SYNC `next` resolves to `/agtoosa-spec` not build.
 9. **Sequential Approval (amended 2026-07-27):** when `/agtoosa-next` dispatches a phase, the user's Next invocation counts as approval at spec, review, and ship deploy gates when readiness checks pass — still one phase per invocation. Direct phase slashes keep standard gates. Post-ship idle routes to next backlog spec or cold-start recommendations.
 10. **Blocked-state routing (amended 2026-07-28, DEV-135):** when review is BLOCKED or tests are red, `/agtoosa-next` routes fix/test tributaries and updates Master-Plan — does not dispatch ship. Phase Stop preserved — no auto-chain on PROGRESS utterances alone.
+11. **Help vs Next disambiguation (amended 2026-07-28, DEV-140):** bare PROGRESS utterances (`next`, `do it`, etc.) **execute** `/agtoosa-next` with dispatch banner; `/agtoosa-help next` and `dry` remain read-only preview. Closures recommend `Next: /agtoosa-next`, not direct phase slashes.
 
 ## Consequences
 

@@ -1,8 +1,8 @@
 # AgToosa Tracker Sync — Export and Proposal Bridge
 
-Mirror AgToosa story state into external trackers **without** surrendering `Docs/Master-Plan.md` authority. v1 is **one-way export** plus **proposal-only import** — not live API synchronization.
+Mirror AgToosa story state into external trackers **without** surrendering `docs/Master-Plan.md` authority. v1 is **one-way export** plus **proposal-only import** — not live API synchronization.
 
-> **Authority:** `Docs/Master-Plan.md` wins every conflict. External trackers are optional mirrors created only when the user explicitly asks. AgToosa does not call provider APIs in v1.
+> **Authority:** `docs/Master-Plan.md` wins every conflict. External trackers are optional mirrors created only when the user explicitly asks. AgToosa does not call provider APIs in v1.
 
 ---
 
@@ -34,12 +34,78 @@ bash agtoosa.sh --tracker intake --path /path/to/project \
   --output /tmp/intake-proposal.md
 ```
 
+**Brownfield discovery → bootstrap proposal (DEV-141):**
+```bash
+bash agtoosa.sh --tracker discover --path /path/to/project --output /tmp/discovery.json
+# Optional: merge gh issue list JSON at discover time
+bash agtoosa.sh --tracker discover --path /path/to/project \
+  --input /tmp/gh-issues.json --output /tmp/discovery.json
+bash agtoosa.sh --tracker bootstrap --path /path/to/project \
+  --input /tmp/discovery.json --output /tmp/bootstrap-proposal.md
+```
+
 PowerShell (delegates to Bash — Git Bash or WSL required):
 ```powershell
 .\agtoosa.ps1 -Tracker -TrackerCommand export -Path C:\Projects\MyApp -TrackerOutput $env:TEMP\export.json
 ```
 
-Run `/agtoosa-tracker export`, `propose`, `publish`, or `intake` in your AI assistant for the full workflow. Substantive rules live in this document; platform adapters delegate here.
+Run `/agtoosa-tracker export`, `propose`, `publish`, `intake`, `discover`, or `bootstrap` in your AI assistant for the full workflow. Substantive rules live in this document; platform adapters delegate here.
+
+---
+
+## Workflow: `/agtoosa-tracker discover` (DEV-141)
+
+1. Scan the repo for PM signals (`.github/ISSUE_TEMPLATE/`, `agtoosa-issues-sync` workflow, `ROADMAP.md`, `docs/plans/`, Linear references) — **no network calls**.
+2. Parse repo-local plan markdown into `items[]` (`provider: repo-plans`).
+3. Optionally merge `--input`:
+   - `agtoosa.github-issues-fetch/v1` or raw `gh issue list --json` array
+   - `agtoosa.linear-fetch-envelope/v1` (agent/MCP export)
+4. Emit `agtoosa.tracker-discovery/v1` to `--output`.
+5. Skip `agtoosa:DEV-*` / `source:agtoosa-sync` GitHub issues at merge time (already mirrored).
+
+---
+
+## Workflow: `/agtoosa-tracker bootstrap` (DEV-141)
+
+1. Load discovery or `agtoosa.tracker-bootstrap-input/v1` (discovery + optional fetch envelopes).
+2. Classify each item: `mirror_skip`, `new_external`, `repo_plan`, `closed_external`, `unchanged`, `unsupported`.
+3. Assign draft IDs (`DRAFT-001`, …) for proposed backlog rows only.
+4. Write Markdown proposal to `--output` with `/agtoosa-task` hints and suggested `tracker_mirror` workflow config.
+5. **Never** modify `docs/Master-Plan.md` during bootstrap.
+
+**Acceptance:** User applies chosen rows via `/agtoosa-task` or explicit edit; then steady-state outbound sync via `publish` if desired.
+
+---
+
+## Linear MCP bootstrap recipe (agent-instructed)
+
+AgToosa does **not** call Linear APIs from the core generator. Use this agent/MCP path:
+
+1. **Fetch** open issues from Linear (MCP or export) for the relevant team/project.
+2. **Normalize** to `agtoosa.linear-fetch-envelope/v1`:
+
+```json
+{
+  "schema_version": "agtoosa.linear-fetch-envelope/v1",
+  "fetched_at": "2026-07-28T12:00:00Z",
+  "team": "Platform",
+  "issues": [
+    {
+      "identifier": "PLAT-12",
+      "title": "Migrate billing webhooks",
+      "state": "In Progress",
+      "url": "https://linear.app/example/issue/PLAT-12"
+    }
+  ]
+}
+```
+
+3. **Discover** with merge: `bash agtoosa.sh --tracker discover --path . --input linear-fetch.json --output discovery.json`
+   - Or wrap in `agtoosa.tracker-bootstrap-input/v1` with a prior local `discovery` object.
+4. **Bootstrap:** `bash agtoosa.sh --tracker bootstrap --path . --input discovery.json --output bootstrap-proposal.md`
+5. **Accept** proposed rows via `/agtoosa-task`; record `tracker_mirror.provider: linear` in `Docs/Context/workflow.md` if continuing to mirror outbound.
+
+Unmapped Linear fields (cycles, dependencies, custom fields) appear as `unsupported` in proposals — repo state unchanged.
 
 ---
 
@@ -60,7 +126,7 @@ Run `/agtoosa-tracker export`, `propose`, `publish`, or `intake` in your AI assi
 1. Skip issues that already carry an `agtoosa:DEV-*` label (AgToosa-synced mirror).
 2. Build `agtoosa.github-issues-intake/v1` envelope from the community issue.
 3. Write a proposal artifact with a suggested Master-Plan backlog row and `/agtoosa-task` hint.
-4. **Never** modify `Docs/Master-Plan.md` during intake.
+4. **Never** modify `docs/Master-Plan.md` during intake.
 5. Maintainer accepts via `/agtoosa-task` or explicit edit; Issues sync runs on the next Master-Plan push to `main`.
 
 ---
@@ -70,14 +136,14 @@ Run `/agtoosa-tracker export`, `propose`, `publish`, or `intake` in your AI assi
 1. Confirm the user wants a tracker mirror (not a replacement for Master-Plan).
 2. Resolve the project path (explicit `--path` or current repo root).
 3. Run the local export command — **no network calls**.
-4. The bridge reads `Docs/Master-Plan.md` and only spec files referenced by exported stories.
+4. The bridge reads `docs/Master-Plan.md` and only spec files referenced by exported stories.
 5. Stories are normalized and sorted by stable story ID; volatile fields (e.g. `generated_at`) are excluded from the export ID digest.
 6. Write the `agtoosa.tracker-bridge/v1` JSON envelope to the explicit `--output` path.
 7. Tell the user how to transport the envelope (manual upload, provider adapter, or MCP tool **outside** AgToosa).
 
 **Export envelope fields (summary):** `schema_version`, `export_id`, `generated_at`, `repository`, `source` (commit + `master_plan_sha256`), `stories[]` with `story_id`, `title`, `epic`, `status`, `estimate`, `spec_path`, `acceptance_criteria`.
 
-Full schema: `Docs/agtoosa-tracker-sync.schema.json`.
+Full schema: `docs/agtoosa-tracker-sync.schema.json`.
 
 ---
 
@@ -87,7 +153,7 @@ Full schema: `Docs/agtoosa-tracker-sync.schema.json`.
 2. Validate schema, story IDs, allowed fields, secret safety, and current `Master-Plan.md` digest.
 3. For each change, compare **repo value** (authoritative) vs **proposed value** (external).
 4. Write a Markdown proposal artifact to `--output` with disposition per item: `proposed`, `unchanged`, `stale`, `unsupported`, or `rejected`.
-5. **Never** modify `Docs/Master-Plan.md`, specs, or task checkboxes during propose.
+5. **Never** modify `docs/Master-Plan.md`, specs, or task checkboxes during propose.
 6. Route accepted changes through existing AgToosa workflows (see **Proposal acceptance** below).
 
 ---
@@ -98,7 +164,7 @@ Accepted proposals **do not** auto-apply. Use one of:
 
 | Change type | Route |
 |-------------|-------|
-| Status, estimate, backlog row, task checkbox | `/agtoosa-task` or explicit human edit to `Docs/Master-Plan.md` |
+| Status, estimate, backlog row, task checkbox | `/agtoosa-task` or explicit human edit to `docs/Master-Plan.md` |
 | Spec content, ACs, design | `/agtoosa-spec amend` |
 | New story | `/agtoosa-spec` (new story) |
 
@@ -171,19 +237,23 @@ When a provider field has no AgToosa equivalent, preserve the original value in 
 | `/agtoosa-tracker export` and `propose` workflow | agent-instructed | This document is canonical |
 | `/agtoosa-tracker publish` manifest render | generator-enforced | Local files only |
 | `/agtoosa-tracker intake` proposal render | generator-enforced | Local files only |
+| `/agtoosa-tracker discover` local scan | generator-enforced | Repo signals only; no network |
+| `/agtoosa-tracker bootstrap` proposal render | generator-enforced | Local files only; no Master-Plan mutation |
+| Linear/GitHub fetch via MCP or `gh` | manual / agent-instructed | Outside core generator |
 | `agtoosa-issues-sync.yml` gh upsert | provider-enforced | GitHub Actions + `GITHUB_TOKEN` |
 | `agtoosa-issues-intake.yml` comment + artifact | provider-enforced | GitHub Actions |
 | Provider field mapping tables | agent-instructed | Translation guidance, not API guarantee |
 | Transporting envelopes to/from trackers | manual / provider-enforced | Human, provider tool, or authorized integration |
 | Accepting a proposal | manual authorization | `/agtoosa-task`, `/agtoosa-spec amend`, or explicit edit |
 | Live bidirectional webhook sync | **roadmap (Phase 3)** | Do not claim silent two-way sync |
-| `Docs/Master-Plan.md` | repo-local source of truth | Wins every tracker conflict |
+| `docs/Master-Plan.md` | repo-local source of truth | Wins every tracker conflict |
 
 **Core generator does not:**
 
 - Call GitHub, Linear, Jira, or TaskMaster APIs directly
 - Store OAuth tokens or API credentials
 - Auto-apply returned status or title changes without human approval
+- Do not claim two-way sync or live provider API synchronization from the core bridge
 
 **CI may (opt-in):**
 
@@ -196,15 +266,15 @@ When a provider field has no AgToosa equivalent, preserve the original value in 
 - Treat every return envelope as **untrusted input**.
 - Redact or reject credentials, token-bearing URLs, absolute local paths, and control characters.
 - Bound file size and record count before parsing oversized returns.
-- Proposal output must not alias `Docs/Master-Plan.md` or other source files.
+- Proposal output must not alias `docs/Master-Plan.md` or other source files.
 
 ---
 
 ## Related
 
-- **PM source of truth:** `Docs/Master-Plan.md`
-- **Fast backlog edits:** `Docs/AgToosa_Task.md`
-- **Spec amendments:** `Docs/AgToosa_Spec.md` (`amend` sub-command)
-- **Envelope schema:** `Docs/agtoosa-tracker-sync.schema.json`
+- **PM source of truth:** `docs/Master-Plan.md`
+- **Fast backlog edits:** `docs/AgToosa_Task.md`
+- **Spec amendments:** `docs/AgToosa_Spec.md` (`amend` sub-command)
+- **Envelope schema:** `docs/agtoosa-tracker-sync.schema.json`
 - **Issues sync script:** `scripts/agtoosa-issues-sync.sh`
 - **CI workflows:** `.github/workflows/agtoosa-issues-sync.yml`, `.github/workflows/agtoosa-issues-intake.yml`

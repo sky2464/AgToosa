@@ -26,7 +26,8 @@ When the user omits `/agtoosa-*`, run **AgToosa Lifecycle Compass** per `docs/Ag
 
 ## On-demand assistance (`/agtoosa-next`)
 
-- `/agtoosa-next` — primary sequential driver; see `docs/AgToosa_Next.md`. PROGRESS utterances (`next`, `okay`, `do it`, `continue`, etc.) dispatch Next per **Continuation Context Contract** — not raw `/agtoosa-build` or `/agtoosa-ship`.
+- `/agtoosa-next` — primary sequential driver; see `docs/AgToosa_Next.md`. PROGRESS utterances (`next`, `okay`, `do it`, `continue`, etc.) dispatch Next per **Continuation Context Contract** — not raw `/agtoosa-build`, `/agtoosa-ship`, or `/agtoosa-help next` preview.
+- **Help vs Next:** freeform `next` executes `/agtoosa-next`; only explicit `/agtoosa-help next` is read-only preview.
 
 ## Cursor workflow command routing
 

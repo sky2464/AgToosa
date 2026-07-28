@@ -10,7 +10,7 @@ set -euo pipefail
 #   bash agtoosa.sh [--force] [--dry-run] [--version] [--help]
 # ──────────────────────────────────────────────────────────────
 
-AGTOOSA_VERSION="5.3.53"
+AGTOOSA_VERSION="5.3.54"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="${SCRIPT_DIR}/template"
 SHIP_DIR="${AGTOOSA_SHIP_DIR:-${SCRIPT_DIR}/ship}"
@@ -29,7 +29,7 @@ if [[ ! -d "${SCRIPT_DIR}/lib" ]]; then
 fi
 
 # ── Source modular libraries ──────────────────────────────────
-for _lib in config version copy apply transaction state lock generate plan dryrun install update migrate provenance registry catalog tracker github-issues maintain reinstall cleanup; do
+for _lib in config version copy apply transaction state lock generate plan dryrun install update migrate provenance registry catalog tracker github-issues github-issues-discover tracker-discover maintain reinstall cleanup; do
   # shellcheck source=/dev/null
   source "${SCRIPT_DIR}/lib/${_lib}.sh"
 done
@@ -429,9 +429,23 @@ if [[ "$TRACKER" == true ]]; then
       fi
       tracker_propose_intake "$_tracker_project" "$TRACKER_INPUT" "$TRACKER_OUTPUT"
       exit $? ;;
+    discover)
+      if [[ -z "$TRACKER_OUTPUT" ]]; then
+        echo -e "${RED}❌ Error: --tracker discover requires --output <file>.${NC}" >&2
+        exit 1
+      fi
+      tracker_discover "$_tracker_project" "$TRACKER_OUTPUT" "$TRACKER_INPUT"
+      exit $? ;;
+    bootstrap)
+      if [[ -z "$TRACKER_INPUT" || -z "$TRACKER_OUTPUT" ]]; then
+        echo -e "${RED}❌ Error: --tracker bootstrap requires --input <file> and --output <file>.${NC}" >&2
+        exit 1
+      fi
+      tracker_bootstrap "$_tracker_project" "$TRACKER_INPUT" "$TRACKER_OUTPUT"
+      exit $? ;;
     *)
       echo -e "${RED}❌ Error: Unknown tracker command '${TRACKER_COMMAND}'.${NC}" >&2
-      echo "Available commands: export, propose, publish, intake" >&2
+      echo "Available commands: export, propose, publish, intake, discover, bootstrap" >&2
       exit 1
       ;;
   esac

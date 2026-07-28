@@ -14,8 +14,8 @@ Use when the user asks for `/agtoosa-next`, `$agtoosa-next`, or wants to advance
 3. Trust `spec_approved` from route-hint JSON; when false, dispatch spec (Sequential Approval applies when quality checks pass).
 4. Dispatch exactly **one** lifecycle workflow (`spec`, `build`, `review`, `ship`, or tributary).
 5. Honor Phase Stop: one phase per invocation. Apply **Sequential Approval Contract** when served by Next (see `Docs/AgToosa_Next.md`).
-6. **PROGRESS utterances** (`next`, `okay`, `do it`, `continue`, etc.) without `/agtoosa-*` → dispatch via Compass **Continuation Context Contract** — pending interview Q answers first; otherwise execute `/agtoosa-next`.
-7. **Distinct from `/agtoosa-help next`:** help previews; this skill **executes**.
+6. **PROGRESS utterances** (`next`, `okay`, `do it`, `continue`, etc.) without `/agtoosa-*` → dispatch via Compass **Continuation Context Contract** — pending interview Q answers first; otherwise **execute** `/agtoosa-next` (print dispatch banner). **Never** substitute `/agtoosa-help next` preview for bare `next`.
+7. **Distinct from `/agtoosa-help next`:** help previews only on explicit help invocation; this skill **executes**.
 8. On successful completion, print dual-line close with `Next: /agtoosa-next` when sequential mode applies.
 
 ## Sub-commands

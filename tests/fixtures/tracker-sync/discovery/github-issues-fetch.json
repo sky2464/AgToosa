@@ -1,0 +1,31 @@
+{
+  "schema_version": "agtoosa.github-issues-fetch/v1",
+  "fetched_at": "2026-07-28T00:00:00Z",
+  "repository": "example/bootstrap-fixture",
+  "issues": [
+    {
+      "number": 42,
+      "title": "feat: add OAuth provider",
+      "state": "OPEN",
+      "labels": [{ "name": "enhancement" }],
+      "body": "Need OAuth for enterprise SSO."
+    },
+    {
+      "number": 7,
+      "title": "feat: Alpha Bridge",
+      "state": "OPEN",
+      "labels": [
+        { "name": "agtoosa:DEV-Alpha" },
+        { "name": "source:agtoosa-sync" }
+      ],
+      "body": "<!-- agtoosa-story-id: DEV-Alpha -->\nSynced from Master-Plan."
+    },
+    {
+      "number": 3,
+      "title": "fix: legacy login bug",
+      "state": "CLOSED",
+      "labels": [{ "name": "bug" }],
+      "body": "Fixed in v1.2."
+    }
+  ]
+}

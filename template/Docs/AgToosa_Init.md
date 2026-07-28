@@ -66,6 +66,24 @@ Use when the AI agent is focused on a specific file or function and needs broade
     - Risks
     - Unresolved questions
 
+**Phase B.5 — Existing work surfaces (optional tributary):**
+
+After the Goal Contract, ask once:
+
+> "Is work already tracked in GitHub Issues, Linear, or repo roadmap files (ROADMAP.md, plans/)?"
+
+If **yes** (brownfield adoption):
+
+1. Run `bash agtoosa.sh --tracker discover --path . --output /tmp/tracker-discovery.json` (local signals only).
+2. Optionally merge provider data — **no network in the generator**:
+   - GitHub: `gh issue list --json number,title,labels,state,body` → save JSON → re-run discover with `--input <file>`.
+   - Linear: agent/MCP export → `agtoosa.linear-fetch-envelope/v1` JSON → discover `--input` or bootstrap input envelope (see `Docs/AgToosa_TrackerSync.md`).
+3. Run `bash agtoosa.sh --tracker bootstrap --path . --input /tmp/tracker-discovery.json --output /tmp/bootstrap-proposal.md`.
+4. Present the proposal; user accepts rows via `/agtoosa-task` or explicit `Docs/Master-Plan.md` edit.
+5. **Do not block init** — continue to Phase C after the user accepts, skips, or defers bootstrap.
+
+If **no**, continue without bootstrap.
+
 4.  **Populate-Check Gate:**
 
     Before asking anything, check whether `Docs/Context/` files already exist and are populated:
@@ -183,7 +201,7 @@ Use when the AI agent is focused on a specific file or function and needs broade
 
 11. **Project Management Setup:**
 
-    > `Docs/Master-Plan.md` is the single source of truth for all project management — it replaces Linear, Jira, GitHub Projects, Trello, or any external tracker. Do NOT create issues in external tools unless the user explicitly asks.
+    > `Docs/Master-Plan.md` is the **repo-local PM authority**. External trackers (GitHub Issues, Linear, etc.) may continue as **public mirrors** after optional bootstrap (`/agtoosa-tracker discover` · `bootstrap`). Import is always proposal-first — never silent. Do not create new external issues unless the user explicitly asks.
 
     *   For each Epic confirmed in the consultation, add an entry to `Docs/Master-Plan.md` under `## Epics`:
         - **Name:** `Epic: [product area name]` (e.g., `Epic: Authentication`)

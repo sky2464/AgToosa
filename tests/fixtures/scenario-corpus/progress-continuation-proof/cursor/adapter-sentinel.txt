@@ -1,0 +1,2 @@
+platform=cursor
+adapter=.cursor/commands/agtoosa-next.md

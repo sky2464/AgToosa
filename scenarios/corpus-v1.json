@@ -4,6 +4,10 @@
     {
       "id": "lifecycle-compass-proof",
       "definition_path": "scenarios/lifecycle-compass-proof.json"
+    },
+    {
+      "id": "progress-continuation-proof",
+      "definition_path": "scenarios/progress-continuation-proof.json"
     }
   ]
 }

@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "scenario_id": "progress-continuation-proof",
+  "platform": "claude",
+  "run_at": "2026-07-28T23:15:00Z",
+  "artifact_results": [
+    {"path": "status-line.txt", "passed": true, "detail": "ok"},
+    {"path": "scenario-notes.md", "passed": true, "detail": "ok"},
+    {"path": "continuation-routing.md", "passed": true, "detail": "ok"},
+    {"path": "adapter-sentinel.txt", "passed": true, "detail": "ok"}
+  ],
+  "verifier_exit_code": 0
+}

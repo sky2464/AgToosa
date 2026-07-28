@@ -17,6 +17,8 @@ Static maintainer-guide links (print as-is; do not fetch or treat as local Docs 
 
 If the argument is `next`, run the same routing as `/agtoosa-next dry` per `Docs/AgToosa_Next.md`. **Never modify** project state. End with:
 
+**Do not** invoke this path for freeform `next` / `do it` — those are PROGRESS utterances that **execute** `/agtoosa-next` per `Docs/AgToosa_Agent.md` → disambiguation table.
+
 ```
 To execute: /agtoosa-next
 (This preview did not modify anything.)

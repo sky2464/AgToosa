@@ -1,0 +1,28 @@
+# Example: manual GitHub Issues bootstrap artifact (DEV-141)
+# Copy to .github/workflows/agtoosa-issues-bootstrap.yml and enable workflow_dispatch.
+# Dumps open issues as JSON for local discover/bootstrap — does NOT modify Master-Plan.
+
+name: AgToosa Issues Bootstrap Export
+
+on:
+  workflow_dispatch:
+
+permissions:
+  issues: read
+
+jobs:
+  export-issues:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Export open issues JSON
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue list --state open --limit 200 \
+            --json number,title,labels,state,body \
+            > /tmp/gh-issues.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agtoosa-github-issues-fetch
+          path: /tmp/gh-issues.json

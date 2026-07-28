@@ -1,0 +1,2 @@
+platform=gemini
+adapter=.gemini/commands/agtoosa-next.toml

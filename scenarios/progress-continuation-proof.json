@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "id": "progress-continuation-proof",
+  "title": "PROGRESS continuation vs help-next disambiguation proof",
+  "description": "Fixed proof task: idle post-ship SYNC routes to spec; bare next executes /agtoosa-next (dispatch banner), not /agtoosa-help next preview.",
+  "platforms": ["cursor", "claude", "codex", "copilot", "windsurf", "gemini"],
+  "shared_artifacts": [
+    {
+      "path": "status-line.txt",
+      "required": true,
+      "markers": ["SYNC:", "next /agtoosa-spec"]
+    },
+    {
+      "path": "scenario-notes.md",
+      "required": true,
+      "markers": ["progress-continuation-proof"]
+    },
+    {
+      "path": "continuation-routing.md",
+      "required": true,
+      "markers": ["AgToosa Next →", "help-next-disambiguation"]
+    }
+  ],
+  "platform_artifacts": {
+    "cursor": [
+      {
+        "path": "adapter-sentinel.txt",
+        "required": true,
+        "markers": ["platform=cursor", ".cursor/commands"]
+      }
+    ],
+    "claude": [
+      {
+        "path": "adapter-sentinel.txt",
+        "required": true,
+        "markers": ["platform=claude", ".claude/commands"]
+      }
+    ],
+    "codex": [
+      {
+        "path": "adapter-sentinel.txt",
+        "required": true,
+        "markers": ["platform=codex", "codex"]
+      }
+    ],
+    "copilot": [
+      {
+        "path": "adapter-sentinel.txt",
+        "required": true,
+        "markers": ["platform=copilot", "copilot-instructions"]
+      }
+    ],
+    "windsurf": [
+      {
+        "path": "adapter-sentinel.txt",
+        "required": true,
+        "markers": ["platform=windsurf", ".windsurf"]
+      }
+    ],
+    "gemini": [
+      {
+        "path": "adapter-sentinel.txt",
+        "required": true,
+        "markers": ["platform=gemini", "gemini"]
+      }
+    ]
+  },
+  "maintainer_steps": {
+    "shared": [
+      "Install or update AgToosa workflow files for the target platform.",
+      "Run: bash agtoosa.sh --status-line [path] > status-line.txt (idle post-ship fixture).",
+      "Create scenario-notes.md with heading progress-continuation-proof and the run date.",
+      "Create continuation-routing.md documenting AgToosa Next → dispatch banner and help-next-disambiguation rule.",
+      "Record the platform adapter sentinel path in adapter-sentinel.txt."
+    ],
+    "cursor": ["Confirm .cursor/commands/agtoosa-next.md documents PROGRESS executes (not help preview)."],
+    "claude": ["Confirm .claude/commands/agtoosa-next.md documents PROGRESS executes."],
+    "codex": ["Confirm Codex agtoosa-next skill documents PROGRESS executes."],
+    "copilot": ["Confirm .github/prompts includes agtoosa-next PROGRESS routing."],
+    "windsurf": ["Confirm .windsurf/workflows/agtoosa-next.md documents PROGRESS executes."],
+    "gemini": ["Confirm .gemini/commands include agtoosa-next PROGRESS routing."]
+  }
+}

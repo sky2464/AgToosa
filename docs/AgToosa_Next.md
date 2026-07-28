@@ -148,6 +148,21 @@ Honor explicit phase slashes when the user names them (`/agtoosa-review security
 - Explicit `/agtoosa-next` bypasses Compass ceremony.
 - **Phase Stop preserved:** PROGRESS routing does not auto-chain Spec → Build → Review → Ship in one invocation.
 
+## Forbidden closure anti-patterns
+
+When recommending the next story or phase:
+
+- **Never** end with "Say 'do it' to run `/agtoosa-spec`" (or any direct phase slash) when the user expressed PROGRESS intent or asked what is next.
+- **Required** closure when sequential mode applies: `Next: /agtoosa-next — <rationale>` plus SYNC pulse.
+- **Never** respond to bare `next` / `do it` with `/agtoosa-help next` preview output — execute `/agtoosa-next` and print the dispatch banner first:
+
+```text
+AgToosa Next → /agtoosa-<command> (<story-id>) — <one-line rationale>
+SYNC: <paste pulse line>
+```
+
+Help preview (`To execute: /agtoosa-next`) is **only** for explicit `/agtoosa-help next` or `/agtoosa-next dry`.
+
 ## Help handoff (`/agtoosa-help next`)
 
 1. Run Step 0 routing (same as `dry`).
