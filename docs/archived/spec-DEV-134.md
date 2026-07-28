@@ -3,7 +3,7 @@
 > **Story ID:** DEV-134  
 > **Epic:** DEV-002 — Workflow Templates · DEV-004 — Testing & QA Harness  
 > **Type:** Chore  
-> **Status:** 🟨 In Progress — build  
+> **Status:** 🏁 Shipped — v5.3.48  
 > **Estimate:** XS  
 > **Clarity:** `ready`  
 > **Priority:** P1  
@@ -52,7 +52,7 @@
 
 - [x] **1.** Re-run `npm run verify:checkpoint` and record evidence — _AC-001_
 - [x] **2.** Add bats MED-001–004 — _AC-002, AC-003, AC-004_
-- [ ] **3.** Ship v5.3.48 — changelog + version parity — _AC-004_
+- [x] **3.** Ship v5.3.48 — changelog + version parity — _AC-004_
 
 ## 4. Test Plan
 

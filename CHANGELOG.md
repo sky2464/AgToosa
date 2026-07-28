@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.48] — 2026-07-28
+
+Patch release: DEV-134 — README hero media pass (catch-up formalization).
+
+### Changed
+
+- **DEV-134 — Hero media.** Slower ReadmeLoop workflow GIF with captions, `WorkflowSummaryScene`, Manrope + IBM Plex Mono typography; `verify:checkpoint` contract; MED-001–004 bats.
+
+---
+
 ## [5.3.47] — 2026-07-28
 
 Patch release: DEV-133 — GitHub branch hygiene for Cursor agent sprawl.
