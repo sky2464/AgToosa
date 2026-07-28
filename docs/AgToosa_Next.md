@@ -78,6 +78,18 @@ When user passes `fix`, `test`, `docs`, or Compass routes a tributary:
 | `docs` — changelog/archive only | `ship` | `/agtoosa-ship docs` |
 | Parallel / handoff / cross-model | — | **Advanced mode** — do not route via Next |
 
+### Step 1b — Blocked or tributary routing (PROGRESS default)
+
+When `/agtoosa-next` dispatches from PROGRESS intent or bare continuation, apply blocked-state rules **before** lifecycle anchor:
+
+| State | Next behavior |
+|-------|---------------|
+| Review **BLOCKED** (unresolved 🔴 Critical in `review-*.md`) | Route **`fix`** tributary → `/agtoosa-build` expedite or re-run `/agtoosa-review` after fixes; update Master-Plan Active Tasks — **not** `/agtoosa-ship` |
+| Build / tests red | Route **`test`** or **`fix`** tributary before review |
+| User said only "continue" / PROGRESS utterance | Always run this routing algorithm — never jump to raw `/agtoosa-build` or `/agtoosa-ship` without SYNC pulse |
+
+When fix tributary resolves a lesson the user confirms, append a dated row under `docs/Context/workflow.md` → `## Standing Corrections` (see `AgToosa_Spec.md` intake tiered logging).
+
 ### Step 2 — Lifecycle anchor (sequential default)
 
 | SYNC `anchor` / `next` | Dispatches |
@@ -129,9 +141,12 @@ Honor explicit phase slashes when the user names them (`/agtoosa-review security
 
 ## Relationship to Lifecycle Compass
 
-- Freeform **sequential** intent ("next", "what's next", "continue the cycle") → route to **`/agtoosa-next`**, not a raw phase slash.
+- Freeform **PROGRESS** intent (continuation utterances — see `AgToosa_Agent.md` → **Continuation Context Contract**) → route to **`/agtoosa-next`**, not a raw phase slash.
+- Illustrative PROGRESS utterances (semantic, not exhaustive): `next`, `continue`, `okay`, `ok`, `do it`, `go ahead`, `sounds good`, `yes`, `proceed`, `let's go`, `keep going`, `what's next`, `agtoosa next`.
+- **Context-aware disambiguation:** pending Plan-Mode Spec Interview question → answer or momentum opt-in — do **not** dispatch Next; post-closure or approval gate → dispatch Next.
 - Compass tributaries (explore, fix, track) may map through Next tributary intents when appropriate.
 - Explicit `/agtoosa-next` bypasses Compass ceremony.
+- **Phase Stop preserved:** PROGRESS routing does not auto-chain Spec → Build → Review → Ship in one invocation.
 
 ## Help handoff (`/agtoosa-help next`)
 

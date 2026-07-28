@@ -18,9 +18,15 @@ When the user omits `/agtoosa-*`, run **AgToosa Project Intake** per `docs/AgToo
 
 When the user omits `/agtoosa-*`, run **AgToosa Lifecycle Compass** per `docs/AgToosa_Agent.md` (extends Project Intake). **Mandatory:** `bash agtoosa.sh --status-line [path]` before routing.
 
-- Infer semantic intent — not phrase matching. Reconcile with SYNC → **ANCHOR** (`spec` · `build` · `review` · `ship` · `none`).
-- Soft: `Compass: soft → <phase>` · Hard: `**AgToosa Lifecycle Compass**` + `ANCHOR:` · Tributary: `serving <phase>` + `When done: return to /agtoosa-<phase>`.
+- Infer semantic intent (`PLAN`/`BUILD`/`REVIEW`/`SHIP`/`FIX`/`EXPLORE`/`TRACK`/`PROGRESS`) — not phrase matching. Reconcile with SYNC → **ANCHOR** (`spec` · `build` · `review` · `ship` · `none`).
+- Soft: `Compass: soft → <phase>` · Hard: `**AgToosa Lifecycle Compass**` + `ANCHOR:` · Progress: `Compass: progress → /agtoosa-next`.
+- **Continuation Context Contract:** pending interview Q → answer/momentum opt-in; post-closure or approval gate → `/agtoosa-next`; bare continuation + active cycle → `/agtoosa-next` — never raw phase slash on PROGRESS alone. See `docs/AgToosa_Agent.md`.
+- Tributary: `serving <phase>` + `When done: return to /agtoosa-<phase>`.
 - Explicit `/agtoosa-*` bypasses Compass ceremony. **Phase Stop:** never auto-chain Spec → Build → Review → Ship.
+
+## On-demand assistance (`/agtoosa-next`)
+
+- `/agtoosa-next` — primary sequential driver; see `docs/AgToosa_Next.md`. PROGRESS utterances (`next`, `okay`, `do it`, `continue`, etc.) dispatch Next per **Continuation Context Contract** — not raw `/agtoosa-build` or `/agtoosa-ship`.
 
 ## Cursor workflow command routing
 

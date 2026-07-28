@@ -10,4 +10,5 @@
 | ship | test | bats | DEV-133 SR-001 | version pins 5.3.47 | PASS | AgToosa | 2026-07-28T01:10:00Z |
 | ship | test | bats | BRH- smoke | 6/6 green | PASS | AgToosa | 2026-07-28T01:10:00Z |
 | ship | version parity | other | agtoosa.sh · agtoosa.ps1 · npm/package.json · Formula/agtoosa.rb | pins 5.3.47 | PASS | AgToosa | 2026-07-28T01:10:00Z |
+| ship | release | github | https://github.com/sky2464/AgToosa/releases/tag/v5.3.47 | `gh release view v5.3.47`; workflow run 30319257259 | PASS | AgToosa | 2026-07-28T01:06:00Z |
 | ship | all Must | other | docs/Master-Plan.md | Ship complete — v5.3.47 | PASS | AgToosa | 2026-07-28T01:10:00Z |

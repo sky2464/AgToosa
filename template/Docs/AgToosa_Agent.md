@@ -364,7 +364,7 @@ drifting the product. Confirm to open Spec, or say how you want to override.
 When the user omits `/agtoosa-*`, run **AgToosa Lifecycle Compass** after Project Intake Standing Corrections read:
 
 1. Run `bash agtoosa.sh --status-line [path]` (or `agtoosa.ps1 -StatusLine`; fallback: read Master-Plan Active Cycle).
-2. Infer **semantic intent** from the utterance (not phrase-table lookup): `PLAN` · `BUILD` · `REVIEW` · `SHIP` · `FIX` · `EXPLORE` · `TRACK`.
+2. Infer **semantic intent** from the utterance (not phrase-table lookup): `PLAN` · `BUILD` · `REVIEW` · `SHIP` · `FIX` · `EXPLORE` · `TRACK` · `PROGRESS`.
 3. Apply Claim Boundary soft/hard (intake triggers above).
 4. **Reconcile** intent × SYNC `next` × hard triggers → exactly one **ANCHOR** (`spec` · `build` · `review` · `ship` · `none`).
 5. Route to the matching workflow; **Phase Stop** preserved.
@@ -376,6 +376,7 @@ When the user omits `/agtoosa-*`, run **AgToosa Lifecycle Compass** after Projec
 | Soft | `Compass: soft → <phase> — <rationale>` |
 | Hard gate | `**AgToosa Lifecycle Compass** — <benefit>. ANCHOR: <phase> — confirm /agtoosa-<phase>.` |
 | Tributary | `Compass: tributary (<explore\|fix\|track>) → serving <phase> · <story-id\|none>` then `When done: return to /agtoosa-<phase> — <rationale>` |
+| Progress | `Compass: progress → /agtoosa-next — <SYNC one-liner>` |
 
 **Semantic classes → ANCHOR** (examples illustrative, not exhaustive):
 
@@ -388,8 +389,20 @@ When the user omits `/agtoosa-*`, run **AgToosa Lifecycle Compass** after Projec
 | FIX | Claim-Boundary-small bug/chore | active phase | tributary → expedite |
 | EXPLORE | Read-only questions | active phase | tributary → answer |
 | TRACK | Log backlog item | `spec` | tributary → `/agtoosa-task` |
+| PROGRESS | Advance lifecycle without naming a phase | `none` (dispatcher) | `/agtoosa-next` |
 
-**Reconciliation (intent × SYNC):**
+**Continuation Context Contract** (PROGRESS-class utterances — semantic, not phrase-table):
+
+Illustrative examples: `next`, `continue`, `okay`, `ok`, `do it`, `go ahead`, `sounds good`, `yes`, `proceed`, `let's go`, `keep going`, `what's next`, `agtoosa next`.
+
+| Priority | Condition | Action |
+|----------|-----------|--------|
+| 1 | Agent asked a **pending interview question** (Plan-Mode Spec Interview, budget menu, hard-gate confirm) | Answer or momentum opt-in per `Docs/AgToosa_Spec.md` — **do not** dispatch `/agtoosa-next` |
+| 2 | Agent printed **closure** (`Next: /agtoosa-next`) or **approval gate** at phase end | Dispatch **`/agtoosa-next`** (Sequential Approval when served) |
+| 3 | **Bare continuation** + active SYNC cycle | Dispatch **`/agtoosa-next`** |
+| 4 | Low confidence | One multiple-choice: `(A) Advance via /agtoosa-next` `(B) Answer pending question` `(C) Something else` |
+
+Never substitute a raw phase slash (`/agtoosa-build`, `/agtoosa-ship`, etc.) when the user only expressed PROGRESS intent — always run the `/agtoosa-next` routing algorithm first.
 
 | Condition | Route |
 |-----------|-------|
@@ -398,7 +411,7 @@ When the user omits `/agtoosa-*`, run **AgToosa Lifecycle Compass** after Projec
 | BUILD intent + active tasks remain | ANCHOR `build` |
 | REVIEW intent + tasks complete | ANCHOR `review` |
 | SHIP intent + review not done | ANCHOR `review` first |
-| Sequential progress ("next", "continue", "what's next") | Route to `/agtoosa-next` (not raw phase slash) |
+| PROGRESS intent (continuation utterance) | Route to `/agtoosa-next` — not a raw phase slash; apply Continuation Context Contract |
 | Low confidence | One multiple-choice question (plan / build / fix / review) |
 
 Explicit `/agtoosa-*` bypasses Compass ceremony. **Do not use Cursor native Plan mode** for in-scope product work — execute AgToosa workflow files. On hard-path confirm, begin the named workflow immediately; Compass is not permission to skip it. Never auto-chain Spec → Build → Review → Ship.

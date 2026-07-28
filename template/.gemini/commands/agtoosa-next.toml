@@ -16,6 +16,8 @@ Dispatch based on arguments:
 
 **Phase stop:** one lifecycle command per invocation. Never auto-chain phases.
 
+**Continuation Context Contract:** PROGRESS utterances (next, okay, do it, continue, etc.) route to /agtoosa-next per Docs/AgToosa_Agent.md — pending interview Q answers first.
+
 **Distinct from /agtoosa-help next:** this command executes workflows; help next is read-only.
 
 <!-- AGTOOSA PRODUCT TRUTH START: command.next -->

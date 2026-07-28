@@ -16,6 +16,8 @@ Sub-command dispatch:
 
 **Phase stop:** one lifecycle command per invocation. Never auto-chain Spec → Build → Review → Ship.
 
+**Continuation Context Contract:** PROGRESS utterances (`next`, `okay`, `do it`, `continue`, etc.) → `/agtoosa-next` per `Docs/AgToosa_Agent.md` — pending interview Q → answer first.
+
 **Distinct from `/agtoosa-help next`:** this command executes workflows; help next is read-only.
 
 <!-- AGTOOSA PRODUCT TRUTH START: command.next -->

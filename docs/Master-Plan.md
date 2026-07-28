@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-28 (/agtoosa-ship — DEV-133 v5.3.47)
+> **Last updated:** 2026-07-28 (/agtoosa-spec — DEV-134 Spec Approved; hero media)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Idle — DEV-133 shipped v5.3.47 |
+| Current phase | Spec ✅ Approved — DEV-134 (build pending) |
 | Milestone | `v5.3.48` (next) |
-| Active cycle | _(none)_ |
-| Cycle state | Idle — post-ship; enroll next via `/agtoosa-next` |
+| Active cycle | DEV-134 |
+| Cycle state | Active — DEV-134 README hero media pass |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -23,7 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| _(none — cycle archived)_ | | | | | |
+| DEV-134 | Chore: README Hero Media Pass (Catch-up Formalization) | Chore | XS | 🟦 Todo — Spec Approved | 0/3 |
 
 <!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.47.md (DEV-133 v5.3.47) -->
 
@@ -75,9 +75,13 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for enrolled Active Cycle stories. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-_(No stories enrolled.)_
+_(No other stories enrolled.)_
 
-<!-- DEV-133 tasks archived with cycle-2026-07-28-release-5.3.47.md -->
+### DEV-134 — README Hero Media Pass (Catch-up Formalization)
+
+- [ ] **1.** Re-run `npm run verify:checkpoint` and record evidence — _AC-001_
+- [ ] **2.** Add bats MED-001–004 — _AC-002, AC-003, AC-004_
+- [ ] **3.** Ship v5.3.48 — changelog + version parity — _AC-004_
 
 ## Manual / Deferred Tasks
 
@@ -131,6 +135,8 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-131 | Chore: Sequential Approval + Release Publication Gate | Chore | S | 🏁 Shipped — v5.3.45 |
 | DEV-132 | Fix: Preserve Evidence JSONL on Re-install and Update | Fix | XS | DEV-001 / DEV-004 | P0 | 🏁 Shipped — v5.3.46 |
 | DEV-133 | Chore: GitHub Branch Hygiene for Cursor Agent Sprawl | Chore | S | DEV-004 | P1 | 🏁 Shipped — v5.3.47 |
+| DEV-134 | Chore: README Hero Media Pass (Catch-up Formalization) | Chore | XS | DEV-002 / DEV-004 | P1 | 🟦 Todo — Spec Approved |
+| DEV-135 | Chore: Natural-Language Continuation → `/agtoosa-next` | Chore | S | DEV-002 / DEV-004 | P1 | 🟨 Build complete — parked (await review) |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
 | DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v5.3.10 |
@@ -760,6 +766,9 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-27 23:40 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-132 — 0 Critical, 2 Warning; next `/agtoosa-next` → ship v5.3.46 | AgToosa |
 | 2026-07-27 23:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-132 — smoke PASS EVJ/SR gate; v5.3.46 | AgToosa |
 | 2026-07-27 23:55 | 🚀 Ship complete — v5.3.46 — DEV-132 Evidence JSONL preservation | AgToosa |
+| 2026-07-28 20:24 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-134 — README hero media catch-up (`7bac032`); NL work renumbered to DEV-135 (parked build-complete); next `/agtoosa-next` → build | AgToosa |
+| 2026-07-28 01:35 | 🏗️ /agtoosa-build — Build complete — DEV-135 (was mislabeled DEV-134) — NLX-001–008; PROGRESS + Continuation Context Contract; parked pending review | AgToosa |
+| 2026-07-28 01:25 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-135 (was DEV-134) — NL continuation → `/agtoosa-next` | AgToosa |
 | 2026-07-28 01:15 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-133 — smoke PASS BRH/SR gate; v5.3.47 | AgToosa |
 | 2026-07-28 01:15 | 🚀 Ship complete — v5.3.47 — DEV-133 GitHub branch hygiene | AgToosa |
 | 2026-07-28 01:15 | 🚀 Release 5.3.47 shipped — v5.3.47; version parity bash/ps1/npm/formula; Milestone v5.3.48 (next) | AgToosa |

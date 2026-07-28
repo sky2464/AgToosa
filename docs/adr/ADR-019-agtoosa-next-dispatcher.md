@@ -1,6 +1,6 @@
 # ADR-019: /agtoosa-next Lifecycle Dispatcher (A+B Hybrid)
 
-**Status:** Accepted (amended 2026-07-26)  
+**Status:** Accepted (amended 2026-07-28)  
 **Date:** 2026-07-26  
 **Deciders:** AI agent + human review (DEV-125)
 
@@ -18,9 +18,10 @@ Most users (~90%) want sequential progress without memorizing phase slash comman
 4. **Sub-commands:** `dry` (preview), `pick` (idle cold-start), optional tributary intents (`fix`, `test`, etc.).
 5. **Idle behavior:** scan Backlog for highest-priority spec candidate; else cold-start with user idea or top-3 recommendations.
 6. **Preserve Phase Stop:** never chain Spec → Build → Review → Ship inside one `/agtoosa-next` run.
-7. **Compass feeds Next:** freeform sequential intent ("next", advance project) routes to `/agtoosa-next`, not raw phase slashes.
+7. **Compass feeds Next:** freeform **PROGRESS** intent (continuation utterances per `Docs/AgToosa_Agent.md` → **Continuation Context Contract**) routes to `/agtoosa-next`, not raw phase slashes. Pending Plan-Mode Spec Interview questions are answered first — not dispatched as Next.
 8. **Generator Must:** `spec_approved` in route-hint JSON; when false, SYNC `next` resolves to `/agtoosa-spec` not build.
 9. **Sequential Approval (amended 2026-07-27):** when `/agtoosa-next` dispatches a phase, the user's Next invocation counts as approval at spec, review, and ship deploy gates when readiness checks pass — still one phase per invocation. Direct phase slashes keep standard gates. Post-ship idle routes to next backlog spec or cold-start recommendations.
+10. **Blocked-state routing (amended 2026-07-28, DEV-135):** when review is BLOCKED or tests are red, `/agtoosa-next` routes fix/test tributaries and updates Master-Plan — does not dispatch ship. Phase Stop preserved — no auto-chain on PROGRESS utterances alone.
 
 ## Consequences
 

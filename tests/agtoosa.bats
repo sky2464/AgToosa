@@ -15560,6 +15560,68 @@ PY
   [ -f "$root/docs/archived/review-DEV-133.md" ]
 }
 
+# -- DEV-135: NL continuation → /agtoosa-next (NLX-001–008) --------------------
+
+@test "DEV-135 @smoke NLX-001: Agent defines PROGRESS class and Continuation Context Contract" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'PROGRESS' "$root/docs/AgToosa_Agent.md"
+  grep -q 'PROGRESS' "$root/template/Docs/AgToosa_Agent.md"
+  grep -q 'Continuation Context Contract' "$root/docs/AgToosa_Agent.md"
+  grep -q 'Continuation Context Contract' "$root/template/Docs/AgToosa_Agent.md"
+  grep -q 'Compass: progress' "$root/docs/AgToosa_Agent.md"
+}
+
+@test "DEV-135 @smoke NLX-002: AgToosa_Next documents PROGRESS continuation examples" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'PROGRESS' "$root/docs/AgToosa_Next.md"
+  grep -q 'PROGRESS' "$root/template/Docs/AgToosa_Next.md"
+  grep -q 'do it' "$root/docs/AgToosa_Next.md"
+  grep -q 'Relationship to Lifecycle Compass' "$root/docs/AgToosa_Next.md"
+}
+
+@test "DEV-135 NLX-003: agtoosa-core.mdc documents context-aware disambiguation" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Continuation Context Contract' "$root/template/.cursor/rules/agtoosa-core.mdc"
+  grep -q 'pending interview' "$root/template/.cursor/rules/agtoosa-core.mdc"
+  grep -q 'PROGRESS' "$root/template/.cursor/rules/agtoosa-core.mdc"
+}
+
+@test "DEV-135 NLX-004: agtoosa-maintainer-core.mdc parity for sequential routing" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Continuation Context Contract' "$root/.cursor/rules/agtoosa-maintainer-core.mdc"
+  grep -q '/agtoosa-next' "$root/.cursor/rules/agtoosa-maintainer-core.mdc"
+  grep -q 'PROGRESS' "$root/.cursor/rules/agtoosa-maintainer-core.mdc"
+}
+
+@test "DEV-135 NLX-005: agtoosa-next skill references Continuation Context Contract" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Continuation Context Contract' "$root/template/.codex/skills/agtoosa-next/SKILL.md"
+  grep -q 'PROGRESS utterances' "$root/template/.codex/skills/agtoosa-next/SKILL.md"
+}
+
+@test "DEV-135 NLX-006: ADR-019 amended with PROGRESS and blocked routing" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'PROGRESS' "$root/docs/adr/ADR-019-agtoosa-next-dispatcher.md"
+  grep -q 'Blocked-state routing' "$root/docs/adr/ADR-019-agtoosa-next-dispatcher.md"
+  grep -q 'DEV-135' "$root/docs/adr/ADR-019-agtoosa-next-dispatcher.md"
+}
+
+@test "DEV-135 NLX-007: Phase Stop preserved for PROGRESS routing" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Phase Stop preserved' "$root/docs/AgToosa_Next.md"
+  grep -q 'Phase Stop preserved' "$root/template/Docs/AgToosa_Next.md"
+  ! grep -qi 'always chain on okay' "$root/docs/AgToosa_Agent.md"
+  ! grep -qi 'always chain on okay' "$root/docs/AgToosa_Next.md"
+}
+
+@test "DEV-135 @smoke NLX-008: Review BLOCKED routing in AgToosa_Next Step 1b" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'Step 1b' "$root/docs/AgToosa_Next.md"
+  grep -q 'Step 1b' "$root/template/Docs/AgToosa_Next.md"
+  grep -q 'BLOCKED' "$root/docs/AgToosa_Next.md"
+  grep -q 'not.*`/agtoosa-ship`' "$root/docs/AgToosa_Next.md"
+}
+
 # -- Sivarena UX review follow-up (UPG-010–UPG-011) ----------------------------
 
 @test "UPG-010: detect copilot from scoped instructions without sentinel" {

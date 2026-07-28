@@ -9,13 +9,14 @@ Use when the user asks for `/agtoosa-next`, `$agtoosa-next`, or wants to advance
 
 ## Execute
 
-1. Read `Docs/AgToosa_Next.md` and follow the routing algorithm.
+1. Read `Docs/AgToosa_Next.md` and follow the routing algorithm (including **Continuation Context Contract** and Step 1b blocked routing).
 2. **Mandatory:** run `bash agtoosa.sh --status-line [path] --route-hint --format json` before dispatch.
 3. Trust `spec_approved` from route-hint JSON; when false, dispatch spec (Sequential Approval applies when quality checks pass).
 4. Dispatch exactly **one** lifecycle workflow (`spec`, `build`, `review`, `ship`, or tributary).
 5. Honor Phase Stop: one phase per invocation. Apply **Sequential Approval Contract** when served by Next (see `Docs/AgToosa_Next.md`).
-6. **Distinct from `/agtoosa-help next`:** help previews; this skill **executes**.
-7. On successful completion, print dual-line close with `Next: /agtoosa-next` when sequential mode applies.
+6. **PROGRESS utterances** (`next`, `okay`, `do it`, `continue`, etc.) without `/agtoosa-*` → dispatch via Compass **Continuation Context Contract** — pending interview Q answers first; otherwise execute `/agtoosa-next`.
+7. **Distinct from `/agtoosa-help next`:** help previews; this skill **executes**.
+8. On successful completion, print dual-line close with `Next: /agtoosa-next` when sequential mode applies.
 
 ## Sub-commands
 
