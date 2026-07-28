@@ -22,7 +22,6 @@
     "legacy:render": "remotion render src/index.ts Hero out/legacy/agtoosa-hero.mp4 --codec=h264 --crf=18"
   },
   "dependencies": {
-    "@fontsource-variable/inter": "5.3.0",
     "@fontsource-variable/manrope": "5.3.0",
     "@fontsource/ibm-plex-mono": "5.3.0",
     "@remotion/cli": "^4.0.0",

@@ -1,5 +1,5 @@
 import React from "react";
-import {colors, FONT_READABLE, FONT_SANS, progress} from "./theme";
+import {colors, FONT_SANS, progress} from "./theme";
 
 type ProofGlyphProps = {
   frame?: number;
@@ -137,10 +137,10 @@ export const Wordmark: React.FC<WordmarkProps> = ({
       <div
         style={{
           color: colors.paper,
-          fontFamily: readable ? FONT_READABLE : FONT_SANS,
-          fontSize: compact ? (readable ? 48 : 40) : readable ? 92 : 78,
-          fontWeight: readable ? 800 : 780,
-          letterSpacing: readable ? "-0.045em" : "-0.055em",
+          fontFamily: FONT_SANS,
+          fontSize: compact ? 40 : readable ? 72 : 78,
+          fontWeight: readable ? 700 : 780,
+          letterSpacing: readable ? "-0.03em" : "-0.055em",
           lineHeight: 0.9,
         }}
       >
@@ -156,9 +156,9 @@ export const BrandCredit: React.FC<{readable?: boolean}> = ({
   <div
     style={{
       color: colors.muted,
-      fontFamily: readable ? FONT_READABLE : FONT_SANS,
-      fontSize: readable ? 20 : 17,
-      fontWeight: readable ? 600 : 570,
+      fontFamily: FONT_SANS,
+      fontSize: readable ? 16 : 17,
+      fontWeight: readable ? 550 : 570,
       letterSpacing: "0.02em",
     }}
   >

@@ -6,7 +6,6 @@ import {
   colors,
   fadeScene,
   FONT_MONO,
-  FONT_READABLE,
   FONT_SANS,
   progress,
 } from "../theme";
@@ -43,9 +42,9 @@ export const ReframeScene: React.FC<{
         <div
           style={{
             color: colors.cyan,
-            fontFamily: readable ? FONT_READABLE : FONT_MONO,
-            fontSize: readable ? 26 : 14,
-            fontWeight: readable ? 700 : undefined,
+            fontFamily: FONT_MONO,
+            fontSize: readable ? 18 : 14,
+            fontWeight: readable ? 500 : undefined,
             letterSpacing: readable ? "0.1em" : "0.18em",
           }}
         >
@@ -54,10 +53,10 @@ export const ReframeScene: React.FC<{
         <div
           style={{
             color: colors.paper,
-            fontFamily: readable ? FONT_READABLE : FONT_MONO,
-            fontSize: readable ? 104 : 118,
-            fontWeight: readable ? 800 : 500,
-            letterSpacing: readable ? "-0.055em" : "-0.065em",
+            fontFamily: FONT_MONO,
+            fontSize: readable ? 76 : 118,
+            fontWeight: 500,
+            letterSpacing: readable ? "-0.02em" : "-0.065em",
             marginTop: 6,
           }}
         >
@@ -66,10 +65,10 @@ export const ReframeScene: React.FC<{
         <div
           style={{
             color: colors.paper,
-            fontFamily: readable ? FONT_READABLE : FONT_SANS,
-            fontSize: readable ? 52 : 38,
+            fontFamily: FONT_SANS,
+            fontSize: readable ? 40 : 38,
             fontWeight: readable ? 700 : 650,
-            letterSpacing: readable ? "-0.025em" : "-0.035em",
+            letterSpacing: readable ? "-0.02em" : "-0.035em",
             marginTop: 12,
           }}
         >
@@ -78,8 +77,8 @@ export const ReframeScene: React.FC<{
         <div
           style={{
             color: colors.muted,
-            fontFamily: readable ? FONT_READABLE : FONT_SANS,
-            fontSize: readable ? 38 : 25,
+            fontFamily: FONT_SANS,
+            fontSize: readable ? 28 : 25,
             fontWeight: readable ? 500 : undefined,
             marginTop: 9,
           }}
@@ -115,9 +114,9 @@ export const ReframeScene: React.FC<{
                 borderTop: index === 0 ? undefined : `1px solid ${colors.line}`,
                 color: colors.paper,
                 display: "flex",
-                fontFamily: readable ? FONT_READABLE : FONT_MONO,
-                fontSize: readable ? 30 : 17,
-                fontWeight: readable ? 650 : 500,
+                fontFamily: readable ? FONT_SANS : FONT_MONO,
+                fontSize: readable ? 22 : 17,
+                fontWeight: readable ? 600 : 500,
                 gap: 18,
                 opacity: itemIn,
                 padding: "18px 0",

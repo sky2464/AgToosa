@@ -9,9 +9,11 @@ import {BrandCredit, Wordmark} from "./Brand";
 import {FilmBackground} from "./FilmBackground";
 import {ReframeScene} from "./scenes/ReframeScene";
 import {TensionScene} from "./scenes/TensionScene";
+import {WorkflowSummaryScene} from "./scenes/WorkflowSummaryScene";
 import {
   colors,
-  FONT_READABLE,
+  FONT_MONO,
+  FONT_SANS,
   progress,
   README_FRAMES,
 } from "./theme";
@@ -51,9 +53,9 @@ const WorkflowScene: React.FC = () => {
         <div
           style={{
             color: colors.cyan,
-            fontFamily: FONT_READABLE,
-            fontSize: 26,
-            fontWeight: 700,
+            fontFamily: FONT_MONO,
+            fontSize: 18,
+            fontWeight: 500,
             letterSpacing: "0.1em",
           }}
         >
@@ -62,10 +64,10 @@ const WorkflowScene: React.FC = () => {
         <div
           style={{
             color: colors.paper,
-            fontFamily: FONT_READABLE,
-            fontSize: 68,
-            fontWeight: 760,
-            letterSpacing: "-0.035em",
+            fontFamily: FONT_SANS,
+            fontSize: 48,
+            fontWeight: 700,
+            letterSpacing: "-0.02em",
             marginTop: 8,
           }}
         >
@@ -77,11 +79,11 @@ const WorkflowScene: React.FC = () => {
         style={{
           bottom: 68,
           color: colors.muted,
-          fontFamily: FONT_READABLE,
-          fontSize: 40,
-          fontWeight: 550,
+          fontFamily: FONT_SANS,
+          fontSize: 28,
+          fontWeight: 500,
           left: 0,
-          opacity: progress(frame, 128, 18),
+          opacity: progress(frame, 96, 18),
           position: "absolute",
           right: 0,
           textAlign: "center",
@@ -123,10 +125,10 @@ const CommandCard: React.FC<{
     <div
       style={{
         color,
-        fontFamily: FONT_READABLE,
-        fontSize: 28,
-        fontWeight: 700,
-        letterSpacing: "0.08em",
+        fontFamily: FONT_MONO,
+        fontSize: 18,
+        fontWeight: 500,
+        letterSpacing: "0.1em",
       }}
     >
       {label}
@@ -134,10 +136,10 @@ const CommandCard: React.FC<{
     <div
       style={{
         color: colors.paper,
-        fontFamily: FONT_READABLE,
-        fontSize: 88,
-        fontWeight: 800,
-        letterSpacing: "-0.05em",
+        fontFamily: FONT_MONO,
+        fontSize: 56,
+        fontWeight: 500,
+        letterSpacing: "-0.02em",
         marginTop: 8,
       }}
     >
@@ -167,9 +169,9 @@ const RoutingScene: React.FC = () => {
         <div
           style={{
             color: colors.cyan,
-            fontFamily: FONT_READABLE,
-            fontSize: 26,
-            fontWeight: 700,
+            fontFamily: FONT_MONO,
+            fontSize: 18,
+            fontWeight: 500,
             letterSpacing: "0.1em",
           }}
         >
@@ -178,10 +180,10 @@ const RoutingScene: React.FC = () => {
         <div
           style={{
             color: colors.paper,
-            fontFamily: FONT_READABLE,
-            fontSize: 68,
-            fontWeight: 760,
-            letterSpacing: "-0.035em",
+            fontFamily: FONT_SANS,
+            fontSize: 48,
+            fontWeight: 700,
+            letterSpacing: "-0.02em",
             marginTop: 8,
           }}
         >
@@ -222,9 +224,9 @@ const RoutingScene: React.FC = () => {
         style={{
           bottom: 86,
           color: colors.muted,
-          fontFamily: FONT_READABLE,
-          fontSize: 32,
-          fontWeight: 650,
+          fontFamily: FONT_MONO,
+          fontSize: 20,
+          fontWeight: 500,
           left: 0,
           letterSpacing: "0.08em",
           opacity: progress(frame, 58, 18),
@@ -257,9 +259,9 @@ const VerifyScene: React.FC = () => {
         <div
           style={{
             color: colors.muted,
-            fontFamily: FONT_READABLE,
-            fontSize: 26,
-            fontWeight: 700,
+            fontFamily: FONT_MONO,
+            fontSize: 18,
+            fontWeight: 500,
             letterSpacing: "0.1em",
           }}
         >
@@ -268,10 +270,10 @@ const VerifyScene: React.FC = () => {
         <div
           style={{
             color: colors.paper,
-            fontFamily: FONT_READABLE,
-            fontSize: 64,
-            fontWeight: 760,
-            letterSpacing: "-0.03em",
+            fontFamily: FONT_SANS,
+            fontSize: 48,
+            fontWeight: 700,
+            letterSpacing: "-0.02em",
             marginTop: 7,
           }}
         >
@@ -290,14 +292,21 @@ const VerifyScene: React.FC = () => {
   );
 };
 
-const ClosingScene: React.FC = () => {
+const ClosingScene: React.FC<{durationInFrames: number}> = ({
+  durationInFrames,
+}) => {
   const frame = useCurrentFrame();
   const reveal = progress(frame, 2, 14);
   const details = progress(frame, 12, 16);
-  const fadeOut = interpolate(frame, [68, 85], [1, 0], {
+  const fadeOut = interpolate(
+    frame,
+    [durationInFrames - 18, durationInFrames],
+    [1, 0],
+    {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
-  });
+    },
+  );
   return (
     <AbsoluteFill style={{opacity: reveal * fadeOut}}>
       <FilmBackground frame={1210} coolShift={14} />
@@ -317,10 +326,10 @@ const ClosingScene: React.FC = () => {
         <div
           style={{
             color: colors.paper,
-            fontFamily: FONT_READABLE,
-            fontSize: 60,
-            fontWeight: 700,
-            letterSpacing: "-0.025em",
+            fontFamily: FONT_SANS,
+            fontSize: 44,
+            fontWeight: 650,
+            letterSpacing: "-0.02em",
             marginTop: 32,
             opacity: details,
           }}
@@ -331,10 +340,10 @@ const ClosingScene: React.FC = () => {
         <div
           style={{
             color: colors.cyan,
-            fontFamily: FONT_READABLE,
-            fontSize: 32,
-            fontWeight: 650,
-            letterSpacing: "0.08em",
+            fontFamily: FONT_MONO,
+            fontSize: 20,
+            fontWeight: 500,
+            letterSpacing: "0.1em",
             marginTop: 18,
             opacity: details,
           }}
@@ -353,40 +362,45 @@ export const ReadmeLoop: React.FC = () => {
   const frame = useCurrentFrame();
   const baseFrame =
     Math.sin((frame / README_FRAMES) * Math.PI * 2) * 90;
-  const brandOpacity = interpolate(frame, [0, 18, 620, 640], [0, 1, 1, 0], {
+  const brandOpacity = interpolate(frame, [0, 18, 694, 714], [0, 1, 1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
   return (
     <AbsoluteFill style={{background: colors.ink}}>
       <FilmBackground frame={baseFrame} coolShift={4} />
-      <Sequence durationInFrames={120}>
-        <Segment duration={120}>
+      <Sequence durationInFrames={144}>
+        <Segment duration={144}>
           <TensionScene timingScale={0.8} readable />
         </Segment>
       </Sequence>
-      <Sequence from={114} durationInFrames={126}>
-        <Segment duration={126}>
+      <Sequence from={138} durationInFrames={150}>
+        <Segment duration={150}>
           <ReframeScene timingScale={0.75} readable />
         </Segment>
       </Sequence>
-      <Sequence from={234} durationInFrames={162}>
-        <Segment duration={162}>
+      <Sequence from={282} durationInFrames={186}>
+        <Segment duration={186}>
           <WorkflowScene />
         </Segment>
       </Sequence>
-      <Sequence from={390} durationInFrames={130}>
-        <Segment duration={130}>
+      <Sequence from={462} durationInFrames={132}>
+        <Segment duration={132}>
           <RoutingScene />
         </Segment>
       </Sequence>
-      <Sequence from={514} durationInFrames={126}>
-        <Segment duration={126}>
+      <Sequence from={588} durationInFrames={132}>
+        <Segment duration={132}>
           <VerifyScene />
         </Segment>
       </Sequence>
-      <Sequence from={634} durationInFrames={86}>
-        <ClosingScene />
+      <Sequence from={714} durationInFrames={144}>
+        <Segment duration={144}>
+          <WorkflowSummaryScene />
+        </Segment>
+      </Sequence>
+      <Sequence from={852} durationInFrames={108}>
+        <ClosingScene durationInFrames={108} />
       </Sequence>
       <div
         style={{

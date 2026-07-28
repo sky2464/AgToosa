@@ -5,7 +5,6 @@ import {
   colors,
   fadeScene,
   FONT_MONO,
-  FONT_READABLE,
   FONT_SANS,
   progress,
 } from "../theme";
@@ -34,9 +33,9 @@ const StatusRow: React.FC<{
       <span
         style={{
           color: colors.muted,
-          fontFamily: readable ? FONT_READABLE : FONT_MONO,
-          fontSize: readable ? 30 : 15,
-          fontWeight: readable ? 650 : 500,
+          fontFamily: readable ? FONT_SANS : FONT_MONO,
+          fontSize: readable ? 22 : 15,
+          fontWeight: readable ? 600 : 500,
         }}
       >
         {label}
@@ -44,9 +43,9 @@ const StatusRow: React.FC<{
       <span
         style={{
           color: colors.paper,
-          fontFamily: readable ? FONT_READABLE : FONT_MONO,
-          fontSize: readable ? 31 : 16,
-          fontWeight: readable ? 700 : 500,
+          fontFamily: readable ? FONT_SANS : FONT_MONO,
+          fontSize: readable ? 22 : 16,
+          fontWeight: readable ? 600 : 500,
         }}
       >
         {value}
@@ -84,9 +83,9 @@ export const TensionScene: React.FC<{
         <div
           style={{
             color: colors.cyan,
-            fontFamily: readable ? FONT_READABLE : FONT_MONO,
-            fontSize: readable ? 26 : 14,
-            fontWeight: readable ? 700 : undefined,
+            fontFamily: FONT_MONO,
+            fontSize: readable ? 18 : 14,
+            fontWeight: readable ? 500 : undefined,
             letterSpacing: readable ? "0.1em" : "0.18em",
           }}
         >
@@ -95,10 +94,10 @@ export const TensionScene: React.FC<{
         <div
           style={{
             color: colors.paper,
-            fontFamily: readable ? FONT_READABLE : FONT_MONO,
-            fontSize: readable ? 104 : 112,
-            fontWeight: readable ? 800 : 500,
-            letterSpacing: readable ? "-0.055em" : "-0.06em",
+            fontFamily: FONT_MONO,
+            fontSize: readable ? 76 : 112,
+            fontWeight: 500,
+            letterSpacing: readable ? "-0.02em" : "-0.06em",
             marginTop: 8,
           }}
         >
@@ -107,9 +106,9 @@ export const TensionScene: React.FC<{
         <div
           style={{
             color: colors.muted,
-            fontFamily: readable ? FONT_READABLE : FONT_SANS,
-            fontSize: readable ? 44 : 31,
-            fontWeight: readable ? 600 : 560,
+            fontFamily: FONT_SANS,
+            fontSize: readable ? 28 : 31,
+            fontWeight: readable ? 500 : 560,
             marginTop: 9,
           }}
         >
@@ -135,10 +134,10 @@ export const TensionScene: React.FC<{
         <div
           style={{
             color: colors.cyan,
-            fontFamily: readable ? FONT_READABLE : FONT_MONO,
-            fontSize: readable ? 26 : 13,
-            fontWeight: readable ? 700 : 500,
-            letterSpacing: readable ? "0.08em" : "0.15em",
+            fontFamily: FONT_MONO,
+            fontSize: readable ? 18 : 13,
+            fontWeight: readable ? 500 : 500,
+            letterSpacing: readable ? "0.1em" : "0.15em",
             marginBottom: 14,
           }}
         >
@@ -184,9 +183,9 @@ export const TensionScene: React.FC<{
           left: 95,
           bottom: 82,
           color: colors.paper,
-          fontFamily: readable ? FONT_READABLE : FONT_SANS,
-          fontSize: readable ? 44 : 28,
-          fontWeight: readable ? 650 : 620,
+          fontFamily: FONT_SANS,
+          fontSize: readable ? 28 : 28,
+          fontWeight: readable ? 600 : 620,
           opacity: closeIn,
         }}
       >

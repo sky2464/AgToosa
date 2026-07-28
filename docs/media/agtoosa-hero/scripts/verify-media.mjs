@@ -67,8 +67,8 @@ const timeline = JSON.parse(
 check(timeline.fps === 30, "timeline is 30fps");
 check(timeline.durationInFrames === 1320, "master is exactly 1320 frames");
 check(
-  timeline.readmeDurationInFrames === 720,
-  "README loop is exactly 720 frames",
+  timeline.readmeDurationInFrames === 960,
+  "README loop is exactly 960 frames",
 );
 check(timeline.cues?.length === 5, "timeline defines exactly five cues");
 const expectedCueIds = [
@@ -89,8 +89,9 @@ check(
 const rootSource = await readFile(join(packageDir, "src", "Root.tsx"), "utf8");
 const indexSource = await readFile(join(packageDir, "src", "index.ts"), "utf8");
 check(
-  indexSource.includes('@fontsource-variable/inter'),
-  "Inter is bundled for the readable README typography",
+  indexSource.includes('@fontsource-variable/manrope') &&
+    !indexSource.includes('@fontsource-variable/inter'),
+  "Manrope is bundled for README prose without Inter",
 );
 check(rootSource.includes('id="MarketingMaster"'), "MarketingMaster is registered");
 check(rootSource.includes('id="ReadmeLoop"'), "ReadmeLoop is registered");
@@ -105,9 +106,10 @@ const readmeSource = await readFile(
   "utf8",
 );
 check(
-  readmeSource.includes("FONT_READABLE") &&
-    !readmeSource.includes("fontFamily: FONT_MONO"),
-  "README display typography uses Inter instead of terminal mono",
+  readmeSource.includes("FONT_SANS") &&
+    readmeSource.includes("FONT_MONO") &&
+    !readmeSource.includes("FONT_READABLE"),
+  "README typography pairs Manrope prose with Plex Mono technical labels",
 );
 check(
   readmeSource.includes("<TensionScene") &&
@@ -115,8 +117,9 @@ check(
     readmeSource.includes("<WorkflowScene") &&
     readmeSource.includes("<RoutingScene") &&
     readmeSource.includes("<VerifyScene") &&
+    readmeSource.includes("<WorkflowSummaryScene") &&
     readmeSource.includes("<ClosingScene"),
-  "README cut composes the six cinematic story beats",
+  "README cut composes seven cinematic story beats",
 );
 check(
   readmeSource.includes("REPO-AWARE PROJECT DRIVER") &&
@@ -124,7 +127,8 @@ check(
   "README cut presents Next as the state-aware one-phase driver",
 );
 check(
-  readmeSource.includes("interpolate(frame, [68, 85], [1, 0]"),
+  readmeSource.includes("durationInFrames - 18") &&
+    readmeSource.includes("[1, 0]"),
   "README closing scene fades to the base frame for a clean loop",
 );
 check(!readmeSource.includes("<Audio"), "README composition mounts no audio");
@@ -158,6 +162,12 @@ check(
     workflowSource.includes("from={{x: position.x + width / 2") &&
     workflowSource.includes("to={{x: next.x - width / 2"),
   "workflow connectors terminate at directional node anchors",
+);
+check(
+  workflowSource.includes("showCaptions") &&
+    workflowSource.includes("Set repository context") &&
+    readmeSource.includes("WorkflowSummaryScene"),
+  "README ends with a captioned full-workflow summary",
 );
 const ctaSource = await readFile(
   join(packageDir, "src", "scenes", "CtaScene.tsx"),
@@ -273,10 +283,10 @@ if (existsSync(checkpointFiles.readme)) {
   const fileStats = await stat(checkpointFiles.readme);
   check(video?.codec_name === "gif", "README candidate is GIF");
   check(video?.width === 800 && video?.height === 450, "README GIF is 800×450");
-  check(Number(video?.nb_frames) === 720, "README GIF has all 720 frames");
+  check(Number(video?.nb_frames) === 960, "README GIF has all 960 frames");
   check(
-    Math.abs(Number(video?.duration) - 24) < 0.05,
-    "README GIF duration is 24 seconds",
+    Math.abs(Number(video?.duration) - 32) < 0.05,
+    "README GIF duration is 32 seconds",
   );
   check(!audio, "README GIF is silent");
   check(fileStats.size < 8_000_000, "README GIF is below 8 MB");

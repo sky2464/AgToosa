@@ -2,7 +2,6 @@ import React from "react";
 import {
   colors,
   FONT_MONO,
-  FONT_READABLE,
   FONT_SANS,
   progress,
 } from "./theme";
@@ -110,11 +109,41 @@ export const DirectionalLink: React.FC<DirectionalLinkProps> = ({
 };
 
 const phases = [
-  {phase: "INIT", command: "/init", note: "ONCE", color: colors.cyan},
-  {phase: "SPEC", command: "/spec", note: "DEFINE", color: colors.spec},
-  {phase: "BUILD", command: "/build", note: "IMPLEMENT", color: colors.build},
-  {phase: "REVIEW", command: "/review", note: "INSPECT", color: colors.review},
-  {phase: "SHIP", command: "/ship", note: "RELEASE", color: colors.ship},
+  {
+    phase: "INIT",
+    command: "/init",
+    note: "ONCE",
+    caption: "Set repository context",
+    color: colors.cyan,
+  },
+  {
+    phase: "SPEC",
+    command: "/spec",
+    note: "DEFINE",
+    caption: "Define the outcome",
+    color: colors.spec,
+  },
+  {
+    phase: "BUILD",
+    command: "/build",
+    note: "IMPLEMENT",
+    caption: "Implement the change",
+    color: colors.build,
+  },
+  {
+    phase: "REVIEW",
+    command: "/review",
+    note: "INSPECT",
+    caption: "Inspect the proof",
+    color: colors.review,
+  },
+  {
+    phase: "SHIP",
+    command: "/ship",
+    note: "RELEASE",
+    caption: "Release with evidence",
+    color: colors.ship,
+  },
 ];
 
 const positions = [
@@ -132,6 +161,8 @@ type WorkflowRailProps = {
   loopPhase?: number;
   timingScale?: number;
   readable?: boolean;
+  staticView?: boolean;
+  showCaptions?: boolean;
 };
 
 export const WorkflowRail: React.FC<WorkflowRailProps> = ({
@@ -141,9 +172,12 @@ export const WorkflowRail: React.FC<WorkflowRailProps> = ({
   loopPhase,
   timingScale = 1,
   readable = false,
+  staticView = false,
+  showCaptions = false,
 }) => {
   const width = compact ? 158 : readable ? 214 : 194;
-  const height = compact ? 78 : readable ? 122 : 112;
+  const height =
+    compact ? 78 : readable && showCaptions ? 148 : readable ? 122 : 112;
   const connectorStarts = [58, 138, 222, 306];
   const loopPosition =
     loopPhase === undefined
@@ -165,7 +199,9 @@ export const WorkflowRail: React.FC<WorkflowRailProps> = ({
         {positions.slice(0, -1).map((position, index) => {
           const next = positions[index + 1];
           const draw =
-            loopPhase === undefined
+            staticView
+              ? 1
+              : loopPhase === undefined
               ? progress(
                   frame,
                   start + connectorStarts[index] * timingScale,
@@ -173,7 +209,9 @@ export const WorkflowRail: React.FC<WorkflowRailProps> = ({
                 )
               : 1;
           const pulse =
-            loopPhase === undefined
+            staticView
+              ? 1
+              : loopPhase === undefined
               ? draw
               : activeLoopConnector === index
                 ? activeLoopProgress
@@ -194,7 +232,9 @@ export const WorkflowRail: React.FC<WorkflowRailProps> = ({
       </svg>
       {phases.map((item, index) => {
         const reveal =
-          loopPhase === undefined
+          staticView
+            ? 1
+            : loopPhase === undefined
             ? progress(
                 frame,
                 start +
@@ -205,6 +245,7 @@ export const WorkflowRail: React.FC<WorkflowRailProps> = ({
               )
             : 1;
         const isLoopActive =
+          !staticView &&
           loopPhase !== undefined &&
           (activeLoopConnector === index || activeLoopConnector + 1 === index);
         return (
@@ -228,15 +269,16 @@ export const WorkflowRail: React.FC<WorkflowRailProps> = ({
               flexDirection: "column",
               justifyContent: "center",
               opacity: reveal,
+              padding: readable && showCaptions ? "10px 8px" : undefined,
               transform: `scale(${0.9 + reveal * 0.1 + (isLoopActive ? 0.025 : 0)})`,
             }}
           >
             <div
               style={{
                 color: item.color,
-                fontFamily: readable ? FONT_READABLE : FONT_MONO,
-                fontSize: compact ? 10 : readable ? 24 : 12,
-                fontWeight: readable ? 700 : undefined,
+                fontFamily: FONT_MONO,
+                fontSize: compact ? 10 : readable ? 16 : 12,
+                fontWeight: readable ? 500 : undefined,
                 letterSpacing: readable ? "0.1em" : "0.16em",
               }}
             >
@@ -245,15 +287,31 @@ export const WorkflowRail: React.FC<WorkflowRailProps> = ({
             <div
               style={{
                 color: colors.paper,
-                fontFamily: readable ? FONT_READABLE : FONT_SANS,
-                fontSize: compact ? 27 : readable ? 48 : 34,
-                fontWeight: readable ? 750 : 700,
-                letterSpacing: readable ? "-0.04em" : "-0.035em",
-                marginTop: compact ? 5 : 8,
+                fontFamily: readable ? FONT_MONO : FONT_SANS,
+                fontSize: compact ? 27 : readable ? 34 : 34,
+                fontWeight: readable ? 500 : 700,
+                letterSpacing: readable ? "-0.02em" : "-0.035em",
+                marginTop: compact ? 5 : readable && showCaptions ? 4 : 8,
               }}
             >
               {item.command}
             </div>
+            {readable && showCaptions ? (
+              <div
+                style={{
+                  color: colors.muted,
+                  fontFamily: FONT_SANS,
+                  fontSize: 16,
+                  fontWeight: 550,
+                  letterSpacing: "-0.01em",
+                  lineHeight: 1.15,
+                  marginTop: 7,
+                  textAlign: "center",
+                }}
+              >
+                {item.caption}
+              </div>
+            ) : null}
           </div>
         );
       })}
