@@ -1,6 +1,8 @@
 # AgToosa Community & Support
 
-> **Private staging:** Discussions are the intended public community surface after launch. While the repository is private, use maintainer access or direct owner communication for support.
+GitHub Discussions are the **public community surface** for AgToosa — support, ideas, collaboration, and announcements.
+
+**Start here:** [Welcome Contributors — Orientation & How to Get Involved](https://github.com/sky2464/AgToosa/discussions/17) (pinned orientation hub).
 
 ## GitHub Discussions
 
@@ -31,9 +33,10 @@ AgToosa uses **GitHub Discussions** as the primary community space for support, 
 ## Getting Help
 
 ### 1. Check the Docs
-- [Getting Started](https://github.com/wiki/AgToosa/Getting-Started)
-- [CLI Reference](https://github.com/wiki/AgToosa/CLI-Reference)
-- [Troubleshooting](https://github.com/wiki/AgToosa/Troubleshooting)
+- [Getting Started](https://github.com/sky2464/AgToosa/wiki/Getting-Started)
+- [CLI Reference](https://github.com/sky2464/AgToosa/wiki/CLI-Reference)
+- [Troubleshooting](https://github.com/sky2464/AgToosa/wiki/Troubleshooting)
+- [First 15 minutes proof](https://github.com/sky2464/AgToosa/blob/main/docs/examples/first-15-minutes.md)
 
 ### 2. Search Discussions
 - [Already asked?](https://github.com/sky2464/AgToosa/discussions)
@@ -43,9 +46,11 @@ AgToosa uses **GitHub Discussions** as the primary community space for support, 
 - [Report a bug](https://github.com/sky2464/AgToosa/issues/new?template=bug.yml)
 - [Request a feature](https://github.com/sky2464/AgToosa/issues/new?template=feature.yml)
 
+For the public backlog and how Issues relate to Master-Plan, see [`.github/PROJECT.md`](PROJECT.md).
+
 ## Reporting Security Issues
 
-Found a security vulnerability? Please report it to `security@agtoosa.dev` instead of GitHub Issues. See [SECURITY.md](SECURITY.md) for details.
+Found a security vulnerability? Please report it privately — see [SECURITY.md](SECURITY.md). Do not open a public issue.
 
 ## Code of Conduct
 
@@ -58,3 +63,5 @@ Want to contribute? See [CONTRIBUTING.md](CONTRIBUTING.md) for:
 - Running tests
 - Submitting pull requests
 - Release process
+
+Backlog authority lives in [`docs/Master-Plan.md`](../docs/Master-Plan.md); GitHub Issues are a synced public mirror.
