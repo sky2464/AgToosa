@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-28 (/agtoosa-ship — DEV-141 v5.3.55)
+> **Last updated:** 2026-07-28 (/agtoosa-spec — DEV-142 enrolled)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Idle — DEV-141 shipped v5.3.55 |
+| Current phase | ✏️ Spec — DEV-142 GitHub Surface Audit |
 | Milestone | `v5.3.56` (next) |
-| Active cycle | — |
-| Cycle state | Idle — post-ship |
+| Active cycle | DEV-142 |
+| Cycle state | Active |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -23,7 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| — | (none) | — | — | — | — |
+| DEV-142 | Chore: GitHub Surface Audit & Community Profile | Chore | M | 🟨 In Progress | 5/5 |
 
 <!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.55.md (DEV-141 v5.3.55) -->
 
@@ -91,23 +91,29 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for enrolled Active Cycle stories. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-### DEV-139 — GitHub Issues PM Bridge
-
-<!-- Shipped v5.3.52 — tasks archived in docs/archived/cycle-2026-07-28-release-5.3.52.md -->
-
 ### DEV-141 — Tracker Discovery & Bootstrap
 
-- [x] **1.** Schema and discover core
-  - [x] 1.1 Discovery + fetch envelope schemas
-  - [x] 1.2 `tracker_discover` local signals + repo-plans
-- [x] **2.** Bootstrap proposal
-  - [x] 2.1 `tracker_bootstrap` classify + render + mutation guard
-- [x] **3.** GitHub bulk merge
-  - [x] 3.1 `github_issues_items_from_fetch` + discover `--input`
-- [x] **4.** Docs and init
-  - [x] 4.1 TrackerSync + Init tributary + Linear MCP recipe
-  - [x] 4.2 Workflow example `agtoosa-issues-bootstrap.yml.example`
-- [x] **5.** Bats TBS-001–TBS-010
+<!-- Shipped v5.3.55 — tasks archived in docs/archived/cycle-2026-07-28-release-5.3.55.md -->
+
+### DEV-142 — GitHub Surface Audit & Community Profile
+
+- [x] **1.** Manifest and audit script
+  - [x] 1.1 `docs/github-surface-manifest.json`
+  - [x] 1.2 `scripts/github-surface-audit.sh`
+  - [x] 1.3 `scripts/github-labels-sync.sh`
+- [x] **2.** CI and workflows
+  - [x] 2.1 `.github/workflows/github-surface-audit.yml`
+  - [x] 2.2 Pre-release checklist hook
+  - [x] 2.3 `docs-pages-proof.yml` optional deploy guard
+- [x] **3.** Issues hygiene
+  - [x] 3.1 `.github/ISSUE_TEMPLATE/config.yml`
+  - [x] 3.2 Reconcile `.github/workflows/labels.yml`
+- [x] **4.** Docs and wiki
+  - [x] 4.1 `.github/GITHUB-SURFACES.md`
+  - [x] 4.2 Wiki-sync Home.md seed verified
+- [x] **5.** Tests and enrollment
+  - [x] 5.1 Bats GSA-001–GSA-010
+  - [x] 5.2 Master-Plan + test plan
 
 ## Manual / Deferred Tasks
 
@@ -137,7 +143,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 |----|-------|-----------|-------|
 | — | (none) | — | — |
 
-Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` (e.g. DEV-080 external publish or demand-gated DEV-057)._
+Conflict playbook: _DEV-141 shipped v5.3.55; DEV-142 active (v5.3.56); DEV-080 external publish complete; demand-gated DEV-057 deferred until Demand Evidence Record accepted._
 
 ## Backlog
 
@@ -168,6 +174,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-138 | Chore: Main CI Health (Product Truth + PSScriptAnalyzer) | Chore | XS | DEV-004 | P1 | 🏁 Shipped — v5.3.53 |
 | DEV-140 | Chore: Help vs Next Disambiguation Hardening | Chore | S | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.54 |
 | DEV-141 | Feature: Tracker Discovery & Bootstrap | Feature | L | DEV-051 / DEV-003 | P1 | 🏁 Shipped — v5.3.55 |
+| DEV-142 | Chore: GitHub Surface Audit & Community Profile | Chore | M | DEV-139 / DEV-076 | P1 | 🟨 In Progress |
 | DEV-139 | Feature: GitHub Issues PM Bridge (Phased B) | Feature | L | DEV-051 / DEV-004 | P1 | 🏁 Shipped — v5.3.52 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
@@ -454,6 +461,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-07-28 23:55 | ✏️ /agtoosa-spec — Spec ✅ Approved + build complete — DEV-142 — GSA-001–010 green; local audit pass; next `/agtoosa-review` | AgToosa |
 | 2026-07-28 23:45 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-141 — smoke PASS TBS/SR gate; v5.3.55 | AgToosa |
 | 2026-07-28 23:45 | 🚀 Ship complete — v5.3.55 — DEV-141 Tracker Discovery & Bootstrap | AgToosa |
 | 2026-07-28 23:35 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-141 — 0 Critical; TBS-001–010 green; next `/agtoosa-next` → ship v5.3.55 | AgToosa |

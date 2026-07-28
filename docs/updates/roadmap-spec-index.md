@@ -1,7 +1,7 @@
 # Roadmap-to-Spec Index
 
 > **Purpose:** Coverage map from `docs/updates/` strategy into executable AgToosa work.
-> **Snapshot:** 2026-07-12 (Rev4 wave promoted).
+> **Snapshot:** 2026-07-28 (post v5.3.55; DEV-142 active for v5.3.56).
 > **Authority:** `docs/Master-Plan.md` remains the source of truth for status and priority.
 
 ## Coverage Contract
@@ -19,17 +19,37 @@ Editing this index does not enroll a story. Backlog stories still require `/agto
 
 | ID | Story | Wave | Status |
 |---|---|---|---|
-| DEV-096 | Pack Validation CI | 3 | 🟩 Built — unlocks 095 |
-| DEV-095 | Official Pack Expansion (5-pack max) | 3 | 🟦 Todo — unblocked (096 GREEN) |
-| DEV-098 | Navigation by User Job | 3 | 🟦 Todo — enrolled |
-| DEV-099 | Core vs Optional Pack Boundary | 3 | 🟦 Todo — enrolled |
-| DEV-101 | Verified vs Community Pack Labeling | 3 | 🟦 Todo — enrolled |
-| DEV-102 | Offline and Network-Dependency Matrix | 3 | 🟦 Todo — enrolled |
-| DEV-103 | External Registry Publication Runbook | 3 | 🟦 Todo — enrolled |
-| DEV-104 | `--reinstall --clean` (ADR-004 Option C) | 3 | 🟦 Todo — enrolled (DEV-090 shipped) |
-| DEV-106 | Built with AgToosa Showcase | 3 | 🟦 Todo — enrolled |
+| DEV-142 | GitHub Surface Audit & Community Profile | v5.3.56 | 🟨 In Progress — enrolled; tasks 5/5 complete; review/ship pending |
 
-> **Enrollment note (2026-07-12):** Wave 3 enrolled after v5.3.18. Soft capacity overrun (~14 SP vs 8). Build: parallel docs **098 · 099 · 101 · 102 · 103 · 106** (soft file locks); **096 → 095**; **104** ready. Shipped through v5.3.19: **DEV-107** (Orchestration Brain). Waves 1a/1b/2 through v5.3.18. Demand-gated: **DEV-057**. Post-Rev4 drafts (not enrolled): **DEV-110**. Spec Approved backlog: **DEV-109**.
+> **Enrollment note (2026-07-28):** Rev4 Waves 1a–3 and post-Rev4 maintenance shipped through **v5.3.55** (DEV-141 Tracker Discovery & Bootstrap). **DEV-142** enrolled for v5.3.56. **Demand-gated:** DEV-057 (deferred — no Demand Evidence Record). **DEV-080** external registry publish manual tasks **done**. Idle hygiene: miToosa adapter sync, Master-Plan archive, this index refresh.
+
+## Recently Shipped (v5.3.49–v5.3.55)
+
+| ID | Story | Version |
+|---|---|---|
+| DEV-135 | Natural-Language Continuation → `/agtoosa-next` | v5.3.49 |
+| DEV-136 | IDE Host Mode Bridge for Spec and Review | v5.3.50 |
+| DEV-137 | Security Scanning CI Health | v5.3.51 |
+| DEV-139 | GitHub Issues PM Bridge (Phased B) | v5.3.52 |
+| DEV-138 | Main CI Health | v5.3.53 |
+| DEV-140 | Help vs Next Disambiguation Hardening | v5.3.54 |
+| DEV-141 | Tracker Discovery & Bootstrap | v5.3.55 |
+
+## Wave 3 — Shipped (reference)
+
+| ID | Story | Wave | Status |
+|---|---|---|---|
+| DEV-096 | Pack Validation CI | 3 | 🏁 Shipped — v5.3.20 |
+| DEV-095 | Official Pack Expansion (5-pack max) | 3 | 🏁 Shipped — v5.3.20 |
+| DEV-098 | Navigation by User Job | 3 | 🏁 Shipped — v5.3.20 |
+| DEV-099 | Core vs Optional Pack Boundary | 3 | 🏁 Shipped — v5.3.20 |
+| DEV-101 | Verified vs Community Pack Labeling | 3 | 🏁 Shipped — v5.3.20 |
+| DEV-102 | Offline and Network-Dependency Matrix | 3 | 🏁 Shipped — v5.3.20 |
+| DEV-103 | External Registry Publication Runbook | 3 | 🏁 Shipped — v5.3.20 |
+| DEV-104 | `--reinstall --clean` (ADR-004 Option C) | 3 | 🏁 Shipped — v5.3.20 |
+| DEV-106 | Built with AgToosa Showcase | 3 | 🏁 Shipped — v5.3.20 |
+
+> **Historical note (2026-07-12):** Wave 3 enrolled after v5.3.18. Shipped through v5.3.19: **DEV-107** (Orchestration Brain). Waves 1a/1b/2 through v5.3.18.
 
 ## Rev4 Wave — Spec Approved (2026-07-12)
 
@@ -307,10 +327,14 @@ If evidence appears, start with `/agtoosa-spec research`; do not promote directl
 | Install/registry JSON | DEV-100 |
 | Pack trust labeling | DEV-101 |
 | Offline/network matrix | DEV-102 |
-| External registry runbook | DEV-103 (+ DEV-080 manual) |
+| External registry runbook | DEV-103 (+ DEV-080 manual **done**) |
 | `--reinstall --clean` | DEV-104 |
 | Community showcase | DEV-106 |
 | Orchestration Brain (agent-instructed fan-out) | DEV-107 |
+| Next / continuation hardening | DEV-135, DEV-140 (shipped v5.3.49–54) |
+| Tracker discover/bootstrap | DEV-141 (shipped v5.3.55) |
+| GitHub surface audit | DEV-142 (active v5.3.56) |
+| GitHub Issues PM bridge | DEV-139 (shipped v5.3.52) |
 | Safe subagent routing and fan-out | DEV-055, DEV-045, DEV-046 (shipped) |
 | Policy, hooks, and learning | DEV-059, DEV-052, DEV-056 (shipped) |
 | Visibility and integrations | DEV-058, DEV-051, DEV-057 (demand-gated) |
