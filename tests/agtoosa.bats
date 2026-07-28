@@ -16081,6 +16081,29 @@ PY
   grep -q 'DEV-Alpha' "$readme"
 }
 
+@test "DEV-139 GIS-011: repeated publish keeps single AGTOOSA-ROADMAP end marker" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local readme="$TEST_PROJECT/gis-readme-repeat.md"
+  printf '# Test README\n\nBody.\n' >"$readme"
+  run bash "$SCRIPT" --tracker publish --path "$fixture" --output "$TEST_PROJECT/gis-rm1.json" --readme "$readme"
+  [ "$status" -eq 0 ]
+  run bash "$SCRIPT" --tracker publish --path "$fixture" --output "$TEST_PROJECT/gis-rm2.json" --readme "$readme"
+  [ "$status" -eq 0 ]
+  [ "$(grep -c 'AGTOOSA-ROADMAP:END' "$readme")" -eq 1 ]
+}
+
+@test "DEV-139 GIS-012: issues-sync dry-run does not mutate README" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local readme="$TEST_PROJECT/gis-dry-readme.md"
+  local sync="$BATS_TEST_DIRNAME/../scripts/agtoosa-issues-sync.sh"
+  printf '# Test README\n\nBody.\n' >"$readme"
+  cp -a "$fixture/." "$TEST_PROJECT/gis-dry-project/"
+  printf '# Test README\n\nBody.\n' >"$TEST_PROJECT/gis-dry-project/README.md"
+  run bash "$sync" --dry-run --path "$TEST_PROJECT/gis-dry-project"
+  [ "$status" -eq 0 ]
+  ! grep -q 'AGTOOSA-ROADMAP:START' "$TEST_PROJECT/gis-dry-project/README.md"
+}
+
 @test "DEV-139 GIS-009: unsafe intake body is redacted in proposal" {
   local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
   local intake="$BATS_TEST_DIRNAME/fixtures/tracker-sync/intake/secret-issue.json"

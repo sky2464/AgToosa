@@ -29,7 +29,11 @@ fi
 MANIFEST="$(mktemp)"
 trap 'rm -f "$MANIFEST"' EXIT
 
-bash "$ROOT/agtoosa.sh" --tracker publish --path "$PROJECT" --output "$MANIFEST" --readme "$PROJECT/README.md"
+publish_args=(--tracker publish --path "$PROJECT" --output "$MANIFEST")
+if [[ "$DRY_RUN" != true ]]; then
+  publish_args+=(--readme "$PROJECT/README.md")
+fi
+bash "$ROOT/agtoosa.sh" "${publish_args[@]}"
 
 if [[ "$DRY_RUN" == true ]]; then
   echo "Dry-run manifest ($(jq '.issues | length' "$MANIFEST") issues):"
