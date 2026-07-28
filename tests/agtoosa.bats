@@ -21,7 +21,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.51" ]]
+  [[ "$output" == "AgToosa v5.3.52" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -15908,6 +15908,23 @@ PY
   grep -q 'DEV-137' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-137.md" ]
   [ -f "$root/docs/archived/review-DEV-137.md" ]
+}
+
+@test "DEV-139 @smoke SR-001: v5.3.52 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.52" ]
+  [ "$ps_ver" = "5.3.52" ]
+  [ "$npm_ver" = "5.3.52" ]
+  [ "$formula_ver" = "5.3.52" ]
+  grep -q '## \[5.3.52\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-139' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-139.md" ]
+  [ -f "$root/docs/archived/review-DEV-139.md" ]
 }
 
 # -- Sivarena UX review follow-up (UPG-010–UPG-011) ----------------------------

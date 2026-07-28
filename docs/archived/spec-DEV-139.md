@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-139
 > **Epic:** DEV-003 — Integrations · DEV-004 — Testing & QA Harness
-> **Status:** 🟨 In Progress
+> **Status:** 🏁 Shipped — v5.3.52
 > **Estimate:** L
 > **Clarity:** `ready`
 > **Spec created:** 2026-07-28

@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.52] — 2026-07-28
+
+Patch release: DEV-139 — GitHub Issues PM Bridge (Phased B).
+
+### Added
+
+- **DEV-139 — GitHub Issues PM bridge.** `--tracker publish` and `--tracker intake` render local manifests and proposals; `agtoosa-issues-sync.yml` mirrors Master-Plan to GitHub Issues on `main`; community intake workflow with backlog draft proposals; README `AGTOOSA-ROADMAP` block; template opt-in workflow example; GIS-001–GIS-010 bats.
+
+---
+
 ## [5.3.51] — 2026-07-28
 
 Patch release: DEV-137 — Security Scanning CI health.
