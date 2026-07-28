@@ -129,7 +129,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 |----|-------|-----------|-------|
 | — | (none) | — | — |
 
-Conflict playbook: _DEV-141 shipped v5.3.55; DEV-142 active (v5.3.56); DEV-080 external publish complete; demand-gated DEV-057 deferred until Demand Evidence Record accepted._
+Conflict playbook: _DEV-142 shipped v5.3.56; milestone v5.3.57; DEV-080 external publish complete; demand-gated DEV-057 deferred until Demand Evidence Record accepted._
 
 ## Backlog
 

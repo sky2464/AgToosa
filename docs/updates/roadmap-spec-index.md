@@ -19,11 +19,11 @@ Editing this index does not enroll a story. Backlog stories still require `/agto
 
 | ID | Story | Wave | Status |
 |---|---|---|---|
-| DEV-142 | GitHub Surface Audit & Community Profile | v5.3.56 | 🟨 In Progress — enrolled; tasks 5/5 complete; review/ship pending |
+| DEV-142 | GitHub Surface Audit & Community Profile | v5.3.56 | 🏁 Shipped — v5.3.56 |
 
-> **Enrollment note (2026-07-28):** Rev4 Waves 1a–3 and post-Rev4 maintenance shipped through **v5.3.55** (DEV-141 Tracker Discovery & Bootstrap). **DEV-142** enrolled for v5.3.56. **Demand-gated:** DEV-057 (deferred — no Demand Evidence Record). **DEV-080** external registry publish manual tasks **done**. Idle hygiene: miToosa adapter sync, Master-Plan archive, this index refresh.
+> **Enrollment note (2026-07-28):** **DEV-142** shipped v5.3.56. Post-Rev4 maintenance through **v5.3.55** (DEV-141). **Demand-gated:** DEV-057 (deferred). **DEV-080** external registry publish manual tasks **done**. Milestone **v5.3.57** next.
 
-## Recently Shipped (v5.3.49–v5.3.55)
+## Recently Shipped (v5.3.49–v5.3.56)
 
 | ID | Story | Version |
 |---|---|---|
@@ -34,6 +34,7 @@ Editing this index does not enroll a story. Backlog stories still require `/agto
 | DEV-138 | Main CI Health | v5.3.53 |
 | DEV-140 | Help vs Next Disambiguation Hardening | v5.3.54 |
 | DEV-141 | Tracker Discovery & Bootstrap | v5.3.55 |
+| DEV-142 | GitHub Surface Audit & Community Profile | v5.3.56 |
 
 ## Wave 3 — Shipped (reference)
 
@@ -333,7 +334,7 @@ If evidence appears, start with `/agtoosa-spec research`; do not promote directl
 | Orchestration Brain (agent-instructed fan-out) | DEV-107 |
 | Next / continuation hardening | DEV-135, DEV-140 (shipped v5.3.49–54) |
 | Tracker discover/bootstrap | DEV-141 (shipped v5.3.55) |
-| GitHub surface audit | DEV-142 (active v5.3.56) |
+| GitHub surface audit | DEV-142 (shipped v5.3.56) |
 | GitHub Issues PM bridge | DEV-139 (shipped v5.3.52) |
 | Safe subagent routing and fan-out | DEV-055, DEV-045, DEV-046 (shipped) |
 | Policy, hooks, and learning | DEV-059, DEV-052, DEV-056 (shipped) |
