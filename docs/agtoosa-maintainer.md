@@ -115,6 +115,32 @@ bash docs/agtoosa-verify.sh stats        # cycle analytics from Update Log + agt
 bash agtoosa.sh --verify .               # generator dispatch (maintainer dogfood)
 ```
 
+## GitHub branch hygiene (Cursor agent sprawl)
+
+Cursor Cloud agents can leave many `cursor/*` remote branches and duplicate open PRs. Stale PR automation (`.github/workflows/stale.yml`) waits 30 days — too slow for same-day sprawl. Use the maintainer cleanup tool instead.
+
+**Safe defaults:**
+
+- Script default is **dry-run** (lists only; no GitHub mutation).
+- Never deletes `main`, `master`, or tags.
+- Only considers branches under prefix `cursor/` (configurable with `--prefix`).
+- Scheduled workflow (`.github/workflows/branch-hygiene.yml`) deletes `cursor/*` branches that have **no open PR**; it does not auto-close open PRs unless you opt in on `workflow_dispatch`.
+
+**Manual commands:**
+
+```bash
+# List eligible cursor/* branches (no mutation)
+bash scripts/cleanup-github-branches.sh --dry-run
+
+# Delete eligible branches (no open PR, or after you closed PRs)
+bash scripts/cleanup-github-branches.sh --apply
+
+# Close open PRs on matching branches, then delete (recovery path)
+bash scripts/cleanup-github-branches.sh --apply --close-prs
+```
+
+**CI:** Actions → **Branch Hygiene (cursor/\*)** → Run workflow. Optional inputs: `dry_run=true` (list only), `close_prs=true` (close then delete).
+
 **Common pitfalls:**
 
 - Maintainer repo uses lowercase `docs/`; generated projects use `Docs/`. The verifier auto-detects via `Master-Plan.md` location. `--doctor` only recognizes `Docs/` installs — it reports "not installed" on the generator source tree.

@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.47] — 2026-07-28
+
+Patch release: DEV-133 — GitHub branch hygiene for Cursor agent sprawl.
+
+### Added
+
+- **DEV-133 — Branch hygiene.** Maintainer `scripts/cleanup-github-branches.sh` (dry-run default, `cursor/` prefix filter, main/master denylist); weekly `.github/workflows/branch-hygiene.yml`; runbook in `docs/agtoosa-maintainer.md`; BRH-001–006 bats.
+
+---
+
 ## [5.3.46] — 2026-07-27
 
 Patch release: DEV-132 — Preserve Evidence JSONL on re-install and update.

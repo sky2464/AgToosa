@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-27 (/agtoosa-ship — DEV-132 v5.3.46)
+> **Last updated:** 2026-07-28 (/agtoosa-ship — DEV-133 v5.3.47)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Ship ✅ — DEV-132 complete |
-| Milestone | `v5.3.47` (next) |
-| Active cycle | Idle — DEV-132 shipped v5.3.46 |
-| Cycle state | Idle — DEV-132 shipped v5.3.46 |
+| Current phase | Idle — DEV-133 shipped v5.3.47 |
+| Milestone | `v5.3.48` (next) |
+| Active cycle | _(none)_ |
+| Cycle state | Idle — post-ship; enroll next via `/agtoosa-next` |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -23,7 +23,9 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| — | *No active stories — cycle idle* | — | — | — | — |
+| _(none — cycle archived)_ | | | | | |
+
+<!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.47.md (DEV-133 v5.3.47) -->
 
 <!-- Archived to docs/archived/cycle-2026-07-27-release-5.3.46.md (DEV-132 v5.3.46) -->
 
@@ -73,14 +75,9 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 > Task breakdown for enrolled Active Cycle stories. Created by `/agtoosa-spec` (Part 4).
 > Updated by `/agtoosa-build` — each completed sub-task gets `- [x]`.
 
-_(No other stories enrolled.)_
+_(No stories enrolled.)_
 
-### DEV-132 — Preserve Evidence JSONL on Re-install and Update
-
-- [x] **1.** Add `agtoosa_is_project_owned_doc` helper — _AC-001, AC-006_
-- [x] **2.** Wire Bash install/update/reinstall/uninstall/plan preservation — _AC-001–AC-004, AC-006_
-- [x] **3.** Wire PowerShell `Copy-FileWithGuard` parity — _AC-005_
-- [x] **4.** Add bats EVJ-001–EVJ-006 — _AC-007_
+<!-- DEV-133 tasks archived with cycle-2026-07-28-release-5.3.47.md -->
 
 ## Manual / Deferred Tasks
 
@@ -132,7 +129,8 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-129 | Chore: Smart Upgrade UX Polish | Chore | S | DEV-001 | P0 | 🏁 Shipped — v5.3.43 |
 | DEV-130 | Chore: BCL Hardening & CI Wiring | Chore | S | DEV-003 / DEV-004 | P0 | 🏁 Shipped — v5.3.44 |
 | DEV-131 | Chore: Sequential Approval + Release Publication Gate | Chore | S | 🏁 Shipped — v5.3.45 |
-| DEV-132 | Fix: Preserve Evidence JSONL on Re-install and Update | Fix | XS | DEV-001 / DEV-004 | P0 | 🟨 In Review — Review ✅ Approved |
+| DEV-132 | Fix: Preserve Evidence JSONL on Re-install and Update | Fix | XS | DEV-001 / DEV-004 | P0 | 🏁 Shipped — v5.3.46 |
+| DEV-133 | Chore: GitHub Branch Hygiene for Cursor Agent Sprawl | Chore | S | DEV-004 | P1 | 🏁 Shipped — v5.3.47 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
 | DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v5.3.10 |
@@ -290,6 +288,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-133 | Chore: GitHub Branch Hygiene for Cursor Agent Sprawl | 2026-07-28 | [spec-DEV-133.md](archived/spec-DEV-133.md) · [review-DEV-133.md](archived/review-DEV-133.md) · [evidence-DEV-133.md](archived/evidence-DEV-133.md) |
 | DEV-132 | Fix: Preserve Evidence JSONL on Re-install and Update | 2026-07-27 | [spec-DEV-132.md](archived/spec-DEV-132.md) · [review-DEV-132.md](archived/review-DEV-132.md) · [evidence-DEV-132.md](archived/evidence-DEV-132.md) |
 | DEV-131 | Chore: Sequential Approval + Release Publication Gate | 2026-07-27 | [spec-DEV-131.md](archived/spec-DEV-131.md) · [review-DEV-131.md](archived/review-DEV-131.md) · [evidence-DEV-131.md](archived/evidence-DEV-131.md) |
 | DEV-124 | Spike: Cross-Framework Interchange | 2026-07-26 | [spec-DEV-124.md](archived/spec-DEV-124.md) · [review-DEV-124.md](archived/review-DEV-124.md) · [evidence-DEV-124.md](archived/evidence-DEV-124.md) |
@@ -761,6 +760,12 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | 2026-07-27 23:40 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-132 — 0 Critical, 2 Warning; next `/agtoosa-next` → ship v5.3.46 | AgToosa |
 | 2026-07-27 23:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-132 — smoke PASS EVJ/SR gate; v5.3.46 | AgToosa |
 | 2026-07-27 23:55 | 🚀 Ship complete — v5.3.46 — DEV-132 Evidence JSONL preservation | AgToosa |
+| 2026-07-28 01:15 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-133 — smoke PASS BRH/SR gate; v5.3.47 | AgToosa |
+| 2026-07-28 01:15 | 🚀 Ship complete — v5.3.47 — DEV-133 GitHub branch hygiene | AgToosa |
+| 2026-07-28 01:15 | 🚀 Release 5.3.47 shipped — v5.3.47; version parity bash/ps1/npm/formula; Milestone v5.3.48 (next) | AgToosa |
+| 2026-07-27 20:02 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-133 — 4-persona review running | AgToosa |
+| 2026-07-27 19:51 | 🏗️ /agtoosa-build — Build complete — DEV-133 — BRH-001–006 6/6 PASS; cleanup script + branch-hygiene workflow | AgToosa |
+| 2026-07-28 00:00 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-133 — branch hygiene script + workflow; `docs/archived/spec-DEV-133.md`; next `/agtoosa-next` → build | AgToosa |
 | 2026-07-27 23:55 | 🚀 Release 5.3.46 shipped — v5.3.46; version parity bash/ps1/npm/formula; Milestone v5.3.47 (next) | AgToosa |
 | 2026-07-27 23:38 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-132 — 4-persona review running | AgToosa |
 | 2026-07-27 23:35 | 🏗️ /agtoosa-build — Build complete — DEV-132 — EVJ-001–006 6/6 PASS; project-owned evidence JSONL wired | AgToosa |

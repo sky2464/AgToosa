@@ -21,7 +21,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.46" ]]
+  [[ "$output" == "AgToosa v5.3.47" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -15470,6 +15470,94 @@ PY
   grep -q 'DEV-132' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-132.md" ]
   [ -f "$root/docs/archived/review-DEV-132.md" ]
+}
+
+# -- DEV-133: GitHub branch hygiene for cursor/* agent sprawl (BRH-001–006) ----
+
+@test "BRH-001 @smoke: cleanup script exists; --dry-run is default; --help works offline" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local script="$root/scripts/cleanup-github-branches.sh"
+  [ -f "$script" ]
+  [ -x "$script" ]
+  run bash "$script" --help
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"--dry-run"* ]]
+  [[ "$output" == *"default"* ]]
+  # Default mode token present without requiring network
+  grep -q 'MODE="dry-run"' "$script"
+}
+
+@test "BRH-002: cleanup script defines --apply, --close-prs, and --prefix flags" {
+  local script="$BATS_TEST_DIRNAME/../scripts/cleanup-github-branches.sh"
+  grep -q -- '--apply' "$script"
+  grep -q -- '--close-prs' "$script"
+  grep -q -- '--prefix' "$script"
+}
+
+@test "BRH-003 @smoke: denylist blocks main and master from deletion eligibility" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash -c '
+    source "'"$root"'/scripts/cleanup-github-branches.sh"
+    brh_is_denylisted main && echo deny-main
+    brh_is_denylisted master && echo deny-master
+    brh_is_prefix_candidate main "cursor/" && echo bad-main || echo ok-main
+    brh_is_prefix_candidate master "cursor/" && echo bad-master || echo ok-master
+    brh_is_prefix_candidate "cursor/critical-bug-investigation-eeed" "cursor/" && echo ok-cursor || echo bad-cursor
+    brh_is_prefix_candidate "feature/foo" "cursor/" && echo bad-feature || echo ok-feature
+  '
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"deny-main"* ]]
+  [[ "$output" == *"deny-master"* ]]
+  [[ "$output" == *"ok-main"* ]]
+  [[ "$output" == *"ok-master"* ]]
+  [[ "$output" == *"ok-cursor"* ]]
+  [[ "$output" == *"ok-feature"* ]]
+  [[ "$output" != *"bad-main"* ]]
+  [[ "$output" != *"bad-master"* ]]
+}
+
+@test "BRH-004: branch-hygiene.yml has schedule and workflow_dispatch" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/branch-hygiene.yml"
+  [ -f "$wf" ]
+  grep -q 'schedule:' "$wf"
+  grep -q 'workflow_dispatch:' "$wf"
+  grep -q 'cleanup-github-branches.sh' "$wf"
+  grep -q 'cursor/' "$wf"
+}
+
+@test "BRH-005: agtoosa-maintainer.md documents branch hygiene runbook" {
+  local f="$BATS_TEST_DIRNAME/../docs/agtoosa-maintainer.md"
+  grep -qi 'branch hygiene' "$f"
+  grep -q 'cleanup-github-branches.sh' "$f"
+  grep -q 'branch-hygiene.yml' "$f"
+  grep -q -- '--dry-run' "$f"
+  grep -q -- '--apply' "$f"
+}
+
+@test "BRH-006 @smoke: BRH contract surfaces present for ship regression" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/scripts/cleanup-github-branches.sh" ]
+  [ -f "$root/.github/workflows/branch-hygiene.yml" ]
+  [ -f "$root/docs/archived/spec-DEV-133.md" ]
+  [ -f "$root/docs/AgToosa_TestPlan-DEV-133.md" ]
+  grep -q 'BRH-001' "$root/docs/AgToosa_TestPlan-DEV-133.md"
+}
+
+@test "DEV-133 @smoke SR-001: v5.3.47 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.47" ]
+  [ "$ps_ver" = "5.3.47" ]
+  [ "$npm_ver" = "5.3.47" ]
+  [ "$formula_ver" = "5.3.47" ]
+  grep -q '## \[5.3.47\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-133' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-133.md" ]
+  [ -f "$root/docs/archived/review-DEV-133.md" ]
 }
 
 # -- Sivarena UX review follow-up (UPG-010–UPG-011) ----------------------------
