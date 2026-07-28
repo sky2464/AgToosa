@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.55] — 2026-07-28
+
+Patch release: DEV-141 — Tracker Discovery & Bootstrap.
+
+### Added
+
+- **DEV-141 — Tracker discover/bootstrap.** `--tracker discover` and `--tracker bootstrap` CLI; `lib/tracker-discover.sh` and `lib/github-issues-discover.sh`; GitHub bulk merge; init Phase B.5 tributary; TBS-001–TBS-010 bats.
+
+---
+
 ## [5.3.54] — 2026-07-28
 
 Patch release: DEV-140 — Help vs Next disambiguation hardening.

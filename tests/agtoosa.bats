@@ -16260,3 +16260,20 @@ PY
   run bats "$BATS_TEST_DIRNAME/agtoosa.bats" -f "DEV-141 TBS-00[1-9]"
   [ "$status" -eq 0 ]
 }
+
+@test "DEV-141 @smoke SR-001: v5.3.55 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.55" ]
+  [ "$ps_ver" = "5.3.55" ]
+  [ "$npm_ver" = "5.3.55" ]
+  [ "$formula_ver" = "5.3.55" ]
+  grep -q '## \[5.3.55\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-141' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-141.md" ]
+  [ -f "$root/docs/archived/review-DEV-141.md" ]
+}

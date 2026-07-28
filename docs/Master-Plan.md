@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-28 (/agtoosa-ship — DEV-140 v5.3.54)
+> **Last updated:** 2026-07-28 (/agtoosa-ship — DEV-141 v5.3.55)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Active — DEV-141 spec approved |
-| Milestone | `v5.3.55` (next) |
-| Active cycle | DEV-141 |
-| Cycle state | Active |
+| Current phase | Idle — DEV-141 shipped v5.3.55 |
+| Milestone | `v5.3.56` (next) |
+| Active cycle | — |
+| Cycle state | Idle — post-ship |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -23,7 +23,9 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-141 | Feature: Tracker Discovery & Bootstrap | Feature | L | 🟦 Todo | 0/5 |
+| — | (none) | — | — | — | — |
+
+<!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.55.md (DEV-141 v5.3.55) -->
 
 <!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.54.md (DEV-140 v5.3.54) -->
 
@@ -95,17 +97,17 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 ### DEV-141 — Tracker Discovery & Bootstrap
 
-- [ ] **1.** Schema and discover core
-  - [ ] 1.1 Discovery + fetch envelope schemas
-  - [ ] 1.2 `tracker_discover` local signals + repo-plans
-- [ ] **2.** Bootstrap proposal
-  - [ ] 2.1 `tracker_bootstrap` classify + render + mutation guard
-- [ ] **3.** GitHub bulk merge
-  - [ ] 3.1 `github_issues_items_from_fetch` + discover `--input`
-- [ ] **4.** Docs and init
-  - [ ] 4.1 TrackerSync + Init tributary + Linear MCP recipe
-  - [ ] 4.2 Workflow example `agtoosa-issues-bootstrap.yml.example`
-- [ ] **5.** Bats TBS-001–TBS-010
+- [x] **1.** Schema and discover core
+  - [x] 1.1 Discovery + fetch envelope schemas
+  - [x] 1.2 `tracker_discover` local signals + repo-plans
+- [x] **2.** Bootstrap proposal
+  - [x] 2.1 `tracker_bootstrap` classify + render + mutation guard
+- [x] **3.** GitHub bulk merge
+  - [x] 3.1 `github_issues_items_from_fetch` + discover `--input`
+- [x] **4.** Docs and init
+  - [x] 4.1 TrackerSync + Init tributary + Linear MCP recipe
+  - [x] 4.2 Workflow example `agtoosa-issues-bootstrap.yml.example`
+- [x] **5.** Bats TBS-001–TBS-010
 
 ## Manual / Deferred Tasks
 
@@ -165,7 +167,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-137 | Chore: Security Scanning CI Health (ShellCheck + workflow re-verify) | Chore | XS | DEV-004 | P1 | 🏁 Shipped — v5.3.51 |
 | DEV-138 | Chore: Main CI Health (Product Truth + PSScriptAnalyzer) | Chore | XS | DEV-004 | P1 | 🏁 Shipped — v5.3.53 |
 | DEV-140 | Chore: Help vs Next Disambiguation Hardening | Chore | S | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.54 |
-| DEV-141 | Feature: Tracker Discovery & Bootstrap | Feature | L | DEV-051 / DEV-003 | P1 | 🟦 Todo — spec approved |
+| DEV-141 | Feature: Tracker Discovery & Bootstrap | Feature | L | DEV-051 / DEV-003 | P1 | 🏁 Shipped — v5.3.55 |
 | DEV-139 | Feature: GitHub Issues PM Bridge (Phased B) | Feature | L | DEV-051 / DEV-004 | P1 | 🏁 Shipped — v5.3.52 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
@@ -324,6 +326,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-141 | Feature: Tracker Discovery & Bootstrap | 2026-07-28 | [spec-DEV-141.md](archived/spec-DEV-141.md) · [review-DEV-141.md](archived/review-DEV-141.md) · [evidence-DEV-141.md](archived/evidence-DEV-141.md) |
 | DEV-140 | Chore: Help vs Next Disambiguation Hardening | 2026-07-28 | [spec-DEV-140.md](archived/spec-DEV-140.md) · [review-DEV-140.md](archived/review-DEV-140.md) · [evidence-DEV-140.md](archived/evidence-DEV-140.md) |
 | DEV-138 | Chore: Main CI Health | 2026-07-28 | [spec-DEV-138.md](archived/spec-DEV-138.md) · [review-DEV-138.md](archived/review-DEV-138.md) · [evidence-DEV-138.md](archived/evidence-DEV-138.md) |
 | DEV-139 | Feature: GitHub Issues PM Bridge | 2026-07-28 | [spec-DEV-139.md](archived/spec-DEV-139.md) · [review-DEV-139.md](archived/review-DEV-139.md) · [evidence-DEV-139.md](archived/evidence-DEV-139.md) |
@@ -451,6 +454,12 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-07-28 23:45 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-141 — smoke PASS TBS/SR gate; v5.3.55 | AgToosa |
+| 2026-07-28 23:45 | 🚀 Ship complete — v5.3.55 — DEV-141 Tracker Discovery & Bootstrap | AgToosa |
+| 2026-07-28 23:35 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-141 — 0 Critical; TBS-001–010 green; next `/agtoosa-next` → ship v5.3.55 | AgToosa |
+| 2026-07-28 23:34 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-141 — 4-persona review (served by `/agtoosa-next`) | AgToosa |
+| 2026-07-28 23:30 | 🏗️ /agtoosa-build — Build complete — DEV-141 — 6/6 tasks; TBS-001–TBS-010 exit 0; next `/agtoosa-next` → review | AgToosa |
+| 2026-07-28 23:28 | 🏗️ /agtoosa-build — Build 🏗️ Started — DEV-141 — TDD closure for discover/bootstrap (as-built 7f91f8a) | AgToosa |
 | 2026-07-28 23:16 | ✅ DEV-080 tasks 4.2/4.3 — External registry publish confirmed — [agtoosa-registry#1](https://github.com/sky2464/agtoosa-registry/pull/1) merged; `registry list` shows 3 packs; checklist updated | AgToosa |
 | 2026-07-28 23:25 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-141 — `docs/archived/spec-DEV-141.md`; estimate L; enrolled Active Cycle; TBS-001–010 green; next `/agtoosa-next` → build | AgToosa |
 | 2026-07-28 23:20 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-140 — smoke PASS NLX/SR gate; v5.3.54 | AgToosa |

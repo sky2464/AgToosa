@@ -19,3 +19,10 @@
 |---------|----------|----------|
 | TBS-003 | bootstrap `--output` targets Master-Plan.md | Non-zero exit; file unchanged |
 | TBS-004 | Issue with `agtoosa:DEV-Alpha` label | Excluded from discovery items |
+
+## Evidence
+
+GREEN evidence — 5 (TBS suite)
+Command: `bats tests/agtoosa.bats -f "DEV-141 TBS"`
+Exit code: 0
+Result: 10/10 pass (2026-07-28)
