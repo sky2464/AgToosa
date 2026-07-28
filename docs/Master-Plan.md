@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-28 (/agtoosa-ship — DEV-136 v5.3.50)
+> **Last updated:** 2026-07-28 (/agtoosa-ship — DEV-137 v5.3.51)
 
 ## Project Charter
 
@@ -9,8 +9,8 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Idle — DEV-136 shipped v5.3.50 |
-| Milestone | `v5.3.51` (next) |
+| Current phase | Idle — DEV-137 shipped v5.3.51 |
+| Milestone | `v5.3.52` (next) |
 | Active cycle | _(none)_ |
 | Cycle state | Idle — post-ship |
 | Cycle capacity | `8 story points` |
@@ -24,6 +24,8 @@
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
 | _(none — cycle archived)_ | | | | | |
+
+<!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.51.md (DEV-137 v5.3.51) -->
 
 <!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.50.md (DEV-136 v5.3.50) -->
 
@@ -83,7 +85,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 _(No stories enrolled.)_
 
-<!-- DEV-134 tasks archived with cycle-2026-07-28-release-5.3.48.md -->
+<!-- DEV-137 tasks archived with cycle-2026-07-28-release-5.3.51.md -->
 
 ## Manual / Deferred Tasks
 
@@ -140,6 +142,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 | DEV-134 | Chore: README Hero Media Pass (Catch-up Formalization) | Chore | XS | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.48 |
 | DEV-135 | Chore: Natural-Language Continuation → `/agtoosa-next` | Chore | S | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.49 |
 | DEV-136 | Chore: IDE Host Mode Bridge for Spec and Review | Chore | M | DEV-028 / DEV-116 | P1 | 🏁 Shipped — v5.3.50 |
+| DEV-137 | Chore: Security Scanning CI Health (ShellCheck + workflow re-verify) | Chore | XS | DEV-004 | P1 | 🏁 Shipped — v5.3.51 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
 | DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v5.3.10 |
@@ -297,7 +300,7 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
-| DEV-136 | Chore: IDE Host Mode Bridge for Spec and Review | 2026-07-28 | [spec-DEV-136.md](archived/spec-DEV-136.md) · [review-DEV-136.md](archived/review-DEV-136.md) · [evidence-DEV-136.md](archived/evidence-DEV-136.md) |
+| DEV-137 | Chore: Security Scanning CI Health | 2026-07-28 | [spec-DEV-137.md](archived/spec-DEV-137.md) · [review-DEV-137.md](archived/review-DEV-137.md) · [evidence-DEV-137.md](archived/evidence-DEV-137.md) |
 | DEV-135 | Chore: Natural-Language Continuation → `/agtoosa-next` | 2026-07-28 | [spec-DEV-135.md](archived/spec-DEV-135.md) · [review-DEV-135.md](archived/review-DEV-135.md) · [evidence-DEV-135.md](archived/evidence-DEV-135.md) |
 | DEV-134 | Chore: README Hero Media Pass (Catch-up Formalization) | 2026-07-28 | [spec-DEV-134.md](archived/spec-DEV-134.md) · [review-DEV-134.md](archived/review-DEV-134.md) · [evidence-DEV-134.md](archived/evidence-DEV-134.md) |
 | DEV-133 | Chore: GitHub Branch Hygiene for Cursor Agent Sprawl | 2026-07-28 | [spec-DEV-133.md](archived/spec-DEV-133.md) · [review-DEV-133.md](archived/review-DEV-133.md) · [evidence-DEV-133.md](archived/evidence-DEV-133.md) |
@@ -421,6 +424,11 @@ Conflict playbook: _DEV-113 shipped v5.3.26 — next enroll via `/agtoosa-spec` 
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-07-28 21:42 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-137 — smoke PASS SSC/SR gate; v5.3.51 | AgToosa |
+| 2026-07-28 21:42 | 🚀 Ship complete — v5.3.51 — DEV-137 Security Scanning CI health | AgToosa |
+| 2026-07-28 21:42 | 🚀 Release 5.3.51 shipped — v5.3.51; version parity bash/ps1/npm/formula; Milestone v5.3.52 (next) | AgToosa |
+| 2026-07-28 21:37 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-137 — Security Scanning CI health | AgToosa |
+| 2026-07-28 21:32 | 🏗️ /agtoosa-build — Build 🏗️ Started — DEV-137 — Security Scanning CI health; 4 tasks; scope: lib/apply.sh, lib/catalog.sh, SSC bats | AgToosa |
 <!-- Older rows through 2026-06-10: docs/archived/updatelog-2026.md -->
 | 2026-07-07 | 🏗️ Merged v5.3.x fix batch — pack lock provenance, re-install data loss, multi-root tarball smuggle, npm pack queue, PowerShell hooks/merge containment (PRs #36–#48, #61–#63) | AgToosa |
 | 2026-07-08 | 🚀 Ship complete — v5.3.1 patch; Unreleased fixes + bootstrap durable pack queue (PR #64); focused SR bats green | AgToosa |

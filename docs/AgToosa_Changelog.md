@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.51] — 2026-07-28
+
+Patch release: DEV-137 — Security Scanning CI health.
+
+### Fixed
+
+- **DEV-137 — Security Scanning CI health.** Resolve ShellCheck SC2207/SC2178 failures blocking Security Scanning workflow; SSC-001–004 regression bats; verified green workflow run on `main`.
+
+---
+
 ## [5.3.50] — 2026-07-28
 
 Patch release: DEV-136 — IDE host mode bridge for spec and review.

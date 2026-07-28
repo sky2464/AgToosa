@@ -21,7 +21,7 @@ teardown() {
   # Update this expected string on each release (Eng review: exact-version pin)
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v5.3.50" ]]
+  [[ "$output" == "AgToosa v5.3.51" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -4163,6 +4163,40 @@ JSON
   grep -q "Set-PSRepository -Name PSGallery -InstallationPolicy Trusted" "$workflow"
   ! grep -q "Install-PackageProvider -Name NuGet" "$workflow"
   grep -q -- '-Confirm:$false' "$workflow"
+}
+
+# -- DEV-137 Security Scanning CI health (SSC-001-SSC-004) ---------------------
+
+@test "SSC-001: local ShellCheck passes with project exclusions" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run shellcheck -x -S warning \
+    --exclude=SC2002,SC2046,SC2086,SC1091,SC2034 \
+    "$root/agtoosa.sh" "$root"/lib/*.sh
+  [ "$status" -eq 0 ]
+}
+
+@test "SSC-002: security-scan workflow uses ShellCheck with project exclusions" {
+  local workflow="$BATS_TEST_DIRNAME/../.github/workflows/security-scan.yml"
+  grep -q "shellcheck -x -S warning" "$workflow"
+  grep -q "SC2002,SC2046,SC2086,SC1091,SC2034" "$workflow"
+  grep -q "agtoosa.sh lib/\*.sh" "$workflow"
+}
+
+@test "SSC-003: security-scan workflow is dispatchable and documents weekly schedule" {
+  local workflow="$BATS_TEST_DIRNAME/../.github/workflows/security-scan.yml"
+  grep -q "workflow_dispatch" "$workflow"
+  grep -q 'cron: "0 0 \* \* 0"' "$workflow"
+  grep -q "trivy-scan:" "$workflow"
+  grep -q "aquasecurity/trivy-action@" "$workflow"
+}
+
+@test "SSC-004: apply and catalog avoid ShellCheck SC2207 SC2178 anti-patterns" {
+  local apply="$BATS_TEST_DIRNAME/../lib/apply.sh"
+  local catalog="$BATS_TEST_DIRNAME/../lib/catalog.sh"
+  ! grep -q "commit_list=(\$(printf" "$apply"
+  grep -q "while IFS= read -r _sorted_line" "$apply"
+  ! grep -q "local found=0" "$catalog"
+  grep -q "local platform_found=0" "$catalog"
 }
 
 # -- DEV-042-DEV-060 Competitive spec wave (CW-001-CW-004) -------------------
@@ -15826,6 +15860,23 @@ PY
   grep -q 'DEV-136' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-136.md" ]
   [ -f "$root/docs/archived/review-DEV-136.md" ]
+}
+
+@test "DEV-137 @smoke SR-001: v5.3.51 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.51" ]
+  [ "$ps_ver" = "5.3.51" ]
+  [ "$npm_ver" = "5.3.51" ]
+  [ "$formula_ver" = "5.3.51" ]
+  grep -q '## \[5.3.51\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-137' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-137.md" ]
+  [ -f "$root/docs/archived/review-DEV-137.md" ]
 }
 
 # -- Sivarena UX review follow-up (UPG-010–UPG-011) ----------------------------
