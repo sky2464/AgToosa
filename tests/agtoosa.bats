@@ -16235,6 +16235,36 @@ PY
   grep -q 'publish' "$root/template/Docs/AgToosa_TrackerSync.md"
 }
 
+@test "DEV-139 GIS-011: issues-sync --dry-run does not mutate README" {
+  local src="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local proj="$TEST_PROJECT/gis-dry-proj"
+  mkdir -p "$proj/docs"
+  cp "$src/docs/Master-Plan.md" "$proj/docs/Master-Plan.md"
+  printf '# Test README\n\nBody.\n' >"$proj/README.md"
+  local fake_bin="$TEST_PROJECT/fake-bin"
+  mkdir -p "$fake_bin"
+  printf '#!/bin/bash\nexit 0\n' >"$fake_bin/gh"
+  chmod +x "$fake_bin/gh"
+  local before after
+  before=$(md5sum "$proj/README.md" | awk '{print $1}')
+  run env PATH="$fake_bin:$PATH" bash "$BATS_TEST_DIRNAME/../scripts/agtoosa-issues-sync.sh" --dry-run --path "$proj"
+  [ "$status" -eq 0 ]
+  after=$(md5sum "$proj/README.md" | awk '{print $1}')
+  [ "$before" = "$after" ]
+}
+
+@test "DEV-139 GIS-012: publish --readme repeat update keeps single END marker" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local readme="$TEST_PROJECT/gis-repeat-readme.md"
+  printf '# Test README\n\nBody.\n<!-- AGTOOSA-ROADMAP:START -->\n> old\n<!-- AGTOOSA-ROADMAP:END -->\n' >"$readme"
+  run bash "$SCRIPT" --tracker publish --path "$fixture" --output "$TEST_PROJECT/gis-repeat.json" --readme "$readme"
+  [ "$status" -eq 0 ]
+  [ "$(grep -c 'AGTOOSA-ROADMAP:END' "$readme")" -eq 1 ]
+  run bash "$SCRIPT" --tracker publish --path "$fixture" --output "$TEST_PROJECT/gis-repeat2.json" --readme "$readme"
+  [ "$status" -eq 0 ]
+  [ "$(grep -c 'AGTOOSA-ROADMAP:END' "$readme")" -eq 1 ]
+}
+
 # -- DEV-140: Help vs Next disambiguation (NLX-009–012) -------------------------
 
 @test "DEV-140 @smoke NLX-009: Agent documents PROGRESS vs help-next disambiguation" {
