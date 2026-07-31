@@ -296,7 +296,7 @@ github_issues_update_readme_block() {
     {
       head -n $((start - 1)) "$readme_path"
       cat "$block_path"
-      tail -n +"$end" "$readme_path"
+      tail -n +"$((end + 1))" "$readme_path"
     } >"$tmp"
   else
     {
