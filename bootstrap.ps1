@@ -33,16 +33,19 @@ $InfoColor = "Cyan"
 function Print-Help {
     Write-Host "AgToosa Windows Bootstrap Installer"
     Write-Host ""
-    Write-Host "Usage: powershell -Command `"iex (New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.ps1')`""
+    Write-Host "Recommended (AV/EDR-friendly — save to disk, then run):"
+    Write-Host '  $Ref = "v5.3.59"'
+    Write-Host '  $Path = Join-Path $env:TEMP "agtoosa-bootstrap.ps1"'
+    Write-Host '  Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sky2464/AgToosa/$Ref/bootstrap.ps1" -OutFile $Path -UseBasicParsing'
+    Write-Host '  & $Path -Ref $Ref'
     Write-Host ""
     Write-Host "Parameters:"
     Write-Host "  -Ref <git-ref>    Git ref to download (default: main, recommended: vX.Y.Z tag)"
     Write-Host "  -Archive <path>   Use a local .tar.gz archive instead of downloading"
     Write-Host "  -Help             Show this help message"
     Write-Host ""
-    Write-Host "Examples:"
-    Write-Host "  # Pin a specific release:"
-    Write-Host "  `$ref='v5.3.28'; `$body=Invoke-RestMethod -Uri \"https://raw.githubusercontent.com/sky2464/AgToosa/`$ref/bootstrap.ps1\"; & ([scriptblock]::Create(`$body)) -Ref `$ref"
+    Write-Host "Requires Git for Windows (Git Bash). Do not use iex or [scriptblock]::Create on"
+    Write-Host "downloaded bootstrap content — endpoint protection commonly blocks that pattern."
 }
 
 function Test-Command {

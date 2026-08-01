@@ -18,7 +18,7 @@ AgToosa is public — bootstrap, releases, registry, and the [proof repository](
 
 ### System Requirements
 
-AgToosa requires these tools (all present by default on modern macOS/Linux):
+AgToosa requires these tools:
 
 - **bash** 4.0+
 - **git** (any recent version)
@@ -26,7 +26,9 @@ AgToosa requires these tools (all present by default on modern macOS/Linux):
 - **tar** (any recent version)
 - **jq** 1.6+ — strongly recommended; required for all `--registry` commands (list, search, info, install, publish)
 
-If any are missing, the bootstrap script will tell you how to install them. Install `jq` via `brew install jq` (macOS) or `sudo apt-get install jq` (Debian/Ubuntu).
+**Fresh macOS:** install Xcode Command Line Tools (`xcode-select --install`) to get `git` and other build tools. **Fresh Windows:** install [Git for Windows](https://git-scm.com/download/win) before the PowerShell bootstrap — it provides Git Bash, which the installer runs under the hood.
+
+If any tool is missing, the bootstrap script prints OS-specific install guidance. Install `jq` via `brew install jq` (macOS) or `sudo apt-get install jq` (Debian/Ubuntu).
 
 ### Quick Start
 
@@ -36,11 +38,24 @@ Start with the [15-minute proof walkthrough](../examples/first-15-minutes.md) fo
 
 Use these when you already know AgToosa and only need an install command.
 
+**Development only (full repository — not for end users):**
+
+```bash
+git clone https://github.com/sky2464/AgToosa.git
+cd AgToosa
+bash agtoosa.sh --version
+```
+
+Use clone when contributing to AgToosa, running bats, or changing generator code. End users and corporate installs should use a **pinned release artifact** (below), not the full repo tree.
+
 **macOS & Linux:**
 
 ```bash
-# Public launch: pinned release (alternative to the proof walkthrough).
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.53
+# Recommended: pinned release via pipe (works in bash/zsh; no process substitution).
+curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh | bash -s -- --ref v5.3.59
+
+# Bash process-substitution alternative (bash or zsh only — fails under plain sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.59
 
 # Homebrew alternative (formula pinned to the tagged release tarball)
 brew install sky2464/agtoosa/agtoosa
@@ -57,7 +72,7 @@ cd AgToosa
 bash agtoosa.sh --version
 
 # development-only main branch command; may include unreleased changes
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh)
+curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh | bash -s --
 ```
 
 > **Pinned installs fail closed.** `--ref vX.Y.Z` never silently falls back to a branch. Each release publishes `bootstrap.sh` and a `SHA256SUMS` asset — verify with `--sha256 <hex>` for high-assurance installs.
@@ -67,17 +82,19 @@ bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstr
 **Windows (native):**
 
 ```powershell
-# Public launch: pinned release.
-$Ref = "v5.3.53"
-$Bootstrap = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/sky2464/AgToosa/$Ref/bootstrap.ps1"
-& ([scriptblock]::Create($Bootstrap)) -Ref $Ref
-.\agtoosa.ps1 -Version
+# Recommended: download bootstrap.ps1 to disk, then run (AV/EDR-friendly).
+$Ref = "v5.3.59"
+$BootstrapPath = Join-Path $env:TEMP "agtoosa-bootstrap.ps1"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sky2464/AgToosa/$Ref/bootstrap.ps1" -OutFile $BootstrapPath -UseBasicParsing
+& $BootstrapPath -Ref $Ref
 
 # Manual verification path for local source checkouts
 git clone https://github.com/sky2464/AgToosa.git
 cd AgToosa
 .\agtoosa.ps1 -Version
 ```
+
+> **Do not use `iex` or `[scriptblock]::Create` on downloaded bootstrap content.** Endpoint protection products commonly block in-memory script execution. Save to a file and invoke with `-File` / `& $path` instead.
 
 **Windows (WSL2 alternative):**
 
@@ -96,15 +113,73 @@ cd AgToosa
 
 > **Windows tip:** Native PowerShell redirects registry publishing to the maintainer workflow. Use WSL2 or Git Bash when you need the Bash-backed registry publish operation.
 
-**Clone-and-run alternative:**
+### Managed devices and corporate networks
+
+Managed laptops often block **remote script execution** (`curl | bash`, `iex`, or in-memory PowerShell). AgToosa is local-first: it copies markdown workflows into your repo. It does not install a background agent, daemon, or telemetry channel.
+
+**Do not use `git clone` for production installs** — the repository includes maintainer tests, fixtures, and docs you do not need to run the generator. Use a **pinned release artifact** instead.
+
+**1. Pinned release tarball + checksum (recommended for corporate networks)**
+
+Download from [GitHub Releases](https://github.com/sky2464/AgToosa/releases) (often allowed when `raw.githubusercontent.com` is blocked). Verify against the release `SHA256SUMS` asset, then run bootstrap from local files only — no in-memory script execution:
 
 ```bash
-git clone https://github.com/sky2464/AgToosa.git && cd AgToosa && bash agtoosa.sh
+VERSION=v5.3.59
+curl -fsSL -o AgToosa.tar.gz "https://github.com/sky2464/AgToosa/archive/refs/tags/${VERSION}.tar.gz"
+curl -fsSL -o SHA256SUMS "https://github.com/sky2464/AgToosa/releases/download/${VERSION}/SHA256SUMS"
+sha256sum -c SHA256SUMS --ignore-missing   # or: shasum -a 256 -c SHA256SUMS --ignore-missing
+curl -fsSL -o bootstrap.sh "https://github.com/sky2464/AgToosa/releases/download/${VERSION}/bootstrap.sh"
+bash bootstrap.sh --ref "${VERSION}" --archive AgToosa.tar.gz
 ```
+
+```powershell
+$Ref = "v5.3.59"
+$Archive = Join-Path $env:TEMP "AgToosa.tar.gz"
+$BootstrapPath = Join-Path $env:TEMP "agtoosa-bootstrap.ps1"
+Invoke-WebRequest -Uri "https://github.com/sky2464/AgToosa/archive/refs/tags/$Ref.tar.gz" -OutFile $Archive -UseBasicParsing
+Invoke-WebRequest -Uri "https://github.com/sky2464/AgToosa/releases/download/$Ref/SHA256SUMS" -OutFile (Join-Path $env:TEMP "SHA256SUMS") -UseBasicParsing
+Invoke-WebRequest -Uri "https://github.com/sky2464/AgToosa/releases/download/$Ref/bootstrap.ps1" -OutFile $BootstrapPath -UseBasicParsing
+& $BootstrapPath -Ref $Ref -Archive $Archive
+```
+
+> **Roadmap:** a dedicated **runtime-only** release asset (`agtoosa-runtime-vX.Y.Z.tar.gz` with just `agtoosa.sh`, `agtoosa.ps1`, `lib/`, `template/`) will replace the full source archive for end-user installs. Tracked in [#89](https://github.com/sky2464/AgToosa/issues/89).
+
+**2. Package manager (macOS — minimal install surface)**
+
+Homebrew installs only the generator binary plus `lib/` and `template/`:
+
+```bash
+brew install sky2464/agtoosa/agtoosa
+```
+
+**3. File-on-disk bootstrap (when only a one-liner is practical)**
+
+See the [Quick install](../README.md#quick-install) commands — pipe-based Bash and `Invoke-WebRequest -OutFile` PowerShell avoid the patterns EDR tools most often block.
+
+**For IT / security reviewers**
+
+| Topic | Detail |
+|-------|--------|
+| Network egress | GitHub Releases / archive URLs only; no AgToosa-hosted service or phone-home |
+| Persistence | None — generator runs on demand and exits |
+| Telemetry | None |
+| Install scope | Writes markdown workflow files and platform adapters into the target repo |
+| Integrity | Pinned `--ref` (fail-closed); release `SHA256SUMS`; optional minisign soft-warn ([SECURITY.md](../../SECURITY.md)) |
+| Allowlist URLs | `github.com/sky2464/AgToosa/releases`, `github.com/sky2464/agtoosa-registry`, `github.com/sky2464/homebrew-agtoosa` |
+| Not recommended | Full `git clone` for end users (ships maintainer tree, tests, and fixtures) |
 
 ### Troubleshooting
 
 If you see an error like `Missing: curl`, the bootstrap script will print installation instructions for your OS. Follow them and try again.
+
+| Symptom | Likely cause | Fix |
+|---------|--------------|-----|
+| `Syntax error: "(" unexpected` (Bash) | One-liner run under `sh`/`dash`, not `bash` | Use the **pipe** command: `curl … \| bash -s -- --ref vX.Y.Z` |
+| `Missing: git` on a new Mac | Xcode Command Line Tools not installed | Run `xcode-select --install`, then retry |
+| PowerShell blocked by antivirus/EDR | `iex` / `[scriptblock]::Create` on downloaded script | Download `bootstrap.ps1` to a file and run `& $path -Ref vX.Y.Z` (see Windows install above) |
+| `Git Bash not found` (Windows) | Git for Windows not installed | Install from https://git-scm.com/download/win |
+| Installer stops at “Where is your project?” | Expected — bootstrap launched the interactive generator | Enter your repo path, or `cd` into your project first and re-run |
+| `Unable to download … archive` with `--ref` | Tag typo or unreleased version | Check https://github.com/sky2464/AgToosa/releases for the exact tag |
 
 **Install health check:**
 

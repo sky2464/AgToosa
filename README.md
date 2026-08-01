@@ -17,18 +17,19 @@
 **macOS / Linux**
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.59
+curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh | bash -s -- --ref v5.3.59
 ```
 
-**Windows (PowerShell)**
+**Windows (PowerShell)** — requires [Git for Windows](https://git-scm.com/download/win) (provides Git Bash)
 
 ```powershell
 $Ref = "v5.3.59"
-$Bootstrap = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/sky2464/AgToosa/$Ref/bootstrap.ps1"
-& ([scriptblock]::Create($Bootstrap)) -Ref $Ref
+$BootstrapPath = Join-Path $env:TEMP "agtoosa-bootstrap.ps1"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sky2464/AgToosa/$Ref/bootstrap.ps1" -OutFile $BootstrapPath -UseBasicParsing
+& $BootstrapPath -Ref $Ref
 ```
 
-Then open your AI assistant: `/agtoosa-init` once → `/agtoosa-next` repeatedly.
+When the generator starts, enter your project path at the prompt (or `cd` into your repo first). Then open your AI assistant: `/agtoosa-init` once → `/agtoosa-next` repeatedly.
 [Full install matrix, flags, and troubleshooting →](docs/guides/readme-reference.md)
 
 ## See it in action
@@ -90,8 +91,8 @@ Use these when you already know AgToosa and only need an install command.
 
 ```bash
 # Public launch: pinned release (alternative to the proof walkthrough).
-# Pin any release: bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref vX.Y.Z
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.59
+# Pin any release: curl -fsSL …/bootstrap.sh | bash -s -- --ref vX.Y.Z
+curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh | bash -s -- --ref v5.3.59
 
 brew install sky2464/agtoosa/agtoosa
 npx agtoosa
@@ -101,7 +102,7 @@ cd AgToosa
 bash agtoosa.sh --version
 
 # development-only main branch command; may include unreleased changes
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh)
+curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh | bash -s --
 ```
 
 > **Windows tip:** Native PowerShell redirects registry publishing to the maintainer workflow. Use WSL2 or Git Bash when you need the Bash-backed registry publish operation. Full Windows paths: [readme-reference](docs/guides/readme-reference.md#installation).

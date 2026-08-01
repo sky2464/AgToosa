@@ -29,7 +29,7 @@ if [[ ! -d "${SCRIPT_DIR}/lib" ]]; then
 fi
 
 # ── Source modular libraries ──────────────────────────────────
-for _lib in config version copy apply transaction state lock generate plan dryrun gitignore install update migrate provenance registry catalog tracker github-issues github-issues-discover tracker-discover maintain reinstall cleanup; do
+for _lib in config version copy apply transaction state lock generate plan dryrun gitignore install update migrate provenance registry catalog tracker github-issues github-issues-discover github-issues-sync tracker-discover maintain reinstall cleanup; do
   # shellcheck source=/dev/null
   source "${SCRIPT_DIR}/lib/${_lib}.sh"
 done
