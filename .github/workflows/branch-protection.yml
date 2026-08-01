@@ -10,8 +10,10 @@ jobs:
 
     steps:
       - name: Check PR has at least one label
+        env:
+          PR_LABELS: ${{ toJson(github.event.pull_request.labels) }}
         run: |
-          label_count=$(jq -r 'length' <<< '${{ toJson(github.event.pull_request.labels) }}')
+          label_count=$(jq -r 'length' <<< "$PR_LABELS")
           if [ "$label_count" -eq 0 ]; then
             echo "❌ PR must have at least one label (bug, enhancement, documentation, chore)"
             exit 1
