@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-07-28 (/agtoosa-ship — DEV-146 v5.3.59)
+> **Last updated:** 2026-08-01 (GitHub issue sync — DEV-148 · DEV-149)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Idle — DEV-146 shipped v5.3.59 |
+| Current phase | Spec approved — DEV-147 |
 | Milestone | `v5.3.60` (next) |
-| Active cycle | — |
-| Cycle state | Idle — cycle complete |
+| Active cycle | DEV-147 |
+| Cycle state | Active |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -23,6 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
+| DEV-147 | Chore: Tracker CI Publish Hardening | Chore | S | 🔍 In Review | 5/5 |
 
 <!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.59.md (DEV-145 + DEV-146 v5.3.59) -->
 
@@ -122,6 +123,19 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 <!-- Shipped v5.3.59 — tasks archived in docs/archived/cycle-2026-07-28-release-5.3.59.md -->
 
+### DEV-147 — Tracker CI Publish Hardening
+
+- [x] **1.** Lib extraction
+  - [x] 1.1 Create `lib/github-issues-sync.sh` — _AC-001, AC-003–AC-006_
+  - [x] 1.2 Refactor `scripts/agtoosa-issues-sync.sh` to source lib — _AC-001_
+- [x] **2.** Doctor gate
+  - [x] 2.1 `github_issues_sync_doctor_check` + `GIP-003` — _AC-007, AC-008_
+  - [x] 2.2 Wire into `lib/maintain.sh` — _AC-007_
+- [x] **3.** Fixtures + mock gh
+  - [x] 3.1 `tests/fixtures/tracker-sync/issues-sync/` — _AC-003–AC-006_
+- [x] **4.** Bats GIP-001–GIP-010 — _AC-001–AC-010_
+- [x] **5.** Template + docs — _AC-009_
+
 ## Manual / Deferred Tasks
 
 > Tasks that require a human action outside the agent. These are **not** counted against the health score.
@@ -186,6 +200,9 @@ Conflict playbook: _DEV-144 shipped v5.3.58; DEV-145 + DEV-146 shipped v5.3.59; 
 | DEV-144 | Chore: Operational Gitignore Auto-Merge | Chore | S | DEV-093 / DEV-119 | P1 | 🏁 Shipped — v5.3.58 |
 | DEV-145 | Feature: Tracker Bootstrap Apply | Feature | M | DEV-141 / DEV-051 | P1 | 🏁 Shipped — v5.3.59 |
 | DEV-146 | Docs: README First-Visit Simplification | Docs | S | DEV-127 / DEV-134 | P1 | 🏁 Shipped — v5.3.59 |
+| DEV-147 | Chore: Tracker CI Publish Hardening | Chore | S | DEV-139 / DEV-051 | P1 | 🟨 In Progress — 5/5 tasks |
+| DEV-148 | Fix: One-Line Install Fails on Fresh Windows/macOS | Fix | M | DEV-001 / DEV-111 | P0 | 🟨 In Progress — github-issues github:sky2464/AgToosa#89 · branch fix/wave |
+| DEV-149 | Fix: Issues-Sync Dry-Run README Corruption | Fix | S | DEV-139 / DEV-147 | P0 | 🟨 In Progress — GIS-011/012 + GIP-010 green · branch fix/wave |
 | DEV-139 | Feature: GitHub Issues PM Bridge (Phased B) | Feature | L | DEV-051 / DEV-004 | P1 | 🏁 Shipped — v5.3.52 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
@@ -201,6 +218,15 @@ Conflict playbook: _DEV-144 shipped v5.3.58; DEV-145 + DEV-146 shipped v5.3.59; 
 | DEV-055 | Feature: Agent Capability Matrix | Feature | S | DEV-002 | P1 | 🏁 Shipped — v5.3.7 |
 | DEV-056 | Feature: Retrospective Learning Loop | Feature | S | DEV-002 | P2 | 🏁 Shipped — v5.3.11 |
 | DEV-057 | Feature: Multi-Repo Story Overlay | Feature | L | DEV-002 | P2 | ⬜ Backlog — demand-gated + DEV-045 |
+
+### GitHub Reported Issues (synced 2026-08-01)
+
+> Inbound community/automation issues linked via tracker bootstrap (`discover` → `bootstrap`). Master-Plan remains SoT; GitHub Issues are mirrors after publish.
+
+| GH # | Story | Title | State | Fix path |
+|------|-------|-------|-------|----------|
+| [#89](https://github.com/sky2464/AgToosa/issues/89) | DEV-148 | One-line install fails on fresh Windows (AV) and macOS (missing git / sh) | Open | [PR #90](https://github.com/sky2464/AgToosa/pull/90) — Phase 1 AV-safe install; Phase 2 runtime tarball deferred |
+| — | DEV-149 | Issues-sync `--dry-run` mutates README; repeat publish duplicates `AGTOOSA-ROADMAP:END` | Automation (no GH issue) | [PR #91](https://github.com/sky2464/AgToosa/pull/91) — consolidate duplicate PRs #86–#88 |
 | DEV-058 | Feature: Local Dashboard | Feature | M | DEV-004 | P2 | 🏁 Shipped — v5.3.12 |
 | DEV-059 | Feature: Governance Policy-as-Code | Feature | M | DEV-004 | P1 | 🏁 Shipped — v5.3.10 |
 | DEV-060 | Docs: Public Benchmark Suite | Docs | M | DEV-004 | P2 | ✅ Done — suite + scoring + claim boundary in `docs/benchmarks/`; competitor runs manual-deferred |
@@ -477,6 +503,11 @@ Conflict playbook: _DEV-144 shipped v5.3.58; DEV-145 + DEV-146 shipped v5.3.59; 
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-08-01 09:50 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-147 (+ DEV-148/149 wave) — 0 Critical; GIP/GIS/INS 16/16 green; CI validate 🟡 pre-existing tracker-discover shellcheck; next `/agtoosa-next` → ship v5.3.60 | AgToosa |
+| 2026-08-01 09:48 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-147 — 4-persona review (served by `/agtoosa-next`) | AgToosa |
+| 2026-08-01 09:45 | 🏗️ /agtoosa-build — DEV-147 build complete — GIP-001–GIP-010 green; DEV-148/149 cherry-picked on fix/wave branch | AgToosa |
+| 2026-08-01 09:25 | ✏️ Tracker sync — GitHub #89 → DEV-148 backlog; automation README corruption → DEV-149; fix wave planned (PR #90 · #91) | AgToosa |
+| 2026-07-29 23:35 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-147 — `docs/archived/spec-DEV-147.md`; GIP-001–GIP-010; enrolled Active Cycle v5.3.60; next `/agtoosa-next` → build | AgToosa |
 | 2026-07-28 12:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-146 (+ DEV-145 batched) — smoke PASS RMF/TBA/SR gate; v5.3.59 | AgToosa |
 | 2026-07-28 12:55 | 🚀 Ship complete — v5.3.59 — DEV-145 Tracker Bootstrap Apply + DEV-146 README First-Visit | AgToosa |
 | 2026-07-28 12:45 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-146 — 0 Critical; RMF-001–003 green; launch-tag gate 🟡 deferred to ship; next `/agtoosa-next` → ship v5.3.59 | AgToosa |

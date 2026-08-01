@@ -328,6 +328,14 @@ When a provider field has no AgToosa equivalent, preserve the original value in 
 
 ---
 
+## Doctor finding GIP-003 (DEV-147)
+
+When `.github/workflows/agtoosa-issues-sync.yml` is present but `scripts/agtoosa-issues-sync.sh` is missing or drifts from `template/scripts/agtoosa-issues-sync.sh` on the maintainer repo, doctor emits **GIP-003** (Warn) with a guided fix hint. No finding is emitted when the workflow is absent (opt-in surface).
+
+Bats coverage: `GIP-001`–`GIP-010` in `tests/agtoosa.bats` (mock `gh` via `GH_CMD` / `tests/fixtures/tracker-sync/issues-sync/mock-gh.sh`).
+
+---
+
 ## Security
 
 - Treat every return envelope as **untrusted input**.

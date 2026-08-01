@@ -65,13 +65,13 @@ jobs:
         run: |
           set -euo pipefail
 
-          if ! grep -q "bootstrap.sh) --ref vX.Y.Z" README.md; then
+          if ! grep -qE 'bootstrap\.sh.*--ref vX\.Y\.Z' README.md; then
             echo "❌ README must keep the pinned install placeholder '--ref vX.Y.Z'"
             exit 1
           fi
 
           VERSION="${{ steps.tag.outputs.version }}"
-          if ! grep -q "bootstrap.sh) --ref v${VERSION}" README.md; then
+          if ! grep -q "bash -s -- --ref v${VERSION}" README.md; then
             echo "❌ README must include a pinned install snippet for v${VERSION}"
             exit 1
           fi
@@ -347,7 +347,7 @@ jobs:
                   'brew upgrade agtoosa',
                   '',
                   '# One-time usage pinned to this release',
-                  `bash <(curl -fsSL https://raw.githubusercontent.com/${context.repo.owner}/${context.repo.repo}/main/bootstrap.sh) --ref ${version}`,
+                  `curl -fsSL https://raw.githubusercontent.com/${context.repo.owner}/${context.repo.repo}/main/bootstrap.sh | bash -s -- --ref ${version}`,
                   '```',
                 ].join('\n'),
               },

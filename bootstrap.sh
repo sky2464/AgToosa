@@ -28,7 +28,10 @@ Pinned tags fail closed: if the tag archive cannot be downloaded, bootstrap
 aborts instead of silently falling back to a branch of the same name.
 
 Examples:
-  # Recommended: pin a release tag
+  # Recommended: pin a release tag (pipe form — works when process substitution is unavailable)
+  curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh | bash -s -- --ref vX.Y.Z
+
+  # Bash process-substitution form (bash/zsh only)
   bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref vX.Y.Z
 
   # Run with generator flags

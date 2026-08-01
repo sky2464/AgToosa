@@ -9945,6 +9945,44 @@ rmh_readme_body_lines() {
   [[ "$install_line" -lt "$hero_line" ]]
 }
 
+# ── DEV-147: One-line install hardening (INS-001–INS-003) ────────────────────
+
+@test "DEV-147 INS-001: README quick install uses AV-friendly bootstrap patterns" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  grep -q 'bash -s -- --ref v5.3.59' "$readme"
+  grep -q 'OutFile \$BootstrapPath' "$readme"
+  ! grep -q 'scriptblock]::Create' "$readme"
+  ! grep -q '| iex' "$readme"
+}
+
+@test "DEV-147 INS-002: readme-reference documents bootstrap failure modes" {
+  local ref="$BATS_TEST_DIRNAME/../docs/guides/readme-reference.md"
+  grep -q 'Syntax error: "(" unexpected' "$ref"
+  grep -q 'scriptblock]::Create' "$ref"
+  grep -q 'xcode-select --install' "$ref"
+  grep -q 'Git Bash not found' "$ref"
+}
+
+@test "DEV-147 INS-003: bootstrap help avoids in-memory PowerShell execution" {
+  local ps1="$BATS_TEST_DIRNAME/../bootstrap.ps1"
+  ! grep -q '| iex' "$ps1"
+  run grep -qE '\[scriptblock\]::Create\(' "$ps1"
+  [ "$status" -ne 0 ]
+  grep -q 'OutFile' "$ps1"
+  grep -q 'bash -s --' "$BATS_TEST_DIRNAME/../bootstrap.sh"
+}
+
+@test "DEV-147 INS-004: readme-reference documents managed-device install ladder" {
+  local ref="$BATS_TEST_DIRNAME/../docs/guides/readme-reference.md"
+  grep -q 'Managed devices and corporate networks' "$ref"
+  grep -q 'Do not use .git clone. for production installs' "$ref"
+  grep -q 'agtoosa-runtime-v' "$ref"
+  grep -q 'SHA256SUMS' "$ref"
+  grep -q 'For IT / security reviewers' "$ref"
+  grep -q 'Development only (full repository' "$ref"
+  ! grep -q 'git clone --depth 1 --branch v5.3.59' "$ref"
+}
+
 # ── DEV-105: PowerShell maintain + update parity (PSP-001–PSP-008) ───────────
 
 @test "DEV-105 @smoke PSP-006: agtoosa.ps1 declares maintain switches" {
@@ -16233,6 +16271,157 @@ PY
   grep -q 'publish' "$root/docs/AgToosa_TrackerSync.md"
   grep -q 'intake' "$root/docs/AgToosa_TrackerSync.md"
   grep -q 'publish' "$root/template/Docs/AgToosa_TrackerSync.md"
+}
+
+@test "DEV-139 GIS-011: issues-sync --dry-run does not mutate README" {
+  local src="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local proj="$TEST_PROJECT/gis-dry-proj"
+  mkdir -p "$proj/docs"
+  cp "$src/docs/Master-Plan.md" "$proj/docs/Master-Plan.md"
+  printf '# Test README\n\nBody.\n' >"$proj/README.md"
+  local fake_bin="$TEST_PROJECT/fake-bin"
+  mkdir -p "$fake_bin"
+  printf '#!/bin/bash\nexit 0\n' >"$fake_bin/gh"
+  chmod +x "$fake_bin/gh"
+  local before after
+  before=$(md5sum "$proj/README.md" | awk '{print $1}')
+  run env PATH="$fake_bin:$PATH" bash "$BATS_TEST_DIRNAME/../scripts/agtoosa-issues-sync.sh" --dry-run --path "$proj"
+  [ "$status" -eq 0 ]
+  after=$(md5sum "$proj/README.md" | awk '{print $1}')
+  [ "$before" = "$after" ]
+}
+
+@test "DEV-139 GIS-012: publish --readme repeat update keeps single END marker" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local readme="$TEST_PROJECT/gis-repeat-readme.md"
+  printf '# Test README\n\nBody.\n<!-- AGTOOSA-ROADMAP:START -->\n> old\n<!-- AGTOOSA-ROADMAP:END -->\n' >"$readme"
+  run bash "$SCRIPT" --tracker publish --path "$fixture" --output "$TEST_PROJECT/gis-repeat.json" --readme "$readme"
+  [ "$status" -eq 0 ]
+  [ "$(grep -c 'AGTOOSA-ROADMAP:END' "$readme")" -eq 1 ]
+  run bash "$SCRIPT" --tracker publish --path "$fixture" --output "$TEST_PROJECT/gis-repeat2.json" --readme "$readme"
+  [ "$status" -eq 0 ]
+  [ "$(grep -c 'AGTOOSA-ROADMAP:END' "$readme")" -eq 1 ]
+}
+
+# ── DEV-147: Tracker CI Publish Hardening (GIP-001–GIP-010) ───────────────────
+
+@test "DEV-147 @smoke GIP-001: issues-sync dry-run prints deterministic manifest rows" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local fake_bin="$TEST_PROJECT/gip-fake-bin"
+  mkdir -p "$fake_bin"
+  cp "$BATS_TEST_DIRNAME/fixtures/tracker-sync/issues-sync/mock-gh.sh" "$fake_bin/gh"
+  chmod +x "$fake_bin/gh"
+  local out1 out2
+  out1=$(env PATH="$fake_bin:$PATH" bash "$BATS_TEST_DIRNAME/../scripts/agtoosa-issues-sync.sh" --dry-run --path "$fixture")
+  out2=$(env PATH="$fake_bin:$PATH" bash "$BATS_TEST_DIRNAME/../scripts/agtoosa-issues-sync.sh" --dry-run --path "$fixture")
+  [[ "$out1" == *"Dry-run manifest"* ]]
+  [[ "$out1" == *"agtoosa:DEV-Alpha"* ]]
+  [ "$out1" = "$out2" ]
+}
+
+@test "DEV-147 @smoke GIP-002: issues-sync missing gh exits before manifest processing" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  run env PATH="/usr/bin:/bin" bash "$BATS_TEST_DIRNAME/../scripts/agtoosa-issues-sync.sh" --dry-run --path "$fixture"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"gh CLI required"* ]]
+}
+
+@test "DEV-147 GIP-003: mock gh edit path when upsert_key exists" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local fake_bin="$TEST_PROJECT/gip-edit-bin"
+  local log="$TEST_PROJECT/gip-edit.log"
+  mkdir -p "$fake_bin"
+  cp "$BATS_TEST_DIRNAME/fixtures/tracker-sync/issues-sync/mock-gh.sh" "$fake_bin/gh"
+  chmod +x "$fake_bin/gh"
+  : >"$log"
+  run env PATH="$fake_bin:$PATH" GH_MOCK_LOG="$log" bash "$BATS_TEST_DIRNAME/../scripts/agtoosa-issues-sync.sh" --path "$fixture"
+  [ "$status" -eq 0 ]
+  grep -q 'issue edit 42' "$log"
+  grep -q 'issue edit' "$log"
+}
+
+@test "DEV-147 GIP-004: mock gh create path when no match" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local fake_bin="$TEST_PROJECT/gip-create-bin"
+  local log="$TEST_PROJECT/gip-create.log"
+  mkdir -p "$fake_bin"
+  cp "$BATS_TEST_DIRNAME/fixtures/tracker-sync/issues-sync/mock-gh.sh" "$fake_bin/gh"
+  chmod +x "$fake_bin/gh"
+  : >"$log"
+  run env PATH="$fake_bin:$PATH" GH_MOCK_LOG="$log" bash "$BATS_TEST_DIRNAME/../scripts/agtoosa-issues-sync.sh" --path "$fixture"
+  [ "$status" -eq 0 ]
+  grep -q 'issue create' "$log"
+}
+
+@test "DEV-147 GIP-005: milestone resolve/create before upsert (mocked)" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project-shipped"
+  local fake_bin="$TEST_PROJECT/gip-ms-bin"
+  local log="$TEST_PROJECT/gip-ms.log"
+  mkdir -p "$fake_bin"
+  cp "$BATS_TEST_DIRNAME/fixtures/tracker-sync/issues-sync/mock-gh.sh" "$fake_bin/gh"
+  chmod +x "$fake_bin/gh"
+  : >"$log"
+  run env PATH="$fake_bin:$PATH" GH_MOCK_LOG="$log" bash "$BATS_TEST_DIRNAME/../scripts/agtoosa-issues-sync.sh" --path "$fixture"
+  [ "$status" -eq 0 ]
+  grep -q 'api repos/:owner/:repo/milestones' "$log"
+}
+
+@test "DEV-147 GIP-006: closed state invokes issue close (mocked)" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project-shipped"
+  local fake_bin="$TEST_PROJECT/gip-close-bin"
+  local log="$TEST_PROJECT/gip-close.log"
+  mkdir -p "$fake_bin"
+  cp "$BATS_TEST_DIRNAME/fixtures/tracker-sync/issues-sync/mock-gh.sh" "$fake_bin/gh"
+  chmod +x "$fake_bin/gh"
+  : >"$log"
+  run env PATH="$fake_bin:$PATH" GH_MOCK_LOG="$log" bash "$BATS_TEST_DIRNAME/../scripts/agtoosa-issues-sync.sh" --path "$fixture"
+  [ "$status" -eq 0 ]
+  grep -q 'issue close 55' "$log"
+}
+
+@test "DEV-147 GIP-007: doctor emits GIP-003 when workflow present but script missing" {
+  _gig_install_cursor_only "$TEST_PROJECT"
+  mkdir -p "$TEST_PROJECT/.github/workflows"
+  printf 'name: AgToosa Issues Sync\n' >"$TEST_PROJECT/.github/workflows/agtoosa-issues-sync.yml"
+  rm -f "$TEST_PROJECT/scripts/agtoosa-issues-sync.sh"
+  run bash "$SCRIPT" --doctor "$TEST_PROJECT" --format json
+  [ "$status" -ne 0 ]
+  echo "$output" | jq -e '.findings[] | select(.id == "GIP-003")' >/dev/null
+}
+
+@test "DEV-147 GIP-008: doctor silent on GIP-003 when workflow absent" {
+  local proj="$TEST_PROJECT/gip-doctor-green"
+  mkdir -p "$proj/docs"
+  printf '# Master-Plan\n\n## Backlog\n\n| ID | Title |\n|----|-------|\n' >"$proj/docs/Master-Plan.md"
+  run bash "$SCRIPT" --doctor "$proj" --format json
+  echo "$output" | jq -e '.findings[] | select(.id == "GIP-003")' >/dev/null && return 1 || true
+}
+
+@test "DEV-147 GIP-009: template script and workflow example exist and match" {
+  local root="$BATS_TEST_DIRNAME/.."
+  [ -f "$root/scripts/agtoosa-issues-sync.sh" ]
+  [ -f "$root/template/scripts/agtoosa-issues-sync.sh" ]
+  [ -f "$root/template/.github/workflows/agtoosa-issues-sync.yml.example" ]
+  cmp -s "$root/scripts/agtoosa-issues-sync.sh" "$root/template/scripts/agtoosa-issues-sync.sh"
+  grep -q 'agtoosa-issues-sync.sh' "$root/template/.github/workflows/agtoosa-issues-sync.yml.example"
+  grep -q 'github_issues_sync' "$root/lib/github-issues-sync.sh"
+}
+
+@test "DEV-147 @smoke GIP-010: issues-sync dry-run preserves AGTOOSA-ROADMAP markers" {
+  local src="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  local proj="$TEST_PROJECT/gip-marker-proj"
+  mkdir -p "$proj/docs"
+  cp "$src/docs/Master-Plan.md" "$proj/docs/Master-Plan.md"
+  printf '# Test README\n<!-- AGTOOSA-ROADMAP:START -->\nold\n<!-- AGTOOSA-ROADMAP:END -->\n' >"$proj/README.md"
+  local fake_bin="$TEST_PROJECT/gip-marker-bin"
+  mkdir -p "$fake_bin"
+  cp "$BATS_TEST_DIRNAME/fixtures/tracker-sync/issues-sync/mock-gh.sh" "$fake_bin/gh"
+  chmod +x "$fake_bin/gh"
+  run env PATH="$fake_bin:$PATH" bash "$BATS_TEST_DIRNAME/../scripts/agtoosa-issues-sync.sh" --dry-run --path "$proj"
+  [ "$status" -eq 0 ]
+  grep -q 'AGTOOSA-ROADMAP:START' "$proj/README.md"
+  grep -q 'AGTOOSA-ROADMAP:END' "$proj/README.md"
+  [ "$(grep -c 'AGTOOSA-ROADMAP:END' "$proj/README.md")" -eq 1 ]
 }
 
 # -- DEV-140: Help vs Next disambiguation (NLX-009–012) -------------------------
