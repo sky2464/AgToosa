@@ -9975,10 +9975,12 @@ rmh_readme_body_lines() {
 @test "DEV-147 INS-004: readme-reference documents managed-device install ladder" {
   local ref="$BATS_TEST_DIRNAME/../docs/guides/readme-reference.md"
   grep -q 'Managed devices and corporate networks' "$ref"
-  grep -q 'git clone --depth 1 --branch v5.3.59' "$ref"
+  grep -q 'Do not use .git clone. for production installs' "$ref"
+  grep -q 'agtoosa-runtime-v' "$ref"
   grep -q 'SHA256SUMS' "$ref"
   grep -q 'For IT / security reviewers' "$ref"
-  ! grep -q 'bypass' "$ref"
+  grep -q 'Development only (full repository' "$ref"
+  ! grep -q 'git clone --depth 1 --branch v5.3.59' "$ref"
 }
 
 # ── DEV-105: PowerShell maintain + update parity (PSP-001–PSP-008) ───────────

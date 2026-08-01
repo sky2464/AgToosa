@@ -38,6 +38,16 @@ Start with the [15-minute proof walkthrough](../examples/first-15-minutes.md) fo
 
 Use these when you already know AgToosa and only need an install command.
 
+**Development only (full repository — not for end users):**
+
+```bash
+git clone https://github.com/sky2464/AgToosa.git
+cd AgToosa
+bash agtoosa.sh --version
+```
+
+Use clone when contributing to AgToosa, running bats, or changing generator code. End users and corporate installs should use a **pinned release artifact** (below), not the full repo tree.
+
 **macOS & Linux:**
 
 ```bash
@@ -103,37 +113,15 @@ cd AgToosa
 
 > **Windows tip:** Native PowerShell redirects registry publishing to the maintainer workflow. Use WSL2 or Git Bash when you need the Bash-backed registry publish operation.
 
-**Clone-and-run alternative:**
-
-```bash
-git clone https://github.com/sky2464/AgToosa.git && cd AgToosa && bash agtoosa.sh
-```
-
 ### Managed devices and corporate networks
 
 Managed laptops often block **remote script execution** (`curl | bash`, `iex`, or in-memory PowerShell). AgToosa is local-first: it copies markdown workflows into your repo. It does not install a background agent, daemon, or telemetry channel.
 
-Use the path your security team prefers, from most to least EDR-friendly:
+**Do not use `git clone` for production installs** — the repository includes maintainer tests, fixtures, and docs you do not need to run the generator. Use a **pinned release artifact** instead.
 
-**1. Git clone (recommended for corporate networks)**
+**1. Pinned release tarball + checksum (recommended for corporate networks)**
 
-No downloaded script is executed from memory — only files already on disk from `git`.
-
-```bash
-git clone --depth 1 --branch v5.3.59 https://github.com/sky2464/AgToosa.git
-cd AgToosa
-bash agtoosa.sh --path /path/to/your/project --platforms cursor --yes
-```
-
-```powershell
-git clone --depth 1 --branch v5.3.59 https://github.com/sky2464/AgToosa.git
-cd AgToosa
-.\agtoosa.ps1 -Path C:\path\to\your\project -Platforms cursor -Yes
-```
-
-**2. GitHub Release tarball + checksum (when `git clone` is restricted)**
-
-Download from [GitHub Releases](https://github.com/sky2464/AgToosa/releases) (often allowed when `raw.githubusercontent.com` is not). Verify against the release `SHA256SUMS` asset, then bootstrap from the local file:
+Download from [GitHub Releases](https://github.com/sky2464/AgToosa/releases) (often allowed when `raw.githubusercontent.com` is blocked). Verify against the release `SHA256SUMS` asset, then run bootstrap from local files only — no in-memory script execution:
 
 ```bash
 VERSION=v5.3.59
@@ -144,13 +132,27 @@ curl -fsSL -o bootstrap.sh "https://github.com/sky2464/AgToosa/releases/download
 bash bootstrap.sh --ref "${VERSION}" --archive AgToosa.tar.gz
 ```
 
-**3. Package manager (macOS)**
+```powershell
+$Ref = "v5.3.59"
+$Archive = Join-Path $env:TEMP "AgToosa.tar.gz"
+$BootstrapPath = Join-Path $env:TEMP "agtoosa-bootstrap.ps1"
+Invoke-WebRequest -Uri "https://github.com/sky2464/AgToosa/archive/refs/tags/$Ref.tar.gz" -OutFile $Archive -UseBasicParsing
+Invoke-WebRequest -Uri "https://github.com/sky2464/AgToosa/releases/download/$Ref/SHA256SUMS" -OutFile (Join-Path $env:TEMP "SHA256SUMS") -UseBasicParsing
+Invoke-WebRequest -Uri "https://github.com/sky2464/AgToosa/releases/download/$Ref/bootstrap.ps1" -OutFile $BootstrapPath -UseBasicParsing
+& $BootstrapPath -Ref $Ref -Archive $Archive
+```
+
+> **Roadmap:** a dedicated **runtime-only** release asset (`agtoosa-runtime-vX.Y.Z.tar.gz` with just `agtoosa.sh`, `agtoosa.ps1`, `lib/`, `template/`) will replace the full source archive for end-user installs. Tracked in [#89](https://github.com/sky2464/AgToosa/issues/89).
+
+**2. Package manager (macOS — minimal install surface)**
+
+Homebrew installs only the generator binary plus `lib/` and `template/`:
 
 ```bash
 brew install sky2464/agtoosa/agtoosa
 ```
 
-**4. File-on-disk bootstrap (when only a one-liner is practical)**
+**3. File-on-disk bootstrap (when only a one-liner is practical)**
 
 See the [Quick install](../README.md#quick-install) commands — pipe-based Bash and `Invoke-WebRequest -OutFile` PowerShell avoid the patterns EDR tools most often block.
 
@@ -158,12 +160,13 @@ See the [Quick install](../README.md#quick-install) commands — pipe-based Bash
 
 | Topic | Detail |
 |-------|--------|
-| Network egress | GitHub only (`github.com` clone/releases); no AgToosa-hosted service or phone-home |
+| Network egress | GitHub Releases / archive URLs only; no AgToosa-hosted service or phone-home |
 | Persistence | None — generator runs on demand and exits |
 | Telemetry | None |
 | Install scope | Writes markdown workflow files and platform adapters into the target repo |
 | Integrity | Pinned `--ref` (fail-closed); release `SHA256SUMS`; optional minisign soft-warn ([SECURITY.md](../../SECURITY.md)) |
-| Allowlist URLs | `github.com/sky2464/AgToosa`, `github.com/sky2464/agtoosa-registry`, `github.com/sky2464/homebrew-agtoosa` |
+| Allowlist URLs | `github.com/sky2464/AgToosa/releases`, `github.com/sky2464/agtoosa-registry`, `github.com/sky2464/homebrew-agtoosa` |
+| Not recommended | Full `git clone` for end users (ships maintainer tree, tests, and fixtures) |
 
 ### Troubleshooting
 
