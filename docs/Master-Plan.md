@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-08-01 (GitHub issue sync — DEV-148 · DEV-149)
+> **Last updated:** 2026-08-01 (ship v5.3.60 — DEV-147 + DEV-148 + DEV-149)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Spec approved — DEV-147 |
-| Milestone | `v5.3.60` (next) |
-| Active cycle | DEV-147 |
-| Cycle state | Active |
+| Current phase | Idle — post v5.3.60 ship |
+| Milestone | `v5.3.61` (next) |
+| Active cycle | — |
+| Cycle state | Idle |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -23,9 +23,9 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-147 | Chore: Tracker CI Publish Hardening | Chore | S | 🔍 In Review | 5/5 |
+| — | (none — cycle archived) | — | — | — | — |
 
-<!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.59.md (DEV-145 + DEV-146 v5.3.59) -->
+<!-- Archived to docs/archived/cycle-2026-08-01-release-5.3.60.md (DEV-147 + DEV-148 + DEV-149 v5.3.60) -->
 
 <!-- Archived to docs/archived/cycle-2026-07-28-release-5.3.58.md (DEV-144 v5.3.58) -->
 
@@ -125,16 +125,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 ### DEV-147 — Tracker CI Publish Hardening
 
-- [x] **1.** Lib extraction
-  - [x] 1.1 Create `lib/github-issues-sync.sh` — _AC-001, AC-003–AC-006_
-  - [x] 1.2 Refactor `scripts/agtoosa-issues-sync.sh` to source lib — _AC-001_
-- [x] **2.** Doctor gate
-  - [x] 2.1 `github_issues_sync_doctor_check` + `GIP-003` — _AC-007, AC-008_
-  - [x] 2.2 Wire into `lib/maintain.sh` — _AC-007_
-- [x] **3.** Fixtures + mock gh
-  - [x] 3.1 `tests/fixtures/tracker-sync/issues-sync/` — _AC-003–AC-006_
-- [x] **4.** Bats GIP-001–GIP-010 — _AC-001–AC-010_
-- [x] **5.** Template + docs — _AC-009_
+<!-- Shipped v5.3.60 — tasks archived in docs/archived/cycle-2026-08-01-release-5.3.60.md -->
 
 ## Manual / Deferred Tasks
 
@@ -164,7 +155,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 |----|-------|-----------|-------|
 | — | (none) | — | — |
 
-Conflict playbook: _DEV-144 shipped v5.3.58; DEV-145 + DEV-146 shipped v5.3.59; milestone v5.3.60; demand-gated DEV-057 deferred._
+Conflict playbook: _DEV-147 + DEV-148 + DEV-149 shipped v5.3.60; milestone v5.3.61; demand-gated DEV-057 deferred._
 
 ## Backlog
 
@@ -200,9 +191,9 @@ Conflict playbook: _DEV-144 shipped v5.3.58; DEV-145 + DEV-146 shipped v5.3.59; 
 | DEV-144 | Chore: Operational Gitignore Auto-Merge | Chore | S | DEV-093 / DEV-119 | P1 | 🏁 Shipped — v5.3.58 |
 | DEV-145 | Feature: Tracker Bootstrap Apply | Feature | M | DEV-141 / DEV-051 | P1 | 🏁 Shipped — v5.3.59 |
 | DEV-146 | Docs: README First-Visit Simplification | Docs | S | DEV-127 / DEV-134 | P1 | 🏁 Shipped — v5.3.59 |
-| DEV-147 | Chore: Tracker CI Publish Hardening | Chore | S | DEV-139 / DEV-051 | P1 | 🟨 In Progress — 5/5 tasks |
-| DEV-148 | Fix: One-Line Install Fails on Fresh Windows/macOS | Fix | M | DEV-001 / DEV-111 | P0 | 🟨 In Progress — github-issues github:sky2464/AgToosa#89 · branch fix/wave |
-| DEV-149 | Fix: Issues-Sync Dry-Run README Corruption | Fix | S | DEV-139 / DEV-147 | P0 | 🟨 In Progress — GIS-011/012 + GIP-010 green · branch fix/wave |
+| DEV-147 | Chore: Tracker CI Publish Hardening | Chore | S | DEV-139 / DEV-051 | P1 | 🏁 Shipped — v5.3.60 |
+| DEV-148 | Fix: One-Line Install Fails on Fresh Windows/macOS | Fix | M | DEV-001 / DEV-111 | P0 | 🏁 Shipped — v5.3.60 (#89 closed) |
+| DEV-149 | Fix: Issues-Sync Dry-Run README Corruption | Fix | S | DEV-139 / DEV-147 | P0 | 🏁 Shipped — v5.3.60 |
 | DEV-139 | Feature: GitHub Issues PM Bridge (Phased B) | Feature | L | DEV-051 / DEV-004 | P1 | 🏁 Shipped — v5.3.52 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
@@ -225,8 +216,8 @@ Conflict playbook: _DEV-144 shipped v5.3.58; DEV-145 + DEV-146 shipped v5.3.59; 
 
 | GH # | Story | Title | State | Fix path |
 |------|-------|-------|-------|----------|
-| [#89](https://github.com/sky2464/AgToosa/issues/89) | DEV-148 | One-line install fails on fresh Windows (AV) and macOS (missing git / sh) | Open | [PR #90](https://github.com/sky2464/AgToosa/pull/90) — Phase 1 AV-safe install; Phase 2 runtime tarball deferred |
-| — | DEV-149 | Issues-sync `--dry-run` mutates README; repeat publish duplicates `AGTOOSA-ROADMAP:END` | Automation (no GH issue) | [PR #91](https://github.com/sky2464/AgToosa/pull/91) — consolidate duplicate PRs #86–#88 |
+| [#89](https://github.com/sky2464/AgToosa/issues/89) | DEV-148 | One-line install fails on fresh Windows (AV) and macOS (missing git / sh) | Closed | Shipped v5.3.60 via PR #92 |
+| — | DEV-149 | Issues-sync `--dry-run` mutates README; repeat publish duplicates `AGTOOSA-ROADMAP:END` | Automation (no GH issue) | Shipped v5.3.60 via PR #92 |
 | DEV-058 | Feature: Local Dashboard | Feature | M | DEV-004 | P2 | 🏁 Shipped — v5.3.12 |
 | DEV-059 | Feature: Governance Policy-as-Code | Feature | M | DEV-004 | P1 | 🏁 Shipped — v5.3.10 |
 | DEV-060 | Docs: Public Benchmark Suite | Docs | M | DEV-004 | P2 | ✅ Done — suite + scoring + claim boundary in `docs/benchmarks/`; competitor runs manual-deferred |
@@ -370,6 +361,9 @@ Conflict playbook: _DEV-144 shipped v5.3.58; DEV-145 + DEV-146 shipped v5.3.59; 
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-147 | Chore: Tracker CI Publish Hardening | 2026-08-01 | [spec-DEV-147.md](archived/spec-DEV-147.md) · [review-DEV-147.md](archived/review-DEV-147.md) · [evidence-DEV-147.md](archived/evidence-DEV-147.md) |
+| DEV-148 | Fix: One-Line Install Fails on Fresh Windows/macOS | 2026-08-01 | wave PR #92 — closes #89 |
+| DEV-149 | Fix: Issues-Sync Dry-Run README Corruption | 2026-08-01 | wave PR #92 |
 | DEV-146 | Docs: README First-Visit Simplification | 2026-07-28 | [spec-DEV-146.md](archived/spec-DEV-146.md) · [review-DEV-146.md](archived/review-DEV-146.md) · [evidence-DEV-146.md](archived/evidence-DEV-146.md) |
 | DEV-145 | Feature: Tracker Bootstrap Apply | 2026-07-28 | [spec-DEV-145.md](archived/spec-DEV-145.md) · [review-DEV-145.md](archived/review-DEV-145.md) · [evidence-DEV-145.md](archived/evidence-DEV-145.md) |
 | DEV-144 | Chore: Operational Gitignore Auto-Merge | 2026-07-28 | [spec-DEV-144.md](archived/spec-DEV-144.md) · [review-DEV-144.md](archived/review-DEV-144.md) · [evidence-DEV-144.md](archived/evidence-DEV-144.md) |
@@ -503,6 +497,9 @@ Conflict playbook: _DEV-144 shipped v5.3.58; DEV-145 + DEV-146 shipped v5.3.59; 
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-08-01 09:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-147 (+ DEV-148/149 batched) — smoke PASS GIP/SR gate; v5.3.60 | AgToosa |
+| 2026-08-01 09:55 | 🚀 Ship complete — v5.3.60 — DEV-147 Tracker CI Publish Hardening + DEV-148 Install + DEV-149 README guard | AgToosa |
+| 2026-08-01 09:55 | 🚀 Release 5.3.60 shipped — v5.3.60; version parity bash/ps1/npm/formula; Milestone v5.3.61 (next); cycle archived | AgToosa |
 | 2026-08-01 09:50 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-147 (+ DEV-148/149 wave) — 0 Critical; GIP/GIS/INS 16/16 green; CI validate 🟡 pre-existing tracker-discover shellcheck; next `/agtoosa-next` → ship v5.3.60 | AgToosa |
 | 2026-08-01 09:48 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-147 — 4-persona review (served by `/agtoosa-next`) | AgToosa |
 | 2026-08-01 09:45 | 🏗️ /agtoosa-build — DEV-147 build complete — GIP-001–GIP-010 green; DEV-148/149 cherry-picked on fix/wave branch | AgToosa |

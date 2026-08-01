@@ -57,7 +57,7 @@ template/
 ### Target corporate UX
 
 ```bash
-VERSION=v5.3.59
+VERSION=v5.3.60
 curl -fsSL -o agtoosa-runtime.tar.gz \
   "https://github.com/sky2464/AgToosa/releases/download/${VERSION}/agtoosa-runtime-${VERSION}.tar.gz"
 curl -fsSL -o SHA256SUMS \

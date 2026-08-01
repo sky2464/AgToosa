@@ -9927,7 +9927,7 @@ rmh_readme_body_lines() {
   grep -q '## Quick install' "$readme"
   grep -q 'Windows (PowerShell)' "$readme"
   grep -q 'bootstrap.ps1' "$readme"
-  grep -q '\$Ref = "v5.3.59"' "$readme"
+  grep -q '\$Ref = "v5.3.60"' "$readme"
 }
 
 @test "DEV-146 RMF-002: README presents confirmed first-visit tagline" {
@@ -9949,7 +9949,7 @@ rmh_readme_body_lines() {
 
 @test "DEV-147 INS-001: README quick install uses AV-friendly bootstrap patterns" {
   local readme="$BATS_TEST_DIRNAME/../README.md"
-  grep -q 'bash -s -- --ref v5.3.59' "$readme"
+  grep -q 'bash -s -- --ref v5.3.60' "$readme"
   grep -q 'OutFile \$BootstrapPath' "$readme"
   ! grep -q 'scriptblock]::Create' "$readme"
   ! grep -q '| iex' "$readme"
@@ -9980,7 +9980,7 @@ rmh_readme_body_lines() {
   grep -q 'SHA256SUMS' "$ref"
   grep -q 'For IT / security reviewers' "$ref"
   grep -q 'Development only (full repository' "$ref"
-  ! grep -q 'git clone --depth 1 --branch v5.3.59' "$ref"
+  ! grep -q 'git clone --depth 1 --branch v5.3.60' "$ref"
 }
 
 # ── DEV-105: PowerShell maintain + update parity (PSP-001–PSP-008) ───────────
@@ -17030,6 +17030,23 @@ PY
   grep -q 'DEV-145|TBA-' "$root/docs/AgToosa_TestPlan-DEV-145.md"
   run bats "$BATS_TEST_DIRNAME/agtoosa.bats" -f "DEV-145 TBA-00[1-9]"
   [ "$status" -eq 0 ]
+}
+
+@test "DEV-147 @smoke SR-001: v5.3.60 release pins and changelog exist" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bash_ver ps_ver npm_ver formula_ver
+  bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+  [ "$bash_ver" = "5.3.60" ]
+  [ "$ps_ver" = "5.3.60" ]
+  [ "$npm_ver" = "5.3.60" ]
+  [ "$formula_ver" = "5.3.60" ]
+  grep -q '## \[5.3.60\]' "$root/CHANGELOG.md"
+  grep -q 'DEV-147' "$root/CHANGELOG.md"
+  [ -f "$root/docs/archived/spec-DEV-147.md" ]
+  [ -f "$root/docs/archived/review-DEV-147.md" ]
 }
 
 @test "DEV-146 @smoke SR-001: v5.3.59 release pins and changelog exist" {

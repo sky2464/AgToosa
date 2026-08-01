@@ -52,10 +52,10 @@ Use clone when contributing to AgToosa, running bats, or changing generator code
 
 ```bash
 # Recommended: pinned release via pipe (works in bash/zsh; no process substitution).
-curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh | bash -s -- --ref v5.3.59
+curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh | bash -s -- --ref v5.3.60
 
 # Bash process-substitution alternative (bash or zsh only — fails under plain sh)
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.59
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.60
 
 # Homebrew alternative (formula pinned to the tagged release tarball)
 brew install sky2464/agtoosa/agtoosa
@@ -83,7 +83,7 @@ curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh |
 
 ```powershell
 # Recommended: download bootstrap.ps1 to disk, then run (AV/EDR-friendly).
-$Ref = "v5.3.59"
+$Ref = "v5.3.60"
 $BootstrapPath = Join-Path $env:TEMP "agtoosa-bootstrap.ps1"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sky2464/AgToosa/$Ref/bootstrap.ps1" -OutFile $BootstrapPath -UseBasicParsing
 & $BootstrapPath -Ref $Ref
@@ -124,7 +124,7 @@ Managed laptops often block **remote script execution** (`curl | bash`, `iex`, o
 Download from [GitHub Releases](https://github.com/sky2464/AgToosa/releases) (often allowed when `raw.githubusercontent.com` is blocked). Verify against the release `SHA256SUMS` asset, then run bootstrap from local files only — no in-memory script execution:
 
 ```bash
-VERSION=v5.3.59
+VERSION=v5.3.60
 curl -fsSL -o AgToosa.tar.gz "https://github.com/sky2464/AgToosa/archive/refs/tags/${VERSION}.tar.gz"
 curl -fsSL -o SHA256SUMS "https://github.com/sky2464/AgToosa/releases/download/${VERSION}/SHA256SUMS"
 sha256sum -c SHA256SUMS --ignore-missing   # or: shasum -a 256 -c SHA256SUMS --ignore-missing
@@ -133,7 +133,7 @@ bash bootstrap.sh --ref "${VERSION}" --archive AgToosa.tar.gz
 ```
 
 ```powershell
-$Ref = "v5.3.59"
+$Ref = "v5.3.60"
 $Archive = Join-Path $env:TEMP "AgToosa.tar.gz"
 $BootstrapPath = Join-Path $env:TEMP "agtoosa-bootstrap.ps1"
 Invoke-WebRequest -Uri "https://github.com/sky2464/AgToosa/archive/refs/tags/$Ref.tar.gz" -OutFile $Archive -UseBasicParsing

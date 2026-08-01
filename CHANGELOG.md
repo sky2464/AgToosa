@@ -5,6 +5,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.60] — 2026-08-01
+
+Patch release: DEV-147 — Tracker CI Publish Hardening; DEV-148 — One-Line Install Hardening; DEV-149 — Issues-Sync README Guard.
+
+### Fixed
+
+- **DEV-149 — Issues-sync README guard.** `--dry-run` no longer mutates README; repeat publish keeps single `AGTOOSA-ROADMAP:END`; GIS-011/012.
+- **DEV-148 — One-line install hardening.** AV-safe pipe Bash + file-download PowerShell; troubleshooting for fresh Windows/macOS; closes #89.
+
+### Added
+
+- **DEV-147 — Tracker CI publish hardening.** `lib/github-issues-sync.sh`; doctor GIP-003; mock-gh fixtures; GIP-001–GIP-010 bats.
+
+---
+
 ## [5.3.59] — 2026-07-28
 
 Patch release: DEV-145 — Tracker Bootstrap Apply; DEV-146 — README First-Visit Simplification.

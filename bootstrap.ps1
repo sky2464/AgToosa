@@ -34,7 +34,7 @@ function Print-Help {
     Write-Host "AgToosa Windows Bootstrap Installer"
     Write-Host ""
     Write-Host "Recommended (AV/EDR-friendly — save to disk, then run):"
-    Write-Host '  $Ref = "v5.3.59"'
+    Write-Host '  $Ref = "v5.3.60"'
     Write-Host '  $Path = Join-Path $env:TEMP "agtoosa-bootstrap.ps1"'
     Write-Host '  Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sky2464/AgToosa/$Ref/bootstrap.ps1" -OutFile $Path -UseBasicParsing'
     Write-Host '  & $Path -Ref $Ref'

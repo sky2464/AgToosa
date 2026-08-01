@@ -5,6 +5,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.60] — 2026-08-01
+
+Patch release: DEV-147 — Tracker CI Publish Hardening; DEV-148 — One-Line Install Hardening; DEV-149 — Issues-Sync README Guard.
+
+### Fixed
+
+- **DEV-149 — Issues-sync README guard.** Dry-run skips `--readme`; single END marker on repeat publish; GIS-011/012.
+- **DEV-148 — One-line install hardening.** AV-safe install paths; readme-reference troubleshooting; INS-001–004.
+
+### Added
+
+- **DEV-147 — Tracker CI publish hardening.** `lib/github-issues-sync.sh`; doctor GIP-003; GIP-001–GIP-010 bats.
+
+---
+
 ## [5.3.59] — 2026-07-28
 
 Patch release: DEV-145 — Tracker Bootstrap Apply; DEV-146 — README First-Visit Simplification.
