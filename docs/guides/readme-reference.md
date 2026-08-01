@@ -109,6 +109,62 @@ cd AgToosa
 git clone https://github.com/sky2464/AgToosa.git && cd AgToosa && bash agtoosa.sh
 ```
 
+### Managed devices and corporate networks
+
+Managed laptops often block **remote script execution** (`curl | bash`, `iex`, or in-memory PowerShell). AgToosa is local-first: it copies markdown workflows into your repo. It does not install a background agent, daemon, or telemetry channel.
+
+Use the path your security team prefers, from most to least EDR-friendly:
+
+**1. Git clone (recommended for corporate networks)**
+
+No downloaded script is executed from memory — only files already on disk from `git`.
+
+```bash
+git clone --depth 1 --branch v5.3.59 https://github.com/sky2464/AgToosa.git
+cd AgToosa
+bash agtoosa.sh --path /path/to/your/project --platforms cursor --yes
+```
+
+```powershell
+git clone --depth 1 --branch v5.3.59 https://github.com/sky2464/AgToosa.git
+cd AgToosa
+.\agtoosa.ps1 -Path C:\path\to\your\project -Platforms cursor -Yes
+```
+
+**2. GitHub Release tarball + checksum (when `git clone` is restricted)**
+
+Download from [GitHub Releases](https://github.com/sky2464/AgToosa/releases) (often allowed when `raw.githubusercontent.com` is not). Verify against the release `SHA256SUMS` asset, then bootstrap from the local file:
+
+```bash
+VERSION=v5.3.59
+curl -fsSL -o AgToosa.tar.gz "https://github.com/sky2464/AgToosa/archive/refs/tags/${VERSION}.tar.gz"
+curl -fsSL -o SHA256SUMS "https://github.com/sky2464/AgToosa/releases/download/${VERSION}/SHA256SUMS"
+sha256sum -c SHA256SUMS --ignore-missing   # or: shasum -a 256 -c SHA256SUMS --ignore-missing
+curl -fsSL -o bootstrap.sh "https://github.com/sky2464/AgToosa/releases/download/${VERSION}/bootstrap.sh"
+bash bootstrap.sh --ref "${VERSION}" --archive AgToosa.tar.gz
+```
+
+**3. Package manager (macOS)**
+
+```bash
+brew install sky2464/agtoosa/agtoosa
+```
+
+**4. File-on-disk bootstrap (when only a one-liner is practical)**
+
+See the [Quick install](../README.md#quick-install) commands — pipe-based Bash and `Invoke-WebRequest -OutFile` PowerShell avoid the patterns EDR tools most often block.
+
+**For IT / security reviewers**
+
+| Topic | Detail |
+|-------|--------|
+| Network egress | GitHub only (`github.com` clone/releases); no AgToosa-hosted service or phone-home |
+| Persistence | None — generator runs on demand and exits |
+| Telemetry | None |
+| Install scope | Writes markdown workflow files and platform adapters into the target repo |
+| Integrity | Pinned `--ref` (fail-closed); release `SHA256SUMS`; optional minisign soft-warn ([SECURITY.md](../../SECURITY.md)) |
+| Allowlist URLs | `github.com/sky2464/AgToosa`, `github.com/sky2464/agtoosa-registry`, `github.com/sky2464/homebrew-agtoosa` |
+
 ### Troubleshooting
 
 If you see an error like `Missing: curl`, the bootstrap script will print installation instructions for your OS. Follow them and try again.

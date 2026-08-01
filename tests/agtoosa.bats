@@ -9972,6 +9972,15 @@ rmh_readme_body_lines() {
   grep -q 'bash -s --' "$BATS_TEST_DIRNAME/../bootstrap.sh"
 }
 
+@test "DEV-147 INS-004: readme-reference documents managed-device install ladder" {
+  local ref="$BATS_TEST_DIRNAME/../docs/guides/readme-reference.md"
+  grep -q 'Managed devices and corporate networks' "$ref"
+  grep -q 'git clone --depth 1 --branch v5.3.59' "$ref"
+  grep -q 'SHA256SUMS' "$ref"
+  grep -q 'For IT / security reviewers' "$ref"
+  ! grep -q 'bypass' "$ref"
+}
+
 # ── DEV-105: PowerShell maintain + update parity (PSP-001–PSP-008) ───────────
 
 @test "DEV-105 @smoke PSP-006: agtoosa.ps1 declares maintain switches" {
