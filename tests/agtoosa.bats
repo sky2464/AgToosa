@@ -9945,6 +9945,32 @@ rmh_readme_body_lines() {
   [[ "$install_line" -lt "$hero_line" ]]
 }
 
+# ── DEV-147: One-line install hardening (INS-001–INS-003) ────────────────────
+
+@test "DEV-147 INS-001: README quick install uses AV-friendly bootstrap patterns" {
+  local readme="$BATS_TEST_DIRNAME/../README.md"
+  grep -q 'bash -s -- --ref v5.3.59' "$readme"
+  grep -q 'OutFile \$BootstrapPath' "$readme"
+  ! grep -q 'scriptblock]::Create' "$readme"
+  ! grep -q '| iex' "$readme"
+}
+
+@test "DEV-147 INS-002: readme-reference documents bootstrap failure modes" {
+  local ref="$BATS_TEST_DIRNAME/../docs/guides/readme-reference.md"
+  grep -q 'Syntax error: "(" unexpected' "$ref"
+  grep -q 'scriptblock]::Create' "$ref"
+  grep -q 'xcode-select --install' "$ref"
+  grep -q 'Git Bash not found' "$ref"
+}
+
+@test "DEV-147 INS-003: bootstrap help avoids in-memory PowerShell execution" {
+  local ps1="$BATS_TEST_DIRNAME/../bootstrap.ps1"
+  ! grep -q '| iex' "$ps1"
+  ! grep -q 'scriptblock]::Create' "$ps1"
+  grep -q 'OutFile' "$ps1"
+  grep -q 'bash -s --' "$BATS_TEST_DIRNAME/../bootstrap.sh"
+}
+
 # ── DEV-105: PowerShell maintain + update parity (PSP-001–PSP-008) ───────────
 
 @test "DEV-105 @smoke PSP-006: agtoosa.ps1 declares maintain switches" {
