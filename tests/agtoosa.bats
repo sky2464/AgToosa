@@ -9966,7 +9966,8 @@ rmh_readme_body_lines() {
 @test "DEV-147 INS-003: bootstrap help avoids in-memory PowerShell execution" {
   local ps1="$BATS_TEST_DIRNAME/../bootstrap.ps1"
   ! grep -q '| iex' "$ps1"
-  ! grep -q 'scriptblock]::Create' "$ps1"
+  run grep -qE '\[scriptblock\]::Create\(' "$ps1"
+  [ "$status" -ne 0 ]
   grep -q 'OutFile' "$ps1"
   grep -q 'bash -s --' "$BATS_TEST_DIRNAME/../bootstrap.sh"
 }
