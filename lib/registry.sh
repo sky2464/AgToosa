@@ -113,6 +113,8 @@ if ! declare -f pack_path_denied >/dev/null 2>&1; then
     ".claude/settings.json"
     ".claude/hooks/"
     ".github/workflows/"
+    "Docs/Master-Plan.md"
+    "docs/Master-Plan.md"
   )
 
   pack_path_denied() {
