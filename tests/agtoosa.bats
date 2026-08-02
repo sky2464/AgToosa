@@ -10012,7 +10012,7 @@ rmh_readme_body_lines() {
   grep -q '## Quick install' "$readme"
   grep -q 'Windows (PowerShell)' "$readme"
   grep -q 'bootstrap.ps1' "$readme"
-  grep -q '\$Ref = "v5.3.61"' "$readme"
+  grep -q '\$Ref = "v5.3.62"' "$readme"
 }
 
 @test "DEV-146 RMF-002: README presents confirmed first-visit tagline" {
@@ -10034,7 +10034,7 @@ rmh_readme_body_lines() {
 
 @test "DEV-147 INS-001: README quick install uses AV-friendly bootstrap patterns" {
   local readme="$BATS_TEST_DIRNAME/../README.md"
-  grep -q 'bash -s -- --ref v5.3.61' "$readme"
+  grep -q 'bash -s -- --ref v5.3.62' "$readme"
   grep -q 'OutFile \$BootstrapPath' "$readme"
   ! grep -q 'scriptblock]::Create' "$readme"
   ! grep -q '| iex' "$readme"
@@ -10065,7 +10065,7 @@ rmh_readme_body_lines() {
   grep -q 'SHA256SUMS' "$ref"
   grep -q 'For IT / security reviewers' "$ref"
   grep -q 'Development only (full repository' "$ref"
-  ! grep -q 'git clone --depth 1 --branch v5.3.61' "$ref"
+  ! grep -q 'git clone --depth 1 --branch v5.3.62' "$ref"
 }
 
 # ── DEV-105: PowerShell maintain + update parity (PSP-001–PSP-008) ───────────
@@ -17138,20 +17138,20 @@ PY
   [ "$status" -eq 0 ]
 }
 
-@test "DEV-147 @smoke SR-001: v5.3.61 release pins and changelog exist" {
+@test "DEV-147 @smoke SR-001: v5.3.62 release pins and changelog exist" {
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/Formula/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "5.3.61" ]
-  [ "$ps_ver" = "5.3.61" ]
-  [ "$npm_ver" = "5.3.61" ]
-  [ "$formula_ver" = "5.3.61" ]
+  [ "$bash_ver" = "5.3.62" ]
+  [ "$ps_ver" = "5.3.62" ]
+  [ "$npm_ver" = "5.3.62" ]
+  [ "$formula_ver" = "5.3.62" ]
+  grep -q '## \[5.3.62\]' "$root/CHANGELOG.md"
+  grep -q 'agtoosa_prompt_read' "$root/lib/config.sh"
   grep -q '## \[5.3.61\]' "$root/CHANGELOG.md"
-  grep -q 'forwarded_args' "$root/CHANGELOG.md"
-  grep -q '## \[5.3.60\]' "$root/CHANGELOG.md"
 }
 
 @test "DEV-146 @smoke SR-001: v5.3.59 release pins and changelog exist" {
