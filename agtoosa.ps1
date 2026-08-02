@@ -156,6 +156,18 @@ $NC     = "${ESC}[0m"
 # ── Helpers ───────────────────────────────────────────────────
 function Write-Color([string]$msg) { Write-Host $msg }
 
+# Read-Host uses the PS host console (not stdin), so piped script content does not
+# consume interactive answers. Fail clearly when no host UI is available (CI).
+function Read-AgToosaPrompt {
+    param([Parameter(Mandatory)][string]$Prompt)
+    if ($null -eq $Host -or $null -eq $Host.UI) {
+        Write-Color "${RED}❌ Error: Interactive prompt requires a terminal.${NC}"
+        Write-Color "${YELLOW}   Re-run with -Path <dir> [-Platforms ...] -Yes for non-interactive use.${NC}"
+        exit 1
+    }
+    return Read-Host $Prompt
+}
+
 function Write-SelfTargetGuidance {
     Write-Color "${YELLOW}   --update is for downstream installed projects only.${NC}"
     Write-Color "${YELLOW}   In the AgToosa generator repo, follow docs/agtoosa-maintainer.md.${NC}"
@@ -425,7 +437,7 @@ function Confirm-PlatformNarrowingIfNeeded([string[]]$before, [string[]]$after, 
     Write-Color ""
     Write-Color "${YELLOW}You are deselecting: $removed${NC}"
     Write-Color "${YELLOW}Their AgToosa files will be eligible for cleanup after apply.${NC}"
-    $reply = Read-Host "Continue with this platform set? (y/N)"
+    $reply = Read-AgToosaPrompt "Continue with this platform set? (y/N)"
     if ([string]::IsNullOrWhiteSpace($reply)) { $reply = "N" }
     return ($reply -match '^[Yy]$')
 }
@@ -1270,7 +1282,7 @@ function Invoke-RegistryInstall([string]$packSpec) {
         exit 1
     }
 
-    $confirm = Read-Host "Installing: $packName v$($pack.version) — Continue? (Y/n)"
+    $confirm = Read-AgToosaPrompt "Installing: $packName v$($pack.version) — Continue? (Y/n)"
     if ([string]::IsNullOrEmpty($confirm)) { $confirm = "Y" }
     if ($confirm -notmatch "^[Yy]$") {
         Write-Color "${YELLOW}Aborted.${NC}"
@@ -1526,7 +1538,12 @@ Write-Color ""
 if (-not [string]::IsNullOrWhiteSpace($Path)) {
     $projectPath = $Path
 } else {
-    $projectPath = Read-Host "Project path"
+    Write-Color "${BOLD}Where is your project?${NC}"
+    Write-Color "${CYAN}Enter the path to your project root${NC}"
+    Write-Color "${CYAN}(Press Enter or type ${BOLD}.${NC}${CYAN} for the current folder: $(Get-Location))${NC}"
+    Write-Color ""
+    $projectPath = Read-AgToosaPrompt "Project path [.] "
+    if ([string]::IsNullOrWhiteSpace($projectPath)) { $projectPath = "." }
 }
 $projectPath = $projectPath -replace '^~', $env:USERPROFILE
 $projectPath = $projectPath.TrimEnd('\', '/')
@@ -1579,7 +1596,7 @@ if ($smartUpgradeMode -and [string]::IsNullOrWhiteSpace($cliPlatforms)) {
     if (-not $Yes) {
         Write-Color "${CYAN}Change platforms? (Enter = keep all checked above)${NC}"
         Write-Color "${CYAN}To replace the active set, enter the full list you want (e.g. 1  or  1 3 5)${NC}"
-        $addSelection = ConvertTo-PlatformMenuInput (Read-Host "Platforms")
+        $addSelection = ConvertTo-PlatformMenuInput (Read-AgToosaPrompt "Platforms")
         if (-not [string]::IsNullOrWhiteSpace($addSelection)) {
             $selectedPlatforms.Clear()
             $selectedPlatforms.AddRange((Get-PlatformsFromMenuDigits $addSelection))
@@ -1612,7 +1629,7 @@ if ($smartUpgradeMode -and [string]::IsNullOrWhiteSpace($cliPlatforms)) {
     Write-Color "  7) OpenCode"
     Write-Color "  8) All of the above"
     Write-Color ""
-    $selectionRaw = Read-Host "Selection"
+    $selectionRaw = Read-AgToosaPrompt "Selection"
     $selection = $selectionRaw.Trim()
 
     if ($selection -eq "8") {
@@ -1634,7 +1651,7 @@ if ($selectedPlatforms.Count -eq 0) {
     if ($Yes) {
         $noPlatformConfirm = "Y"
     } else {
-        $noPlatformConfirm = Read-Host "Continue anyway? (y/N)"
+        $noPlatformConfirm = Read-AgToosaPrompt "Continue anyway? (y/N)"
     }
     if ($noPlatformConfirm -notmatch "^[Yy]$") {
         Write-Color "${YELLOW}Re-run agtoosa.ps1 and select at least one platform.${NC}"
@@ -1680,10 +1697,10 @@ try {
     if ($Yes) {
         $confirm = "Y"
     } elseif ($smartUpgradeMode) {
-        $confirm = Read-Host "Apply upgrade now? (Y/n)"
+        $confirm = Read-AgToosaPrompt "Apply upgrade now? (Y/n)"
         if ([string]::IsNullOrEmpty($confirm)) { $confirm = "Y" }
     } else {
-        $confirm = Read-Host "Copy files now? (Y/n)"
+        $confirm = Read-AgToosaPrompt "Copy files now? (Y/n)"
         if ([string]::IsNullOrEmpty($confirm)) { $confirm = "Y" }
     }
 

@@ -330,7 +330,10 @@ PY
 run_uninstall() {
   local target="$1"
   if [[ -z "$target" ]]; then
-    read -rp "Project path to uninstall AgToosa from: " target
+    echo -e "${BOLD}Project path to uninstall AgToosa from:${NC}"
+    echo -e "${CYAN}(Press Enter or type ${BOLD}.${NC}${CYAN} for the current folder: $(pwd))${NC}"
+    agtoosa_prompt_read "Project path [.]: " target
+    target="${target:-.}"
     target="${target/#\~/$HOME}"
     target="${target%/}"
   fi
@@ -360,7 +363,7 @@ run_uninstall() {
   if [[ "$ASSUME_YES" == true ]]; then
     reply="Y"
   else
-    read -rp "Proceed? (y/N): " reply
+    agtoosa_prompt_read "Proceed? (y/N): " reply
     reply="${reply:-N}"
   fi
   if [[ ! "$reply" =~ ^[Yy]$ ]]; then

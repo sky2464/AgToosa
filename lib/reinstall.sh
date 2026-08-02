@@ -218,7 +218,9 @@ run_reinstall_clean() {
       target="$CLI_PROJECT_PATH"
     else
       echo -e "${BOLD}Project path to reinstall (clean):${NC}"
-      read -rp "Project path: " target
+      echo -e "${CYAN}(Press Enter or type ${BOLD}.${NC}${CYAN} for the current folder: $(pwd))${NC}"
+      agtoosa_prompt_read "Project path [.]: " target
+      target="${target:-.}"
       target="${target/#\~/$HOME}"
       target="${target%/}"
     fi
@@ -296,8 +298,8 @@ run_reinstall_clean() {
   local reply
   if [[ "${ASSUME_YES:-false}" == true ]]; then
     reply="Y"
-  elif [[ -t 0 ]]; then
-    read -rp "Proceed with destructive clean reinstall? (y/N): " reply
+  elif [[ -t 0 ]] || _agtoosa_tty_usable; then
+    agtoosa_prompt_read "Proceed with destructive clean reinstall? (y/N): " reply
     reply="${reply:-N}"
   else
     echo -e "${RED}❌ Error: --reinstall --clean requires confirmation.${NC}" >&2

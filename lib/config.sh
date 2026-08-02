@@ -592,3 +592,27 @@ print_usage() {
 print_template_files() {
   printf '%s\n' "${DOCS_FILES[@]}" "${OPTIONAL_TEMPLATE_FILES[@]}" "${CONTEXT_FILES[@]}" "${AGTOOSA_DOTDIR_FILES[@]}"
 }
+
+# Returns 0 when /dev/tty is available for interactive reads (pipe bootstrap case).
+_agtoosa_tty_usable() {
+  [[ -r /dev/tty ]] || return 1
+  ( : </dev/tty ) 2>/dev/null
+}
+
+# Read a line for interactive prompts. When stdin is not a tty (e.g. curl | bash
+# bootstrap or Git Bash launched without a tty stdin), read from /dev/tty when available.
+agtoosa_prompt_read() {
+  local _prompt="$1"
+  local _varname="$2"
+  if [[ -t 0 ]]; then
+    # shellcheck disable=SC2162
+    IFS= read -r -p "$_prompt" "$_varname"
+  elif _agtoosa_tty_usable; then
+    # shellcheck disable=SC2162
+    IFS= read -r -p "$_prompt" "$_varname" </dev/tty
+  else
+    echo "Error: Interactive prompt requires a terminal." >&2
+    echo "Re-run with --path <dir> [--platforms ...] --yes for non-interactive use." >&2
+    return 1
+  fi
+}

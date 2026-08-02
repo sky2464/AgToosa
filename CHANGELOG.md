@@ -5,6 +5,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [Unreleased]
+
+### Fixed
+
+- **Pipe bootstrap project path prompt.** `curl | bash` install no longer exits before the user can enter a project path; prompts read from `/dev/tty` when stdin is the script stream ([#99](https://github.com/sky2464/AgToosa/issues/99)). Empty path defaults to `.` with clearer Enter/current-folder guidance. Maintain flows and PowerShell `Read-AgToosaPrompt` aligned.
+
+---
+
 ## [5.3.61] — 2026-08-02
 
 Patch release: bootstrap macOS bash 3.2 nounset fix ([#94](https://github.com/sky2464/AgToosa/issues/94)).

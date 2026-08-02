@@ -464,7 +464,9 @@ run_cleanup() {
       target="$CLI_PROJECT_PATH"
     else
       echo -e "${BOLD}Project path to clean up:${NC}"
-      read -rp "Project path: " target
+      echo -e "${CYAN}(Press Enter or type ${BOLD}.${NC}${CYAN} for the current folder: $(pwd))${NC}"
+      agtoosa_prompt_read "Project path [.]: " target
+      target="${target:-.}"
       target="${target/#\~/$HOME}"
       target="${target%/}"
     fi
@@ -488,8 +490,8 @@ run_cleanup() {
     reply="Y"
   elif [[ "${ASSUME_YES:-false}" == true ]]; then
     reply="Y"
-  elif [[ -t 0 ]]; then
-    read -rp "Remove these ${#CLEANUP_CANDIDATES[@]} file(s)? (y/N): " reply
+  elif [[ -t 0 ]] || _agtoosa_tty_usable; then
+    agtoosa_prompt_read "Remove these ${#CLEANUP_CANDIDATES[@]} file(s)? (y/N): " reply
     reply="${reply:-N}"
   else
     echo -e "${RED}❌ Error: --cleanup requires confirmation.${NC}" >&2
@@ -542,11 +544,11 @@ offer_cleanup_after_apply() {
     return 0
   fi
 
-  if [[ -t 0 ]]; then
+  if [[ -t 0 ]] || _agtoosa_tty_usable; then
     echo ""
     echo -e "${YELLOW}Found ${count} unnecessary file(s) (backups, removed docs, deselected platforms).${NC}"
     local reply
-    read -rp "Run cleanup now? (y/N): " reply
+    agtoosa_prompt_read "Run cleanup now? (y/N): " reply
     if [[ "$reply" =~ ^[Yy]$ ]]; then
       run_cleanup "$project_path" true
     else
