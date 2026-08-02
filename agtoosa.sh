@@ -470,7 +470,9 @@ fi
 if [[ "$UPDATE" == true ]]; then
   if [[ -z "$UPDATE_PATH" ]]; then
     echo -e "${BOLD}Project path to update:${NC}"
-    read -rp "Project path: " UPDATE_PATH
+    echo -e "${CYAN}(Press Enter or type ${BOLD}.${NC}${CYAN} for the current folder: $(pwd))${NC}"
+    agtoosa_prompt_read "Project path [.]: " UPDATE_PATH
+    UPDATE_PATH="${UPDATE_PATH:-.}"
     UPDATE_PATH="${UPDATE_PATH/#\~/$HOME}"
     UPDATE_PATH="${UPDATE_PATH%/}"
   fi
@@ -561,9 +563,11 @@ if [[ -n "$CLI_PROJECT_PATH" ]]; then
   PROJECT_PATH="$CLI_PROJECT_PATH"
 else
   echo -e "${BOLD}Where is your project?${NC}"
-  echo -e "${CYAN}Enter the full path to your project root:${NC}"
+  echo -e "${CYAN}Enter the path to your project root${NC}"
+  echo -e "${CYAN}(Press Enter or type ${BOLD}.${NC}${CYAN} for the current folder: $(pwd))${NC}"
   echo ""
-  read -rp "Project path: " PROJECT_PATH
+  agtoosa_prompt_read "Project path [.]: " PROJECT_PATH
+  PROJECT_PATH="${PROJECT_PATH:-.}"
 fi
 PROJECT_PATH="${PROJECT_PATH/#\~/$HOME}"
 PROJECT_PATH="${PROJECT_PATH%/}"
@@ -622,7 +626,7 @@ if [[ "$SMART_UPGRADE_MODE" == true && -z "$CLI_PLATFORMS" ]]; then
       echo -e "${CYAN}Change platforms? (Enter = keep all checked above)${NC}"
       echo -e "${CYAN}To replace the active set, enter the full list you want (e.g. 1  or  1 3 5)${NC}"
       echo ""
-      read -rp "Platforms: " ADD_PLATFORM_SELECTION
+      agtoosa_prompt_read "Platforms: " ADD_PLATFORM_SELECTION
       ADD_PLATFORM_SELECTION="$(sanitize_platform_menu_input "$ADD_PLATFORM_SELECTION")"
       ADD_PLATFORM_SELECTION="${ADD_PLATFORM_SELECTION//[[:space:]]/}"
       if [[ -n "$ADD_PLATFORM_SELECTION" ]]; then
@@ -677,7 +681,7 @@ else
   echo "  7) Codex / OpenCode / Other"
   echo "  8) All of the above"
   echo ""
-  read -rp "Your selection: " SELECTION
+  agtoosa_prompt_read "Your selection: " SELECTION
   apply_platform_selection "$SELECTION"
 fi
 
@@ -705,7 +709,7 @@ if [[ "$SOME_PLATFORM_SELECTED" == false ]]; then
   if [[ "$ASSUME_YES" == true ]]; then
     NO_PLATFORM_CONFIRM="Y"
   else
-    read -rp "Continue anyway? (y/N): " NO_PLATFORM_CONFIRM
+    agtoosa_prompt_read "Continue anyway? (y/N): " NO_PLATFORM_CONFIRM
     NO_PLATFORM_CONFIRM="${NO_PLATFORM_CONFIRM:-N}"
   fi
   echo ""
@@ -781,9 +785,9 @@ if [[ "$ASSUME_YES" == true ]]; then
   CONFIRM="Y"
 else
   if [[ "$SMART_UPGRADE_MODE" == true ]]; then
-    read -rp "Apply upgrade now? (Y/n): " CONFIRM
+    agtoosa_prompt_read "Apply upgrade now? (Y/n): " CONFIRM
   else
-    read -rp "Copy files now? (Y/n): " CONFIRM
+    agtoosa_prompt_read "Copy files now? (Y/n): " CONFIRM
   fi
   CONFIRM="${CONFIRM:-Y}"
 fi

@@ -295,7 +295,7 @@ confirm_platform_narrowing_if_needed() {
   echo ""
   echo -e "${YELLOW}You are deselecting: ${removed}${NC}"
   echo -e "${YELLOW}Their AgToosa files will be eligible for cleanup after apply.${NC}"
-  read -rp "Continue with this platform set? (y/N): " reply
+  agtoosa_prompt_read "Continue with this platform set? (y/N): " reply
   reply="${reply:-N}"
   [[ "$reply" =~ ^[Yy]$ ]]
 }

@@ -1526,7 +1526,12 @@ Write-Color ""
 if (-not [string]::IsNullOrWhiteSpace($Path)) {
     $projectPath = $Path
 } else {
-    $projectPath = Read-Host "Project path"
+    Write-Color "${BOLD}Where is your project?${NC}"
+    Write-Color "${CYAN}Enter the path to your project root${NC}"
+    Write-Color "${CYAN}(Press Enter or type ${BOLD}.${NC}${CYAN} for the current folder: $(Get-Location))${NC}"
+    Write-Color ""
+    $projectPath = Read-Host "Project path [.] "
+    if ([string]::IsNullOrWhiteSpace($projectPath)) { $projectPath = "." }
 }
 $projectPath = $projectPath -replace '^~', $env:USERPROFILE
 $projectPath = $projectPath.TrimEnd('\', '/')

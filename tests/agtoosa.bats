@@ -6901,6 +6901,28 @@ EOF
   rm -rf "$fixture_dir" "$archive_path"
 }
 
+# ── DEV-149: piped bootstrap stdin prompts via /dev/tty (B33-001–B33-003) ──
+
+@test "DEV-149 B33-001: agtoosa_prompt_read uses /dev/tty when stdin is not a tty" {
+  local config="$BATS_TEST_DIRNAME/../lib/config.sh"
+  grep -q 'agtoosa_prompt_read' "$config"
+  grep -q '_agtoosa_tty_usable' "$config"
+  grep -q '\-t 0' "$config"
+  grep -q '/dev/tty' "$config"
+}
+
+@test "DEV-149 B33-002: install wizard documents . and Enter for current folder" {
+  grep -q 'Press Enter or type' "$SCRIPT"
+  grep -q 'Project path \[.\]' "$SCRIPT"
+  grep -q 'PROJECT_PATH="${PROJECT_PATH:-.}"' "$SCRIPT"
+}
+
+@test "DEV-149 B33-003: install wizard routes interactive reads through agtoosa_prompt_read" {
+  grep -q 'agtoosa_prompt_read "Project path' "$SCRIPT"
+  grep -q 'agtoosa_prompt_read "Your selection:' "$SCRIPT"
+  ! grep -q 'read -rp "Project path:' "$SCRIPT"
+}
+
 @test "DEV-071 NI-001: non-interactive install with --path --platforms --yes" {
   run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
   [ "$status" -eq 0 ]
