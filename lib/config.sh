@@ -599,7 +599,7 @@ _agtoosa_tty_usable() {
   ( : </dev/tty ) 2>/dev/null
 }
 
-# Read a line for interactive prompts. When stdin is not a TTY (e.g. curl | bash
+# Read a line for interactive prompts. When stdin is a pipe (e.g. curl | bash
 # bootstrap), read from /dev/tty so prompts still wait for user input.
 agtoosa_prompt_read() {
   local _prompt="$1"
@@ -607,12 +607,17 @@ agtoosa_prompt_read() {
   if [[ -t 0 ]]; then
     # shellcheck disable=SC2162
     IFS= read -r -p "$_prompt" "$_varname"
-  elif _agtoosa_tty_usable; then
-    # shellcheck disable=SC2162
-    IFS= read -r -p "$_prompt" "$_varname" </dev/tty
+  elif [[ -p /dev/stdin ]]; then
+    if _agtoosa_tty_usable; then
+      # shellcheck disable=SC2162
+      IFS= read -r -p "$_prompt" "$_varname" </dev/tty
+    else
+      echo "Error: Interactive prompt requires a terminal." >&2
+      echo "Re-run with --path <dir> [--platforms ...] --yes for non-interactive use." >&2
+      return 1
+    fi
   else
-    echo "Error: Interactive prompt requires a terminal." >&2
-    echo "Re-run with --path <dir> [--platforms ...] --yes for non-interactive use." >&2
-    return 1
+    # shellcheck disable=SC2162
+    IFS= read -r -p "$_prompt" "$_varname"
   fi
 }
