@@ -1,7 +1,7 @@
 # Spike: Corporate / EDR-Safe Install Plan
 
 > **Tracking:** [#89](https://github.com/sky2464/AgToosa/issues/89)  
-> **Status:** Plan approved — Phase 1 in [PR #90](https://github.com/sky2464/AgToosa/pull/90); Phase 2 pending enrollment
+> **Status:** Phase 1 shipped (v5.3.60 via PR #92); Phase 2 (runtime tarball) pending enrollment
 
 ## Problem
 
