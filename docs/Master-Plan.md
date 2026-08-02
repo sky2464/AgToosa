@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-08-01 (ship v5.3.60 — DEV-147 + DEV-148 + DEV-149)
+> **Last updated:** 2026-08-02 (ship v5.3.61 — bootstrap bash 3.2 fix #94)
 
 ## Project Charter
 
@@ -9,8 +9,8 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Idle — post v5.3.60 ship |
-| Milestone | `v5.3.61` (next) |
+| Current phase | Idle — post v5.3.61 ship |
+| Milestone | `v5.3.62` (next) |
 | Active cycle | — |
 | Cycle state | Idle |
 | Cycle capacity | `8 story points` |
@@ -497,6 +497,7 @@ Conflict playbook: _DEV-147 + DEV-148 + DEV-149 shipped v5.3.60; milestone v5.3.
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-08-02 15:30 | 🚀 Release 5.3.61 shipped — bootstrap macOS bash 3.2 `forwarded_args` fix; closes #94; PR #95 | AgToosa |
 | 2026-08-01 09:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-147 (+ DEV-148/149 batched) — smoke PASS GIP/SR gate; v5.3.60 | AgToosa |
 | 2026-08-01 09:55 | 🚀 Ship complete — v5.3.60 — DEV-147 Tracker CI Publish Hardening + DEV-148 Install + DEV-149 README guard | AgToosa |
 | 2026-08-01 09:55 | 🚀 Release 5.3.60 shipped — v5.3.60; version parity bash/ps1/npm/formula; Milestone v5.3.61 (next); cycle archived | AgToosa |

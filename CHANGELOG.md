@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [5.3.61] — 2026-08-02
+
+Patch release: bootstrap macOS bash 3.2 nounset fix ([#94](https://github.com/sky2464/AgToosa/issues/94)).
+
+### Fixed
+
+- **Bootstrap on macOS bash 3.2.** Pipe install with `--ref` only no longer fails with `forwarded_args[@]: unbound variable` under `set -u` (DEV-148 B32-001/B32-002; PR #95).
+
+---
+
 ## [5.3.60] — 2026-08-01
 
 Patch release: DEV-147 — Tracker CI Publish Hardening; DEV-148 — One-Line Install Hardening; DEV-149 — Issues-Sync README Guard.
