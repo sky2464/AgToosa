@@ -6854,6 +6854,30 @@ JSON
   rm -rf "$home_dir" "$fixture_dir" "$archive_path"
 }
 
+# ── DEV-148: bootstrap macOS bash 3.2 empty forwarded_args (B32-001–B32-002) ──
+
+@test "DEV-148 B32-001: bootstrap guards empty forwarded_args for bash 3.2 nounset" {
+  grep -q 'macOS ships bash 3.2' "$BOOTSTRAP_SCRIPT"
+  grep -q '\${#forwarded_args\[@\]}' "$BOOTSTRAP_SCRIPT"
+}
+
+@test "DEV-148 B32-002: bootstrap --ref only succeeds without forwarded args" {
+  local fixture_dir archive_path
+  fixture_dir="$(mktemp -d)"
+  archive_path="$(mktemp /tmp/agtoosa-bootstrap-b32-XXXXXX.tar.gz)"
+  mkdir -p "$fixture_dir/AgToosa-b32/template" "$fixture_dir/AgToosa-b32/lib"
+  cat > "$fixture_dir/AgToosa-b32/agtoosa.sh" <<'EOF'
+#!/usr/bin/env bash
+echo "AgToosa bootstrap-b32-ok"
+EOF
+  chmod +x "$fixture_dir/AgToosa-b32/agtoosa.sh"
+  tar -czf "$archive_path" -C "$fixture_dir" AgToosa-b32
+  run bash "$BOOTSTRAP_SCRIPT" --ref v5.3.60 --archive "$archive_path"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"bootstrap-b32-ok"* ]]
+  rm -rf "$fixture_dir" "$archive_path"
+}
+
 @test "DEV-071 NI-001: non-interactive install with --path --platforms --yes" {
   run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
   [ "$status" -eq 0 ]

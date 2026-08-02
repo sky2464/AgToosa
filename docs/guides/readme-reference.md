@@ -180,6 +180,8 @@ If you see an error like `Missing: curl`, the bootstrap script will print instal
 | `Git Bash not found` (Windows) | Git for Windows not installed | Install from https://git-scm.com/download/win |
 | Installer stops at “Where is your project?” | Expected — bootstrap launched the interactive generator | Enter your repo path, or `cd` into your project first and re-run |
 | `Unable to download … archive` with `--ref` | Tag typo or unreleased version | Check https://github.com/sky2464/AgToosa/releases for the exact tag |
+| `forwarded_args[@]: unbound variable` (macOS) | Default macOS **bash 3.2** + `set -u` + empty forwarded args after `--ref` only | Fixed in v5.3.61+; upgrade bootstrap or use `brew install sky2464/agtoosa/agtoosa` |
+| `bash version 3.2 detected` (warning) | macOS system bash is older than 4.0 | Warning only for bootstrap; install bash 4+ via Homebrew if you hit script errors |
 
 **Install health check:**
 

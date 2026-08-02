@@ -382,4 +382,10 @@ PACK_QUEUE_DIR="${HOME}/.cache/agtoosa/pack-queue"
 mkdir -p "$PACK_QUEUE_DIR"
 export AGTOOSA_PACK_QUEUE_DIR="$PACK_QUEUE_DIR"
 
-exec bash "$SRC_DIR/agtoosa.sh" "${forwarded_args[@]}"
+# macOS ships bash 3.2; with `set -u`, expanding an empty array (`"${arr[@]}"`)
+# is an unbound-variable error. Branch when there is nothing to forward.
+if [[ ${#forwarded_args[@]} -gt 0 ]]; then
+  exec bash "$SRC_DIR/agtoosa.sh" "${forwarded_args[@]}"
+else
+  exec bash "$SRC_DIR/agtoosa.sh"
+fi
