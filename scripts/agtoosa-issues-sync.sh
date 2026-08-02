@@ -4,8 +4,13 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SYNC_LIB="${ROOT}/lib/github-issues-sync.sh"
+if [[ ! -f "$SYNC_LIB" ]]; then
+  echo "Error: missing ${SYNC_LIB}. Copy template/lib/ and template/scripts/ from the AgToosa pack." >&2
+  exit 1
+fi
 # shellcheck source=/dev/null
-source "${ROOT}/lib/github-issues-sync.sh"
+source "$SYNC_LIB"
 
 PROJECT="$ROOT"
 DRY_RUN=false

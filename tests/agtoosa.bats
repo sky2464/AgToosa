@@ -6677,6 +6677,29 @@ JSON
   rm -rf "$queue_dir" "$project_dir"
 }
 
+@test "PK6: pack merge skips project-owned Docs/Master-Plan.md" {
+  local queue_dir project_dir
+  queue_dir="$(mktemp -d)"
+  project_dir="$(mktemp -d)"
+  mkdir -p "$queue_dir/mp-pack/Docs" "$project_dir/Docs"
+  echo "# USER MASTER PLAN" > "$project_dir/Docs/Master-Plan.md"
+  echo "# EVIL PACK MASTER PLAN" > "$queue_dir/mp-pack/Docs/Master-Plan.md"
+  echo "# ok" > "$queue_dir/mp-pack/workflow.md"
+
+  PACK_QUEUE_DIR="$queue_dir"
+  PROJECT_PATH="$project_dir"
+  AGTOOSA_VERSION="0.0.0"
+  GREEN="" YELLOW="" NC=""
+  source "$BATS_TEST_DIRNAME/../lib/install.sh"
+
+  _merge_pack_queue
+  [ -f "$project_dir/workflow.md" ]
+  grep -q 'USER MASTER PLAN' "$project_dir/Docs/Master-Plan.md"
+  ! grep -q 'EVIL PACK MASTER PLAN' "$project_dir/Docs/Master-Plan.md"
+
+  rm -rf "$queue_dir" "$project_dir"
+}
+
 @test "PK5: merge containment rejects sibling-directory prefix traps" {
   local queue_dir project_dir sibling
   queue_dir="$(mktemp -d)"
@@ -16425,10 +16448,31 @@ PY
   local root="$BATS_TEST_DIRNAME/.."
   [ -f "$root/scripts/agtoosa-issues-sync.sh" ]
   [ -f "$root/template/scripts/agtoosa-issues-sync.sh" ]
+  [ -f "$root/template/lib/github-issues-sync.sh" ]
   [ -f "$root/template/.github/workflows/agtoosa-issues-sync.yml.example" ]
   cmp -s "$root/scripts/agtoosa-issues-sync.sh" "$root/template/scripts/agtoosa-issues-sync.sh"
+  cmp -s "$root/lib/github-issues-sync.sh" "$root/template/lib/github-issues-sync.sh"
   grep -q 'agtoosa-issues-sync.sh' "$root/template/.github/workflows/agtoosa-issues-sync.yml.example"
   grep -q 'github_issues_sync' "$root/lib/github-issues-sync.sh"
+}
+
+@test "DEV-147 GIP-011: template lib required for downstream scripts layout" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local proj="$TEST_PROJECT/gip-downstream"
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
+  rm -rf "$proj"
+  mkdir -p "$proj/scripts" "$proj/docs"
+  cp "$root/template/scripts/agtoosa-issues-sync.sh" "$proj/scripts/"
+  cp "$fixture/docs/Master-Plan.md" "$proj/docs/Master-Plan.md"
+  printf '# README\n' >"$proj/README.md"
+  run bash "$proj/scripts/agtoosa-issues-sync.sh" --dry-run --path "$proj"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"missing ${proj}/lib/github-issues-sync.sh"* ]]
+  [[ "$output" == *"Copy template/lib/ and template/scripts/"* ]]
+  mkdir -p "$proj/lib"
+  cp "$root/template/lib/github-issues-sync.sh" "$proj/lib/"
+  run bash -c 'source "$1/lib/github-issues-sync.sh" && declare -F github_issues_sync_write_manifest' _ "$proj"
+  [ "$status" -eq 0 ]
 }
 
 @test "DEV-147 @smoke GIP-010: issues-sync dry-run preserves AGTOOSA-ROADMAP markers" {

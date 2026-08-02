@@ -12,6 +12,8 @@ PACK_DENYLIST_PATTERNS=(
   ".claude/settings.json"
   ".claude/hooks/"
   ".github/workflows/"
+  "Docs/Master-Plan.md"
+  "docs/Master-Plan.md"
 )
 
 # Return 0 when a pack-relative path is on the sensitive denylist.
