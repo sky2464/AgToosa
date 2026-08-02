@@ -490,7 +490,7 @@ run_cleanup() {
     reply="Y"
   elif [[ "${ASSUME_YES:-false}" == true ]]; then
     reply="Y"
-  elif [[ -t 0 ]]; then
+  elif [[ -t 0 ]] || _agtoosa_tty_usable; then
     agtoosa_prompt_read "Remove these ${#CLEANUP_CANDIDATES[@]} file(s)? (y/N): " reply
     reply="${reply:-N}"
   else
@@ -544,7 +544,7 @@ offer_cleanup_after_apply() {
     return 0
   fi
 
-  if [[ -t 0 ]]; then
+  if [[ -t 0 ]] || _agtoosa_tty_usable; then
     echo ""
     echo -e "${YELLOW}Found ${count} unnecessary file(s) (backups, removed docs, deselected platforms).${NC}"
     local reply

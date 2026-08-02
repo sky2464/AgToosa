@@ -298,7 +298,7 @@ run_reinstall_clean() {
   local reply
   if [[ "${ASSUME_YES:-false}" == true ]]; then
     reply="Y"
-  elif [[ -t 0 ]]; then
+  elif [[ -t 0 ]] || _agtoosa_tty_usable; then
     agtoosa_prompt_read "Proceed with destructive clean reinstall? (y/N): " reply
     reply="${reply:-N}"
   else
