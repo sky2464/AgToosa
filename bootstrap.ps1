@@ -292,6 +292,7 @@ try {
     # Execute agtoosa.sh via Git Bash.
     # The source directory is passed via the environment, not string
     # interpolation, so quote characters in the path cannot inject shell code.
+    # Interactive prompts in agtoosa.sh read from /dev/tty when stdin is piped.
     Write-Host "Running AgToosa..."
     $env:AGTOOSA_BOOTSTRAP_SRC = $srcDir
     & $gitBashPath -lc 'cd "$AGTOOSA_BOOTSTRAP_SRC" && bash agtoosa.sh'

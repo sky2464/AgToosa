@@ -157,12 +157,12 @@ emit_migration_plan_human() {
 # Interactive confirm for MAJOR apply. Returns 0 when accepted.
 confirm_major_migration() {
   local reply=""
-  if [[ ! -t 0 ]]; then
+  if ! [[ -t 0 ]] && ! _agtoosa_tty_usable; then
     return 1
   fi
   echo -e "${YELLOW}${BOLD}MAJOR version change detected (v${MIGRATE_FROM_VERSION} → v${MIGRATE_TO_VERSION}).${NC}"
   echo -e "${YELLOW}Breaking template changes may apply. Review the plan above.${NC}"
-  read -rp "Proceed with MAJOR migration? [y/N] " reply || true
+  agtoosa_prompt_read "Proceed with MAJOR migration? [y/N] " reply
   [[ "$reply" == "y" || "$reply" == "Y" || "$reply" == "yes" || "$reply" == "YES" ]]
 }
 

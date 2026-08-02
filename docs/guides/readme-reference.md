@@ -178,7 +178,7 @@ If you see an error like `Missing: curl`, the bootstrap script will print instal
 | `Missing: git` on a new Mac | Xcode Command Line Tools not installed | Run `xcode-select --install`, then retry |
 | PowerShell blocked by antivirus/EDR | `iex` / `[scriptblock]::Create` on downloaded script | Download `bootstrap.ps1` to a file and run `& $path -Ref vX.Y.Z` (see Windows install above) |
 | `Git Bash not found` (Windows) | Git for Windows not installed | Install from https://git-scm.com/download/win |
-| Installer stops at “Where is your project?” then exits (no input) | Piped bootstrap (`curl \| bash`) leaves stdin on the script, not the terminal | Fixed in v5.3.62+; press **Enter** or type **`.`** for the current folder. Workaround: `bash agtoosa.sh --path . --platforms cursor --yes` |
+| Installer stops at “Where is your project?” then exits (no input) | Piped bootstrap (`curl \| bash`) leaves stdin on the script, not the terminal | Fixed in v5.3.62+; press **Enter** or type **`.`** for the current folder. Workaround: `bash agtoosa.sh --path . --platforms cursor --yes`. Windows `bootstrap.ps1` runs Git Bash → same fix applies |
 | Installer stops at “Where is your project?” (waiting) | Expected — bootstrap launched the interactive generator | Enter your repo path, **`.`** or **Enter** for the current folder, or `cd` into your project first |
 | `Unable to download … archive` with `--ref` | Tag typo or unreleased version | Check https://github.com/sky2464/AgToosa/releases for the exact tag |
 | `forwarded_args[@]: unbound variable` (macOS) | Default macOS **bash 3.2** + `set -u` + empty forwarded args after `--ref` only | Fixed in v5.3.61+; upgrade bootstrap or use `brew install sky2464/agtoosa/agtoosa` |

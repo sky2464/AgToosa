@@ -4228,7 +4228,7 @@ JSON
 @test "CIH-004: agtoosa.ps1 uses ConvertTo-PlatformMenuInput approved verb" {
   local ps1="$BATS_TEST_DIRNAME/../agtoosa.ps1"
   grep -q "function ConvertTo-PlatformMenuInput" "$ps1"
-  grep -q "ConvertTo-PlatformMenuInput (Read-Host" "$ps1"
+  grep -q "ConvertTo-PlatformMenuInput (Read-AgToosaPrompt" "$ps1"
 }
 
 # -- DEV-042-DEV-060 Competitive spec wave (CW-001-CW-004) -------------------
@@ -6921,6 +6921,22 @@ EOF
   grep -q 'agtoosa_prompt_read "Project path' "$SCRIPT"
   grep -q 'agtoosa_prompt_read "Your selection:' "$SCRIPT"
   ! grep -q 'read -rp "Project path:' "$SCRIPT"
+}
+
+@test "DEV-149 B33-004: maintain flows route path prompts through agtoosa_prompt_read" {
+  local root="$BATS_TEST_DIRNAME/.."
+  grep -q 'agtoosa_prompt_read "Project path' "$root/lib/reinstall.sh"
+  grep -q 'agtoosa_prompt_read "Project path' "$root/lib/cleanup.sh"
+  grep -q 'agtoosa_prompt_read "Project path' "$root/lib/maintain.sh"
+  ! grep -q 'read -rp "Project path:' "$root/lib/reinstall.sh"
+  ! grep -q 'read -rp "Project path:' "$root/lib/cleanup.sh"
+}
+
+@test "DEV-149 B33-005: PowerShell install uses host-console Read-AgToosaPrompt" {
+  local ps1="$BATS_TEST_DIRNAME/../agtoosa.ps1"
+  grep -q 'function Read-AgToosaPrompt' "$ps1"
+  grep -q 'Read-AgToosaPrompt "Project path' "$ps1"
+  grep -q '\$projectPath = "\."' "$ps1"
 }
 
 @test "DEV-071 NI-001: non-interactive install with --path --platforms --yes" {
