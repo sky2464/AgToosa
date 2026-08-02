@@ -28,27 +28,33 @@ Generator-installed documentation from the `DOCS_FILES` array in `lib/config.sh`
 Docs/ADR-FORMAT.md
 Docs/AgToosa_Agent.md
 Docs/AgToosa_AgentCapability.md
+Docs/AgToosa_Behavioral_Conformance.md
 Docs/AgToosa_Build.md
 Docs/AgToosa_CaseStudy.template.md
 Docs/AgToosa_Catalog.md
+Docs/AgToosa_Change_Aware_Delivery.md
 Docs/AgToosa_Changelog.md
 Docs/AgToosa_Compatibility_Contract.md
 Docs/AgToosa_Concise.md
 Docs/AgToosa_Core_Contract.md
 Docs/AgToosa_CrossModelReview.md
+Docs/AgToosa_Cross_Framework_Interchange.md
 Docs/AgToosa_Dashboard.md
 Docs/AgToosa_Debug.md
 Docs/AgToosa_Delivery_Evidence_Contract.md
 Docs/AgToosa_Evidence.md
+Docs/AgToosa_Evidence_Provenance.md
 Docs/AgToosa_Goal.md
 Docs/AgToosa_Governance.md
 Docs/AgToosa_GovernancePolicy.md
+Docs/AgToosa_Guarded_Portable_Execution.md
 Docs/AgToosa_Handoff.md
 Docs/AgToosa_Hooks.md
 Docs/AgToosa_Import.md
 Docs/AgToosa_Init.md
 Docs/AgToosa_MetricsKit.md
 Docs/AgToosa_Network_Matrix.md
+Docs/AgToosa_Next.md
 Docs/AgToosa_Orchestration.md
 Docs/AgToosa_QA.md
 Docs/AgToosa_Quickref.md
@@ -73,17 +79,28 @@ Docs/LANGUAGE.md
 Docs/Master-Architecture.md
 Docs/Master-Plan.md
 Docs/SPEC-FORMAT.md
+Docs/agtoosa-capsule-pack.sh
+Docs/agtoosa-capsule-return.sh
+Docs/agtoosa-capsule-verify.sh
+Docs/agtoosa-context-compile.sh
 Docs/agtoosa-dashboard.sh
+Docs/agtoosa-drift-assess.sh
 Docs/agtoosa-evidence-profile-check.sh
 Docs/agtoosa-evidence.jsonl
 Docs/agtoosa-gate.yml.example
+Docs/agtoosa-interchange-assess.sh
+Docs/agtoosa-interchange-export.sh
+Docs/agtoosa-interchange-import.sh
 Docs/agtoosa-policy-check.sh
+Docs/agtoosa-proof-verify.sh
+Docs/agtoosa-scenario-run.sh
+Docs/agtoosa-scenario-verify.sh
 Docs/agtoosa-tracker-sync.schema.json
 Docs/agtoosa-verify.sh
-Docs/schemas/verify-result-v1.json
 Docs/schemas/cleanup-result-v1.json
-```
+Docs/schemas/verify-result-v1.json
 
+```
 ## Optional Platform Surfaces (`OPTIONAL_TEMPLATE_FILES`)
 
 Optional adapters and platform entry points from `OPTIONAL_TEMPLATE_FILES` in `lib/config.sh`. These are **not** core-enforced lifecycle documents; they are selected by platform choice at install/update time.
@@ -99,6 +116,7 @@ Optional adapters and platform entry points from `OPTIONAL_TEMPLATE_FILES` in `l
 .claude/commands/agtoosa-help.md
 .claude/commands/agtoosa-import.md
 .claude/commands/agtoosa-init.md
+.claude/commands/agtoosa-next.md
 .claude/commands/agtoosa-qa.md
 .claude/commands/agtoosa-revert.md
 .claude/commands/agtoosa-review.md
@@ -120,6 +138,7 @@ Optional adapters and platform entry points from `OPTIONAL_TEMPLATE_FILES` in `l
 .codex/prompts/agtoosa-help.md
 .codex/prompts/agtoosa-import.md
 .codex/prompts/agtoosa-init.md
+.codex/prompts/agtoosa-next.md
 .codex/prompts/agtoosa-qa.md
 .codex/prompts/agtoosa-revert.md
 .codex/prompts/agtoosa-review.md
@@ -138,6 +157,7 @@ Optional adapters and platform entry points from `OPTIONAL_TEMPLATE_FILES` in `l
 .codex/skills/agtoosa-help/SKILL.md
 .codex/skills/agtoosa-import/SKILL.md
 .codex/skills/agtoosa-init/SKILL.md
+.codex/skills/agtoosa-next/SKILL.md
 .codex/skills/agtoosa-qa/SKILL.md
 .codex/skills/agtoosa-revert/SKILL.md
 .codex/skills/agtoosa-review/SKILL.md
@@ -156,6 +176,7 @@ Optional adapters and platform entry points from `OPTIONAL_TEMPLATE_FILES` in `l
 .cursor/commands/agtoosa-help.md
 .cursor/commands/agtoosa-import.md
 .cursor/commands/agtoosa-init.md
+.cursor/commands/agtoosa-next.md
 .cursor/commands/agtoosa-qa.md
 .cursor/commands/agtoosa-revert.md
 .cursor/commands/agtoosa-review.md
@@ -191,6 +212,7 @@ Optional adapters and platform entry points from `OPTIONAL_TEMPLATE_FILES` in `l
 .gemini/commands/agtoosa-help.toml
 .gemini/commands/agtoosa-import.toml
 .gemini/commands/agtoosa-init.toml
+.gemini/commands/agtoosa-next.toml
 .gemini/commands/agtoosa-qa.toml
 .gemini/commands/agtoosa-revert.toml
 .gemini/commands/agtoosa-review.toml
@@ -218,6 +240,7 @@ Optional adapters and platform entry points from `OPTIONAL_TEMPLATE_FILES` in `l
 .github/prompts/agtoosa-help.prompt.md
 .github/prompts/agtoosa-import.prompt.md
 .github/prompts/agtoosa-init.prompt.md
+.github/prompts/agtoosa-next.prompt.md
 .github/prompts/agtoosa-qa.prompt.md
 .github/prompts/agtoosa-revert.prompt.md
 .github/prompts/agtoosa-review.prompt.md
@@ -252,6 +275,7 @@ Optional adapters and platform entry points from `OPTIONAL_TEMPLATE_FILES` in `l
 .windsurf/workflows/agtoosa-help.md
 .windsurf/workflows/agtoosa-import.md
 .windsurf/workflows/agtoosa-init.md
+.windsurf/workflows/agtoosa-next.md
 .windsurf/workflows/agtoosa-qa.md
 .windsurf/workflows/agtoosa-revert.md
 .windsurf/workflows/agtoosa-review.md
@@ -267,8 +291,8 @@ CLAUDE.md
 Docs/AgToosa_Claude.md
 Docs/AgToosa_Gemini.md
 OPENCODE.md
-```
 
+```
 ## Context Files (`CONTEXT_FILES`)
 
 Context inventory from `CONTEXT_FILES` in `lib/config.sh`.
@@ -279,8 +303,8 @@ Docs/Context/product-guidelines.md
 Docs/Context/product.md
 Docs/Context/tech-stack.md
 Docs/Context/workflow.md
-```
 
+```
 ## Claim Boundary / Enforcement Classes
 
 | Control | Classification | Notes |

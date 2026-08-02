@@ -2679,13 +2679,13 @@ PY
   done
 }
 
-@test "WP2: each native surface has exactly 19 agtoosa workflow adapters" {
-  [ "$(find "$TEMPLATE_DIR/.claude/commands" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 19 ]
-  [ "$(find "$TEMPLATE_DIR/.cursor/commands" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 19 ]
-  [ "$(find "$TEMPLATE_DIR/.gemini/commands" -maxdepth 1 -name 'agtoosa-*.toml' 2>/dev/null | wc -l | tr -d ' ')" -eq 19 ]
-  [ "$(find "$TEMPLATE_DIR/.github/prompts" -maxdepth 1 -name 'agtoosa-*.prompt.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 19 ]
-  [ "$(find "$TEMPLATE_DIR/.windsurf/workflows" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 19 ]
-  [ "$(find "$TEMPLATE_DIR/.codex/prompts" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 19 ]
+@test "WP2: each native surface has exactly 20 agtoosa workflow adapters" {
+  [ "$(find "$TEMPLATE_DIR/.claude/commands" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 20 ]
+  [ "$(find "$TEMPLATE_DIR/.cursor/commands" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 20 ]
+  [ "$(find "$TEMPLATE_DIR/.gemini/commands" -maxdepth 1 -name 'agtoosa-*.toml' 2>/dev/null | wc -l | tr -d ' ')" -eq 20 ]
+  [ "$(find "$TEMPLATE_DIR/.github/prompts" -maxdepth 1 -name 'agtoosa-*.prompt.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 20 ]
+  [ "$(find "$TEMPLATE_DIR/.windsurf/workflows" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 20 ]
+  [ "$(find "$TEMPLATE_DIR/.codex/prompts" -maxdepth 1 -name 'agtoosa-*.md' 2>/dev/null | wc -l | tr -d ' ')" -eq 20 ]
 }
 
 @test "WP3: ship adapters on all six surfaces delegate check to Part 0 read-only audit" {
