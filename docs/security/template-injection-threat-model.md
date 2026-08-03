@@ -99,7 +99,7 @@ vector becomes Active.
 | **File-type allowlist** | `lib/registry.sh: validate_pack_files()` | High — blocks `.sh`, `.py`, `.js`, and all other executable formats; only `.md`, `.json`, `.toml`, `.mdc` allowed |
 | **SHA-256 pinning** | `lib/registry.sh: compute_sha256()` + `agtoosa-lock.json` | High — prevents post-publish tampering; a compromised pack author cannot silently update an already-installed pack |
 | **Tar-slip pre-scan** | `lib/registry.sh: assert_safe_tarball()`, `bootstrap.sh`, `bootstrap.ps1` | High — rejects absolute paths and `..` members before extraction |
-| **Sensitive destination denylist** | `lib/install.sh: PACK_DENYLIST_PATTERNS` | High — packs cannot merge into `.claude/settings.json`, `.claude/hooks/`, or `.github/workflows/` |
+| **Sensitive destination denylist** | `lib/install.sh: PACK_DENYLIST_PATTERNS` | High — packs cannot merge into `.claude/settings.json`, `.claude/hooks/`, `.github/workflows/`, or `Docs/Master-Plan.md` / `docs/Master-Plan.md` |
 | **Verified-flag enforcement** | `lib/registry.sh` | Medium — unverified packs require `--allow-unverified` or `AGTOOSA_ALLOW_UNVERIFIED=1` |
 | **Content preview** | `lib/registry.sh: _print_pack_preview()` | Medium — lists staged files and flags AI-instruction surfaces before user consent |
 | **Isolated staging** | `lib/registry.sh` | Medium — packs extract to a temp dir before queueing, not directly into the project |
