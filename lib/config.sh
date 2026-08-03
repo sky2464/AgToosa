@@ -599,20 +599,44 @@ _agtoosa_tty_usable() {
   ( : </dev/tty ) 2>/dev/null
 }
 
-# Read a line for interactive prompts. When stdin is not a tty (e.g. curl | bash
-# bootstrap or Git Bash launched without a tty stdin), read from /dev/tty when available.
+# Read a line for interactive prompts.
+# - TTY stdin: read from stdin.
+# - curl | bash (script on stdin, $0 is bash): read from /dev/tty.
+# - printf | bash agtoosa.sh (answers on stdin): read from stdin; on EOF fall back to tty.
+# - Git Bash / closed stdin (not a pipe): read from /dev/tty when available.
 agtoosa_prompt_read() {
   local _prompt="$1"
   local _varname="$2"
   if [[ -t 0 ]]; then
     # shellcheck disable=SC2162
     IFS= read -r -p "$_prompt" "$_varname"
+  elif [[ -p /dev/stdin ]] && { [[ "$0" == bash ]] || [[ "$0" == -bash ]]; }; then
+    if _agtoosa_tty_usable; then
+      # shellcheck disable=SC2162
+      IFS= read -r -p "$_prompt" "$_varname" </dev/tty
+    else
+      echo "Error: Interactive prompt requires a terminal." >&2
+      echo "Re-run with --path <dir> [--platforms ...] --yes for non-interactive use." >&2
+      return 1
+    fi
+  elif [[ -p /dev/stdin ]]; then
+    # Piped answers to a script file; exhausted curl pipe falls back to tty.
+  # shellcheck disable=SC2162
+    if ! IFS= read -r -p "$_prompt" "$_varname"; then
+      if _agtoosa_tty_usable; then
+        # shellcheck disable=SC2162
+        IFS= read -r -p "$_prompt" "$_varname" </dev/tty
+      else
+        echo "Error: Interactive prompt requires a terminal." >&2
+        echo "Re-run with --path <dir> [--platforms ...] --yes for non-interactive use." >&2
+        return 1
+      fi
+    fi
   elif _agtoosa_tty_usable; then
     # shellcheck disable=SC2162
     IFS= read -r -p "$_prompt" "$_varname" </dev/tty
   else
-    echo "Error: Interactive prompt requires a terminal." >&2
-    echo "Re-run with --path <dir> [--platforms ...] --yes for non-interactive use." >&2
-    return 1
+    # shellcheck disable=SC2162
+    IFS= read -r -p "$_prompt" "$_varname"
   fi
 }
