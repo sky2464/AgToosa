@@ -34,7 +34,7 @@ Community pack injection (DEV-064/065) is only one supply-chain surface. This do
 | **Repudiation** | Unclear which artifact was installed | Lock file + version marker (`Docs/agtoosa-lock.json`, `Docs/.agtoosa-version`) | Operational state (`.agtoosa/state.json`) is Wave 2 / DEV-093 |
 | **Information Disclosure** | Staging dirs or lock files leak paths | Restrictive `mktemp` perms on apply staging; gitignore operational state | User machine logs outside AgToosa control |
 | **Denial of Service** | Huge / malicious archives | Size/type allowlists; fail-fast validation | Disk exhaustion on large legitimate packs |
-| **Elevation of Privilege** | Pack writes hooks/CI paths | Pack denylist for `.claude/settings.json`, hooks, `.github/workflows/` | AI assistants that later copy doc content into workflows (see pack TM) |
+| **Elevation of Privilege** | Pack writes hooks/CI paths or PM state | Pack denylist for `.claude/settings.json`, hooks, `.github/workflows/`, and `Docs/Master-Plan.md` / `docs/Master-Plan.md` | AI assistants that later copy doc content into workflows (see pack TM) |
 
 ---
 
