@@ -5,6 +5,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [Unreleased]
+
+### Fixed
+
+- **Piped stdin prompt answers (v5.3.62 regression).** `agtoosa_prompt_read` again accepts `printf | bash agtoosa.sh` scripted answers; only `curl | bash` bootstrap (script on stdin) routes to `/dev/tty`. Bats: B33-006.
+
 ## [5.3.62] — 2026-08-02
 
 Patch release: pipe bootstrap project path prompt ([#99](https://github.com/sky2464/AgToosa/issues/99)).
