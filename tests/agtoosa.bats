@@ -6939,6 +6939,22 @@ EOF
   grep -q '\$projectPath = "\."' "$ps1"
 }
 
+@test "DEV-149 B33-006: agtoosa_prompt_read accepts piped answers to script file" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local tmp="$TEST_PROJECT/prompt-read-test.sh"
+  cat > "$tmp" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+source "$root/lib/config.sh"
+agtoosa_prompt_read "prompt: " ans
+printf '%s' "\$ans"
+EOF
+  chmod +x "$tmp"
+  run bash -c "printf 'piped-answer\n' | bash '$tmp'"
+  [ "$status" -eq 0 ]
+  [ "$output" = "piped-answer" ]
+}
+
 @test "DEV-071 NI-001: non-interactive install with --path --platforms --yes" {
   run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
   [ "$status" -eq 0 ]
