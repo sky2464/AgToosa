@@ -175,12 +175,28 @@ Registry and bootstrap behavior changed in the v5.3.0 supply-chain wave. Touch t
 |---------|-------------|----------|
 | Tar-slip pre-scan | `lib/registry.sh:assert_safe_tarball`, `bootstrap.sh`, `bootstrap.ps1` | Reject absolute paths and `..` members **before** extraction |
 | Pack file allowlist | `lib/registry.sh:validate_pack_files` | Only `.md`, `.json`, `.toml`, `.mdc` allowed |
-| Sensitive destination denylist | `lib/install.sh:PACK_DENYLIST_PATTERNS` | Packs cannot merge into `.claude/settings.json`, `.claude/hooks/`, or `.github/workflows/` |
+| Sensitive destination denylist | `lib/install.sh:PACK_DENYLIST_PATTERNS` | Packs cannot merge into `.claude/settings.json`, `.claude/hooks/`, `.github/workflows/`, or `Docs/Master-Plan.md` / `docs/Master-Plan.md` (project-owned PM state) |
 | Verified flag | `lib/registry.sh` | `verified: false` packs require `--allow-unverified` or `AGTOOSA_ALLOW_UNVERIFIED=1` |
 | Content preview | `lib/registry.sh:_print_pack_preview` | Lists staged files, flags AI-instruction surfaces, shows blocked destinations before consent |
 | Pinned bootstrap | `bootstrap.sh`, `Formula/agtoosa.rb` | `--ref vX.Y.Z` fails closed (no branch fallback); optional `--sha256`; releases publish `SHA256SUMS` |
 
 User-facing registry docs live in `template/Docs/AgToosa_Registry.md` (mirror: `docs/AgToosa_Registry.md`). Threat-model detail: `docs/security/template-injection-threat-model.md`.
+
+## Interactive prompts (TTY plumbing)
+
+Interactive flows must work when stdin is **not** a TTY — for example `curl … | bash` bootstrap, Windows `bootstrap.ps1` launching Git Bash, or CI wrappers that pipe the generator script.
+
+| Helper | Location | Behavior |
+|--------|----------|----------|
+| `agtoosa_prompt_read` | `lib/config.sh` | Reads a line for path/confirm prompts. Uses stdin when `-t 0`; otherwise reads from `/dev/tty` when `_agtoosa_tty_usable` |
+| `_agtoosa_tty_usable` | `lib/config.sh` | Returns 0 when `/dev/tty` is readable (pipe-bootstrap case) |
+| `Read-AgToosaPrompt` | `agtoosa.ps1` | PowerShell parity for install path prompts |
+
+**Call sites (v5.3.62+):** install wizard (`agtoosa.sh`), `--cleanup`, `--reinstall --clean`, `--uninstall`, MAJOR migration confirm, and post-install cleanup offer in `lib/cleanup.sh` / `lib/reinstall.sh` / `lib/maintain.sh` / `lib/migrate.sh` / `lib/apply.sh`.
+
+**Non-interactive escape hatch:** pass `--path <dir> [--platforms …] --yes` for installs; `--yes` for `--cleanup` / `--reinstall --clean` / `--uninstall`. When neither a TTY nor `/dev/tty` is available, `agtoosa_prompt_read` exits non-zero with a message to re-run with those flags.
+
+**Maintainer pitfall:** do not add raw `read -rp` in generator libs — route through `agtoosa_prompt_read` so piped bootstrap and Git Bash launches keep working. Bats: `DEV-149 B33-001`–`B33-005` in `tests/agtoosa.bats`.
 
 ## Operating Rules
 
