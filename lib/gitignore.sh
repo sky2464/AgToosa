@@ -50,6 +50,7 @@ gitignore_merge_operational() {
   GI="$gi" BEGIN="$AGTOOSA_GITIGNORE_BEGIN" END="$AGTOOSA_GITIGNORE_END" BLOCK_FILE="$block_file" OUT="$tmp" \
     python3 <<'PY'
 import os
+import sys
 
 gi = os.environ["GI"]
 begin = os.environ["BEGIN"]
@@ -77,6 +78,13 @@ for line in lines:
     if not inblock:
         out.append(line)
 
+if replaced and inblock:
+    print(
+        "gitignore: malformed AgToosa marker block (BEGIN without END); leaving .gitignore unchanged",
+        file=sys.stderr,
+    )
+    sys.exit(2)
+
 if not replaced:
     if out and out[-1].strip():
         out.append("\n")
@@ -85,6 +93,15 @@ if not replaced:
 with open(out_path, "w", encoding="utf-8") as f:
     f.writelines(out)
 PY
+    py_rc=$?
+    if [[ $py_rc -eq 2 ]]; then
+      rm -f "$tmp"
+      return 0
+    fi
+    if [[ $py_rc -ne 0 ]]; then
+      rm -f "$tmp"
+      return 1
+    fi
     mv "$tmp" "$gi"
   else
     {
