@@ -6939,6 +6939,22 @@ EOF
   grep -q '\$projectPath = "\."' "$ps1"
 }
 
+@test "DEV-149 B33-006: agtoosa_prompt_read accepts piped answers to script file" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local tmp="$TEST_PROJECT/prompt-read-test.sh"
+  cat > "$tmp" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+source "$root/lib/config.sh"
+agtoosa_prompt_read "prompt: " ans
+printf '%s' "\$ans"
+EOF
+  chmod +x "$tmp"
+  run bash -c "printf 'piped-answer\n' | bash '$tmp'"
+  [ "$status" -eq 0 ]
+  [ "$output" = "piped-answer" ]
+}
+
 @test "DEV-071 NI-001: non-interactive install with --path --platforms --yes" {
   run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
   [ "$status" -eq 0 ]
@@ -14658,6 +14674,24 @@ assert ".cursor/" not in block
 assert ".agtoosa/" in block
 PY
   [ "$status" -eq 0 ]
+}
+
+@test "DEV-144 GIG-009: malformed marker block (missing END) preserves user rules" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local begin='# BEGIN AgToosa operational (managed — do not edit)'
+  cat > "$TEST_PROJECT/.gitignore" <<EOF
+node_modules/
+$begin
+.Docs/.agtoosa-version
+*.log
+.env
+EOF
+  run bash -c "source '$root/lib/gitignore.sh'; gitignore_merge_operational '$TEST_PROJECT'"
+  [ "$status" -eq 0 ]
+  grep -q '^node_modules/' "$TEST_PROJECT/.gitignore"
+  grep -q '^\*\.log' "$TEST_PROJECT/.gitignore"
+  grep -q '^\.env' "$TEST_PROJECT/.gitignore"
+  [ "$(grep -cF "$begin" "$TEST_PROJECT/.gitignore")" -eq 1 ]
 }
 
 @test "DEV-144 @smoke GIG-008: DEV-144 filter and test plan documented" {
