@@ -91,7 +91,7 @@ Audit the seven gates in `docs/AgToosa_Readiness.md`. For each failed gate, reco
 
 3.  **Active story has approved spec** — For each 🟨 In Progress or 🟦 Todo row in `## Active Cycle`, require a matching spec file with `## ✅ Spec Approved`. *Fix with:* `/agtoosa-spec`.
 
-4.  **Must ACs mapped to tests** — For the active story's spec, every **Must** `AC-NNN` must appear in `docs/AgToosa_TestPlan-*.md`. *Fix with:* `/agtoosa-spec tasks` or `/agtoosa-qa plan`.
+4.  **Must ACs mapped to tests** — For the active story's spec, every **Must** `AC-NNN` must appear in `docs/archived/testplans/AgToosa_TestPlan-*.md`. *Fix with:* `/agtoosa-spec tasks` or `/agtoosa-qa plan`.
 
 5.  **Security / threat model present** — Active spec must include threat model content per `docs/SPEC-FORMAT.md`. *Fix with:* `/agtoosa-spec plan`.
 

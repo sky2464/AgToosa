@@ -28,7 +28,7 @@ echo Y | AGTOOSA_PACK_QUEUE_DIR="$QUEUE" bash agtoosa.sh --registry install ./te
 
 Negative boundary (disallowed file type) uses `tests/fixtures/registry-packs/unsafe-disallowed` — see OPP-008.
 
-Recorded proof: `docs/AgToosa_TestPlan-DEV-080.md` (OPP-007, OPP-008).
+Recorded proof: `docs/archived/testplans/AgToosa_TestPlan-DEV-080.md` (OPP-007, OPP-008).
 
 ## Non-goals
 

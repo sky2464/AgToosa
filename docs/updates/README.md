@@ -6,7 +6,7 @@
 
 1. `docs/Master-Plan.md` — active cycle, backlog, tasks, blockers, and manual work.
 2. `docs/archived/spec-DEV-*.md` — approved executable story contracts.
-3. `docs/AgToosa_TestPlan-DEV-*.md` and archived evidence — proof.
+3. `docs/archived/testplans/AgToosa_TestPlan-DEV-*.md` and archived evidence — proof.
 4. `docs/AgToosa_Team_Trust_Roadmap.md` — enforcement posture and non-guarantees.
 5. `docs/updates/agtoosa-plan-revised.md` — recommended execution sequence.
 6. `docs/updates/roadmap-spec-index.md` — coverage map from actionable proposals to DEV specs.

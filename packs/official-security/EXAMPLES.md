@@ -29,7 +29,7 @@ Fixture path:
 echo Y | AGTOOSA_PACK_QUEUE_DIR="$QUEUE" bash agtoosa.sh --registry install ./tests/fixtures/registry-packs/official-security
 ```
 
-Recorded install/merge proof: `docs/AgToosa_TestPlan-DEV-095.md` (OPE-007).
+Recorded install/merge proof: `docs/archived/testplans/AgToosa_TestPlan-DEV-095.md` (OPE-007).
 
 ## Non-goals
 

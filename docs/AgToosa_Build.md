@@ -133,7 +133,7 @@ After every command, test run, scan, or parallel subagent during `/agtoosa-build
     **🔴 RED — Write a Failing Test First:**
     *   Before writing ANY implementation code, write a test that describes the expected behavior.
     *   The test MUST fail initially (confirming it tests something real).
-    *   **RED evidence (mandatory):** run the new test and capture the failing run **before** writing implementation code. Record it in the story test plan (`docs/AgToosa_TestPlan-[story-id].md`) as:
+    *   **RED evidence (mandatory):** run the new test and capture the failing run **before** writing implementation code. Record it in the story test plan (`docs/archived/testplans/AgToosa_TestPlan-[story-id].md`) as:
 
         ```
         RED evidence — [task-id]

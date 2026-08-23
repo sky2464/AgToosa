@@ -342,11 +342,11 @@ PY
   [ "$status" -eq 0 ]
 
   copy_contract
-  mkdir -p "$TMP_ROOT/.github/workflows" "$TMP_ROOT/tests" "$TMP_ROOT/docs"
+  mkdir -p "$TMP_ROOT/.github/workflows" "$TMP_ROOT/tests" "$TMP_ROOT/docs/archived/testplans"
   cp "$ROOT/.github/workflows/ci.yml" "$TMP_ROOT/.github/workflows/ci.yml"
   cp "$ROOT/tests/product-truth.bats" "$TMP_ROOT/tests/product-truth.bats"
   cp "$ROOT/tests/agtoosa.bats" "$TMP_ROOT/tests/agtoosa.bats"
-  cp "$ROOT/docs/AgToosa_TestPlan-DEV-118.md" "$TMP_ROOT/docs/AgToosa_TestPlan-DEV-118.md"
+  cp "$ROOT/docs/archived/testplans/AgToosa_TestPlan-DEV-118.md" "$TMP_ROOT/docs/archived/testplans/AgToosa_TestPlan-DEV-118.md"
   sed -i.bak '/product-truth/d' "$TMP_ROOT/.github/workflows/ci.yml"
   rm -f "$TMP_ROOT/.github/workflows/ci.yml.bak"
   run python3 "$TOOL" check --root "$TMP_ROOT"     --contract "$TMP_ROOT/contracts/product-truth-v1.json" --as-of "$AS_OF" --only ci

@@ -283,7 +283,7 @@ def check_boundaries(data: dict, findings: Findings) -> None:
 def check_ci(data: dict, root: Path, findings: Findings) -> None:
     workflow = root / ".github/workflows/ci.yml"
     tests = root / "tests/product-truth.bats"
-    plan = root / "docs/AgToosa_TestPlan-DEV-118.md"
+    plan = root / "docs/archived/testplans/AgToosa_TestPlan-DEV-118.md"
     for path in (workflow, tests, plan):
         relative = str(path.relative_to(root))
         if repo_path(root, relative, findings) is None:

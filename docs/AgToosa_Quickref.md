@@ -49,7 +49,7 @@ Utilities (on demand): `/agtoosa-status`, `/agtoosa-task`, `/agtoosa-qa`, `/agto
 |------|------|
 | `docs/Master-Plan.md` | Stories, tasks, status, update log |
 | `docs/archived/spec-<id>.md` | Story spec (active until shipped, then stays archived) |
-| `docs/AgToosa_TestPlan-<id>.md` | AC-to-test mapping + RED/GREEN evidence |
+| `docs/archived/testplans/AgToosa_TestPlan-<id>.md` | AC-to-test mapping + RED/GREEN evidence |
 | `docs/archived/review-<id>.md` | Review verdicts |
 | `docs/agtoosa-events.jsonl` | Append-only phase-event log (one JSON line per transition) |
 | `docs/agtoosa-evidence.jsonl` | Optional JSONL mirror of per-story evidence ledger (non-authoritative; canonical is `docs/archived/evidence-<id>.md`) |

@@ -3682,7 +3682,7 @@ PY
   grep -q 'DEV-033.*agtoosa.ps1 PSScriptAnalyzer approved verbs.*2026-06-05' "$mp"
   [ -f "$BATS_TEST_DIRNAME/../docs/archived/spec-DEV-033.md" ]
   [ -f "$BATS_TEST_DIRNAME/../docs/archived/review-DEV-033.md" ]
-  [ -f "$BATS_TEST_DIRNAME/../docs/AgToosa_TestPlan-DEV-033.md" ]
+  [ -f "$BATS_TEST_DIRNAME/../docs/archived/testplans/AgToosa_TestPlan-DEV-033.md" ]
 }
 
 @test "DEV-034 LR-003: release version pins remain aligned" {
@@ -3723,7 +3723,7 @@ PY
 }
 
 @test "DEV-034 LR-006: DEV-034 test plan maps all LR checks" {
-  local tp="$BATS_TEST_DIRNAME/../docs/AgToosa_TestPlan-DEV-034.md"
+  local tp="$BATS_TEST_DIRNAME/../docs/archived/testplans/AgToosa_TestPlan-DEV-034.md"
   grep -q 'LR-001' "$tp"
   grep -q 'LR-002' "$tp"
   grep -q 'LR-003' "$tp"
@@ -3795,7 +3795,7 @@ PY
 }
 
 @test "DEV-035 LG-006: test plan maps all launch gate checks" {
-  local tp="$BATS_TEST_DIRNAME/../docs/AgToosa_TestPlan-DEV-035.md"
+  local tp="$BATS_TEST_DIRNAME/../docs/archived/testplans/AgToosa_TestPlan-DEV-035.md"
 
   grep -q "LG-001" "$tp"
   grep -q "LG-002" "$tp"
@@ -3882,7 +3882,7 @@ JSON
 }
 
 @test "DEV-036 WP-005: test plan maps all Windows and registry parity checks" {
-  local tp="$BATS_TEST_DIRNAME/../docs/AgToosa_TestPlan-DEV-036.md"
+  local tp="$BATS_TEST_DIRNAME/../docs/archived/testplans/AgToosa_TestPlan-DEV-036.md"
   grep -q "WP-001" "$tp"
   grep -q "WP-002" "$tp"
   grep -q "WP-003" "$tp"
@@ -3935,7 +3935,7 @@ JSON
 }
 
 @test "DEV-037 TD-005: test plan maps all truthful docs checks" {
-  local tp="$BATS_TEST_DIRNAME/../docs/AgToosa_TestPlan-DEV-037.md"
+  local tp="$BATS_TEST_DIRNAME/../docs/archived/testplans/AgToosa_TestPlan-DEV-037.md"
   grep -q "TD-001" "$tp"
   grep -q "TD-002" "$tp"
   grep -q "TD-003" "$tp"
@@ -3982,7 +3982,7 @@ JSON
 }
 
 @test "DEV-038 DH-005: test plan maps all distribution hardening checks" {
-  local tp="$BATS_TEST_DIRNAME/../docs/AgToosa_TestPlan-DEV-038.md"
+  local tp="$BATS_TEST_DIRNAME/../docs/archived/testplans/AgToosa_TestPlan-DEV-038.md"
   grep -q "DH-001" "$tp"
   grep -q "DH-002" "$tp"
   grep -q "DH-003" "$tp"
@@ -4122,7 +4122,7 @@ JSON
 }
 
 @test "DEV-041 PL-004: test plan records public publication evidence" {
-  local tp="$BATS_TEST_DIRNAME/../docs/AgToosa_TestPlan-DEV-041.md"
+  local tp="$BATS_TEST_DIRNAME/../docs/archived/testplans/AgToosa_TestPlan-DEV-041.md"
   grep -q "PL-001" "$tp"
   grep -q "PL-008" "$tp"
   grep -q "public mode passes" "$tp"
@@ -4238,11 +4238,11 @@ assert_competitive_story_artifacts() {
   local root="$BATS_TEST_DIRNAME/.."
 
   [ -f "$root/docs/archived/spec-${id}.md" ]
-  [ -f "$root/docs/AgToosa_TestPlan-${id}.md" ]
+  [ -f "$root/docs/archived/testplans/AgToosa_TestPlan-${id}.md" ]
   grep -q "Story ID:.*${id}" "$root/docs/archived/spec-${id}.md"
-  grep -q "Spec:.*${id}" "$root/docs/AgToosa_TestPlan-${id}.md"
+  grep -q "Spec:.*${id}" "$root/docs/archived/testplans/AgToosa_TestPlan-${id}.md"
   grep -q "Claim Boundary" "$root/docs/archived/spec-${id}.md"
-  grep -q -E "Status:.*(Backlog|Todo|In Progress|Done)" "$root/docs/AgToosa_TestPlan-${id}.md"
+  grep -q -E "Status:.*(Backlog|Todo|In Progress|Done)" "$root/docs/archived/testplans/AgToosa_TestPlan-${id}.md"
 }
 
 @test "DEV-042-060 CW-001: competitive wave specs and test plans exist" {
@@ -4251,9 +4251,9 @@ assert_competitive_story_artifacts() {
 
   for id in $(seq -f "DEV-%03g" 42 60); do
     [ -f "$root/docs/archived/spec-${id}.md" ]
-    [ -f "$root/docs/AgToosa_TestPlan-${id}.md" ]
+    [ -f "$root/docs/archived/testplans/AgToosa_TestPlan-${id}.md" ]
     grep -q "Story ID:.*${id}" "$root/docs/archived/spec-${id}.md"
-    grep -q "Spec:.*${id}" "$root/docs/AgToosa_TestPlan-${id}.md"
+    grep -q "Spec:.*${id}" "$root/docs/archived/testplans/AgToosa_TestPlan-${id}.md"
   done
 }
 
@@ -4298,7 +4298,7 @@ assert_competitive_story_artifacts() {
   local root="$BATS_TEST_DIRNAME/.."
   local mp="$root/docs/Master-Plan.md"
   local spec="$root/docs/archived/spec-DEV-042.md"
-  local tp="$root/docs/AgToosa_TestPlan-DEV-042.md"
+  local tp="$root/docs/archived/testplans/AgToosa_TestPlan-DEV-042.md"
 
   grep -q "| DEV-042 | Feature: Spec Quality Analyzer | 2026-06-10 |" "$mp"
   grep -q "DEV-042 | Spec Quality Analyzer" "$root/docs/archived/cycle-2026-06-10-release-5.3.0.md"
@@ -4342,7 +4342,7 @@ assert_competitive_story_artifacts() {
 
 @test "DEV-042 SQA-003: test plan records analyzer implementation evidence" {
   local root="$BATS_TEST_DIRNAME/.."
-  local tp="$root/docs/AgToosa_TestPlan-DEV-042.md"
+  local tp="$root/docs/archived/testplans/AgToosa_TestPlan-DEV-042.md"
 
   grep -q "SQA-001" "$tp"
   grep -q "SQA-002" "$tp"
@@ -4382,7 +4382,7 @@ assert_competitive_story_artifacts() {
 @test "DEV-043 BDB-003: Brownfield baseline implementation evidence is recorded" {
   local root="$BATS_TEST_DIRNAME/.."
   local spec="$root/docs/archived/spec-DEV-043.md"
-  local tp="$root/docs/AgToosa_TestPlan-DEV-043.md"
+  local tp="$root/docs/archived/testplans/AgToosa_TestPlan-DEV-043.md"
 
   grep -q "Status:.*✅ Done" "$spec"
   grep -q "## ✅ Spec Approved" "$spec"
@@ -4601,7 +4601,7 @@ _dag_deps_valid() {
   # Must not reopen DEV-055 surfaces with DEV-045 Work Package content
   ! grep -qiE 'Work Package DAG|owned_files' "$root/docs/AgToosa_AgentCapability.md"
   ! grep -qiE 'Work Package DAG|owned_files' "$root/template/Docs/AgToosa_AgentCapability.md"
-  tp="$root/docs/AgToosa_TestPlan-DEV-045.md"
+  tp="$root/docs/archived/testplans/AgToosa_TestPlan-DEV-045.md"
   [ -f "$tp" ]
   grep -q "PKG-1.1" "$tp"
   grep -q "PKG-1.2" "$tp"
@@ -4742,7 +4742,7 @@ _dag_deps_valid() {
     grep -q '../<repo>-<package_id>' "$f"
   done
   # Test plan smoke set + evidence structure
-  tp="$root/docs/AgToosa_TestPlan-DEV-046.md"
+  tp="$root/docs/archived/testplans/AgToosa_TestPlan-DEV-046.md"
   [ -f "$tp" ]
   grep -q "WT-001" "$tp"
   grep -q "WT-002" "$tp"
@@ -5202,7 +5202,7 @@ _dag_deps_valid() {
   run bats "$BATS_TEST_DIRNAME/agtoosa.bats" -f "DEV-051 TS-00[1-7]"
   [ "$status" -eq 0 ]
   grep -q 'Do not claim two-way sync' "$root/docs/AgToosa_TrackerSync.md"
-  grep -q 'without using live provider APIs' "$root/docs/AgToosa_TestPlan-DEV-051.md"
+  grep -q 'without using live provider APIs' "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-051.md"
 }
 
 @test "DEV-052 CW-015: Hook Automation Pack backlog artifacts exist" {
@@ -9971,12 +9971,10 @@ rmh_readme_body_lines() {
 
 @test "DEV-127 @smoke RMH-001: README references hero motion assets" {
   local readme="$BATS_TEST_DIRNAME/../README.md"
-  local hero_dir="$BATS_TEST_DIRNAME/../docs/media/agtoosa-hero"
-  grep -q 'docs/media/agtoosa-hero/agtoosa-hero.gif' "$readme"
-  grep -q 'docs/media/agtoosa-hero/lifecycle-accent.svg' "$readme"
-  [ -f "$hero_dir/agtoosa-hero.gif" ]
-  [ -f "$hero_dir/agtoosa-hero-poster.png" ]
-  [ -f "$hero_dir/lifecycle-accent.svg" ]
+  # DEV-152: hero assets moved to GitHub Release storage (docs/media/agtoosa-hero/
+  # is no longer tracked in git) to keep the bootstrap.sh install tarball small.
+  grep -q 'github.com/sky2464/AgToosa/releases/download/v5.3.60/agtoosa-hero.gif' "$readme"
+  grep -q 'github.com/sky2464/AgToosa/releases/download/v5.3.60/lifecycle-accent.svg' "$readme"
 }
 
 @test "DEV-127 RMH-002: README body stays within line budget" {
@@ -9999,13 +9997,6 @@ rmh_readme_body_lines() {
   grep -q 'PHASE 1 — SPEC & PLANNING' "$arch"
   grep -q 'PHASE 4 — SHIP & ARCHIVE' "$arch"
   grep -q '/agtoosa-init' "$arch"
-}
-
-@test "DEV-127 RMH-005: Remotion hero source is present" {
-  local hero_dir="$BATS_TEST_DIRNAME/../docs/media/agtoosa-hero"
-  [ -f "$hero_dir/package.json" ]
-  [ -f "$hero_dir/src/Hero.tsx" ]
-  grep -q 'remotion' "$hero_dir/package.json"
 }
 
 @test "DEV-127 RMH-006: launch checker passes after README refresh" {
@@ -10040,7 +10031,7 @@ rmh_readme_body_lines() {
   local readme="$BATS_TEST_DIRNAME/../README.md"
   local install_line hero_line
   install_line="$(grep -n '^## Quick install' "$readme" | head -n1 | cut -d: -f1)"
-  hero_line="$(grep -n 'docs/media/agtoosa-hero/agtoosa-hero.gif' "$readme" | head -n1 | cut -d: -f1)"
+  hero_line="$(grep -n 'releases/download/v5.3.60/agtoosa-hero.gif' "$readme" | head -n1 | cut -d: -f1)"
   [[ -n "$install_line" ]]
   [[ -n "$hero_line" ]]
   [[ "$install_line" -lt "$hero_line" ]]
@@ -10324,7 +10315,7 @@ PY
   local root="$BATS_TEST_DIRNAME/.."
   grep -q "DEV-097" "$root/tests/agtoosa.bats"
   grep -qiE 'security.?doc.?review|manual.*security|review pointer' "$root/docs/archived/spec-DEV-097.md"
-  grep -q "FST-" "$root/docs/AgToosa_TestPlan-DEV-097.md"
+  grep -q "FST-" "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-097.md"
 }
 
 # ── DEV-094: Assistant Compatibility Contract (ACC-001–ACC-008) ───────────────
@@ -10398,7 +10389,7 @@ PY
 @test "DEV-094 ACC-008: DEV-094 filter and evidence boundary" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q "DEV-094" "$root/tests/agtoosa.bats"
-  grep -q "ACC-" "$root/docs/AgToosa_TestPlan-DEV-094.md"
+  grep -q "ACC-" "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-094.md"
   local f="$root/docs/AgToosa_Compatibility_Contract.md"
   [ -f "$f" ]
   ! grep -qiE 'all platforms are Scenario-tested|every platform.*Scenario-tested' "$f"
@@ -10530,7 +10521,7 @@ PY
 @test "DEV-092 TAP-008: DEV-092 filter documents evidence" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q "DEV-092" "$root/tests/agtoosa.bats"
-  grep -q "TAP-" "$root/docs/AgToosa_TestPlan-DEV-092.md"
+  grep -q "TAP-" "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-092.md"
 }
 
 # ── DEV-093: Install State File + Lock Reconciliation (STF-001–STF-009) ───────
@@ -10827,7 +10818,7 @@ PY
 @test "DEV-093 STF-009: DEV-093 filter and lock path regression" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q "DEV-093" "$root/tests/agtoosa.bats"
-  grep -q "STF-" "$root/docs/AgToosa_TestPlan-DEV-093.md"
+  grep -q "STF-" "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-093.md"
   [ -f "$root/lib/state.sh" ]
   [ -f "$root/lib/lock.sh" ]
   # Lock writer must target Docs/agtoosa-lock.json, never root .agtoosa-lock.json
@@ -11013,9 +11004,9 @@ PY
 @test "DEV-100 JIO-007: DEV-100 filter documents evidence" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q "DEV-100" "$root/tests/agtoosa.bats"
-  grep -q "JIO-" "$root/docs/AgToosa_TestPlan-DEV-100.md"
-  grep -q 'bats tests/agtoosa.bats -f "DEV-100|JIO-"' "$root/docs/AgToosa_TestPlan-DEV-100.md" \
-    || grep -q 'DEV-100\\|JIO-' "$root/docs/AgToosa_TestPlan-DEV-100.md"
+  grep -q "JIO-" "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-100.md"
+  grep -q 'bats tests/agtoosa.bats -f "DEV-100|JIO-"' "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-100.md" \
+    || grep -q 'DEV-100\\|JIO-' "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-100.md"
   grep -q -- '--format json' "$root/docs/AgToosa_Catalog.md"
   grep -q -- '--format json' "$root/template/Docs/AgToosa_Catalog.md"
 }
@@ -11334,11 +11325,11 @@ EOF
 @test "DEV-089 EPV-009: DEV-089 filter documents RED/GREEN boundary" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q "DEV-089" "$root/tests/agtoosa.bats"
-  grep -q "EPV-" "$root/docs/AgToosa_TestPlan-DEV-089.md"
+  grep -q "EPV-" "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-089.md"
   # EPV @test titles must not claim hosted SaaS audit or mandatory CI profiles
   ! grep -E '^@test "DEV-089 EPV-[0-9]+:.*(hosted SaaS|mandatory CI profile)' "$root/tests/agtoosa.bats"
-  grep -q 'bats tests/agtoosa.bats -f "DEV-089|EPV-"' "$root/docs/AgToosa_TestPlan-DEV-089.md" \
-    || grep -q 'DEV-089\\|EPV-' "$root/docs/AgToosa_TestPlan-DEV-089.md"
+  grep -q 'bats tests/agtoosa.bats -f "DEV-089|EPV-"' "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-089.md" \
+    || grep -q 'DEV-089\\|EPV-' "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-089.md"
 }
 
 # ── DEV-091: Migration wizard + rollback manifest (MWZ-001–MWZ-010) ───────────
@@ -11485,9 +11476,9 @@ _mwz_seed_major() {
 @test "DEV-091 MWZ-010: DEV-091 filter and manifest schema fields" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q "DEV-091" "$root/tests/agtoosa.bats"
-  grep -q "MWZ-" "$root/docs/AgToosa_TestPlan-DEV-091.md"
-  grep -q 'bats tests/agtoosa.bats -f "DEV-091|MWZ-"' "$root/docs/AgToosa_TestPlan-DEV-091.md" \
-    || grep -q 'DEV-091\\|MWZ-' "$root/docs/AgToosa_TestPlan-DEV-091.md"
+  grep -q "MWZ-" "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-091.md"
+  grep -q 'bats tests/agtoosa.bats -f "DEV-091|MWZ-"' "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-091.md" \
+    || grep -q 'DEV-091\\|MWZ-' "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-091.md"
   [ -f "$root/lib/migrate.sh" ]
   grep -q 'is_major_migration\|run_major_migration\|write_rollback_manifest' "$root/lib/migrate.sh"
 
@@ -14580,8 +14571,8 @@ PY
 @test "DEV-119 RPT-012: DEV-119 filter and test plan documented" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q "DEV-119" "$root/tests/agtoosa.bats"
-  grep -q "RPT-" "$root/docs/AgToosa_TestPlan-DEV-119.md"
-  grep -q 'DEV-119|RPT-' "$root/docs/AgToosa_TestPlan-DEV-119.md"
+  grep -q "RPT-" "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-119.md"
+  grep -q 'DEV-119|RPT-' "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-119.md"
 }
 
 # ── DEV-144: Operational Gitignore Auto-Merge (GIG-001–GIG-008) ───────────────
@@ -14697,8 +14688,8 @@ EOF
 @test "DEV-144 @smoke GIG-008: DEV-144 filter and test plan documented" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q "DEV-144" "$root/tests/agtoosa.bats"
-  grep -q "GIG-" "$root/docs/AgToosa_TestPlan-DEV-144.md"
-  grep -q 'DEV-144|GIG-' "$root/docs/AgToosa_TestPlan-DEV-144.md"
+  grep -q "GIG-" "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-144.md"
+  grep -q 'DEV-144|GIG-' "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-144.md"
   grep -q "gitignore_merge_operational" "$root/lib/gitignore.sh"
 }
 
@@ -14763,7 +14754,7 @@ EOF
   [ -f "$root/docs/archived/review-DEV-127.md" ]
   [ -f "$root/docs/archived/evidence-DEV-127.md" ]
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-127.md"
-  grep -q 'docs/media/agtoosa-hero/agtoosa-hero.gif' "$root/README.md"
+  grep -q 'releases/download/v5.3.60/agtoosa-hero.gif' "$root/README.md"
 }
 
 # -- DEV-121 ship regression v5.3.34 (SR-001) --------------------------------
@@ -16015,8 +16006,8 @@ PY
   [ -f "$root/scripts/cleanup-github-branches.sh" ]
   [ -f "$root/.github/workflows/branch-hygiene.yml" ]
   [ -f "$root/docs/archived/spec-DEV-133.md" ]
-  [ -f "$root/docs/AgToosa_TestPlan-DEV-133.md" ]
-  grep -q 'BRH-001' "$root/docs/AgToosa_TestPlan-DEV-133.md"
+  [ -f "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-133.md" ]
+  grep -q 'BRH-001' "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-133.md"
 }
 
 @test "DEV-133 @smoke SR-001: v5.3.47 release pins and changelog exist" {
@@ -16037,40 +16028,16 @@ PY
 }
 
 # -- DEV-134: README hero media catch-up (MED-001–004) --------------------------
-
-@test "DEV-134 @smoke MED-001: ReadmeLoop composes WorkflowSummaryScene and seven beats" {
-  local hero_dir="$BATS_TEST_DIRNAME/../docs/media/agtoosa-hero"
-  [ -f "$hero_dir/src/scenes/WorkflowSummaryScene.tsx" ]
-  grep -q 'WorkflowSummaryScene' "$hero_dir/src/ReadmeLoop.tsx"
-  grep -q '<TensionScene' "$hero_dir/src/ReadmeLoop.tsx"
-  grep -q '<ReframeScene' "$hero_dir/src/ReadmeLoop.tsx"
-  grep -q '<WorkflowScene' "$hero_dir/src/ReadmeLoop.tsx"
-  grep -q '<RoutingScene' "$hero_dir/src/ReadmeLoop.tsx"
-  grep -q '<VerifyScene' "$hero_dir/src/ReadmeLoop.tsx"
-  grep -q '<ClosingScene' "$hero_dir/src/ReadmeLoop.tsx"
-}
-
-@test "DEV-134 MED-002: WorkflowRail captions and verify script check summary scene" {
-  local hero_dir="$BATS_TEST_DIRNAME/../docs/media/agtoosa-hero"
-  grep -q 'showCaptions' "$hero_dir/src/WorkflowRail.tsx"
-  grep -q 'Set repository context' "$hero_dir/src/WorkflowRail.tsx"
-  grep -q 'WorkflowSummaryScene' "$hero_dir/scripts/verify-media.mjs"
-  grep -q 'captioned full-workflow summary' "$hero_dir/scripts/verify-media.mjs"
-}
+# DEV-152: docs/media/agtoosa-hero/ (the Remotion source tree) is no longer
+# tracked in git — the rendered GIF/PNG/SVG are hosted on the v5.3.60 GitHub
+# Release instead, to keep the bootstrap.sh install tarball small. MED-001,
+# MED-002, and MED-004 asserted on the now-untracked Remotion source and
+# have no remaining subject in this repo; MED-003 is kept, updated to check
+# the Release URL instead of the local relative path.
 
 @test "DEV-134 @smoke MED-003: README references published hero GIF assets" {
   local readme="$BATS_TEST_DIRNAME/../README.md"
-  local hero_dir="$BATS_TEST_DIRNAME/../docs/media/agtoosa-hero"
-  grep -q 'docs/media/agtoosa-hero/agtoosa-hero.gif' "$readme"
-  [ -f "$hero_dir/agtoosa-hero.gif" ]
-  [ -f "$hero_dir/agtoosa-hero-poster.png" ]
-}
-
-@test "DEV-134 MED-004: verify:checkpoint passes for hero media package" {
-  local hero_dir="$BATS_TEST_DIRNAME/../docs/media/agtoosa-hero"
-  run bash -c 'cd "'"$hero_dir"'" && npm run verify:checkpoint'
-  [ "$status" -eq 0 ]
-  [[ "$output" == *"media verification complete"* ]]
+  grep -q 'releases/download/v5.3.60/agtoosa-hero.gif' "$readme"
 }
 
 @test "DEV-134 @smoke SR-001: v5.3.48 release pins and changelog exist" {
@@ -17166,8 +17133,8 @@ PY
 @test "DEV-145 @smoke TBA-010: DEV-145 filter suite green" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q "DEV-145" "$root/tests/agtoosa.bats"
-  grep -q "TBA-" "$root/docs/AgToosa_TestPlan-DEV-145.md"
-  grep -q 'DEV-145|TBA-' "$root/docs/AgToosa_TestPlan-DEV-145.md"
+  grep -q "TBA-" "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-145.md"
+  grep -q 'DEV-145|TBA-' "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-145.md"
   run bats "$BATS_TEST_DIRNAME/agtoosa.bats" -f "DEV-145 TBA-00[1-9]"
   [ "$status" -eq 0 ]
 }

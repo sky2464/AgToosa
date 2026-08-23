@@ -16,6 +16,13 @@ desktop.ini
 *.swo
 *.sublime-project
 *.sublime-workspace
+*.code-workspace
+
+# ── Local-only agent/editor state (never commit) ──────────────
+.claude/
+.codex/
+.tmp/
+.remember/
 
 # ── Node.js ──────────────────────────────────────────────────
 node_modules/
@@ -50,6 +57,11 @@ _site/
 docs/_site/
 .jekyll-cache/
 .sass-cache/
+
+# ── Hero media Remotion project ──────────────────────────────
+# Rendered assets (GIF/PNG/SVG) are hosted on GitHub Releases;
+# the Remotion source stays local-only, never tracked in git.
+docs/media/agtoosa-hero/
 
 # ── AgToosa Generated Output ────────────────────────────────
 ship/
