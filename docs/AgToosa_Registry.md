@@ -293,7 +293,7 @@ bash agtoosa.sh --registry install ./packs/official-react
 bash agtoosa.sh --registry install ./packs/official-security
 ```
 
-Evidence and review checklist: `docs/official-pack-pilot-checklist.md` · test plans: `docs/AgToosa_TestPlan-DEV-080.md`, `docs/AgToosa_TestPlan-DEV-095.md` · external publication runbook: [`docs/registry-external-publication-runbook.md`](registry-external-publication-runbook.md).
+Evidence and review checklist: `docs/official-pack-pilot-checklist.md` · test plans: `docs/archived/testplans/AgToosa_TestPlan-DEV-080.md`, `docs/archived/testplans/AgToosa_TestPlan-DEV-095.md` · external publication runbook: [`docs/registry-external-publication-runbook.md`](registry-external-publication-runbook.md).
 
 External submission/approval remains **manual**. Do not report a pack as externally published until the accepted `agtoosa-registry` record is independently confirmed (runbook confirm phase).
 

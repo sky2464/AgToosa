@@ -35,7 +35,7 @@ Merge into a throwaway project:
 # _merge_pack_queue copies Docs/official-web-workflow.md into the host.
 ```
 
-Evidence for DEV-080 lives in `docs/AgToosa_TestPlan-DEV-080.md` (OPP-005) — README commands alone are not install proof.
+Evidence for DEV-080 lives in `docs/archived/testplans/AgToosa_TestPlan-DEV-080.md` (OPP-005) — README commands alone are not install proof.
 
 ## Non-goals
 

@@ -33,7 +33,7 @@ Fixture path for CI (same install surface):
 echo Y | AGTOOSA_PACK_QUEUE_DIR="$QUEUE" bash agtoosa.sh --registry install ./tests/fixtures/registry-packs/official-react
 ```
 
-Evidence for DEV-095 lives in `docs/AgToosa_TestPlan-DEV-095.md` (OPE-006) — README commands alone are not install proof.
+Evidence for DEV-095 lives in `docs/archived/testplans/AgToosa_TestPlan-DEV-095.md` (OPE-006) — README commands alone are not install proof.
 
 ## Non-goals
 

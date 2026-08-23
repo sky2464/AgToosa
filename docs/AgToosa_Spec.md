@@ -96,7 +96,7 @@ After research (and optional findings summary), **end the agent turn** on the fi
 
 - write or update `docs/archived/spec-*.md`
 - enroll or mutate `docs/Master-Plan.md` story rows (read-only research is allowed)
-- generate `docs/AgToosa_TestPlan-*.md`
+- generate `docs/archived/testplans/AgToosa_TestPlan-*.md`
 - implement build artifacts (generator code, platform adapters, bats) or run `/agtoosa-build`
 
 Wait for the user's answer before the next question or any spec artifacts. Use `/agtoosa-spec research` when the user wants findings-only output without advancing to Q&A in the same session.
@@ -357,7 +357,7 @@ Before spec generation, confirm coverage (as findings or interview answers) for:
     *   Mirror the task tree into `docs/Master-Plan.md` under `## Active Tasks` (replacing the flat table format).
 
 14. **Test Plan Skeleton:**
-    *   Generate **`docs/AgToosa_TestPlan-[story-id].md`** containing:
+    *   Generate **`docs/archived/testplans/AgToosa_TestPlan-[story-id].md`** containing:
         - Spec reference (link to `docs/archived/spec-[story-id].md`)
         - AC coverage table — each `AC-NNN` from the spec mapped to test IDs (`T-001`, `T-002`, ...)
         - Test category per ID: Unit · Integration · E2E · Security · Performance

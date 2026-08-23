@@ -34,7 +34,7 @@ When the generator starts, enter your project path at the prompt (or `cd` into y
 
 ## See it in action
 
-<img src="docs/media/agtoosa-hero/agtoosa-hero.gif" alt="AgToosa workflow: init, spec, build, review, ship, status, and next" width="720"/>
+<img src="https://github.com/sky2464/AgToosa/releases/download/v5.3.60/agtoosa-hero.gif" alt="AgToosa workflow: init, spec, build, review, ship, status, and next" width="720"/>
 
 ```mermaid
 flowchart LR
@@ -49,7 +49,7 @@ flowchart LR
     class SH ship
 ```
 
-<img src="docs/media/agtoosa-hero/lifecycle-accent.svg" alt="" width="480"/>
+<img src="https://github.com/sky2464/AgToosa/releases/download/v5.3.60/lifecycle-accent.svg" alt="" width="480"/>
 
 [Full architecture diagram →](docs/guides/architecture-overview.md) · [First 15 minutes walkthrough](docs/examples/first-15-minutes.md) · proof video `[manual]`
 

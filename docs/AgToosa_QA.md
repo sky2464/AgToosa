@@ -27,7 +27,7 @@ During `/agtoosa-qa run`, capture command run, exit code, pass/fail, warnings, e
    *   Open the active spec (`docs/archived/spec-[story-id].md`) and locate the `### 1.2 Acceptance Criteria (EARS)` table (any heading containing `Acceptance Criteria`, or rows matching `AC-NNN`, qualifies).
    *   If no AC table exists, **stop** and instruct the user to run `/agtoosa-spec` or add ACs manually. Do **not** auto-run `/agtoosa-spec`.
 
-2. **Generate `docs/AgToosa_TestPlan-[story-id].md`** containing:
+2. **Generate `docs/archived/testplans/AgToosa_TestPlan-[story-id].md`** containing:
    *   **Spec reference** — link to the source `docs/archived/spec-[story-id].md`
    *   **AC coverage table** — each `AC-NNN` mapped to one or more test IDs (`T-001`, `T-002`, ...)
    *   **Test category** per test ID: Unit · Integration · E2E · Security · Performance
@@ -93,7 +93,7 @@ During `/agtoosa-qa run`, capture command run, exit code, pass/fail, warnings, e
 11. **P3–P4 defects** are recorded in the QA report only — user decides whether to add them to `docs/Master-Plan.md`.
 
 ## Output
-*   `docs/AgToosa_TestPlan-[name].md` after Part 1
+*   `docs/archived/testplans/AgToosa_TestPlan-[name].md` after Part 1
 *   `docs/AgToosa_QAReport-[name].md` after Part 3
 *   `docs/Master-Plan.md` Backlog entries for every P0–P2 defect after Part 4
 *   If QA cleared: prompt `/agtoosa-review`
