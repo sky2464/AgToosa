@@ -152,7 +152,7 @@ AgToosa caches `registry.json` locally so list/search/info work when the network
 - ✅ **Isolated staging** — Packs extract to a temp directory first; only user-confirmed content reaches `.agtoosa/pack-queue/`.
 - ✅ **Informed-consent preview** — Before queueing, AgToosa prints the full file tree and flags AI-instruction surfaces (`.cursor/*`, `CLAUDE.md`, etc.) so you know what your assistant will follow.
 - ✅ **Verified-pack gate** — Registry entries with `"verified": false` are rejected unless you pass `--allow-unverified` (or set `AGTOOSA_ALLOW_UNVERIFIED=1`).
-- ✅ **Sensitive-path denylist** — Packs cannot write to `.claude/settings.json`, `.claude/hooks/`, or `.github/workflows/` (blocked at preview and merge).
+- ✅ **Sensitive-path denylist** — Packs cannot write to `.claude/settings.json`, `.claude/hooks/`, `.github/workflows/`, or `Docs/Master-Plan.md` / `docs/Master-Plan.md` (blocked at preview and merge).
 - ✅ **File-type allowlist** — Only `.md`, `.json`, `.toml`, and `.mdc` files are accepted; no scripts or binaries.
 - ✅ **Registry review** — New packs require PR approval from maintainers before publication (`verified: true`).
 - ✅ **Pinned versions** — Each published version's hash is recorded; existing installs are unaffected if a pack author goes rogue.
