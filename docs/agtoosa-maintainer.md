@@ -201,6 +201,22 @@ Registry and bootstrap behavior changed in the v5.3.0 supply-chain wave. Touch t
 
 User-facing registry docs live in `template/Docs/AgToosa_Registry.md` (mirror: `docs/AgToosa_Registry.md`). Threat-model detail: `docs/security/template-injection-threat-model.md`.
 
+## Interactive prompts (TTY plumbing)
+
+Interactive flows must work when stdin is **not** a TTY — for example `curl … | bash` bootstrap, Windows `bootstrap.ps1` launching Git Bash, or CI wrappers that pipe the generator script.
+
+| Helper | Location | Behavior |
+|--------|----------|----------|
+| `agtoosa_prompt_read` | `lib/config.sh` | Reads a line for path/confirm prompts. Uses stdin when `-t 0`; otherwise reads from `/dev/tty` when `_agtoosa_tty_usable` |
+| `_agtoosa_tty_usable` | `lib/config.sh` | Returns 0 when `/dev/tty` is readable (pipe-bootstrap case) |
+| `Read-AgToosaPrompt` | `agtoosa.ps1` | PowerShell parity for install path prompts |
+
+**Call sites (v5.3.62+):** install wizard (`agtoosa.sh`), `--cleanup`, `--reinstall --clean`, `--uninstall`, MAJOR migration confirm, and post-install cleanup offer in `lib/cleanup.sh` / `lib/reinstall.sh` / `lib/maintain.sh` / `lib/migrate.sh` / `lib/apply.sh`.
+
+**Non-interactive escape hatch:** pass `--path <dir> [--platforms …] --yes` for installs; `--yes` for `--cleanup` / `--reinstall --clean` / `--uninstall`. When neither a TTY nor `/dev/tty` is available, `agtoosa_prompt_read` exits non-zero with a message to re-run with those flags.
+
+**Maintainer pitfall:** do not add raw `read -rp` in generator libs — route through `agtoosa_prompt_read` so piped bootstrap and Git Bash launches keep working. Bats: `DEV-149 B33-001`–`B33-005` in `tests/agtoosa.bats`.
+
 ## Operating Rules
 
 1. Start from the concrete owning surface: the shell file, template file, or test that directly controls the behavior.
