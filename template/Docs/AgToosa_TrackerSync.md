@@ -332,7 +332,15 @@ When a provider field has no AgToosa equivalent, preserve the original value in 
 
 When `.github/workflows/agtoosa-issues-sync.yml` is present but `scripts/agtoosa-issues-sync.sh` is missing or drifts from `template/scripts/agtoosa-issues-sync.sh` on the maintainer repo, doctor emits **GIP-003** (Warn) with a guided fix hint. No finding is emitted when the workflow is absent (opt-in surface).
 
-**Downstream layout:** `scripts/agtoosa-issues-sync.sh` sources `lib/github-issues-sync.sh` at the repo root. Copy **both** from the AgToosa template pack (`template/scripts/` and `template/lib/`) when enabling the opt-in workflow — the script exits with a clear error if `lib/github-issues-sync.sh` is missing.
+**Runtime layout:** `scripts/agtoosa-issues-sync.sh` is a thin entrypoint that sources `lib/github-issues-sync.sh`. Both must exist in the project — copy from `template/scripts/` and `template/lib/` when enabling the workflow. The script fails fast with a copy hint when `lib/github-issues-sync.sh` is missing.
+
+```bash
+# Enable issues sync in a downstream project
+cp template/scripts/agtoosa-issues-sync.sh scripts/
+mkdir -p lib
+cp template/lib/github-issues-sync.sh lib/
+# Copy .github/workflows/agtoosa-issues-sync.yml.example → .github/workflows/agtoosa-issues-sync.yml
+```
 
 Bats coverage: `GIP-001`–`GIP-010` in `tests/agtoosa.bats` (mock `gh` via `GH_CMD` / `tests/fixtures/tracker-sync/issues-sync/mock-gh.sh`).
 
@@ -353,5 +361,6 @@ Bats coverage: `GIP-001`–`GIP-010` in `tests/agtoosa.bats` (mock `gh` via `GH_
 - **Fast backlog edits:** `docs/AgToosa_Task.md`
 - **Spec amendments:** `docs/AgToosa_Spec.md` (`amend` sub-command)
 - **Envelope schema:** `docs/agtoosa-tracker-sync.schema.json`
-- **Issues sync script:** `scripts/agtoosa-issues-sync.sh` (requires `lib/github-issues-sync.sh` at repo root)
+- **Issues sync script:** `scripts/agtoosa-issues-sync.sh` (sources `lib/github-issues-sync.sh`)
+- **Issues sync lib:** `lib/github-issues-sync.sh` (copy from `template/lib/` when enabling the workflow)
 - **CI workflows:** `.github/workflows/agtoosa-issues-sync.yml`, `.github/workflows/agtoosa-issues-intake.yml`
