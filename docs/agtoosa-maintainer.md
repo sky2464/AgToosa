@@ -116,6 +116,25 @@ bash docs/agtoosa-verify.sh stats        # cycle analytics from Update Log + agt
 bash agtoosa.sh --verify .               # generator dispatch (maintainer dogfood)
 ```
 
+## Interactive prompts (piped bootstrap)
+
+Pipe-based installs (`curl … | bash`) and some Windows Git Bash launches leave **stdin on the script**, not the terminal. Plain `read -p` then exits immediately or reads EOF instead of waiting for user input.
+
+**Canonical helpers** (`lib/config.sh`):
+
+| Helper | Role |
+|--------|------|
+| `_agtoosa_tty_usable` | Returns 0 when `/dev/tty` is readable (pipe-bootstrap case) |
+| `agtoosa_prompt_read` | Reads a line from stdin when `-t 0`, otherwise from `/dev/tty`; fails with a `--path … --yes` hint when no TTY exists |
+
+**Rules for new interactive code:**
+
+1. **Path and menu prompts** — use `agtoosa_prompt_read "…" varname` instead of `read -rp`. Covered surfaces: `agtoosa.sh` install wizard, `--update`, `lib/maintain.sh` (`--uninstall`), `lib/cleanup.sh`, `lib/reinstall.sh`, `lib/migrate.sh`, `lib/apply.sh` (platform deselect confirm).
+2. **Destructive confirmations** (`--cleanup`, `--reinstall --clean`) — gate on `[[ -t 0 ]] || _agtoosa_tty_usable` before calling `agtoosa_prompt_read`; without a TTY, exit non-zero and tell the user to pass `--yes`.
+3. **Non-interactive bypass** — `--path`, `--platforms`, and `--yes` (PowerShell: `-Path`, `-Platforms`, `-Yes`) must skip all prompts.
+
+User-facing troubleshooting for pipe bootstrap lives in `docs/guides/readme-reference.md` (v5.3.62+). Bats: `DEV-149 B33-001`–`B33-005` in `tests/agtoosa.bats`.
+
 ## GitHub branch hygiene (Cursor agent sprawl)
 
 Cursor Cloud agents can leave many `cursor/*` remote branches and duplicate open PRs. Stale PR automation (`.github/workflows/stale.yml`) waits 30 days — too slow for same-day sprawl. Use the maintainer cleanup tool instead.
@@ -175,7 +194,7 @@ Registry and bootstrap behavior changed in the v5.3.0 supply-chain wave. Touch t
 |---------|-------------|----------|
 | Tar-slip pre-scan | `lib/registry.sh:assert_safe_tarball`, `bootstrap.sh`, `bootstrap.ps1` | Reject absolute paths and `..` members **before** extraction |
 | Pack file allowlist | `lib/registry.sh:validate_pack_files` | Only `.md`, `.json`, `.toml`, `.mdc` allowed |
-| Sensitive destination denylist | `lib/install.sh:PACK_DENYLIST_PATTERNS` | Packs cannot merge into `.claude/settings.json`, `.claude/hooks/`, or `.github/workflows/` |
+| Sensitive destination denylist | `lib/install.sh:PACK_DENYLIST_PATTERNS` | Packs cannot merge into `.claude/settings.json`, `.claude/hooks/`, `.github/workflows/`, or `Docs/Master-Plan.md` / `docs/Master-Plan.md` (project-owned PM state) |
 | Verified flag | `lib/registry.sh` | `verified: false` packs require `--allow-unverified` or `AGTOOSA_ALLOW_UNVERIFIED=1` |
 | Content preview | `lib/registry.sh:_print_pack_preview` | Lists staged files, flags AI-instruction surfaces, shows blocked destinations before consent |
 | Pinned bootstrap | `bootstrap.sh`, `Formula/agtoosa.rb` | `--ref vX.Y.Z` fails closed (no branch fallback); optional `--sha256`; releases publish `SHA256SUMS` |
