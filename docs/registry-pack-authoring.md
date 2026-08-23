@@ -33,7 +33,7 @@ For CLI details (`--registry list|info|install|publish`), see the Registry doc â
 
 ## Allowlist / denylist reminder
 
-Packs remain markdown-only for automatic install. Sensitive destinations such as `.claude/settings.json`, `.claude/hooks/`, and `.github/workflows/` are blocked by the generator denylist. Do not document workarounds that write protected settings or CI workflows via pack content.
+Packs remain markdown-only for automatic install. Sensitive destinations such as `.claude/settings.json`, `.claude/hooks/`, `.github/workflows/`, and `Docs/Master-Plan.md` / `docs/Master-Plan.md` are blocked by the generator denylist. Do not document workarounds that write protected settings, CI workflows, or project-owned PM state via pack content.
 
 ---
 
