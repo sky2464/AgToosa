@@ -98,6 +98,10 @@ PY
       rm -f "$tmp"
       return 0
     fi
+    if [[ $py_rc -ne 0 ]]; then
+      rm -f "$tmp"
+      return 1
+    fi
     mv "$tmp" "$gi"
   else
     {
