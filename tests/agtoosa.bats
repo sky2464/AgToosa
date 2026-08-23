@@ -14676,6 +14676,24 @@ PY
   [ "$status" -eq 0 ]
 }
 
+@test "DEV-144 GIG-009: malformed marker block (missing END) preserves user rules" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local begin='# BEGIN AgToosa operational (managed — do not edit)'
+  cat > "$TEST_PROJECT/.gitignore" <<EOF
+node_modules/
+$begin
+.Docs/.agtoosa-version
+*.log
+.env
+EOF
+  run bash -c "source '$root/lib/gitignore.sh'; gitignore_merge_operational '$TEST_PROJECT'"
+  [ "$status" -eq 0 ]
+  grep -q '^node_modules/' "$TEST_PROJECT/.gitignore"
+  grep -q '^\*\.log' "$TEST_PROJECT/.gitignore"
+  grep -q '^\.env' "$TEST_PROJECT/.gitignore"
+  [ "$(grep -cF "$begin" "$TEST_PROJECT/.gitignore")" -eq 1 ]
+}
+
 @test "DEV-144 @smoke GIG-008: DEV-144 filter and test plan documented" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q "DEV-144" "$root/tests/agtoosa.bats"

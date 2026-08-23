@@ -621,7 +621,7 @@ agtoosa_prompt_read() {
     fi
   elif [[ -p /dev/stdin ]]; then
     # Piped answers to a script file; exhausted curl pipe falls back to tty.
-  # shellcheck disable=SC2162
+    # shellcheck disable=SC2162
     if ! IFS= read -r -p "$_prompt" "$_varname"; then
       if _agtoosa_tty_usable; then
         # shellcheck disable=SC2162
