@@ -32,7 +32,7 @@ Emits a JSON object with `id`, `name`, `platforms`, `compatibility`, and when pr
 
 **Validate a catalog file:**
 ```bash
-bash agtoosa.sh --catalog validate catalog/catalog.json
+bash agtoosa.sh --catalog validate data/catalog/catalog.json
 ```
 
 **Generate a non-executing preset install plan:**
@@ -100,4 +100,4 @@ If catalog provenance drifts from the registry index, the entry is **stale** and
 ## Related
 
 - **Registry (canonical install):** `docs/AgToosa_Registry.md`
-- **Production catalog data:** `catalog/catalog.json` in the AgToosa generator repository (shipped as reference; teams may fork for private catalogs in future stories).
+- **Production catalog data:** `data/catalog/catalog.json` in the AgToosa generator repository (shipped as reference; teams may fork for private catalogs in future stories).

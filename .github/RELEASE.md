@@ -86,7 +86,7 @@ Only the latest minor release receives patch backports. Older minors are EOL.
 
 - Breaking changes require a MAJOR version bump
 - A deprecation notice must appear in the CHANGELOG of the previous minor release before the breaking change lands
-- The README and CONTRIBUTING.md must be updated to document the migration path
+- The README and `.github/CONTRIBUTING.md` must be updated to document the migration path
 
 ## Who Can Cut Releases
 

@@ -184,7 +184,7 @@ def validate_schema(data: dict, root: Path, findings: Findings) -> None:
         findings.add("$schema must bind product-truth-v1.schema.json")
     if data.get("schema_version") != "1":
         findings.add("unsupported schema_version")
-    schema_path = root / "contracts/product-truth-v1.schema.json"
+    schema_path = root / "data/contracts/product-truth-v1.schema.json"
     try:
         schema_path.resolve(strict=True).relative_to(root.resolve(strict=True))
     except (OSError, ValueError):

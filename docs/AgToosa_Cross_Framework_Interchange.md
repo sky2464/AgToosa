@@ -19,7 +19,7 @@ Cross-Framework Interchange (CFI) provides a **normalized interchange manifest**
 
 ## Interchange manifest
 
-Schema: `contracts/interchange-manifest-v1.schema.json`.
+Schema: `data/contracts/interchange-manifest-v1.schema.json`.
 
 | Field | Meaning |
 |-------|---------|
@@ -39,7 +39,7 @@ All repo-relative paths reject leading `/` and `..` traversal. Helpers live in `
 
 ## Loss report
 
-Schema: `contracts/interchange-loss-report-v1.schema.json`.
+Schema: `data/contracts/interchange-loss-report-v1.schema.json`.
 
 | Field | Meaning |
 |-------|---------|

@@ -100,7 +100,7 @@ See `docs/agtoosa-maintainer.md` for the full maintainer guide (generator mainte
 
 ## Where to ask or report
 
-Use the channel matrix in [`.github/SUPPORT.md`](.github/SUPPORT.md) — that document is the canonical support, sponsorship, and consulting boundary. Community responses are best effort and are not an SLA.
+Use the channel matrix in [`SUPPORT.md`](SUPPORT.md) — that document is the canonical support, sponsorship, and consulting boundary. Community responses are best effort and are not an SLA.
 
 | Need | Where |
 |------|--------|
@@ -142,7 +142,7 @@ When submitting a feature:
 3. **Update documentation** if you've changed behavior
 4. **Ensure tests pass**: `bash tests/agtoosa.bats`
 5. **Check code quality**: `shellcheck agtoosa.sh lib/*.sh`
-6. **Check markdown**: `markdownlint *.md template/Docs/*.md`
+6. **Check markdown**: `markdownlint --config .github/linters/.markdownlint.yml *.md template/Docs/*.md`
 7. **Use conventional commits** for clear history
 8. **Submit** your PR with a clear description
 

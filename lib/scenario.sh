@@ -16,7 +16,7 @@ scenario_resolve_root() {
 scenario_load_definition() {
   local root="$1"
   local scenario_id="$2"
-  local def="$root/scenarios/${scenario_id}.json"
+  local def="$root/data/scenarios/${scenario_id}.json"
   [[ -f "$def" ]] || { echo "Error: scenario definition not found: $def" >&2; return 1; }
   printf '%s\n' "$def"
 }
@@ -31,7 +31,7 @@ scenario_verify_impl() {
 import json, os, sys
 
 root, scenario_id, platform, artifact_root = sys.argv[1:5]
-def_path = os.path.join(root, "scenarios", f"{scenario_id}.json")
+def_path = os.path.join(root, "data", "scenarios", f"{scenario_id}.json")
 
 def fail(msg):
     print(f"Error: {msg}", file=sys.stderr)
@@ -114,7 +114,7 @@ scenario_validate_corpus() {
 import json, os, sys
 
 corpus_path, root = sys.argv[1], sys.argv[2]
-schema_path = os.path.join(root, "contracts", "scenario-corpus-v1.schema.json")
+schema_path = os.path.join(root, "data", "contracts", "scenario-corpus-v1.schema.json")
 
 def fail(msg):
     print(f"Error: {msg}", file=sys.stderr)
@@ -148,19 +148,19 @@ for entry in corpus.get("scenarios", []):
 PY
 }
 
-# Locate repo root containing contracts/ from any path under the tree.
+# Locate repo root containing data/contracts/ from any path under the tree.
 scenario_resolve_contracts_root() {
   local start_path="$1"
   local dir
   dir="$(cd "$(dirname "$start_path")" && pwd)"
   while [[ "$dir" != "/" ]]; do
-    if [[ -f "$dir/contracts/scenario-run-v1.schema.json" ]]; then
+    if [[ -f "$dir/data/contracts/scenario-run-v1.schema.json" ]]; then
       printf '%s' "$dir"
       return 0
     fi
     dir="$(dirname "$dir")"
   done
-  echo "Error: cannot locate contracts/scenario-run-v1.schema.json" >&2
+  echo "Error: cannot locate data/contracts/scenario-run-v1.schema.json" >&2
   return 1
 }
 
@@ -172,7 +172,7 @@ scenario_validate_run_json() {
 import json, os, sys
 
 run_path, root = sys.argv[1], sys.argv[2]
-schema_path = os.path.join(root, "contracts", "scenario-run-v1.schema.json")
+schema_path = os.path.join(root, "data", "contracts", "scenario-run-v1.schema.json")
 
 def fail(msg):
     print(f"Error: {msg}", file=sys.stderr)

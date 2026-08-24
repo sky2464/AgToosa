@@ -86,10 +86,10 @@
     ".github/SUPPORT.md",
     ".github/TRIAGE.md",
     ".github/workflows/github-surface-audit.yml",
-    "CODE_OF_CONDUCT.md",
-    "CONTRIBUTING.md",
+    ".github/CODE_OF_CONDUCT.md",
+    ".github/CONTRIBUTING.md",
     "LICENSE",
-    "SECURITY.md",
+    ".github/SECURITY.md",
     "docs/github-surface-manifest.json",
     "scripts/github-surface-audit.sh",
     "scripts/github-labels-sync.sh"

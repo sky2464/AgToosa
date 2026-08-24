@@ -24,8 +24,8 @@ The Behavioral Conformance Lab (BCL) provides a **versioned scenario corpus** an
 | Scenario id | `lifecycle-compass-proof` |
 | Trigger | Run `bash agtoosa.sh --status-line`, capture SYNC output, record platform adapter sentinel |
 | Platforms | `cursor`, `claude`, `codex`, `copilot`, `windsurf`, `gemini` |
-| Corpus index | `scenarios/corpus-v1.json` |
-| Definition | `scenarios/lifecycle-compass-proof.json` |
+| Corpus index | `data/scenarios/corpus-v1.json` |
+| Definition | `data/scenarios/lifecycle-compass-proof.json` |
 
 VS Code shares the GitHub Copilot instruction path — document as Copilot-family; do not require a seventh duplicate scenario run.
 
@@ -37,7 +37,7 @@ Record one JSON file per platform run:
 <artifact-root>/scenario-run.json
 ```
 
-Schema: `contracts/scenario-run-v1.schema.json`. Required fields: `scenario_id`, `platform`, `run_at`, `artifact_results[]`, `verifier_exit_code`. Optional: `proof_graph_path`, `runner_notes`.
+Schema: `data/contracts/scenario-run-v1.schema.json`. Required fields: `scenario_id`, `platform`, `run_at`, `artifact_results[]`, `verifier_exit_code`. Optional: `proof_graph_path`, `runner_notes`.
 
 ### Optional proof-graph linkage (DEV-120)
 

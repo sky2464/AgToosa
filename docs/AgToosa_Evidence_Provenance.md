@@ -37,7 +37,7 @@ One JSON file per story:
 Docs/archived/proof-graph-<story-id>.json
 ```
 
-Schema: `contracts/proof-graph-v1.schema.json` (v1). Required top-level fields: `version`, `story_id`, `provider`, `nodes`, `edges`.
+Schema: `data/contracts/proof-graph-v1.schema.json` (v1). Required top-level fields: `version`, `story_id`, `provider`, `nodes`, `edges`.
 
 ## Proof-provider interface
 

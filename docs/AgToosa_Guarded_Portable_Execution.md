@@ -19,7 +19,7 @@ Guarded Portable Execution (GPE) provides **execution capsules** — portable, p
 
 ## Execution capsule
 
-Schema: `contracts/execution-capsule-v1.schema.json`.
+Schema: `data/contracts/execution-capsule-v1.schema.json`.
 
 | Field | Meaning |
 |-------|---------|
@@ -44,7 +44,7 @@ All repo-relative paths reject leading `/` and `..` traversal. Helpers live in `
 
 ## Return envelope
 
-Schema: `contracts/capsule-return-v1.schema.json`.
+Schema: `data/contracts/capsule-return-v1.schema.json`.
 
 | Field | Meaning |
 |-------|---------|

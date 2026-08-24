@@ -58,7 +58,7 @@ scenario_is_platform "$PLATFORM" || { echo "Error: unknown platform '$PLATFORM'"
 
 mkdir -p "$ARTIFACT_ROOT" || { echo "Error: cannot create artifact root" >&2; exit 2; }
 
-CORPUS="${CORPUS:-$REPO_ROOT/scenarios/corpus-v1.json}"
+CORPUS="${CORPUS:-$REPO_ROOT/data/scenarios/corpus-v1.json}"
 VERIFY="$SCRIPT_DIR/agtoosa-scenario-verify.sh"
 RUN_JSON="$ARTIFACT_ROOT/scenario-run.json"
 

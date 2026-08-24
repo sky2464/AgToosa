@@ -3,16 +3,16 @@
 setup() {
   ROOT="$BATS_TEST_DIRNAME/.."
   TOOL="$ROOT/scripts/product-truth.py"
-  CONTRACT="$ROOT/contracts/product-truth-v1.json"
+  CONTRACT="$ROOT/data/contracts/product-truth-v1.json"
   FIXTURES="$ROOT/tests/fixtures/product-truth"
   AS_OF="2026-07-14"
   TMP_ROOT="$BATS_TEST_TMPDIR/repo"
 }
 
 copy_contract() {
-  mkdir -p "$TMP_ROOT/contracts"
-  cp "$CONTRACT" "$TMP_ROOT/contracts/product-truth-v1.json"
-  cp "$ROOT/contracts/product-truth-v1.schema.json" "$TMP_ROOT/contracts/product-truth-v1.schema.json"
+  mkdir -p "$TMP_ROOT/data/contracts"
+  cp "$CONTRACT" "$TMP_ROOT/data/contracts/product-truth-v1.json"
+  cp "$ROOT/data/contracts/product-truth-v1.schema.json" "$TMP_ROOT/data/contracts/product-truth-v1.schema.json"
 }
 
 copy_targets() {
@@ -58,7 +58,7 @@ run_check() {
   [ "$status" -eq 0 ]
 
   copy_contract
-  python3 - "$TMP_ROOT/contracts/product-truth-v1.json" <<'PY'
+  python3 - "$TMP_ROOT/data/contracts/product-truth-v1.json" <<'PY'
 import json, sys
 p = sys.argv[1]
 data = json.load(open(p, encoding="utf-8"))
@@ -66,13 +66,13 @@ data["unknown_field"] = "${SECRET}"
 data["path_policy"]["generated_root"] = "../escape"
 json.dump(data, open(p, "w", encoding="utf-8"), indent=2)
 PY
-  run python3 "$TOOL" check --root "$TMP_ROOT"     --contract "$TMP_ROOT/contracts/product-truth-v1.json" --as-of "$AS_OF" --only schema
+  run python3 "$TOOL" check --root "$TMP_ROOT"     --contract "$TMP_ROOT/data/contracts/product-truth-v1.json" --as-of "$AS_OF" --only schema
   [ "$status" -ne 0 ]
   [[ "$output" == *"unknown field"* ]]
   [[ "$output" == *"interpolation"* || "$output" == *"traversal"* ]]
 
   copy_contract
-  python3 - "$TMP_ROOT/contracts/product-truth-v1.json" <<'PY'
+  python3 - "$TMP_ROOT/data/contracts/product-truth-v1.json" <<'PY'
 import json, sys
 p = sys.argv[1]
 data = json.load(open(p, encoding="utf-8"))
@@ -80,12 +80,12 @@ data["commands"][0]["mutation_class"] = "execute-anything"
 json.dump(data, open(p, "w", encoding="utf-8"), indent=2)
 PY
   run python3 "$TOOL" check --root "$TMP_ROOT" \
-    --contract "$TMP_ROOT/contracts/product-truth-v1.json" --as-of "$AS_OF" --only schema
+    --contract "$TMP_ROOT/data/contracts/product-truth-v1.json" --as-of "$AS_OF" --only schema
   [ "$status" -ne 0 ]
   [[ "$output" == *"schema enum"* ]]
 
   copy_contract
-  python3 - "$TMP_ROOT/contracts/product-truth-v1.json" <<'PY'
+  python3 - "$TMP_ROOT/data/contracts/product-truth-v1.json" <<'PY'
 from pathlib import Path
 import sys
 p = Path(sys.argv[1])
@@ -95,12 +95,12 @@ text = text.replace('"schema_version": "1",',
 p.write_text(text, encoding="utf-8")
 PY
   run python3 "$TOOL" check --root "$TMP_ROOT" \
-    --contract "$TMP_ROOT/contracts/product-truth-v1.json" --as-of "$AS_OF" --only schema
+    --contract "$TMP_ROOT/data/contracts/product-truth-v1.json" --as-of "$AS_OF" --only schema
   [ "$status" -ne 0 ]
   [[ "$output" == *"duplicate field"* ]]
 
   copy_contract
-  python3 - "$TMP_ROOT/contracts/product-truth-v1.json" <<'PY'
+  python3 - "$TMP_ROOT/data/contracts/product-truth-v1.json" <<'PY'
 import json, sys
 p = sys.argv[1]
 data = json.load(open(p, encoding="utf-8"))
@@ -110,29 +110,29 @@ data["path_policy"]["candidate_files"][0] = "/tmp/outside"
 json.dump(data, open(p, "w", encoding="utf-8"), indent=2)
 PY
   run python3 "$TOOL" check --root "$TMP_ROOT" \
-    --contract "$TMP_ROOT/contracts/product-truth-v1.json" --as-of "$AS_OF" --only schema
+    --contract "$TMP_ROOT/data/contracts/product-truth-v1.json" --as-of "$AS_OF" --only schema
   [ "$status" -ne 0 ]
   [[ "$output" == *"dynamic include"* ]]
   [[ "$output" == *"interpolation or executable"* ]]
   [[ "$output" == *"absolute repository path"* || "$output" == *"schema pattern"* ]]
 
   copy_contract
-  python3 - "$TMP_ROOT/contracts/product-truth-v1.json" <<'PY'
+  python3 - "$TMP_ROOT/data/contracts/product-truth-v1.json" <<'PY'
 from pathlib import Path
 import sys
 Path(sys.argv[1]).write_bytes(b" " * 1_048_577)
 PY
   run python3 "$TOOL" check --root "$TMP_ROOT" \
-    --contract "$TMP_ROOT/contracts/product-truth-v1.json" --as-of "$AS_OF" --only schema
+    --contract "$TMP_ROOT/data/contracts/product-truth-v1.json" --as-of "$AS_OF" --only schema
   [ "$status" -ne 0 ]
   [[ "$output" == *"bounded-size limit"* ]]
 
   copy_contract
-  rm "$TMP_ROOT/contracts/product-truth-v1.schema.json"
-  if ln -s "$ROOT/contracts/product-truth-v1.schema.json" \
-      "$TMP_ROOT/contracts/product-truth-v1.schema.json" 2>/dev/null; then
+  rm "$TMP_ROOT/data/contracts/product-truth-v1.schema.json"
+  if ln -s "$ROOT/data/contracts/product-truth-v1.schema.json" \
+      "$TMP_ROOT/data/contracts/product-truth-v1.schema.json" 2>/dev/null; then
     run python3 "$TOOL" check --root "$TMP_ROOT" \
-      --contract "$TMP_ROOT/contracts/product-truth-v1.json" --as-of "$AS_OF" --only schema
+      --contract "$TMP_ROOT/data/contracts/product-truth-v1.json" --as-of "$AS_OF" --only schema
     [ "$status" -ne 0 ]
     [[ "$output" == *"symlink escape"* ]]
   fi
@@ -151,7 +151,7 @@ PY
   copy_contract
   copy_targets
   cp "$TMP_ROOT/template/.cursor/commands/agtoosa-help.md"     "$TMP_ROOT/template/.cursor/commands/agtoosa-unreviewed.md"
-  run python3 "$TOOL" check --root "$TMP_ROOT"     --contract "$TMP_ROOT/contracts/product-truth-v1.json" --as-of "$AS_OF" --only inventory
+  run python3 "$TOOL" check --root "$TMP_ROOT"     --contract "$TMP_ROOT/data/contracts/product-truth-v1.json" --as-of "$AS_OF" --only inventory
   [ "$status" -ne 0 ]
   [[ "$output" == *"unreviewed"* ]]
   [[ "$output" == *"cursor.project-commands"* ]]
@@ -175,9 +175,9 @@ PY
   sed -i.bak 's/^- Question budget:/- Question budget: drifted /' \
     "$TMP_ROOT/template/.cursor/commands/agtoosa-spec.md"
   rm -f "$TMP_ROOT/template/.cursor/commands/agtoosa-spec.md.bak"
-  run python3 "$TOOL" render --check --root "$TMP_ROOT"     --contract "$TMP_ROOT/contracts/product-truth-v1.json" --as-of "$AS_OF"
+  run python3 "$TOOL" render --check --root "$TMP_ROOT"     --contract "$TMP_ROOT/data/contracts/product-truth-v1.json" --as-of "$AS_OF"
   [ "$status" -ne 0 ]
-  run python3 "$TOOL" render --apply --root "$TMP_ROOT"     --contract "$TMP_ROOT/contracts/product-truth-v1.json" --as-of "$AS_OF"
+  run python3 "$TOOL" render --apply --root "$TMP_ROOT"     --contract "$TMP_ROOT/data/contracts/product-truth-v1.json" --as-of "$AS_OF"
   [ "$status" -eq 0 ]
   [ "$(cat "$TMP_ROOT/outside.txt")" = "outside" ]
   grep -q 'PLATFORM-OWNED-SENTINEL' \
@@ -196,7 +196,7 @@ PY
   malformed_hash="$(shasum -a 256 \
     "$TMP_ROOT/template/.cursor/commands/agtoosa-spec.md" | awk '{print $1}')"
   run python3 "$TOOL" render --apply --root "$TMP_ROOT" \
-    --contract "$TMP_ROOT/contracts/product-truth-v1.json" --as-of "$AS_OF"
+    --contract "$TMP_ROOT/data/contracts/product-truth-v1.json" --as-of "$AS_OF"
   [ "$status" -ne 0 ]
   [[ "$output" == *"requires exactly one existing managed block"* ]]
   [ "$malformed_hash" = "$(shasum -a 256 \
@@ -212,7 +212,7 @@ PY
   ln -s "$BATS_TEST_TMPDIR/outside-temp" \
     "$TMP_ROOT/template/.cursor/commands/agtoosa-spec.md.product-truth.tmp"
   run python3 "$TOOL" render --apply --root "$TMP_ROOT" \
-    --contract "$TMP_ROOT/contracts/product-truth-v1.json" --as-of "$AS_OF"
+    --contract "$TMP_ROOT/data/contracts/product-truth-v1.json" --as-of "$AS_OF"
   [ "$status" -ne 0 ]
   [[ "$output" == *"temporary render path already exists"* ]]
   [ "$(cat "$BATS_TEST_TMPDIR/outside-temp")" = "outside-temp" ]
@@ -226,7 +226,7 @@ PY
   copy_targets
   sed -i.bak 's/Quick max: 2/Quick max: 3/'     "$TMP_ROOT/template/.gemini/commands/agtoosa-spec.toml"
   rm -f "$TMP_ROOT/template/.gemini/commands/agtoosa-spec.toml.bak"
-  run python3 "$TOOL" check --root "$TMP_ROOT"     --contract "$TMP_ROOT/contracts/product-truth-v1.json" --as-of "$AS_OF" --only adapters
+  run python3 "$TOOL" check --root "$TMP_ROOT"     --contract "$TMP_ROOT/data/contracts/product-truth-v1.json" --as-of "$AS_OF" --only adapters
   [ "$status" -ne 0 ]
   [[ "$output" == *"google.gemini-cli"* ]]
   [[ "$output" == *"command.spec"* ]]
@@ -239,7 +239,7 @@ PY
   copy_contract
   copy_path_candidates
   printf '\nSee docs/Master-Plan.md for local state.\n' >>     "$TMP_ROOT/template/Docs/AgToosa_Build.md"
-  run python3 "$TOOL" check --root "$TMP_ROOT"     --contract "$TMP_ROOT/contracts/product-truth-v1.json" --as-of "$AS_OF" --only paths
+  run python3 "$TOOL" check --root "$TMP_ROOT"     --contract "$TMP_ROOT/data/contracts/product-truth-v1.json" --as-of "$AS_OF" --only paths
   [ "$status" -ne 0 ]
   [[ "$output" == *"lowercase generated local path"* ]]
   [[ "$output" == *"AgToosa_Build.md"* ]]
@@ -254,7 +254,7 @@ PY
   cp "$ROOT/agtoosa.ps1" "$TMP_ROOT/agtoosa.ps1"
   sed -i.bak "s/addPlatform 'vscode'/addPlatform 'copilot'/" "$TMP_ROOT/agtoosa.ps1"
   rm -f "$TMP_ROOT/agtoosa.ps1.bak"
-  run python3 "$TOOL" check --root "$TMP_ROOT"     --contract "$TMP_ROOT/contracts/product-truth-v1.json" --as-of "$AS_OF" --only platforms
+  run python3 "$TOOL" check --root "$TMP_ROOT"     --contract "$TMP_ROOT/data/contracts/product-truth-v1.json" --as-of "$AS_OF" --only platforms
   [ "$status" -ne 0 ]
   [[ "$output" == *"vscode"* ]]
   [[ "$output" == *"copilot"* ]]
@@ -297,14 +297,14 @@ PY
   [[ "$output" == *"stale/unverified"* ]]
 
   copy_contract
-  python3 - "$TMP_ROOT/contracts/product-truth-v1.json" <<'PY'
+  python3 - "$TMP_ROOT/data/contracts/product-truth-v1.json" <<'PY'
 import json, sys
 p = sys.argv[1]
 data = json.load(open(p, encoding="utf-8"))
 data["targets"][0]["renderer_version"] = "2"
 json.dump(data, open(p, "w", encoding="utf-8"), indent=2)
 PY
-  run python3 "$TOOL" check --root "$ROOT"     --contract "$TMP_ROOT/contracts/product-truth-v1.json" --as-of "$AS_OF" --only claims
+  run python3 "$TOOL" check --root "$ROOT"     --contract "$TMP_ROOT/data/contracts/product-truth-v1.json" --as-of "$AS_OF" --only claims
   [ "$status" -ne 0 ]
   [[ "$output" == *"fingerprint"* ]]
 }
@@ -324,14 +324,14 @@ PY
   [ "$status" -eq 0 ]
 
   copy_contract
-  python3 - "$TMP_ROOT/contracts/product-truth-v1.json" <<'PY'
+  python3 - "$TMP_ROOT/data/contracts/product-truth-v1.json" <<'PY'
 import json, sys
 p = sys.argv[1]
 data = json.load(open(p, encoding="utf-8"))
 data["static_claim_boundary"]["allowed"].append("host-recognition")
 json.dump(data, open(p, "w", encoding="utf-8"), indent=2)
 PY
-  run python3 "$TOOL" check --root "$ROOT"     --contract "$TMP_ROOT/contracts/product-truth-v1.json" --as-of "$AS_OF" --only boundaries
+  run python3 "$TOOL" check --root "$ROOT"     --contract "$TMP_ROOT/data/contracts/product-truth-v1.json" --as-of "$AS_OF" --only boundaries
   [ "$status" -ne 0 ]
   [[ "$output" == *"forbidden conclusion"* ]]
   [[ "$output" == *"host-recognition"* ]]
@@ -349,7 +349,7 @@ PY
   cp "$ROOT/docs/archived/testplans/AgToosa_TestPlan-DEV-118.md" "$TMP_ROOT/docs/archived/testplans/AgToosa_TestPlan-DEV-118.md"
   sed -i.bak '/product-truth/d' "$TMP_ROOT/.github/workflows/ci.yml"
   rm -f "$TMP_ROOT/.github/workflows/ci.yml.bak"
-  run python3 "$TOOL" check --root "$TMP_ROOT"     --contract "$TMP_ROOT/contracts/product-truth-v1.json" --as-of "$AS_OF" --only ci
+  run python3 "$TOOL" check --root "$TMP_ROOT"     --contract "$TMP_ROOT/data/contracts/product-truth-v1.json" --as-of "$AS_OF" --only ci
   [ "$status" -ne 0 ]
   [[ "$output" == *"focused Product Truth CI gate"* ]]
 }

@@ -19,7 +19,7 @@ Community pack injection (DEV-064/065) is only one supply-chain surface. This do
 |---------|-------------|
 | **Pinned install chain** | `bootstrap.sh` / `curl \| bash` paths, Homebrew formula, npm wrapper download of release tarballs, optional `--ref` / `--sha256` pins |
 | **Release artifacts** | GitHub Release assets, `SHA256SUMS`, optional minisign sidecars (DEV-054), version tags |
-| **Catalog / registry metadata** | `catalog/catalog.json`, registry index URLs, pack manifests (`schema_version`, SHA-256, signature URLs) |
+| **Catalog / registry metadata** | `data/catalog/catalog.json`, registry index URLs, pack manifests (`schema_version`, SHA-256, signature URLs) |
 | **Generator template outputs** | Files copied from `template/` into projects (`Docs/`, platform adapters, hooks) |
 | **Maintainer CI publish path** | Release workflows, environment protection, who can mint tags and upload assets |
 

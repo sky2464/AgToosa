@@ -19,7 +19,7 @@ Change-Aware Adaptive Delivery (CAD) provides a **frozen allowlist baseline**, *
 
 ## Drift baseline
 
-Frozen allowlist at `tests/fixtures/drift-assess/baseline-v1.json` (maintainer pilot) or project-specific baselines conforming to `contracts/drift-baseline-v1.schema.json`.
+Frozen allowlist at `tests/fixtures/drift-assess/baseline-v1.json` (maintainer pilot) or project-specific baselines conforming to `data/contracts/drift-baseline-v1.schema.json`.
 
 Each path entry records:
 
@@ -31,7 +31,7 @@ Each path entry records:
 
 ## Drift report
 
-Schema: `contracts/drift-report-v1.schema.json`. Provider v1: **`git-inventory`** (local file inventory only).
+Schema: `data/contracts/drift-report-v1.schema.json`. Provider v1: **`git-inventory`** (local file inventory only).
 
 Report sections:
 
@@ -60,7 +60,7 @@ bash Docs/agtoosa-context-compile.sh --story DEV-120 \
   --output tests/fixtures/drift-assess/context-compilation-DEV-120.json
 ```
 
-Schema: `contracts/context-compilation-v1.schema.json`.
+Schema: `data/contracts/context-compilation-v1.schema.json`.
 
 When `proof_graph_path` is set, validate separately:
 
