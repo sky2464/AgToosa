@@ -70,10 +70,10 @@
 
 ## 3. Tasks
 
-- [ ] 1. `scripts/pack-runtime.sh` — AC-001
-- [ ] 2. Release workflow pack + upload — AC-001, AC-002
-- [ ] 3. Bats RTA-001–RTA-006 — AC-003, AC-004
-- [ ] 4. Docs + spike update — AC-005, AC-006
+- [x] 1. `scripts/pack-runtime.sh` — AC-001
+- [x] 2. Release workflow pack + upload — AC-001, AC-002
+- [x] 3. Bats RTA-001–RTA-006 — AC-003, AC-004
+- [x] 4. Docs + spike update — AC-005, AC-006
 - [ ] 5. Homebrew runtime URL (best-effort) — AC-007
 
 ### 3.2 Test Plan

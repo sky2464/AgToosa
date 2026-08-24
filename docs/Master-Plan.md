@@ -23,7 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-150 | Feature: Corporate Runtime Release Asset | Feature | M | 🟨 In Progress | ▱▱▱▱▱ 0/5 tasks |
+| DEV-150 | Feature: Corporate Runtime Release Asset | Feature | M | 🟨 In Progress | ▰▰▰▰▱ 4/5 tasks |
 | DEV-151 | Chore: Tracker Publish CI Automation | Chore | S | 🟦 Todo — Spec Approved | 0/4 |
 | DEV-152 | Chore: Bats Cleanup & Version Pin Consolidation | Chore | S | 🟦 Todo — Spec Approved | 0/5 |
 | DEV-153 | Feature: Bats Tiering & Smoke-Set Extraction | Feature | M | 🟦 Todo — Spec Approved | 0/5 |
@@ -132,10 +132,10 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 ### DEV-150 — Corporate Runtime Release Asset
 
-- [ ] 1. `scripts/pack-runtime.sh` — _AC-001_
-- [ ] 2. Release workflow pack + upload — _AC-001, AC-002_
-- [ ] 3. Bats RTA-001–RTA-006 — _AC-003, AC-004_
-- [ ] 4. Docs + spike update — _AC-005, AC-006_
+- [x] 1. `scripts/pack-runtime.sh` — _AC-001_
+- [x] 2. Release workflow pack + upload — _AC-001, AC-002_
+- [x] 3. Bats RTA-001–RTA-006 — _AC-003, AC-004_
+- [x] 4. Docs + spike update — _AC-005, AC-006_
 - [ ] 5. Homebrew runtime URL (best-effort) — _AC-007_
 
 ### DEV-151 — Tracker Publish CI Automation
@@ -533,6 +533,10 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-08-24 04:45 | 🟢 /agtoosa-build — Task 🟢 4/5 complete — DEV-150 — Docs + spike update; RTA-005/006 green; readme-reference.md corporate section now prefers runtime tarball, install-corporate-edr-plan.md Phase 2 marked shipped | AgToosa |
+| 2026-08-24 04:40 | 🟢 /agtoosa-build — Task 🟢 3/5 complete — DEV-150 — Bats RTA-001–RTA-006 written test-first (RED confirmed), all 6 green after tasks 1-2-4 | AgToosa |
+| 2026-08-24 04:35 | 🟢 /agtoosa-build — Task 🟢 2/5 complete — DEV-150 — release-advanced.yml packs runtime tarball + appends SHA256SUMS digest; RTA-004 green | AgToosa |
+| 2026-08-24 04:25 | 🟢 /agtoosa-build — Task 🟢 1/5 complete — DEV-150 — scripts/pack-runtime.sh; RTA-001/002/003 green; 414K runtime vs ~17.1MB source (≈41× smaller) | AgToosa |
 | 2026-08-24 04:20 | 🏗️ Build 🏗️ Started — DEV-150 — Starting TDD cycle. 5 tasks declared. Scope: `scripts/pack-runtime.sh`, `.github/workflows/release-advanced.yml`, `tests/agtoosa.bats`, `docs/guides/readme-reference.md`. Next: Task 1/5 — scripts/pack-runtime.sh. | AgToosa |
 | 2026-08-23 21:27 | ✏️ Master-Plan sync — DEV-150 + DEV-151 re-targeted to v5.3.63 after stash reconciliation (specs approved 2026-08-01 under stale v5.3.61 target; v5.3.61/v5.3.62 shipped unrelated fixes in the interim) | AgToosa |
 | 2026-08-02 15:45 | 🚀 Release 5.3.62 shipped — pipe bootstrap project path prompt `/dev/tty` fix; closes #99; PR #100 | AgToosa |

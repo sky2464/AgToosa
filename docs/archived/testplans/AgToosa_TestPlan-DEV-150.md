@@ -51,3 +51,21 @@ ok 1 DEV-150 @smoke RTA-004: release workflow packs runtime tarball and appends 
 ```
 
 YAML validated with `ruby -ryaml -e "YAML.load_file(...)"` — valid.
+
+## GREEN evidence — Task 4 (docs + spike update) — RTA-005, RTA-006
+
+Command: `bats tests/agtoosa.bats -f 'RTA-00'`
+Exit code: 0
+
+```
+ok 1 DEV-150 @smoke RTA-001: runtime pack contains exactly agtoosa.sh, agtoosa.ps1, lib/, template/ at root
+ok 2 DEV-150 RTA-002: runtime tarball is materially smaller than a full source archive
+ok 3 DEV-150 RTA-003: runtime archive rejects unexpected repo-only members
+ok 4 DEV-150 @smoke RTA-004: release workflow packs runtime tarball and appends its digest to SHA256SUMS
+ok 5 DEV-150 @smoke RTA-005: readme-reference corporate section prefers runtime tarball over source archive
+ok 6 DEV-150 RTA-006: install-corporate-edr-plan Phase 2 marked shipped
+```
+
+Regression check — pre-existing tests touching `docs/guides/readme-reference.md` also re-run green: `TD-002`, `CW-004`, `INS-002`, `INS-004` (all pass). `RMH-003` fails but is confirmed pre-existing on `main` (unrelated stale text, not touched by this change).
+
+markdownlint: readme-reference.md/install-corporate-edr-plan.md non-blocking in CI (`|| true`); new content follows the doc's existing bold-pseudo-heading convention — no new pattern introduced.
