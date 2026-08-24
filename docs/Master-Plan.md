@@ -25,6 +25,8 @@
 |----|-------|------|----------|--------|-----------|
 | DEV-150 | Feature: Corporate Runtime Release Asset | Feature | M | 🟦 Todo — Spec Approved | 0/5 |
 | DEV-151 | Chore: Tracker Publish CI Automation | Chore | S | 🟦 Todo — Spec Approved | 0/4 |
+| DEV-152 | Chore: Bats Cleanup & Version Pin Consolidation | Chore | S | 🟦 Todo — Spec Approved | 0/5 |
+| DEV-153 | Feature: Bats Tiering & Smoke-Set Extraction | Feature | M | 🟦 Todo — Spec Approved | 0/5 |
 
 <!-- Archived to docs/archived/cycle-2026-08-01-release-5.3.60.md (DEV-147 + DEV-148 + DEV-149 v5.3.60) -->
 
@@ -142,6 +144,22 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 - [ ] 2. Post-ship sync job in release-advanced.yml — _AC-004–AC-006_
 - [ ] 3. Bats GIA-001–GIA-008 — _AC-001–AC-007_
 - [ ] 4. Template + TrackerSync docs — _AC-007, AC-008_
+
+### DEV-152 — Bats Cleanup & Version Pin Consolidation
+
+- [ ] 1. Catalog and analyze 170 stale version pins — _AC-001_
+- [ ] 2. Consolidate version pins (lines 7321–15437) — _AC-001, AC-002, AC-003_
+- [ ] 3. Parameterize version reference (AGTOOSA_VERSION env or fixture) — _AC-001_
+- [ ] 4. Validate clean state (bats compile, grep stale refs) — _AC-004_
+- [ ] 5. Update docs and CHANGELOG — _AC-005_
+
+### DEV-153 — Bats Tiering & Smoke-Set Extraction
+
+- [ ] 1. Analyze current @smoke tags; categorize by speed — _AC-001_
+- [ ] 2. Re-tag smoke-set (trim 228 → 75 tests) — _AC-001_
+- [ ] 3. Create @regression tier (103+ ship wave tests) — _AC-002_
+- [ ] 4. Update CI workflows (PR: smoke; main/release: full/regression) — _AC-004_
+- [ ] 5. Document parallelization in TestPlan.md — _AC-005_
 
 ## Manual / Deferred Tasks
 
