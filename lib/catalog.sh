@@ -4,7 +4,7 @@
 # Sourced by agtoosa.sh for --catalog mode.
 # Read-only discovery and non-executing preset plans; installs delegate to registry.
 
-CATALOG_DEFAULT_PATH="${SCRIPT_DIR}/catalog/catalog.json"
+CATALOG_DEFAULT_PATH="${SCRIPT_DIR}/data/catalog/catalog.json"
 CATALOG_MAX_BYTES=524288
 CATALOG_MAX_ENTRIES=100
 CATALOG_MAX_MEMBERS=20

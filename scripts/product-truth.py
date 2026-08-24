@@ -347,7 +347,7 @@ def main() -> int:
     args = parse_args()
     findings = Findings()
     contract_path = Path(args.contract).resolve()
-    root = Path(args.root).resolve() if args.root else contract_path.parent.parent
+    root = Path(args.root).resolve() if args.root else contract_path.parent.parent.parent
     data = load_contract(contract_path, findings)
     validate_schema(data, root, findings)
     try:

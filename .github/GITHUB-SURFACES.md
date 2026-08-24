@@ -15,7 +15,7 @@ This guide inventories every **nav-visible** GitHub community surface, how to co
 | **Projects** | **Intentionally unused** — Issues + milestones are canonical | Audit only; no Projects v2 board |
 | **Wiki** | Browsable workflow docs | `wiki-sync.yml` → `Home.md` |
 | **Pages** | Static docs from `/docs` | `docs-pages-proof.yml` + Settings enablement |
-| **Security** | Vulnerability reporting | `SECURITY.md` |
+| **Security** | Vulnerability reporting | `.github/SECURITY.md` |
 | **Sponsors** | Optional funding link | `.github/FUNDING.yml` (activation: DEV-084 M-1) |
 
 ## One-time setup

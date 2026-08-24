@@ -57,4 +57,4 @@ Consult `docs/AgToosa_GovernancePolicy.md` (checker: `docs/agtoosa-policy-check.
 
 ## Breaking Change & Deprecation Policy
 
-Breaking changes must have a one-minor-release deprecation notice before removal. Announce the deprecation in a minor release with a runtime warning; remove in the next minor or major release. See `CONTRIBUTING.md` for the full deprecation procedure and timeline example.
+Breaking changes must have a one-minor-release deprecation notice before removal. Announce the deprecation in a minor release with a runtime warning; remove in the next minor or major release. See `.github/CONTRIBUTING.md` for the full deprecation procedure and timeline example.

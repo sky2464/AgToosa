@@ -1,7 +1,7 @@
 # Official Pack Pilot — Review and Evidence Checklist
 
 > **Stories:** DEV-080 (three pilots), DEV-095 (five-pack expansion)  
-> **Catalog contract consumed:** `schema_version` **1.0** (`catalog/catalog.schema.json` / DEV-053)  
+> **Catalog contract consumed:** `schema_version` **1.0** (`data/catalog/catalog.schema.json` / DEV-053)  
 > **Maintainer:** sky2464  
 > **Publication status:** DEV-080 trio **published** in external registry (`verified: false`); `official-react` / `official-security` remain **local candidate**
 

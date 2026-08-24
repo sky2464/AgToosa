@@ -11,7 +11,7 @@ This document is the canonical boundary for community support, GitHub Sponsors, 
 | Question / troubleshooting | [GitHub Discussions (Q&A)](https://github.com/sky2464/AgToosa/discussions/new?category=q-a) | What you tried, OS/shell, install command, relevant logs | Community best-effort triage |
 | Reproducible bug | [Bug report issue](https://github.com/sky2464/AgToosa/issues/new?template=bug.yml) | Steps to reproduce, expected vs actual, environment | Community best-effort triage |
 | Feature proposal | [Feature request](https://github.com/sky2464/AgToosa/issues/new?template=feature.yml) or [Discussions](https://github.com/sky2464/AgToosa/discussions) | Use case, motivation, expected behavior | Community best-effort discussion |
-| Security vulnerability | Private only — see [SECURITY.md](../SECURITY.md) | Description, reproduction, impact | Private intake; no public issue |
+| Security vulnerability | Private only — see [SECURITY.md](SECURITY.md) | Description, reproduction, impact | Private intake; no public issue |
 | Consulting inquiry | Outside open-source channels (see below) | Scope under a separately executed agreement | Not an open-source support entitlement |
 
 ## Before asking
@@ -43,6 +43,6 @@ Maintainers may offer optional consulting as a **separate commercial relationshi
 
 ## Related links
 
-- [SECURITY.md](../SECURITY.md) — private vulnerability reporting
-- [CONTRIBUTING.md](../CONTRIBUTING.md) — contribution process
-- [CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md) — community standards
+- [SECURITY.md](SECURITY.md) — private vulnerability reporting
+- [CONTRIBUTING.md](CONTRIBUTING.md) — contribution process
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) — community standards

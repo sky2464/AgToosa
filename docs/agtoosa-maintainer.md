@@ -78,7 +78,7 @@ Inline comments in `lib/*.sh` and `agtoosa.sh` should describe behavior in plain
 - `ship/` is temporary staging output and must never be treated as durable project state.
 - `.agtoosa/pack-queue/` is the durable staging area for `--registry install` packs until the next project install merges them.
 - Downstream installs merge an operational `.gitignore` marker block via `lib/gitignore.sh` (DEV-144) — `.agtoosa/`, `*.bak.*`, `.worktrees/` only; workflow docs and provenance markers stay committed.
-- The canonical version lives in `AGTOOSA_VERSION` at the top of `agtoosa.sh` and must match `agtoosa.ps1` and `npm/package.json`.
+- The canonical version lives in `AGTOOSA_VERSION` at the top of `agtoosa.sh` and must match `agtoosa.ps1` and `packaging/npm/package.json`.
 - `lib/maintain.sh` owns `--verify`, `--doctor`, and `--uninstall` (sourced by `agtoosa.sh`).
 - `lib/cleanup.sh` owns `--cleanup` (merge backups, orphan docs, deselected platform files).
 - Proof-engine artifacts ship from `template/Docs/` into every install: `agtoosa-verify.sh`, `agtoosa-gate.yml.example`, and `agtoosa-events.jsonl` (seed file). The maintainer mirror is `docs/agtoosa-verify.sh` — keep both copies aligned when changing gate logic.
@@ -105,7 +105,7 @@ Beyond the interactive install wizard, `agtoosa.sh` exposes these maintainer-rel
 | `-Yes` | `agtoosa.ps1` | Non-interactive consent (CI, devcontainers) | Requires `-Path` |
 | `--allow-unverified` | `lib/registry.sh` | Opt in to installing registry packs where `verified: false` | See Supply Chain section below |
 
-**npm wrapper:** `npm/` publishes a thin `npx agtoosa` shim that downloads the release tarball pinned to `npm/package.json` version, screens archive members, and forwards args to `agtoosa.sh`. Bump `npm/package.json` version in lockstep with `AGTOOSA_VERSION` on every release.
+**npm wrapper:** `packaging/npm/` publishes a thin `npx agtoosa` shim that downloads the release tarball pinned to `packaging/npm/package.json` version, screens archive members, and forwards args to `agtoosa.sh`. Bump `packaging/npm/package.json` version in lockstep with `AGTOOSA_VERSION` on every release.
 
 **Verifier modes** (on either copy of `agtoosa-verify.sh`):
 
@@ -171,7 +171,7 @@ bash scripts/cleanup-github-branches.sh --apply --close-prs
 
 1. Update `lib/config.sh` help text and `lib/maintain.sh` behavior together.
 2. Add or extend bats coverage in `tests/agtoosa.bats` (VF/DR/UN sections).
-3. Keep `npm/package.json` version identical to `AGTOOSA_VERSION` — the npm wrapper pins downloads to that version.
+3. Keep `packaging/npm/package.json` version identical to `AGTOOSA_VERSION` — the npm wrapper pins downloads to that version.
 
 ## Proof Engine Artifacts
 
@@ -197,7 +197,7 @@ Registry and bootstrap behavior changed in the v5.3.0 supply-chain wave. Touch t
 | Sensitive destination denylist | `lib/install.sh:PACK_DENYLIST_PATTERNS` | Packs cannot merge into `.claude/settings.json`, `.claude/hooks/`, `.github/workflows/`, or `Docs/Master-Plan.md` / `docs/Master-Plan.md` (project-owned PM state) |
 | Verified flag | `lib/registry.sh` | `verified: false` packs require `--allow-unverified` or `AGTOOSA_ALLOW_UNVERIFIED=1` |
 | Content preview | `lib/registry.sh:_print_pack_preview` | Lists staged files, flags AI-instruction surfaces, shows blocked destinations before consent |
-| Pinned bootstrap | `bootstrap.sh`, `Formula/agtoosa.rb` | `--ref vX.Y.Z` fails closed (no branch fallback); optional `--sha256`; releases publish `SHA256SUMS` |
+| Pinned bootstrap | `bootstrap.sh`, `packaging/homebrew/agtoosa.rb` | `--ref vX.Y.Z` fails closed (no branch fallback); optional `--sha256`; releases publish `SHA256SUMS` |
 
 User-facing registry docs live in `template/Docs/AgToosa_Registry.md` (mirror: `docs/AgToosa_Registry.md`). Threat-model detail: `docs/security/template-injection-threat-model.md`.
 
@@ -264,9 +264,9 @@ Adding a new fix-command? It must emit the closure line on successful completion
 
 Do **not** advance MINOR for every small story. Update Project Charter **Milestone** to the **next PATCH** on the active MINOR (e.g. `v5.2.1 (next)` while shipped is `5.2.0`).
 
-- Bump `AGTOOSA_VERSION` in `agtoosa.sh`, `agtoosa.ps1`, and `npm/package.json` to identical values (bats checks parity).
+- Bump `AGTOOSA_VERSION` in `agtoosa.sh`, `agtoosa.ps1`, and `packaging/npm/package.json` to identical values (bats checks parity).
 - Update `README.md` version badge AND any pinned `--ref vX.Y.Z` install snippets — they drift silently across releases.
-- Publish `SHA256SUMS` for bootstrap tarballs; pin `Formula/agtoosa.rb` to the tagged tarball + sha256.
+- Publish `SHA256SUMS` for bootstrap tarballs; pin `packaging/homebrew/agtoosa.rb` to the tagged tarball + sha256.
 - **Publish the GitHub release** per [`.github/RELEASE.md`](../.github/RELEASE.md): after version bump commits land on `main`, run `git tag vX.Y.Z && git push origin vX.Y.Z`, then confirm `release-advanced.yml` is green and `gh release view vX.Y.Z` shows notes + assets. Do **not** log `Release X shipped` in Master-Plan until the tag is pushed and CI succeeds.
 - Run `bash agtoosa.sh --verify .` on this repo before shipping generator or template changes that touch lifecycle state.
 - Run `bash scripts/check-launch-readiness.sh --mode private` to confirm the release tag is published on `origin` (fails when local version exceeds the newest remote tag).

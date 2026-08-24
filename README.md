@@ -7,7 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-5.3.62-green.svg)](https://github.com/sky2464/AgToosa/releases)
 [![CI Status](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](.github/CONTRIBUTING.md)
 [![Discussions](https://img.shields.io/badge/Discussions-GitHub-blue.svg)](https://github.com/sky2464/AgToosa/discussions)
 
 </div>
@@ -31,6 +31,16 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sky2464/AgToosa/$Ref/b
 
 When the generator starts, enter your project path at the prompt (or `cd` into your repo first). Then open your AI assistant: `/agtoosa-init` once → `/agtoosa-next` repeatedly.
 [Full install matrix, flags, and troubleshooting →](docs/guides/readme-reference.md)
+
+### What lands in your repo
+
+AgToosa only ever writes a `Docs/` folder plus your chosen AI platform's config into the *target* project you point it at — this repository is the generator's own source, none of it is copied into your codebase.
+
+```
+your-project/
+├── Docs/              # workflow docs, deterministic verifier, generated specs
+└── .claude/ .cursor/  # (or whichever platform(s) you selected)
+```
 
 ## See it in action
 
@@ -110,7 +120,7 @@ curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh |
 
 ## Contributing & support
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Community help and sponsorship: [`.github/SUPPORT.md`](.github/SUPPORT.md). Security: [SECURITY.md](SECURITY.md).
+See [CONTRIBUTING.md](.github/CONTRIBUTING.md). Community help and sponsorship: [`.github/SUPPORT.md`](.github/SUPPORT.md). Security: [SECURITY.md](.github/SECURITY.md).
 
 <!-- AGTOOSA-ROADMAP:START -->
 

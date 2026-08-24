@@ -164,7 +164,7 @@ See the [Quick install](../README.md#quick-install) commands — pipe-based Bash
 | Persistence | None — generator runs on demand and exits |
 | Telemetry | None |
 | Install scope | Writes markdown workflow files and platform adapters into the target repo |
-| Integrity | Pinned `--ref` (fail-closed); release `SHA256SUMS`; optional minisign soft-warn ([SECURITY.md](../../SECURITY.md)) |
+| Integrity | Pinned `--ref` (fail-closed); release `SHA256SUMS`; optional minisign soft-warn ([SECURITY.md](../../.github/SECURITY.md)) |
 | Allowlist URLs | `github.com/sky2464/AgToosa/releases`, `github.com/sky2464/agtoosa-registry`, `github.com/sky2464/homebrew-agtoosa` |
 | Not recommended | Full `git clone` for end users (ships maintainer tree, tests, and fixtures) |
 

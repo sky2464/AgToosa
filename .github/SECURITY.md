@@ -22,7 +22,7 @@ If you discover a security vulnerability in AgToosa, please report it responsibl
 
 Security intake is private and maintained on a **best-effort** basis. This policy defines where to report; it does **not** establish an acknowledgement, response, remediation, or SLA timeline. Any contractual timing commitments would appear only in a separately executed agreement, not in this document.
 
-For community support channels (questions, bugs, proposals) and the sponsorship/consulting boundary, see [`.github/SUPPORT.md`](.github/SUPPORT.md).
+For community support channels (questions, bugs, proposals) and the sponsorship/consulting boundary, see [`SUPPORT.md`](SUPPORT.md).
 
 ## Security Model
 

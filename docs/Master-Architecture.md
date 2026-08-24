@@ -75,7 +75,7 @@ flowchart TB
 | Template pack | Canonical workflow docs and platform adapters | `template/` | Generated project contract |
 | Project docs | Maintainer dogfood state | `docs/` | AgToosa repository state |
 | Regression tests | Install, update, parity, and workflow assertions | `tests/agtoosa.bats` | QA harness |
-| Product Truth Contract | Closed, inert command, target, path, platform, backend, dependency, claim, and projection facts | `contracts/product-truth-v1.json`, `contracts/product-truth-v1.schema.json` | Canonical static truth; data only, never an executable runtime configuration |
+| Product Truth Contract | Closed, inert command, target, path, platform, backend, dependency, claim, and projection facts | `data/contracts/product-truth-v1.json`, `data/contracts/product-truth-v1.schema.json` | Canonical static truth; data only, never an executable runtime configuration |
 | Product Truth tooling | Bounded validation, reconciliation, claim freshness, and managed-block projection | `scripts/product-truth.py`, `scripts/product_truth_core.py` | Offline Python standard library; check modes never write and apply is explicit |
 | Product Truth tests | Positive and tampered fixtures for every DEV-118 Must AC | `tests/product-truth.bats`, `tests/fixtures/product-truth/` | Static conformance only; evidence provenance and assistant behavior remain separate boundaries |
 

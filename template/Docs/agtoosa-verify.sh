@@ -433,7 +433,7 @@ if [[ -f "$ROOT/agtoosa.sh" && -f "$ROOT/agtoosa.ps1" ]]; then
   else
     fail "G5-version-mismatch" "generator version mismatch (bash=$bv, ps1=$pv)" \
       "Mismatched generator versions break install/update consistency." \
-      "Align AGTOOSA_VERSION in agtoosa.sh and agtoosa.ps1 (and npm/package.json)." enforced
+      "Align AGTOOSA_VERSION in agtoosa.sh and agtoosa.ps1 (and packaging/npm/package.json)." enforced
   fi
 elif [[ -f "$DOCS/.agtoosa-version" ]]; then
   pass "installed AgToosa version: $(cat "$DOCS/.agtoosa-version")"

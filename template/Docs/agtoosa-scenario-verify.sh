@@ -57,7 +57,7 @@ done
 
 scenario_is_platform "$PLATFORM" || { echo "Error: unknown platform '$PLATFORM'" >&2; exit 2; }
 
-CORPUS="${CORPUS:-$REPO_ROOT/scenarios/corpus-v1.json}"
+CORPUS="${CORPUS:-$REPO_ROOT/data/scenarios/corpus-v1.json}"
 [[ -f "$CORPUS" ]] || { echo "Error: corpus file '$CORPUS' not found" >&2; exit 2; }
 
 if ! command -v python3 >/dev/null 2>&1; then

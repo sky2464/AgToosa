@@ -66,4 +66,4 @@ Issues with no activity for **30 days** receive a `stale` warning via the stale 
 
 ## Escalation
 
-Security vulnerabilities must NOT be filed as public issues. See [SECURITY.md](../SECURITY.md) for the private disclosure process.
+Security vulnerabilities must NOT be filed as public issues. See [SECURITY.md](SECURITY.md) for the private disclosure process.
