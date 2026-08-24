@@ -43,6 +43,9 @@ jobs:
           destination: ./_site
           build_revision: ${{ github.sha }}
 
+      - name: Fix _site ownership (jekyll-build-pages runs as root in Docker)
+        run: sudo chown -R "$(id -u):$(id -g)" _site
+
       - name: Stamp artifact with source commit
         run: |
           set -euo pipefail
