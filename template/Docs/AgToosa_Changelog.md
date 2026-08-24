@@ -7,7 +7,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
-## [5.3.34] — 2026-07-26
+## [0.3.34] — 2026-07-26
 
 Patch release: DEV-121 — Behavioral Conformance Lab.
 
@@ -17,7 +17,7 @@ Patch release: DEV-121 — Behavioral Conformance Lab.
 
 ---
 
-## [5.3.33] — 2026-07-26
+## [0.3.33] — 2026-07-26
 
 Patch release: DEV-127 — README Experience Refresh.
 
@@ -27,7 +27,7 @@ Patch release: DEV-127 — README Experience Refresh.
 
 ---
 
-## [5.3.32] — 2026-07-26
+## [0.3.32] — 2026-07-26
 
 Patch release: DEV-119 — Recoverable Project Transaction.
 
@@ -37,7 +37,7 @@ Patch release: DEV-119 — Recoverable Project Transaction.
 
 ---
 
-## [5.3.31] — 2026-07-25
+## [0.3.31] — 2026-07-25
 
 Patch release: cross-model review consent and workflow policy.
 
@@ -47,7 +47,7 @@ Patch release: cross-model review consent and workflow policy.
 
 ---
 
-## [5.3.30] — 2026-07-22
+## [0.3.30] — 2026-07-22
 
 Patch release: DEV-118 — Product Truth & Adapter Contract.
 
@@ -61,7 +61,7 @@ Patch release: DEV-118 — Product Truth & Adapter Contract.
 
 ---
 
-## [5.3.28] — 2026-07-12
+## [0.3.28] — 2026-07-12
 
 Patch release: DEV-116 — AgToosa Lifecycle Compass.
 
@@ -71,7 +71,7 @@ Patch release: DEV-116 — AgToosa Lifecycle Compass.
 
 ---
 
-## [5.3.27] — 2026-07-12
+## [0.3.27] — 2026-07-12
 
 Patch release: DEV-115 — `--cleanup` safety follow-up.
 
@@ -79,7 +79,7 @@ Patch release: DEV-115 — `--cleanup` safety follow-up.
 
 - **DEV-115 — `--cleanup` safety follow-up.** `--only backups` limits housekeeping to merge backups; preserve deep-merged `.claude/settings.json` when Claude is deselected; CLN-015–CLN-017 bats; `AgToosa_Update.md` guidance.
 
-## [5.3.26] — 2026-07-12
+## [0.3.26] — 2026-07-12
 
 Patch release: DEV-113 — Cursor intake hardening + fixture parity.
 
@@ -89,7 +89,7 @@ Patch release: DEV-113 — Cursor intake hardening + fixture parity.
 
 ---
 
-## [5.3.25] — 2026-07-12
+## [0.3.25] — 2026-07-12
 
 Patch release: DEV-114 — `--cleanup` false-positive hotfix.
 
@@ -99,7 +99,7 @@ Patch release: DEV-114 — `--cleanup` false-positive hotfix.
 
 ---
 
-## [5.3.24] — 2026-07-12
+## [0.3.24] — 2026-07-12
 
 Patch release: DEV-112 — Smart Apply UX Polish + `--cleanup`.
 
@@ -108,7 +108,7 @@ Patch release: DEV-112 — Smart Apply UX Polish + `--cleanup`.
 - **DEV-112 — Smart Apply UX Polish.** Quiet upgrade output; platform legend with checkmarks; context-aware next steps; SAU-011–SAU-017.
 - **DEV-112 — `--cleanup` housekeeping.** Opt-in removal of merge backups, orphan docs, and deselected platform files; CLN-001–CLN-011.
 
-## [5.3.23] — 2026-07-12
+## [0.3.23] — 2026-07-12
 
 Patch release: DEV-111 — Smart One-Command Install UX.
 

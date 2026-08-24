@@ -275,11 +275,11 @@ PY
 }
 
 @test "DEV-118 @smoke PTC-008: Windows bootstrap binds and validates exact refs" {
-  run_check --only windows-ref --windows-ref v5.3.28     --archive-map "$FIXTURES/windows-ref/archives.json"
+  run_check --only windows-ref --windows-ref v0.3.28     --archive-map "$FIXTURES/windows-ref/archives.json"
   [ "$status" -eq 0 ]
-  [[ "$output" == *"refs/tags/v5.3.28"* ]]
+  [[ "$output" == *"refs/tags/v0.3.28"* ]]
 
-  run_check --only windows-ref --windows-ref 'v5.3.28;main'     --archive-map "$FIXTURES/windows-ref/archives.json"
+  run_check --only windows-ref --windows-ref 'v0.3.28;main'     --archive-map "$FIXTURES/windows-ref/archives.json"
   [ "$status" -ne 0 ]
   [[ "$output" == *"invalid release ref"* ]]
 

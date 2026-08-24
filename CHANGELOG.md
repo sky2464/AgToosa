@@ -9,10 +9,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ### Fixed
 
-- **Piped stdin prompt answers (v5.3.62 regression).** `agtoosa_prompt_read` again accepts `printf | bash agtoosa.sh` scripted answers; only `curl | bash` bootstrap (script on stdin) routes to `/dev/tty`. Bats: B33-006; restores UPG-005/008/009.
+- **Piped stdin prompt answers (v0.3.62 regression).** `agtoosa_prompt_read` again accepts `printf | bash agtoosa.sh` scripted answers; only `curl | bash` bootstrap (script on stdin) routes to `/dev/tty`. Bats: B33-006; restores UPG-005/008/009.
 - **Gitignore merge data loss on malformed marker.** When `.gitignore` has a `BEGIN AgToosa operational` marker without a matching `END`, merge now leaves the file unchanged instead of silently deleting trailing user rules. Bats: GIG-009.
 
-## [5.3.62] — 2026-08-02
+## [0.3.62] — 2026-08-02
 
 Patch release: pipe bootstrap project path prompt ([#99](https://github.com/sky2464/AgToosa/issues/99)).
 
@@ -22,7 +22,7 @@ Patch release: pipe bootstrap project path prompt ([#99](https://github.com/sky2
 
 ---
 
-## [5.3.61] — 2026-08-02
+## [0.3.61] — 2026-08-02
 
 Patch release: bootstrap macOS bash 3.2 nounset fix ([#94](https://github.com/sky2464/AgToosa/issues/94)).
 
@@ -32,7 +32,7 @@ Patch release: bootstrap macOS bash 3.2 nounset fix ([#94](https://github.com/sk
 
 ---
 
-## [5.3.60] — 2026-08-01
+## [0.3.60] — 2026-08-01
 
 Patch release: DEV-147 — Tracker CI Publish Hardening; DEV-148 — One-Line Install Hardening; DEV-149 — Issues-Sync README Guard.
 
@@ -47,7 +47,7 @@ Patch release: DEV-147 — Tracker CI Publish Hardening; DEV-148 — One-Line In
 
 ---
 
-## [5.3.59] — 2026-07-28
+## [0.3.59] — 2026-07-28
 
 Patch release: DEV-145 — Tracker Bootstrap Apply; DEV-146 — README First-Visit Simplification.
 
@@ -61,7 +61,7 @@ Patch release: DEV-145 — Tracker Bootstrap Apply; DEV-146 — README First-Vis
 
 ---
 
-## [5.3.58] — 2026-07-28
+## [0.3.58] — 2026-07-28
 
 Patch release: DEV-144 — Operational Gitignore Auto-Merge.
 
@@ -71,7 +71,7 @@ Patch release: DEV-144 — Operational Gitignore Auto-Merge.
 
 ---
 
-## [5.3.57] — 2026-07-28
+## [0.3.57] — 2026-07-28
 
 Patch release: DEV-143 — Tracker Unlinked Status Finding.
 
@@ -81,7 +81,7 @@ Patch release: DEV-143 — Tracker Unlinked Status Finding.
 
 ---
 
-## [5.3.56] — 2026-07-28
+## [0.3.56] — 2026-07-28
 
 Patch release: DEV-142 — GitHub Surface Audit & Community Profile.
 
@@ -91,7 +91,7 @@ Patch release: DEV-142 — GitHub Surface Audit & Community Profile.
 
 ---
 
-## [5.3.55] — 2026-07-28
+## [0.3.55] — 2026-07-28
 
 Patch release: DEV-141 — Tracker Discovery & Bootstrap.
 
@@ -101,7 +101,7 @@ Patch release: DEV-141 — Tracker Discovery & Bootstrap.
 
 ---
 
-## [5.3.54] — 2026-07-28
+## [0.3.54] — 2026-07-28
 
 Patch release: DEV-140 — Help vs Next disambiguation hardening.
 
@@ -111,7 +111,7 @@ Patch release: DEV-140 — Help vs Next disambiguation hardening.
 
 ---
 
-## [5.3.53] — 2026-07-28
+## [0.3.53] — 2026-07-28
 
 Patch release: DEV-138 — Main CI Health.
 
@@ -121,7 +121,7 @@ Patch release: DEV-138 — Main CI Health.
 
 ---
 
-## [5.3.52] — 2026-07-28
+## [0.3.52] — 2026-07-28
 
 Patch release: DEV-139 — GitHub Issues PM Bridge (Phased B).
 
@@ -131,7 +131,7 @@ Patch release: DEV-139 — GitHub Issues PM Bridge (Phased B).
 
 ---
 
-## [5.3.51] — 2026-07-28
+## [0.3.51] — 2026-07-28
 
 Patch release: DEV-137 — Security Scanning CI health.
 
@@ -141,7 +141,7 @@ Patch release: DEV-137 — Security Scanning CI health.
 
 ---
 
-## [5.3.50] — 2026-07-28
+## [0.3.50] — 2026-07-28
 
 Patch release: DEV-136 — IDE host mode bridge for spec and review.
 
@@ -151,7 +151,7 @@ Patch release: DEV-136 — IDE host mode bridge for spec and review.
 
 ---
 
-## [5.3.49] — 2026-07-28
+## [0.3.49] — 2026-07-28
 
 Patch release: DEV-135 — natural-language continuation routes to `/agtoosa-next`.
 
@@ -161,7 +161,7 @@ Patch release: DEV-135 — natural-language continuation routes to `/agtoosa-nex
 
 ---
 
-## [5.3.48] — 2026-07-28
+## [0.3.48] — 2026-07-28
 
 Patch release: DEV-134 — README hero media pass (catch-up formalization).
 
@@ -171,7 +171,7 @@ Patch release: DEV-134 — README hero media pass (catch-up formalization).
 
 ---
 
-## [5.3.47] — 2026-07-28
+## [0.3.47] — 2026-07-28
 
 Patch release: DEV-133 — GitHub branch hygiene for Cursor agent sprawl.
 
@@ -181,7 +181,7 @@ Patch release: DEV-133 — GitHub branch hygiene for Cursor agent sprawl.
 
 ---
 
-## [5.3.46] — 2026-07-27
+## [0.3.46] — 2026-07-27
 
 Patch release: DEV-132 — Preserve Evidence JSONL on re-install and update.
 
@@ -191,7 +191,7 @@ Patch release: DEV-132 — Preserve Evidence JSONL on re-install and update.
 
 ---
 
-## [5.3.45] — 2026-07-27
+## [0.3.45] — 2026-07-27
 
 Patch release: DEV-131 — Sequential Approval + Release Publication Gate.
 
@@ -202,7 +202,7 @@ Patch release: DEV-131 — Sequential Approval + Release Publication Gate.
 
 ---
 
-## [5.3.44] — 2026-07-27
+## [0.3.44] — 2026-07-27
 
 Patch release: DEV-130 — BCL Hardening & CI Wiring; Sivarena UX follow-up (UPG-010/011).
 
@@ -213,7 +213,7 @@ Patch release: DEV-130 — BCL Hardening & CI Wiring; Sivarena UX follow-up (UPG
 
 ---
 
-## [5.3.43] — 2026-07-26
+## [0.3.43] — 2026-07-26
 
 Patch release: DEV-129 — Smart Upgrade UX Polish.
 
@@ -223,17 +223,17 @@ Patch release: DEV-129 — Smart Upgrade UX Polish.
 
 ---
 
-## [5.3.42] — 2026-07-26
+## [0.3.42] — 2026-07-26
 
 Patch release: DEV-128 hotfix — interactive upgrade platform prompt.
 
 ### Fixed
 
-- **DEV-128 hotfix.** Restore `read -rp` for the upgrade `Platforms:` prompt on macOS (v5.3.41 `read -e` hid the prompt and blocked input); UPG-007 regression.
+- **DEV-128 hotfix.** Restore `read -rp` for the upgrade `Platforms:` prompt on macOS (v0.3.41 `read -e` hid the prompt and blocked input); UPG-007 regression.
 
 ---
 
-## [5.3.41] — 2026-07-26
+## [0.3.41] — 2026-07-26
 
 Patch release: DEV-128 — Smart Upgrade Platform Selection & Version Guards.
 
@@ -243,7 +243,7 @@ Patch release: DEV-128 — Smart Upgrade Platform Selection & Version Guards.
 
 ---
 
-## [5.3.40] — 2026-07-26
+## [0.3.40] — 2026-07-26
 
 Patch release: DEV-124 — Cross-Framework Interchange.
 
@@ -253,7 +253,7 @@ Patch release: DEV-124 — Cross-Framework Interchange.
 
 ---
 
-## [5.3.39] — 2026-07-26
+## [0.3.39] — 2026-07-26
 
 Patch release: DEV-123 — Guarded Portable Execution.
 
@@ -263,7 +263,7 @@ Patch release: DEV-123 — Guarded Portable Execution.
 
 ---
 
-## [5.3.38] — 2026-07-26
+## [0.3.38] — 2026-07-26
 
 Patch release: DEV-122 — Change-Aware Adaptive Delivery.
 
@@ -273,7 +273,7 @@ Patch release: DEV-122 — Change-Aware Adaptive Delivery.
 
 ---
 
-## [5.3.37] — 2026-07-26
+## [0.3.37] — 2026-07-26
 
 Patch release: DEV-120 — Delivery Proof Fabric.
 
@@ -283,7 +283,7 @@ Patch release: DEV-120 — Delivery Proof Fabric.
 
 ---
 
-## [5.3.36] — 2026-07-26
+## [0.3.36] — 2026-07-26
 
 Patch release: DEV-126 — Spec Interview Hardening.
 
@@ -293,7 +293,7 @@ Patch release: DEV-126 — Spec Interview Hardening.
 
 ---
 
-## [5.3.35] — 2026-07-26
+## [0.3.35] — 2026-07-26
 
 Patch release: DEV-125 — /agtoosa-next Lifecycle Dispatcher.
 
@@ -303,7 +303,7 @@ Patch release: DEV-125 — /agtoosa-next Lifecycle Dispatcher.
 
 ---
 
-## [5.3.34] — 2026-07-26
+## [0.3.34] — 2026-07-26
 
 Patch release: DEV-121 — Behavioral Conformance Lab.
 
@@ -313,7 +313,7 @@ Patch release: DEV-121 — Behavioral Conformance Lab.
 
 ---
 
-## [5.3.33] — 2026-07-26
+## [0.3.33] — 2026-07-26
 
 Patch release: DEV-127 — README Experience Refresh.
 
@@ -323,7 +323,7 @@ Patch release: DEV-127 — README Experience Refresh.
 
 ---
 
-## [5.3.32] — 2026-07-26
+## [0.3.32] — 2026-07-26
 
 Patch release: DEV-119 — Recoverable Project Transaction.
 
@@ -333,7 +333,7 @@ Patch release: DEV-119 — Recoverable Project Transaction.
 
 ---
 
-## [5.3.31] — 2026-07-25
+## [0.3.31] — 2026-07-25
 
 Patch release: cross-model review consent and workflow policy.
 
@@ -343,7 +343,7 @@ Patch release: cross-model review consent and workflow policy.
 
 ---
 
-## [5.3.30] — 2026-07-22
+## [0.3.30] — 2026-07-22
 
 Patch release: DEV-118 — Product Truth & Adapter Contract.
 
@@ -353,7 +353,7 @@ Patch release: DEV-118 — Product Truth & Adapter Contract.
 
 ---
 
-## [5.3.29] — 2026-07-14
+## [0.3.29] — 2026-07-14
 
 Patch release: DEV-117 — Cycle Continuity Guard.
 
@@ -363,7 +363,7 @@ Patch release: DEV-117 — Cycle Continuity Guard.
 
 ---
 
-## [5.3.28] — 2026-07-12
+## [0.3.28] — 2026-07-12
 
 Patch release: DEV-116 — AgToosa Lifecycle Compass.
 
@@ -373,7 +373,7 @@ Patch release: DEV-116 — AgToosa Lifecycle Compass.
 
 ---
 
-## [5.3.27] — 2026-07-12
+## [0.3.27] — 2026-07-12
 
 Patch release: DEV-115 — `--cleanup` safety follow-up.
 
@@ -381,7 +381,7 @@ Patch release: DEV-115 — `--cleanup` safety follow-up.
 
 - **DEV-115 — `--cleanup` safety follow-up.** `--only backups` limits housekeeping to merge backups; preserve deep-merged `.claude/settings.json` when Claude is deselected; CLN-015–CLN-017 bats; `AgToosa_Update.md` guidance.
 
-## [5.3.26] — 2026-07-12
+## [0.3.26] — 2026-07-12
 
 Patch release: DEV-113 — Cursor intake hardening + fixture parity.
 
@@ -389,7 +389,7 @@ Patch release: DEV-113 — Cursor intake hardening + fixture parity.
 
 - **DEV-113 — Cursor intake hardening.** FIX-001 exercises `scripts/cursor-intake-fixture.sh`; CIT-002–CIT-004 bats; `template/CLAUDE.md` NL Intent Map parity; install bats use `$AGTOOSA_SHIP_DIR` for ship isolation.
 
-## [5.3.25] — 2026-07-12
+## [0.3.25] — 2026-07-12
 
 Patch release: DEV-114 — `--cleanup` false-positive hotfix.
 
@@ -397,7 +397,7 @@ Patch release: DEV-114 — `--cleanup` false-positive hotfix.
 
 - **DEV-114 — `--cleanup` false positives.** Symmetric Copilot/VS Code shared-path guard (`.github/prompts`, `.github/agents`); preserve `Docs/AgToosa_TestPlan-*` story test plans; CLN-012–CLN-014 bats; `AgToosa_Update.md` cleanup guidance.
 
-## [5.3.24] — 2026-07-12
+## [0.3.24] — 2026-07-12
 
 Patch release: DEV-112 — Smart Apply UX polish + `--cleanup` + Cursor NL intent routing.
 
@@ -412,7 +412,7 @@ Patch release: DEV-112 — Smart Apply UX polish + `--cleanup` + Cursor NL inten
 
 - `AGTOOSA_SHIP_DIR` override for isolated staging; post-install cleanup hint via `offer_cleanup_after_apply`.
 
-## [5.3.23] — 2026-07-12
+## [0.3.23] — 2026-07-12
 
 Patch release: DEV-111 — Smart One-Command Install UX.
 
@@ -420,7 +420,7 @@ Patch release: DEV-111 — Smart One-Command Install UX.
 
 - **DEV-111 — Smart One-Command Install UX.** Auto-detect upgrade on re-run; `Found:` platform detect + optional add; `smart_apply()` unified path; smart per-file preserve/refresh (Master-Plan, Context placeholders); human summary buckets (Updated/Preserved/Unchanged/Merged); `--force` hidden from interactive UX; PS1 parity; SAU-001–SAU-010 bats.
 
-## [5.3.22] — 2026-07-12
+## [0.3.22] — 2026-07-12
 
 Patch release: DEV-110 — AgToosa Project Intake.
 
@@ -428,7 +428,7 @@ Patch release: DEV-110 — AgToosa Project Intake.
 
 - **DEV-110 — AgToosa Project Intake.** Dual-mode freeform PM classifier (soft expedite + hard gate); always-on `agtoosa-core.mdc`; Project Intake Protocol in Agent.md; Standing Corrections in `workflow.md`; ADR-013; INT-001–INT-012 bats.
 
-## [5.3.21] — 2026-07-12
+## [0.3.21] — 2026-07-12
 
 Patch release: DEV-109 — Lifecycle Next-Step Sync + Multi-Spec Clarity.
 
@@ -436,7 +436,7 @@ Patch release: DEV-109 — Lifecycle Next-Step Sync + Multi-Spec Clarity.
 
 - **DEV-109 — Lifecycle Next-Step Sync + Multi-Spec Clarity.** Dual-line phase close (`Next:` lifecycle command + `SYNC:` pulse); `agtoosa.sh --status-line` and `agtoosa.ps1 -StatusLine` read-only Master-Plan parse; multi-spec intake + clarity tags (`ready` · `sa-ready` · `needs-interview`); repeating soft-cap interview budget; ADR-012; LNS-001–LNS-010 bats.
 
-## [5.3.20] — 2026-07-12
+## [0.3.20] — 2026-07-12
 
 Patch release: DEV-107 + Rev4 Wave 3 (DEV-095, DEV-096, DEV-098, DEV-099, DEV-101, DEV-102, DEV-103, DEV-104, DEV-106).
 
@@ -453,11 +453,11 @@ Patch release: DEV-107 + Rev4 Wave 3 (DEV-095, DEV-096, DEV-098, DEV-099, DEV-10
 - **DEV-103 — External Registry Publication Runbook.** `registry-external-publication-runbook.md`; PUB-001–007 bats.
 - **DEV-106 — Built with AgToosa Showcase.** `built-with-agtoosa.md`; SHOW-001–007 bats.
 
-## [5.3.19] — 2026-07-12
+## [0.3.19] — 2026-07-12
 
-_Superseded by [5.3.20] batched ship — DEV-107 included in 5.3.20._
+_Superseded by [0.3.20] batched ship — DEV-107 included in 0.3.20._
 
-## [5.3.18] — 2026-07-12
+## [0.3.18] — 2026-07-12
 
 Patch release: Rev4 Wave 1b/2 remainder (DEV-089, DEV-091, DEV-093, DEV-100).
 
@@ -468,7 +468,7 @@ Patch release: Rev4 Wave 1b/2 remainder (DEV-089, DEV-091, DEV-093, DEV-100).
 - **DEV-093 — Install State File + Lock Reconciliation.** `lib/state.sh` + `lib/lock.sh`; gitignored `.agtoosa/state.json`; STF-001–009 bats.
 - **DEV-100 — Shared JSON Output for Install/Registry.** Catalog plan/info `--format json` reusing DEV-090 schema; JIO-001–007 bats.
 
-## [5.3.17] — 2026-07-12
+## [0.3.17] — 2026-07-12
 
 Patch release: Rev4 Wave 1a (DEV-086, DEV-090, DEV-105).
 
@@ -478,7 +478,7 @@ Patch release: Rev4 Wave 1a (DEV-086, DEV-090, DEV-105).
 - **DEV-090 — Unified Install/Update Plan Engine.** `lib/plan.sh` shared categorization; dry-run/`--format json` plan schema; Init/Update lock path `Docs/agtoosa-lock.json`; PLN-001–009 bats.
 - **DEV-105 — PowerShell Maintain + Update Parity.** `-Verify`/`-Doctor`/`-Uninstall`; `-Update` delegates to bash `run_update`; Pester maintain suite; PSP bats.
 
-## [5.3.16] — 2026-07-12
+## [0.3.16] — 2026-07-12
 
 Patch release: Rev4 Wave 2 (DEV-092, DEV-094, DEV-097).
 
@@ -488,7 +488,7 @@ Patch release: Rev4 Wave 2 (DEV-092, DEV-094, DEV-097).
 - **DEV-094 — Assistant Compatibility Contract.** `AgToosa_Compatibility_Contract.md` Install/Render/Scenario tiers; AgentCapability cross-link (no matrix merge); ACC-001–008 bats.
 - **DEV-097 — Framework Supply-Chain Threat Model.** `docs/security/framework-supply-chain-threat-model.md` + security README index; honest soft-warn signing boundary; FST-001–006 bats.
 
-## [5.3.15] — 2026-07-12
+## [0.3.15] — 2026-07-12
 
 Patch release: Rev4 Wave 1b (DEV-087, DEV-088).
 
@@ -497,7 +497,7 @@ Patch release: Rev4 Wave 1b (DEV-087, DEV-088).
 - **DEV-087 — Delivery Evidence Contract + Profiles.** `AgToosa_Delivery_Evidence_Contract.md`; `.agtoosa/evidence.yml.example` + config index README; schema-only `agtoosa-evidence-profile-check.sh`; DEC-001–009 bats. Full profile gate enforcement remains DEV-089.
 - **DEV-088 — Verifier and Doctor Machine Output.** `verify-result-v1` JSON schema; `agtoosa-verify.sh` / doctor `--format json`; Problem/Impact/Fix human findings; gate JSON step; VFJ-001–010 bats. VF-001/002 regression retained.
 
-## [5.3.14] — 2026-07-11
+## [0.3.14] — 2026-07-11
 
 Patch release: DEV-051 Tracker Sync Bridge.
 
@@ -505,15 +505,15 @@ Patch release: DEV-051 Tracker Sync Bridge.
 
 - **DEV-051 — Tracker Sync Bridge.** `lib/tracker.sh` + `--tracker export|propose` CLI; `AgToosa_TrackerSync.md`; provider-neutral schema; six platform adapters; TS-001–TS-008 bats. Local export + proposal-only import — no live API sync.
 
-## [5.3.13] — 2026-07-11
+## [0.3.13] — 2026-07-11
 
 Patch release: post-ship hygiene (DEV-085).
 
 ### Changed
 
-- **DEV-085 — Post-v5.3.12 release hygiene.** Restores ship-regression bats coverage (`bb8a8bd`) and reconciles `docs/Master-Plan.md` Completed This Cycle / Update Log / Epics after v5.3.12 ship drift.
+- **DEV-085 — Post-v0.3.12 release hygiene.** Restores ship-regression bats coverage (`bb8a8bd`) and reconciles `docs/Master-Plan.md` Completed This Cycle / Update Log / Epics after v0.3.12 ship drift.
 
-## [5.3.12] — 2026-07-11
+## [0.3.12] — 2026-07-11
 
 Patch release: wave 4 (DEV-058).
 
@@ -521,7 +521,7 @@ Patch release: wave 4 (DEV-058).
 
 - **DEV-058 — Local Dashboard.** `agtoosa-dashboard.sh` Markdown/HTML stdout-only projection; `AgToosa_Dashboard.md`; DB-001–DB-008 bats. Read-only local; no hosted/CDN/telemetry.
 
-## [5.3.11] — 2026-07-11
+## [0.3.11] — 2026-07-11
 
 Patch release: wave 3 (DEV-052, DEV-056).
 
@@ -530,7 +530,7 @@ Patch release: wave 3 (DEV-052, DEV-056).
 - **DEV-052 — Hook Automation Pack.** `AgToosa_Hooks.md`, Init/Update preview+approval, secret-safe exemplar, HK-001–HK-007 bats. No silent hook install.
 - **DEV-056 — Retrospective Learning Loop.** `AgToosa_Retro.md` structured ship retro; proposal routing only via task/spec/amend; RL-001–RL-008 bats. No telemetry/ML/auto-enrollment.
 
-## [5.3.10] — 2026-07-11
+## [0.3.10] — 2026-07-11
 
 Patch release: wave 2 dependents (DEV-046, DEV-059).
 
@@ -539,7 +539,7 @@ Patch release: wave 2 dependents (DEV-046, DEV-059).
 - **DEV-046 — Optional Worktree Isolation.** `AgToosa_Worktree.md` dual-path; Build/Handoff/Import wiring; WT-001–WT-006 bats. Optional/agent-instructed (no automatic git worktree execution).
 - **DEV-059 — Governance Policy-as-Code.** `AgToosa_GovernancePolicy.md`, inert example, deterministic checker, Handoff Applicable Policy, optional verifier WARN; GP-001–GP-009 bats. Missing policy stays healthy.
 
-## [5.3.9] — 2026-07-11
+## [0.3.9] — 2026-07-11
 
 Patch release: remaining-specs fan-out wave 1 (DEV-045, DEV-076, DEV-077, DEV-079, DEV-080, DEV-082, DEV-083, DEV-084).
 
@@ -554,7 +554,7 @@ Patch release: remaining-specs fan-out wave 1 (DEV-045, DEV-076, DEV-077, DEV-07
 - **DEV-083 — Voluntary Workflow Metrics Kit.** MetricsKit + CaseStudy template; MET-001–MET-010 bats; no telemetry.
 - **DEV-084 — Open-Source Sustainability Boundary.** Canonical SUPPORT.md boundary; OSS-001–OSS-007 bats; Sponsors live enablement manual-deferred.
 
-## [5.3.8] — 2026-07-11
+## [0.3.8] — 2026-07-11
 
 Patch release: four-epic parallel cycle (DEV-075, DEV-053, DEV-078, DEV-081).
 
@@ -567,7 +567,7 @@ Patch release: four-epic parallel cycle (DEV-075, DEV-053, DEV-078, DEV-081).
 
 ---
 
-## [5.3.7] — 2026-07-11
+## [0.3.7] — 2026-07-11
 
 Patch release: Agent Capability Matrix (DEV-055).
 
@@ -577,7 +577,7 @@ Patch release: Agent Capability Matrix (DEV-055).
 
 ---
 
-## [5.3.6] — 2026-07-11
+## [0.3.6] — 2026-07-11
 
 Patch release: Cross-Model Review Gate (DEV-050).
 
@@ -587,7 +587,7 @@ Patch release: Cross-Model Review Gate (DEV-050).
 
 ---
 
-## [5.3.5] — 2026-07-08
+## [0.3.5] — 2026-07-08
 
 Patch release: Signed Registry Provenance (DEV-054).
 
@@ -597,7 +597,7 @@ Patch release: Signed Registry Provenance (DEV-054).
 
 ---
 
-## [5.3.4] — 2026-07-08
+## [0.3.4] — 2026-07-08
 
 Patch release: Evidence Ledger (DEV-049).
 
@@ -607,7 +607,7 @@ Patch release: Evidence Ledger (DEV-049).
 
 ---
 
-## [5.3.3] — 2026-07-08
+## [0.3.3] — 2026-07-08
 
 Patch release: async agent handoff packs + agent result import gate (DEV-047, DEV-048).
 
@@ -618,7 +618,7 @@ Patch release: async agent handoff packs + agent result import gate (DEV-047, DE
 
 ---
 
-## [5.3.2] — 2026-07-08
+## [0.3.2] — 2026-07-08
 
 Patch release: PowerShell non-interactive install parity (DEV-074).
 
@@ -628,7 +628,7 @@ Patch release: PowerShell non-interactive install parity (DEV-074).
 
 ---
 
-## [5.3.1] — 2026-07-08
+## [0.3.1] — 2026-07-08
 
 Patch release: accumulated Unreleased supply-chain and install fixes.
 
@@ -644,7 +644,7 @@ Patch release: accumulated Unreleased supply-chain and install fixes.
 
 ---
 
-## [5.3.0] — 2026-06-10
+## [0.3.0] — 2026-06-10
 
 MINOR release: proof engine + supply chain wave (DEV-042, DEV-043, DEV-061–DEV-073; 458 bats tests).
 

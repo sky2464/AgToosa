@@ -81,7 +81,7 @@ Copy this block for every measure. All fields are required before publishing a n
 
 **Boundary:** Downloads or process starts are **not** success. Without treating downloads or starts as success, recalculate using completion plus the declared post-install check.
 
-**SYNTHETIC worked example (illustrative only — non-customer data):** Window 2026-01-01–2026-01-31 UTC; attempts=10; successful completions with post-check=8; failure stage copy=1, post-check=1; platforms mixed; version 5.3.x; retries=2. Rate = 8/10 = 80%. **Not a real outcome.**
+**SYNTHETIC worked example (illustrative only — non-customer data):** Window 2026-01-01–2026-01-31 UTC; attempts=10; successful completions with post-check=8; failure stage copy=1, post-check=1; platforms mixed; version 0.3.x; retries=2. Rate = 8/10 = 80%. **Not a real outcome.**
 
 ### 3.2 Verifier Adoption
 

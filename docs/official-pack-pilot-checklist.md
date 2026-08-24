@@ -55,7 +55,7 @@ DEV-080 shipped the first three pilots. DEV-095 expands to the five-pack maximum
 | Date | Action | Artifact |
 |------|--------|----------|
 | 2026-07-28 | Submitted three pilot packs | [agtoosa-registry PR #1](https://github.com/sky2464/agtoosa-registry/pull/1) |
-| 2026-07-28 | Release tarballs on AgToosa `v5.3.53` | `official-{web,api,infra}-0.1.0.tar.gz` |
+| 2026-07-28 | Release tarballs on AgToosa `v0.3.53` | `official-{web,api,infra}-0.1.0.tar.gz` |
 
 **Allowed claim:** **published** / available via `bash agtoosa.sh --registry list` — official pilot; `verified: false` until separate review sets verified.
 

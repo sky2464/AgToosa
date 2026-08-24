@@ -2,12 +2,12 @@ name: Release
 
 # Canonical tag-triggered release automation is release-advanced.yml.
 # This workflow is a manual fallback only — do not add push: tags here (race
-# with release-advanced.yml produced empty release bodies on v5.3.27).
+# with release-advanced.yml produced empty release bodies on v0.3.27).
 on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to release (e.g., v5.3.44)'
+        description: 'Version to release (e.g., v0.3.44)'
         required: true
 
 jobs:

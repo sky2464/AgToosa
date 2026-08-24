@@ -1,7 +1,7 @@
 # Spike: Corporate / EDR-Safe Install Plan
 
 > **Tracking:** [#89](https://github.com/sky2464/AgToosa/issues/89)  
-> **Status:** Phase 1 shipped (v5.3.60 via PR #92); Phase 2 (runtime tarball) pending enrollment
+> **Status:** Phase 1 shipped (v0.3.60 via PR #92); Phase 2 (runtime tarball) pending enrollment
 
 ## Problem
 
@@ -57,7 +57,7 @@ template/
 ### Target corporate UX
 
 ```bash
-VERSION=v5.3.60
+VERSION=v0.3.60
 curl -fsSL -o agtoosa-runtime.tar.gz \
   "https://github.com/sky2464/AgToosa/releases/download/${VERSION}/agtoosa-runtime-${VERSION}.tar.gz"
 curl -fsSL -o SHA256SUMS \

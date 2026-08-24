@@ -35,9 +35,9 @@ Team/enterprise adoption needs stronger evidence and controls:
 
 ## Competitive execution wave
 
-DEV-042 through DEV-060 define the Competitive execution wave. **v5.3.0 shipped the proof-engine and supply-chain core** (DEV-042, DEV-043, DEV-044 via DEV-061/067, DEV-060 suite, DEV-061–073). Remaining DEV-045–059 stories are future work unless a linked DEV story is shipped with passing evidence. The wave strengthens AgToosa where alternatives lean on heavier runtimes while preserving the product boundary: repo-native workflow files, machine-checkable proof where shipped, and explicit agent handoffs.
+DEV-042 through DEV-060 define the Competitive execution wave. **v0.3.0 shipped the proof-engine and supply-chain core** (DEV-042, DEV-043, DEV-044 via DEV-061/067, DEV-060 suite, DEV-061–073). Remaining DEV-045–059 stories are future work unless a linked DEV story is shipped with passing evidence. The wave strengthens AgToosa where alternatives lean on heavier runtimes while preserving the product boundary: repo-native workflow files, machine-checkable proof where shipped, and explicit agent handoffs.
 
-**Shipped in v5.3.0 (examples):**
+**Shipped in v0.3.0 (examples):**
 
 - Spec quality analyzer (DEV-042) — agent-instructed gate in `/agtoosa-spec`.
 - Brownfield spec drift baseline (DEV-043) — agent-instructed current-state step.

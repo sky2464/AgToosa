@@ -333,7 +333,7 @@ bash agtoosa.sh --cleanup <project> --verbose    # per-file plan and removal lin
 bash agtoosa.sh --cleanup <project> --only backups --dry-run  # backups only
 ```
 
-**Piped stdin / CI:** When stdin is not a TTY (common in CI or `curl | bash` wrappers), confirmation prompts read from `/dev/tty` when available (v5.3.62+). If neither stdin nor `/dev/tty` is interactive, `--cleanup` and `--reinstall --clean` require `--yes` or they exit non-zero with a guided message.
+**Piped stdin / CI:** When stdin is not a TTY (common in CI or `curl | bash` wrappers), confirmation prompts read from `/dev/tty` when available (v0.3.62+). If neither stdin nor `/dev/tty` is interactive, `--cleanup` and `--reinstall --clean` require `--yes` or they exit non-zero with a guided message.
 
 JSON conforms to `Docs/schemas/cleanup-result-v1.json` (`summary` + `candidates[]`).
 
