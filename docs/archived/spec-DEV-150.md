@@ -68,6 +68,16 @@
 | `tests/agtoosa.bats` | RTA-001–RTA-006 |
 | `docs/guides/readme-reference.md` | Corporate runtime block |
 
+### 2.4 Threat Model (STRIDE)
+
+| Threat | Category | Mitigation |
+|--------|----------|------------|
+| Tarball crafted to omit/replace a member post-build | Tampering | `SHA256SUMS` covers the runtime asset (AC-002); corporate UX (spike Phase 2) mandates verify-before-extract |
+| Pack script accidentally bundles maintainer-only paths (tests, fixtures, `.git`) | Information disclosure | Fixed allowlist (`agtoosa.sh agtoosa.ps1 lib template`) in `pack-runtime.sh`; RTA-001/RTA-003 assert exact membership and reject extras |
+| Non-deterministic build lets a compromised runner silently swap tarball bytes between builds | Tampering | Fixed member order, no timestamp/uid randomization introduced; same-repo-state reruns are byte-stable (verified locally) |
+| Release workflow failure blocks the whole release | Denial of service | Runtime pack step runs inside `publish-release` (must succeed with the release); Homebrew URL switch (AC-007) stays behind the existing job-level `continue-on-error: true` — best-effort only |
+| Corporate doc change silently drops the existing bootstrap path for teams that rely on it | Repudiation | Full source archive + bootstrap instructions retained as a named alternative, not deleted |
+
 ## 3. Tasks
 
 - [x] 1. `scripts/pack-runtime.sh` — AC-001

@@ -23,7 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-150 | Feature: Corporate Runtime Release Asset | Feature | M | 🟨 In Progress | ▰▰▰▰▰ 5/5 tasks |
+| DEV-150 | Feature: Corporate Runtime Release Asset | Feature | M | 🟦 Todo — Build Complete (awaiting review) | ▰▰▰▰▰ 5/5 tasks |
 | DEV-151 | Chore: Tracker Publish CI Automation | Chore | S | 🟦 Todo — Spec Approved | 0/4 |
 | DEV-152 | Chore: Bats Cleanup & Version Pin Consolidation | Chore | S | 🟦 Todo — Spec Approved | 0/5 |
 | DEV-153 | Feature: Bats Tiering & Smoke-Set Extraction | Feature | M | 🟦 Todo — Spec Approved | 0/5 |
@@ -534,6 +534,7 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-08-24 05:10 | 🏁 /agtoosa-build — Build 🏁 Complete — DEV-150 — 5/5 tasks, RTA-001–007 all green; STRIDE threat model added (verifier G3-threat-DEV-150 resolved); self-verify clean except systemic `Docs/` (capital-D) test-plan path check, pre-existing across all stories, not DEV-150-specific. Next: `/agtoosa-review`. | AgToosa |
 | 2026-08-24 05:00 | 📋 /agtoosa-task — DEV-154 added to Backlog — Chore: Fix PR Hygiene Checks Stale Label-Event Gate. `require-labels` (`.github/workflows/branch-protection.yml`) reads `github.event.pull_request.labels` from the triggering event payload; since the workflow only listens to `pull_request` (not `labeled`), a rerun after adding labels post-open replays the stale (often empty) snapshot until a new push. *Discovered during `/agtoosa-build` on DEV-150 on 2026-08-24.* Candidate fix already prototyped on a separate local branch. | AgToosa |
 | 2026-08-24 04:50 | 🟢 /agtoosa-build — Task 🟢 5/5 complete — DEV-150 — Homebrew formula bump now points at the runtime tarball (best-effort, job-level continue-on-error unchanged); RTA-007 green — all 5 tasks done, all 7 RTA tests green | AgToosa |
 | 2026-08-24 04:45 | 🟢 /agtoosa-build — Task 🟢 4/5 complete — DEV-150 — Docs + spike update; RTA-005/006 green; readme-reference.md corporate section now prefers runtime tarball, install-corporate-edr-plan.md Phase 2 marked shipped | AgToosa |
