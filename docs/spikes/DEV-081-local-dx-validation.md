@@ -77,7 +77,7 @@ All three options scored against the same criteria (AC-001). Scale: **Low / Medi
 | ID | Method | Finding | Label |
 |----|--------|---------|-------|
 | W-01 | `bash agtoosa.sh --version` on maintainer repo | Exit 0 in **~0.02s** user time | Observed |
-| W-02 | `node npm/bin/agtoosa.js --version` on macOS | Downloads pinned `v5.3.7` tarball, extracts to temp, delegates to `agtoosa.sh`, deletes temp; **~0.9–1.3s** per run | Observed |
+| W-02 | `node npm/bin/agtoosa.js --version` on macOS | Downloads pinned `v0.3.7` tarball, extracts to temp, delegates to `agtoosa.sh`, deletes temp; **~0.9–1.3s** per run | Observed |
 | W-03 | Read `npm/bin/agtoosa.js` | Wrapper performs tar-slip pre-scan, pins version to `package.json`, forwards argv to `bash agtoosa.sh`, sets `AGTOOSA_PACK_QUEUE_DIR` under `~/.cache/agtoosa/pack-queue`; **rejects win32** with message to use WSL or `agtoosa.ps1` | Observed |
 | W-04 | Read `bootstrap.sh` / README | Bootstrap and git-clone paths already provide non-npm distribution without duplicating generator logic | Observed |
 | W-05 | Error propagation | npm wrapper `process.exit(run.status ?? 1)` — child exit codes propagate | Observed |

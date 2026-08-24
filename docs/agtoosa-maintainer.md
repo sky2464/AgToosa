@@ -133,7 +133,7 @@ Pipe-based installs (`curl … | bash`) and some Windows Git Bash launches leave
 2. **Destructive confirmations** (`--cleanup`, `--reinstall --clean`) — gate on `[[ -t 0 ]] || _agtoosa_tty_usable` before calling `agtoosa_prompt_read`; without a TTY, exit non-zero and tell the user to pass `--yes`.
 3. **Non-interactive bypass** — `--path`, `--platforms`, and `--yes` (PowerShell: `-Path`, `-Platforms`, `-Yes`) must skip all prompts.
 
-User-facing troubleshooting for pipe bootstrap lives in `docs/guides/readme-reference.md` (v5.3.62+). Bats: `DEV-149 B33-001`–`B33-005` in `tests/agtoosa.bats`.
+User-facing troubleshooting for pipe bootstrap lives in `docs/guides/readme-reference.md` (v0.3.62+). Bats: `DEV-149 B33-001`–`B33-005` in `tests/agtoosa.bats`.
 
 ## GitHub branch hygiene (Cursor agent sprawl)
 
@@ -188,7 +188,7 @@ When changing verifier checks, update `template/Docs/agtoosa-verify.sh` first, m
 
 ## Supply Chain and Registry Hardening
 
-Registry and bootstrap behavior changed in the v5.3.0 supply-chain wave. Touch these surfaces together:
+Registry and bootstrap behavior changed in the v0.3.0 supply-chain wave. Touch these surfaces together:
 
 | Concern | Owning code | Behavior |
 |---------|-------------|----------|
@@ -211,7 +211,7 @@ Interactive flows must work when stdin is **not** a TTY — for example `curl �
 | `_agtoosa_tty_usable` | `lib/config.sh` | Returns 0 when `/dev/tty` is readable (pipe-bootstrap case) |
 | `Read-AgToosaPrompt` | `agtoosa.ps1` | PowerShell parity for install path prompts |
 
-**Call sites (v5.3.62+):** install wizard (`agtoosa.sh`), `--cleanup`, `--reinstall --clean`, `--uninstall`, MAJOR migration confirm, and post-install cleanup offer in `lib/cleanup.sh` / `lib/reinstall.sh` / `lib/maintain.sh` / `lib/migrate.sh` / `lib/apply.sh`.
+**Call sites (v0.3.62+):** install wizard (`agtoosa.sh`), `--cleanup`, `--reinstall --clean`, `--uninstall`, MAJOR migration confirm, and post-install cleanup offer in `lib/cleanup.sh` / `lib/reinstall.sh` / `lib/maintain.sh` / `lib/migrate.sh` / `lib/apply.sh`.
 
 **Non-interactive escape hatch:** pass `--path <dir> [--platforms …] --yes` for installs; `--yes` for `--cleanup` / `--reinstall --clean` / `--uninstall`. When neither a TTY nor `/dev/tty` is available, `agtoosa_prompt_read` exits non-zero with a message to re-run with those flags.
 

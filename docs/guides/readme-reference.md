@@ -52,10 +52,10 @@ Use clone when contributing to AgToosa, running bats, or changing generator code
 
 ```bash
 # Recommended: pinned release via pipe (works in bash/zsh; no process substitution).
-curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh | bash -s -- --ref v5.3.62
+curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh | bash -s -- --ref v0.3.62
 
 # Bash process-substitution alternative (bash or zsh only — fails under plain sh)
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.62
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v0.3.62
 
 # Homebrew alternative (formula pinned to the tagged release tarball)
 brew install sky2464/agtoosa/agtoosa
@@ -83,7 +83,7 @@ curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh |
 
 ```powershell
 # Recommended: download bootstrap.ps1 to disk, then run (AV/EDR-friendly).
-$Ref = "v5.3.62"
+$Ref = "v0.3.62"
 $BootstrapPath = Join-Path $env:TEMP "agtoosa-bootstrap.ps1"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sky2464/AgToosa/$Ref/bootstrap.ps1" -OutFile $BootstrapPath -UseBasicParsing
 & $BootstrapPath -Ref $Ref
@@ -124,7 +124,7 @@ Managed laptops often block **remote script execution** (`curl | bash`, `iex`, o
 Download from [GitHub Releases](https://github.com/sky2464/AgToosa/releases) (often allowed when `raw.githubusercontent.com` is blocked). Verify against the release `SHA256SUMS` asset, then run bootstrap from local files only — no in-memory script execution:
 
 ```bash
-VERSION=v5.3.62
+VERSION=v0.3.62
 curl -fsSL -o AgToosa.tar.gz "https://github.com/sky2464/AgToosa/archive/refs/tags/${VERSION}.tar.gz"
 curl -fsSL -o SHA256SUMS "https://github.com/sky2464/AgToosa/releases/download/${VERSION}/SHA256SUMS"
 sha256sum -c SHA256SUMS --ignore-missing   # or: shasum -a 256 -c SHA256SUMS --ignore-missing
@@ -133,7 +133,7 @@ bash bootstrap.sh --ref "${VERSION}" --archive AgToosa.tar.gz
 ```
 
 ```powershell
-$Ref = "v5.3.62"
+$Ref = "v0.3.62"
 $Archive = Join-Path $env:TEMP "AgToosa.tar.gz"
 $BootstrapPath = Join-Path $env:TEMP "agtoosa-bootstrap.ps1"
 Invoke-WebRequest -Uri "https://github.com/sky2464/AgToosa/archive/refs/tags/$Ref.tar.gz" -OutFile $Archive -UseBasicParsing
@@ -178,11 +178,11 @@ If you see an error like `Missing: curl`, the bootstrap script will print instal
 | `Missing: git` on a new Mac | Xcode Command Line Tools not installed | Run `xcode-select --install`, then retry |
 | PowerShell blocked by antivirus/EDR | `iex` / `[scriptblock]::Create` on downloaded script | Download `bootstrap.ps1` to a file and run `& $path -Ref vX.Y.Z` (see Windows install above) |
 | `Git Bash not found` (Windows) | Git for Windows not installed | Install from https://git-scm.com/download/win |
-| Installer stops at “Where is your project?” then exits (no input) | Piped bootstrap (`curl \| bash`) leaves stdin on the script, not the terminal | Fixed in v5.3.62+; press **Enter** or type **`.`** for the current folder. Workaround: `bash agtoosa.sh --path . --platforms cursor --yes`. Windows `bootstrap.ps1` runs Git Bash → same fix applies |
+| Installer stops at “Where is your project?” then exits (no input) | Piped bootstrap (`curl \| bash`) leaves stdin on the script, not the terminal | Fixed in v0.3.62+; press **Enter** or type **`.`** for the current folder. Workaround: `bash agtoosa.sh --path . --platforms cursor --yes`. Windows `bootstrap.ps1` runs Git Bash → same fix applies |
 | Installer stops at “Where is your project?” (waiting) | Expected — bootstrap launched the interactive generator | Enter your repo path, **`.`** or **Enter** for the current folder, or `cd` into your project first |
-| `--cleanup` / `--reinstall` exits with “requires confirmation” in CI or piped shell | stdin is not a TTY and `/dev/tty` is unavailable | Re-run with `--yes` (e.g. `bash agtoosa.sh --cleanup <project> --yes`). v5.3.62+ reads confirms from `/dev/tty` when stdin is piped but a terminal exists |
+| `--cleanup` / `--reinstall` exits with “requires confirmation” in CI or piped shell | stdin is not a TTY and `/dev/tty` is unavailable | Re-run with `--yes` (e.g. `bash agtoosa.sh --cleanup <project> --yes`). v0.3.62+ reads confirms from `/dev/tty` when stdin is piped but a terminal exists |
 | `Unable to download … archive` with `--ref` | Tag typo or unreleased version | Check https://github.com/sky2464/AgToosa/releases for the exact tag |
-| `forwarded_args[@]: unbound variable` (macOS) | Default macOS **bash 3.2** + `set -u` + empty forwarded args after `--ref` only | Fixed in v5.3.61+; upgrade bootstrap or use `brew install sky2464/agtoosa/agtoosa` |
+| `forwarded_args[@]: unbound variable` (macOS) | Default macOS **bash 3.2** + `set -u` + empty forwarded args after `--ref` only | Fixed in v0.3.61+; upgrade bootstrap or use `brew install sky2464/agtoosa/agtoosa` |
 | `bash version 3.2 detected` (warning) | macOS system bash is older than 4.0 | Warning only for bootstrap; install bash 4+ via Homebrew if you hit script errors |
 
 **Install health check:**
@@ -334,9 +334,9 @@ AgToosa's wedge is narrower: lightweight, repo-native, multi-assistant workflow 
 
 ### Competitive execution wave
 
-DEV-042 through DEV-060 are roadmap specs, not current guarantees. The Competitive execution wave strengthens repo-native proof gates that alternatives often handle through heavier runtimes, hosted task systems, or single-IDE workflows. **v5.3.0 shipped the proof-engine core**; remaining stories stay on the Master-Plan backlog until enrolled with passing evidence.
+DEV-042 through DEV-060 are roadmap specs, not current guarantees. The Competitive execution wave strengthens repo-native proof gates that alternatives often handle through heavier runtimes, hosted task systems, or single-IDE workflows. **v0.3.0 shipped the proof-engine core**; remaining stories stay on the Master-Plan backlog until enrolled with passing evidence.
 
-**Shipped (v5.3.0 and earlier in this wave):**
+**Shipped (v0.3.0 and earlier in this wave):**
 
 | Story | Capability | Enforcement |
 |-------|------------|-------------|

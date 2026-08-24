@@ -1,10 +1,10 @@
 {"ts":"2026-06-10T00:00:00Z","phase":"ship","event":"complete","story":"DEV-042-DEV-073","by":"AgToosa"}
-{"ts":"2026-07-08T20:00:00Z","phase":"ship","event":"complete","story":"v5.3.1-patch","by":"AgToosa"}
+{"ts":"2026-07-08T20:00:00Z","phase":"ship","event":"complete","story":"v0.3.1-patch","by":"AgToosa"}
 {"ts":"2026-07-08T21:00:00Z","phase":"build","event":"start","story":"DEV-074","by":"AgToosa"}
 {"ts":"2026-07-08T22:30:00Z","phase":"build","event":"complete","story":"DEV-074","by":"AgToosa"}
 {"ts":"2026-07-08T23:00:00Z","phase":"review","event":"start","story":"DEV-074","by":"AgToosa"}
 {"ts":"2026-07-08T23:15:00Z","phase":"review","event":"complete","story":"DEV-074","by":"AgToosa"}
-{"ts":"2026-07-08T23:30:00Z","phase":"ship","event":"complete","story":"DEV-074-v5.3.2","by":"AgToosa"}
+{"ts":"2026-07-08T23:30:00Z","phase":"ship","event":"complete","story":"DEV-074-v0.3.2","by":"AgToosa"}
 {"ts":"2026-07-08T22:45:00Z","phase":"build","event":"complete","story":"DEV-047","by":"AgToosa"}
 {"ts":"2026-07-08T22:45:00Z","phase":"build","event":"complete","story":"DEV-048","by":"AgToosa"}
 {"ts":"2026-07-08T23:10:00Z","phase":"review","event":"complete","story":"DEV-047","by":"AgToosa"}
@@ -21,7 +21,7 @@
 {"ts":"2026-07-08T23:40:00Z","phase":"review","event":"complete","story":"DEV-054","by":"AgToosa"}
 {"ts":"2026-07-08T23:45:00Z","phase":"ship","event":"complete","story":"DEV-054","by":"AgToosa"}
 {"ts":"2026-07-11T17:59:00Z","phase":"build","event":"start","story":"DEV-050","by":"AgToosa"}
-{"ts":"2026-07-11T18:30:00Z","phase":"ship","event":"complete","story":"DEV-050-v5.3.6","by":"AgToosa"}
+{"ts":"2026-07-11T18:30:00Z","phase":"ship","event":"complete","story":"DEV-050-v0.3.6","by":"AgToosa"}
 {"ts":"2026-07-11T18:15:00Z","phase":"build","event":"complete","story":"DEV-050","by":"AgToosa"}
 {"ts":"2026-07-11T18:30:00Z","phase":"review","event":"start","story":"DEV-050","by":"AgToosa"}
 {"ts":"2026-07-11T18:45:00Z","phase":"review","event":"complete","story":"DEV-050","by":"AgToosa"}
@@ -42,7 +42,7 @@
 {"ts":"2026-07-12T03:15:00Z","phase":"ship","event":"complete","story":"DEV-053","by":"AgToosa"}
 {"ts":"2026-07-12T03:15:00Z","phase":"ship","event":"complete","story":"DEV-078","by":"AgToosa"}
 {"ts":"2026-07-12T03:15:00Z","phase":"ship","event":"complete","story":"DEV-081","by":"AgToosa"}
-{"ts":"2026-07-12T03:15:00Z","phase":"ship","event":"complete","story":"v5.3.8-batched","by":"AgToosa"}
+{"ts":"2026-07-12T03:15:00Z","phase":"ship","event":"complete","story":"v0.3.8-batched","by":"AgToosa"}
 {"ts":"2026-07-12T02:21:19Z","phase":"spec","event":"approved","story":"DEV-045","by":"AgToosa"}
 {"ts":"2026-07-12T02:21:19Z","phase":"build","event":"start","story":"DEV-045","by":"AgToosa"}
 {"ts":"2026-07-12T02:21:19Z","phase":"spec","event":"approved","story":"DEV-076","by":"AgToosa"}
@@ -74,14 +74,14 @@
 {"ts":"2026-07-12T02:31:00Z","phase":"evidence","event":"update","story":"DEV-045","by":"AgToosa"}
 {"ts":"2026-07-12T02:31:05Z","phase":"review","event":"approved","story":"DEV-045","by":"AgToosa","verdict":"PASS","critical":0}
 {"ts":"2026-07-12T02:32:00Z","phase":"evidence","event":"update","story":"DEV-080","by":"AgToosa"}
-{"ts":"2026-07-12T02:32:57Z","phase":"ship","event":"complete","story":"DEV-045","by":"AgToosa","version":"5.3.9"}
-{"ts":"2026-07-12T02:32:57Z","phase":"ship","event":"complete","story":"DEV-076","by":"AgToosa","version":"5.3.9"}
-{"ts":"2026-07-12T02:32:57Z","phase":"ship","event":"complete","story":"DEV-077","by":"AgToosa","version":"5.3.9"}
-{"ts":"2026-07-12T02:32:57Z","phase":"ship","event":"complete","story":"DEV-079","by":"AgToosa","version":"5.3.9"}
-{"ts":"2026-07-12T02:32:57Z","phase":"ship","event":"complete","story":"DEV-080","by":"AgToosa","version":"5.3.9"}
-{"ts":"2026-07-12T02:32:57Z","phase":"ship","event":"complete","story":"DEV-082","by":"AgToosa","version":"5.3.9"}
-{"ts":"2026-07-12T02:32:57Z","phase":"ship","event":"complete","story":"DEV-083","by":"AgToosa","version":"5.3.9"}
-{"ts":"2026-07-12T02:32:57Z","phase":"ship","event":"complete","story":"DEV-084","by":"AgToosa","version":"5.3.9"}
+{"ts":"2026-07-12T02:32:57Z","phase":"ship","event":"complete","story":"DEV-045","by":"AgToosa","version":"0.3.9"}
+{"ts":"2026-07-12T02:32:57Z","phase":"ship","event":"complete","story":"DEV-076","by":"AgToosa","version":"0.3.9"}
+{"ts":"2026-07-12T02:32:57Z","phase":"ship","event":"complete","story":"DEV-077","by":"AgToosa","version":"0.3.9"}
+{"ts":"2026-07-12T02:32:57Z","phase":"ship","event":"complete","story":"DEV-079","by":"AgToosa","version":"0.3.9"}
+{"ts":"2026-07-12T02:32:57Z","phase":"ship","event":"complete","story":"DEV-080","by":"AgToosa","version":"0.3.9"}
+{"ts":"2026-07-12T02:32:57Z","phase":"ship","event":"complete","story":"DEV-082","by":"AgToosa","version":"0.3.9"}
+{"ts":"2026-07-12T02:32:57Z","phase":"ship","event":"complete","story":"DEV-083","by":"AgToosa","version":"0.3.9"}
+{"ts":"2026-07-12T02:32:57Z","phase":"ship","event":"complete","story":"DEV-084","by":"AgToosa","version":"0.3.9"}
 {"ts":"2026-07-12T02:35:42Z","phase":"spec","event":"approved","story":"DEV-046","by":"AgToosa"}
 {"ts":"2026-07-12T02:35:42Z","phase":"build","event":"start","story":"DEV-046","by":"AgToosa"}
 {"ts":"2026-07-12T02:35:42Z","phase":"spec","event":"approved","story":"DEV-059","by":"AgToosa"}
@@ -91,8 +91,8 @@
 {"ts":"2026-07-12T02:44:34Z","phase":"evidence","event":"update","story":"DEV-059","by":"AgToosa"}
 {"ts":"2026-07-12T02:44:39Z","phase":"review","event":"complete","story":"DEV-046","by":"AgToosa","verdict":"PASS","critical":0}
 {"ts":"2026-07-12T02:44:39Z","phase":"evidence","event":"update","story":"DEV-046","by":"AgToosa"}
-{"ts":"2026-07-12T02:45:22Z","phase":"ship","event":"complete","story":"DEV-046","by":"AgToosa","version":"5.3.10"}
-{"ts":"2026-07-12T02:45:22Z","phase":"ship","event":"complete","story":"DEV-059","by":"AgToosa","version":"5.3.10"}
+{"ts":"2026-07-12T02:45:22Z","phase":"ship","event":"complete","story":"DEV-046","by":"AgToosa","version":"0.3.10"}
+{"ts":"2026-07-12T02:45:22Z","phase":"ship","event":"complete","story":"DEV-059","by":"AgToosa","version":"0.3.10"}
 {"ts":"2026-07-12T02:47:40Z","phase":"spec","event":"approved","story":"DEV-052","by":"AgToosa"}
 {"ts":"2026-07-12T02:47:40Z","phase":"build","event":"start","story":"DEV-052","by":"AgToosa"}
 {"ts":"2026-07-12T02:47:40Z","phase":"spec","event":"approved","story":"DEV-056","by":"AgToosa"}
@@ -100,20 +100,20 @@
 {"ts":"2026-07-12T02:56:00Z","phase":"evidence","event":"update","story":"DEV-056","by":"AgToosa"}
 {"ts":"2026-07-12T02:56:00Z","phase":"evidence","event":"update","story":"DEV-052","by":"AgToosa"}
 {"ts":"2026-07-12T02:56:00Z","phase":"review","event":"approved","story":"DEV-052","by":"AgToosa"}
-{"ts":"2026-07-12T02:57:04Z","phase":"ship","event":"complete","story":"DEV-052","by":"AgToosa","version":"5.3.11"}
-{"ts":"2026-07-12T02:57:04Z","phase":"ship","event":"complete","story":"DEV-056","by":"AgToosa","version":"5.3.11"}
+{"ts":"2026-07-12T02:57:04Z","phase":"ship","event":"complete","story":"DEV-052","by":"AgToosa","version":"0.3.11"}
+{"ts":"2026-07-12T02:57:04Z","phase":"ship","event":"complete","story":"DEV-056","by":"AgToosa","version":"0.3.11"}
 {"ts":"2026-07-12T02:57:47Z","phase":"spec","event":"approved","story":"DEV-058","by":"AgToosa"}
 {"ts":"2026-07-12T02:57:47Z","phase":"build","event":"start","story":"DEV-058","by":"AgToosa"}
 {"ts":"2026-07-12T03:03:51Z","phase":"review","event":"complete","story":"DEV-058","by":"AgToosa","verdict":"PASS","critical":0}
 {"ts":"2026-07-12T03:03:51Z","phase":"evidence","event":"update","story":"DEV-058","by":"AgToosa"}
-{"ts":"2026-07-12T03:04:42Z","phase":"ship","event":"complete","story":"DEV-058","by":"AgToosa","version":"5.3.12"}
+{"ts":"2026-07-12T03:04:42Z","phase":"ship","event":"complete","story":"DEV-058","by":"AgToosa","version":"0.3.12"}
 {"ts":"2026-07-12T03:18:00Z","phase":"review","event":"approved","story":"DEV-085","by":"AgToosa"}
-{"ts":"2026-07-12T03:20:00Z","phase":"ship","event":"complete","story":"DEV-085","by":"AgToosa","version":"5.3.13"}
-{"ts":"2026-07-12T03:35:00Z","phase":"spec","event":"approved","story":"DEV-051","by":"AgToosa","cycle":"v5.3.14"}
+{"ts":"2026-07-12T03:20:00Z","phase":"ship","event":"complete","story":"DEV-085","by":"AgToosa","version":"0.3.13"}
+{"ts":"2026-07-12T03:35:00Z","phase":"spec","event":"approved","story":"DEV-051","by":"AgToosa","cycle":"v0.3.14"}
 {"ts":"2026-07-12T03:44:00Z","phase":"build","event":"start","story":"DEV-051","by":"AgToosa"}
 {"ts":"2026-07-12T03:48:00Z","phase":"build","event":"complete","story":"DEV-051","by":"AgToosa","tasks":"10/10"}
 {"ts":"2026-07-12T04:05:00Z","phase":"review","event":"approved","story":"DEV-051","by":"AgToosa","critical":0}
-{"ts":"2026-07-12T04:10:00Z","phase":"ship","event":"complete","story":"DEV-051","by":"AgToosa","version":"5.3.14"}
+{"ts":"2026-07-12T04:10:00Z","phase":"ship","event":"complete","story":"DEV-051","by":"AgToosa","version":"0.3.14"}
 {"ts":"2026-07-12T15:15:00Z","phase":"build","event":"start","story":"DEV-087","by":"AgToosa"}
 {"ts":"2026-07-12T15:15:00Z","phase":"build","event":"start","story":"DEV-088","by":"AgToosa"}
 {"ts":"2026-07-12T15:15:00Z","phase":"build","event":"blocked","story":"DEV-091","by":"AgToosa","reason":"hard-dep DEV-090 not shipped"}
@@ -123,8 +123,8 @@
 {"ts":"2026-07-12T15:25:00Z","phase":"review","event":"start","story":"DEV-088","by":"AgToosa"}
 {"ts":"2026-07-12T15:35:00Z","phase":"review","event":"approved","story":"DEV-087","by":"AgToosa","critical":0}
 {"ts":"2026-07-12T15:35:00Z","phase":"review","event":"approved","story":"DEV-088","by":"AgToosa","critical":0}
-{"ts":"2026-07-12T15:40:00Z","phase":"ship","event":"complete","story":"DEV-087","by":"AgToosa","release":"5.3.15"}
-{"ts":"2026-07-12T15:40:00Z","phase":"ship","event":"complete","story":"DEV-088","by":"AgToosa","release":"5.3.15"}
+{"ts":"2026-07-12T15:40:00Z","phase":"ship","event":"complete","story":"DEV-087","by":"AgToosa","release":"0.3.15"}
+{"ts":"2026-07-12T15:40:00Z","phase":"ship","event":"complete","story":"DEV-088","by":"AgToosa","release":"0.3.15"}
 {"ts":"2026-07-12T15:47:00Z","phase":"build","event":"start","story":"DEV-086","by":"AgToosa","wave":"1a"}
 {"ts":"2026-07-12T15:47:00Z","phase":"build","event":"start","story":"DEV-090","by":"AgToosa","wave":"1a"}
 {"ts":"2026-07-12T15:47:00Z","phase":"build","event":"start","story":"DEV-105","by":"AgToosa","wave":"1a"}
@@ -149,15 +149,15 @@
 {"ts":"2026-07-12T17:25:00Z","phase":"review","event":"approved","story":"DEV-092","by":"AgToosa","critical":0,"wave":"2"}
 {"ts":"2026-07-12T17:25:00Z","phase":"review","event":"approved","story":"DEV-094","by":"AgToosa","critical":0,"wave":"2"}
 {"ts":"2026-07-12T17:25:00Z","phase":"review","event":"approved","story":"DEV-097","by":"AgToosa","critical":0,"wave":"2"}
-{"ts":"2026-07-12T17:45:00Z","phase":"ship","event":"complete","story":"DEV-092","by":"AgToosa","release":"5.3.16"}
-{"ts":"2026-07-12T17:45:00Z","phase":"ship","event":"complete","story":"DEV-094","by":"AgToosa","release":"5.3.16"}
-{"ts":"2026-07-12T17:45:00Z","phase":"ship","event":"complete","story":"DEV-097","by":"AgToosa","release":"5.3.16"}
+{"ts":"2026-07-12T17:45:00Z","phase":"ship","event":"complete","story":"DEV-092","by":"AgToosa","release":"0.3.16"}
+{"ts":"2026-07-12T17:45:00Z","phase":"ship","event":"complete","story":"DEV-094","by":"AgToosa","release":"0.3.16"}
+{"ts":"2026-07-12T17:45:00Z","phase":"ship","event":"complete","story":"DEV-097","by":"AgToosa","release":"0.3.16"}
 {"ts":"2026-07-12T18:22:39Z","phase":"evidence","event":"update","story":"DEV-086","by":"AgToosa"}
 {"ts":"2026-07-12T18:22:39Z","phase":"evidence","event":"update","story":"DEV-090","by":"AgToosa"}
 {"ts":"2026-07-12T18:22:39Z","phase":"evidence","event":"update","story":"DEV-105","by":"AgToosa"}
-{"ts":"2026-07-12T18:22:39Z","phase":"ship","event":"complete","story":"DEV-086","by":"AgToosa","release":"5.3.17"}
-{"ts":"2026-07-12T18:22:39Z","phase":"ship","event":"complete","story":"DEV-090","by":"AgToosa","release":"5.3.17"}
-{"ts":"2026-07-12T18:22:39Z","phase":"ship","event":"complete","story":"DEV-105","by":"AgToosa","release":"5.3.17"}
+{"ts":"2026-07-12T18:22:39Z","phase":"ship","event":"complete","story":"DEV-086","by":"AgToosa","release":"0.3.17"}
+{"ts":"2026-07-12T18:22:39Z","phase":"ship","event":"complete","story":"DEV-090","by":"AgToosa","release":"0.3.17"}
+{"ts":"2026-07-12T18:22:39Z","phase":"ship","event":"complete","story":"DEV-105","by":"AgToosa","release":"0.3.17"}
 {"ts":"2026-07-12T18:22:39Z","phase":"spec","event":"amend-approved","story":"DEV-100","rev":"R1","by":"AgToosa"}
 {"ts":"2026-07-12T18:27:12Z","phase":"build","event":"complete","story":"DEV-093","by":"AgToosa"}
 {"ts":"2026-07-12T18:27:12Z","phase":"build","event":"complete","story":"DEV-089","by":"AgToosa"}
@@ -167,10 +167,10 @@
 {"ts":"2026-07-12T18:32:07Z","phase":"review","event":"approved","story":"DEV-091","by":"AgToosa","critical":0}
 {"ts":"2026-07-12T18:32:07Z","phase":"review","event":"approved","story":"DEV-093","by":"AgToosa","critical":0}
 {"ts":"2026-07-12T18:32:07Z","phase":"review","event":"approved","story":"DEV-100","by":"AgToosa","critical":0}
-{"ts":"2026-07-12T18:32:07Z","phase":"ship","event":"complete","story":"DEV-089","by":"AgToosa","release":"5.3.18"}
-{"ts":"2026-07-12T18:32:07Z","phase":"ship","event":"complete","story":"DEV-091","by":"AgToosa","release":"5.3.18"}
-{"ts":"2026-07-12T18:32:07Z","phase":"ship","event":"complete","story":"DEV-093","by":"AgToosa","release":"5.3.18"}
-{"ts":"2026-07-12T18:32:07Z","phase":"ship","event":"complete","story":"DEV-100","by":"AgToosa","release":"5.3.18"}
+{"ts":"2026-07-12T18:32:07Z","phase":"ship","event":"complete","story":"DEV-089","by":"AgToosa","release":"0.3.18"}
+{"ts":"2026-07-12T18:32:07Z","phase":"ship","event":"complete","story":"DEV-091","by":"AgToosa","release":"0.3.18"}
+{"ts":"2026-07-12T18:32:07Z","phase":"ship","event":"complete","story":"DEV-093","by":"AgToosa","release":"0.3.18"}
+{"ts":"2026-07-12T18:32:07Z","phase":"ship","event":"complete","story":"DEV-100","by":"AgToosa","release":"0.3.18"}
 {"ts":"2026-07-12T18:50:00Z","phase":"spec","event":"enrolled","story":"Wave-3","by":"AgToosa","stories":["DEV-095","DEV-096","DEV-098","DEV-099","DEV-101","DEV-102","DEV-103","DEV-104","DEV-106"]}
 {"ts":"2026-07-12T19:00:00Z","phase":"build","event":"start","story":"Wave-3","by":"AgToosa","stories":["DEV-096","DEV-098","DEV-099","DEV-101","DEV-102","DEV-103","DEV-104","DEV-106"],"blocked":["DEV-095"]}
 {"ts":"2026-07-12T18:58:00Z","phase":"build","event":"complete","story":"DEV-101","by":"AgToosa","note":"TRUST-001–006 green; Trust surface labeling"}
@@ -185,15 +185,15 @@
 {"ts":"2026-07-12T20:45:00Z","phase":"review","event":"complete","story":"DEV-107","by":"AgToosa","note":"4-persona PASS; 0 critical; 3 warnings accepted"}
 {"ts":"2026-07-12T21:00:00Z","phase":"review","event":"start","story":"Wave-3","by":"AgToosa","note":"DEV-095·096·098·099·101·102·103·104·106"}
 {"ts":"2026-07-12T21:30:00Z","phase":"review","event":"complete","story":"Wave-3","by":"AgToosa","note":"4-persona+cross-model PASS; 0 critical; warnings accepted"}
-{"ts":"2026-07-12T22:00:00Z","phase":"ship","event":"complete","story":"DEV-107","by":"AgToosa","note":"v5.3.19; ORB smoke PASS; deployment manual (git/local)"}
+{"ts":"2026-07-12T22:00:00Z","phase":"ship","event":"complete","story":"DEV-107","by":"AgToosa","note":"v0.3.19; ORB smoke PASS; deployment manual (git/local)"}
 {"ts":"2026-07-12T22:00:00Z","phase":"evidence","event":"update","story":"DEV-107","by":"AgToosa"}
-{"ts":"2026-07-12T22:00:00Z","phase":"ship","event":"complete","story":"Wave-3","by":"AgToosa","note":"v5.3.20 — DEV-095·096·098·099·101·102·103·104·106 + DEV-107"}
+{"ts":"2026-07-12T22:00:00Z","phase":"ship","event":"complete","story":"Wave-3","by":"AgToosa","note":"v0.3.20 — DEV-095·096·098·099·101·102·103·104·106 + DEV-107"}
 {"ts":"2026-07-12T20:45:00Z","phase":"build","event":"start","story":"DEV-109","by":"AgToosa"}
 {"ts":"2026-07-12T21:30:00Z","phase":"build","event":"complete","story":"DEV-109","by":"AgToosa"}
 {"ts":"2026-07-12T20:47:00Z","phase":"review","event":"start","story":"DEV-109","by":"AgToosa"}
 {"ts":"2026-07-12T20:47:00Z","phase":"review","event":"approved","story":"DEV-109","by":"AgToosa","critical":0}
 {"ts":"2026-07-12T20:47:00Z","phase":"evidence","event":"update","story":"DEV-109","by":"AgToosa"}
-{"ts":"2026-07-12T20:48:00Z","phase":"ship","event":"complete","story":"DEV-109","by":"AgToosa","release":"5.3.21"}
+{"ts":"2026-07-12T20:48:00Z","phase":"ship","event":"complete","story":"DEV-109","by":"AgToosa","release":"0.3.21"}
 {"ts":"2026-07-12T20:48:00Z","phase":"evidence","event":"update","story":"DEV-109","by":"AgToosa"}
 {"ts":"2026-07-12T21:00:00Z","phase":"build","event":"start","story":"DEV-110","by":"AgToosa"}
 {"ts":"2026-07-12T21:15:00Z","phase":"build","event":"complete","story":"DEV-110","by":"AgToosa","tasks":"7/7"}
@@ -201,9 +201,9 @@
 {"ts":"2026-07-12T21:30:00Z","phase":"review","event":"approved","story":"DEV-110","by":"AgToosa","critical":0}
 {"ts":"2026-07-12T21:30:00Z","phase":"evidence","event":"update","story":"DEV-110","by":"AgToosa"}
 {"ts":"2026-07-12T22:00:00Z","phase":"ship","event":"start","story":"DEV-110","by":"AgToosa"}
-{"ts":"2026-07-12T22:00:00Z","phase":"ship","event":"complete","story":"DEV-110","by":"AgToosa","version":"5.3.22"}
+{"ts":"2026-07-12T22:00:00Z","phase":"ship","event":"complete","story":"DEV-110","by":"AgToosa","version":"0.3.22"}
 {"ts":"2026-07-12T23:00:00Z","phase":"ship","event":"start","story":"DEV-111","by":"AgToosa"}
-{"ts":"2026-07-12T23:00:00Z","phase":"ship","event":"complete","story":"DEV-111","by":"AgToosa","version":"5.3.23"}
+{"ts":"2026-07-12T23:00:00Z","phase":"ship","event":"complete","story":"DEV-111","by":"AgToosa","version":"0.3.23"}
 {"ts":"2026-07-12T23:15:00Z","phase":"build","event":"start","story":"DEV-113","by":"AgToosa"}
 {"ts":"2026-07-12T23:25:00Z","phase":"build","event":"complete","story":"DEV-113","by":"AgToosa"}
 {"ts":"2026-07-12T23:30:00Z","phase":"review","event":"start","story":"DEV-113","by":"AgToosa"}
@@ -225,24 +225,24 @@
 {"ts":"2026-07-14T22:48:07Z","phase":"review","event":"start","story":"DEV-117","by":"AgToosa","note":"ship-gate smoke coverage follow-up"}
 {"ts":"2026-07-14T22:57:42Z","phase":"review","event":"approved","story":"DEV-117","by":"AgToosa","critical":0,"warnings":4,"note":"ship-gate smoke coverage follow-up"}
 {"ts":"2026-07-14T22:57:42Z","phase":"evidence","event":"update","story":"DEV-117","by":"AgToosa","note":"ship-gate smoke coverage follow-up"}
-{"ts":"2026-07-15T03:42:00Z","phase":"ship","event":"complete","story":"DEV-117","by":"AgToosa","note":"v5.3.29 smoke PASS 5/5"}
+{"ts":"2026-07-15T03:42:00Z","phase":"ship","event":"complete","story":"DEV-117","by":"AgToosa","note":"v0.3.29 smoke PASS 5/5"}
 {"ts":"2026-07-23T03:25:00Z","phase":"spec","event":"enrolled","story":"DEV-118","by":"AgToosa","note":"Spec Approved; Part 4 tasks synced; Active Cycle Todo"}
 {"ts":"2026-07-23T03:30:00Z","phase":"build","event":"start","story":"DEV-118","by":"AgToosa"}
 {"ts":"2026-07-23T03:32:00Z","phase":"build","event":"complete","story":"DEV-118","by":"AgToosa","note":"PTC 12/12; verifier PASS"}
 {"ts":"2026-07-23T03:35:00Z","phase":"review","event":"start","story":"DEV-118","by":"AgToosa"}
 {"ts":"2026-07-23T03:45:00Z","phase":"review","event":"approved","story":"DEV-118","by":"AgToosa","critical":0,"warnings":5}
 {"ts":"2026-07-23T03:45:00Z","phase":"evidence","event":"update","story":"DEV-118","by":"AgToosa"}
-{"ts":"2026-07-23T04:00:00Z","phase":"ship","event":"complete","story":"DEV-118","by":"AgToosa","note":"v5.3.30 smoke PASS 12/12"}
-{"ts":"2026-07-25T05:30:00Z","phase":"ship","event":"complete","story":"cross-model-consent","by":"AgToosa","note":"v5.3.31 patch; CM-008 + SR-001/SR-002"}
-{"ts":"2026-07-26T18:44:00Z","phase":"ship","event":"complete","story":"DEV-119","by":"AgToosa","note":"v5.3.32 smoke PASS 12/12"}
+{"ts":"2026-07-23T04:00:00Z","phase":"ship","event":"complete","story":"DEV-118","by":"AgToosa","note":"v0.3.30 smoke PASS 12/12"}
+{"ts":"2026-07-25T05:30:00Z","phase":"ship","event":"complete","story":"cross-model-consent","by":"AgToosa","note":"v0.3.31 patch; CM-008 + SR-001/SR-002"}
+{"ts":"2026-07-26T18:44:00Z","phase":"ship","event":"complete","story":"DEV-119","by":"AgToosa","note":"v0.3.32 smoke PASS 12/12"}
 {"ts":"2026-07-26T22:20:00Z","phase":"build","event":"start","story":"DEV-122","by":"AgToosa"}
 {"ts":"2026-07-26T22:25:00Z","phase":"build","event":"complete","story":"DEV-122","by":"AgToosa","note":"DIA-001–DIA-012 green"}
 {"ts":"2026-07-26T21:30:00Z","phase":"review","event":"approved","story":"DEV-120","by":"AgToosa","critical":0,"warnings":2}
-{"ts":"2026-07-26T21:35:00Z","phase":"ship","event":"complete","story":"DEV-120","by":"AgToosa","note":"v5.3.37 smoke PASS 12/12"}
+{"ts":"2026-07-26T21:35:00Z","phase":"ship","event":"complete","story":"DEV-120","by":"AgToosa","note":"v0.3.37 smoke PASS 12/12"}
 {"ts":"2026-07-26T21:40:00Z","phase":"review","event":"approved","story":"DEV-122","by":"AgToosa","critical":0,"warnings":2}
-{"ts":"2026-07-26T21:45:00Z","phase":"ship","event":"complete","story":"DEV-122","by":"AgToosa","note":"v5.3.38 smoke PASS 12/12"}
-{"ts":"2026-07-26T21:45:00Z","phase":"ship","event":"complete","story":"DEV-125","by":"AgToosa","note":"v5.3.35 batch ship"}
-{"ts":"2026-07-26T21:45:00Z","phase":"ship","event":"complete","story":"DEV-126","by":"AgToosa","note":"v5.3.36 batch ship"}
+{"ts":"2026-07-26T21:45:00Z","phase":"ship","event":"complete","story":"DEV-122","by":"AgToosa","note":"v0.3.38 smoke PASS 12/12"}
+{"ts":"2026-07-26T21:45:00Z","phase":"ship","event":"complete","story":"DEV-125","by":"AgToosa","note":"v0.3.35 batch ship"}
+{"ts":"2026-07-26T21:45:00Z","phase":"ship","event":"complete","story":"DEV-126","by":"AgToosa","note":"v0.3.36 batch ship"}
 {"ts":"2026-07-26T22:30:00Z","phase":"spec","event":"approved","story":"DEV-120","by":"AgToosa","note":"12 Must ACs; DPF test plan; enrolled Active Cycle"}
 {"ts":"2026-07-26T22:35:00Z","phase":"build","event":"start","story":"DEV-120","by":"AgToosa"}
 {"ts":"2026-07-26T22:40:00Z","phase":"build","event":"complete","story":"DEV-120","by":"AgToosa","note":"DPF-001–DPF-012 green"}
@@ -250,45 +250,45 @@
 {"ts":"2026-07-26T21:50:00Z","phase":"build","event":"start","story":"DEV-123","by":"AgToosa"}
 {"ts":"2026-07-26T21:55:00Z","phase":"build","event":"complete","story":"DEV-123","by":"AgToosa","note":"GPE-001–GPE-012 green"}
 {"ts":"2026-07-26T22:00:00Z","phase":"review","event":"approved","story":"DEV-123","by":"AgToosa","critical":0,"warnings":2}
-{"ts":"2026-07-26T22:05:00Z","phase":"ship","event":"complete","story":"DEV-123","by":"AgToosa","note":"v5.3.39 smoke PASS 12/12 + SR-001"}
+{"ts":"2026-07-26T22:05:00Z","phase":"ship","event":"complete","story":"DEV-123","by":"AgToosa","note":"v0.3.39 smoke PASS 12/12 + SR-001"}
 {"ts":"2026-07-26T22:10:00Z","phase":"spec","event":"enrolled","story":"DEV-124","by":"AgToosa","note":"Spec Approved; Part 4 tasks synced; Active Cycle; test plan docs/AgToosa_TestPlan-DEV-124.md; ADR-024 Proposed"}
 {"ts":"2026-07-26T22:11:00Z","phase":"build","event":"start","story":"DEV-124","by":"AgToosa"}
 {"ts":"2026-07-26T22:12:00Z","phase":"build","event":"complete","story":"DEV-124","by":"AgToosa","note":"CFI-001–CFI-012 green"}
 {"ts":"2026-07-26T22:15:00Z","phase":"review","event":"approved","story":"DEV-124","by":"AgToosa","critical":0,"warnings":2}
-{"ts":"2026-07-26T22:20:00Z","phase":"ship","event":"complete","story":"DEV-124","by":"AgToosa","note":"v5.3.40 smoke PASS 12/12 + SR-001"}
+{"ts":"2026-07-26T22:20:00Z","phase":"ship","event":"complete","story":"DEV-124","by":"AgToosa","note":"v0.3.40 smoke PASS 12/12 + SR-001"}
 {"ts":"2026-07-26T22:25:00Z","phase":"spec","event":"tasks_sync","story":"none","by":"AgToosa","note":"Active Tasks idle hygiene — orphaned DEV-120/123/124 stubs cleared"}
 {"ts":"2026-07-27T23:18:00Z","phase":"build","event":"complete","story":"DEV-131","by":"AgToosa","note":"NXT-013–015 + RL-001–004 7/7 PASS"}
-{"ts":"2026-07-27T23:26:00Z","phase":"ship","event":"complete","story":"DEV-131","by":"AgToosa","note":"v5.3.45 tag + release-advanced.yml green"}
-{"ts":"2026-07-27T23:30:00Z","phase":"ship","event":"complete","story":"DEV-131","by":"AgToosa","note":"v5.3.45 smoke PASS 7/7 + SR-001"}
+{"ts":"2026-07-27T23:26:00Z","phase":"ship","event":"complete","story":"DEV-131","by":"AgToosa","note":"v0.3.45 tag + release-advanced.yml green"}
+{"ts":"2026-07-27T23:30:00Z","phase":"ship","event":"complete","story":"DEV-131","by":"AgToosa","note":"v0.3.45 smoke PASS 7/7 + SR-001"}
 {"ts":"2026-07-27T23:30:00Z","phase":"spec","event":"enrolled","story":"DEV-132","by":"AgToosa","note":"Spec Approved; evidence JSONL preservation fix; test plan docs/AgToosa_TestPlan-DEV-132.md"}
 {"ts":"2026-07-27T23:35:00Z","phase":"build","event":"complete","story":"DEV-132","by":"AgToosa","note":"EVJ-001–006 6/6 PASS"}
 {"ts":"2026-07-27T23:38:00Z","phase":"review","event":"started","story":"DEV-132","by":"AgToosa"}
 {"ts":"2026-07-27T23:40:00Z","phase":"review","event":"approved","story":"DEV-132","by":"AgToosa","critical":0,"warnings":2}
-{"ts":"2026-07-27T23:55:00Z","phase":"ship","event":"deployed","story":"DEV-132","by":"AgToosa","version":"5.3.46","note":"EVJ/SR smoke PASS; tag v5.3.46"}
-{"ts":"2026-07-27T23:55:00Z","phase":"ship","event":"complete","story":"DEV-132","by":"AgToosa","version":"5.3.46"}
+{"ts":"2026-07-27T23:55:00Z","phase":"ship","event":"deployed","story":"DEV-132","by":"AgToosa","version":"0.3.46","note":"EVJ/SR smoke PASS; tag v0.3.46"}
+{"ts":"2026-07-27T23:55:00Z","phase":"ship","event":"complete","story":"DEV-132","by":"AgToosa","version":"0.3.46"}
 {"ts":"2026-07-28T00:00:00Z","phase":"spec","event":"enrolled","story":"DEV-133","by":"AgToosa","note":"Spec Approved; branch hygiene; test plan docs/AgToosa_TestPlan-DEV-133.md"}
 {"ts":"2026-07-28T00:51:00Z","phase":"build","event":"complete","story":"DEV-133","by":"AgToosa","note":"BRH-001–006 6/6 PASS"}
 {"ts":"2026-07-28T01:02:00Z","phase":"review","event":"started","story":"DEV-133","by":"AgToosa"}
 {"ts":"2026-07-28T01:02:00Z","phase":"review","event":"approved","story":"DEV-133","by":"AgToosa","critical":0,"warnings":2}
-{"ts":"2026-07-28T01:15:00Z","phase":"ship","event":"complete","story":"DEV-133","by":"AgToosa","note":"v5.3.47; BRH/SR smoke PASS"}
+{"ts":"2026-07-28T01:15:00Z","phase":"ship","event":"complete","story":"DEV-133","by":"AgToosa","note":"v0.3.47; BRH/SR smoke PASS"}
 {"ts":"2026-07-28T01:20:00Z","phase":"spec","event":"draft","story":"DEV-135","by":"AgToosa","note":"NL continuation routing (later renumbered from DEV-134)"}
 {"ts":"2026-07-28T01:25:00Z","phase":"spec","event":"approved","story":"DEV-135","by":"AgToosa","note":"Spec Approved; later parked when user picked hero as DEV-134"}
 {"ts":"2026-07-28T01:35:00Z","phase":"build","event":"complete","story":"DEV-135","by":"AgToosa","note":"NLX-001–008 8/8 PASS; parked await review"}
 {"ts":"2026-07-28T01:24:00Z","phase":"spec","event":"approved","story":"DEV-134","by":"AgToosa","note":"README hero media catch-up; cold-start pick (3) after git pull; latest 7bac032"}
 {"ts":"2026-07-28T02:30:00Z","phase":"build","event":"start","story":"DEV-134","by":"AgToosa"}
 {"ts":"2026-07-28T02:31:00Z","phase":"build","event":"complete","story":"DEV-134","by":"AgToosa","note":"MED-001–004 4/4 PASS; verify:checkpoint green; ship task deferred"}
-{"ts":"2026-07-28T21:00:00Z","phase":"ship","event":"complete","story":"DEV-134","by":"AgToosa","note":"v5.3.48; MED/SR smoke PASS"}
-{"ts":"2026-07-28T21:10:00Z","phase":"ship","event":"complete","story":"DEV-135","by":"AgToosa","note":"v5.3.49; NLX/SR smoke PASS"}
+{"ts":"2026-07-28T21:00:00Z","phase":"ship","event":"complete","story":"DEV-134","by":"AgToosa","note":"v0.3.48; MED/SR smoke PASS"}
+{"ts":"2026-07-28T21:10:00Z","phase":"ship","event":"complete","story":"DEV-135","by":"AgToosa","note":"v0.3.49; NLX/SR smoke PASS"}
 {"ts":"2026-07-27T21:00:00Z","phase":"review","event":"start","story":"DEV-135","by":"AgToosa","note":"4-persona review; NL continuation PROGRESS routing"}
-{"ts":"2026-07-27T21:05:00Z","phase":"review","event":"approved","story":"DEV-135","by":"AgToosa","note":"0 Critical; NLX-001–008 green; ship v5.3.49"}
+{"ts":"2026-07-27T21:05:00Z","phase":"review","event":"approved","story":"DEV-135","by":"AgToosa","note":"0 Critical; NLX-001–008 green; ship v0.3.49"}
 {"ts":"2026-07-28T21:15:00Z","phase":"spec","event":"approved","story":"DEV-136","by":"AgToosa","note":"IDE Host Mode Bridge catch-up; build complete 4882506; await review"}
 {"ts":"2026-07-28T21:12:00Z","phase":"review","event":"start","story":"DEV-136","by":"AgToosa"}
 {"ts":"2026-07-28T21:12:00Z","phase":"review","event":"approved","story":"DEV-136","by":"AgToosa","note":"0 Critical; IDE-001–012 green"}
-{"ts":"2026-07-28T21:18:00Z","phase":"ship","event":"complete","story":"DEV-136","by":"AgToosa","note":"v5.3.50; IDE/SR smoke PASS"}
+{"ts":"2026-07-28T21:18:00Z","phase":"ship","event":"complete","story":"DEV-136","by":"AgToosa","note":"v0.3.50; IDE/SR smoke PASS"}
 {"ts":"2026-07-28T21:30:00Z","phase":"spec","event":"approved","story":"DEV-137","by":"AgToosa","note":"Security Scanning CI health; catch-up 5faf2fe"}
 {"ts":"2026-07-28T21:35:00Z","phase":"build","event":"complete","story":"DEV-137","by":"AgToosa","note":"SSC-001–004 green; security-scan 30323157694 success"}
 {"ts":"2026-07-28T21:38:00Z","phase":"review","event":"approved","story":"DEV-137","by":"AgToosa","note":"0 Critical; SSC-001–004 green"}
-{"ts":"2026-07-28T21:42:00Z","phase":"ship","event":"complete","story":"DEV-137","by":"AgToosa","note":"v5.3.51; SSC/SR smoke PASS"}
+{"ts":"2026-07-28T21:42:00Z","phase":"ship","event":"complete","story":"DEV-137","by":"AgToosa","note":"v0.3.51; SSC/SR smoke PASS"}
 {"ts":"2026-07-28T21:48:00Z","phase":"spec","event":"approved","story":"DEV-138","by":"AgToosa","note":"main CI health; PTC-002 + PSScriptAnalyzer"}
 {"ts":"2026-07-28T21:50:00Z","phase":"build","event":"start","story":"DEV-138","by":"AgToosa"}
 {"ts":"2026-07-28T21:52:00Z","phase":"build","event":"complete","story":"DEV-138","by":"AgToosa","note":"PTC-002 + CIH-001–004 green"}
@@ -297,7 +297,7 @@
 {"ts":"2026-07-28T22:32:00Z","phase":"build","event":"start","story":"DEV-139","by":"AgToosa"}
 {"ts":"2026-07-28T22:35:00Z","phase":"build","event":"complete","story":"DEV-139","by":"AgToosa","note":"GIS-001–010 10/10 PASS"}
 {"ts":"2026-07-28T22:55:00Z","phase":"review","event":"approved","story":"DEV-139","by":"AgToosa","note":"0 Critical; GIS + DEV-051 regression green"}
-{"ts":"2026-07-28T23:05:00Z","phase":"ship","event":"complete","story":"DEV-139","by":"AgToosa","note":"v5.3.52; GIS/SR smoke PASS"}
-{"ts":"2026-07-28T23:10:00Z","phase":"ship","event":"complete","story":"DEV-138","by":"AgToosa","note":"v5.3.53; CIH/SR smoke PASS"}
+{"ts":"2026-07-28T23:05:00Z","phase":"ship","event":"complete","story":"DEV-139","by":"AgToosa","note":"v0.3.52; GIS/SR smoke PASS"}
+{"ts":"2026-07-28T23:10:00Z","phase":"ship","event":"complete","story":"DEV-138","by":"AgToosa","note":"v0.3.53; CIH/SR smoke PASS"}
 {"ts":"2026-07-29T04:28:00Z","phase":"build","event":"start","story":"DEV-141","by":"AgToosa"}
 {"ts":"2026-07-29T04:30:00Z","phase":"build","event":"complete","story":"DEV-141","by":"AgToosa"}
