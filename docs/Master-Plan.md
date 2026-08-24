@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-08-02 (ship v5.3.62 — pipe bootstrap prompt fix #99)
+> **Last updated:** 2026-08-23 (re-target DEV-150 + DEV-151 specs to v5.3.63)
 
 ## Project Charter
 
@@ -9,10 +9,10 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Idle — post v5.3.62 ship |
-| Milestone | `v5.3.63` (next) |
-| Active cycle | — |
-| Cycle state | Idle |
+| Current phase | Spec — DEV-150 + DEV-151 (re-targeted for v5.3.63) |
+| Milestone | `v5.3.63` (active) |
+| Active cycle | DEV-150 · DEV-151 |
+| Cycle state | Active |
 | Cycle capacity | `8 story points` |
 
 > **Cycle state contract:** use `Active` while a story is enrolled; use `Idle — <reason>` only when an empty cycle is intentional.
@@ -23,7 +23,8 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| — | (none — cycle archived) | — | — | — | — |
+| DEV-150 | Feature: Corporate Runtime Release Asset | Feature | M | 🟦 Todo — Spec Approved | 0/5 |
+| DEV-151 | Chore: Tracker Publish CI Automation | Chore | S | 🟦 Todo — Spec Approved | 0/4 |
 
 <!-- Archived to docs/archived/cycle-2026-08-01-release-5.3.60.md (DEV-147 + DEV-148 + DEV-149 v5.3.60) -->
 
@@ -127,6 +128,21 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 <!-- Shipped v5.3.60 — tasks archived in docs/archived/cycle-2026-08-01-release-5.3.60.md -->
 
+### DEV-150 — Corporate Runtime Release Asset
+
+- [ ] 1. `scripts/pack-runtime.sh` — _AC-001_
+- [ ] 2. Release workflow pack + upload — _AC-001, AC-002_
+- [ ] 3. Bats RTA-001–RTA-006 — _AC-003, AC-004_
+- [ ] 4. Docs + spike update — _AC-005, AC-006_
+- [ ] 5. Homebrew runtime URL (best-effort) — _AC-007_
+
+### DEV-151 — Tracker Publish CI Automation
+
+- [ ] 1. Issues-sync workflow: bats preflight + PR gate + pin fix — _AC-001–AC-003_
+- [ ] 2. Post-ship sync job in release-advanced.yml — _AC-004–AC-006_
+- [ ] 3. Bats GIA-001–GIA-008 — _AC-001–AC-007_
+- [ ] 4. Template + TrackerSync docs — _AC-007, AC-008_
+
 ## Manual / Deferred Tasks
 
 > Tasks that require a human action outside the agent. These are **not** counted against the health score.
@@ -155,7 +171,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 |----|-------|-----------|-------|
 | — | (none) | — | — |
 
-Conflict playbook: _DEV-147 + DEV-148 + DEV-149 shipped v5.3.60; milestone v5.3.61; demand-gated DEV-057 deferred._
+Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 deferred._
 
 ## Backlog
 
@@ -194,6 +210,8 @@ Conflict playbook: _DEV-147 + DEV-148 + DEV-149 shipped v5.3.60; milestone v5.3.
 | DEV-147 | Chore: Tracker CI Publish Hardening | Chore | S | DEV-139 / DEV-051 | P1 | 🏁 Shipped — v5.3.60 |
 | DEV-148 | Fix: One-Line Install Fails on Fresh Windows/macOS | Fix | M | DEV-001 / DEV-111 | P0 | 🏁 Shipped — v5.3.60 (#89 closed) |
 | DEV-149 | Fix: Issues-Sync Dry-Run README Corruption | Fix | S | DEV-139 / DEV-147 | P0 | 🏁 Shipped — v5.3.60 |
+| DEV-150 | Feature: Corporate Runtime Release Asset | Feature | M | DEV-001 / DEV-148 | P0 | 🟦 Todo — Spec Approved |
+| DEV-151 | Chore: Tracker Publish CI Automation | Chore | S | DEV-139 / DEV-147 | P1 | 🟦 Todo — Spec Approved |
 | DEV-139 | Feature: GitHub Issues PM Bridge (Phased B) | Feature | L | DEV-051 / DEV-004 | P1 | 🏁 Shipped — v5.3.52 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
@@ -497,8 +515,10 @@ Conflict playbook: _DEV-147 + DEV-148 + DEV-149 shipped v5.3.60; milestone v5.3.
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-08-23 21:27 | ✏️ Master-Plan sync — DEV-150 + DEV-151 re-targeted to v5.3.63 after stash reconciliation (specs approved 2026-08-01 under stale v5.3.61 target; v5.3.61/v5.3.62 shipped unrelated fixes in the interim) | AgToosa |
 | 2026-08-02 15:45 | 🚀 Release 5.3.62 shipped — pipe bootstrap project path prompt `/dev/tty` fix; closes #99; PR #100 | AgToosa |
 | 2026-08-02 15:30 | 🚀 Release 5.3.61 shipped — bootstrap macOS bash 3.2 `forwarded_args` fix; closes #94; PR #95 | AgToosa |
+| 2026-08-01 09:58 | ✏️ /agtoosa-spec — DEV-150 + DEV-151 spec approved — v5.3.61 wave; runtime tarball + tracker CI automation; test plans DEV-150/151 | AgToosa |
 | 2026-08-01 09:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-147 (+ DEV-148/149 batched) — smoke PASS GIP/SR gate; v5.3.60 | AgToosa |
 | 2026-08-01 09:55 | 🚀 Ship complete — v5.3.60 — DEV-147 Tracker CI Publish Hardening + DEV-148 Install + DEV-149 README guard | AgToosa |
 | 2026-08-01 09:55 | 🚀 Release 5.3.60 shipped — v5.3.60; version parity bash/ps1/npm/formula; Milestone v5.3.61 (next); cycle archived | AgToosa |
