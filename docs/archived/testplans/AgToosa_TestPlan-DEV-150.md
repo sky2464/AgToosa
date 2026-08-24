@@ -40,3 +40,14 @@ ok 3 DEV-150 RTA-003: runtime archive rejects unexpected repo-only members
 ```
 
 Manual size check: `agtoosa-runtime-v5.3.62.tar.gz` = 414K vs `git archive HEAD` full source = ~17.1MB (≈41× smaller).
+
+## GREEN evidence — Task 2 (release-advanced.yml pack + upload) — RTA-004
+
+Command: `bats tests/agtoosa.bats -f 'RTA-004'`
+Exit code: 0
+
+```
+ok 1 DEV-150 @smoke RTA-004: release workflow packs runtime tarball and appends its digest to SHA256SUMS
+```
+
+YAML validated with `ruby -ryaml -e "YAML.load_file(...)"` — valid.

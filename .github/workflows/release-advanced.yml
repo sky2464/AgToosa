@@ -191,21 +191,27 @@ jobs:
               "${args[@]}"
           fi
 
-      - name: Upload versioned entrypoints + SHA256SUMS
+      - name: Pack corporate/EDR-safe runtime tarball
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agtoosa-assets
+          bash scripts/pack-runtime.sh --root . --output-dir /tmp/agtoosa-assets
+
+      - name: Upload versioned entrypoints + runtime tarball + SHA256SUMS
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          mkdir -p /tmp/agtoosa-assets
           cp bootstrap.sh bootstrap.ps1 agtoosa.sh agtoosa.ps1 /tmp/agtoosa-assets/
           (
             cd /tmp/agtoosa-assets
-            sha256sum bootstrap.sh bootstrap.ps1 agtoosa.sh agtoosa.ps1 > SHA256SUMS
+            sha256sum bootstrap.sh bootstrap.ps1 agtoosa.sh agtoosa.ps1 agtoosa-runtime-*.tar.gz > SHA256SUMS
             cat SHA256SUMS
           )
           gh release upload "${{ needs.version-validation.outputs.tag }}" \
             /tmp/agtoosa-assets/bootstrap.sh \
             /tmp/agtoosa-assets/bootstrap.ps1 \
+            /tmp/agtoosa-assets/agtoosa-runtime-*.tar.gz \
             /tmp/agtoosa-assets/SHA256SUMS \
             --clobber
 
