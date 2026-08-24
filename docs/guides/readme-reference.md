@@ -119,9 +119,31 @@ Managed laptops often block **remote script execution** (`curl | bash`, `iex`, o
 
 **Do not use `git clone` for production installs** — the repository includes maintainer tests, fixtures, and docs you do not need to run the generator. Use a **pinned release artifact** instead.
 
-**1. Pinned release tarball + checksum (recommended for corporate networks)**
+**1. Pinned runtime tarball + checksum (recommended for corporate networks)**
 
-Download from [GitHub Releases](https://github.com/sky2464/AgToosa/releases) (often allowed when `raw.githubusercontent.com` is blocked). Verify against the release `SHA256SUMS` asset, then run bootstrap from local files only — no in-memory script execution:
+Download the minimal runtime asset — named `agtoosa-runtime-vX.Y.Z.tar.gz` on every release — from [GitHub Releases](https://github.com/sky2464/AgToosa/releases) (often allowed when `raw.githubusercontent.com` is blocked). It contains only `agtoosa.sh`, `agtoosa.ps1`, `lib/`, and `template/`, not the maintainer tests, fixtures, or docs that ship in the full source archive. Verify against the release `SHA256SUMS` asset, then extract and run directly — no bootstrap step, no in-memory script execution:
+
+```bash
+VERSION=v0.3.62
+curl -fsSL -o agtoosa-runtime.tar.gz "https://github.com/sky2464/AgToosa/releases/download/${VERSION}/agtoosa-runtime-${VERSION}.tar.gz"
+curl -fsSL -o SHA256SUMS "https://github.com/sky2464/AgToosa/releases/download/${VERSION}/SHA256SUMS"
+sha256sum -c SHA256SUMS --ignore-missing   # or: shasum -a 256 -c SHA256SUMS --ignore-missing
+mkdir -p /opt/agtoosa && tar -xzf agtoosa-runtime.tar.gz -C /opt/agtoosa
+/opt/agtoosa/agtoosa.sh --path /path/to/project --platforms cursor --yes
+```
+
+```powershell
+$Ref = "v0.3.62"
+$RuntimeArchive = Join-Path $env:TEMP "agtoosa-runtime.tar.gz"
+Invoke-WebRequest -Uri "https://github.com/sky2464/AgToosa/releases/download/$Ref/agtoosa-runtime-$Ref.tar.gz" -OutFile $RuntimeArchive -UseBasicParsing
+Invoke-WebRequest -Uri "https://github.com/sky2464/AgToosa/releases/download/$Ref/SHA256SUMS" -OutFile (Join-Path $env:TEMP "SHA256SUMS") -UseBasicParsing
+$RuntimeDir = "C:\agtoosa"
+New-Item -ItemType Directory -Path $RuntimeDir -Force | Out-Null
+tar -xzf $RuntimeArchive -C $RuntimeDir
+& "$RuntimeDir\agtoosa.ps1" -Path "C:\path\to\project" -Platforms cursor -Yes
+```
+
+**Full source archive + bootstrap (when you need bootstrap's install wizard, not just the generator binary)**
 
 ```bash
 VERSION=v0.3.62
@@ -141,8 +163,6 @@ Invoke-WebRequest -Uri "https://github.com/sky2464/AgToosa/releases/download/$Re
 Invoke-WebRequest -Uri "https://github.com/sky2464/AgToosa/releases/download/$Ref/bootstrap.ps1" -OutFile $BootstrapPath -UseBasicParsing
 & $BootstrapPath -Ref $Ref -Archive $Archive
 ```
-
-> **Roadmap:** a dedicated **runtime-only** release asset (`agtoosa-runtime-vX.Y.Z.tar.gz` with just `agtoosa.sh`, `agtoosa.ps1`, `lib/`, `template/`) will replace the full source archive for end-user installs. Tracked in [#89](https://github.com/sky2464/AgToosa/issues/89).
 
 **2. Package manager (macOS — minimal install surface)**
 

@@ -23,7 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-150 | Feature: Corporate Runtime Release Asset | Feature | M | 🟦 Todo — Spec Approved | 0/5 |
+| DEV-150 | Feature: Corporate Runtime Release Asset | Feature | M | 🟦 Todo — Build Complete (awaiting review) | ▰▰▰▰▰ 5/5 tasks |
 | DEV-151 | Chore: Tracker Publish CI Automation | Chore | S | 🟦 Todo — Spec Approved | 0/4 |
 | DEV-152 | Chore: Bats Cleanup & Version Pin Consolidation | Chore | S | 🟦 Todo — Spec Approved | 0/5 |
 | DEV-153 | Feature: Bats Tiering & Smoke-Set Extraction | Feature | M | 🟦 Todo — Spec Approved | 0/5 |
@@ -132,11 +132,11 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 ### DEV-150 — Corporate Runtime Release Asset
 
-- [ ] 1. `scripts/pack-runtime.sh` — _AC-001_
-- [ ] 2. Release workflow pack + upload — _AC-001, AC-002_
-- [ ] 3. Bats RTA-001–RTA-006 — _AC-003, AC-004_
-- [ ] 4. Docs + spike update — _AC-005, AC-006_
-- [ ] 5. Homebrew runtime URL (best-effort) — _AC-007_
+- [x] 1. `scripts/pack-runtime.sh` — _AC-001_
+- [x] 2. Release workflow pack + upload — _AC-001, AC-002_
+- [x] 3. Bats RTA-001–RTA-006 — _AC-003, AC-004_
+- [x] 4. Docs + spike update — _AC-005, AC-006_
+- [x] 5. Homebrew runtime URL (best-effort) — _AC-007_
 
 ### DEV-151 — Tracker Publish CI Automation
 
@@ -230,6 +230,7 @@ Conflict playbook: _DEV-150 + DEV-151 active for v0.3.63; demand-gated DEV-057 d
 | DEV-149 | Fix: Issues-Sync Dry-Run README Corruption | Fix | S | DEV-139 / DEV-147 | P0 | 🏁 Shipped — v0.3.60 |
 | DEV-150 | Feature: Corporate Runtime Release Asset | Feature | M | DEV-001 / DEV-148 | P0 | 🟦 Todo — Spec Approved |
 | DEV-151 | Chore: Tracker Publish CI Automation | Chore | S | DEV-139 / DEV-147 | P1 | 🟦 Todo — Spec Approved |
+| DEV-154 | Chore: Fix PR Hygiene Checks Stale Label-Event Gate | Chore | S | DEV-004 | P2 | ⬜ Backlog |
 | DEV-139 | Feature: GitHub Issues PM Bridge (Phased B) | Feature | L | DEV-051 / DEV-004 | P1 | 🏁 Shipped — v0.3.52 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v0.3.9 |
@@ -533,6 +534,14 @@ Conflict playbook: _DEV-150 + DEV-151 active for v0.3.63; demand-gated DEV-057 d
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-08-24 05:10 | 🏁 /agtoosa-build — Build 🏁 Complete — DEV-150 — 5/5 tasks, RTA-001–007 all green; STRIDE threat model added (verifier G3-threat-DEV-150 resolved); self-verify clean except systemic `Docs/` (capital-D) test-plan path check, pre-existing across all stories, not DEV-150-specific. Next: `/agtoosa-review`. | AgToosa |
+| 2026-08-24 05:00 | 📋 /agtoosa-task — DEV-154 added to Backlog — Chore: Fix PR Hygiene Checks Stale Label-Event Gate. `require-labels` (`.github/workflows/branch-protection.yml`) reads `github.event.pull_request.labels` from the triggering event payload; since the workflow only listens to `pull_request` (not `labeled`), a rerun after adding labels post-open replays the stale (often empty) snapshot until a new push. *Discovered during `/agtoosa-build` on DEV-150 on 2026-08-24.* Candidate fix already prototyped on a separate local branch. | AgToosa |
+| 2026-08-24 04:50 | 🟢 /agtoosa-build — Task 🟢 5/5 complete — DEV-150 — Homebrew formula bump now points at the runtime tarball (best-effort, job-level continue-on-error unchanged); RTA-007 green — all 5 tasks done, all 7 RTA tests green | AgToosa |
+| 2026-08-24 04:45 | 🟢 /agtoosa-build — Task 🟢 4/5 complete — DEV-150 — Docs + spike update; RTA-005/006 green; readme-reference.md corporate section now prefers runtime tarball, install-corporate-edr-plan.md Phase 2 marked shipped | AgToosa |
+| 2026-08-24 04:40 | 🟢 /agtoosa-build — Task 🟢 3/5 complete — DEV-150 — Bats RTA-001–RTA-006 written test-first (RED confirmed), all 6 green after tasks 1-2-4 | AgToosa |
+| 2026-08-24 04:35 | 🟢 /agtoosa-build — Task 🟢 2/5 complete — DEV-150 — release-advanced.yml packs runtime tarball + appends SHA256SUMS digest; RTA-004 green | AgToosa |
+| 2026-08-24 04:25 | 🟢 /agtoosa-build — Task 🟢 1/5 complete — DEV-150 — scripts/pack-runtime.sh; RTA-001/002/003 green; 414K runtime vs ~17.1MB source (≈41× smaller) | AgToosa |
+| 2026-08-24 04:20 | 🏗️ Build 🏗️ Started — DEV-150 — Starting TDD cycle. 5 tasks declared. Scope: `scripts/pack-runtime.sh`, `.github/workflows/release-advanced.yml`, `tests/agtoosa.bats`, `docs/guides/readme-reference.md`. Next: Task 1/5 — scripts/pack-runtime.sh. | AgToosa |
 | 2026-08-23 21:27 | ✏️ Master-Plan sync — DEV-150 + DEV-151 re-targeted to v0.3.63 after stash reconciliation (specs approved 2026-08-01 under stale v0.3.61 target; v0.3.61/v0.3.62 shipped unrelated fixes in the interim) | AgToosa |
 | 2026-08-02 15:45 | 🚀 Release 0.3.62 shipped — pipe bootstrap project path prompt `/dev/tty` fix; closes #99; PR #100 | AgToosa |
 | 2026-08-02 15:30 | 🚀 Release 0.3.61 shipped — bootstrap macOS bash 3.2 `forwarded_args` fix; closes #94; PR #95 | AgToosa |
