@@ -608,11 +608,11 @@ agtoosa_prompt_read() {
   local _prompt="$1"
   local _varname="$2"
   if [[ -t 0 ]]; then
-    # shellcheck disable=SC2162
+    # shellcheck disable=SC2162,SC2229
     IFS= read -r -p "$_prompt" "$_varname"
   elif [[ -p /dev/stdin ]] && { [[ "$0" == bash ]] || [[ "$0" == -bash ]]; }; then
     if _agtoosa_tty_usable; then
-      # shellcheck disable=SC2162
+      # shellcheck disable=SC2162,SC2229
       IFS= read -r -p "$_prompt" "$_varname" </dev/tty
     else
       echo "Error: Interactive prompt requires a terminal." >&2
@@ -621,10 +621,10 @@ agtoosa_prompt_read() {
     fi
   elif [[ -p /dev/stdin ]]; then
     # Piped answers to a script file; exhausted curl pipe falls back to tty.
-    # shellcheck disable=SC2162
+    # shellcheck disable=SC2162,SC2229
     if ! IFS= read -r -p "$_prompt" "$_varname"; then
       if _agtoosa_tty_usable; then
-        # shellcheck disable=SC2162
+        # shellcheck disable=SC2162,SC2229
         IFS= read -r -p "$_prompt" "$_varname" </dev/tty
       else
         echo "Error: Interactive prompt requires a terminal." >&2
@@ -633,10 +633,10 @@ agtoosa_prompt_read() {
       fi
     fi
   elif _agtoosa_tty_usable; then
-    # shellcheck disable=SC2162
+    # shellcheck disable=SC2162,SC2229
     IFS= read -r -p "$_prompt" "$_varname" </dev/tty
   else
-    # shellcheck disable=SC2162
+    # shellcheck disable=SC2162,SC2229
     IFS= read -r -p "$_prompt" "$_varname"
   fi
 }
