@@ -17247,3 +17247,13 @@ PY
   [ -f "$doc" ]
   grep -qi 'phase 2.*shipped' "$doc"
 }
+
+@test "DEV-150 RTA-007: Homebrew bump job attempts the runtime tarball URL (best-effort)" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/release-advanced.yml"
+  [ -f "$wf" ]
+  local job_block
+  job_block="$(grep -A 60 '^  bump-homebrew-formula:' "$wf")"
+  grep -q 'agtoosa-runtime-' <<< "$job_block"
+  # Best-effort: still job-level continue-on-error, not a hard release gate.
+  grep -q 'continue-on-error: true' <<< "$job_block"
+}

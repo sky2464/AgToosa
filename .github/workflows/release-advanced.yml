@@ -232,7 +232,11 @@ jobs:
           TAG: ${{ needs.version-validation.outputs.tag }}
         run: |
           set -euo pipefail
-          TARBALL_URL="https://github.com/sky2464/AgToosa/archive/refs/tags/${TAG}.tar.gz"
+          # DEV-150: prefer the minimal runtime asset (agtoosa.sh, agtoosa.ps1,
+          # lib/, template/ — same paths `install` below stages) over the full
+          # source archive. Best-effort: job-level continue-on-error covers
+          # the case where the runtime asset is unexpectedly missing.
+          TARBALL_URL="https://github.com/sky2464/AgToosa/releases/download/${TAG}/agtoosa-runtime-${TAG}.tar.gz"
           echo "Downloading tarball from $TARBALL_URL..."
           curl -fsSL "$TARBALL_URL" -o /tmp/agtoosa-release.tar.gz
           SHA256=$(sha256sum /tmp/agtoosa-release.tar.gz | awk '{print $1}')
