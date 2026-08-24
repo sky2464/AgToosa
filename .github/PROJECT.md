@@ -8,7 +8,7 @@ AgToosa uses **`docs/Master-Plan.md` as the sole PM authority**. GitHub Issues a
 |---------|---------|
 | [GitHub Issues](https://github.com/sky2464/AgToosa/issues) | Live backlog mirror (active cycle + open backlog) |
 | README `AGTOOSA-ROADMAP` block | Auto-generated summary on Master-Plan sync |
-| Milestones | Align to Project Charter release (e.g. `v5.3.52`) |
+| Milestones | Align to Project Charter release (e.g. `v0.3.52`) |
 
 ## Automation (DEV-139)
 

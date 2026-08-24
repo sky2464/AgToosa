@@ -151,7 +151,7 @@ Before changing version pins or CHANGELOG release headings, apply the **patch-fi
 |---------------|------|----------------------|
 | Fix, Chore, docs-only, estimate **S** | **PATCH** (default) | 5.2.1 |
 | Feature **S**, same MINOR train, non-breaking | **PATCH** | 5.2.1 |
-| New MINOR train, multi-story batched release | **MINOR** (Z=0) | 5.3.0 |
+| New MINOR train, multi-story batched release | **MINOR** (Z=0) | 0.3.0 |
 | Breaking per ADR-004 | **MAJOR** | 6.0.0 |
 
 - Default to **PATCH+1** on the current MINOR — do not bump MINOR for every small story.

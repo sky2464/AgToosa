@@ -5,7 +5,7 @@
 **The repo-native AI project manager for spec-driven development**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-5.3.62-green.svg)](https://github.com/sky2464/AgToosa/releases)
+[![Version](https://img.shields.io/badge/version-0.3.62-green.svg)](https://github.com/sky2464/AgToosa/releases)
 [![CI Status](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml/badge.svg)](https://github.com/sky2464/AgToosa/actions/workflows/ci.yml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](.github/CONTRIBUTING.md)
 [![Discussions](https://img.shields.io/badge/Discussions-GitHub-blue.svg)](https://github.com/sky2464/AgToosa/discussions)
@@ -17,13 +17,13 @@
 **macOS / Linux**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh | bash -s -- --ref v5.3.62
+curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh | bash -s -- --ref v0.3.62
 ```
 
 **Windows (PowerShell)** — requires [Git for Windows](https://git-scm.com/download/win) (provides Git Bash)
 
 ```powershell
-$Ref = "v5.3.62"
+$Ref = "v0.3.62"
 $BootstrapPath = Join-Path $env:TEMP "agtoosa-bootstrap.ps1"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sky2464/AgToosa/$Ref/bootstrap.ps1" -OutFile $BootstrapPath -UseBasicParsing
 & $BootstrapPath -Ref $Ref
@@ -44,7 +44,7 @@ your-project/
 
 ## See it in action
 
-<img src="https://github.com/sky2464/AgToosa/releases/download/v5.3.60/agtoosa-hero.gif" alt="AgToosa workflow: init, spec, build, review, ship, status, and next" width="720"/>
+<img src="https://github.com/sky2464/AgToosa/releases/download/v0.3.60/agtoosa-hero.gif" alt="AgToosa workflow: init, spec, build, review, ship, status, and next" width="720"/>
 
 ```mermaid
 flowchart LR
@@ -59,7 +59,7 @@ flowchart LR
     class SH ship
 ```
 
-<img src="https://github.com/sky2464/AgToosa/releases/download/v5.3.60/lifecycle-accent.svg" alt="" width="480"/>
+<img src="https://github.com/sky2464/AgToosa/releases/download/v0.3.60/lifecycle-accent.svg" alt="" width="480"/>
 
 [Full architecture diagram →](docs/guides/architecture-overview.md) · [First 15 minutes walkthrough](docs/examples/first-15-minutes.md) · proof video `[manual]`
 
@@ -103,7 +103,7 @@ Use these when you already know AgToosa and only need an install command.
 ```bash
 # Public launch: pinned release (alternative to the proof walkthrough).
 # Pin any release: curl -fsSL …/bootstrap.sh | bash -s -- --ref vX.Y.Z
-curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh | bash -s -- --ref v5.3.62
+curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh | bash -s -- --ref v0.3.62
 
 brew install sky2464/agtoosa/agtoosa
 npx agtoosa
@@ -130,7 +130,7 @@ See [CONTRIBUTING.md](.github/CONTRIBUTING.md). Community help and sponsorship: 
 
 | Story | Title | Status |
 |-------|-------|--------|
-| DEV-139 | Feature: GitHub Issues PM Bridge | 🏁 Shipped — v5.3.52 |
+| DEV-139 | Feature: GitHub Issues PM Bridge | 🏁 Shipped — v0.3.52 |
 
 [View all issues →](https://github.com/sky2464/AgToosa/issues)
 

@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-08-23 (re-target DEV-150 + DEV-151 specs to v5.3.63)
+> **Last updated:** 2026-08-23 (re-target DEV-150 + DEV-151 specs to v0.3.63)
 
 ## Project Charter
 
@@ -9,8 +9,8 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Spec — DEV-150 + DEV-151 (re-targeted for v5.3.63) |
-| Milestone | `v5.3.63` (active) |
+| Current phase | Spec — DEV-150 + DEV-151 (re-targeted for v0.3.63) |
+| Milestone | `v0.3.63` (active) |
 | Active cycle | DEV-150 · DEV-151 |
 | Cycle state | Active |
 | Cycle capacity | `8 story points` |
@@ -77,7 +77,7 @@
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.21.md (DEV-109 v5.3.21) -->
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.20.md (Wave 3 + DEV-107 batched v5.3.20) -->
 <!-- Wave 1a archived to docs/archived/cycle-2026-07-12-release-5.3.17.md -->
-<!-- Wave 1b/2 remainder archived via v5.3.18 ship -->
+<!-- Wave 1b/2 remainder archived via v0.3.18 ship -->
 
 <!-- Archived to docs/archived/cycle-2026-07-12-release-5.3.16.md -->
 
@@ -183,13 +183,13 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 ## Blocked
 
-> **Status:** 🟢 Wave 3 shipped v5.3.20 — five-pack official inventory (local candidates)
+> **Status:** 🟢 Wave 3 shipped v0.3.20 — five-pack official inventory (local candidates)
 
 | ID | Title | Blocked by | Since |
 |----|-------|-----------|-------|
 | — | (none) | — | — |
 
-Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 deferred._
+Conflict playbook: _DEV-150 + DEV-151 active for v0.3.63; demand-gated DEV-057 deferred._
 
 ## Backlog
 
@@ -198,53 +198,53 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 
 | ID | Title | Type | Estimate | Epic | Priority | Status |
 |----|-------|------|----------|------|----------|--------|
-| DEV-118 | Chore: Product Truth & Adapter Contract | Chore | L | DEV-001 / DEV-002 / DEV-004 | P0 | 🏁 Shipped — v5.3.30 |
-| DEV-119 | Feature: Recoverable Project Transaction | Feature | L | DEV-001 | P0 | 🏁 Shipped — v5.3.32 |
-| DEV-125 | Feature: /agtoosa-next Lifecycle Dispatcher | Feature | L | DEV-002 | P0 | 🏁 Shipped — v5.3.35 |
-| DEV-126 | Chore: Spec Interview Hardening | Chore | S | DEV-002 | P0 | 🏁 Shipped — v5.3.36 |
-| DEV-120 | Spike: Delivery Proof Fabric | Spike | L | DEV-002 / DEV-004 | P0 | 🏁 Shipped — v5.3.37 |
-| DEV-121 | Spike: Behavioral Conformance Lab | Spike | L | DEV-003 / DEV-004 | P0 | 🏁 Shipped — v5.3.34 |
-| DEV-122 | Spike: Change-Aware Adaptive Delivery | Spike | L | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.38 |
-| DEV-123 | Spike: Guarded Portable Execution | Spike | M | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.39 |
-| DEV-124 | Spike: Cross-Framework Interchange | Spike | M | DEV-002 | P2 | 🏁 Shipped — v5.3.40 |
-| DEV-128 | Bugfix: Smart Upgrade Platform & Version Guards | Bugfix | S | DEV-001 | P0 | 🏁 Shipped — v5.3.42 |
-| DEV-129 | Chore: Smart Upgrade UX Polish | Chore | S | DEV-001 | P0 | 🏁 Shipped — v5.3.43 |
-| DEV-130 | Chore: BCL Hardening & CI Wiring | Chore | S | DEV-003 / DEV-004 | P0 | 🏁 Shipped — v5.3.44 |
-| DEV-131 | Chore: Sequential Approval + Release Publication Gate | Chore | S | 🏁 Shipped — v5.3.45 |
-| DEV-132 | Fix: Preserve Evidence JSONL on Re-install and Update | Fix | XS | DEV-001 / DEV-004 | P0 | 🏁 Shipped — v5.3.46 |
-| DEV-133 | Chore: GitHub Branch Hygiene for Cursor Agent Sprawl | Chore | S | DEV-004 | P1 | 🏁 Shipped — v5.3.47 |
-| DEV-134 | Chore: README Hero Media Pass (Catch-up Formalization) | Chore | XS | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.48 |
-| DEV-135 | Chore: Natural-Language Continuation → `/agtoosa-next` | Chore | S | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.49 |
-| DEV-136 | Chore: IDE Host Mode Bridge for Spec and Review | Chore | M | DEV-028 / DEV-116 | P1 | 🏁 Shipped — v5.3.50 |
-| DEV-137 | Chore: Security Scanning CI Health (ShellCheck + workflow re-verify) | Chore | XS | DEV-004 | P1 | 🏁 Shipped — v5.3.51 |
-| DEV-138 | Chore: Main CI Health (Product Truth + PSScriptAnalyzer) | Chore | XS | DEV-004 | P1 | 🏁 Shipped — v5.3.53 |
-| DEV-140 | Chore: Help vs Next Disambiguation Hardening | Chore | S | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v5.3.54 |
-| DEV-141 | Feature: Tracker Discovery & Bootstrap | Feature | L | DEV-051 / DEV-003 | P1 | 🏁 Shipped — v5.3.55 |
-| DEV-142 | Chore: GitHub Surface Audit & Community Profile | Chore | M | DEV-139 / DEV-076 | P1 | 🏁 Shipped — v5.3.56 |
-| DEV-143 | Chore: Tracker Unlinked Status Finding | Chore | S | DEV-141 / DEV-051 | P1 | 🏁 Shipped — v5.3.57 |
-| DEV-144 | Chore: Operational Gitignore Auto-Merge | Chore | S | DEV-093 / DEV-119 | P1 | 🏁 Shipped — v5.3.58 |
-| DEV-145 | Feature: Tracker Bootstrap Apply | Feature | M | DEV-141 / DEV-051 | P1 | 🏁 Shipped — v5.3.59 |
-| DEV-146 | Docs: README First-Visit Simplification | Docs | S | DEV-127 / DEV-134 | P1 | 🏁 Shipped — v5.3.59 |
-| DEV-147 | Chore: Tracker CI Publish Hardening | Chore | S | DEV-139 / DEV-051 | P1 | 🏁 Shipped — v5.3.60 |
-| DEV-148 | Fix: One-Line Install Fails on Fresh Windows/macOS | Fix | M | DEV-001 / DEV-111 | P0 | 🏁 Shipped — v5.3.60 (#89 closed) |
-| DEV-149 | Fix: Issues-Sync Dry-Run README Corruption | Fix | S | DEV-139 / DEV-147 | P0 | 🏁 Shipped — v5.3.60 |
+| DEV-118 | Chore: Product Truth & Adapter Contract | Chore | L | DEV-001 / DEV-002 / DEV-004 | P0 | 🏁 Shipped — v0.3.30 |
+| DEV-119 | Feature: Recoverable Project Transaction | Feature | L | DEV-001 | P0 | 🏁 Shipped — v0.3.32 |
+| DEV-125 | Feature: /agtoosa-next Lifecycle Dispatcher | Feature | L | DEV-002 | P0 | 🏁 Shipped — v0.3.35 |
+| DEV-126 | Chore: Spec Interview Hardening | Chore | S | DEV-002 | P0 | 🏁 Shipped — v0.3.36 |
+| DEV-120 | Spike: Delivery Proof Fabric | Spike | L | DEV-002 / DEV-004 | P0 | 🏁 Shipped — v0.3.37 |
+| DEV-121 | Spike: Behavioral Conformance Lab | Spike | L | DEV-003 / DEV-004 | P0 | 🏁 Shipped — v0.3.34 |
+| DEV-122 | Spike: Change-Aware Adaptive Delivery | Spike | L | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v0.3.38 |
+| DEV-123 | Spike: Guarded Portable Execution | Spike | M | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v0.3.39 |
+| DEV-124 | Spike: Cross-Framework Interchange | Spike | M | DEV-002 | P2 | 🏁 Shipped — v0.3.40 |
+| DEV-128 | Bugfix: Smart Upgrade Platform & Version Guards | Bugfix | S | DEV-001 | P0 | 🏁 Shipped — v0.3.42 |
+| DEV-129 | Chore: Smart Upgrade UX Polish | Chore | S | DEV-001 | P0 | 🏁 Shipped — v0.3.43 |
+| DEV-130 | Chore: BCL Hardening & CI Wiring | Chore | S | DEV-003 / DEV-004 | P0 | 🏁 Shipped — v0.3.44 |
+| DEV-131 | Chore: Sequential Approval + Release Publication Gate | Chore | S | 🏁 Shipped — v0.3.45 |
+| DEV-132 | Fix: Preserve Evidence JSONL on Re-install and Update | Fix | XS | DEV-001 / DEV-004 | P0 | 🏁 Shipped — v0.3.46 |
+| DEV-133 | Chore: GitHub Branch Hygiene for Cursor Agent Sprawl | Chore | S | DEV-004 | P1 | 🏁 Shipped — v0.3.47 |
+| DEV-134 | Chore: README Hero Media Pass (Catch-up Formalization) | Chore | XS | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v0.3.48 |
+| DEV-135 | Chore: Natural-Language Continuation → `/agtoosa-next` | Chore | S | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v0.3.49 |
+| DEV-136 | Chore: IDE Host Mode Bridge for Spec and Review | Chore | M | DEV-028 / DEV-116 | P1 | 🏁 Shipped — v0.3.50 |
+| DEV-137 | Chore: Security Scanning CI Health (ShellCheck + workflow re-verify) | Chore | XS | DEV-004 | P1 | 🏁 Shipped — v0.3.51 |
+| DEV-138 | Chore: Main CI Health (Product Truth + PSScriptAnalyzer) | Chore | XS | DEV-004 | P1 | 🏁 Shipped — v0.3.53 |
+| DEV-140 | Chore: Help vs Next Disambiguation Hardening | Chore | S | DEV-002 / DEV-004 | P1 | 🏁 Shipped — v0.3.54 |
+| DEV-141 | Feature: Tracker Discovery & Bootstrap | Feature | L | DEV-051 / DEV-003 | P1 | 🏁 Shipped — v0.3.55 |
+| DEV-142 | Chore: GitHub Surface Audit & Community Profile | Chore | M | DEV-139 / DEV-076 | P1 | 🏁 Shipped — v0.3.56 |
+| DEV-143 | Chore: Tracker Unlinked Status Finding | Chore | S | DEV-141 / DEV-051 | P1 | 🏁 Shipped — v0.3.57 |
+| DEV-144 | Chore: Operational Gitignore Auto-Merge | Chore | S | DEV-093 / DEV-119 | P1 | 🏁 Shipped — v0.3.58 |
+| DEV-145 | Feature: Tracker Bootstrap Apply | Feature | M | DEV-141 / DEV-051 | P1 | 🏁 Shipped — v0.3.59 |
+| DEV-146 | Docs: README First-Visit Simplification | Docs | S | DEV-127 / DEV-134 | P1 | 🏁 Shipped — v0.3.59 |
+| DEV-147 | Chore: Tracker CI Publish Hardening | Chore | S | DEV-139 / DEV-051 | P1 | 🏁 Shipped — v0.3.60 |
+| DEV-148 | Fix: One-Line Install Fails on Fresh Windows/macOS | Fix | M | DEV-001 / DEV-111 | P0 | 🏁 Shipped — v0.3.60 (#89 closed) |
+| DEV-149 | Fix: Issues-Sync Dry-Run README Corruption | Fix | S | DEV-139 / DEV-147 | P0 | 🏁 Shipped — v0.3.60 |
 | DEV-150 | Feature: Corporate Runtime Release Asset | Feature | M | DEV-001 / DEV-148 | P0 | 🟦 Todo — Spec Approved |
 | DEV-151 | Chore: Tracker Publish CI Automation | Chore | S | DEV-139 / DEV-147 | P1 | 🟦 Todo — Spec Approved |
 | DEV-154 | Chore: Fix PR Hygiene Checks Stale Label-Event Gate | Chore | S | DEV-004 | P2 | ⬜ Backlog |
-| DEV-139 | Feature: GitHub Issues PM Bridge (Phased B) | Feature | L | DEV-051 / DEV-004 | P1 | 🏁 Shipped — v5.3.52 |
+| DEV-139 | Feature: GitHub Issues PM Bridge (Phased B) | Feature | L | DEV-051 / DEV-004 | P1 | 🏁 Shipped — v0.3.52 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
-| DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.9 |
-| DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v5.3.10 |
-| DEV-047 | Feature: Async Agent Handoff Packs | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.3 |
-| DEV-048 | Feature: Agent Result Import Gate | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.3 |
-| DEV-049 | Feature: Evidence Ledger | Feature | M | DEV-004 | P0 | 🏁 Shipped — v5.3.4 |
-| DEV-050 | Feature: Cross-Model Review Gate | Feature | S | DEV-002 | P1 | 🏁 Shipped — v5.3.6 |
-| DEV-051 | Feature: Tracker Sync Bridge | Feature | M | DEV-003 | P1 | 🏁 Shipped — v5.3.14 |
-| DEV-052 | Feature: Hook Automation Pack | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.11 |
-| DEV-053 | Feature: Extension and Preset Catalog | Feature | M | DEV-003 | P1 | 🏁 Shipped — v5.3.8 |
-| DEV-054 | Feature: Signed Registry Provenance | Feature | M | DEV-003 | P0 | 🏁 Shipped — v5.3.5 |
-| DEV-055 | Feature: Agent Capability Matrix | Feature | S | DEV-002 | P1 | 🏁 Shipped — v5.3.7 |
-| DEV-056 | Feature: Retrospective Learning Loop | Feature | S | DEV-002 | P2 | 🏁 Shipped — v5.3.11 |
+| DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v0.3.9 |
+| DEV-046 | Feature: Optional Worktree Isolation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v0.3.10 |
+| DEV-047 | Feature: Async Agent Handoff Packs | Feature | M | DEV-002 | P0 | 🏁 Shipped — v0.3.3 |
+| DEV-048 | Feature: Agent Result Import Gate | Feature | M | DEV-002 | P0 | 🏁 Shipped — v0.3.3 |
+| DEV-049 | Feature: Evidence Ledger | Feature | M | DEV-004 | P0 | 🏁 Shipped — v0.3.4 |
+| DEV-050 | Feature: Cross-Model Review Gate | Feature | S | DEV-002 | P1 | 🏁 Shipped — v0.3.6 |
+| DEV-051 | Feature: Tracker Sync Bridge | Feature | M | DEV-003 | P1 | 🏁 Shipped — v0.3.14 |
+| DEV-052 | Feature: Hook Automation Pack | Feature | M | DEV-002 | P1 | 🏁 Shipped — v0.3.11 |
+| DEV-053 | Feature: Extension and Preset Catalog | Feature | M | DEV-003 | P1 | 🏁 Shipped — v0.3.8 |
+| DEV-054 | Feature: Signed Registry Provenance | Feature | M | DEV-003 | P0 | 🏁 Shipped — v0.3.5 |
+| DEV-055 | Feature: Agent Capability Matrix | Feature | S | DEV-002 | P1 | 🏁 Shipped — v0.3.7 |
+| DEV-056 | Feature: Retrospective Learning Loop | Feature | S | DEV-002 | P2 | 🏁 Shipped — v0.3.11 |
 | DEV-057 | Feature: Multi-Repo Story Overlay | Feature | L | DEV-002 | P2 | ⬜ Backlog — demand-gated + DEV-045 |
 
 ### GitHub Reported Issues (synced 2026-08-01)
@@ -253,21 +253,21 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 
 | GH # | Story | Title | State | Fix path |
 |------|-------|-------|-------|----------|
-| [#89](https://github.com/sky2464/AgToosa/issues/89) | DEV-148 | One-line install fails on fresh Windows (AV) and macOS (missing git / sh) | Closed | Shipped v5.3.60 via PR #92 |
-| — | DEV-149 | Issues-sync `--dry-run` mutates README; repeat publish duplicates `AGTOOSA-ROADMAP:END` | Automation (no GH issue) | Shipped v5.3.60 via PR #92 |
-| DEV-058 | Feature: Local Dashboard | Feature | M | DEV-004 | P2 | 🏁 Shipped — v5.3.12 |
-| DEV-059 | Feature: Governance Policy-as-Code | Feature | M | DEV-004 | P1 | 🏁 Shipped — v5.3.10 |
+| [#89](https://github.com/sky2464/AgToosa/issues/89) | DEV-148 | One-line install fails on fresh Windows (AV) and macOS (missing git / sh) | Closed | Shipped v0.3.60 via PR #92 |
+| — | DEV-149 | Issues-sync `--dry-run` mutates README; repeat publish duplicates `AGTOOSA-ROADMAP:END` | Automation (no GH issue) | Shipped v0.3.60 via PR #92 |
+| DEV-058 | Feature: Local Dashboard | Feature | M | DEV-004 | P2 | 🏁 Shipped — v0.3.12 |
+| DEV-059 | Feature: Governance Policy-as-Code | Feature | M | DEV-004 | P1 | 🏁 Shipped — v0.3.10 |
 | DEV-060 | Docs: Public Benchmark Suite | Docs | M | DEV-004 | P2 | ✅ Done — suite + scoring + claim boundary in `docs/benchmarks/`; competitor runs manual-deferred |
-| DEV-075 | Docs: Subagent and Persona Guide Suite | Docs | M | DEV-002 | P1 | 🏁 Shipped — v5.3.8 |
-| DEV-076 | Spike: Static Documentation Site Proof | Spike | S | DEV-004 | P2 | 🏁 Shipped — v5.3.9 |
-| DEV-077 | Chore: Authoring Guide and Onboarding Surface | Chore | S | DEV-003 | P2 | 🏁 Shipped — v5.3.9 |
-| DEV-078 | Chore: First-15-Minutes Maintenance Gate | Chore | XS | DEV-004 | P1 | 🏁 Shipped — v5.3.8 |
-| DEV-079 | Docs: Verifier and CI Adoption Examples | Docs | S | DEV-004 | P2 | 🏁 Shipped — v5.3.9 |
-| DEV-080 | Feature: Official Registry Pack Pilot | Feature | L | DEV-003 | P2 | 🏁 Shipped — v5.3.9 (external publish manual) |
-| DEV-081 | Spike: Optional Local DX Add-on Validation | Spike | M | DEV-001 | P2 | 🏁 Shipped — v5.3.8 |
-| DEV-082 | Spike: High-Assurance Signature Mode Validation | Spike | S | DEV-003 | P2 | 🏁 Shipped — v5.3.9 (Defer) |
-| DEV-083 | Docs: Voluntary Workflow Metrics and Case Study Kit | Docs | S | DEV-004 | P2 | 🏁 Shipped — v5.3.9 |
-| DEV-084 | Chore: Open-Source Sustainability and Support Boundary | Chore | XS | DEV-004 | P2 | 🏁 Shipped — v5.3.9 (Sponsors manual) |
+| DEV-075 | Docs: Subagent and Persona Guide Suite | Docs | M | DEV-002 | P1 | 🏁 Shipped — v0.3.8 |
+| DEV-076 | Spike: Static Documentation Site Proof | Spike | S | DEV-004 | P2 | 🏁 Shipped — v0.3.9 |
+| DEV-077 | Chore: Authoring Guide and Onboarding Surface | Chore | S | DEV-003 | P2 | 🏁 Shipped — v0.3.9 |
+| DEV-078 | Chore: First-15-Minutes Maintenance Gate | Chore | XS | DEV-004 | P1 | 🏁 Shipped — v0.3.8 |
+| DEV-079 | Docs: Verifier and CI Adoption Examples | Docs | S | DEV-004 | P2 | 🏁 Shipped — v0.3.9 |
+| DEV-080 | Feature: Official Registry Pack Pilot | Feature | L | DEV-003 | P2 | 🏁 Shipped — v0.3.9 (external publish manual) |
+| DEV-081 | Spike: Optional Local DX Add-on Validation | Spike | M | DEV-001 | P2 | 🏁 Shipped — v0.3.8 |
+| DEV-082 | Spike: High-Assurance Signature Mode Validation | Spike | S | DEV-003 | P2 | 🏁 Shipped — v0.3.9 (Defer) |
+| DEV-083 | Docs: Voluntary Workflow Metrics and Case Study Kit | Docs | S | DEV-004 | P2 | 🏁 Shipped — v0.3.9 |
+| DEV-084 | Chore: Open-Source Sustainability and Support Boundary | Chore | XS | DEV-004 | P2 | 🏁 Shipped — v0.3.9 (Sponsors manual) |
 | DEV-035 | Chore: Launch P0 publication and quickstart gate | Chore | M | DEV-004 | P0 | ✅ Done |
 | DEV-036 | Fix: Windows and registry parity | Fix | M | DEV-001 / DEV-003 | P1 | ✅ Done |
 | DEV-037 | Chore: Truthful launch documentation and positioning | Chore | M | DEV-002 | P1 | ✅ Done |
@@ -279,38 +279,38 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | DEV-030 | Fix: `/agtoosa-update` self-target uncertainty | Fix | S | DEV-002 | High | 🏁 Shipped |
 | DEV-033 | Fix: agtoosa.ps1 PSScriptAnalyzer approved verbs | Fix | XS | DEV-001 | Medium | 🏁 Shipped |
 | DEV-034 | Chore: Maintainer release-state reconciliation | Chore | S | DEV-004 | High | 🏁 Shipped |
-| DEV-085 | Chore: Post-v5.3.12 release hygiene (bats restore + Master-Plan reconciliation) | Chore | XS | DEV-004 | High | 🏁 Shipped — v5.3.13 |
-| DEV-086 | Chore: Canonical Proof Product Experience | Chore | S | DEV-004 | P0 | 🏁 Shipped — v5.3.17 |
-| DEV-087 | Feature: Delivery Evidence Contract + Profiles | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.15 |
-| DEV-088 | Feature: Verifier and Doctor Machine Output | Feature | M | DEV-004 | P0 | 🏁 Shipped — v5.3.15 |
-| DEV-089 | Feature: Evidence-Profile Verifier Gates | Feature | M | DEV-004 | P1 | 🏁 Shipped — v5.3.18 |
-| DEV-090 | Feature: Unified Install/Update Plan Engine | Feature | M | DEV-001 | P0 | 🏁 Shipped — v5.3.17 |
-| DEV-091 | Feature: Migration Wizard + Rollback Manifest | Feature | L | DEV-001 | P0 | 🏁 Shipped — v5.3.18 |
-| DEV-092 | Chore: Transactional Apply + Idempotency | Chore | M | DEV-001 | P1 | 🏁 Shipped — v5.3.16 |
-| DEV-093 | Feature: Install State File + Lock Reconciliation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v5.3.18 |
-| DEV-094 | Feature: Assistant Compatibility Contract | Feature | M | DEV-004 | P1 | 🏁 Shipped — v5.3.16 |
-| DEV-095 | Feature: Official Pack Expansion (5-pack max) | Feature | M | DEV-003 | P1 | 🏁 Shipped — v5.3.20 |
-| DEV-096 | Chore: Pack Validation CI | Chore | S | DEV-003 | P1 | 🏁 Shipped — v5.3.20 |
-| DEV-097 | Docs: Framework Supply-Chain Threat Model | Docs | S | DEV-004 | P1 | 🏁 Shipped — v5.3.16 |
-| DEV-098 | Docs: Navigation by User Job | Docs | XS | DEV-004 | P2 | 🏁 Shipped — v5.3.20 |
-| DEV-099 | Docs: Core vs Optional Pack Boundary | Docs | XS | DEV-003 | P2 | 🏁 Shipped — v5.3.20 |
-| DEV-100 | Feature: Shared JSON Output for Install/Registry | Feature | S | DEV-001 | P2 | 🏁 Shipped — v5.3.18 |
-| DEV-101 | Docs: Verified vs Community Pack Labeling | Docs | XS | DEV-003 | P2 | 🏁 Shipped — v5.3.20 |
-| DEV-102 | Docs: Offline and Network-Dependency Matrix | Docs | XS | DEV-004 | P2 | 🏁 Shipped — v5.3.20 |
-| DEV-103 | Chore: External Registry Publication Runbook | Chore | S | DEV-003 | P2 | 🏁 Shipped — v5.3.20 |
-| DEV-104 | Feature: `--reinstall --clean` (ADR-004 Option C) | Feature | S | DEV-001 | P2 | 🏁 Shipped — v5.3.20 |
-| DEV-105 | Feature: PowerShell Maintain + Update Parity | Feature | M | DEV-001 | P0 | 🏁 Shipped — v5.3.17 |
-| DEV-106 | Docs: Built with AgToosa Showcase | Docs | XS | DEV-004 | P2 | 🏁 Shipped — v5.3.20 |
-| DEV-107 | Feature: Agent-Instructed Orchestration Brain | Feature | M | DEV-002 | P1 | 🏁 Shipped — v5.3.20 |
-| DEV-109 | Feature: Lifecycle Next-Step Sync + Multi-Spec Clarity | Feature | L | DEV-002 / DEV-001 | P0 | 🏁 Shipped — v5.3.21 |
-| DEV-110 | Feature: AgToosa Project Intake | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.22 |
-| DEV-111 | Feature: Smart One-Command Install UX | Feature | M | DEV-001 | P0 | 🏁 Shipped — v5.3.23 |
-| DEV-112 | Feature: Smart Apply UX Polish + `--cleanup` | Feature | M | DEV-001 / DEV-111 | P0 | 🏁 Shipped — v5.3.24 |
-| DEV-113 | Chore: Cursor Intake Hardening + Fixture Parity | Chore | S | DEV-002 | P1 | 🏁 Shipped — v5.3.26 |
-| DEV-114 | Fix: `--cleanup` false positives | Fix | S | DEV-112 | P0 | 🏁 Shipped — v5.3.25 |
-| DEV-115 | Fix: `--cleanup` safety follow-up | Fix | S | DEV-114 | P0 | 🏁 Shipped — v5.3.27 |
-| DEV-116 | Feature: AgToosa Lifecycle Compass | Feature | M | DEV-002 | P0 | 🏁 Shipped — v5.3.28 |
-| DEV-117 | Chore: Cycle Continuity Guard | Chore | S | DEV-004 | P1 | 🏁 Shipped — v5.3.29 |
+| DEV-085 | Chore: Post-v0.3.12 release hygiene (bats restore + Master-Plan reconciliation) | Chore | XS | DEV-004 | High | 🏁 Shipped — v0.3.13 |
+| DEV-086 | Chore: Canonical Proof Product Experience | Chore | S | DEV-004 | P0 | 🏁 Shipped — v0.3.17 |
+| DEV-087 | Feature: Delivery Evidence Contract + Profiles | Feature | M | DEV-002 | P0 | 🏁 Shipped — v0.3.15 |
+| DEV-088 | Feature: Verifier and Doctor Machine Output | Feature | M | DEV-004 | P0 | 🏁 Shipped — v0.3.15 |
+| DEV-089 | Feature: Evidence-Profile Verifier Gates | Feature | M | DEV-004 | P1 | 🏁 Shipped — v0.3.18 |
+| DEV-090 | Feature: Unified Install/Update Plan Engine | Feature | M | DEV-001 | P0 | 🏁 Shipped — v0.3.17 |
+| DEV-091 | Feature: Migration Wizard + Rollback Manifest | Feature | L | DEV-001 | P0 | 🏁 Shipped — v0.3.18 |
+| DEV-092 | Chore: Transactional Apply + Idempotency | Chore | M | DEV-001 | P1 | 🏁 Shipped — v0.3.16 |
+| DEV-093 | Feature: Install State File + Lock Reconciliation | Feature | M | DEV-001 | P1 | 🏁 Shipped — v0.3.18 |
+| DEV-094 | Feature: Assistant Compatibility Contract | Feature | M | DEV-004 | P1 | 🏁 Shipped — v0.3.16 |
+| DEV-095 | Feature: Official Pack Expansion (5-pack max) | Feature | M | DEV-003 | P1 | 🏁 Shipped — v0.3.20 |
+| DEV-096 | Chore: Pack Validation CI | Chore | S | DEV-003 | P1 | 🏁 Shipped — v0.3.20 |
+| DEV-097 | Docs: Framework Supply-Chain Threat Model | Docs | S | DEV-004 | P1 | 🏁 Shipped — v0.3.16 |
+| DEV-098 | Docs: Navigation by User Job | Docs | XS | DEV-004 | P2 | 🏁 Shipped — v0.3.20 |
+| DEV-099 | Docs: Core vs Optional Pack Boundary | Docs | XS | DEV-003 | P2 | 🏁 Shipped — v0.3.20 |
+| DEV-100 | Feature: Shared JSON Output for Install/Registry | Feature | S | DEV-001 | P2 | 🏁 Shipped — v0.3.18 |
+| DEV-101 | Docs: Verified vs Community Pack Labeling | Docs | XS | DEV-003 | P2 | 🏁 Shipped — v0.3.20 |
+| DEV-102 | Docs: Offline and Network-Dependency Matrix | Docs | XS | DEV-004 | P2 | 🏁 Shipped — v0.3.20 |
+| DEV-103 | Chore: External Registry Publication Runbook | Chore | S | DEV-003 | P2 | 🏁 Shipped — v0.3.20 |
+| DEV-104 | Feature: `--reinstall --clean` (ADR-004 Option C) | Feature | S | DEV-001 | P2 | 🏁 Shipped — v0.3.20 |
+| DEV-105 | Feature: PowerShell Maintain + Update Parity | Feature | M | DEV-001 | P0 | 🏁 Shipped — v0.3.17 |
+| DEV-106 | Docs: Built with AgToosa Showcase | Docs | XS | DEV-004 | P2 | 🏁 Shipped — v0.3.20 |
+| DEV-107 | Feature: Agent-Instructed Orchestration Brain | Feature | M | DEV-002 | P1 | 🏁 Shipped — v0.3.20 |
+| DEV-109 | Feature: Lifecycle Next-Step Sync + Multi-Spec Clarity | Feature | L | DEV-002 / DEV-001 | P0 | 🏁 Shipped — v0.3.21 |
+| DEV-110 | Feature: AgToosa Project Intake | Feature | M | DEV-002 | P0 | 🏁 Shipped — v0.3.22 |
+| DEV-111 | Feature: Smart One-Command Install UX | Feature | M | DEV-001 | P0 | 🏁 Shipped — v0.3.23 |
+| DEV-112 | Feature: Smart Apply UX Polish + `--cleanup` | Feature | M | DEV-001 / DEV-111 | P0 | 🏁 Shipped — v0.3.24 |
+| DEV-113 | Chore: Cursor Intake Hardening + Fixture Parity | Chore | S | DEV-002 | P1 | 🏁 Shipped — v0.3.26 |
+| DEV-114 | Fix: `--cleanup` false positives | Fix | S | DEV-112 | P0 | 🏁 Shipped — v0.3.25 |
+| DEV-115 | Fix: `--cleanup` safety follow-up | Fix | S | DEV-114 | P0 | 🏁 Shipped — v0.3.27 |
+| DEV-116 | Feature: AgToosa Lifecycle Compass | Feature | M | DEV-002 | P0 | 🏁 Shipped — v0.3.28 |
+| DEV-117 | Chore: Cycle Continuity Guard | Chore | S | DEV-004 | P1 | 🏁 Shipped — v0.3.29 |
 
 ### Competitive Proof Portfolio (`intake:large`)
 
@@ -347,7 +347,7 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
     *   **Success Criteria:** Zero-friction installation and error-free multi-platform scaffolding on clean or existing directories.
     *   **Last shipped:** DEV-046 — Optional Worktree Isolation → `docs/archived/spec-DEV-046.md`
     *   **Last shipped:** DEV-081 — Optional Local DX spike (defer all three options) → `docs/archived/spec-DEV-081.md`
-    *   **Current:** Rev4 wave — DEV-090 · DEV-105 shipped v5.3.17; DEV-091 · DEV-093 · DEV-100 active; DEV-092 shipped v5.3.16; DEV-104 · DEV-102 backlog
+    *   **Current:** Rev4 wave — DEV-090 · DEV-105 shipped v0.3.17; DEV-091 · DEV-093 · DEV-100 active; DEV-092 shipped v0.3.16; DEV-104 · DEV-102 backlog
 
 *   **DEV-002 - Epic: Workflow Templates**
     *   **Goal:** Comprehensive AI-native rule files, prompts, skills, and templates keeping AI agents fully aligned with the four-phase lifecycle.
@@ -374,7 +374,7 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
     *   **Last shipped:** DEV-080 — Official Registry Pack Pilot → `docs/archived/spec-DEV-080.md`
     *   **Last shipped:** DEV-082 — High-Assurance Signature Mode Validation → `docs/archived/spec-DEV-082.md`
     *   **Last shipped:** DEV-051 — Tracker Sync Bridge → `docs/archived/spec-DEV-051.md`
-    *   **Current:** Wave 3 shipped v5.3.20 (095–106); DEV-080 external publish remains [manual-deferred]
+    *   **Current:** Wave 3 shipped v0.3.20 (095–106); DEV-080 external publish remains [manual-deferred]
 
 *   **DEV-004 - Epic: Testing & QA Harness**
     *   **Goal:** Comprehensive end-to-end integration and version verification suites validating the robustness of the entire framework.
@@ -389,7 +389,7 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
     *   **Last shipped:** DEV-083 — Voluntary Workflow Metrics and Case Study Kit → `docs/archived/spec-DEV-083.md`
     *   **Last shipped:** DEV-084 — Open-Source Sustainability and Support Boundary → `docs/archived/spec-DEV-084.md`
     *   **Last shipped:** DEV-088 — Verifier and Doctor Machine Output → `docs/archived/spec-DEV-088.md`
-    *   **Current:** Rev4 wave — DEV-086 shipped v5.3.17; DEV-089 In Progress; DEV-094 · DEV-097 shipped v5.3.16; DEV-098 · DEV-106 backlog
+    *   **Current:** Rev4 wave — DEV-086 shipped v0.3.17; DEV-089 In Progress; DEV-094 · DEV-097 shipped v0.3.16; DEV-098 · DEV-106 backlog
 
 ## Completed This Cycle
 
@@ -455,7 +455,7 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | DEV-087 | Feature: Delivery Evidence Contract + Profiles | 2026-07-12 | [spec-DEV-087.md](archived/spec-DEV-087.md) · [review-DEV-087.md](archived/review-DEV-087.md) · [evidence-DEV-087.md](archived/evidence-DEV-087.md) |
 | DEV-088 | Feature: Verifier and Doctor Machine Output | 2026-07-12 | [spec-DEV-088.md](archived/spec-DEV-088.md) · [review-DEV-088.md](archived/review-DEV-088.md) · [evidence-DEV-088.md](archived/evidence-DEV-088.md) |
 | DEV-051 | Feature: Tracker Sync Bridge | 2026-07-11 | [spec-DEV-051.md](archived/spec-DEV-051.md) · [review-DEV-051.md](archived/review-DEV-051.md) · [evidence-DEV-051.md](archived/evidence-DEV-051.md) |
-| DEV-085 | Chore: Post-v5.3.12 release hygiene (bats restore + Master-Plan reconciliation) | 2026-07-11 | [spec-DEV-085.md](archived/spec-DEV-085.md) · [review-DEV-085.md](archived/review-DEV-085.md) · [evidence-DEV-085.md](archived/evidence-DEV-085.md) |
+| DEV-085 | Chore: Post-v0.3.12 release hygiene (bats restore + Master-Plan reconciliation) | 2026-07-11 | [spec-DEV-085.md](archived/spec-DEV-085.md) · [review-DEV-085.md](archived/review-DEV-085.md) · [evidence-DEV-085.md](archived/evidence-DEV-085.md) |
 | DEV-058 | Feature: Local Dashboard | 2026-07-11 | [spec-DEV-058.md](archived/spec-DEV-058.md) · [review-DEV-058.md](archived/review-DEV-058.md) · [evidence-DEV-058.md](archived/evidence-DEV-058.md) |
 | DEV-052 | Feature: Hook Automation Pack | 2026-07-11 | [spec-DEV-052.md](archived/spec-DEV-052.md) · [review-DEV-052.md](archived/review-DEV-052.md) · [evidence-DEV-052.md](archived/evidence-DEV-052.md) |
 | DEV-056 | Feature: Retrospective Learning Loop | 2026-07-11 | [spec-DEV-056.md](archived/spec-DEV-056.md) · [review-DEV-056.md](archived/review-DEV-056.md) · [evidence-DEV-056.md](archived/evidence-DEV-056.md) |
@@ -542,88 +542,88 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | 2026-08-24 04:35 | 🟢 /agtoosa-build — Task 🟢 2/5 complete — DEV-150 — release-advanced.yml packs runtime tarball + appends SHA256SUMS digest; RTA-004 green | AgToosa |
 | 2026-08-24 04:25 | 🟢 /agtoosa-build — Task 🟢 1/5 complete — DEV-150 — scripts/pack-runtime.sh; RTA-001/002/003 green; 414K runtime vs ~17.1MB source (≈41× smaller) | AgToosa |
 | 2026-08-24 04:20 | 🏗️ Build 🏗️ Started — DEV-150 — Starting TDD cycle. 5 tasks declared. Scope: `scripts/pack-runtime.sh`, `.github/workflows/release-advanced.yml`, `tests/agtoosa.bats`, `docs/guides/readme-reference.md`. Next: Task 1/5 — scripts/pack-runtime.sh. | AgToosa |
-| 2026-08-23 21:27 | ✏️ Master-Plan sync — DEV-150 + DEV-151 re-targeted to v5.3.63 after stash reconciliation (specs approved 2026-08-01 under stale v5.3.61 target; v5.3.61/v5.3.62 shipped unrelated fixes in the interim) | AgToosa |
-| 2026-08-02 15:45 | 🚀 Release 5.3.62 shipped — pipe bootstrap project path prompt `/dev/tty` fix; closes #99; PR #100 | AgToosa |
-| 2026-08-02 15:30 | 🚀 Release 5.3.61 shipped — bootstrap macOS bash 3.2 `forwarded_args` fix; closes #94; PR #95 | AgToosa |
-| 2026-08-01 09:58 | ✏️ /agtoosa-spec — DEV-150 + DEV-151 spec approved — v5.3.61 wave; runtime tarball + tracker CI automation; test plans DEV-150/151 | AgToosa |
-| 2026-08-01 09:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-147 (+ DEV-148/149 batched) — smoke PASS GIP/SR gate; v5.3.60 | AgToosa |
-| 2026-08-01 09:55 | 🚀 Ship complete — v5.3.60 — DEV-147 Tracker CI Publish Hardening + DEV-148 Install + DEV-149 README guard | AgToosa |
-| 2026-08-01 09:55 | 🚀 Release 5.3.60 shipped — v5.3.60; version parity bash/ps1/npm/formula; Milestone v5.3.61 (next); cycle archived | AgToosa |
-| 2026-08-01 09:50 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-147 (+ DEV-148/149 wave) — 0 Critical; GIP/GIS/INS 16/16 green; CI validate 🟡 pre-existing tracker-discover shellcheck; next `/agtoosa-next` → ship v5.3.60 | AgToosa |
+| 2026-08-23 21:27 | ✏️ Master-Plan sync — DEV-150 + DEV-151 re-targeted to v0.3.63 after stash reconciliation (specs approved 2026-08-01 under stale v0.3.61 target; v0.3.61/v0.3.62 shipped unrelated fixes in the interim) | AgToosa |
+| 2026-08-02 15:45 | 🚀 Release 0.3.62 shipped — pipe bootstrap project path prompt `/dev/tty` fix; closes #99; PR #100 | AgToosa |
+| 2026-08-02 15:30 | 🚀 Release 0.3.61 shipped — bootstrap macOS bash 3.2 `forwarded_args` fix; closes #94; PR #95 | AgToosa |
+| 2026-08-01 09:58 | ✏️ /agtoosa-spec — DEV-150 + DEV-151 spec approved — v0.3.61 wave; runtime tarball + tracker CI automation; test plans DEV-150/151 | AgToosa |
+| 2026-08-01 09:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-147 (+ DEV-148/149 batched) — smoke PASS GIP/SR gate; v0.3.60 | AgToosa |
+| 2026-08-01 09:55 | 🚀 Ship complete — v0.3.60 — DEV-147 Tracker CI Publish Hardening + DEV-148 Install + DEV-149 README guard | AgToosa |
+| 2026-08-01 09:55 | 🚀 Release 0.3.60 shipped — v0.3.60; version parity bash/ps1/npm/formula; Milestone v0.3.61 (next); cycle archived | AgToosa |
+| 2026-08-01 09:50 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-147 (+ DEV-148/149 wave) — 0 Critical; GIP/GIS/INS 16/16 green; CI validate 🟡 pre-existing tracker-discover shellcheck; next `/agtoosa-next` → ship v0.3.60 | AgToosa |
 | 2026-08-01 09:48 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-147 — 4-persona review (served by `/agtoosa-next`) | AgToosa |
 | 2026-08-01 09:45 | 🏗️ /agtoosa-build — DEV-147 build complete — GIP-001–GIP-010 green; DEV-148/149 cherry-picked on fix/wave branch | AgToosa |
 | 2026-08-01 09:25 | ✏️ Tracker sync — GitHub #89 → DEV-148 backlog; automation README corruption → DEV-149; fix wave planned (PR #90 · #91) | AgToosa |
 | 2026-07-29 23:35 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-147 — `docs/archived/spec-DEV-147.md`; GIP-001–GIP-010; enrolled Active Cycle v5.3.60; next `/agtoosa-next` → build | AgToosa |
-| 2026-07-28 12:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-146 (+ DEV-145 batched) — smoke PASS RMF/TBA/SR gate; v5.3.59 | AgToosa |
-| 2026-07-28 12:55 | 🚀 Ship complete — v5.3.59 — DEV-145 Tracker Bootstrap Apply + DEV-146 README First-Visit | AgToosa |
-| 2026-07-28 12:45 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-146 — 0 Critical; RMF-001–003 green; launch-tag gate 🟡 deferred to ship; next `/agtoosa-next` → ship v5.3.59 | AgToosa |
+| 2026-07-28 12:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-146 (+ DEV-145 batched) — smoke PASS RMF/TBA/SR gate; v0.3.59 | AgToosa |
+| 2026-07-28 12:55 | 🚀 Ship complete — v0.3.59 — DEV-145 Tracker Bootstrap Apply + DEV-146 README First-Visit | AgToosa |
+| 2026-07-28 12:45 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-146 — 0 Critical; RMF-001–003 green; launch-tag gate 🟡 deferred to ship; next `/agtoosa-next` → ship v0.3.59 | AgToosa |
 | 2026-07-28 12:44 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-146 — 4-persona review (served by `/agtoosa-next`) | AgToosa |
 | 2026-07-28 12:40 | 🏗️ /agtoosa-build — Build complete — DEV-146 — README first-visit simplification; RMF-001–003; next `/agtoosa-review` | AgToosa |
 | 2026-07-28 12:35 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-146 — `docs/archived/spec-DEV-146.md`; enrolled Active Cycle | AgToosa |
-| 2026-07-28 00:35 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-144 — smoke PASS GIG/SR gate; v5.3.58 | AgToosa |
-| 2026-07-28 00:35 | 🚀 Ship complete — v5.3.58 — DEV-144 Operational Gitignore Auto-Merge | AgToosa |
-| 2026-07-28 00:32 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-143 — smoke PASS TUS/SR gate; v5.3.57 | AgToosa |
-| 2026-07-28 00:32 | 🚀 Ship complete — v5.3.57 — DEV-143 Tracker Unlinked Status Finding | AgToosa |
-| 2026-07-28 00:30 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-144 — 0 Critical; GIG-001–008 green; next `/agtoosa-next` → ship v5.3.57 | AgToosa |
+| 2026-07-28 00:35 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-144 — smoke PASS GIG/SR gate; v0.3.58 | AgToosa |
+| 2026-07-28 00:35 | 🚀 Ship complete — v0.3.58 — DEV-144 Operational Gitignore Auto-Merge | AgToosa |
+| 2026-07-28 00:32 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-143 — smoke PASS TUS/SR gate; v0.3.57 | AgToosa |
+| 2026-07-28 00:32 | 🚀 Ship complete — v0.3.57 — DEV-143 Tracker Unlinked Status Finding | AgToosa |
+| 2026-07-28 00:30 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-144 — 0 Critical; GIG-001–008 green; next `/agtoosa-next` → ship v0.3.57 | AgToosa |
 | 2026-07-28 00:28 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-144 — 4-persona review (served by `/agtoosa-next`) | AgToosa |
-| 2026-07-28 00:25 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-143 — 0 Critical; TUS-001–008 green; next `/agtoosa-next` → ship v5.3.57 | AgToosa |
+| 2026-07-28 00:25 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-143 — 0 Critical; TUS-001–008 green; next `/agtoosa-next` → ship v0.3.57 | AgToosa |
 | 2026-07-28 00:24 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-143 — 4-persona review (served by `/agtoosa-next`) | AgToosa |
 | 2026-07-28 00:20 | 🏗️ /agtoosa-build — Build complete — DEV-143 — 5/5 tasks; TUS-001–TUS-008 exit 0; next `/agtoosa-next` → review | AgToosa |
 | 2026-07-28 00:12 | 🏗️ /agtoosa-build — Build 🏗️ Started — DEV-143 — status-check CLI + status doc + TUS suite | AgToosa |
 | 2026-07-28 00:10 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-143 — `docs/archived/spec-DEV-143.md`; estimate S; enrolled Active Cycle; TUS-001–008 planned; renumbered from cold-start pick (DEV-142 taken); next `/agtoosa-next` → build | AgToosa |
-| 2026-07-28 00:05 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-142 — smoke PASS GSA/SR gate; v5.3.56 | AgToosa |
-| 2026-07-28 00:05 | 🚀 Ship complete — v5.3.56 — DEV-142 GitHub Surface Audit & Community Profile | AgToosa |
-| 2026-07-28 23:58 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-142 — 0 Critical; GSA-001–010 green; live audit manual-deferred; next `/agtoosa-ship` v5.3.56 | AgToosa |
+| 2026-07-28 00:05 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-142 — smoke PASS GSA/SR gate; v0.3.56 | AgToosa |
+| 2026-07-28 00:05 | 🚀 Ship complete — v0.3.56 — DEV-142 GitHub Surface Audit & Community Profile | AgToosa |
+| 2026-07-28 23:58 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-142 — 0 Critical; GSA-001–010 green; live audit manual-deferred; next `/agtoosa-ship` v0.3.56 | AgToosa |
 | 2026-07-28 23:57 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-142 — 4-persona review (served by `/agtoosa-next`) | AgToosa |
 | 2026-07-28 23:55 | ✏️ /agtoosa-spec — Spec ✅ Approved + build complete — DEV-142 — GSA-001–010 green; local audit pass; next `/agtoosa-review` | AgToosa |
-| 2026-07-28 23:45 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-141 — smoke PASS TBS/SR gate; v5.3.55 | AgToosa |
-| 2026-07-28 23:45 | 🚀 Ship complete — v5.3.55 — DEV-141 Tracker Discovery & Bootstrap | AgToosa |
-| 2026-07-28 23:35 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-141 — 0 Critical; TBS-001–010 green; next `/agtoosa-next` → ship v5.3.55 | AgToosa |
+| 2026-07-28 23:45 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-141 — smoke PASS TBS/SR gate; v0.3.55 | AgToosa |
+| 2026-07-28 23:45 | 🚀 Ship complete — v0.3.55 — DEV-141 Tracker Discovery & Bootstrap | AgToosa |
+| 2026-07-28 23:35 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-141 — 0 Critical; TBS-001–010 green; next `/agtoosa-next` → ship v0.3.55 | AgToosa |
 | 2026-07-28 23:34 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-141 — 4-persona review (served by `/agtoosa-next`) | AgToosa |
 | 2026-07-28 23:30 | 🏗️ /agtoosa-build — Build complete — DEV-141 — 6/6 tasks; TBS-001–TBS-010 exit 0; next `/agtoosa-next` → review | AgToosa |
 | 2026-07-28 23:28 | 🏗️ /agtoosa-build — Build 🏗️ Started — DEV-141 — TDD closure for discover/bootstrap (as-built 7f91f8a) | AgToosa |
 | 2026-07-28 23:16 | ✅ DEV-080 tasks 4.2/4.3 — External registry publish confirmed — [agtoosa-registry#1](https://github.com/sky2464/agtoosa-registry/pull/1) merged; `registry list` shows 3 packs; checklist updated | AgToosa |
 | 2026-07-28 23:25 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-141 — `docs/archived/spec-DEV-141.md`; estimate L; enrolled Active Cycle; TBS-001–010 green; next `/agtoosa-next` → build | AgToosa |
-| 2026-07-28 23:20 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-140 — smoke PASS NLX/SR gate; v5.3.54 | AgToosa |
-| 2026-07-28 23:20 | 🚀 Ship complete — v5.3.54 — DEV-140 Help vs Next disambiguation | AgToosa |
-| 2026-07-28 23:15 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-140 — 0 Critical; NLX-009–013 green; next `/agtoosa-next` → ship v5.3.54 | AgToosa |
+| 2026-07-28 23:20 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-140 — smoke PASS NLX/SR gate; v0.3.54 | AgToosa |
+| 2026-07-28 23:20 | 🚀 Ship complete — v0.3.54 — DEV-140 Help vs Next disambiguation | AgToosa |
+| 2026-07-28 23:15 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-140 — 0 Critical; NLX-009–013 green; next `/agtoosa-next` → ship v0.3.54 | AgToosa |
 | 2026-07-28 23:10 | 🏗️ /agtoosa-build — Build complete — DEV-140 — NLX-009–013 + progress-continuation-proof BCL; next `/agtoosa-next` → review | AgToosa |
 | 2026-07-28 23:05 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-140 — help vs next disambiguation; test plan `docs/AgToosa_TestPlan-DEV-140.md` | AgToosa |
-| 2026-07-28 23:10 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-138 — smoke PASS CIH/SR gate; v5.3.53 | AgToosa |
-| 2026-07-28 23:10 | 🚀 Ship complete — v5.3.53 — DEV-138 Main CI Health | AgToosa |
-| 2026-07-28 23:10 | 🚀 Release 5.3.53 shipped — v5.3.53; version parity bash/ps1/npm/formula; Milestone v5.3.54 (next) | AgToosa |
-| 2026-07-28 23:05 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-139 — smoke PASS GIS/SR gate; v5.3.52 | AgToosa |
-| 2026-07-28 23:05 | 🚀 Ship complete — v5.3.52 — DEV-139 GitHub Issues PM Bridge | AgToosa |
-| 2026-07-28 23:05 | 🚀 Release 5.3.52 shipped — v5.3.52; version parity bash/ps1/npm/formula; Milestone v5.3.53 (next) | AgToosa |
-| 2026-07-28 22:55 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-139 — 0 Critical, 2 Warning (AC-003 verify at ship); GIS-001–010 + DEV-051 regression green; next `/agtoosa-next` → ship v5.3.52 | AgToosa |
+| 2026-07-28 23:10 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-138 — smoke PASS CIH/SR gate; v0.3.53 | AgToosa |
+| 2026-07-28 23:10 | 🚀 Ship complete — v0.3.53 — DEV-138 Main CI Health | AgToosa |
+| 2026-07-28 23:10 | 🚀 Release 0.3.53 shipped — v0.3.53; version parity bash/ps1/npm/formula; Milestone v0.3.54 (next) | AgToosa |
+| 2026-07-28 23:05 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-139 — smoke PASS GIS/SR gate; v0.3.52 | AgToosa |
+| 2026-07-28 23:05 | 🚀 Ship complete — v0.3.52 — DEV-139 GitHub Issues PM Bridge | AgToosa |
+| 2026-07-28 23:05 | 🚀 Release 0.3.52 shipped — v0.3.52; version parity bash/ps1/npm/formula; Milestone v0.3.53 (next) | AgToosa |
+| 2026-07-28 22:55 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-139 — 0 Critical, 2 Warning (AC-003 verify at ship); GIS-001–010 + DEV-051 regression green; next `/agtoosa-next` → ship v0.3.52 | AgToosa |
 | 2026-07-28 22:54 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-139 — 4-persona review (served by `/agtoosa-next`) | AgToosa |
 | 2026-07-28 22:35 | 🏗️ /agtoosa-build — Build complete — DEV-139 — GIS-001–010 10/10 PASS; next `/agtoosa-next` → review | AgToosa |
 | 2026-07-28 22:32 | 🏗️ /agtoosa-build — Build 🏗️ Started — DEV-139 — GitHub Issues PM bridge | AgToosa |
-| 2026-07-28 21:58 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-138 — 0 Critical, 1 Warning (AC-003 verify at ship); PTC-002 + CIH-001–004 green; next `/agtoosa-next` → ship v5.3.52 | AgToosa |
+| 2026-07-28 21:58 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-138 — 0 Critical, 1 Warning (AC-003 verify at ship); PTC-002 + CIH-001–004 green; next `/agtoosa-next` → ship v0.3.52 | AgToosa |
 | 2026-07-28 21:57 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-138 — main CI health | AgToosa |
 | 2026-07-28 21:50 | 🏗️ /agtoosa-build — Build 🏗️ Started — DEV-138 — main CI health; scope: product-truth.bats, agtoosa.ps1, CIH bats | AgToosa |
-| 2026-07-28 21:42 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-137 — smoke PASS SSC/SR gate; v5.3.51 | AgToosa |
-| 2026-07-28 21:42 | 🚀 Ship complete — v5.3.51 — DEV-137 Security Scanning CI health | AgToosa |
-| 2026-07-28 21:42 | 🚀 Release 5.3.51 shipped — v5.3.51; version parity bash/ps1/npm/formula; Milestone v5.3.52 (next) | AgToosa |
+| 2026-07-28 21:42 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-137 — smoke PASS SSC/SR gate; v0.3.51 | AgToosa |
+| 2026-07-28 21:42 | 🚀 Ship complete — v0.3.51 — DEV-137 Security Scanning CI health | AgToosa |
+| 2026-07-28 21:42 | 🚀 Release 0.3.51 shipped — v0.3.51; version parity bash/ps1/npm/formula; Milestone v0.3.52 (next) | AgToosa |
 | 2026-07-28 21:37 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-137 — Security Scanning CI health | AgToosa |
 | 2026-07-28 21:32 | 🏗️ /agtoosa-build — Build 🏗️ Started — DEV-137 — Security Scanning CI health; 4 tasks; scope: lib/apply.sh, lib/catalog.sh, SSC bats | AgToosa |
 <!-- Older rows through 2026-06-10: docs/archived/updatelog-2026.md -->
-| 2026-07-07 | 🏗️ Merged v5.3.x fix batch — pack lock provenance, re-install data loss, multi-root tarball smuggle, npm pack queue, PowerShell hooks/merge containment (PRs #36–#48, #61–#63) | AgToosa |
-| 2026-07-08 | 🚀 Ship complete — v5.3.1 patch; Unreleased fixes + bootstrap durable pack queue (PR #64); focused SR bats green | AgToosa |
-| 2026-07-08 | 🚀 Release 5.3.1 shipped — v5.3.1; version parity bash/ps1/npm; Milestone v5.3.2 (next) | AgToosa |
+| 2026-07-07 | 🏗️ Merged v0.3.x fix batch — pack lock provenance, re-install data loss, multi-root tarball smuggle, npm pack queue, PowerShell hooks/merge containment (PRs #36–#48, #61–#63) | AgToosa |
+| 2026-07-08 | 🚀 Ship complete — v0.3.1 patch; Unreleased fixes + bootstrap durable pack queue (PR #64); focused SR bats green | AgToosa |
+| 2026-07-08 | 🚀 Release 0.3.1 shipped — v0.3.1; version parity bash/ps1/npm; Milestone v0.3.2 (next) | AgToosa |
 | 2026-07-08 | ✏️ /agtoosa-spec DEV-074 enrolled — PS1 non-interactive install parity; spec approved; test plan `docs/AgToosa_TestPlan-DEV-074.md` | AgToosa |
 | 2026-07-08 | 🏗️ /agtoosa-build DEV-074 — Task 🟢 12/12 complete — PS1 `-Path`/`-Platforms`/`-Yes` parity; bats DEV-074 CT-001–CT-004; Pester NI-001–NI-005 green | AgToosa |
 | 2026-07-08 | 🔍 Review 🔍 Started — DEV-074 — 4-persona review running | AgToosa |
 | 2026-07-08 | 🔍 Review ✅ Approved — DEV-074; 0 🔴 Critical, 2 🟡 Warning (accepted); report: `docs/archived/review-DEV-074.md` | AgToosa |
-| 2026-07-08 | 🚀 Ship complete — v5.3.2 — DEV-074 PS1 non-interactive install parity; bats DEV-074 SR-001–SR-003 green | AgToosa |
-| 2026-07-08 | 🚀 Release 5.3.2 shipped — v5.3.2; version parity bash/ps1/npm; Milestone v5.3.3 (next) | AgToosa |
+| 2026-07-08 | 🚀 Ship complete — v0.3.2 — DEV-074 PS1 non-interactive install parity; bats DEV-074 SR-001–SR-003 green | AgToosa |
+| 2026-07-08 | 🚀 Release 0.3.2 shipped — v0.3.2; version parity bash/ps1/npm; Milestone v0.3.3 (next) | AgToosa |
 | 2026-07-08 | ✏️ /agtoosa-spec DEV-047 + DEV-048 enrolled — deepened executable specs; Spec ✅ Approved; estimate M each; Active Cycle | AgToosa |
 | 2026-07-08 | 🏗️ /agtoosa-build DEV-047 + DEV-048 — Task 🟢 5/5 + 5/5 — Handoff/Import docs, adapters, Build/Ship wiring, HO/IR bats | AgToosa |
 | 2026-07-08 | 🏗️ Build complete — DEV-047 + DEV-048; next: `/agtoosa-review` then `/agtoosa-ship` | AgToosa |
 | 2026-07-08 | 🔍 Review 🔍 Started — DEV-047 + DEV-048 — 4-persona review running | AgToosa |
 | 2026-07-08 | 🔍 Review ✅ Approved — DEV-047 + DEV-048; 0 🔴 Critical, 4 🟡 Warning accepted (1 fixed); report: `docs/archived/review-DEV-047-048.md` | AgToosa |
-| 2026-07-08 | 🚀 Ship complete — v5.3.3 — DEV-047 + DEV-048 handoff/import; bats DEV-047/048 HO/IR green | AgToosa |
-| 2026-07-08 | 🚀 Release 5.3.3 shipped — v5.3.3; version parity bash/ps1/npm; Milestone v5.3.4 (next) | AgToosa |
+| 2026-07-08 | 🚀 Ship complete — v0.3.3 — DEV-047 + DEV-048 handoff/import; bats DEV-047/048 HO/IR green | AgToosa |
+| 2026-07-08 | 🚀 Release 0.3.3 shipped — v0.3.3; version parity bash/ps1/npm; Milestone v0.3.4 (next) | AgToosa |
 | 2026-07-08 | ✏️ /agtoosa-spec DEV-049 enrolled — Evidence Ledger deepened (markdown + optional JSONL); estimate M; Active Cycle Todo; awaiting Spec Approved | AgToosa |
 | 2026-07-08 | /agtoosa-spec — Spec ✅ Approved — DEV-049 — spec-DEV-049.md; estimate M; enrolled in cycle | AgToosa |
 | 2026-07-08 | 🏗️ /agtoosa-build DEV-049 Started — 5 tasks; scope: AgToosa_Evidence.md, Review/Ship wiring, JSONL seed, EL bats, config/adapters | AgToosa |
@@ -631,8 +631,8 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | 2026-07-08 | 🏗️ Build complete — DEV-049; next: `/agtoosa-review` then `/agtoosa-ship` | AgToosa |
 | 2026-07-08 | 🔍 Review 🔍 Started — DEV-049 — 4-persona review running | AgToosa |
 | 2026-07-08 | 🔍 Review ✅ Approved — DEV-049; 0 🔴 Critical, 5 🟡 Warning accepted; report: `docs/archived/review-DEV-049.md`; evidence: `docs/archived/evidence-DEV-049.md` | AgToosa |
-| 2026-07-08 | 🚀 Ship complete — v5.3.4 — DEV-049 Evidence Ledger; bats DEV-049 EL/SR green | AgToosa |
-| 2026-07-08 | 🚀 Release 5.3.4 shipped — v5.3.4; version parity bash/ps1/npm; Milestone v5.3.5 (next) | AgToosa |
+| 2026-07-08 | 🚀 Ship complete — v0.3.4 — DEV-049 Evidence Ledger; bats DEV-049 EL/SR green | AgToosa |
+| 2026-07-08 | 🚀 Release 0.3.4 shipped — v0.3.4; version parity bash/ps1/npm; Milestone v0.3.5 (next) | AgToosa |
 | 2026-07-08 | ✏️ /agtoosa-spec DEV-054 enrolled — Signed Registry Provenance deepened (minisign soft-warn, packs+releases); estimate M; Active Cycle Todo; awaiting Spec Approved | AgToosa |
 | 2026-07-08 | /agtoosa-spec — Spec ✅ Approved — DEV-054 — spec-DEV-054.md; estimate M; enrolled in cycle | AgToosa |
 | 2026-07-08 | 🏗️ /agtoosa-build DEV-054 Started — 5 tasks; scope: registry soft-warn minisign, provenance docs, ADR-011, pubkey path, SP bats | AgToosa |
@@ -640,8 +640,8 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | 2026-07-08 | 🏗️ Build complete — DEV-054; next: `/agtoosa-review` then `/agtoosa-ship` | AgToosa |
 | 2026-07-08 | 🔍 Review 🔍 Started — DEV-054 — 4-persona review running | AgToosa |
 | 2026-07-08 | 🔍 Review ✅ Approved — DEV-054; 0 🔴 Critical, 6 🟡 Warning accepted; report: `docs/archived/review-DEV-054.md`; evidence: `docs/archived/evidence-DEV-054.md` | AgToosa |
-| 2026-07-08 | 🚀 Ship complete — v5.3.5 — DEV-054 Signed Registry Provenance; bats DEV-054 SP/SR green | AgToosa |
-| 2026-07-08 | 🚀 Release 5.3.5 shipped — v5.3.5; version parity bash/ps1/npm; Milestone v5.3.6 (next) | AgToosa |
+| 2026-07-08 | 🚀 Ship complete — v0.3.5 — DEV-054 Signed Registry Provenance; bats DEV-054 SP/SR green | AgToosa |
+| 2026-07-08 | 🚀 Release 0.3.5 shipped — v0.3.5; version parity bash/ps1/npm; Milestone v0.3.6 (next) | AgToosa |
 | 2026-07-08 | 🏗️ /agtoosa-build — DEV-054 M-1 `[manual-done]` — maintainer minisign key + pubkey (`4a64308`) + release sidecars (`c4f240b`, `48f3f90`); verify green on bootstrap.sh and agtoosa.sh | AgToosa |
 | 2026-07-11 | ✏️ /agtoosa-spec DEV-050 enrolled — Cross-Model Review Gate deepened (subagent-friendly writer/reviewer separation); spec `docs/archived/spec-DEV-050.md`; test plan `docs/AgToosa_TestPlan-DEV-050.md`; estimate S; Active Cycle Todo; awaiting Spec Approved | AgToosa |
 | 2026-07-11 | /agtoosa-spec — Spec ✅ Approved — DEV-050 — spec-DEV-050.md; estimate S; enrolled in cycle | AgToosa |
@@ -651,8 +651,8 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-050 — Task 🟢 5/5 — Wave 3 complete: CM-007 Agent/Skills/Quickref cross-links + GREEN evidence in test plan; DEV-050 filter 8/8 green; build complete — next: `/agtoosa-review` | AgToosa |
 | 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-050 — 4-persona + cross-model review running | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-050; 0 🔴 Critical, 5 🟡 Warning (4 fixed, 1 accepted); report: `docs/archived/review-DEV-050.md`; evidence: `docs/archived/evidence-DEV-050.md` | AgToosa |
-| 2026-07-11 | 🚀 Ship complete — v5.3.6 — DEV-050 Cross-Model Review Gate; bats DEV-050 CM/SR green; smoke PASS | AgToosa |
-| 2026-07-11 | 🚀 Release 5.3.6 shipped — v5.3.6; version parity bash/ps1/npm; Milestone v5.3.7 (next) | AgToosa |
+| 2026-07-11 | 🚀 Ship complete — v0.3.6 — DEV-050 Cross-Model Review Gate; bats DEV-050 CM/SR green; smoke PASS | AgToosa |
+| 2026-07-11 | 🚀 Release 0.3.6 shipped — v0.3.6; version parity bash/ps1/npm; Milestone v0.3.7 (next) | AgToosa |
 | 2026-07-11 | ✏️ /agtoosa-spec DEV-055 enrolled — Agent Capability Matrix deepened (lifecycle routing matrix post-DEV-050); spec `docs/archived/spec-DEV-055.md`; test plan `docs/AgToosa_TestPlan-DEV-055.md`; estimate S; Active Cycle Todo; awaiting Spec Approved | AgToosa |
 | 2026-07-11 | /agtoosa-spec — Spec ✅ Approved — DEV-055 — spec-DEV-055.md; estimate S; enrolled in cycle | AgToosa |
 | 2026-07-11 | 🏗️ Build 🏗️ Started — DEV-055 — TDD cycle; 5 tasks; scope: AgToosa_AgentCapability.md, Handoff/Review/Build/Help, Specialists cross-link, config, bats AM-001–AM-007; Wave 1: RED bats + canonical doc | AgToosa |
@@ -662,8 +662,8 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | 2026-07-11 | ✏️ Roadmap intake split complete — DEV-045/046/051/052/053/056/057/058/059 deepened to executable backlog specs; DEV-075–DEV-084 specs and test plans added; coverage index: `docs/updates/roadmap-spec-index.md`; no stories enrolled or approved | AgToosa |
 | 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-055 — 4-persona review running | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-055; 0 🔴 Critical, 3 🟡 Warning (2 accepted, 1 fixed); report: `docs/archived/review-DEV-055.md`; evidence: `docs/archived/evidence-DEV-055.md` | AgToosa |
-| 2026-07-11 | 🚀 Ship complete — v5.3.7 — DEV-055 Agent Capability Matrix; bats DEV-055 AM/SR green; smoke PASS | AgToosa |
-| 2026-07-11 | 🚀 Release 5.3.7 shipped — v5.3.7; version parity bash/ps1/npm; Milestone v5.3.8 (next) | AgToosa |
+| 2026-07-11 | 🚀 Ship complete — v0.3.7 — DEV-055 Agent Capability Matrix; bats DEV-055 AM/SR green; smoke PASS | AgToosa |
+| 2026-07-11 | 🚀 Release 0.3.7 shipped — v0.3.7; version parity bash/ps1/npm; Milestone v0.3.8 (next) | AgToosa |
 | 2026-07-11 | ✏️ /agtoosa-spec — Four-epic parallel enrollment — DEV-075 (DEV-002), DEV-053 (DEV-003), DEV-078 (DEV-004), DEV-081 (DEV-001); specs approved; parallel `/agtoosa-build` via subagents | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-075 — Task 🟢 5/5 — ADP-001–ADP-009 green; guide suite + README links | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-078 — Task 🟢 4/4 — F15-001–F15-008 green; launch-readiness maintenance gate | AgToosa |
@@ -675,8 +675,8 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-078; 0 🔴 Critical; report: `docs/archived/review-DEV-078.md`; evidence: `docs/archived/evidence-DEV-078.md` | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-081; 0 🔴 Critical; report: `docs/archived/review-DEV-081.md`; evidence: `docs/archived/evidence-DEV-081.md` | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-053; 0 🔴 Critical, 8 🟡 Warning accepted; cross-model Recommended tier; report: `docs/archived/review-DEV-053.md`; evidence: `docs/archived/evidence-DEV-053.md` | AgToosa |
-| 2026-07-11 | 🚀 Ship complete — v5.3.8 — DEV-075 + DEV-053 + DEV-078 + DEV-081 batched; bats ADP/PC/F15/DXV + SR green; smoke PASS | AgToosa |
-| 2026-07-11 | 🚀 Release 5.3.8 shipped — v5.3.8; version parity bash/ps1/npm; Milestone v5.3.9 (next); active cycle archived | AgToosa |
+| 2026-07-11 | 🚀 Ship complete — v0.3.8 — DEV-075 + DEV-053 + DEV-078 + DEV-081 batched; bats ADP/PC/F15/DXV + SR green; smoke PASS | AgToosa |
+| 2026-07-11 | 🚀 Release 0.3.8 shipped — v0.3.8; version parity bash/ps1/npm; Milestone v0.3.9 (next); active cycle archived | AgToosa |
 | 2026-07-11 | ✏️ /agtoosa-spec DEV-045 enrolled — Work Package Wave DAG deepened (schema + Spec/Build/Handoff/Import wiring); spec `docs/archived/spec-DEV-045.md`; test plan `docs/AgToosa_TestPlan-DEV-045.md`; estimate M; Active Cycle Todo; awaiting Spec Approved | AgToosa |
 | 2026-07-11 | ✅ /agtoosa-spec — Spec ✅ Approved — remaining-specs fan-out wave 1: DEV-045/076/077/079/080/082/083/084; demand-gated DEV-051/057 parked; dependents DEV-046/059/052/056/058 deferred to later waves | AgToosa |
 | 2026-07-11 | 🏗️ Build 🏗️ Started — remaining-specs fan-out wave 1 — 8 parallel subagents; orchestrator owns Master-Plan | AgToosa |
@@ -698,10 +698,10 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-083; 0 🔴 Critical, 4 🟡 Warning accepted; report: `docs/archived/review-DEV-083.md`; evidence: `docs/archived/evidence-DEV-083.md` | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-080; 0 🔴 Critical, 5 🟡 Warning accepted; 4.2/4.3 [manual-deferred]; report: `docs/archived/review-DEV-080.md`; evidence: `docs/archived/evidence-DEV-080.md` | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-045; 0 🔴 Critical, 6 🟡 Warning accepted; report: `docs/archived/review-DEV-045.md`; evidence: `docs/archived/evidence-DEV-045.md` | AgToosa |
-| 2026-07-11 | 🔍 Review complete — remaining-specs wave 1 all PASS (0 critical); next: `/agtoosa-ship` v5.3.9 | AgToosa |
-| 2026-07-11 | 🚀 Ship complete — v5.3.9 — remaining-specs wave 1 (DEV-045/076/077/079/080/082/083/084); smoke PASS; cycle archived | AgToosa |
-| 2026-07-11 | 🚀 Release 5.3.9 shipped — v5.3.9; version parity bash/ps1/npm; Milestone v5.3.10 (next) | AgToosa |
-| 2026-07-11 | ✅ /agtoosa-spec — Spec ✅ Approved — wave 2: DEV-046 · DEV-059; enrolled post v5.3.9 | AgToosa |
+| 2026-07-11 | 🔍 Review complete — remaining-specs wave 1 all PASS (0 critical); next: `/agtoosa-ship` v0.3.9 | AgToosa |
+| 2026-07-11 | 🚀 Ship complete — v0.3.9 — remaining-specs wave 1 (DEV-045/076/077/079/080/082/083/084); smoke PASS; cycle archived | AgToosa |
+| 2026-07-11 | 🚀 Release 0.3.9 shipped — v0.3.9; version parity bash/ps1/npm; Milestone v0.3.10 (next) | AgToosa |
+| 2026-07-11 | ✅ /agtoosa-spec — Spec ✅ Approved — wave 2: DEV-046 · DEV-059; enrolled post v0.3.9 | AgToosa |
 | 2026-07-11 | 🏗️ Build 🏗️ Started — wave 2 — DEV-046 · DEV-059 parallel subagents | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-046 — Task 🟢 4/4 — WT-001–006 green; AgToosa_Worktree.md + Build/Handoff/Import wiring | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-059 — Task 🟢 4/4 — GP-001–009 green; GovernancePolicy + checker + Handoff Applicable Policy | AgToosa |
@@ -709,8 +709,8 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — wave 2 DEV-046 · DEV-059 | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-059; 0 🔴 Critical, 4 🟡 Warning accepted; report: `docs/archived/review-DEV-059.md`; evidence: `docs/archived/evidence-DEV-059.md` | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-046; 0 🔴 Critical, 4 🟡 Warning accepted; report: `docs/archived/review-DEV-046.md`; evidence: `docs/archived/evidence-DEV-046.md` | AgToosa |
-| 2026-07-11 | 🚀 Ship complete — v5.3.10 — wave 2 DEV-046 · DEV-059; smoke PASS; cycle archived | AgToosa |
-| 2026-07-11 | 🚀 Release 5.3.10 shipped — v5.3.10; version parity bash/ps1/npm; Milestone v5.3.11 (next) | AgToosa |
+| 2026-07-11 | 🚀 Ship complete — v0.3.10 — wave 2 DEV-046 · DEV-059; smoke PASS; cycle archived | AgToosa |
+| 2026-07-11 | 🚀 Release 0.3.10 shipped — v0.3.10; version parity bash/ps1/npm; Milestone v0.3.11 (next) | AgToosa |
 | 2026-07-11 | ✅ /agtoosa-spec — Spec ✅ Approved — wave 3: DEV-052 · DEV-056 | AgToosa |
 | 2026-07-11 | 🏗️ Build 🏗️ Started — wave 3 — DEV-052 · DEV-056 parallel subagents | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-052 — Task 🟢 4/4 — HK-001–007 green; Hooks pack + Init/Update preview; no silent install | AgToosa |
@@ -719,30 +719,30 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — wave 3 DEV-052 · DEV-056 | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-056; 0 🔴 Critical; report: `docs/archived/review-DEV-056.md`; evidence: `docs/archived/evidence-DEV-056.md` | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-052; 0 🔴 Critical, 4 🟡 Warning accepted; report: `docs/archived/review-DEV-052.md`; evidence: `docs/archived/evidence-DEV-052.md` | AgToosa |
-| 2026-07-11 | 🚀 Ship complete — v5.3.11 — wave 3 DEV-052 · DEV-056; smoke PASS; cycle archived | AgToosa |
-| 2026-07-11 | 🚀 Release 5.3.11 shipped — v5.3.11; version parity bash/ps1/npm; Milestone v5.3.12 (next) | AgToosa |
+| 2026-07-11 | 🚀 Ship complete — v0.3.11 — wave 3 DEV-052 · DEV-056; smoke PASS; cycle archived | AgToosa |
+| 2026-07-11 | 🚀 Release 0.3.11 shipped — v0.3.11; version parity bash/ps1/npm; Milestone v0.3.12 (next) | AgToosa |
 | 2026-07-11 | ✅ /agtoosa-spec — Spec ✅ Approved — wave 4: DEV-058 | AgToosa |
 | 2026-07-11 | 🏗️ Build 🏗️ Started — wave 4 — DEV-058 | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-058 — Task 🟢 4/4 — DB-001–008 green; agtoosa-dashboard.sh Markdown/HTML stdout-only | AgToosa |
 | 2026-07-11 | 🏗️ Build complete — wave 4 (DEV-058); next: /agtoosa-review | AgToosa |
 | 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — wave 4 DEV-058 | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-058; 0 🔴 Critical, 3 🟡 Warning accepted; report: `docs/archived/review-DEV-058.md`; evidence: `docs/archived/evidence-DEV-058.md` | AgToosa |
-| 2026-07-11 | 🚀 Ship complete — v5.3.12 — wave 4 DEV-058; smoke PASS; cycle archived | AgToosa |
-| 2026-07-11 | 🚀 Release 5.3.12 shipped — v5.3.12; version parity bash/ps1/npm; Milestone v5.3.13 (next); all unblocked remaining specs complete | AgToosa |
-| 2026-07-11 | 🏗️ /agtoosa-build DEV-085 — Task 🟢 1/1 — bats restore (bb8a8bd) + Master-Plan reconciliation after v5.3.12 ship drift | AgToosa |
+| 2026-07-11 | 🚀 Ship complete — v0.3.12 — wave 4 DEV-058; smoke PASS; cycle archived | AgToosa |
+| 2026-07-11 | 🚀 Release 0.3.12 shipped — v0.3.12; version parity bash/ps1/npm; Milestone v0.3.13 (next); all unblocked remaining specs complete | AgToosa |
+| 2026-07-11 | 🏗️ /agtoosa-build DEV-085 — Task 🟢 1/1 — bats restore (bb8a8bd) + Master-Plan reconciliation after v0.3.12 ship drift | AgToosa |
 | 2026-07-11 | ✏️ DEV-085 — Master-Plan Update Log / Completed This Cycle / Epics reconciled; roadmap-spec-index note added | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-085; 0 🔴 Critical; report: `docs/archived/review-DEV-085.md`; evidence: `docs/archived/evidence-DEV-085.md` | AgToosa |
-| 2026-07-11 | 🚀 Ship complete — v5.3.13 — DEV-085; smoke PASS; cycle archived | AgToosa |
-| 2026-07-11 | 🚀 Release 5.3.13 shipped — v5.3.13; version parity bash/ps1/npm; Milestone v5.3.14 (next); post-ship hygiene complete | AgToosa |
+| 2026-07-11 | 🚀 Ship complete — v0.3.13 — DEV-085; smoke PASS; cycle archived | AgToosa |
+| 2026-07-11 | 🚀 Release 0.3.13 shipped — v0.3.13; version parity bash/ps1/npm; Milestone v0.3.14 (next); post-ship hygiene complete | AgToosa |
 | 2026-07-11 | ✏️ /agtoosa-spec DEV-051 enrolled — Tracker Sync Bridge; demand un-gated; GitHub Issues first adapter; spec `docs/archived/spec-DEV-051.md`; test plan `docs/AgToosa_TestPlan-DEV-051.md`; estimate M; Active Cycle Todo | AgToosa |
-| 2026-07-11 | /agtoosa-spec — Spec ✅ Approved — DEV-051 — spec-DEV-051.md; estimate M; enrolled in v5.3.14 cycle | AgToosa |
+| 2026-07-11 | /agtoosa-spec — Spec ✅ Approved — DEV-051 — spec-DEV-051.md; estimate M; enrolled in v0.3.14 cycle | AgToosa |
 | 2026-07-11 | 🏗️ Build 🏗️ Started — DEV-051 — TDD cycle; 10 tasks; scope: lib/tracker.sh, AgToosa_TrackerSync.md, --tracker CLI, TS-001–TS-008 bats | AgToosa |
 | 2026-07-11 | 🏗️ /agtoosa-build DEV-051 — Task 🟢 10/10 — TS-001–TS-008 green; export/propose local-only; Master-Plan mutation guard PASS | AgToosa |
 | 2026-07-11 | 🏗️ Build complete — DEV-051; next: `/agtoosa-review` | AgToosa |
 | 2026-07-11 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-051 — 4-persona review running | AgToosa |
 | 2026-07-11 | 🔍 Review ✅ Approved — DEV-051; 0 🔴 Critical, 2 🟡 Warning (accepted); report: `docs/archived/review-DEV-051.md`; evidence: `docs/archived/evidence-DEV-051.md` | AgToosa |
-| 2026-07-11 | 🚀 Ship complete — v5.3.14 — DEV-051 Tracker Sync Bridge; smoke PASS; cycle archived | AgToosa |
-| 2026-07-11 | 🚀 Release 5.3.14 shipped — v5.3.14; version parity bash/ps1/npm; Milestone v5.3.15 (next); all unblocked remaining specs complete | AgToosa |
+| 2026-07-11 | 🚀 Ship complete — v0.3.14 — DEV-051 Tracker Sync Bridge; smoke PASS; cycle archived | AgToosa |
+| 2026-07-11 | 🚀 Release 0.3.14 shipped — v0.3.14; version parity bash/ps1/npm; Milestone v0.3.15 (next); all unblocked remaining specs complete | AgToosa |
 | 2026-07-11 | 🔍 /agtoosa-spec triage — no enrollable stories; DEV-057 demand gate unmet (7/7 fields); competitive wave complete; cycle remains parked | AgToosa |
 | 2026-07-12 | ✏️ Rev4 wave promoted — DEV-086–DEV-106 specs + test plans approved; conflict resolutions `docs/updates/rev4-conflict-resolutions.md`; roadmap index updated | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — Wave 1a enrolled — DEV-086, DEV-090, DEV-105; specs `docs/archived/spec-DEV-086.md` … `spec-DEV-105.md` | AgToosa |
@@ -754,9 +754,9 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | 2026-07-12 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-087 · DEV-088 — 4-persona + cross-model review running | AgToosa |
 | 2026-07-12 | 🔍 Review ✅ Approved — DEV-087; 0 🔴 Critical, 6 🟡 Warning accepted; report: `docs/archived/review-DEV-087.md`; evidence: `docs/archived/evidence-DEV-087.md` | AgToosa |
 | 2026-07-12 | 🔍 Review ✅ Approved — DEV-088; 0 🔴 Critical, 7 🟡 Warning accepted; report: `docs/archived/review-DEV-088.md`; evidence: `docs/archived/evidence-DEV-088.md` | AgToosa |
-| 2026-07-12 | 🔍 Review complete — Wave 1b DEV-087 · DEV-088 PASS (0 critical); next: `/agtoosa-ship` v5.3.15 | AgToosa |
-| 2026-07-12 | 🚀 Ship complete — v5.3.15 — Wave 1b DEV-087 · DEV-088; smoke PASS; cycle archived | AgToosa |
-| 2026-07-12 | 🚀 Release 5.3.15 shipped — v5.3.15; version parity bash/ps1/npm; Milestone v5.3.16 (next); Wave 1a remains active | AgToosa |
+| 2026-07-12 | 🔍 Review complete — Wave 1b DEV-087 · DEV-088 PASS (0 critical); next: `/agtoosa-ship` v0.3.15 | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v0.3.15 — Wave 1b DEV-087 · DEV-088; smoke PASS; cycle archived | AgToosa |
+| 2026-07-12 | 🚀 Release 0.3.15 shipped — v0.3.15; version parity bash/ps1/npm; Milestone v0.3.16 (next); Wave 1a remains active | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — Wave 1a Part 4 — Active Tasks + Work Package DAGs for DEV-086 · DEV-090 · DEV-105; build mode parallel fan-out; AC-007 mapped in DEV-105 test plan | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — DEV-107 enrolled — Agent-Instructed Orchestration Brain; Spec Approved; Backlog (build after Wave 1a); epic DEV-002; estimate M | AgToosa |
 | 2026-07-12 | 🏗️ Build 🏗️ Started — Wave 1a parallel fan-out — DEV-086 · DEV-090 · DEV-105 | AgToosa |
@@ -768,7 +768,7 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | 2026-07-12 | 🔍 Review ✅ Approved — DEV-086; 0 🔴 Critical, warnings accepted; report: `docs/archived/review-DEV-086.md`; evidence: `docs/archived/evidence-DEV-086.md` | AgToosa |
 | 2026-07-12 | 🔍 Review ✅ Approved — DEV-090; 0 🔴 Critical, warnings accepted; report: `docs/archived/review-DEV-090.md`; evidence: `docs/archived/evidence-DEV-090.md` | AgToosa |
 | 2026-07-12 | 🔍 Review ✅ Approved — DEV-105; 0 🔴 Critical, warnings accepted; report: `docs/archived/review-DEV-105.md`; evidence: `docs/archived/evidence-DEV-105.md` | AgToosa |
-| 2026-07-12 | 🔍 Review complete — Wave 1a DEV-086 · DEV-090 · DEV-105 PASS (0 critical); next: `/agtoosa-ship` v5.3.16 | AgToosa |
+| 2026-07-12 | 🔍 Review complete — Wave 1a DEV-086 · DEV-090 · DEV-105 PASS (0 critical); next: `/agtoosa-ship` v0.3.16 | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — DEV-109 draft — Lifecycle Next-Step Sync + Multi-Spec Clarity; ADR-012; test plan `docs/AgToosa_TestPlan-DEV-109.md`; backlog; awaiting Spec Approved | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — DEV-109 estimate L; backlog only (after last wave); not enrolled in Active Cycle | AgToosa |
 | 2026-07-12 | /agtoosa-spec — Spec ✅ Approved — DEV-109 — spec-DEV-109.md; estimate L; backlog only | AgToosa |
@@ -778,9 +778,9 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | 2026-07-12 | 🏗️ Build complete — DEV-109; next: `/agtoosa-review` | AgToosa |
 | 2026-07-12 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-109 — 4-persona review running | AgToosa |
 | 2026-07-12 | 🔍 Review ✅ Approved — DEV-109; 0 🔴 Critical, 5 warnings accepted; report: `docs/archived/review-DEV-109.md`; evidence: `docs/archived/evidence-DEV-109.md` | AgToosa |
-| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-109 — smoke PASS; v5.3.21; spec archived | AgToosa |
-| 2026-07-12 | 🚀 Ship complete — v5.3.21 — DEV-109 Lifecycle Next-Step Sync; smoke PASS; cycle archived | AgToosa |
-| 2026-07-12 | 🚀 Release 5.3.21 shipped — v5.3.21; version parity bash/ps1/npm; Milestone v5.3.22 (next) | AgToosa |
+| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-109 — smoke PASS; v0.3.21; spec archived | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v0.3.21 — DEV-109 Lifecycle Next-Step Sync; smoke PASS; cycle archived | AgToosa |
+| 2026-07-12 | 🚀 Release 0.3.21 shipped — v0.3.21; version parity bash/ps1/npm; Milestone v0.3.22 (next) | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — DEV-110 draft — AgToosa Project Intake; ADR-013; test plan `docs/AgToosa_TestPlan-DEV-110.md`; backlog after DEV-109; expedite when capacity frees; awaiting Spec Approved | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — DEV-110 Part 4 complete — Story Skill synthesis (decline all); Spec Quality re-run pass; approval gate presented; tasks in spec until enrollment | AgToosa |
 | 2026-07-12 | /agtoosa-spec — Spec ✅ Approved — DEV-110 — expedited enrollment on build request | AgToosa |
@@ -798,14 +798,14 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | 2026-07-12 | 🔍 Review ✅ Approved — DEV-094; 0 🔴 Critical, warnings accepted; report: `docs/archived/review-DEV-094.md`; evidence: `docs/archived/evidence-DEV-094.md` | AgToosa |
 | 2026-07-12 | 🔍 Review ✅ Approved — DEV-097; 0 🔴 Critical, warnings accepted; report: `docs/archived/review-DEV-097.md`; evidence: `docs/archived/evidence-DEV-097.md` | AgToosa |
 | 2026-07-12 | 🔍 Review complete — Wave 2 DEV-092 · DEV-094 · DEV-097 PASS (0 critical); next: `/agtoosa-ship` | AgToosa |
-| 2026-07-12 | 🚀 Ship complete — v5.3.16 — Wave 2 DEV-092 · DEV-094 · DEV-097; smoke PASS; cycle archived | AgToosa |
-| 2026-07-12 | 🚀 Release 5.3.16 shipped — v5.3.16; version parity bash/ps1/npm; Milestone v5.3.17 (next); Wave 1a remains active | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v0.3.16 — Wave 2 DEV-092 · DEV-094 · DEV-097; smoke PASS; cycle archived | AgToosa |
+| 2026-07-12 | 🚀 Release 0.3.16 shipped — v0.3.16; version parity bash/ps1/npm; Milestone v0.3.17 (next); Wave 1a remains active | AgToosa |
 | 2026-07-12 | 🏗️ Build 🏗️ Started — DEV-089 — Evidence-Profile Verifier Gates; Active Cycle In Progress; EPV TDD | AgToosa |
 | 2026-07-12 | 🏗️ /agtoosa-build DEV-089 — Task 🟢 4/4 — EPV-001–009 green; Gate 7 after Gate 6; ledger WARN DEV-049 | AgToosa |
 | 2026-07-12 | 🏗️ Build complete — DEV-089; next: `/agtoosa-review` | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec amend — DEV-100 R1 Approved — Must ACs use `--format json` only | AgToosa |
-| 2026-07-12 | 🚀 Ship complete — v5.3.17 — Wave 1a DEV-086 · DEV-090 · DEV-105; smoke PASS; cycle archived | AgToosa |
-| 2026-07-12 | 🚀 Release 5.3.17 shipped — v5.3.17; version parity bash/ps1/npm; Milestone v5.3.18 (next); enroll DEV-091; remainder 089 · 093 · 100 | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v0.3.17 — Wave 1a DEV-086 · DEV-090 · DEV-105; smoke PASS; cycle archived | AgToosa |
+| 2026-07-12 | 🚀 Release 0.3.17 shipped — v0.3.17; version parity bash/ps1/npm; Milestone v0.3.18 (next); enroll DEV-091; remainder 089 · 093 · 100 | AgToosa |
 | 2026-07-12 | 🏗️ /agtoosa-build DEV-093 — Task 🟢 3/3 — STF-001–009 green; state.json + lock reconcile | AgToosa |
 | 2026-07-12 | 🏗️ /agtoosa-build DEV-089 — Task 🟢 4/4 — EPV-001–009 green; verifier Gate 7 | AgToosa |
 | 2026-07-12 | 🏗️ Build 🏗️ Started — DEV-100 · DEV-091 — JIO + MWZ TDD | AgToosa |
@@ -813,8 +813,8 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | 2026-07-12 | 🏗️ /agtoosa-build DEV-100 — Task 🟢 3/3 — JIO-001–007 green; catalog plan/info --format json | AgToosa |
 | 2026-07-12 | 🏗️ /agtoosa-build DEV-091 — Task 🟢 4/4 — MWZ-001–010 green; MAJOR wizard + rollback | AgToosa |
 | 2026-07-12 | 🔍 Review ✅ Approved — DEV-089 · DEV-091 · DEV-093 · DEV-100; 0 🔴 Critical | AgToosa |
-| 2026-07-12 | 🚀 Ship complete — v5.3.18 — Wave 1b/2 remainder DEV-089 · DEV-091 · DEV-093 · DEV-100; smoke PASS | AgToosa |
-| 2026-07-12 | 🚀 Release 5.3.18 shipped — v5.3.18; version parity bash/ps1/npm; Milestone v5.3.19 (next); Waves 1a/1b/2 complete | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v0.3.18 — Wave 1b/2 remainder DEV-089 · DEV-091 · DEV-093 · DEV-100; smoke PASS | AgToosa |
+| 2026-07-12 | 🚀 Release 0.3.18 shipped — v0.3.18; version parity bash/ps1/npm; Milestone v0.3.19 (next); Waves 1a/1b/2 complete | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — Wave 3 enroll — DEV-096 · DEV-095 (blocked) · DEV-098 · DEV-099 · DEV-101 · DEV-102 · DEV-103 · DEV-104 · DEV-106 into Active Cycle; ~14 SP soft overrun; sequence 096→095; docs parallel with soft file locks | AgToosa |
 | 2026-07-12 | 🏗️ Build 🏗️ Started — Wave 3 parallel — DEV-096 · DEV-098 · DEV-099 · DEV-101 · DEV-102 · DEV-103 · DEV-104 · DEV-106; DEV-095 blocked on 096; no worktree (sequential packages within story, clean tree between) | AgToosa |
 | 2026-07-12 | 🏗️ /agtoosa-build DEV-101 — Task 🟢 3/3 — TRUST-001–006 green; Trust surface verified/community/official-pilot labeling | AgToosa |
@@ -834,40 +834,40 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | 2026-07-12 | 🏗️ Build complete — Wave 3 (DEV-095 · DEV-096 · DEV-098 · DEV-099 · DEV-101 · DEV-102 · DEV-103 · DEV-104 · DEV-106); smoke PASS; next: `/agtoosa-review` | AgToosa |
 | 2026-07-12 | 🔍 /agtoosa-review — Review 🔍 Started — Wave 3 (095 · 096 · 098 · 099 · 101 · 102 · 103 · 104 · 106) — 4-persona + cross-model | AgToosa |
 | 2026-07-12 | 🔍 Review ✅ Approved — Wave 3 DEV-095 · DEV-096 · DEV-098 · DEV-099 · DEV-101 · DEV-102 · DEV-103 · DEV-104 · DEV-106; 0 🔴 Critical; reports: `docs/archived/review-DEV-09*.md` · `review-DEV-10*.md` | AgToosa |
-| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — Wave 3 (095·096·098·099·101·102·103·104·106) + DEV-107 batched — smoke PASS; v5.3.20 | AgToosa |
-| 2026-07-12 | 🚀 Ship complete — v5.3.20 — Rev4 Wave 3 + DEV-107; smoke PASS; cycle archived | AgToosa |
-| 2026-07-12 | 🚀 Release 5.3.20 shipped — v5.3.20; version parity bash/ps1/npm; Milestone v5.3.21 (next) | AgToosa |
-| 2026-07-12 | 🚀 Ship complete — v5.3.25 — DEV-114 cleanup false-positive hotfix; CLN-012–014 PASS | AgToosa |
-| 2026-07-12 | 🚀 Release 5.3.25 shipped — v5.3.25; version parity bash/ps1/npm; Milestone v5.3.26 (next) | AgToosa |
-| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-112 — smoke PASS; v5.3.24; spec archived | AgToosa |
-| 2026-07-12 | 🚀 Ship complete — v5.3.24 — DEV-112 Smart Apply UX + cleanup; smoke PASS; cycle archived | AgToosa |
-| 2026-07-12 | 🚀 Release 5.3.24 shipped — v5.3.24; version parity bash/ps1/npm; Milestone v5.3.25 (next) | AgToosa |
-| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-111 — smoke PASS; v5.3.23; spec archived | AgToosa |
-| 2026-07-12 | 🚀 Ship complete — v5.3.23 — DEV-111 Smart One-Command Install UX; smoke PASS; cycle archived | AgToosa |
-| 2026-07-12 | 🚀 Release 5.3.23 shipped — v5.3.23; version parity bash/ps1/npm; Milestone v5.3.24 (next) | AgToosa |
-| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-110 — smoke PASS; v5.3.22; spec archived | AgToosa |
-| 2026-07-12 | 🚀 Ship complete — v5.3.22 — DEV-110 Project Intake; smoke PASS; cycle archived | AgToosa |
-| 2026-07-12 | 🚀 Release 5.3.22 shipped — v5.3.22; version parity bash/ps1/npm; Milestone v5.3.23 (next) | AgToosa |
+| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — Wave 3 (095·096·098·099·101·102·103·104·106) + DEV-107 batched — smoke PASS; v0.3.20 | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v0.3.20 — Rev4 Wave 3 + DEV-107; smoke PASS; cycle archived | AgToosa |
+| 2026-07-12 | 🚀 Release 0.3.20 shipped — v0.3.20; version parity bash/ps1/npm; Milestone v0.3.21 (next) | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v0.3.25 — DEV-114 cleanup false-positive hotfix; CLN-012–014 PASS | AgToosa |
+| 2026-07-12 | 🚀 Release 0.3.25 shipped — v0.3.25; version parity bash/ps1/npm; Milestone v0.3.26 (next) | AgToosa |
+| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-112 — smoke PASS; v0.3.24; spec archived | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v0.3.24 — DEV-112 Smart Apply UX + cleanup; smoke PASS; cycle archived | AgToosa |
+| 2026-07-12 | 🚀 Release 0.3.24 shipped — v0.3.24; version parity bash/ps1/npm; Milestone v0.3.25 (next) | AgToosa |
+| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-111 — smoke PASS; v0.3.23; spec archived | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v0.3.23 — DEV-111 Smart One-Command Install UX; smoke PASS; cycle archived | AgToosa |
+| 2026-07-12 | 🚀 Release 0.3.23 shipped — v0.3.23; version parity bash/ps1/npm; Milestone v0.3.24 (next) | AgToosa |
+| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-110 — smoke PASS; v0.3.22; spec archived | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v0.3.22 — DEV-110 Project Intake; smoke PASS; cycle archived | AgToosa |
+| 2026-07-12 | 🚀 Release 0.3.22 shipped — v0.3.22; version parity bash/ps1/npm; Milestone v0.3.23 (next) | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — DEV-113 enrolled — Cursor Intake Hardening + Fixture Parity; spec `docs/archived/spec-DEV-113.md`; test plan `docs/AgToosa_TestPlan-DEV-113.md`; estimate S; Active Cycle Todo; awaiting Spec Approved | AgToosa |
 | 2026-07-12 | /agtoosa-spec — Spec ✅ Approved — DEV-113 | AgToosa |
 | 2026-07-12 | 🏗️ Build 🏗️ Started — DEV-113 — Cursor intake hardening; 10 tasks; FIX-001→fixture, CIT-*, CLAUDE.md parity, AGTOOSA_SHIP_DIR ship tests | AgToosa |
 | 2026-07-12 | 🏗️ /agtoosa-build DEV-113 — Task 🟢 10/10 — FIX/CIT/NLM green; full bats 950×3; next: `/agtoosa-review` | AgToosa |
 | 2026-07-12 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-113 — 4-persona review running | AgToosa |
 | 2026-07-12 | 🔍 Review ✅ Approved — DEV-113; 0 🔴 Critical, 3 🟡 Warning accepted; report: `docs/archived/review-DEV-113.md`; evidence: `docs/archived/evidence-DEV-113.md`; next: `/agtoosa-ship` | AgToosa |
-| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-113 — smoke PASS; v5.3.26; spec archived | AgToosa |
-| 2026-07-12 | 🚀 Ship complete — v5.3.26 — DEV-113 Cursor intake hardening; smoke PASS; cycle archived | AgToosa |
-| 2026-07-12 | 🚀 Release 5.3.26 shipped — v5.3.26; version parity bash/ps1/npm; Milestone v5.3.27 (next) | AgToosa |
-| 2026-07-12 | 🚀 Ship complete — v5.3.27 — DEV-115 cleanup safety follow-up; CLN-015–017 PASS; miToosa dogfood | AgToosa |
+| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-113 — smoke PASS; v0.3.26; spec archived | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v0.3.26 — DEV-113 Cursor intake hardening; smoke PASS; cycle archived | AgToosa |
+| 2026-07-12 | 🚀 Release 0.3.26 shipped — v0.3.26; version parity bash/ps1/npm; Milestone v0.3.27 (next) | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v0.3.27 — DEV-115 cleanup safety follow-up; CLN-015–017 PASS; miToosa dogfood | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — DEV-116 draft — AgToosa Lifecycle Compass; ADR-014; test plan `docs/AgToosa_TestPlan-DEV-116.md`; design `docs/superpowers/specs/2026-07-12-lifecycle-compass-design.md`; awaiting Spec Approved | AgToosa |
-| 2026-07-12 | 🚀 Release 5.3.27 shipped — v5.3.27; version parity bash/ps1/npm; Milestone v5.3.28 (next) | AgToosa |
+| 2026-07-12 | 🚀 Release 0.3.27 shipped — v0.3.27; version parity bash/ps1/npm; Milestone v0.3.28 (next) | AgToosa |
 | 2026-07-12 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-116 — spec-DEV-116.md; estimate M; enrolled in cycle | AgToosa |
 | 2026-07-12 | 🏗️ Build 🏗️ Started — DEV-116 — AgToosa Lifecycle Compass; 11 tasks; CMP-001→CMP-007, route-hint | AgToosa |
 | 2026-07-12 | 🏗️ /agtoosa-build DEV-116 — Task 🟢 11/11 — CMP green; next: /agtoosa-review | AgToosa |
 | 2026-07-12 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-116 — 4-persona review running | AgToosa |
 | 2026-07-12 | 🔍 Review ✅ Approved — DEV-116; 0 🔴 Critical, 2 🟡 Warning accepted; report: docs/archived/review-DEV-116.md; evidence: docs/archived/evidence-DEV-116.md; next: /agtoosa-ship | AgToosa |
-| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-116 — smoke PASS; v5.3.28; spec archived | AgToosa |
-| 2026-07-12 | 🚀 Ship complete — v5.3.28 — DEV-116 AgToosa Lifecycle Compass; smoke PASS; cycle archived | AgToosa |
-| 2026-07-12 | 🚀 Release 5.3.28 shipped — v5.3.28; version parity bash/ps1/npm/formula; Milestone v5.3.29 (next) | AgToosa |
+| 2026-07-12 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-116 — smoke PASS; v0.3.28; spec archived | AgToosa |
+| 2026-07-12 | 🚀 Ship complete — v0.3.28 — DEV-116 AgToosa Lifecycle Compass; smoke PASS; cycle archived | AgToosa |
+| 2026-07-12 | 🚀 Release 0.3.28 shipped — v0.3.28; version parity bash/ps1/npm/formula; Milestone v0.3.29 (next) | AgToosa |
 | 2026-07-13 | ✏️ /agtoosa-spec — DEV-117 draft — Cycle Continuity Guard; explicit `Cycle state` contract for intentionally idle cycles; test plan `docs/AgToosa_TestPlan-DEV-117.md`; estimate S; Active Cycle Todo; awaiting Spec Approved | AgToosa |
 | 2026-07-13 21:25 | /agtoosa-spec — Spec ✅ Approved — DEV-117 — spec-DEV-117.md; estimate S; enrolled in cycle. | AgToosa |
 | 2026-07-13 21:30 | /agtoosa-build — Build 🏗️ Started — DEV-117 — Starting TDD cycle; 4 tasks; scope: Master-Plan cycle state, verifier mirrors, status mirrors, focused CCG bats. Next: Task 1/4 — cycle-state contract. | AgToosa |
@@ -883,9 +883,9 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | 2026-07-14 17:44 | /agtoosa-build — Build complete — DEV-117 ship-gate follow-up; 5/5 tasks; next `/agtoosa-review`. | AgToosa |
 | 2026-07-14 17:48 | /agtoosa-review — Review 🔍 Started — DEV-117 ship-gate follow-up — 4-persona review running. | AgToosa |
 | 2026-07-14 17:57 | /agtoosa-review — Review ✅ Approved — DEV-117 ship-gate follow-up — 0 new Critical, 0 new Warning; 4 accepted warnings unchanged; 5 smoke tests cover 8/8 Must ACs; next `/agtoosa-ship`. | AgToosa |
-| 2026-07-14 22:42 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-117 — smoke PASS 5/5; v5.3.29; cycle archived | AgToosa |
-| 2026-07-14 22:42 | 🚀 Ship complete — v5.3.29 — DEV-117 Cycle Continuity Guard; smoke PASS; cycle archived | AgToosa |
-| 2026-07-14 22:42 | 🚀 Release 5.3.29 shipped — v5.3.29; version parity bash/ps1/npm; Milestone v5.3.30 (next) | AgToosa |
+| 2026-07-14 22:42 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-117 — smoke PASS 5/5; v0.3.29; cycle archived | AgToosa |
+| 2026-07-14 22:42 | 🚀 Ship complete — v0.3.29 — DEV-117 Cycle Continuity Guard; smoke PASS; cycle archived | AgToosa |
+| 2026-07-14 22:42 | 🚀 Release 0.3.29 shipped — v0.3.29; version parity bash/ps1/npm; Milestone v0.3.30 (next) | AgToosa |
 | 2026-07-14 18:31 | /agtoosa-spec — Spec ✅ Approved — DEV-118 — `docs/archived/spec-DEV-118.md`; estimate L; backlog only; ADR-015–ADR-017 accepted. | AgToosa |
 | 2026-07-22 | ✏️ /agtoosa-spec tasks — DEV-118 Part 4 synced; 10 tasks; test plan `docs/AgToosa_TestPlan-DEV-118.md`; enrolled Active Cycle Todo. | AgToosa |
 | 2026-07-22 | ✏️ /agtoosa-spec — DEV-118 enrolled on `main` — Product Truth & Adapter Contract; cycle Active; estimate L (soft capacity overrun). | AgToosa |
@@ -893,105 +893,105 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 | 2026-07-23 03:32 | 🏗️ /agtoosa-build — Task 🟢 10/10 — DEV-118 — PTC 12/12; product-truth check PASS; verifier PASS; next `/agtoosa-review`. | AgToosa |
 | 2026-07-23 03:35 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-118 — 4-persona + cross-model review. | AgToosa |
 | 2026-07-23 03:45 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-118 — 0 Critical; 5 Warning; PTC 12/12; adjacent regressions 32/32; next `/agtoosa-ship`. | AgToosa |
-| 2026-07-23 04:00 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-118 — smoke PASS 12/12; v5.3.30; cycle archived | AgToosa |
-| 2026-07-23 04:00 | 🚀 Ship complete — v5.3.30 — DEV-118 Product Truth & Adapter Contract; smoke PASS; cycle archived | AgToosa |
-| 2026-07-23 04:00 | 🚀 Release 5.3.30 shipped — v5.3.30; version parity bash/ps1/npm/formula; Milestone v5.3.31 (next) | AgToosa |
-| 2026-07-25 00:35 | 🚀 Release 5.3.31 shipped — cross-model consent + workflow policy; version parity bash/ps1/npm/formula; Milestone v5.3.32 (next) | AgToosa |
+| 2026-07-23 04:00 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-118 — smoke PASS 12/12; v0.3.30; cycle archived | AgToosa |
+| 2026-07-23 04:00 | 🚀 Ship complete — v0.3.30 — DEV-118 Product Truth & Adapter Contract; smoke PASS; cycle archived | AgToosa |
+| 2026-07-23 04:00 | 🚀 Release 0.3.30 shipped — v0.3.30; version parity bash/ps1/npm/formula; Milestone v0.3.31 (next) | AgToosa |
+| 2026-07-25 00:35 | 🚀 Release 0.3.31 shipped — cross-model consent + workflow policy; version parity bash/ps1/npm/formula; Milestone v0.3.32 (next) | AgToosa |
 | 2026-07-26 12:52 | ✏️ /agtoosa-spec — DEV-119 spec + test plan generated — `docs/archived/spec-DEV-119.md`; 12 Must ACs; estimate L; enrolled Active Cycle Todo; **awaiting Spec Approved** | AgToosa |
 | 2026-07-26 13:08 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-119 — `docs/archived/spec-DEV-119.md`; estimate L; enrolled Active Cycle; next `/agtoosa-build` | AgToosa |
 | 2026-07-26 13:32 | 🔨 /agtoosa-build — DEV-119 build complete — `lib/transaction.sh`, apply journal hooks, `--transaction-recover`/`--transaction-status`, RPT-001–RPT-012 green | AgToosa |
 | 2026-07-26 13:35 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-119 — 0 Critical, 4 Warning; RPT 12/12; review `docs/archived/review-DEV-119.md`; next `/agtoosa-ship` | AgToosa |
-| 2026-07-26 13:44 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-119 — smoke PASS 12/12; v5.3.32; cycle archived | AgToosa |
-| 2026-07-26 13:44 | 🚀 Ship complete — v5.3.32 — DEV-119 Recoverable Project Transaction; smoke PASS; cycle archived | AgToosa |
-| 2026-07-26 13:44 | 🚀 Release 5.3.32 shipped — v5.3.32; version parity bash/ps1/npm/formula; Milestone v5.3.33 (next) | AgToosa |
+| 2026-07-26 13:44 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-119 — smoke PASS 12/12; v0.3.32; cycle archived | AgToosa |
+| 2026-07-26 13:44 | 🚀 Ship complete — v0.3.32 — DEV-119 Recoverable Project Transaction; smoke PASS; cycle archived | AgToosa |
+| 2026-07-26 13:44 | 🚀 Release 0.3.32 shipped — v0.3.32; version parity bash/ps1/npm/formula; Milestone v0.3.33 (next) | AgToosa |
 | 2026-07-26 13:10 | ✏️ /agtoosa-spec — DEV-125 spec enrolled — `/agtoosa-next` Lifecycle Dispatcher; ADR-019; test plan `docs/AgToosa_TestPlan-DEV-125.md`; backlog Spec ready; **awaiting Spec Approved** | AgToosa |
 | 2026-07-26 13:15 | 🔨 /agtoosa-build — DEV-125 build complete — `AgToosa_Next.md`, six platform adapters, product-truth `command.next`, NXT-001–NXT-009 bats green | AgToosa |
 | 2026-07-26 14:00 | 🔨 /agtoosa-build — DEV-125 A+B hybrid — help previews + Next executes; `spec_approved` in route-hint JSON; Quickref Day 1 = init + next; NXT-010–NXT-012 | AgToosa |
 | 2026-07-26 13:30 | 🔨 /agtoosa-build — DEV-126 build complete — spec interview hardening (validation floor, turn-stop, findings artifact, adapter contracts); DEV-126 T-001–T-008 bats green | AgToosa |
 | 2026-07-26 14:30 | 🏗️ /agtoosa-build — DEV-127 build complete — motion-first README; readme-reference + architecture guides; RMH green | AgToosa |
 | 2026-07-26 14:36 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-127 — 0 Critical, 3 Warning | AgToosa |
-| 2026-07-26 14:45 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-127 — smoke PASS; v5.3.33; cycle archived | AgToosa |
-| 2026-07-26 14:45 | 🚀 Ship complete — v5.3.33 — DEV-127 README Experience Refresh | AgToosa |
-| 2026-07-26 14:45 | 🚀 Release 5.3.33 shipped — v5.3.33; version parity bash/ps1/npm/formula; Milestone v5.3.34 (next) | AgToosa |
+| 2026-07-26 14:45 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-127 — smoke PASS; v0.3.33; cycle archived | AgToosa |
+| 2026-07-26 14:45 | 🚀 Ship complete — v0.3.33 — DEV-127 README Experience Refresh | AgToosa |
+| 2026-07-26 14:45 | 🚀 Release 0.3.33 shipped — v0.3.33; version parity bash/ps1/npm/formula; Milestone v0.3.34 (next) | AgToosa |
 | 2026-07-26 15:41 | ✏️ /agtoosa-spec — DEV-121 enrolled — Behavioral Conformance Lab; Amendment R1 approved | AgToosa |
 | 2026-07-26 15:55 | 🔨 /agtoosa-build — DEV-121 build complete — BCL-001–BCL-013 green | AgToosa |
 | 2026-07-26 16:00 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-121 — 0 Critical, 3 Warning | AgToosa |
-| 2026-07-26 16:15 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-121 — smoke PASS 13/13 + SR-001; v5.3.34; cycle archived | AgToosa |
-| 2026-07-26 16:15 | 🚀 Ship complete — v5.3.34 — DEV-121 Behavioral Conformance Lab | AgToosa |
-| 2026-07-26 16:15 | 🚀 Release 5.3.34 shipped — v5.3.34; version parity bash/ps1/npm/formula; Milestone v5.3.35 (next) | AgToosa |
+| 2026-07-26 16:15 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-121 — smoke PASS 13/13 + SR-001; v0.3.34; cycle archived | AgToosa |
+| 2026-07-26 16:15 | 🚀 Ship complete — v0.3.34 — DEV-121 Behavioral Conformance Lab | AgToosa |
+| 2026-07-26 16:15 | 🚀 Release 0.3.34 shipped — v0.3.34; version parity bash/ps1/npm/formula; Milestone v0.3.35 (next) | AgToosa |
 | 2026-07-26 20:20 | 🏗️ Build 🏗️ Started — DEV-122 — TDD cycle; 11 tasks; scope: drift contracts, git-inventory provider, assess/compile CLIs, DIA bats | AgToosa |
 | 2026-07-26 20:25 | 🔨 /agtoosa-build — DEV-122 build complete — DIA-001–DIA-012 green; next `/agtoosa-review` | AgToosa |
 | 2026-07-26 21:30 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-120 — 0 Critical, 2 Warning | AgToosa |
-| 2026-07-26 21:35 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-120 — smoke PASS 12/12; v5.3.37 | AgToosa |
+| 2026-07-26 21:35 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-120 — smoke PASS 12/12; v0.3.37 | AgToosa |
 | 2026-07-26 21:40 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-122 — 0 Critical, 2 Warning | AgToosa |
-| 2026-07-26 21:45 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-122 — smoke PASS 12/12 + SR-001; v5.3.38; cycle archived | AgToosa |
-| 2026-07-26 21:45 | 🚀 Ship complete — v5.3.38 — DEV-122 Change-Aware Adaptive Delivery | AgToosa |
-| 2026-07-26 21:45 | 🚀 Release 5.3.35–5.3.38 shipped — DEV-125/126/120/122 batch; version parity bash/ps1/npm/formula; Milestone v5.3.39 (next) | AgToosa |
+| 2026-07-26 21:45 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-122 — smoke PASS 12/12 + SR-001; v0.3.38; cycle archived | AgToosa |
+| 2026-07-26 21:45 | 🚀 Ship complete — v0.3.38 — DEV-122 Change-Aware Adaptive Delivery | AgToosa |
+| 2026-07-26 21:45 | 🚀 Release 0.3.35–0.3.38 shipped — DEV-125/126/120/122 batch; version parity bash/ps1/npm/formula; Milestone v0.3.39 (next) | AgToosa |
 | 2026-07-26 20:30 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-120 — `docs/archived/spec-DEV-120.md`; 12 Must ACs; estimate L; enrolled Active Cycle; test plan `docs/AgToosa_TestPlan-DEV-120.md`; next `/agtoosa-build` | AgToosa |
 | 2026-07-26 20:35 | 🏗️ /agtoosa-build — DEV-120 build complete — DPF-001–DPF-012 green; pilot verify PASS; next `/agtoosa-review` | AgToosa |
-| 2026-07-26 22:05 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-123 — smoke PASS 12/12 + SR-001; v5.3.39; cycle archived | AgToosa |
-| 2026-07-26 22:05 | 🚀 Ship complete — v5.3.39 — DEV-123 Guarded Portable Execution | AgToosa |
-| 2026-07-26 22:05 | 🚀 Release 5.3.39 shipped — v5.3.39; version parity bash/ps1/npm/formula; Milestone v5.3.40 (next) | AgToosa |
+| 2026-07-26 22:05 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-123 — smoke PASS 12/12 + SR-001; v0.3.39; cycle archived | AgToosa |
+| 2026-07-26 22:05 | 🚀 Ship complete — v0.3.39 — DEV-123 Guarded Portable Execution | AgToosa |
+| 2026-07-26 22:05 | 🚀 Release 0.3.39 shipped — v0.3.39; version parity bash/ps1/npm/formula; Milestone v0.3.40 (next) | AgToosa |
 | 2026-07-26 22:00 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-123 — 0 Critical, 2 Warning | AgToosa |
 | 2026-07-26 21:55 | 🔨 /agtoosa-build — DEV-123 build complete — GPE-001–GPE-012 green; next `/agtoosa-review` | AgToosa |
-| 2026-07-26 22:20 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-124 — smoke PASS 12/12 + SR-001; v5.3.40; cycle archived | AgToosa |
-| 2026-07-26 22:20 | 🚀 Ship complete — v5.3.40 — DEV-124 Cross-Framework Interchange | AgToosa |
-| 2026-07-26 22:20 | 🚀 Release 5.3.40 shipped — v5.3.40; version parity bash/ps1/npm/formula; Milestone v5.3.41 (next); competitive proof portfolio complete | AgToosa |
+| 2026-07-26 22:20 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-124 — smoke PASS 12/12 + SR-001; v0.3.40; cycle archived | AgToosa |
+| 2026-07-26 22:20 | 🚀 Ship complete — v0.3.40 — DEV-124 Cross-Framework Interchange | AgToosa |
+| 2026-07-26 22:20 | 🚀 Release 0.3.40 shipped — v0.3.40; version parity bash/ps1/npm/formula; Milestone v0.3.41 (next); competitive proof portfolio complete | AgToosa |
 | 2026-07-26 22:15 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-124 — 0 Critical, 2 Warning | AgToosa |
 | 2026-07-26 22:25 | ✏️ /agtoosa-spec tasks — Active Tasks idle hygiene — removed orphaned DEV-120/123/124 stubs; cycle idle; next `/agtoosa-spec` to enroll | AgToosa |
 | 2026-07-26 22:40 | 🔨 /agtoosa-build — DEV-128 build complete — UPG-001–UPG-006 green; downgrade guard + platform replace semantics | AgToosa |
 | 2026-07-26 22:41 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-128 — 0 Critical, 1 Warning | AgToosa |
-| 2026-07-26 22:42 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-128 — smoke PASS UPG-001–006 + SR-001; v5.3.41; cycle archived | AgToosa |
-| 2026-07-26 22:42 | 🚀 Ship complete — v5.3.41 — DEV-128 Smart Upgrade Platform & Version Guards | AgToosa |
-| 2026-07-26 22:42 | 🚀 Release 5.3.41 shipped — v5.3.41; version parity bash/ps1/npm/formula; Milestone v5.3.42 (next) | AgToosa |
-| 2026-07-26 22:50 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-128 hotfix — UPG-007; v5.3.42 | AgToosa |
-| 2026-07-26 22:50 | 🚀 Ship complete — v5.3.42 — DEV-128 interactive platform prompt hotfix | AgToosa |
-| 2026-07-26 22:50 | 🚀 Release 5.3.42 shipped — v5.3.42; version parity bash/ps1/npm/formula; Milestone v5.3.43 (next) | AgToosa |
-| 2026-07-26 23:47 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-129 — smoke PASS UPG/CLN gate; v5.3.43 | AgToosa |
-| 2026-07-26 23:47 | 🚀 Ship complete — v5.3.43 — DEV-129 Smart Upgrade UX Polish | AgToosa |
-| 2026-07-26 23:47 | 🚀 Release 5.3.43 shipped — v5.3.43; version parity bash/ps1/npm/formula; Milestone v5.3.44 (next) | AgToosa |
+| 2026-07-26 22:42 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-128 — smoke PASS UPG-001–006 + SR-001; v0.3.41; cycle archived | AgToosa |
+| 2026-07-26 22:42 | 🚀 Ship complete — v0.3.41 — DEV-128 Smart Upgrade Platform & Version Guards | AgToosa |
+| 2026-07-26 22:42 | 🚀 Release 0.3.41 shipped — v0.3.41; version parity bash/ps1/npm/formula; Milestone v0.3.42 (next) | AgToosa |
+| 2026-07-26 22:50 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-128 hotfix — UPG-007; v0.3.42 | AgToosa |
+| 2026-07-26 22:50 | 🚀 Ship complete — v0.3.42 — DEV-128 interactive platform prompt hotfix | AgToosa |
+| 2026-07-26 22:50 | 🚀 Release 0.3.42 shipped — v0.3.42; version parity bash/ps1/npm/formula; Milestone v0.3.43 (next) | AgToosa |
+| 2026-07-26 23:47 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-129 — smoke PASS UPG/CLN gate; v0.3.43 | AgToosa |
+| 2026-07-26 23:47 | 🚀 Ship complete — v0.3.43 — DEV-129 Smart Upgrade UX Polish | AgToosa |
+| 2026-07-26 23:47 | 🚀 Release 0.3.43 shipped — v0.3.43; version parity bash/ps1/npm/formula; Milestone v0.3.44 (next) | AgToosa |
 | 2026-07-26 19:10 | ✏️ /agtoosa-spec — DEV-130 spec ready — BCL hardening (jsonschema, six-platform run JSON, CI BCL smoke); test plan: docs/AgToosa_TestPlan-DEV-130.md | AgToosa |
 | 2026-07-27 21:52 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-130 — 0 Critical | AgToosa |
-| 2026-07-27 21:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-130 — smoke PASS BCL-014/015; v5.3.44 | AgToosa |
-| 2026-07-27 21:55 | 🚀 Ship complete — v5.3.44 — DEV-130 BCL Hardening (+ UPG-010/011 UX follow-up) | AgToosa |
-| 2026-07-27 21:55 | 🚀 Release 5.3.44 shipped — v5.3.44; version parity bash/ps1/npm/formula; Milestone v5.3.45 (next) | AgToosa |
-| 2026-07-27 23:40 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-132 — 0 Critical, 2 Warning; next `/agtoosa-next` → ship v5.3.46 | AgToosa |
-| 2026-07-27 23:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-132 — smoke PASS EVJ/SR gate; v5.3.46 | AgToosa |
-| 2026-07-27 23:55 | 🚀 Ship complete — v5.3.46 — DEV-132 Evidence JSONL preservation | AgToosa |
-| 2026-07-28 21:18 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-136 — smoke PASS IDE/SR gate; v5.3.50 | AgToosa |
-| 2026-07-28 21:18 | 🚀 Ship complete — v5.3.50 — DEV-136 IDE host mode bridge | AgToosa |
-| 2026-07-28 21:18 | 🚀 Release 5.3.50 shipped — v5.3.50; version parity bash/ps1/npm/formula; Milestone v5.3.51 (next) | AgToosa |
-| 2026-07-27 21:05 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-135 — 0 Critical; NLX-001–008 green; next `/agtoosa-next` → ship v5.3.49 | AgToosa |
+| 2026-07-27 21:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-130 — smoke PASS BCL-014/015; v0.3.44 | AgToosa |
+| 2026-07-27 21:55 | 🚀 Ship complete — v0.3.44 — DEV-130 BCL Hardening (+ UPG-010/011 UX follow-up) | AgToosa |
+| 2026-07-27 21:55 | 🚀 Release 0.3.44 shipped — v0.3.44; version parity bash/ps1/npm/formula; Milestone v0.3.45 (next) | AgToosa |
+| 2026-07-27 23:40 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-132 — 0 Critical, 2 Warning; next `/agtoosa-next` → ship v0.3.46 | AgToosa |
+| 2026-07-27 23:55 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-132 — smoke PASS EVJ/SR gate; v0.3.46 | AgToosa |
+| 2026-07-27 23:55 | 🚀 Ship complete — v0.3.46 — DEV-132 Evidence JSONL preservation | AgToosa |
+| 2026-07-28 21:18 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-136 — smoke PASS IDE/SR gate; v0.3.50 | AgToosa |
+| 2026-07-28 21:18 | 🚀 Ship complete — v0.3.50 — DEV-136 IDE host mode bridge | AgToosa |
+| 2026-07-28 21:18 | 🚀 Release 0.3.50 shipped — v0.3.50; version parity bash/ps1/npm/formula; Milestone v0.3.51 (next) | AgToosa |
+| 2026-07-27 21:05 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-135 — 0 Critical; NLX-001–008 green; next `/agtoosa-next` → ship v0.3.49 | AgToosa |
 | 2026-07-27 21:00 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-135 — NL continuation PROGRESS routing | AgToosa |
-| 2026-07-28 21:10 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-135 — smoke PASS NLX/SR gate; v5.3.49 | AgToosa |
-| 2026-07-28 21:10 | 🚀 Ship complete — v5.3.49 — DEV-135 NL continuation → `/agtoosa-next` | AgToosa |
-| 2026-07-28 21:10 | 🚀 Release 5.3.49 shipped — v5.3.49; version parity bash/ps1/npm/formula; Milestone v5.3.50 (next) | AgToosa |
-| 2026-07-28 21:12 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-136 — 0 Critical, 1 Warning (accepted); IDE-001–012 green; next `/agtoosa-next` → ship v5.3.50 | AgToosa |
+| 2026-07-28 21:10 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-135 — smoke PASS NLX/SR gate; v0.3.49 | AgToosa |
+| 2026-07-28 21:10 | 🚀 Ship complete — v0.3.49 — DEV-135 NL continuation → `/agtoosa-next` | AgToosa |
+| 2026-07-28 21:10 | 🚀 Release 0.3.49 shipped — v0.3.49; version parity bash/ps1/npm/formula; Milestone v0.3.50 (next) | AgToosa |
+| 2026-07-28 21:12 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-136 — 0 Critical, 1 Warning (accepted); IDE-001–012 green; next `/agtoosa-next` → ship v0.3.50 | AgToosa |
 | 2026-07-28 21:12 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-136 — IDE host mode bridge catch-up | AgToosa |
 | 2026-07-28 21:15 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-136 — IDE Host Mode Bridge catch-up (`4882506`); IDE-001–012 green; next `/agtoosa-next` → review | AgToosa |
-| 2026-07-28 21:00 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-134 — smoke PASS MED/SR gate; v5.3.48 | AgToosa |
-| 2026-07-28 21:00 | 🚀 Ship complete — v5.3.48 — DEV-134 README hero media pass | AgToosa |
-| 2026-07-28 21:00 | 🚀 Release 5.3.48 shipped — v5.3.48; version parity bash/ps1/npm/formula; Milestone v5.3.49 (next) | AgToosa |
-| 2026-07-28 20:36 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-134 — 0 Critical; next `/agtoosa-next` → ship v5.3.48 | AgToosa |
+| 2026-07-28 21:00 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-134 — smoke PASS MED/SR gate; v0.3.48 | AgToosa |
+| 2026-07-28 21:00 | 🚀 Ship complete — v0.3.48 — DEV-134 README hero media pass | AgToosa |
+| 2026-07-28 21:00 | 🚀 Release 0.3.48 shipped — v0.3.48; version parity bash/ps1/npm/formula; Milestone v0.3.49 (next) | AgToosa |
+| 2026-07-28 20:36 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-134 — 0 Critical; next `/agtoosa-next` → ship v0.3.48 | AgToosa |
 | 2026-07-28 20:36 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-134 — hero media formalization | AgToosa |
 | 2026-07-28 20:31 | 🏗️ /agtoosa-build — Build complete — DEV-134 — MED-001–004 4/4 PASS; verify:checkpoint green; next `/agtoosa-next` → review or ship task 3 | AgToosa |
 | 2026-07-28 20:30 | 🏗️ /agtoosa-build — Build 🏗️ Started — DEV-134 — hero media formalization; 3 tasks; scope: agtoosa-hero + MED bats | AgToosa |
 | 2026-07-28 20:24 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-134 — README hero media catch-up (`7bac032`); NL work renumbered to DEV-135 (parked build-complete); next `/agtoosa-next` → build | AgToosa |
 | 2026-07-28 01:35 | 🏗️ /agtoosa-build — Build complete — DEV-135 (was mislabeled DEV-134) — NLX-001–008; PROGRESS + Continuation Context Contract; parked pending review | AgToosa |
 | 2026-07-28 01:25 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-135 (was DEV-134) — NL continuation → `/agtoosa-next` | AgToosa |
-| 2026-07-28 01:15 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-133 — smoke PASS BRH/SR gate; v5.3.47 | AgToosa |
-| 2026-07-28 01:15 | 🚀 Ship complete — v5.3.47 — DEV-133 GitHub branch hygiene | AgToosa |
-| 2026-07-28 01:15 | 🚀 Release 5.3.47 shipped — v5.3.47; version parity bash/ps1/npm/formula; Milestone v5.3.48 (next) | AgToosa |
+| 2026-07-28 01:15 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-133 — smoke PASS BRH/SR gate; v0.3.47 | AgToosa |
+| 2026-07-28 01:15 | 🚀 Ship complete — v0.3.47 — DEV-133 GitHub branch hygiene | AgToosa |
+| 2026-07-28 01:15 | 🚀 Release 0.3.47 shipped — v0.3.47; version parity bash/ps1/npm/formula; Milestone v0.3.48 (next) | AgToosa |
 | 2026-07-27 20:02 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-133 — 4-persona review running | AgToosa |
 | 2026-07-27 19:51 | 🏗️ /agtoosa-build — Build complete — DEV-133 — BRH-001–006 6/6 PASS; cleanup script + branch-hygiene workflow | AgToosa |
 | 2026-07-28 00:00 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-133 — branch hygiene script + workflow; `docs/archived/spec-DEV-133.md`; next `/agtoosa-next` → build | AgToosa |
-| 2026-07-27 23:55 | 🚀 Release 5.3.46 shipped — v5.3.46; version parity bash/ps1/npm/formula; Milestone v5.3.47 (next) | AgToosa |
+| 2026-07-27 23:55 | 🚀 Release 0.3.46 shipped — v0.3.46; version parity bash/ps1/npm/formula; Milestone v0.3.47 (next) | AgToosa |
 | 2026-07-27 23:38 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-132 — 4-persona review running | AgToosa |
 | 2026-07-27 23:35 | 🏗️ /agtoosa-build — Build complete — DEV-132 — EVJ-001–006 6/6 PASS; project-owned evidence JSONL wired | AgToosa |
 | 2026-07-27 23:30 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-132 — evidence JSONL preservation; `docs/archived/spec-DEV-132.md`; test plan `docs/AgToosa_TestPlan-DEV-132.md`; next `/agtoosa-next` → build | AgToosa |
-| 2026-07-27 23:30 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-131 — smoke PASS NXT/RL gate; v5.3.45 | AgToosa |
-| 2026-07-27 23:30 | 🚀 Release 5.3.45 shipped — v5.3.45; version parity bash/ps1/npm/formula; Milestone v5.3.46 (next) | AgToosa |
-| 2026-07-27 23:30 | 🚀 Ship complete — v5.3.45 — DEV-131 Sequential Approval + Release Publication Gate | AgToosa |
-| 2026-07-27 23:23 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-131 — 0 Critical, 3 Warning; next `/agtoosa-next` → ship v5.3.45 | AgToosa |
+| 2026-07-27 23:30 | 🚀 /agtoosa-ship — Ship 🚀 Deployed — DEV-131 — smoke PASS NXT/RL gate; v0.3.45 | AgToosa |
+| 2026-07-27 23:30 | 🚀 Release 0.3.45 shipped — v0.3.45; version parity bash/ps1/npm/formula; Milestone v0.3.46 (next) | AgToosa |
+| 2026-07-27 23:30 | 🚀 Ship complete — v0.3.45 — DEV-131 Sequential Approval + Release Publication Gate | AgToosa |
+| 2026-07-27 23:23 | 🔍 /agtoosa-review — Review ✅ Approved — DEV-131 — 0 Critical, 3 Warning; next `/agtoosa-next` → ship v0.3.45 | AgToosa |
 | 2026-07-27 23:18 | 🏗️ /agtoosa-build — Build complete — DEV-131 — doc parity verified; NXT-013–015 + RL-001–004 7/7 PASS | AgToosa |
 | 2026-07-27 17:15 | ✏️ /agtoosa-spec — Spec ✅ Approved — DEV-131 — `docs/archived/spec-DEV-131.md`; estimate S; enrolled Active Cycle; test plan `docs/AgToosa_TestPlan-DEV-131.md`; next `/agtoosa-next` → build | AgToosa |

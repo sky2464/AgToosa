@@ -1,7 +1,7 @@
 **Public launch: pinned release**
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v5.3.15
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v0.3.15
 ```
 
 **Private collaborator path: clone and run**

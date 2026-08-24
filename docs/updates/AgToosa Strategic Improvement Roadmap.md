@@ -1,7 +1,7 @@
 # AgToosa Strategic Improvement Roadmap
 
 > **Role:** Non-authoritative strategy and opportunity analysis.
-> **Snapshot:** 2026-07-11, after v5.3.6; DEV-055 is In Progress with build Wave 1 complete.
+> **Snapshot:** 2026-07-11, after v0.3.6; DEV-055 is In Progress with build Wave 1 complete.
 > **Execution source of truth:** `docs/Master-Plan.md`.
 > **Operating plan:** `docs/updates/agtoosa-plan-revised.md`.
 
@@ -66,7 +66,7 @@ These controls are not equivalent:
 
 ### 3.2 Active and backlog evidence
 
-- **Now:** DEV-055, Agent Capability Matrix, is approved and In Progress for the v5.3.7 target.
+- **Now:** DEV-055, Agent Capability Matrix, is approved and In Progress for the v0.3.7 target.
 - **Subagent safety backlog:** DEV-045 Work Package Wave DAG and DEV-046 Optional Worktree Isolation.
 - **Guardrail backlog:** DEV-052 Hook Automation Pack and DEV-059 Governance Policy-as-Code.
 - **Learning and visibility backlog:** DEV-056 Retrospective Learning Loop and DEV-058 Local Dashboard.

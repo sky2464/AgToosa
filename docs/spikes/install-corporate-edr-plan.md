@@ -1,7 +1,7 @@
 # Spike: Corporate / EDR-Safe Install Plan
 
 > **Tracking:** [#89](https://github.com/sky2464/AgToosa/issues/89)  
-> **Status:** Phase 1 shipped (v5.3.60 via PR #92); Phase 2 (runtime tarball) shipped (v5.3.63 via DEV-150)
+> **Status:** Phase 1 shipped (v0.3.60 via PR #92); Phase 2 (runtime tarball) shipped (v0.3.63 via DEV-150)
 
 ## Problem
 
@@ -31,7 +31,7 @@ Shipped or in flight via PR #90:
 | Mark `git clone` as development-only in readme-reference | |
 | Troubleshooting for EDR, missing deps, interactive prompt | |
 
-## Phase 2 — Minimal runtime release asset (shipped v5.3.63)
+## Phase 2 — Minimal runtime release asset (shipped v0.3.63)
 
 ### Problem
 
@@ -57,7 +57,7 @@ template/
 ### Target corporate UX
 
 ```bash
-VERSION=v5.3.60
+VERSION=v0.3.60
 curl -fsSL -o agtoosa-runtime.tar.gz \
   "https://github.com/sky2464/AgToosa/releases/download/${VERSION}/agtoosa-runtime-${VERSION}.tar.gz"
 curl -fsSL -o SHA256SUMS \
@@ -71,7 +71,7 @@ No bootstrap required — verify, extract, run.
 
 ### Acceptance criteria
 
-- [x] Runtime tarball materially smaller than full source archive — 414K vs ~17.1MB full source (≈41× smaller), measured on v5.3.62 tree
+- [x] Runtime tarball materially smaller than full source archive — 414K vs ~17.1MB full source (≈41× smaller), measured on v0.3.62 tree
 - [x] `SHA256SUMS` lists runtime asset — `release-advanced.yml` appends `agtoosa-runtime-*.tar.gz` digest
 - [x] bats: pack contents = exactly `{agtoosa.sh, agtoosa.ps1, lib/, template/}` — RTA-001, RTA-003
 - [x] readme-reference corporate section prefers runtime asset over source archive — RTA-005

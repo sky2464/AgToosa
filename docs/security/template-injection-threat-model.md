@@ -1,6 +1,6 @@
 # Threat Model: Markdown Template Injection via Community Packs
 
-**Status:** Partially mitigated (v5.3.0 — DEV-064/065)  
+**Status:** Partially mitigated (v0.3.0 — DEV-064/065)  
 **Date:** 2026-05-04 (updated 2026-06-15)  
 **Component:** AgToosa Community Registry (`--registry install`)  
 **Affected versions:** v3.1.0+ (registry packs first available in v3.0.0)  
@@ -117,7 +117,7 @@ vector becomes Active.
 | PR curation has no automated linter | Low | Manual review may miss embedded payloads in large packs |
 | `_write_lock_file` trusts `.pack-meta.json` field values | Low | `name` and `sha256` fields are embedded in lock file without escaping; JSON encoding prevents injection into the lock file itself |
 
-**Closed in v5.3.0 (DEV-065):** sandboxed pack preview before install; hook/CI destination denylist; verified-flag enforcement.
+**Closed in v0.3.0 (DEV-065):** sandboxed pack preview before install; hook/CI destination denylist; verified-flag enforcement.
 
 ---
 
@@ -150,7 +150,7 @@ files after pack installation. Flag failures as warnings; do not block install.
 ### M-4: Sandboxed pack preview (Long-term — v4)
 
 ~~Before staging, render a summary of pack file contents (file list + first 10 lines of
-each file) and require explicit user confirmation.~~ **Implemented in v5.3.0** as `_print_pack_preview()` — file tree with AI-surface and denylist flags before consent. Future work: show first N lines of each file for deeper review.
+each file) and require explicit user confirmation.~~ **Implemented in v0.3.0** as `_print_pack_preview()` — file tree with AI-surface and denylist flags before consent. Future work: show first N lines of each file for deeper review.
 
 ---
 

@@ -1,7 +1,7 @@
 # AgToosa Executable Product Plan
 
 > **Strategy:** Simplicity-first and subagent-first.
-> **Snapshot:** 2026-07-11, v5.3.6 shipped; DEV-055 is In Progress for v5.3.7 with build Wave 1 complete.
+> **Snapshot:** 2026-07-11, v0.3.6 shipped; DEV-055 is In Progress for v0.3.7 with build Wave 1 complete.
 > **Status:** Planning guidance only. `docs/Master-Plan.md` is the execution source of truth.
 
 ## 1. Goal Contract
@@ -230,7 +230,7 @@ Required evidence:
 - Build, Handoff, Review, Help, and Specialists cross-links.
 - `lib/config.sh` inventory parity.
 - Honest parallel/sequential/manual fallback language.
-- Review approval and v5.3.7 ship evidence.
+- Review approval and v0.3.7 ship evidence.
 
 Do not enroll another implementation story until DEV-055 is reviewed or explicitly paused.
 

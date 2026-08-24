@@ -1,7 +1,7 @@
 # Roadmap-to-Spec Index
 
 > **Purpose:** Coverage map from `docs/updates/` strategy into executable AgToosa work.
-> **Snapshot:** 2026-07-28 (post v5.3.55; DEV-142 active for v5.3.56).
+> **Snapshot:** 2026-07-28 (post v0.3.55; DEV-142 active for v0.3.56).
 > **Authority:** `docs/Master-Plan.md` remains the source of truth for status and priority.
 
 ## Coverage Contract
@@ -19,38 +19,38 @@ Editing this index does not enroll a story. Backlog stories still require `/agto
 
 | ID | Story | Wave | Status |
 |---|---|---|---|
-| DEV-142 | GitHub Surface Audit & Community Profile | v5.3.56 | 🏁 Shipped — v5.3.56 |
+| DEV-142 | GitHub Surface Audit & Community Profile | v0.3.56 | 🏁 Shipped — v0.3.56 |
 
-> **Enrollment note (2026-07-28):** **DEV-142** shipped v5.3.56. Post-Rev4 maintenance through **v5.3.55** (DEV-141). **Demand-gated:** DEV-057 (deferred). **DEV-080** external registry publish manual tasks **done**. Milestone **v5.3.57** next.
+> **Enrollment note (2026-07-28):** **DEV-142** shipped v0.3.56. Post-Rev4 maintenance through **v0.3.55** (DEV-141). **Demand-gated:** DEV-057 (deferred). **DEV-080** external registry publish manual tasks **done**. Milestone **v0.3.57** next.
 
-## Recently Shipped (v5.3.49–v5.3.56)
+## Recently Shipped (v0.3.49–v0.3.56)
 
 | ID | Story | Version |
 |---|---|---|
-| DEV-135 | Natural-Language Continuation → `/agtoosa-next` | v5.3.49 |
-| DEV-136 | IDE Host Mode Bridge for Spec and Review | v5.3.50 |
-| DEV-137 | Security Scanning CI Health | v5.3.51 |
-| DEV-139 | GitHub Issues PM Bridge (Phased B) | v5.3.52 |
-| DEV-138 | Main CI Health | v5.3.53 |
-| DEV-140 | Help vs Next Disambiguation Hardening | v5.3.54 |
-| DEV-141 | Tracker Discovery & Bootstrap | v5.3.55 |
-| DEV-142 | GitHub Surface Audit & Community Profile | v5.3.56 |
+| DEV-135 | Natural-Language Continuation → `/agtoosa-next` | v0.3.49 |
+| DEV-136 | IDE Host Mode Bridge for Spec and Review | v0.3.50 |
+| DEV-137 | Security Scanning CI Health | v0.3.51 |
+| DEV-139 | GitHub Issues PM Bridge (Phased B) | v0.3.52 |
+| DEV-138 | Main CI Health | v0.3.53 |
+| DEV-140 | Help vs Next Disambiguation Hardening | v0.3.54 |
+| DEV-141 | Tracker Discovery & Bootstrap | v0.3.55 |
+| DEV-142 | GitHub Surface Audit & Community Profile | v0.3.56 |
 
 ## Wave 3 — Shipped (reference)
 
 | ID | Story | Wave | Status |
 |---|---|---|---|
-| DEV-096 | Pack Validation CI | 3 | 🏁 Shipped — v5.3.20 |
-| DEV-095 | Official Pack Expansion (5-pack max) | 3 | 🏁 Shipped — v5.3.20 |
-| DEV-098 | Navigation by User Job | 3 | 🏁 Shipped — v5.3.20 |
-| DEV-099 | Core vs Optional Pack Boundary | 3 | 🏁 Shipped — v5.3.20 |
-| DEV-101 | Verified vs Community Pack Labeling | 3 | 🏁 Shipped — v5.3.20 |
-| DEV-102 | Offline and Network-Dependency Matrix | 3 | 🏁 Shipped — v5.3.20 |
-| DEV-103 | External Registry Publication Runbook | 3 | 🏁 Shipped — v5.3.20 |
-| DEV-104 | `--reinstall --clean` (ADR-004 Option C) | 3 | 🏁 Shipped — v5.3.20 |
-| DEV-106 | Built with AgToosa Showcase | 3 | 🏁 Shipped — v5.3.20 |
+| DEV-096 | Pack Validation CI | 3 | 🏁 Shipped — v0.3.20 |
+| DEV-095 | Official Pack Expansion (5-pack max) | 3 | 🏁 Shipped — v0.3.20 |
+| DEV-098 | Navigation by User Job | 3 | 🏁 Shipped — v0.3.20 |
+| DEV-099 | Core vs Optional Pack Boundary | 3 | 🏁 Shipped — v0.3.20 |
+| DEV-101 | Verified vs Community Pack Labeling | 3 | 🏁 Shipped — v0.3.20 |
+| DEV-102 | Offline and Network-Dependency Matrix | 3 | 🏁 Shipped — v0.3.20 |
+| DEV-103 | External Registry Publication Runbook | 3 | 🏁 Shipped — v0.3.20 |
+| DEV-104 | `--reinstall --clean` (ADR-004 Option C) | 3 | 🏁 Shipped — v0.3.20 |
+| DEV-106 | Built with AgToosa Showcase | 3 | 🏁 Shipped — v0.3.20 |
 
-> **Historical note (2026-07-12):** Wave 3 enrolled after v5.3.18. Shipped through v5.3.19: **DEV-107** (Orchestration Brain). Waves 1a/1b/2 through v5.3.18.
+> **Historical note (2026-07-12):** Wave 3 enrolled after v0.3.18. Shipped through v0.3.19: **DEV-107** (Orchestration Brain). Waves 1a/1b/2 through v0.3.18.
 
 ## Rev4 Wave — Spec Approved (2026-07-12)
 
@@ -101,57 +101,57 @@ Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
 | DEV-104 | `--reinstall --clean` (ADR-004 Option C) | Feature | S | DEV-001 | P2 | `docs/archived/spec-DEV-104.md` | `docs/AgToosa_TestPlan-DEV-104.md` |
 | DEV-106 | Built with AgToosa Showcase | Docs | XS | DEV-004 | P2 | `docs/archived/spec-DEV-106.md` | `docs/AgToosa_TestPlan-DEV-106.md` |
 
-> **Enrollment note (2026-07-12):** Wave 3 A enroll after v5.3.18 — all nine into Active Cycle; **095** blocked on **096**; soft capacity overrun (~14 SP); docs parallel with soft file locks; **104** ready (090 shipped).
+> **Enrollment note (2026-07-12):** Wave 3 A enroll after v0.3.18 — all nine into Active Cycle; **095** blocked on **096**; soft capacity overrun (~14 SP); docs parallel with soft file locks; **104** ready (090 shipped).
 
 ### Post-Rev4 enrollments (Spec Approved)
 
 | ID | Story | Type | Est | Epic | Pri | Spec | Test plan |
 |---|---|---|---:|---|---:|---|---|
 | DEV-107 | Agent-Instructed Orchestration Brain | Feature | M | DEV-002 | P1 | `docs/archived/spec-DEV-107.md` | `docs/AgToosa_TestPlan-DEV-107.md` |
-| DEV-109 | Lifecycle Next-Step Sync + Multi-Spec Clarity | Feature | L | DEV-002 / DEV-001 | P0 | `docs/archived/spec-DEV-109.md` | `docs/AgToosa_TestPlan-DEV-109.md` | 🏁 Shipped v5.3.21 |
-| DEV-110 | AgToosa Project Intake | Feature | M | DEV-002 | P0 | `docs/archived/spec-DEV-110.md` | `docs/AgToosa_TestPlan-DEV-110.md` | 🏁 Shipped v5.3.22 |
-| DEV-111 | Smart One-Command Install UX | Feature | M | DEV-001 | P0 | `docs/archived/spec-DEV-111.md` | `docs/AgToosa_TestPlan-DEV-111.md` | 🏁 Shipped v5.3.23 |
-| DEV-112 | Smart Apply UX Polish + `--cleanup` | Feature | M | DEV-001 / DEV-111 | P0 | `docs/archived/spec-DEV-112.md` | `docs/AgToosa_TestPlan-DEV-112.md` | 🏁 Shipped v5.3.24 |
-| DEV-114 | `--cleanup` false-positive hotfix | Fix | S | DEV-112 | P0 | `docs/archived/spec-DEV-114.md` | `docs/AgToosa_TestPlan-DEV-114.md` | 🏁 Shipped v5.3.25 |
-| DEV-113 | Cursor intake hardening + fixture parity | Chore | S | DEV-002 | P1 | `docs/archived/spec-DEV-113.md` | `docs/AgToosa_TestPlan-DEV-113.md` | 🏁 Shipped v5.3.26 |
-| DEV-115 | `--cleanup` safety follow-up | Fix | S | DEV-114 | P0 | `docs/archived/spec-DEV-115.md` | `docs/AgToosa_TestPlan-DEV-115.md` | 🏁 Shipped v5.3.27 |
-| DEV-116 | AgToosa Lifecycle Compass | Feature | M | DEV-002 | P0 | `docs/archived/spec-DEV-116.md` | `docs/AgToosa_TestPlan-DEV-116.md` | 🏁 Shipped v5.3.28 |
-| DEV-117 | Cycle Continuity Guard | Chore | S | DEV-004 | P1 | `docs/archived/spec-DEV-117.md` | `docs/AgToosa_TestPlan-DEV-117.md` | 🏁 Shipped v5.3.29 |
-| DEV-118 | Product Truth & Adapter Contract | Chore | L | DEV-001 / DEV-002 / DEV-004 | P0 | `docs/archived/spec-DEV-118.md` | `docs/AgToosa_TestPlan-DEV-118.md` | 🏁 Shipped v5.3.30 |
+| DEV-109 | Lifecycle Next-Step Sync + Multi-Spec Clarity | Feature | L | DEV-002 / DEV-001 | P0 | `docs/archived/spec-DEV-109.md` | `docs/AgToosa_TestPlan-DEV-109.md` | 🏁 Shipped v0.3.21 |
+| DEV-110 | AgToosa Project Intake | Feature | M | DEV-002 | P0 | `docs/archived/spec-DEV-110.md` | `docs/AgToosa_TestPlan-DEV-110.md` | 🏁 Shipped v0.3.22 |
+| DEV-111 | Smart One-Command Install UX | Feature | M | DEV-001 | P0 | `docs/archived/spec-DEV-111.md` | `docs/AgToosa_TestPlan-DEV-111.md` | 🏁 Shipped v0.3.23 |
+| DEV-112 | Smart Apply UX Polish + `--cleanup` | Feature | M | DEV-001 / DEV-111 | P0 | `docs/archived/spec-DEV-112.md` | `docs/AgToosa_TestPlan-DEV-112.md` | 🏁 Shipped v0.3.24 |
+| DEV-114 | `--cleanup` false-positive hotfix | Fix | S | DEV-112 | P0 | `docs/archived/spec-DEV-114.md` | `docs/AgToosa_TestPlan-DEV-114.md` | 🏁 Shipped v0.3.25 |
+| DEV-113 | Cursor intake hardening + fixture parity | Chore | S | DEV-002 | P1 | `docs/archived/spec-DEV-113.md` | `docs/AgToosa_TestPlan-DEV-113.md` | 🏁 Shipped v0.3.26 |
+| DEV-115 | `--cleanup` safety follow-up | Fix | S | DEV-114 | P0 | `docs/archived/spec-DEV-115.md` | `docs/AgToosa_TestPlan-DEV-115.md` | 🏁 Shipped v0.3.27 |
+| DEV-116 | AgToosa Lifecycle Compass | Feature | M | DEV-002 | P0 | `docs/archived/spec-DEV-116.md` | `docs/AgToosa_TestPlan-DEV-116.md` | 🏁 Shipped v0.3.28 |
+| DEV-117 | Cycle Continuity Guard | Chore | S | DEV-004 | P1 | `docs/archived/spec-DEV-117.md` | `docs/AgToosa_TestPlan-DEV-117.md` | 🏁 Shipped v0.3.29 |
+| DEV-118 | Product Truth & Adapter Contract | Chore | L | DEV-001 / DEV-002 / DEV-004 | P0 | `docs/archived/spec-DEV-118.md` | `docs/AgToosa_TestPlan-DEV-118.md` | 🏁 Shipped v0.3.30 |
 
 > **Enrollment note (2026-07-12):** DEV-107 Spec Approved; remains Backlog until after Wave 1a capacity frees. Build must not displace DEV-086 / DEV-090 / DEV-105.
 >
-> **Enrollment note (2026-07-12):** DEV-109 shipped v5.3.21 — dual-line lifecycle closure + SYNC CLI + multi-spec clarity tags.
+> **Enrollment note (2026-07-12):** DEV-109 shipped v0.3.21 — dual-line lifecycle closure + SYNC CLI + multi-spec clarity tags.
 >
-> **Enrollment note (2026-07-12):** DEV-110 shipped v5.3.22 — dual-mode Project Intake + always-on core rule + Standing Corrections.
+> **Enrollment note (2026-07-12):** DEV-110 shipped v0.3.22 — dual-mode Project Intake + always-on core rule + Standing Corrections.
 >
-> **Enrollment note (2026-07-12):** DEV-111 shipped v5.3.23 — one-command smart apply; auto-detect upgrade; platform Found/add UX; summary buckets.
+> **Enrollment note (2026-07-12):** DEV-111 shipped v0.3.23 — one-command smart apply; auto-detect upgrade; platform Found/add UX; summary buckets.
 >
-> **Enrollment note (2026-07-12):** DEV-112 shipped v5.3.24 — quiet upgrade UX; platform legend; context-aware next steps; `--cleanup` housekeeping.
+> **Enrollment note (2026-07-12):** DEV-112 shipped v0.3.24 — quiet upgrade UX; platform legend; context-aware next steps; `--cleanup` housekeeping.
 >
-> **Enrollment note (2026-07-12):** DEV-116 shipped v5.3.28 — AgToosa Lifecycle Compass; semantic intent routing; --route-hint CLI formatting; CMP integration tests.
-> **Enrollment note (2026-07-14):** DEV-117 shipped v5.3.29 — Cycle Continuity Guard; explicit `Cycle state` idle contract; verifier Gate 3 + status scoring; CCG bats.
-> **Enrollment note (2026-07-22):** DEV-118 shipped v5.3.30 — Product Truth & Adapter Contract; PTC CI gate; competitive portfolio DEV-119–DEV-124 remain `needs-interview`.
+> **Enrollment note (2026-07-12):** DEV-116 shipped v0.3.28 — AgToosa Lifecycle Compass; semantic intent routing; --route-hint CLI formatting; CMP integration tests.
+> **Enrollment note (2026-07-14):** DEV-117 shipped v0.3.29 — Cycle Continuity Guard; explicit `Cycle state` idle contract; verifier Gate 3 + status scoring; CCG bats.
+> **Enrollment note (2026-07-22):** DEV-118 shipped v0.3.30 — Product Truth & Adapter Contract; PTC CI gate; competitive portfolio DEV-119–DEV-124 remain `needs-interview`.
 
-## Recently shipped (v5.3.14 — 2026-07-11)
+## Recently shipped (v0.3.14 — 2026-07-11)
 
 | ID | Story | Type | Spec |
 |---|---|---|---|
 | DEV-051 | Tracker Sync Bridge | Feature | `docs/archived/spec-DEV-051.md` |
 
-## Recently shipped (v5.3.13 — 2026-07-11)
+## Recently shipped (v0.3.13 — 2026-07-11)
 
 | ID | Story | Type | Spec |
 |---|---|---|---|
-| DEV-085 | Post-v5.3.12 release hygiene (bats restore + Master-Plan reconciliation) | Chore | `docs/archived/spec-DEV-085.md` |
+| DEV-085 | Post-v0.3.12 release hygiene (bats restore + Master-Plan reconciliation) | Chore | `docs/archived/spec-DEV-085.md` |
 
-## Recently shipped (v5.3.12 — 2026-07-11)
+## Recently shipped (v0.3.12 — 2026-07-11)
 
 | ID | Story | Epic | Spec |
 |---|---|---|---|
 | DEV-058 | Local Dashboard | DEV-004 | `docs/archived/spec-DEV-058.md` |
 
-## Recently shipped (v5.3.9 — 2026-07-11)
+## Recently shipped (v0.3.9 — 2026-07-11)
 
 | ID | Story | Epic | Spec |
 |---|---|---|---|
@@ -164,7 +164,7 @@ Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
 | DEV-083 | Voluntary Workflow Metrics Kit | DEV-004 | `docs/archived/spec-DEV-083.md` |
 | DEV-084 | Open-Source Sustainability Boundary | DEV-004 | `docs/archived/spec-DEV-084.md` |
 
-## Recently shipped (v5.3.8 — 2026-07-11)
+## Recently shipped (v0.3.8 — 2026-07-11)
 
 | ID | Story | Epic | Spec |
 |---|---|---|---|
@@ -177,7 +177,7 @@ Source: `docs/updates/Rev4-*.md`, `docs/updates/rev4-conflict-resolutions.md`.
 
 | ID | Story | Spec | Role |
 |---|---|---|---|
-| DEV-055 | Agent Capability Matrix | `docs/archived/spec-DEV-055.md` | Shipped v5.3.7 — lifecycle routing prerequisite |
+| DEV-055 | Agent Capability Matrix | `docs/archived/spec-DEV-055.md` | Shipped v0.3.7 — lifecycle routing prerequisite |
 
 ## Existing Future Stories — Deepened
 
@@ -332,10 +332,10 @@ If evidence appears, start with `/agtoosa-spec research`; do not promote directl
 | `--reinstall --clean` | DEV-104 |
 | Community showcase | DEV-106 |
 | Orchestration Brain (agent-instructed fan-out) | DEV-107 |
-| Next / continuation hardening | DEV-135, DEV-140 (shipped v5.3.49–54) |
-| Tracker discover/bootstrap | DEV-141 (shipped v5.3.55) |
-| GitHub surface audit | DEV-142 (shipped v5.3.56) |
-| GitHub Issues PM bridge | DEV-139 (shipped v5.3.52) |
+| Next / continuation hardening | DEV-135, DEV-140 (shipped v0.3.49–54) |
+| Tracker discover/bootstrap | DEV-141 (shipped v0.3.55) |
+| GitHub surface audit | DEV-142 (shipped v0.3.56) |
+| GitHub Issues PM bridge | DEV-139 (shipped v0.3.52) |
 | Safe subagent routing and fan-out | DEV-055, DEV-045, DEV-046 (shipped) |
 | Policy, hooks, and learning | DEV-059, DEV-052, DEV-056 (shipped) |
 | Visibility and integrations | DEV-058, DEV-051, DEV-057 (demand-gated) |
