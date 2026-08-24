@@ -17,7 +17,7 @@ git commit -m "chore: start proof app"
 Use the pinned public release path:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh | bash -s -- --ref v0.3.62
+curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh | bash -s -- --ref v0.3.63
 ```
 
 The public proof repository for this walkthrough is [sky2464/agtoosa-first-15-proof](https://github.com/sky2464/agtoosa-first-15-proof).

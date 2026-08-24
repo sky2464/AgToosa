@@ -52,10 +52,10 @@ Use clone when contributing to AgToosa, running bats, or changing generator code
 
 ```bash
 # Recommended: pinned release via pipe (works in bash/zsh; no process substitution).
-curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh | bash -s -- --ref v0.3.62
+curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh | bash -s -- --ref v0.3.63
 
 # Bash process-substitution alternative (bash or zsh only — fails under plain sh)
-bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v0.3.62
+bash <(curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh) --ref v0.3.63
 
 # Homebrew alternative (formula pinned to the tagged release tarball)
 brew install sky2464/agtoosa/agtoosa
@@ -83,7 +83,7 @@ curl -fsSL https://raw.githubusercontent.com/sky2464/AgToosa/main/bootstrap.sh |
 
 ```powershell
 # Recommended: download bootstrap.ps1 to disk, then run (AV/EDR-friendly).
-$Ref = "v0.3.62"
+$Ref = "v0.3.63"
 $BootstrapPath = Join-Path $env:TEMP "agtoosa-bootstrap.ps1"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/sky2464/AgToosa/$Ref/bootstrap.ps1" -OutFile $BootstrapPath -UseBasicParsing
 & $BootstrapPath -Ref $Ref
@@ -124,7 +124,7 @@ Managed laptops often block **remote script execution** (`curl | bash`, `iex`, o
 Download the minimal runtime asset — named `agtoosa-runtime-vX.Y.Z.tar.gz` on every release — from [GitHub Releases](https://github.com/sky2464/AgToosa/releases) (often allowed when `raw.githubusercontent.com` is blocked). It contains only `agtoosa.sh`, `agtoosa.ps1`, `lib/`, and `template/`, not the maintainer tests, fixtures, or docs that ship in the full source archive. Verify against the release `SHA256SUMS` asset, then extract and run directly — no bootstrap step, no in-memory script execution:
 
 ```bash
-VERSION=v0.3.62
+VERSION=v0.3.63
 curl -fsSL -o agtoosa-runtime.tar.gz "https://github.com/sky2464/AgToosa/releases/download/${VERSION}/agtoosa-runtime-${VERSION}.tar.gz"
 curl -fsSL -o SHA256SUMS "https://github.com/sky2464/AgToosa/releases/download/${VERSION}/SHA256SUMS"
 sha256sum -c SHA256SUMS --ignore-missing   # or: shasum -a 256 -c SHA256SUMS --ignore-missing
@@ -133,7 +133,7 @@ mkdir -p /opt/agtoosa && tar -xzf agtoosa-runtime.tar.gz -C /opt/agtoosa
 ```
 
 ```powershell
-$Ref = "v0.3.62"
+$Ref = "v0.3.63"
 $RuntimeArchive = Join-Path $env:TEMP "agtoosa-runtime.tar.gz"
 Invoke-WebRequest -Uri "https://github.com/sky2464/AgToosa/releases/download/$Ref/agtoosa-runtime-$Ref.tar.gz" -OutFile $RuntimeArchive -UseBasicParsing
 Invoke-WebRequest -Uri "https://github.com/sky2464/AgToosa/releases/download/$Ref/SHA256SUMS" -OutFile (Join-Path $env:TEMP "SHA256SUMS") -UseBasicParsing
@@ -146,7 +146,7 @@ tar -xzf $RuntimeArchive -C $RuntimeDir
 **Full source archive + bootstrap (when you need bootstrap's install wizard, not just the generator binary)**
 
 ```bash
-VERSION=v0.3.62
+VERSION=v0.3.63
 curl -fsSL -o AgToosa.tar.gz "https://github.com/sky2464/AgToosa/archive/refs/tags/${VERSION}.tar.gz"
 curl -fsSL -o SHA256SUMS "https://github.com/sky2464/AgToosa/releases/download/${VERSION}/SHA256SUMS"
 sha256sum -c SHA256SUMS --ignore-missing   # or: shasum -a 256 -c SHA256SUMS --ignore-missing
@@ -155,7 +155,7 @@ bash bootstrap.sh --ref "${VERSION}" --archive AgToosa.tar.gz
 ```
 
 ```powershell
-$Ref = "v0.3.62"
+$Ref = "v0.3.63"
 $Archive = Join-Path $env:TEMP "AgToosa.tar.gz"
 $BootstrapPath = Join-Path $env:TEMP "agtoosa-bootstrap.ps1"
 Invoke-WebRequest -Uri "https://github.com/sky2464/AgToosa/archive/refs/tags/$Ref.tar.gz" -OutFile $Archive -UseBasicParsing

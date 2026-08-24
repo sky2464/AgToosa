@@ -5,6 +5,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ---
 
+## [0.3.63] — 2026-08-24
+
+Feature release: corporate/EDR runtime release asset, plus a version-scheme downgrade-guard fix.
+
+### Added
+
+- **Corporate runtime release asset (DEV-150).** Every release now publishes `agtoosa-runtime-vX.Y.Z.tar.gz` — just `agtoosa.sh`, `agtoosa.ps1`, `lib/`, and `template/` — as a materially smaller, corporate/EDR-friendly alternative to the full source archive; verify against the release `SHA256SUMS`, then extract and run directly (no bootstrap step, no in-memory script execution). Bats: RTA-001–RTA-007.
+
+### Fixed
+
+- **Historical 5.x installs blocked from updating into the renumbered 0.x line.** Renumbering `AGTOOSA_VERSION` from the `5.3.x` line to `0.3.x` (v0.3.62) made the downgrade guard refuse `--update`/`-Update` on any install still recording a `5.x` version marker, since `0.3.62` reads as numerically older. Scoped a one-time exception to AgToosa's actual historical majors (1–5) so that boundary crossing is treated as a normal update; genuine downgrades (including bogus/future markers and downgrades within the 0.x line) are still blocked. Bats: UPG-012, UPG-013.
+
+---
+
 ## [0.3.62] — 2026-08-02
 
 Patch release: pipe bootstrap project path prompt ([#99](https://github.com/sky2464/AgToosa/issues/99)).

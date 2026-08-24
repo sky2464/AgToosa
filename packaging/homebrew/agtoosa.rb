@@ -10,7 +10,7 @@ class Agtoosa < Formula
   url "https://github.com/sky2464/AgToosa/archive/refs/tags/v0.3.33.tar.gz"
   sha256 "PLACEHOLDER"
   license "MIT"
-  version "0.3.62"
+  version "0.3.63"
 
   def install
     bin.install "agtoosa.sh" => "agtoosa"
