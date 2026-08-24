@@ -52,6 +52,20 @@ assert_not_downgrade() {
   local installed="$1" generator="$2"
   [[ -z "$installed" || "$installed" == "unknown" ]] && return 0
   [[ -z "$generator" ]] && return 0
+
+  # One-time version-scheme exception: AgToosa's versioning was renumbered
+  # from the historical 2.x-5.x line down to 0.x at the 5.3.62 -> 0.3.62
+  # boundary (same minor/patch cadence, major reset to 0). An install still
+  # recording a version from that historical line is not being downgraded
+  # when it updates into the 0.x line -- treat the crossing as a normal
+  # update, not a downgrade. Scoped to AgToosa's actual historical majors
+  # (1-5) so unrelated/bogus installed markers still trigger the guard.
+  local installed_major="${installed%%.*}" generator_major="${generator%%.*}"
+  if (( 10#${generator_major:-99} == 0 )) \
+    && (( 10#${installed_major:-99} >= 1 && 10#${installed_major:-99} <= 5 )); then
+    return 0
+  fi
+
   version_lt "$generator" "$installed" || return 0
 
   if [[ "${FORCE:-false}" == true ]]; then

@@ -15693,6 +15693,24 @@ PY
   [[ "$output" == *"older than installed"* ]]
 }
 
+@test "UPG-012: version-scheme crossing (historical 5.x install -> 0.x generator) is not a downgrade" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo "5.3.62" > "$TEST_PROJECT/Docs/.agtoosa-version"
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -eq 0 ]
+  [[ "$output" != *"older than installed"* ]]
+}
+
+@test "UPG-013: downgrade within the 0.x line is still blocked" {
+  run bash "$SCRIPT" --path "$TEST_PROJECT" --platforms claude --yes < /dev/null
+  [ "$status" -eq 0 ]
+  echo "0.9.9" > "$TEST_PROJECT/Docs/.agtoosa-version"
+  run bash "$SCRIPT" --update "$TEST_PROJECT"
+  [ "$status" -eq 1 ]
+  [[ "$output" == *"older than installed"* ]]
+}
+
 # -- DEV-128 ship regression v0.3.41 (SR-001) ---------------------------------
 
 @test "DEV-128 @smoke SR-001: v0.3.42 release pins and changelog exist" {
