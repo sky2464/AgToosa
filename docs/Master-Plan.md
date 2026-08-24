@@ -23,7 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-150 | Feature: Corporate Runtime Release Asset | Feature | M | 🟦 Todo — Spec Approved | 0/5 |
+| DEV-150 | Feature: Corporate Runtime Release Asset | Feature | M | 🟨 In Progress | ▱▱▱▱▱ 0/5 tasks |
 | DEV-151 | Chore: Tracker Publish CI Automation | Chore | S | 🟦 Todo — Spec Approved | 0/4 |
 | DEV-152 | Chore: Bats Cleanup & Version Pin Consolidation | Chore | S | 🟦 Todo — Spec Approved | 0/5 |
 | DEV-153 | Feature: Bats Tiering & Smoke-Set Extraction | Feature | M | 🟦 Todo — Spec Approved | 0/5 |
@@ -533,6 +533,7 @@ Conflict playbook: _DEV-150 + DEV-151 active for v5.3.63; demand-gated DEV-057 d
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-08-24 04:20 | 🏗️ Build 🏗️ Started — DEV-150 — Starting TDD cycle. 5 tasks declared. Scope: `scripts/pack-runtime.sh`, `.github/workflows/release-advanced.yml`, `tests/agtoosa.bats`, `docs/guides/readme-reference.md`. Next: Task 1/5 — scripts/pack-runtime.sh. | AgToosa |
 | 2026-08-23 21:27 | ✏️ Master-Plan sync — DEV-150 + DEV-151 re-targeted to v5.3.63 after stash reconciliation (specs approved 2026-08-01 under stale v5.3.61 target; v5.3.61/v5.3.62 shipped unrelated fixes in the interim) | AgToosa |
 | 2026-08-02 15:45 | 🚀 Release 5.3.62 shipped — pipe bootstrap project path prompt `/dev/tty` fix; closes #99; PR #100 | AgToosa |
 | 2026-08-02 15:30 | 🚀 Release 5.3.61 shipped — bootstrap macOS bash 3.2 `forwarded_args` fix; closes #94; PR #95 | AgToosa |

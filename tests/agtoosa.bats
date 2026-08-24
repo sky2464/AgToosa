@@ -17178,3 +17178,72 @@ PY
   [ -f "$root/docs/archived/spec-DEV-145.md" ]
   grep -q 'tracker_bootstrap_apply' "$root/lib/tracker-discover.sh"
 }
+
+# ── DEV-150: Corporate Runtime Release Asset (RTA-001–RTA-006) ─────────────────
+
+@test "DEV-150 @smoke RTA-001: runtime pack contains exactly agtoosa.sh, agtoosa.ps1, lib/, template/ at root" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local pack_script="$root/scripts/pack-runtime.sh"
+  local out_dir="$TEST_PROJECT/pack-out"
+  mkdir -p "$out_dir"
+  run bash "$pack_script" --root "$root" --output-dir "$out_dir"
+  [ "$status" -eq 0 ]
+  local tarball
+  tarball="$(find "$out_dir" -name 'agtoosa-runtime-v*.tar.gz' 2>/dev/null | head -1)"
+  [ -n "$tarball" ]
+  local members
+  members="$(tar -tzf "$tarball" | sed 's#/$##' | awk -F/ '{print $1}' | sort -u | tr '\n' ',')"
+  [ "$members" = "agtoosa.ps1,agtoosa.sh,lib,template," ]
+}
+
+@test "DEV-150 RTA-002: runtime tarball is materially smaller than a full source archive" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local pack_script="$root/scripts/pack-runtime.sh"
+  local out_dir="$TEST_PROJECT/pack-out"
+  mkdir -p "$out_dir"
+  run bash "$pack_script" --root "$root" --output-dir "$out_dir"
+  [ "$status" -eq 0 ]
+  local tarball
+  tarball="$(find "$out_dir" -name 'agtoosa-runtime-v*.tar.gz' 2>/dev/null | head -1)"
+  [ -n "$tarball" ]
+  local runtime_size source_size
+  runtime_size="$(wc -c < "$tarball")"
+  source_size="$(cd "$root" && git archive --format=tar.gz HEAD | wc -c)"
+  [ "$runtime_size" -lt "$source_size" ]
+}
+
+@test "DEV-150 RTA-003: runtime archive rejects unexpected repo-only members" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local pack_script="$root/scripts/pack-runtime.sh"
+  local out_dir="$TEST_PROJECT/pack-out"
+  mkdir -p "$out_dir"
+  run bash "$pack_script" --root "$root" --output-dir "$out_dir"
+  [ "$status" -eq 0 ]
+  local tarball
+  tarball="$(find "$out_dir" -name 'agtoosa-runtime-v*.tar.gz' 2>/dev/null | head -1)"
+  [ -n "$tarball" ]
+  local listing
+  listing="$(tar -tzf "$tarball")"
+  ! grep -qE '^(tests/|\.github/|CHANGELOG\.md$|docs/|packaging/|\.git/)' <<< "$listing"
+}
+
+@test "DEV-150 @smoke RTA-004: release workflow packs runtime tarball and appends its digest to SHA256SUMS" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/release-advanced.yml"
+  [ -f "$wf" ]
+  grep -q 'pack-runtime.sh' "$wf"
+  grep -qE 'sha256sum.*agtoosa-runtime.*SHA256SUMS|sha256sum.*>>\s*SHA256SUMS' "$wf"
+}
+
+@test "DEV-150 @smoke RTA-005: readme-reference corporate section prefers runtime tarball over source archive" {
+  local doc="$BATS_TEST_DIRNAME/../docs/guides/readme-reference.md"
+  [ -f "$doc" ]
+  # Must be a concrete download instruction, not just the old "Roadmap" aside.
+  grep -q 'releases/download/${VERSION}/agtoosa-runtime-' "$doc"
+  ! grep -q 'Roadmap:.*runtime-only.*release asset' "$doc"
+}
+
+@test "DEV-150 RTA-006: install-corporate-edr-plan Phase 2 marked shipped" {
+  local doc="$BATS_TEST_DIRNAME/../docs/spikes/install-corporate-edr-plan.md"
+  [ -f "$doc" ]
+  grep -qi 'phase 2.*shipped' "$doc"
+}
