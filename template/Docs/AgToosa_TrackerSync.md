@@ -346,6 +346,24 @@ Bats coverage: `GIP-001`–`GIP-010` in `tests/agtoosa.bats` (mock `gh` via `GH_
 
 ---
 
+## CI automation (DEV-151)
+
+`.github/workflows/agtoosa-issues-sync.yml` runs three paths:
+
+| Trigger | Job | Behavior |
+|---------|-----|----------|
+| `pull_request` touching `docs/Master-Plan.md` / `Docs/Master-Plan.md` | `validate` | GIP bats preflight (`bats tests/agtoosa.bats -f "GIP-"`) + `--dry-run` manifest — no live `gh` calls |
+| `push` to `main` touching `docs/Master-Plan.md` / `Docs/Master-Plan.md` | `sync-issues` | Same GIP bats preflight, then live `gh` upsert, then README roadmap commit (`[skip ci]`) |
+| `workflow_dispatch` | `sync-issues` | Manual re-run of the live sync path |
+
+The GIP bats preflight fails the workflow before any live `gh` sync if the issues-sync script regresses — a bad publish never reaches GitHub Issues.
+
+**Post-ship hook:** `release-advanced.yml` runs `sync-issues-post-ship` after `publish-release` completes. It re-runs the live sync (`continue-on-error: true`) so shipped story states reach Issues immediately after a release, without waiting for the next Master-Plan push. Release publishing is never blocked by an Issues API failure.
+
+Bats coverage: `GIA-001`–`GIA-008` in `tests/agtoosa.bats` assert the workflow YAML contract (job order, PR gate has no live sync, checkout pin parity with `ci.yml`, post-ship job present and best-effort, template/docs parity).
+
+---
+
 ## Security
 
 - Treat every return envelope as **untrusted input**.
