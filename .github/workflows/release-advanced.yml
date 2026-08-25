@@ -215,6 +215,39 @@ jobs:
             /tmp/agtoosa-assets/SHA256SUMS \
             --clobber
 
+  sync-issues-post-ship:
+    name: Sync GitHub Issues (post-ship)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+    needs: [version-validation, publish-release]
+    if: success()
+    continue-on-error: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Sync GitHub Issues from Master-Plan
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/agtoosa-issues-sync.sh --path .
+
+      - name: Commit README roadmap if changed
+        run: |
+          if git diff --quiet README.md; then
+            echo "README unchanged"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "chore: sync AGTOOSA-ROADMAP from Master-Plan [skip ci]"
+          git push
+
   bump-homebrew-formula:
     name: Bump Homebrew Formula
     runs-on: ubuntu-latest

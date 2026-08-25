@@ -23,7 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-151 | Chore: Tracker Publish CI Automation | Chore | S | 🟦 Todo — Spec Approved | 0/4 |
+| DEV-151 | Chore: Tracker Publish CI Automation | Chore | S | 🟦 Todo — Build Complete | 4/4 |
 | DEV-152 | Chore: Bats Cleanup & Version Pin Consolidation | Chore | S | 🟦 Todo — Spec Approved | 0/5 |
 | DEV-153 | Feature: Bats Tiering & Smoke-Set Extraction | Feature | M | 🟦 Todo — Spec Approved | 0/5 |
 
@@ -139,10 +139,10 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 ### DEV-151 — Tracker Publish CI Automation
 
-- [ ] 1. Issues-sync workflow: bats preflight + PR gate + pin fix — _AC-001–AC-003_
-- [ ] 2. Post-ship sync job in release-advanced.yml — _AC-004–AC-006_
-- [ ] 3. Bats GIA-001–GIA-008 — _AC-001–AC-007_
-- [ ] 4. Template + TrackerSync docs — _AC-007, AC-008_
+- [x] 1. Issues-sync workflow: bats preflight + PR gate + pin fix — _AC-001–AC-003_
+- [x] 2. Post-ship sync job in release-advanced.yml — _AC-004–AC-006_
+- [x] 3. Bats GIA-001–GIA-008 — _AC-001–AC-007_
+- [x] 4. Template + TrackerSync docs — _AC-007, AC-008_
 
 ### DEV-152 — Bats Cleanup & Version Pin Consolidation
 

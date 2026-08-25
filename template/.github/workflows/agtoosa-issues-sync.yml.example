@@ -1,11 +1,16 @@
 # Copy to `.github/workflows/agtoosa-issues-sync.yml` to enable Master-Plan → GitHub Issues sync.
-# Requires: AgToosa installed, `gh` CLI in CI, issues:write permission.
+# Requires: AgToosa installed, `gh` CLI in CI, issues:write permission, bats-core for the
+# GIP preflight (installed below). See docs/AgToosa_TrackerSync.md for the CI automation flow.
 
 name: AgToosa Issues Sync
 
 on:
   push:
     branches: [main]
+    paths:
+      - 'docs/Master-Plan.md'
+      - 'Docs/Master-Plan.md'
+  pull_request:
     paths:
       - 'docs/Master-Plan.md'
       - 'Docs/Master-Plan.md'
@@ -16,12 +21,46 @@ permissions:
   issues: write
 
 jobs:
+  validate:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y jq
+      - name: Install bats
+        run: |
+          BATS_VERSION="v1.13.0"
+          curl -sSL "https://github.com/bats-core/bats-core/archive/refs/tags/${BATS_VERSION}.tar.gz" -o bats.tar.gz
+          tar -xzf bats.tar.gz
+          sudo "./bats-core-${BATS_VERSION#v}/install.sh" /usr/local
+      - name: GIP bats preflight
+        run: bats tests/agtoosa.bats -f "GIP-"
+      - name: Dry-run publish manifest
+        run: bash scripts/agtoosa-issues-sync.sh --dry-run --path .
+
   sync-issues:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: sudo apt-get update && sudo apt-get install -y jq
+      - name: Install bats
+        run: |
+          BATS_VERSION="v1.13.0"
+          curl -sSL "https://github.com/bats-core/bats-core/archive/refs/tags/${BATS_VERSION}.tar.gz" -o bats.tar.gz
+          tar -xzf bats.tar.gz
+          sudo "./bats-core-${BATS_VERSION#v}/install.sh" /usr/local
+      - name: GIP bats preflight
+        run: bats tests/agtoosa.bats -f "GIP-"
       - name: Sync issues
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: bash scripts/agtoosa-issues-sync.sh --path .
+
+# Post-ship sync (optional): add a best-effort job to your release workflow after
+# publish, mirroring `sync-issues-post-ship` in AgToosa's own release-advanced.yml,
+# so shipped story states reach GitHub Issues without waiting for the next
+# Master-Plan push. Use `continue-on-error: true` so Issues API failures never
+# block a release.

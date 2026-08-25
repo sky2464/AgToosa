@@ -17275,3 +17275,75 @@ PY
   # Best-effort: still job-level continue-on-error, not a hard release gate.
   grep -q 'continue-on-error: true' <<< "$job_block"
 }
+
+# ── DEV-151: Tracker Publish CI Automation (GIA-001–GIA-008) ─────────────────
+
+@test "DEV-151 GIA-001: sync-issues job runs GIP bats before live gh sync" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/agtoosa-issues-sync.yml"
+  [ -f "$wf" ]
+  local job_block
+  job_block="$(sed -n '/^  sync-issues:/,/^  [a-z-]*:$/p' "$wf")"
+  local bats_line sync_line
+  bats_line="$(grep -n 'bats tests/agtoosa.bats -f "GIP-"' <<< "$job_block" | head -1 | cut -d: -f1)"
+  sync_line="$(grep -n 'agtoosa-issues-sync.sh --path .' <<< "$job_block" | head -1 | cut -d: -f1)"
+  [ -n "$bats_line" ]
+  [ -n "$sync_line" ]
+  [ "$bats_line" -lt "$sync_line" ]
+}
+
+@test "DEV-151 GIA-002: pull_request job dry-runs and does not invoke live gh sync" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/agtoosa-issues-sync.yml"
+  grep -q 'pull_request:' "$wf"
+  local job_block
+  job_block="$(sed -n '/^  validate:/,/^  [a-z-]*:$/p' "$wf")"
+  [[ "$job_block" == *"--dry-run"* ]]
+  [[ "$job_block" != *"agtoosa-issues-sync.sh --path ."* ]]
+}
+
+@test "DEV-151 GIA-003: issues-sync workflow checkout pin matches ci.yml" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/agtoosa-issues-sync.yml"
+  local ci="$BATS_TEST_DIRNAME/../.github/workflows/ci.yml"
+  local wf_sha ci_sha
+  wf_sha="$(grep -m1 -o 'actions/checkout@[0-9a-f]*' "$wf")"
+  ci_sha="$(grep -m1 -o 'actions/checkout@[0-9a-f]*' "$ci")"
+  [ -n "$wf_sha" ]
+  [ "$wf_sha" = "$ci_sha" ]
+}
+
+@test "DEV-151 GIA-004: release-advanced.yml runs sync-issues-post-ship after publish-release" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/release-advanced.yml"
+  grep -q '^  sync-issues-post-ship:' "$wf"
+  local job_block
+  job_block="$(grep -A 8 '^  sync-issues-post-ship:' "$wf")"
+  grep -q 'needs:.*publish-release' <<< "$job_block"
+}
+
+@test "DEV-151 GIA-005: sync-issues-post-ship job is best-effort (continue-on-error)" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/release-advanced.yml"
+  local job_block
+  job_block="$(grep -A 8 '^  sync-issues-post-ship:' "$wf")"
+  grep -q 'continue-on-error: true' <<< "$job_block"
+}
+
+@test "DEV-151 GIA-006: sync-issues-post-ship commits README with [skip ci]" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/release-advanced.yml"
+  local job_block
+  job_block="$(sed -n '/^  sync-issues-post-ship:/,/^  [a-z-]*:$/p' "$wf")"
+  grep -q '\[skip ci\]' <<< "$job_block"
+}
+
+@test "DEV-151 GIA-007: template workflow example mirrors maintainer issues-sync workflow" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local example="$root/template/.github/workflows/agtoosa-issues-sync.yml.example"
+  [ -f "$example" ]
+  grep -q 'pull_request:' "$example"
+  grep -q 'bats tests/agtoosa.bats -f "GIP-"' "$example"
+}
+
+@test "DEV-151 GIA-008: AgToosa_TrackerSync.md documents PR gate, bats preflight, and post-ship hook" {
+  local doc="$BATS_TEST_DIRNAME/../docs/AgToosa_TrackerSync.md"
+  [ -f "$doc" ]
+  grep -qi 'pull_request' "$doc"
+  grep -qi 'bats' "$doc"
+  grep -qi 'post-ship' "$doc"
+}
