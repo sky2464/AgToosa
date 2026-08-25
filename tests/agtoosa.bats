@@ -16425,7 +16425,7 @@ PY
 
 @test "DEV-147 @smoke GIP-002: issues-sync missing gh exits before manifest processing" {
   local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project"
-  run env PATH="/usr/bin:/bin" bash "$BATS_TEST_DIRNAME/../scripts/agtoosa-issues-sync.sh" --dry-run --path "$fixture"
+  run env GH_CMD="gh-does-not-exist-gip002" bash "$BATS_TEST_DIRNAME/../scripts/agtoosa-issues-sync.sh" --dry-run --path "$fixture"
   [ "$status" -ne 0 ]
   [[ "$output" == *"gh CLI required"* ]]
 }
