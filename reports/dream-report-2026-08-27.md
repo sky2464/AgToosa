@@ -34,3 +34,4 @@ Both PRs are draft, green on their scoped bats filters (`GIA-`/`GIP-`) and `shel
 ## Other observations (not filed as issues)
 
 - Pushing this report's commit surfaced a GitHub notice: **1 high-severity Dependabot alert** on the default branch (`https://github.com/sky2464/AgToosa/security/dependabot/4`). None of the tools available to this routine can read Dependabot alert details, so no issue was filed on unverified specifics — flagging here for a human to check the Security tab directly.
+See update below (Phase 4).

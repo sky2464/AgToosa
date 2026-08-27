@@ -358,9 +358,9 @@ Bats coverage: `GIP-001`–`GIP-010` in `tests/agtoosa.bats` (mock `gh` via `GH_
 
 The GIP bats preflight fails the workflow before any live `gh` sync if the issues-sync script regresses — a bad publish never reaches GitHub Issues.
 
-**Post-ship hook:** `release-advanced.yml` runs `sync-issues-post-ship` after `publish-release` completes. It re-runs the live sync (`continue-on-error: true`) so shipped story states reach Issues immediately after a release, without waiting for the next Master-Plan push. Release publishing is never blocked by an Issues API failure.
+**Post-ship hook:** `release-advanced.yml` runs `sync-issues-post-ship` after `publish-release` completes. It re-runs the live sync (`continue-on-error: true`) so shipped story states reach Issues immediately after a release, without waiting for the next Master-Plan push. Release publishing is never blocked by an Issues API failure. `release-advanced.yml` triggers on a tag push, which leaves a bare checkout on a detached HEAD — this job's checkout pins `ref: main` and its README commit pushes via an explicit `git push origin HEAD:main` refspec so the roadmap sync doesn't silently no-op off a detached HEAD.
 
-Bats coverage: `GIA-001`–`GIA-008` in `tests/agtoosa.bats` assert the workflow YAML contract (job order, PR gate has no live sync, checkout pin parity with `ci.yml`, post-ship job present and best-effort, template/docs parity).
+Bats coverage: `GIA-001`–`GIA-009` in `tests/agtoosa.bats` assert the workflow YAML contract (job order, PR gate has no live sync, checkout pin parity with `ci.yml`, post-ship job present and best-effort, checks out a real branch with an explicit push refspec, template/docs parity).
 
 ---
 

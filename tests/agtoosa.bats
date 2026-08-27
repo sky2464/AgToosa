@@ -16483,6 +16483,25 @@ PY
   grep -q 'issue close 55' "$log"
 }
 
+@test "DEV-147 GIP-012: quote-bearing milestone title resolves via jq --arg, not string interpolation" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project-milestone-quote"
+  local fake_bin="$TEST_PROJECT/gip-ms-quote-bin"
+  local log="$TEST_PROJECT/gip-ms-quote.log"
+  mkdir -p "$fake_bin"
+  cp "$BATS_TEST_DIRNAME/fixtures/tracker-sync/issues-sync/mock-gh.sh" "$fake_bin/gh"
+  chmod +x "$fake_bin/gh"
+  : >"$log"
+  run env PATH="$fake_bin:$PATH" GH_MOCK_LOG="$log" \
+    GH_MOCK_MILESTONES_JSON='[{"title": "9.9.9 \"RC\"", "number": 42}]' \
+    bash "$BATS_TEST_DIRNAME/../scripts/agtoosa-issues-sync.sh" --path "$fixture"
+  [ "$status" -eq 0 ]
+  grep -q 'api repos/:owner/:repo/milestones' "$log"
+  # Existing milestone with a literal quote in its title must resolve via the
+  # lookup call; a broken string-interpolated jq filter would fail the match
+  # and fall through to an unwanted milestone-create call instead.
+  ! grep -q 'title=9.9.9' "$log"
+}
+
 @test "DEV-147 GIP-007: doctor emits GIP-003 when workflow present but script missing" {
   _gig_install_cursor_only "$TEST_PROJECT"
   mkdir -p "$TEST_PROJECT/.github/workflows"
@@ -17330,6 +17349,21 @@ PY
   local job_block
   job_block="$(sed -n '/^  sync-issues-post-ship:/,/^  [a-z-]*:$/p' "$wf")"
   grep -q '\[skip ci\]' <<< "$job_block"
+}
+
+@test "DEV-151 GIA-009: sync-issues-post-ship checks out a real branch and pushes an explicit refspec" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/release-advanced.yml"
+  local job_block
+  job_block="$(sed -n '/^  sync-issues-post-ship:/,/^  [a-z-]*:$/p' "$wf")"
+  # release-advanced.yml triggers on `push: tags:`, which leaves a bare
+  # checkout on a detached HEAD — `git push` with no refspec then fails
+  # with "You are not currently on a branch" (silently, under
+  # continue-on-error). The checkout must pin an explicit ref, and the
+  # push must use an explicit refspec so it doesn't depend on HEAD being
+  # attached to a branch.
+  grep -q 'ref: main' <<< "$job_block"
+  grep -q 'git push origin HEAD:main' <<< "$job_block"
+  ! grep -qE '^\s*git push\s*$' <<< "$job_block"
 }
 
 @test "DEV-151 GIA-007: template workflow example mirrors maintainer issues-sync workflow" {
