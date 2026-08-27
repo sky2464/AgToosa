@@ -26,4 +26,11 @@ Both items above are genuinely new (no matching open issue found via search) and
 
 ## Issues filed / PRs opened
 
-See update below (Phase 4).
+- **#134** — `sync-issues-post-ship` README commit fails silently on detached HEAD → **PR #137** (draft, fix branch `fix/134-post-ship-detached-head-push`): pins checkout to `ref: main`, pushes via explicit `git push origin HEAD:main`, adds `GIA-009` (confirmed to fail against the pre-fix workflow), updates `docs/AgToosa_TrackerSync.md` + template mirror.
+- **#135** — unescaped milestone title interpolated into a `--jq` filter → **PR #136** (draft, fix branch `fix/135-milestone-jq-arg-escape`): filters via `jq -r --arg` instead of shell interpolation, adds `GIP-012` with a quote-bearing milestone fixture, mirrors `lib/` fix to `template/lib/`.
+
+Both PRs are draft, green on their scoped bats filters (`GIA-`/`GIP-`) and `shellcheck`, and left open for human review per the routine's guardrails (no self-merge).
+
+## Other observations (not filed as issues)
+
+- Pushing this report's commit surfaced a GitHub notice: **1 high-severity Dependabot alert** on the default branch (`https://github.com/sky2464/AgToosa/security/dependabot/4`). None of the tools available to this routine can read Dependabot alert details, so no issue was filed on unverified specifics — flagging here for a human to check the Security tab directly.
