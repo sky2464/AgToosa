@@ -16483,6 +16483,25 @@ PY
   grep -q 'issue close 55' "$log"
 }
 
+@test "DEV-147 GIP-012: quote-bearing milestone title resolves via jq --arg, not string interpolation" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project-milestone-quote"
+  local fake_bin="$TEST_PROJECT/gip-ms-quote-bin"
+  local log="$TEST_PROJECT/gip-ms-quote.log"
+  mkdir -p "$fake_bin"
+  cp "$BATS_TEST_DIRNAME/fixtures/tracker-sync/issues-sync/mock-gh.sh" "$fake_bin/gh"
+  chmod +x "$fake_bin/gh"
+  : >"$log"
+  run env PATH="$fake_bin:$PATH" GH_MOCK_LOG="$log" \
+    GH_MOCK_MILESTONES_JSON='[{"title": "9.9.9 \"RC\"", "number": 42}]' \
+    bash "$BATS_TEST_DIRNAME/../scripts/agtoosa-issues-sync.sh" --path "$fixture"
+  [ "$status" -eq 0 ]
+  grep -q 'api repos/:owner/:repo/milestones' "$log"
+  # Existing milestone with a literal quote in its title must resolve via the
+  # lookup call; a broken string-interpolated jq filter would fail the match
+  # and fall through to an unwanted milestone-create call instead.
+  ! grep -q 'title=9.9.9' "$log"
+}
+
 @test "DEV-147 GIP-007: doctor emits GIP-003 when workflow present but script missing" {
   _gig_install_cursor_only "$TEST_PROJECT"
   mkdir -p "$TEST_PROJECT/.github/workflows"
