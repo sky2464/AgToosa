@@ -87,3 +87,15 @@ Append `(codex confirmed alias for opencode — not a distinct platform; agtoosa
 | Missing archived artifacts (pre-fix) | DEV-148, DEV-149 (6 files) | unchanged |
 | Stale tracking items (pre-fix) | 3 (migration wizard) | unchanged |
 | ADR-001/4 TODOS annotation (pre-fix) | missing | unchanged |
+
+---
+
+## Issues Filed and PRs Opened
+
+| # | Title | PR |
+|---|-------|----|
+| [#130](https://github.com/sky2464/AgToosa/issues/130) | Missing spec/review/evidence artifacts for DEV-148 and DEV-149 | [#133](https://github.com/sky2464/AgToosa/pull/133) |
+| [#131](https://github.com/sky2464/AgToosa/issues/131) | Stale migration wizard tracking items despite DEV-091 shipping in v0.3.18 | [#133](https://github.com/sky2464/AgToosa/pull/133) |
+| [#132](https://github.com/sky2464/AgToosa/issues/132) | TODOS.md ADR-001 item 4 missing codex/platform-count clarification | [#133](https://github.com/sky2464/AgToosa/pull/133) |
+
+All three were resolved together in draft PR #133 (branch `claude/epic-davinci-lu3g1h`), left open for human review per the automation's guardrails.
