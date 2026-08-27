@@ -17351,6 +17351,21 @@ PY
   grep -q '\[skip ci\]' <<< "$job_block"
 }
 
+@test "DEV-151 GIA-009: sync-issues-post-ship checks out a real branch and pushes an explicit refspec" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/release-advanced.yml"
+  local job_block
+  job_block="$(sed -n '/^  sync-issues-post-ship:/,/^  [a-z-]*:$/p' "$wf")"
+  # release-advanced.yml triggers on `push: tags:`, which leaves a bare
+  # checkout on a detached HEAD — `git push` with no refspec then fails
+  # with "You are not currently on a branch" (silently, under
+  # continue-on-error). The checkout must pin an explicit ref, and the
+  # push must use an explicit refspec so it doesn't depend on HEAD being
+  # attached to a branch.
+  grep -q 'ref: main' <<< "$job_block"
+  grep -q 'git push origin HEAD:main' <<< "$job_block"
+  ! grep -qE '^\s*git push\s*$' <<< "$job_block"
+}
+
 @test "DEV-151 GIA-007: template workflow example mirrors maintainer issues-sync workflow" {
   local root="$BATS_TEST_DIRNAME/.."
   local example="$root/template/.github/workflows/agtoosa-issues-sync.yml.example"
