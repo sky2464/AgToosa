@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-08-24 (DEV-150 shipped as v0.3.63)
+> **Last updated:** 2026-08-27 (DEV-151 shipped as v0.3.63; backfilled — see #140)
 
 ## Project Charter
 
@@ -9,9 +9,9 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Spec — DEV-151 (v0.3.63 milestone; DEV-150 shipped) |
+| Current phase | Spec — DEV-152 / DEV-153 (v0.3.63 milestone; DEV-150 + DEV-151 shipped) |
 | Milestone | `v0.3.63` (shipped) |
-| Active cycle | DEV-151 |
+| Active cycle | DEV-152, DEV-153 |
 | Cycle state | Active |
 | Cycle capacity | `8 story points` |
 
@@ -23,7 +23,6 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-151 | Chore: Tracker Publish CI Automation | Chore | S | 🟦 Todo — Build Complete | 4/4 |
 | DEV-152 | Chore: Bats Cleanup & Version Pin Consolidation | Chore | S | 🟦 Todo — Spec Ready for Approval (human review pending) | 0/5 |
 | DEV-153 | Feature: Bats Tiering & Smoke-Set Extraction | Feature | M | 🟦 Todo — Spec Ready for Approval (human review pending) | 0/5 |
 
@@ -397,6 +396,7 @@ Conflict playbook: _DEV-150 + DEV-151 active for v0.3.63; demand-gated DEV-057 d
 
 | ID | Title | Shipped | Archived Spec |
 |----|-------|---------|--------------|
+| DEV-151 | Chore: Tracker Publish CI Automation | 2026-08-24 (v0.3.63) | [spec-DEV-151.md](archived/spec-DEV-151.md) · [AgToosa_TestPlan-DEV-151.md](archived/testplans/AgToosa_TestPlan-DEV-151.md) — shipped without separate `/agtoosa-review`/evidence-ledger artifacts; verified via GIA-001–GIA-009 bats. Row backfilled 2026-08-27 — see #140. |
 | DEV-150 | Feature: Corporate Runtime Release Asset | 2026-08-24 (v0.3.63) | [spec-DEV-150.md](archived/spec-DEV-150.md) · [AgToosa_TestPlan-DEV-150.md](archived/testplans/AgToosa_TestPlan-DEV-150.md) — shipped without separate `/agtoosa-review`/evidence-ledger artifacts; verified directly via RTA-001–007 bats and a full regression sweep before merge |
 | DEV-147 | Chore: Tracker CI Publish Hardening | 2026-08-01 | [spec-DEV-147.md](archived/spec-DEV-147.md) · [review-DEV-147.md](archived/review-DEV-147.md) · [evidence-DEV-147.md](archived/evidence-DEV-147.md) |
 | DEV-148 | Fix: One-Line Install Fails on Fresh Windows/macOS | 2026-08-01 | wave PR #92 — closes #89 |
@@ -534,6 +534,7 @@ Conflict playbook: _DEV-150 + DEV-151 active for v0.3.63; demand-gated DEV-057 d
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-08-27 12:20 | 🚀 Ship backfill — DEV-151 (Tracker Publish CI Automation) moved to Completed This Cycle; merged 2026-08-24 via PR #129 (commit `5a56e37`) as part of v0.3.63 but never transitioned out of Active Cycle or logged here. CHANGELOG.md and agtoosa-events.jsonl backfilled to match. See #140. | AgToosa |
 | 2026-08-24 23:50 | 🚀 Release v0.3.63 shipped — DEV-150 (Corporate Runtime Release Asset) merged via PR #128, plus a downgrade-guard fix (historical 5.x installs can now update into the renumbered 0.x line; UPG-012/013). Tagged and published via `release-advanced.yml`. | AgToosa |
 | 2026-08-24 05:10 | 🏁 /agtoosa-build — Build 🏁 Complete — DEV-150 — 5/5 tasks, RTA-001–007 all green; STRIDE threat model added (verifier G3-threat-DEV-150 resolved); self-verify clean except systemic `Docs/` (capital-D) test-plan path check, pre-existing across all stories, not DEV-150-specific. Next: `/agtoosa-review`. | AgToosa |
 | 2026-08-24 05:00 | 📋 /agtoosa-task — DEV-154 added to Backlog — Chore: Fix PR Hygiene Checks Stale Label-Event Gate. `require-labels` (`.github/workflows/branch-protection.yml`) reads `github.event.pull_request.labels` from the triggering event payload; since the workflow only listens to `pull_request` (not `labeled`), a rerun after adding labels post-open replays the stale (often empty) snapshot until a new push. *Discovered during `/agtoosa-build` on DEV-150 on 2026-08-24.* Candidate fix already prototyped on a separate local branch. | AgToosa |
