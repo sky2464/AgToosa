@@ -7,6 +7,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+### Fixed
+
+- **No fallback guidance when a native `/agtoosa-*` command isn't recognized (DEV-155).** A user hitting `/agtoosa-init` in a Claude surface that doesn't load the CLI's `.claude/commands/` picker (e.g. a web or non-interactive session) had no path forward, even though the underlying `Docs/AgToosa_Init.md` workflow is plain-language and has no CLI dependency. Every platform entry point (`CLAUDE.md`, `.cursorrules`, `.windsurfrules`, `AGENTS.md`, `OPENCODE.md`, `.github/copilot-instructions.md`) now documents a plain-language fallback, the generator's post-install "Next steps" output prints the same tip, and `Docs/AgToosa_Agent.md` → Project Intake Protocol codifies it centrally.
+
 ## [0.3.63] — 2026-08-24
 
 Feature release: corporate/EDR runtime release asset, plus a version-scheme downgrade-guard fix.

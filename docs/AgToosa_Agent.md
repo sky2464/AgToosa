@@ -324,6 +324,8 @@ When the user sends a **freeform** request without an explicit `/agtoosa-*` (or 
 
 **Slash wins:** explicit `/agtoosa-*` bypasses intake ceremony; run the named workflow (Standing Corrections still apply as project memory).
 
+**Native command unavailable:** If this surface doesn't recognize a native `/agtoosa-*` command (e.g. a web or non-interactive session that doesn't load this platform's command picker), treat the plain-language equivalent the same as the slash command — read the matching `docs/AgToosa_*.md` workflow file from the entry point's Core Commands table and execute it directly. The `.claude/commands/`, `.cursor/commands/`, etc. files are thin dispatchers to those docs; nothing about the workflow requires the native picker.
+
 **Soft path** (quiet one-liner, e.g. `Intake: soft → /agtoosa-task — expediting.`):
 
 - Local bug/chore/debug cleanup, &lt;15 min, single-file or clearly local

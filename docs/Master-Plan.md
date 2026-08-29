@@ -26,6 +26,7 @@
 | DEV-151 | Chore: Tracker Publish CI Automation | Chore | S | 🟦 Todo — Build Complete | 4/4 |
 | DEV-152 | Chore: Bats Cleanup & Version Pin Consolidation | Chore | S | 🟦 Todo — Spec Approved | 0/5 |
 | DEV-153 | Feature: Bats Tiering & Smoke-Set Extraction | Feature | M | 🟦 Todo — Spec Approved | 0/5 |
+| DEV-155 | Fix: Cross-Platform Fallback Guidance for Unrecognized `/agtoosa-*` Commands | Fix | S | 🟦 Todo — Build Complete | 6/6 |
 
 <!-- Archived to docs/archived/cycle-2026-08-01-release-5.3.60.md (DEV-147 + DEV-148 + DEV-149 v5.3.60) -->
 
@@ -160,6 +161,15 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 - [ ] 4. Update CI workflows (PR: smoke; main/release: full/regression) — _AC-004_
 - [ ] 5. Document parallelization in TestPlan.md — _AC-005_
 
+### DEV-155 — Cross-Platform Fallback Guidance for Unrecognized `/agtoosa-*` Commands
+
+- [x] 1. CLI "Next steps" fallback tip — _AC-001_
+- [x] 2. Central Project Intake fallback bullet (`Docs/AgToosa_Agent.md` + template mirror) — _AC-002_
+- [x] 3. Identical fallback section in all 6 platform entry points — _AC-003_
+- [x] 4. Maintainer parity-table row + Per-Platform Parity note — _AC-004_
+- [x] 5. Bats coverage (2 new tests) — _AC-005_
+- [x] 6. Master-Plan / CHANGELOG bookkeeping — _AC-006_
+
 ## Manual / Deferred Tasks
 
 > Tasks that require a human action outside the agent. These are **not** counted against the health score.
@@ -230,6 +240,7 @@ Conflict playbook: _DEV-150 + DEV-151 active for v0.3.63; demand-gated DEV-057 d
 | DEV-150 | Feature: Corporate Runtime Release Asset | Feature | M | DEV-001 / DEV-148 | P0 | 🟦 Todo — Spec Approved |
 | DEV-151 | Chore: Tracker Publish CI Automation | Chore | S | DEV-139 / DEV-147 | P1 | 🟦 Todo — Spec Approved |
 | DEV-154 | Chore: Fix PR Hygiene Checks Stale Label-Event Gate | Chore | S | DEV-004 | P2 | ⬜ Backlog |
+| DEV-155 | Fix: Cross-Platform Fallback Guidance for Unrecognized `/agtoosa-*` Commands | Fix | S | DEV-004 | P1 | 🟦 Todo — Build Complete |
 | DEV-139 | Feature: GitHub Issues PM Bridge (Phased B) | Feature | L | DEV-051 / DEV-004 | P1 | 🏁 Shipped — v0.3.52 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v0.3.9 |
@@ -534,6 +545,7 @@ Conflict playbook: _DEV-150 + DEV-151 active for v0.3.63; demand-gated DEV-057 d
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-08-27 07:40 | 🏁 AgToosa Project Intake (Plan Mode) → Build 🏁 Complete — DEV-155 — User-reported friction: `/agtoosa-init` not recognized in a non-CLI Claude surface. Scoped via Plan Mode (full per-platform parity, confirmed by user), then built: CLI next-steps tip (`lib/install.sh`), central Project Intake fallback bullet (`docs/AgToosa_Agent.md` + `template/Docs/` mirror), identical `## If a Command Isn't Recognized` section in all 6 platform entry points, maintainer parity-table row (`docs/agtoosa-maintainer.md`), 2 new bats tests. No regressions; 2 pre-existing unrelated bats failures (`--update detects installed Claude platform and merges CLAUDE.md`, `SAU-003`) confirmed via git-stash baseline, not caused by this change. Next: `/agtoosa-review`. | AgToosa |
 | 2026-08-24 23:50 | 🚀 Release v0.3.63 shipped — DEV-150 (Corporate Runtime Release Asset) merged via PR #128, plus a downgrade-guard fix (historical 5.x installs can now update into the renumbered 0.x line; UPG-012/013). Tagged and published via `release-advanced.yml`. | AgToosa |
 | 2026-08-24 05:10 | 🏁 /agtoosa-build — Build 🏁 Complete — DEV-150 — 5/5 tasks, RTA-001–007 all green; STRIDE threat model added (verifier G3-threat-DEV-150 resolved); self-verify clean except systemic `Docs/` (capital-D) test-plan path check, pre-existing across all stories, not DEV-150-specific. Next: `/agtoosa-review`. | AgToosa |
 | 2026-08-24 05:00 | 📋 /agtoosa-task — DEV-154 added to Backlog — Chore: Fix PR Hygiene Checks Stale Label-Event Gate. `require-labels` (`.github/workflows/branch-protection.yml`) reads `github.event.pull_request.labels` from the triggering event payload; since the workflow only listens to `pull_request` (not `labeled`), a rerun after adding labels post-open replays the stale (often empty) snapshot until a new push. *Discovered during `/agtoosa-build` on DEV-150 on 2026-08-24.* Candidate fix already prototyped on a separate local branch. | AgToosa |
