@@ -3752,6 +3752,25 @@ PY
   grep -q 'LR-006' "$tp"
 }
 
+# ── Repo Consistency: Master-Plan spec-approval status parity (SAP-001) ─────
+
+@test "SAP-001: Active Cycle 'Spec Approved' status agrees with the spec file's approval marker" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  local archived="$BATS_TEST_DIRNAME/../docs/archived"
+  local active id spec
+
+  active="$(awk '/^## Active Cycle/{flag=1; next} /^## Active Tasks/{flag=0} flag' "$mp")"
+
+  while IFS= read -r id; do
+    [[ -z "$id" ]] && continue
+    spec="$archived/spec-${id}.md"
+    [ -f "$spec" ] || continue
+    if echo "$active" | grep -E "^\| ${id} \|" | grep -q 'Spec Approved'; then
+      grep -qE '^## ✅ Spec Approved|^## Spec Approved' "$spec"
+    fi
+  done <<< "$(echo "$active" | grep -oE 'DEV-[0-9]+' | sort -u)"
+}
+
 # -- DEV-035 Launch P0 publication and quickstart gate (LG-001-LG-006) --------
 
 @test "DEV-035 LG-001: README labels public launch commands truthfully" {
