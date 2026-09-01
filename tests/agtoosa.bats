@@ -7256,9 +7256,10 @@ JSON
 
 @test "DEV-074 SR-003: Master-Plan records v0.3.2 ship and next patch milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v0.3.2' "$mp"
-  grep -q 'Release 0.3.2 shipped' "$mp"
-  grep -q 'Milestone v0.3.3 (next)' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — v0.3.2' "$mp" || grep -q 'Ship complete — v0.3.2' "$log"
+  grep -q 'Release 0.3.2 shipped' "$mp" || grep -q 'Release 0.3.2 shipped' "$log"
+  grep -q 'Milestone v0.3.3 (next)' "$mp" || grep -q 'Milestone v0.3.3 (next)' "$log"
 }
 
 # -- DEV-047/048 ship regression (SR-001–SR-003) --------------------------------
@@ -7282,11 +7283,12 @@ JSON
 
 @test "DEV-047 SR-003: Master-Plan records v0.3.3 ship and next patch milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v0.3.3' "$mp"
-  grep -q 'Release 0.3.3 shipped' "$mp"
-  grep -q 'Milestone v0.3.4 (next)' "$mp"
-  grep -q '| DEV-047 | Feature: Async Agent Handoff Packs | 2026-07-08 |' "$mp"
-  grep -q '| DEV-048 | Feature: Agent Result Import Gate | 2026-07-08 |' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — v0.3.3' "$mp" || grep -q 'Ship complete — v0.3.3' "$log"
+  grep -q 'Release 0.3.3 shipped' "$mp" || grep -q 'Release 0.3.3 shipped' "$log"
+  grep -q 'Milestone v0.3.4 (next)' "$mp" || grep -q 'Milestone v0.3.4 (next)' "$log"
+  grep -q '| DEV-047 | Feature: Async Agent Handoff Packs | 2026-07-08 |' "$mp" || grep -q '| DEV-047 | Feature: Async Agent Handoff Packs | 2026-07-08 |' "$log"
+  grep -q '| DEV-048 | Feature: Agent Result Import Gate | 2026-07-08 |' "$mp" || grep -q '| DEV-048 | Feature: Agent Result Import Gate | 2026-07-08 |' "$log"
 }
 
 # -- DEV-049 ship regression (SR-001–SR-003) --------------------------------
@@ -7318,10 +7320,11 @@ JSON
 
 @test "DEV-049 SR-003: Master-Plan records v0.3.4 ship and next patch milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v0.3.4' "$mp"
-  grep -q 'Release 0.3.4 shipped' "$mp"
-  grep -q 'v0.3.5 (next)' "$mp"
-  grep -q '| DEV-049 | Feature: Evidence Ledger | 2026-07-08 |' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — v0.3.4' "$mp" || grep -q 'Ship complete — v0.3.4' "$log"
+  grep -q 'Release 0.3.4 shipped' "$mp" || grep -q 'Release 0.3.4 shipped' "$log"
+  grep -q 'v0.3.5 (next)' "$mp" || grep -q 'v0.3.5 (next)' "$log"
+  grep -q '| DEV-049 | Feature: Evidence Ledger | 2026-07-08 |' "$mp" || grep -q '| DEV-049 | Feature: Evidence Ledger | 2026-07-08 |' "$log"
 }
 
 # -- DEV-054 ship regression (SR-001–SR-003) --------------------------------
@@ -7353,10 +7356,11 @@ JSON
 
 @test "DEV-054 SR-003: Master-Plan records v0.3.5 ship and next patch milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v0.3.5' "$mp"
-  grep -q 'Release 0.3.5 shipped' "$mp"
-  grep -q 'v0.3.6 (next)' "$mp"
-  grep -q '| DEV-054 | Feature: Signed Registry Provenance | 2026-07-08 |' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — v0.3.5' "$mp" || grep -q 'Ship complete — v0.3.5' "$log"
+  grep -q 'Release 0.3.5 shipped' "$mp" || grep -q 'Release 0.3.5 shipped' "$log"
+  grep -q 'v0.3.6 (next)' "$mp" || grep -q 'v0.3.6 (next)' "$log"
+  grep -q '| DEV-054 | Feature: Signed Registry Provenance | 2026-07-08 |' "$mp" || grep -q '| DEV-054 | Feature: Signed Registry Provenance | 2026-07-08 |' "$log"
 }
 
 # -- DEV-050 ship regression (SR-001–SR-003) --------------------------------
@@ -7388,10 +7392,11 @@ JSON
 
 @test "DEV-050 SR-003: Master-Plan records v0.3.6 ship and next patch milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v0.3.6' "$mp"
-  grep -q 'Release 0.3.6 shipped' "$mp"
-  grep -q 'v0.3.7 (next)' "$mp"
-  grep -q '| DEV-050 | Feature: Cross-Model Review Gate | 2026-07-11 |' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — v0.3.6' "$mp" || grep -q 'Ship complete — v0.3.6' "$log"
+  grep -q 'Release 0.3.6 shipped' "$mp" || grep -q 'Release 0.3.6 shipped' "$log"
+  grep -q 'v0.3.7 (next)' "$mp" || grep -q 'v0.3.7 (next)' "$log"
+  grep -q '| DEV-050 | Feature: Cross-Model Review Gate | 2026-07-11 |' "$mp" || grep -q '| DEV-050 | Feature: Cross-Model Review Gate | 2026-07-11 |' "$log"
 }
 
 # -- DEV-055 ship regression (SR-001–SR-003) --------------------------------
@@ -7423,10 +7428,11 @@ JSON
 
 @test "DEV-055 SR-003: Master-Plan records v0.3.7 ship and next patch milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v0.3.7' "$mp"
-  grep -q 'Release 0.3.7 shipped' "$mp"
-  grep -q 'v0.3.8 (next)' "$mp"
-  grep -q '| DEV-055 | Feature: Agent Capability Matrix | 2026-07-11 |' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — v0.3.7' "$mp" || grep -q 'Ship complete — v0.3.7' "$log"
+  grep -q 'Release 0.3.7 shipped' "$mp" || grep -q 'Release 0.3.7 shipped' "$log"
+  grep -q 'v0.3.8 (next)' "$mp" || grep -q 'v0.3.8 (next)' "$log"
+  grep -q '| DEV-055 | Feature: Agent Capability Matrix | 2026-07-11 |' "$mp" || grep -q '| DEV-055 | Feature: Agent Capability Matrix | 2026-07-11 |' "$log"
 }
 
 # -- DEV-053 batched ship regression v0.3.8 (SR-001–SR-003) -------------------
@@ -7464,13 +7470,14 @@ JSON
 
 @test "DEV-053 SR-003: Master-Plan records v0.3.8 batched ship and next patch milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v0.3.8' "$mp"
-  grep -q 'Release 0.3.8 shipped' "$mp"
-  grep -q 'Milestone v0.3.9 (next)' "$mp"
-  grep -q '| DEV-075 | Docs: Subagent and Persona Guide Suite | 2026-07-11 |' "$mp"
-  grep -q '| DEV-053 | Feature: Extension and Preset Catalog | 2026-07-11 |' "$mp"
-  grep -q '| DEV-078 | Chore: First-15-Minutes Maintenance Gate | 2026-07-11 |' "$mp"
-  grep -q '| DEV-081 | Spike: Optional Local DX Add-on Validation | 2026-07-11 |' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — v0.3.8' "$mp" || grep -q 'Ship complete — v0.3.8' "$log"
+  grep -q 'Release 0.3.8 shipped' "$mp" || grep -q 'Release 0.3.8 shipped' "$log"
+  grep -q 'Milestone v0.3.9 (next)' "$mp" || grep -q 'Milestone v0.3.9 (next)' "$log"
+  grep -q '| DEV-075 | Docs: Subagent and Persona Guide Suite | 2026-07-11 |' "$mp" || grep -q '| DEV-075 | Docs: Subagent and Persona Guide Suite | 2026-07-11 |' "$log"
+  grep -q '| DEV-053 | Feature: Extension and Preset Catalog | 2026-07-11 |' "$mp" || grep -q '| DEV-053 | Feature: Extension and Preset Catalog | 2026-07-11 |' "$log"
+  grep -q '| DEV-078 | Chore: First-15-Minutes Maintenance Gate | 2026-07-11 |' "$mp" || grep -q '| DEV-078 | Chore: First-15-Minutes Maintenance Gate | 2026-07-11 |' "$log"
+  grep -q '| DEV-081 | Spike: Optional Local DX Add-on Validation | 2026-07-11 |' "$mp" || grep -q '| DEV-081 | Spike: Optional Local DX Add-on Validation | 2026-07-11 |' "$log"
 }
 
 
@@ -7502,8 +7509,9 @@ JSON
 
 @test "DEV-045 SR-003: Master-Plan records v0.3.9 ship" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v0.3.9' "$mp"
-  grep -q 'Release 0.3.9 shipped' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — v0.3.9' "$mp" || grep -q 'Ship complete — v0.3.9' "$log"
+  grep -q 'Release 0.3.9 shipped' "$mp" || grep -q 'Release 0.3.9 shipped' "$log"
 }
 
 # -- wave 2 ship regression v0.3.10 (SR-001–SR-003) ---------------------------
@@ -7537,11 +7545,12 @@ JSON
 
 @test "DEV-046 SR-003: Master-Plan records v0.3.10 ship and next patch milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v0.3.10' "$mp"
-  grep -q 'Release 0.3.10 shipped' "$mp"
-  grep -q 'v0.3.11 (next)' "$mp"
-  grep -q '| DEV-046 | Feature: Optional Worktree Isolation | 2026-07-11 |' "$mp"
-  grep -q '| DEV-059 | Feature: Governance Policy-as-Code | 2026-07-11 |' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — v0.3.10' "$mp" || grep -q 'Ship complete — v0.3.10' "$log"
+  grep -q 'Release 0.3.10 shipped' "$mp" || grep -q 'Release 0.3.10 shipped' "$log"
+  grep -q 'v0.3.11 (next)' "$mp" || grep -q 'v0.3.11 (next)' "$log"
+  grep -q '| DEV-046 | Feature: Optional Worktree Isolation | 2026-07-11 |' "$mp" || grep -q '| DEV-046 | Feature: Optional Worktree Isolation | 2026-07-11 |' "$log"
+  grep -q '| DEV-059 | Feature: Governance Policy-as-Code | 2026-07-11 |' "$mp" || grep -q '| DEV-059 | Feature: Governance Policy-as-Code | 2026-07-11 |' "$log"
 }
 
 
@@ -7576,9 +7585,10 @@ JSON
 
 @test "DEV-052 SR-003: Master-Plan records v0.3.11 ship and next patch milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v0.3.11' "$mp"
-  grep -q 'Release 0.3.11 shipped' "$mp"
-  grep -q 'v0.3.12 (next)' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — v0.3.11' "$mp" || grep -q 'Ship complete — v0.3.11' "$log"
+  grep -q 'Release 0.3.11 shipped' "$mp" || grep -q 'Release 0.3.11 shipped' "$log"
+  grep -q 'v0.3.12 (next)' "$mp" || grep -q 'v0.3.12 (next)' "$log"
 }
 
 
@@ -7610,10 +7620,11 @@ JSON
 
 @test "DEV-058 SR-003: Master-Plan records v0.3.12 ship and next patch milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v0.3.12' "$mp"
-  grep -q 'Release 0.3.12 shipped' "$mp"
-  grep -q 'v0.3.13 (next)' "$mp"
-  grep -q '| DEV-058 | Feature: Local Dashboard | 2026-07-11 |' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — v0.3.12' "$mp" || grep -q 'Ship complete — v0.3.12' "$log"
+  grep -q 'Release 0.3.12 shipped' "$mp" || grep -q 'Release 0.3.12 shipped' "$log"
+  grep -q 'v0.3.13 (next)' "$mp" || grep -q 'v0.3.13 (next)' "$log"
+  grep -q '| DEV-058 | Feature: Local Dashboard | 2026-07-11 |' "$mp" || grep -q '| DEV-058 | Feature: Local Dashboard | 2026-07-11 |' "$log"
 }
 
 # -- post-v0.3.12 hygiene ship regression v0.3.13 (SR-001–SR-003) ---------------
@@ -7644,10 +7655,11 @@ JSON
 
 @test "DEV-085 SR-003: Master-Plan records v0.3.13 ship and v0.3.14 next milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v0.3.13' "$mp"
-  grep -q 'Release 0.3.13 shipped' "$mp"
-  grep -q 'v0.3.14 (next)' "$mp"
-  grep -q '| DEV-085 | Chore: Post-v0.3.12 release hygiene' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — v0.3.13' "$mp" || grep -q 'Ship complete — v0.3.13' "$log"
+  grep -q 'Release 0.3.13 shipped' "$mp" || grep -q 'Release 0.3.13 shipped' "$log"
+  grep -q 'v0.3.14 (next)' "$mp" || grep -q 'v0.3.14 (next)' "$log"
+  grep -q '| DEV-085 | Chore: Post-v0.3.12 release hygiene' "$mp" || grep -q '| DEV-085 | Chore: Post-v0.3.12 release hygiene' "$log"
 }
 
 # -- DEV-051 ship regression v0.3.14 (SR-001–SR-003) ----------------------------
@@ -7678,10 +7690,11 @@ JSON
 
 @test "DEV-051 SR-003: Master-Plan records v0.3.14 ship and v0.3.15 next milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v0.3.14' "$mp"
-  grep -q 'Release 0.3.14 shipped' "$mp"
-  grep -q 'v0.3.15 (next)' "$mp"
-  grep -q '| DEV-051 | Feature: Tracker Sync Bridge' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — v0.3.14' "$mp" || grep -q 'Ship complete — v0.3.14' "$log"
+  grep -q 'Release 0.3.14 shipped' "$mp" || grep -q 'Release 0.3.14 shipped' "$log"
+  grep -q 'v0.3.15 (next)' "$mp" || grep -q 'v0.3.15 (next)' "$log"
+  grep -q '| DEV-051 | Feature: Tracker Sync Bridge' "$mp" || grep -q '| DEV-051 | Feature: Tracker Sync Bridge' "$log"
 }
 
 # -- Wave 1b ship regression v0.3.15 (SR-001–SR-003) ----------------------------
@@ -7717,11 +7730,12 @@ JSON
 
 @test "DEV-087 SR-003: Master-Plan records v0.3.15 ship and v0.3.16 next milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v0.3.15' "$mp"
-  grep -q 'Release 0.3.15 shipped' "$mp"
-  grep -q 'v0.3.16 (next)' "$mp"
-  grep -q '| DEV-087 | Feature: Delivery Evidence Contract' "$mp"
-  grep -q '| DEV-088 | Feature: Verifier and Doctor Machine Output' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — v0.3.15' "$mp" || grep -q 'Ship complete — v0.3.15' "$log"
+  grep -q 'Release 0.3.15 shipped' "$mp" || grep -q 'Release 0.3.15 shipped' "$log"
+  grep -q 'v0.3.16 (next)' "$mp" || grep -q 'v0.3.16 (next)' "$log"
+  grep -q '| DEV-087 | Feature: Delivery Evidence Contract' "$mp" || grep -q '| DEV-087 | Feature: Delivery Evidence Contract' "$log"
+  grep -q '| DEV-088 | Feature: Verifier and Doctor Machine Output' "$mp" || grep -q '| DEV-088 | Feature: Verifier and Doctor Machine Output' "$log"
 }
 
 # -- Wave 2 ship regression v0.3.16 (SR-001–SR-003) ----------------------------
@@ -7762,12 +7776,13 @@ JSON
 
 @test "DEV-092 SR-003: Master-Plan records v0.3.16 ship and v0.3.17 next milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v0.3.16' "$mp"
-  grep -q 'Release 0.3.16 shipped' "$mp"
-  grep -q 'v0.3.17 (next)' "$mp"
-  grep -q '| DEV-092 | Chore: Transactional Apply' "$mp"
-  grep -q '| DEV-094 | Feature: Assistant Compatibility Contract' "$mp"
-  grep -q '| DEV-097 | Docs: Framework Supply-Chain Threat Model' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — v0.3.16' "$mp" || grep -q 'Ship complete — v0.3.16' "$log"
+  grep -q 'Release 0.3.16 shipped' "$mp" || grep -q 'Release 0.3.16 shipped' "$log"
+  grep -q 'v0.3.17 (next)' "$mp" || grep -q 'v0.3.17 (next)' "$log"
+  grep -q '| DEV-092 | Chore: Transactional Apply' "$mp" || grep -q '| DEV-092 | Chore: Transactional Apply' "$log"
+  grep -q '| DEV-094 | Feature: Assistant Compatibility Contract' "$mp" || grep -q '| DEV-094 | Feature: Assistant Compatibility Contract' "$log"
+  grep -q '| DEV-097 | Docs: Framework Supply-Chain Threat Model' "$mp" || grep -q '| DEV-097 | Docs: Framework Supply-Chain Threat Model' "$log"
 }
 
 # -- Wave 1a ship regression v0.3.17 (SR-001–SR-003) ----------------------------
@@ -7808,12 +7823,13 @@ JSON
 
 @test "DEV-086 SR-003: Master-Plan records v0.3.17 ship and v0.3.18 next milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v0.3.17' "$mp"
-  grep -q 'Release 0.3.17 shipped' "$mp"
-  grep -q 'v0.3.18 (next)' "$mp"
-  grep -q '| DEV-086 | Chore: Canonical Proof Product Experience' "$mp"
-  grep -q '| DEV-090 | Feature: Unified Install/Update Plan Engine' "$mp"
-  grep -q '| DEV-105 | Feature: PowerShell Maintain + Update Parity' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — v0.3.17' "$mp" || grep -q 'Ship complete — v0.3.17' "$log"
+  grep -q 'Release 0.3.17 shipped' "$mp" || grep -q 'Release 0.3.17 shipped' "$log"
+  grep -q 'v0.3.18 (next)' "$mp" || grep -q 'v0.3.18 (next)' "$log"
+  grep -q '| DEV-086 | Chore: Canonical Proof Product Experience' "$mp" || grep -q '| DEV-086 | Chore: Canonical Proof Product Experience' "$log"
+  grep -q '| DEV-090 | Feature: Unified Install/Update Plan Engine' "$mp" || grep -q '| DEV-090 | Feature: Unified Install/Update Plan Engine' "$log"
+  grep -q '| DEV-105 | Feature: PowerShell Maintain + Update Parity' "$mp" || grep -q '| DEV-105 | Feature: PowerShell Maintain + Update Parity' "$log"
 }
 
 # -- Wave 1b/2 remainder ship regression v0.3.18 (SR-001–SR-003) ---------------
@@ -7846,13 +7862,14 @@ JSON
 
 @test "DEV-089 SR-003: Master-Plan records v0.3.18 ship and v0.3.20 milestone progression" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v0.3.18' "$mp"
-  grep -q 'Release 0.3.18 shipped' "$mp"
-  grep -q 'Release 0.3.20 shipped' "$mp"
-  grep -q '| DEV-089 | Feature: Evidence-Profile Verifier Gates' "$mp"
-  grep -q '| DEV-091 | Feature: Migration Wizard' "$mp"
-  grep -q '| DEV-093 | Feature: Install State File' "$mp"
-  grep -q '| DEV-100 | Feature: Shared JSON Output' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — v0.3.18' "$mp" || grep -q 'Ship complete — v0.3.18' "$log"
+  grep -q 'Release 0.3.18 shipped' "$mp" || grep -q 'Release 0.3.18 shipped' "$log"
+  grep -q 'Release 0.3.20 shipped' "$mp" || grep -q 'Release 0.3.20 shipped' "$log"
+  grep -q '| DEV-089 | Feature: Evidence-Profile Verifier Gates' "$mp" || grep -q '| DEV-089 | Feature: Evidence-Profile Verifier Gates' "$log"
+  grep -q '| DEV-091 | Feature: Migration Wizard' "$mp" || grep -q '| DEV-091 | Feature: Migration Wizard' "$log"
+  grep -q '| DEV-093 | Feature: Install State File' "$mp" || grep -q '| DEV-093 | Feature: Install State File' "$log"
+  grep -q '| DEV-100 | Feature: Shared JSON Output' "$mp" || grep -q '| DEV-100 | Feature: Shared JSON Output' "$log"
 }
 
 # ── DEV-081: Optional Local DX Add-on Validation (DXV-001–DXV-008) ───────────
@@ -13159,11 +13176,12 @@ PY
 
 @test "DEV-096 SR-003: Master-Plan records v0.3.26 ship and v0.3.27 next milestone" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q 'Ship complete — v0.3.26' "$mp"
-  grep -q 'Release 0.3.26 shipped' "$mp"
-  grep -q 'v0.3.27 (next)' "$mp"
-  grep -q 'DEV-113' "$mp"
-  grep -q 'Shipped — v0.3.26' "$mp"
+  local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
+  grep -q 'Ship complete — v0.3.26' "$mp" || grep -q 'Ship complete — v0.3.26' "$log"
+  grep -q 'Release 0.3.26 shipped' "$mp" || grep -q 'Release 0.3.26 shipped' "$log"
+  grep -q 'v0.3.27 (next)' "$mp" || grep -q 'v0.3.27 (next)' "$log"
+  grep -q 'DEV-113' "$mp" || grep -q 'DEV-113' "$log"
+  grep -q 'Shipped — v0.3.26' "$mp" || grep -q 'Shipped — v0.3.26' "$log"
 }
 
 # ── DEV-109: Lifecycle Next-Step Sync + Multi-Spec Clarity (LNS-001–LNS-010) ───
