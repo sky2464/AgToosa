@@ -28,3 +28,4 @@ No genuinely new gap was found this run, so no new issue was filed (searched tit
 
 - No new issues filed — #140, #141, #146, #148, #153 already cover every gap found today.
 - No fix PR opened — all identifiable gaps either already have a pending fix PR awaiting merge (#140→#143, #148→#151) or are explicitly out of this routine's automated-fix scope (#141, #146, #153 itself).
+- Pushing this report's branch surfaced **3 high-severity Dependabot alerts** on the default branch (up from the 1 high alert re-confirmed as recently as 2026-09-01, per #141). Commented on #141 with the updated count rather than filing a new issue, since the details still can't be read by any tool available to this routine.
