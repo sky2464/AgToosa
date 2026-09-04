@@ -229,7 +229,7 @@ Conflict playbook: _DEV-150 + DEV-151 active for v0.3.63; demand-gated DEV-057 d
 | DEV-149 | Fix: Issues-Sync Dry-Run README Corruption | Fix | S | DEV-139 / DEV-147 | P0 | 🏁 Shipped — v0.3.60 |
 | DEV-150 | Feature: Corporate Runtime Release Asset | Feature | M | DEV-001 / DEV-148 | P0 | 🟦 Todo — Spec Approved |
 | DEV-151 | Chore: Tracker Publish CI Automation | Chore | S | DEV-139 / DEV-147 | P1 | 🟦 Todo — Spec Approved |
-| DEV-154 | Chore: Fix PR Hygiene Checks Stale Label-Event Gate | Chore | S | DEV-004 | P2 | ⬜ Backlog |
+| DEV-154 | Chore: Fix PR Hygiene Checks Stale Label-Event Gate | Chore | S | DEV-004 | P2 | 🟨 In Review — PR open (closes #156), pending merge |
 | DEV-139 | Feature: GitHub Issues PM Bridge (Phased B) | Feature | L | DEV-051 / DEV-004 | P1 | 🏁 Shipped — v0.3.52 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v0.3.9 |
@@ -534,6 +534,7 @@ Conflict playbook: _DEV-150 + DEV-151 active for v0.3.63; demand-gated DEV-057 d
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-09-04 10:00 | 🔧 DEV-154 — `require-labels` (`.github/workflows/branch-protection.yml`) now re-fetches live PR labels via `gh pr view` with a bounded retry (was trusting the stale `pull_request` event-payload snapshot, which races `auto-label.yml` and fails almost every new PR). Bats: DEV-154 T-001–T-003. PR open, closes #156; pending human merge — do not mark this row shipped until then. | AgToosa |
 | 2026-08-24 23:50 | 🚀 Release v0.3.63 shipped — DEV-150 (Corporate Runtime Release Asset) merged via PR #128, plus a downgrade-guard fix (historical 5.x installs can now update into the renumbered 0.x line; UPG-012/013). Tagged and published via `release-advanced.yml`. | AgToosa |
 | 2026-08-24 05:10 | 🏁 /agtoosa-build — Build 🏁 Complete — DEV-150 — 5/5 tasks, RTA-001–007 all green; STRIDE threat model added (verifier G3-threat-DEV-150 resolved); self-verify clean except systemic `Docs/` (capital-D) test-plan path check, pre-existing across all stories, not DEV-150-specific. Next: `/agtoosa-review`. | AgToosa |
 | 2026-08-24 05:00 | 📋 /agtoosa-task — DEV-154 added to Backlog — Chore: Fix PR Hygiene Checks Stale Label-Event Gate. `require-labels` (`.github/workflows/branch-protection.yml`) reads `github.event.pull_request.labels` from the triggering event payload; since the workflow only listens to `pull_request` (not `labeled`), a rerun after adding labels post-open replays the stale (often empty) snapshot until a new push. *Discovered during `/agtoosa-build` on DEV-150 on 2026-08-24.* Candidate fix already prototyped on a separate local branch. | AgToosa |

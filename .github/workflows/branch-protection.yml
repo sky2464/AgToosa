@@ -7,13 +7,26 @@ on:
 jobs:
   pr-hygiene:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
 
     steps:
       - name: Check PR has at least one label
         env:
-          PR_LABELS: ${{ toJson(github.event.pull_request.labels) }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          label_count=$(jq -r 'length' <<< "$PR_LABELS")
+          # auto-label.yml labels PRs asynchronously on the same 'opened'/'edited'
+          # event, so github.event.pull_request.labels is frequently a stale, empty
+          # snapshot taken before it runs (DEV-154 / #156). Poll the live PR state
+          # instead of trusting the triggering event payload.
+          label_count=0
+          for attempt in 1 2 3 4 5 6; do
+            label_count=$(gh pr view "$PR_NUMBER" --repo "$REPO" --json labels -q '.labels | length')
+            [ "$label_count" -gt 0 ] && break
+            sleep 5
+          done
           if [ "$label_count" -eq 0 ]; then
             echo "❌ PR must have at least one label (bug, enhancement, documentation, chore)"
             exit 1
