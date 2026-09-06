@@ -7,6 +7,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+### Fixed
+
+- **ShellCheck Security Scan false positives in `lib/tracker-discover.sh` (#160).** `_resolve_discovery_input`, `tracker_discover`, and `tracker_status_check` each declared a `local items` holding a jq JSON string, colliding by name with the real bash array `items` in `_discover_repo_plan_items` and tripping SC2178/SC2128 across the whole file. Renamed the JSON-string locals to `items_json` to remove the collision; the required weekly `ShellCheck Security Scan` job now passes. Bats: DEV-141 TBS-001–TBS-010, DEV-143 TUS-001–TUS-008 (all green, unchanged behavior).
+
 ## [0.3.63] — 2026-08-24
 
 Feature release: corporate/EDR runtime release asset, plus a version-scheme downgrade-guard fix.
