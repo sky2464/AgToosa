@@ -25,6 +25,12 @@ No genuinely new gap was found today beyond what #140/#141/#146/#148/#153/#156/#
 1. Marked PRs **#151, #158, #161 ready for review** (were drafts) — removes a hard GitHub-level merge blocker that existed independently of CI status. Left #153 a comment with this finding plus a recommended merge order, since it's new information not in that issue's original triage.
 2. Declined to open new fix PRs for #140, #141, or #146 (the three oldest open issues, per the routine's fallback-to-oldest-issues rule when no new issue is filed): #140 already has a correct, unmerged fix (#143) — a second PR would duplicate it; #141 has no available tooling to act on; #146 explicitly documents that a mechanical patch here would preempt the pending `docs/archived/spec-DEV-152.md` approval and is out of scope for this routine by its own prior analysis. Forcing a fix into any of the three would either duplicate existing work or contradict the spec-driven process this routine is supposed to protect.
 
+## Issues filed / PRs opened this run
+
+- Issues filed: none — all gaps found today are already tracked by #140, #141, #146, #148, #153, #156, #160.
+- PR opened: [#163](https://github.com/sky2464/AgToosa/pull/163) (this report, draft).
+- Other actions: marked #151/#158/#161 ready for review (were drafts); commented on [#153](https://github.com/sky2464/AgToosa/issues/153) with the draft-blocker finding and recommended merge order; commented on [#141](https://github.com/sky2464/AgToosa/issues/141) flagging a possible 1→5 high-severity Dependabot alert-count escalation seen in this run's `git push` output.
+
 ## 3 prioritized action items
 
 1. **(P1, process)** A human needs to actually merge the queue — starting with PR #143 (docs-only DEV-151 tracking backfill, zero code risk, closes #140) and PR #158 (fixes the `pr-hygiene` label race that's independently breaking #151/#161's checks, closes #156). Both are now out of draft. `validate`'s red is pre-existing baseline noise, not something either PR introduces.
