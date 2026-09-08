@@ -10,7 +10,7 @@ Items deferred from active plans. Each item has a source and a target milestone.
 
 - [x] **GitHub Release body** — GitHub Release for v3.1.0 created (already existed via tag push). Source: CEO review finding (announcement artifact missing).
 
-- [ ] **Migration wizard milestone** — commit to a v3.2.0 release date for the interactive migration wizard (ADR-004 item 5) that runs on `--update` when a MAJOR version delta is detected. **Target: v3.2.0 / 2026-07-01.** Source: CEO review finding.
+- [x] **Migration wizard milestone** — shipped as DEV-091 (v0.3.18, 2026-07-12): `lib/migrate.sh` implements `is_major_migration()`, `compute_migration_plan()`, `emit_migration_plan_human()`, `confirm_major_migration()`, `run_major_migration()`, `write_rollback_manifest()`. See `docs/archived/spec-DEV-091.md`. Source: CEO review finding.
 
 - [x] **Markdown template injection threat model** — documented in `docs/security/template-injection-threat-model.md`. Attack surface, vectors, existing mitigations (SHA-256 + file-type allowlist), open gaps, and recommended mitigations catalogued. Priority: Low while pack count near zero; escalate before public registry launch. Source: CEO/security review.
 
@@ -27,7 +27,7 @@ Items deferred from active plans. Each item has a source and a target milestone.
 ## Open ADR Action Items (not blocking v3.1.0)
 
 - [x] **ADR-001 item 3**: Extension authoring guide — created `docs/extension-authoring-guide.md` with 6-step guide and OpenCode worked example (v3.1.0)
-- [ ] **ADR-001 item 4**: Evaluate manifest-driven platform approach when platform count reaches 8 — currently 7; trigger: 8th platform added
+- [ ] **ADR-001 item 4**: Evaluate manifest-driven platform approach when platform count reaches 8 — currently 7; trigger: 8th platform added (`codex` confirmed alias for `opencode` — not a distinct platform; `agtoosa.sh:658`)
 - [ ] **ADR-001 item 5**: Track Gemini CLI and Cursor hook API announcements — monitoring; no action until API ships
 - [ ] **ADR-002 item 5**: GitHub Action in `agtoosa-registry` to lint/validate pack manifests — deferred; trigger: first community pack PR submitted
 - [ ] **ADR-002 item 6**: GPG-signed registry index verification (v4) — deferred; SHA-256 pinning sufficient for now
@@ -36,5 +36,5 @@ Items deferred from active plans. Each item has a source and a target milestone.
 - [x] **ADR-003 item 5**: Master-Plan.md compaction strategy — Part 6 "Compact Master-Plan.md" added to `AgToosa_Ship.md` with cycle-archive protocol (v3.1.0)
 - [x] **ADR-003 item 6**: Parallel task distribution in Build phase for Claude Code — "Claude Code Parallel Pattern" subsection added to `AgToosa_Build.md` (v3.1.0)
 - [x] **ADR-003 item 7**: Sub-agent dependency DAG + auto-rollback — `## Future: Sub-Agent Dependency DAG (v4)` design stub added to ADR-003 (v3.1.0)
-- [ ] **ADR-004 item 5**: Interactive migration wizard for `--update` (MAJOR version delta) — **Target: v3.2.0 / 2026-07-01**
+- [x] **ADR-004 item 5**: Interactive migration wizard for `--update` (MAJOR version delta) — shipped DEV-091, v0.3.18
 - [ ] **ADR-004 item 8**: Automated CHANGELOG generation from conventional commits — Evaluated; defer to v4 (see Future/Backlog above)

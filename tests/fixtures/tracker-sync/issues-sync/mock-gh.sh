@@ -29,7 +29,7 @@ if [[ "${1:-}" == "api" ]]; then
     _apply_jq '{"number": 7}' "$jq_filter"
     exit 0
   fi
-  _apply_jq '[]' "$jq_filter"
+  _apply_jq "${GH_MOCK_MILESTONES_JSON:-[]}" "$jq_filter"
   exit 0
 fi
 

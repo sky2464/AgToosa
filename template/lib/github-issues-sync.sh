@@ -39,7 +39,7 @@ github_issues_sync_apply() {
   milestone_title=$(jq -r '.milestone // empty' "$manifest")
   milestone_number=""
   if [[ -n "$milestone_title" && "$milestone_title" != "null" ]]; then
-    milestone_number=$(_github_issues_sync_gh api "repos/:owner/:repo/milestones" --jq ".[] | select(.title==\"$milestone_title\") | .number" 2>/dev/null | head -n1 || true)
+    milestone_number=$(_github_issues_sync_gh api "repos/:owner/:repo/milestones" 2>/dev/null | jq -r --arg t "$milestone_title" '.[] | select(.title==$t) | .number' 2>/dev/null | head -n1 || true)
     if [[ -z "$milestone_number" ]]; then
       milestone_number=$(_github_issues_sync_gh api repos/:owner/:repo/milestones -f title="$milestone_title" -f state=open --jq .number)
     fi

@@ -9,6 +9,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ### Fixed
 
+- **PR hygiene label check raced `auto-label.yml` (DEV-154).** `require-labels` now re-fetches the PR's current labels from the GitHub API with a bounded retry instead of trusting the `pull_request` event's label snapshot, which was almost always empty at check time since `auto-label.yml` applies labels moments later on the same event. Bats: DEV-154 T-001–T-003. Closes #156.
+- **ShellCheck Security Scan false positives in `lib/tracker-discover.sh` (#160).** `_resolve_discovery_input`, `tracker_discover`, and `tracker_status_check` each declared a `local items` holding a jq JSON string, colliding by name with the real bash array `items` in `_discover_repo_plan_items` and tripping SC2178/SC2128 across the whole file. Renamed the JSON-string locals to `items_json` to remove the collision; the required weekly `ShellCheck Security Scan` job now passes. Bats: DEV-141 TBS-001–TBS-010, DEV-143 TUS-001–TUS-008 (all green, unchanged behavior).
 - **No fallback guidance when a native `/agtoosa-*` command isn't recognized (DEV-155).** A user hitting `/agtoosa-init` in a Claude surface that doesn't load the CLI's `.claude/commands/` picker (e.g. a web or non-interactive session) had no path forward, even though the underlying `Docs/AgToosa_Init.md` workflow is plain-language and has no CLI dependency. Every platform entry point (`CLAUDE.md`, `.cursorrules`, `.windsurfrules`, `AGENTS.md`, `OPENCODE.md`, `.github/copilot-instructions.md`) now documents a plain-language fallback, the generator's post-install "Next steps" output prints the same tip, and `Docs/AgToosa_Agent.md` → Project Intake Protocol codifies it centrally.
 
 ## [0.3.63] — 2026-08-24
@@ -18,6 +20,7 @@ Feature release: corporate/EDR runtime release asset, plus a version-scheme down
 ### Added
 
 - **Corporate runtime release asset (DEV-150).** Every release now publishes `agtoosa-runtime-vX.Y.Z.tar.gz` — just `agtoosa.sh`, `agtoosa.ps1`, `lib/`, and `template/` — as a materially smaller, corporate/EDR-friendly alternative to the full source archive; verify against the release `SHA256SUMS`, then extract and run directly (no bootstrap step, no in-memory script execution). Bats: RTA-001–RTA-007.
+- **Tracker Publish CI Automation (DEV-151).** `release-advanced.yml` gained a `sync-issues-post-ship` job so shipped story states reach GitHub Issues (and the README roadmap block) immediately after a release, instead of waiting for the next `Master-Plan.md`-touching push; a `bats -f "GIP-"` preflight guards the job before any live `gh` mutation, and a PR-only dry-run validate job is split from the push-triggered live-sync job. Bats: GIA-001–GIA-009 (GIA-009 added 2026-08-27 alongside the detached-HEAD checkout fix below).
 
 ### Fixed
 
