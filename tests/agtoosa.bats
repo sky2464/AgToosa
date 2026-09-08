@@ -3674,6 +3674,26 @@ PY
   ! echo "$active" | grep -q 'DEV-033'
   ! echo "$active" | grep -q 'DEV-031'
   ! echo "$active" | grep -q 'DEV-032'
+  ! echo "$active" | grep -q 'DEV-151'
+}
+
+@test "TRK-001: DEV-151 shipped disposition is recorded in Master-Plan, CHANGELOG, and events log" {
+  local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
+  local changelog="$BATS_TEST_DIRNAME/../CHANGELOG.md"
+  local events="$BATS_TEST_DIRNAME/../docs/agtoosa-events.jsonl"
+
+  # Moved to Completed This Cycle with a pointer row, not left dangling in Active Cycle.
+  local completed
+  completed="$(awk '/^## Completed This Cycle/{flag=1; next} /^## Update Log/{flag=0} flag' "$mp")"
+  echo "$completed" | grep -q 'DEV-151'
+  [ -f "$BATS_TEST_DIRNAME/../docs/archived/spec-DEV-151.md" ]
+  [ -f "$BATS_TEST_DIRNAME/../docs/archived/testplans/AgToosa_TestPlan-DEV-151.md" ]
+
+  # CHANGELOG documents the story, not just the bug fixes layered on top of it later.
+  grep -q 'DEV-151' "$changelog"
+
+  # Phase-event log has at least one DEV-151 row (ship or build), matching the DEV-150 precedent.
+  grep -q '"story":"DEV-151"' "$events"
 }
 
 @test "DEV-034 LR-002: DEV-033 shipped disposition is explicit" {
