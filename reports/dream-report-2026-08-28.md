@@ -26,3 +26,11 @@ All three are genuinely new (search for matching open issues returned zero resul
 1. **(P1, process-integrity)** Correct `docs/Master-Plan.md:27-28` to stop claiming DEV-152/DEV-153 are "Spec Approved" when the spec files themselves are only at "Ready for Approval." Do not add the `## ✅ Spec Approved` marker via automation — `docs/SPEC-FORMAT.md` reserves that for `/agtoosa-spec` after human review.
 2. **(P2, tracking drift)** Move DEV-151 from Active Cycle to Completed This Cycle in `docs/Master-Plan.md`, update the Project Charter header/Current phase, add a CHANGELOG.md `[0.3.63]` bullet, and append the missing `build`/`ship` rows to `docs/agtoosa-events.jsonl`.
 3. **(P3, security visibility)** File a tracking issue for the open high-severity Dependabot alert so a human triages it in the Security tab, instead of it only living inside report prose.
+
+## Issues filed / PRs opened
+
+- **#139** — Master-Plan.md claims DEV-152/DEV-153 are "Spec Approved" but neither spec has the marker → **PR #142** (draft, branch `fix/139-spec-approval-status`): corrects the two status cells to "Spec Ready for Approval (human review pending)" without self-approving the specs, adds `SAP-001` bats coverage (verified against pre-/post-fix content via `git stash`, bats itself unavailable in this environment).
+- **#140** — DEV-151 shipped to `main` (PR #129) but Master-Plan/CHANGELOG/events.jsonl tracking was never closed out → **PR #143** (draft, branch `fix/140-dev151-tracking`): moves DEV-151 to Completed This Cycle, updates the Project Charter header, adds a CHANGELOG bullet, backfills an `agtoosa-events.jsonl` ship row, extends `DEV-034 LR-001` and adds `TRK-001` bats coverage. `bash docs/agtoosa-verify.sh` fail count dropped 5 → 4 with this fix applied.
+- **#141** — open high-severity Dependabot alert (`security/dependabot/4`) never tracked as an issue → filed with the `security` label, no PR: this needs a human to open the Security tab and triage the actual advisory, which no tool available to this routine can read. Left open for manual follow-up, consistent with the guardrail against acting on unverified security specifics.
+
+Both PRs #142 and #143 are draft, left open for human review per the routine's guardrails (no self-merge, no self-approval of specs).
