@@ -7,6 +7,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+### Fixed
+
+- **PR hygiene label check raced `auto-label.yml` (DEV-154).** `require-labels` now re-fetches the PR's current labels from the GitHub API with a bounded retry instead of trusting the `pull_request` event's label snapshot, which was almost always empty at check time since `auto-label.yml` applies labels moments later on the same event. Bats: DEV-154 T-001–T-003. Closes #156.
+
 ## [0.3.63] — 2026-08-24
 
 Feature release: corporate/EDR runtime release asset, plus a version-scheme downgrade-guard fix.

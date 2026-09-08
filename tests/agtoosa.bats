@@ -3396,9 +3396,29 @@ PY
 @test "DEV-029 T-005: require-labels still fails when PR has no labels" {
   local f="$BATS_TEST_DIRNAME/../.github/workflows/branch-protection.yml"
   grep -q 'Check PR has at least one label' "$f"
-  grep -q 'pull_request.labels' "$f"
   grep -q 'label_count' "$f"
   grep -q 'PR must have at least one label' "$f"
+}
+
+# ── DEV-154 require-labels re-fetches live PR state instead of the stale event
+#    payload snapshot (T-001–T-003) ─────────────────────────────────────────
+
+@test "DEV-154 T-001: require-labels no longer trusts the triggering event's label snapshot" {
+  local f="$BATS_TEST_DIRNAME/../.github/workflows/branch-protection.yml"
+  ! grep -q 'toJson(github.event.pull_request.labels)' "$f"
+}
+
+@test "DEV-154 T-002: require-labels re-fetches labels from the GitHub API by PR number" {
+  local f="$BATS_TEST_DIRNAME/../.github/workflows/branch-protection.yml"
+  grep -q 'gh pr view' "$f"
+  grep -q '\-\-json labels' "$f"
+  grep -q 'GH_TOKEN' "$f"
+}
+
+@test "DEV-154 T-003: require-labels retries so a slower auto-label.yml run still counts" {
+  local f="$BATS_TEST_DIRNAME/../.github/workflows/branch-protection.yml"
+  grep -qE 'for attempt in' "$f"
+  grep -q 'sleep' "$f"
 }
 
 # ── DEV-031 project-specific specialist subagents (T-001–T-015) ─────────────
