@@ -133,7 +133,7 @@ _discover_repo_plan_items() {
 
 _resolve_discovery_input() {
   local input_json="$1"
-  local schema discovery items='[]'
+  local schema discovery items_json='[]'
   schema=$(echo "$input_json" | jq -r '.schema_version // empty')
   case "$schema" in
     "$TRACKER_DISCOVERY_VERSION")
@@ -142,36 +142,36 @@ _resolve_discovery_input() {
       ;;
     "$TRACKER_BOOTSTRAP_INPUT_VERSION")
       discovery=$(echo "$input_json" | jq -c '.discovery')
-      items=$(echo "$discovery" | jq -c '.items // []')
+      items_json=$(echo "$discovery" | jq -c '.items // []')
       if echo "$input_json" | jq -e '.github_issues_fetch' >/dev/null 2>&1; then
         local gh_items
         gh_items=$(github_issues_items_from_fetch "$(echo "$input_json" | jq -c '.github_issues_fetch')") || return 1
-        items=$(discovery_merge_items "$items" "$gh_items")
+        items_json=$(discovery_merge_items "$items_json" "$gh_items")
       fi
       if echo "$input_json" | jq -e '.linear_fetch' >/dev/null 2>&1; then
         local lin_items
         lin_items=$(linear_items_from_fetch "$(echo "$input_json" | jq -c '.linear_fetch')") || return 1
-        items=$(discovery_merge_items "$items" "$lin_items")
+        items_json=$(discovery_merge_items "$items_json" "$lin_items")
       fi
-      echo "$discovery" | jq --argjson items "$items" '.items = $items'
+      echo "$discovery" | jq --argjson items "$items_json" '.items = $items'
       return 0
       ;;
     "$GH_ISSUES_FETCH_VERSION")
-      items=$(github_issues_items_from_fetch "$input_json") || return 1
+      items_json=$(github_issues_items_from_fetch "$input_json") || return 1
       jq -nc \
         --arg schema_version "$TRACKER_DISCOVERY_VERSION" \
         --arg discovered_at "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
-        --argjson items "$items" \
+        --argjson items "$items_json" \
         '{schema_version: $schema_version, discovered_at: $discovered_at, signals: [], items: $items}'
       return 0
       ;;
     *)
       if echo "$input_json" | jq -e 'type == "array"' >/dev/null 2>&1; then
-        items=$(github_issues_items_from_fetch "$input_json") || return 1
+        items_json=$(github_issues_items_from_fetch "$input_json") || return 1
         jq -nc \
           --arg schema_version "$TRACKER_DISCOVERY_VERSION" \
           --arg discovered_at "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
-          --argjson items "$items" \
+          --argjson items "$items_json" \
           '{schema_version: $schema_version, discovered_at: $discovered_at, signals: [], items: $items}'
         return 0
       fi
@@ -185,9 +185,9 @@ tracker_discover() {
   local project_path="$1" output_path="$2" merge_input="${3:-}"
   _tracker_require_jq || return 1
 
-  local signals items='[]' discovered_at repo_path
+  local signals items_json='[]' discovered_at repo_path
   signals=$(_discover_scan_signals "$project_path")
-  items=$(_discover_repo_plan_items "$project_path")
+  items_json=$(_discover_repo_plan_items "$project_path")
   discovered_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || date -u +"%Y-%m-%dT%H:%M:%SZ")
   repo_path="$project_path"
 
@@ -197,12 +197,12 @@ tracker_discover() {
     merge_schema=$(echo "$merge_json" | jq -r '.schema_version // empty')
     if [[ "$merge_schema" == "$GH_ISSUES_FETCH_VERSION" ]] || echo "$merge_json" | jq -e 'type == "array"' >/dev/null 2>&1; then
       gh_items=$(github_issues_items_from_fetch "$merge_json") || return 1
-      items=$(discovery_merge_items "$items" "$gh_items")
+      items_json=$(discovery_merge_items "$items_json" "$gh_items")
       repo=$(echo "$merge_json" | jq -r '.repository // empty')
       [[ -n "$repo" ]] && repo_path="$repo"
     elif [[ "$merge_schema" == "$LINEAR_FETCH_VERSION" ]]; then
       lin_items=$(linear_items_from_fetch "$merge_json") || return 1
-      items=$(discovery_merge_items "$items" "$lin_items")
+      items_json=$(discovery_merge_items "$items_json" "$lin_items")
     else
       echo "Error: --input for discover must be github-issues-fetch or linear-fetch envelope." >&2
       return 1
@@ -210,7 +210,7 @@ tracker_discover() {
   fi
 
   local count
-  count=$(echo "$items" | jq 'length')
+  count=$(echo "$items_json" | jq 'length')
   if [[ "$count" -gt $TRACKER_MAX_DISCOVERY_ITEMS ]]; then
     echo "Error: discovery items exceed bound (${TRACKER_MAX_DISCOVERY_ITEMS})." >&2
     return 1
@@ -222,7 +222,7 @@ tracker_discover() {
     --arg discovered_at "$discovered_at" \
     --arg repository "$repo_path" \
     --argjson signals "$signals" \
-    --argjson items "$items" \
+    --argjson items "$items_json" \
     '{
       schema_version: $schema_version,
       discovered_at: $discovered_at,
@@ -726,14 +726,14 @@ tracker_status_check() {
   local mp
   mp=$(_tracker_find_master_plan "$project_path") || return 1
 
-  local signals items='[]' merged_inputs='["local"]'
+  local signals items_json='[]' merged_inputs='["local"]'
   local gh_cache="${project_path}/${TRACKER_CACHE_GH_REL}"
   local lin_cache="${project_path}/${TRACKER_CACHE_LINEAR_REL}"
   local has_tracker_signals=0
   local generated_at project_resolved
 
   signals=$(_discover_scan_signals "$project_path")
-  items=$(_discover_repo_plan_items "$project_path")
+  items_json=$(_discover_repo_plan_items "$project_path")
   generated_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || date -u +"%Y-%m-%dT%H:%M:%SZ")
   project_resolved=$(_tracker_resolve_path "$project_path")
 
@@ -745,7 +745,7 @@ tracker_status_check() {
     local merge_json gh_items
     merge_json=$(_tracker_load_bounded_json "$gh_cache") || return 1
     gh_items=$(github_issues_items_from_fetch "$merge_json") || return 1
-    items=$(discovery_merge_items "$items" "$gh_items")
+    items_json=$(discovery_merge_items "$items_json" "$gh_items")
     merged_inputs=$(echo "$merged_inputs" | jq -c --arg p "$TRACKER_CACHE_GH_REL" '. + [$p]')
     has_tracker_signals=1
   fi
@@ -754,13 +754,13 @@ tracker_status_check() {
     local merge_json lin_items
     merge_json=$(_tracker_load_bounded_json "$lin_cache") || return 1
     lin_items=$(linear_items_from_fetch "$merge_json") || return 1
-    items=$(discovery_merge_items "$items" "$lin_items")
+    items_json=$(discovery_merge_items "$items_json" "$lin_items")
     merged_inputs=$(echo "$merged_inputs" | jq -c --arg p "$TRACKER_CACHE_LINEAR_REL" '. + [$p]')
     has_tracker_signals=1
   fi
 
   local item_count
-  item_count=$(echo "$items" | jq 'length')
+  item_count=$(echo "$items_json" | jq 'length')
   if [[ "$item_count" -gt $TRACKER_MAX_DISCOVERY_ITEMS ]]; then
     echo "Error: status-check items exceed bound (${TRACKER_MAX_DISCOVERY_ITEMS})." >&2
     return 1
@@ -792,7 +792,7 @@ tracker_status_check() {
       unchanged) unchanged=$((unchanged + 1)) ;;
       *) unsupported=$((unsupported + 1)) ;;
     esac
-  done < <(echo "$items" | jq -c '.[]?')
+  done < <(echo "$items_json" | jq -c '.[]?')
 
   local unlinked_json='[]' sample_refs='[]' emit=0 severity="info"
   if [[ ${#unlinked_items[@]} -gt 0 ]]; then
