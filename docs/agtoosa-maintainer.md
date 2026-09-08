@@ -237,7 +237,7 @@ Slash-command behavior has two layers: context rules and discoverable native ent
 - Windsurf: `.windsurf/rules/` for context and `.windsurf/workflows/` for native workflow picker discoverability.
 - Codex/OpenCode/Other: `OPENCODE.md` plus `.codex/skills/` for Codex skill discoverability.
 
-If a platform truly lacks a per-command native format, document the fallback in its entry-point file rather than claiming native `/agtoosa-*` picker support.
+If a platform truly lacks a per-command native format, document the fallback in its entry-point file rather than claiming native `/agtoosa-*` picker support. First implemented example: the `## If a Command Isn't Recognized` section (see table below) — covers a native-format platform whose command picker isn't loaded in every session surface (e.g. a web or non-interactive Claude session vs. the CLI), not just platforms that lack a picker entirely.
 
 ## User-Facing Strings That Must Match Across Variants
 
@@ -248,6 +248,7 @@ These strings are part of the user-facing contract and must appear verbatim in e
 | `Next: /agtoosa-<command> — <rationale>` plus `SYNC:` pulse (see Lifecycle Next-Step Contract) (closure line) | `template/Docs/AgToosa_{Build,Task,Spec,Ship,Init}.md` Output section | All relevant command, rule, prompt, workflow, and skill adapters |
 | `Note: '<token>' is not a defined sub-command. Did you mean: plan, readiness, git, orphans? Falling back to full dashboard.` (status typo helper) | `template/Docs/AgToosa_Status.md` Part 5.6 | 5 status platform variants |
 | `Recommended Next Actions generation` heading + the Part 5.5 algorithm | `template/Docs/AgToosa_Status.md` Part 5.5 | Referenced (not duplicated) from each status variant |
+| `## If a Command Isn't Recognized` heading + "Native slash commands depend on this platform's command-picker being loaded..." (fallback-to-plain-language guidance) | `template/CLAUDE.md` | `template/.cursorrules`, `template/.windsurfrules`, `template/AGENTS.md`, `template/OPENCODE.md`, `template/.github/copilot-instructions.md`; semantic counterpart in `template/Docs/AgToosa_Agent.md` → Project Intake Protocol ("Native command unavailable" bullet) |
 
 Adding a new fix-command? It must emit the closure line on successful completion and be added to the table above.
 

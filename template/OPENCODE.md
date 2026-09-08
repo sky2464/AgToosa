@@ -30,6 +30,10 @@ For Codex, AgToosa installs `.codex/prompts/agtoosa-*.md` **slash prompts** so `
 
 See `Docs/AgToosa_Agent.md` for the full sub-command reference.
 
+## If a Command Isn't Recognized
+
+Native slash commands depend on this platform's command-picker being loaded (CLI or IDE session). If a command from the table above isn't recognized here, treat a plain-language request ("run agtoosa init", "do an agtoosa review") as equivalent — read the matching `Docs/AgToosa_*.md` file yourself and execute it. The dispatcher files above are a convenience, not a requirement.
+
 ## Key References
 
 - `Docs/Master-Plan.md` — Source of truth for project state and backlog

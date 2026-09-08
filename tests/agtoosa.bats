@@ -449,6 +449,30 @@ EOF
   [ "$status" -eq 0 ]
   [ -f "$TEST_PROJECT/.claude/skills/agtoosa-review.md" ]
 }
+@test "install prints a fallback tip for unrecognized /agtoosa-init" {
+  run bash -c "printf '$TEST_PROJECT\n3\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"isn't recognized"* ]]
+  [[ "$output" == *"Docs/AgToosa_Init.md"* ]]
+}
+@test "all platform entry points document the 'command not recognized' fallback" {
+  run bash -c "printf '$TEST_PROJECT\n8\nY\n' | bash '$SCRIPT'"
+  [ "$status" -eq 0 ]
+  run grep -q "If a Command Isn't Recognized" "$TEST_PROJECT/CLAUDE.md"
+  [ "$status" -eq 0 ]
+  run grep -q "If a Command Isn't Recognized" "$TEST_PROJECT/.cursorrules"
+  [ "$status" -eq 0 ]
+  run grep -q "If a Command Isn't Recognized" "$TEST_PROJECT/.windsurfrules"
+  [ "$status" -eq 0 ]
+  run grep -q "If a Command Isn't Recognized" "$TEST_PROJECT/AGENTS.md"
+  [ "$status" -eq 0 ]
+  run grep -q "If a Command Isn't Recognized" "$TEST_PROJECT/OPENCODE.md"
+  [ "$status" -eq 0 ]
+  run grep -q "If a Command Isn't Recognized" "$TEST_PROJECT/.github/copilot-instructions.md"
+  [ "$status" -eq 0 ]
+  run grep -q "Native command unavailable" "$TEST_PROJECT/Docs/AgToosa_Agent.md"
+  [ "$status" -eq 0 ]
+}
 @test "Cursor option installs .cursor/rules/ MDX files" {
   run bash -c "printf '$TEST_PROJECT\n1\nY\n' | bash '$SCRIPT'"
   [ "$status" -eq 0 ]

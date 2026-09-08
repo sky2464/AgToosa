@@ -652,6 +652,8 @@ install_files() {
     echo -e "     ${BOLD}/agtoosa-build${NC}   → TDD build and test"
     echo -e "     ${BOLD}/agtoosa-review${NC}  → Multi-persona code review"
     echo -e "     ${BOLD}/agtoosa-ship${NC}    → Deploy, archive, and suggest next"
+    echo ""
+    echo -e "  ${CYAN}Tip:${NC} If /agtoosa-init isn't recognized (e.g. a non-CLI or web session), just tell your assistant: \"read Docs/AgToosa_Init.md and run it\" — the /agtoosa-* files just dispatch to those docs."
   else
     echo -e "  ${CYAN}2.${NC} Run ${BOLD}/agtoosa-init${NC} to set up your project (one-time)"
     echo ""
@@ -660,6 +662,8 @@ install_files() {
     echo -e "     ${BOLD}/agtoosa-build${NC}   → TDD build and test"
     echo -e "     ${BOLD}/agtoosa-review${NC}  → Multi-persona code review"
     echo -e "     ${BOLD}/agtoosa-ship${NC}    → Deploy, archive, and suggest next"
+    echo ""
+    echo -e "  ${CYAN}Tip:${NC} If /agtoosa-init isn't recognized (e.g. a non-CLI or web session), just tell your assistant: \"read Docs/AgToosa_Init.md and run it\" — the /agtoosa-* files just dispatch to those docs."
   fi
   echo ""
 }
