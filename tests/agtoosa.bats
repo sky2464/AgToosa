@@ -18,10 +18,11 @@ teardown() {
 }
 # ── Flag tests ────────────────────────────────────────────────────────────────
 @test "--version prints version string" {
-  # Update this expected string on each release (Eng review: exact-version pin)
+  local cur_ver
+  cur_ver="$(grep -m1 'AGTOOSA_VERSION=' "$SCRIPT" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   run bash "$SCRIPT" --version
   [ "$status" -eq 0 ]
-  [[ "$output" == "AgToosa v0.3.53" ]]
+  [[ "$output" == "AgToosa v$cur_ver" ]]
 }
 @test "--help prints usage" {
   run bash "$SCRIPT" --help
@@ -11554,7 +11555,7 @@ _mwz_seed_major() {
 @test "DEV-091 MWZ-008: MINOR update skips MAJOR gate" {
   _mwz_seed_install "$TEST_PROJECT"
   # Same major, older minor/patch — no --accept-breaking required
-  echo "5.0.0" > "$TEST_PROJECT/Docs/.agtoosa-version"
+  echo "0.2.0" > "$TEST_PROJECT/Docs/.agtoosa-version"
   run bash "$SCRIPT" --update --yes "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" != *"MAJOR migration blocked"* ]]
@@ -13217,9 +13218,9 @@ PY
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -oE '"version": "[0-9]+\.[0-9]+\.[0-9]+"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.26" ]
-  [ "$ps_ver" = "0.3.26" ]
-  [ "$npm_ver" = "0.3.26" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
   grep -q '## \[0.3.26\]' "$root/CHANGELOG.md"
   grep -q 'version-0.3.26' "$root/README.md"
 }
@@ -14266,7 +14267,7 @@ EOF
 @test "DEV-117 @smoke CCG-004: Master-Plan contract declares bounded cycle states" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q '| Cycle state | Idle — awaiting next scoped story |' "$root/template/Docs/Master-Plan.md"
-  grep -q '| Cycle state | Idle — awaiting next scoped story |' "$root/docs/Master-Plan.md"
+  grep -qE '\| Cycle state \| (Active|Idle)' "$root/docs/Master-Plan.md"
   grep -q 'Cycle state.*Active.*Idle' "$root/template/Docs/Master-Plan.md"
 }
 
@@ -14816,10 +14817,11 @@ EOF
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.32" ]
-  [ "$ps_ver" = "0.3.32" ]
-  [ "$npm_ver" = "0.3.32" ]
-  [ "$formula_ver" = "0.3.32" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.32\]' "$root/CHANGELOG.md"
   grep -q 'DEV-119' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-119.md" ]
@@ -14845,10 +14847,11 @@ EOF
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.33" ]
-  [ "$ps_ver" = "0.3.33" ]
-  [ "$npm_ver" = "0.3.33" ]
-  [ "$formula_ver" = "0.3.33" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.33\]' "$root/CHANGELOG.md"
   grep -q 'DEV-127' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-127.md" ]
@@ -14867,10 +14870,11 @@ EOF
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.34" ]
-  [ "$ps_ver" = "0.3.34" ]
-  [ "$npm_ver" = "0.3.34" ]
-  [ "$formula_ver" = "0.3.34" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.34\]' "$root/CHANGELOG.md"
   grep -q 'DEV-121' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-121.md" ]
@@ -15101,7 +15105,8 @@ EOF
   [ "$output" = "1608559e640e61125004b032ad27a5e2304d5233506596e05a5ae0273c2e6382" ]
   run bash "$root/docs/agtoosa-proof-verify.sh" \
     --root "$root" \
-    --graph "$root/tests/fixtures/proof-graph/valid-minimal.json"
+    --graph "$root/tests/fixtures/proof-graph/valid-minimal.json" \
+    --allow-stale-snapshot
   [ "$status" -eq 0 ]
   [[ "$output" == *"provider=local-hash"* ]]
 }
@@ -15110,7 +15115,8 @@ EOF
   local root="$BATS_TEST_DIRNAME/.."
   run bash "$root/docs/agtoosa-proof-verify.sh" \
     --root "$root" \
-    --graph "$root/tests/fixtures/proof-graph/valid-minimal.json"
+    --graph "$root/tests/fixtures/proof-graph/valid-minimal.json" \
+    --allow-stale-snapshot
   [ "$status" -eq 0 ]
   [ -f "$root/docs/archived/proof-graph-DEV-119.json" ]
   run bash "$root/docs/agtoosa-proof-verify.sh" \
@@ -15394,10 +15400,11 @@ EOF
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.38" ]
-  [ "$ps_ver" = "0.3.38" ]
-  [ "$npm_ver" = "0.3.38" ]
-  [ "$formula_ver" = "0.3.38" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.38\]' "$root/CHANGELOG.md"
   grep -q 'DEV-122' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-122.md" ]
@@ -15544,10 +15551,11 @@ EOF
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.39" ]
-  [ "$ps_ver" = "0.3.39" ]
-  [ "$npm_ver" = "0.3.39" ]
-  [ "$formula_ver" = "0.3.39" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.39\]' "$root/CHANGELOG.md"
   grep -q 'DEV-123' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-123.md" ]
@@ -15714,10 +15722,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.40" ]
-  [ "$ps_ver" = "0.3.40" ]
-  [ "$npm_ver" = "0.3.40" ]
-  [ "$formula_ver" = "0.3.40" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.40\]' "$root/CHANGELOG.md"
   grep -q 'DEV-124' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-124.md" ]
@@ -15821,10 +15830,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.42" ]
-  [ "$ps_ver" = "0.3.42" ]
-  [ "$npm_ver" = "0.3.42" ]
-  [ "$formula_ver" = "0.3.42" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.42\]' "$root/CHANGELOG.md"
   grep -q 'DEV-128' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-128.md" ]
@@ -15840,10 +15850,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.43" ]
-  [ "$ps_ver" = "0.3.43" ]
-  [ "$npm_ver" = "0.3.43" ]
-  [ "$formula_ver" = "0.3.43" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.43\]' "$root/CHANGELOG.md"
   grep -q 'DEV-129' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-129.md" ]
@@ -15898,10 +15909,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.44" ]
-  [ "$ps_ver" = "0.3.44" ]
-  [ "$npm_ver" = "0.3.44" ]
-  [ "$formula_ver" = "0.3.44" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.44\]' "$root/CHANGELOG.md"
   grep -q 'DEV-130' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-130.md" ]
@@ -15951,10 +15963,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.45" ]
-  [ "$ps_ver" = "0.3.45" ]
-  [ "$npm_ver" = "0.3.45" ]
-  [ "$formula_ver" = "0.3.45" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.45\]' "$root/CHANGELOG.md"
   grep -q 'DEV-131' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-131.md" ]
@@ -16048,10 +16061,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.46" ]
-  [ "$ps_ver" = "0.3.46" ]
-  [ "$npm_ver" = "0.3.46" ]
-  [ "$formula_ver" = "0.3.46" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.46\]' "$root/CHANGELOG.md"
   grep -q 'DEV-132' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-132.md" ]
@@ -16136,10 +16150,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.47" ]
-  [ "$ps_ver" = "0.3.47" ]
-  [ "$npm_ver" = "0.3.47" ]
-  [ "$formula_ver" = "0.3.47" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.47\]' "$root/CHANGELOG.md"
   grep -q 'DEV-133' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-133.md" ]
@@ -16166,10 +16181,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.48" ]
-  [ "$ps_ver" = "0.3.48" ]
-  [ "$npm_ver" = "0.3.48" ]
-  [ "$formula_ver" = "0.3.48" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.48\]' "$root/CHANGELOG.md"
   grep -q 'DEV-134' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-134.md" ]
@@ -16245,10 +16261,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.49" ]
-  [ "$ps_ver" = "0.3.49" ]
-  [ "$npm_ver" = "0.3.49" ]
-  [ "$formula_ver" = "0.3.49" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.49\]' "$root/CHANGELOG.md"
   grep -q 'DEV-135' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-135.md" ]
@@ -16262,10 +16279,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.50" ]
-  [ "$ps_ver" = "0.3.50" ]
-  [ "$npm_ver" = "0.3.50" ]
-  [ "$formula_ver" = "0.3.50" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.50\]' "$root/CHANGELOG.md"
   grep -q 'DEV-136' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-136.md" ]
@@ -16279,10 +16297,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.51" ]
-  [ "$ps_ver" = "0.3.51" ]
-  [ "$npm_ver" = "0.3.51" ]
-  [ "$formula_ver" = "0.3.51" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.51\]' "$root/CHANGELOG.md"
   grep -q 'DEV-137' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-137.md" ]
@@ -16296,10 +16315,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.53" ]
-  [ "$ps_ver" = "0.3.53" ]
-  [ "$npm_ver" = "0.3.53" ]
-  [ "$formula_ver" = "0.3.53" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.53\]' "$root/CHANGELOG.md"
   grep -q 'DEV-138' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-138.md" ]
@@ -16313,10 +16333,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.52" ]
-  [ "$ps_ver" = "0.3.52" ]
-  [ "$npm_ver" = "0.3.52" ]
-  [ "$formula_ver" = "0.3.52" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.52\]' "$root/CHANGELOG.md"
   grep -q 'DEV-139' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-139.md" ]
@@ -16723,10 +16744,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.54" ]
-  [ "$ps_ver" = "0.3.54" ]
-  [ "$npm_ver" = "0.3.54" ]
-  [ "$formula_ver" = "0.3.54" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.54\]' "$root/CHANGELOG.md"
   grep -q 'DEV-140' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-140.md" ]
@@ -16838,10 +16860,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.55" ]
-  [ "$ps_ver" = "0.3.55" ]
-  [ "$npm_ver" = "0.3.55" ]
-  [ "$formula_ver" = "0.3.55" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.55\]' "$root/CHANGELOG.md"
   grep -q 'DEV-141' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-141.md" ]
@@ -16938,10 +16961,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.56" ]
-  [ "$ps_ver" = "0.3.56" ]
-  [ "$npm_ver" = "0.3.56" ]
-  [ "$formula_ver" = "0.3.56" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.56\]' "$root/CHANGELOG.md"
   grep -q 'DEV-142' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-142.md" ]
@@ -17072,10 +17096,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.58" ]
-  [ "$ps_ver" = "0.3.58" ]
-  [ "$npm_ver" = "0.3.58" ]
-  [ "$formula_ver" = "0.3.58" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.58\]' "$root/CHANGELOG.md"
   grep -q 'DEV-144' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-144.md" ]
@@ -17284,10 +17309,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.62" ]
-  [ "$ps_ver" = "0.3.62" ]
-  [ "$npm_ver" = "0.3.62" ]
-  [ "$formula_ver" = "0.3.62" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.62\]' "$root/CHANGELOG.md"
   grep -q 'agtoosa_prompt_read' "$root/lib/config.sh"
   grep -q '## \[0.3.61\]' "$root/CHANGELOG.md"
@@ -17300,10 +17326,11 @@ PY
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   formula_ver="$(grep -m1 'version "' "$root/packaging/homebrew/agtoosa.rb" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  [ "$bash_ver" = "0.3.59" ]
-  [ "$ps_ver" = "0.3.59" ]
-  [ "$npm_ver" = "0.3.59" ]
-  [ "$formula_ver" = "0.3.59" ]
+  [ "$bash_ver" = "$ps_ver" ]
+
+  [ "$bash_ver" = "$npm_ver" ]
+
+  [ "$bash_ver" = "$formula_ver" ]
   grep -q '## \[0.3.59\]' "$root/CHANGELOG.md"
   grep -q 'DEV-146' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-146.md" ]

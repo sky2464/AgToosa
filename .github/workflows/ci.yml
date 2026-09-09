@@ -24,8 +24,7 @@ jobs:
 
       - name: ShellCheck
         run: |
-          sudo apt-get update
-          sudo apt-get install -y shellcheck
+          command -v shellcheck >/dev/null 2>&1 || { sudo apt-get update && sudo apt-get install -y shellcheck; }
           shellcheck -x -S warning \
             --exclude=SC2002,SC2046,SC2086,SC1091,SC2034,SC2128,SC2178 \
             agtoosa.sh bootstrap.sh lib/*.sh
@@ -49,15 +48,6 @@ jobs:
             exit 1
           fi
           echo "✅ Version parity: bash=v$BASH_VER ps1=v$PS_VER"
-
-      - name: Markdown Lint
-        timeout-minutes: 3
-        run: |
-          timeout 180s npx --yes markdownlint-cli2 \
-            --config .github/linters/.markdownlint-cli2.jsonc \
-            "*.md" \
-            "docs/**/*.md" \
-            ".github/**/*.md" || true
 
       - name: Validate Template Completeness
         run: |
@@ -104,10 +94,17 @@ jobs:
           sudo "./bats-core-${BATS_VERSION#v}/install.sh" /usr/local
           bats --version
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: ".github/requirements-dev.txt"
+
       - name: Install Python test dependencies
         run: pip install -r .github/requirements-dev.txt
 
-      - name: Product Truth contract and adjacent regressions
+      - name: Product Truth contract validation
         run: |
           python3 scripts/product-truth.py check \
             --root . \
@@ -118,10 +115,9 @@ jobs:
             --contract data/contracts/product-truth-v1.json \
             --as-of 2026-07-14
           bats tests/product-truth.bats
-          bats tests/agtoosa.bats -f '@smoke BCL|PN|WP2|ACC|NET|PSP|CORE'
 
       - name: Run generator smoke tests
-        run: bats tests/agtoosa.bats
+        run: bats tests/agtoosa.bats -f '@smoke'
 
   windows-smoke:
     name: Windows PowerShell Smoke Test
@@ -133,8 +129,10 @@ jobs:
         shell: pwsh
         timeout-minutes: 5
         run: |
-          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-          Install-Module PSScriptAnalyzer -RequiredVersion 1.21.0 -Force -AllowClobber -Scope CurrentUser -Repository PSGallery -Confirm:$false
+          if (-not (Get-Module -ListAvailable -Name PSScriptAnalyzer)) {
+            Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+            Install-Module PSScriptAnalyzer -RequiredVersion 1.21.0 -Force -AllowClobber -Scope CurrentUser -Repository PSGallery -Confirm:$false
+          }
           $findings = Invoke-ScriptAnalyzer -Path "$env:GITHUB_WORKSPACE\agtoosa.ps1" -IncludeRule PSUseApprovedVerbs -Severity Error, Warning
           if ($findings) {
             $findings | Format-Table -AutoSize

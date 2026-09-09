@@ -285,7 +285,7 @@ Do **not** advance MINOR for every small story. Update Project Charter **Milesto
 
 ## Validation
 
-- Prefer `bats tests/agtoosa.bats` when generator behavior or template installation changes.
+- During development and PR iterations, run fast smoke validation: `bash scripts/test-fast.sh` or `bats tests/agtoosa.bats -f '@smoke'`, or targeted story coverage (`bats tests/agtoosa.bats -f 'DEV-XXX'`). Reserve full `bats tests/agtoosa.bats` (1,290+ tests) for pre-release validation.
 - Use narrow `bash agtoosa.sh --help`, `--version`, `--list-template-files`, or `--update` checks when they directly cover the touched surface.
 - After touching verifier or maintain helpers: `bash agtoosa.sh --verify .` and `bash docs/agtoosa-verify.sh --strict` on this repo. Use `--doctor` against a generated fixture (doctor checks `Docs/`, not maintainer `docs/`).
 - After changing `lib/maintain.sh` uninstall paths: run focused bats (`-f "DEV-073"` or `-f "UN"`) before the full suite.

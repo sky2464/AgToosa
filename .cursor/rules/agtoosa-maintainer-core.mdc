@@ -33,6 +33,9 @@ When the user omits `/agtoosa-*`, run **AgToosa Lifecycle Compass** per `docs/Ag
 
 Installed maintainer commands live in `.cursor/commands/agtoosa-*.md`. When the user types `/agtoosa-*`, execute the matching command file and `docs/AgToosa_*.md`. Do **not** route `/agtoosa-*` to `/create-skill` or generic skill flows.
 
+## Fast Test Execution
+- Run `bash scripts/test-fast.sh` or `bats tests/agtoosa.bats -f '@smoke'` or targeted story filters (`-f DEV-XXX`). Do not run the full 1,296-test bats suite in tight development loops.
+
 ## Key files (maintainer)
 
 - `docs/agtoosa-maintainer.md` — Maintainer entry guide

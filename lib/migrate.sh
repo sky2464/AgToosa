@@ -27,6 +27,15 @@ is_major_migration() {
   im="$(_migrate_major "$installed")"
   tm="$(_migrate_major "$target")"
   [[ -n "$im" && -n "$tm" ]] || return 1
+
+  # Historical version-scheme exception: historical 1.x-5.x < 0.x
+  if (( 10#$im >= 1 && 10#$im <= 5 )) && (( 10#$tm == 0 )); then
+    return 0
+  fi
+  if (( 10#$im == 0 )) && (( 10#$tm >= 1 && 10#$tm <= 5 )); then
+    return 1
+  fi
+
   (( 10#$im < 10#$tm ))
 }
 

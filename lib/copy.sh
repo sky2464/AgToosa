@@ -123,8 +123,8 @@ merge_platform_file() {
     local bak from_ver
     bak="$(backup_file "$dst")"
     BAK_FILES+=("$bak")
-    cp "$src" "$dst"
     from_ver="$(merge_display_from_version "$dst")"
+    cp "$src" "$dst"
     echo -e "  ${GREEN}✅${NC} ${label} ${CYAN}(merged: project v${from_ver} → v${AGTOOSA_VERSION}, backup: $(basename "$bak"))${NC}"
     if declare -F apply_note_merged >/dev/null 2>&1; then
       apply_note_merged

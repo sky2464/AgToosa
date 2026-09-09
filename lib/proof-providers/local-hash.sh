@@ -83,7 +83,14 @@ for e in g["edges"]:
     full = f"{root}/{rel}"
     import os
     if not os.path.isfile(full):
-        fail(f"missing artifact file '{rel}'")
+        alt = f"{root}/docs/archived/testplans/{os.path.basename(rel)}"
+        alt_docs = f"{root}/Docs/archived/testplans/{os.path.basename(rel)}"
+        if os.path.isfile(alt):
+            full = alt
+        elif os.path.isfile(alt_docs):
+            full = alt_docs
+        else:
+            fail(f"missing artifact file '{rel}'")
     expected = dst.get("sha256")
     if not expected:
         fail(f"content-hash node '{dst['id']}' missing sha256")

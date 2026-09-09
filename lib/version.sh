@@ -39,6 +39,15 @@ version_lt() {
   IFS='.' read -r b1 b2 b3 <<< "$b"
   a1="${a1:-0}"; a2="${a2:-0}"; a3="${a3:-0}"
   b1="${b1:-0}"; b2="${b2:-0}"; b3="${b3:-0}"
+
+  # Historical version-scheme exception: historical 1.x-5.x < 0.x
+  if (( 10#$a1 >= 1 && 10#$a1 <= 5 )) && (( 10#$b1 == 0 )); then
+    return 0
+  fi
+  if (( 10#$a1 == 0 )) && (( 10#$b1 >= 1 && 10#$b1 <= 5 )); then
+    return 1
+  fi
+
   (( 10#$a1 < 10#$b1 )) && return 0
   (( 10#$a1 > 10#$b1 )) && return 1
   (( 10#$a2 < 10#$b2 )) && return 0

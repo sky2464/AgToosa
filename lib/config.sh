@@ -43,8 +43,6 @@ DOCS_FILES=(
   "Docs/AgToosa_Import.md"
   "Docs/AgToosa_Worktree.md"
   "Docs/AgToosa_Evidence.md"
-  "Docs/AgToosa_Evidence_Provenance.md"
-  "Docs/agtoosa-proof-verify.sh"
   "Docs/AgToosa_Delivery_Evidence_Contract.md"
   "Docs/agtoosa-evidence-profile-check.sh"
   "Docs/agtoosa-evidence.jsonl"

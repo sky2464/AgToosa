@@ -6,6 +6,14 @@
 #               AGTOOSA_VERSION, BAK_FILES, colors.
 # Globals modified: COPIED, SKIPPED, EXISTING_FILES, KEEP_SHIP.
 
+if ! declare -F apply_verbose_echo >/dev/null 2>&1; then
+  apply_verbose_echo() {
+    if [[ "${APPLY_QUIET:-false}" != true ]]; then
+      echo -e "$@"
+    fi
+  }
+fi
+
 # Destinations a pack must never write to: executable-hook and CI surfaces.
 # Canonical definition (lib/registry.sh defines a guarded copy for standalone use).
 PACK_DENYLIST_PATTERNS=(
