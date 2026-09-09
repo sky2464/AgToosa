@@ -31,3 +31,26 @@ updates:
       - "dependencies"
     commit-message:
       prefix: "chore(deps):"
+
+  # Media project dependencies (Remotion)
+  - package-ecosystem: "npm"
+    directory: "/docs/media/agtoosa-hero"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+    open-pull-requests-limit: 5
+    groups:
+      npm_and_yarn:
+        patterns:
+          - "*"
+    reviewers:
+      - "sky2464"
+    labels:
+      - "dependencies"
+      - "chore"
+    commit-message:
+      prefix: "chore(deps):"
+      prefix-development: "chore(deps):"
+      include: "scope"
+
