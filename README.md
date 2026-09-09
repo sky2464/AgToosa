@@ -83,12 +83,15 @@ Follow one path to see AgToosa value: install → open the [proof repository](ht
 
 [Start the first 15 minutes proof walkthrough](docs/examples/first-15-minutes.md) · [public launch proof](docs/examples/public-launch-proof.md)
 
+**Public launch status:** AgToosa is public — bootstrap, releases, registry, and the [proof repository](https://github.com/sky2464/agtoosa-first-15-proof) are anonymously accessible.
+
 | Topic | Link |
 |-------|------|
 | Install matrix, `/agtoosa-next` driver, troubleshooting | [README reference](docs/guides/readme-reference.md) |
 | Architecture deep dive | [architecture-overview.md](docs/guides/architecture-overview.md) |
 | Compare to alternatives | [readme-reference § How it differs](docs/guides/readme-reference.md#how-it-differs) |
 | Audience guides | [solo-dev](docs/guides/solo-developer-workflows.md) · [security-sensitive](docs/guides/security-sensitive-projects.md) · [subagent-heavy](docs/guides/subagent-heavy-workflows.md) |
+| Authoring guides | [extension-authoring-guide.md](docs/extension-authoring-guide.md) · [registry-pack-authoring.md](docs/registry-pack-authoring.md) |
 | Core vs optional pack boundary | [AgToosa_Core_Contract.md](docs/AgToosa_Core_Contract.md) |
 | Wiki | [GitHub Wiki](https://github.com/sky2464/AgToosa/wiki) |
 

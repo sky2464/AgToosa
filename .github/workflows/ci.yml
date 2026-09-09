@@ -117,7 +117,7 @@ jobs:
           bats tests/product-truth.bats
 
       - name: Run generator smoke tests
-        run: bats tests/agtoosa.bats -f '@smoke'
+        run: bats tests/agtoosa.bats -f '@smoke BCL|PN|WP2|ACC|NET|PSP|CORE'
 
   windows-smoke:
     name: Windows PowerShell Smoke Test

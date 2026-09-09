@@ -51,8 +51,8 @@ if command -v python3 >/dev/null 2>&1 && [[ -f "data/contracts/product-truth-v1.
   echo -e "${GREEN}✅ Product Truth passed${NC}"
 fi
 
-echo -e "${CYAN}==> 4. Running Generator Smoke Tests (@smoke)...${NC}"
-bats tests/agtoosa.bats -f '@smoke'
+echo -e "${CYAN}==> 4. Running Generator Smoke Tests...${NC}"
+bats tests/agtoosa.bats -f '@smoke BCL|PN|WP2|ACC|NET|PSP|CORE'
 
 echo ""
 echo -e "${GREEN}🎉 All fast checks and smoke tests passed!${NC}"

@@ -10210,7 +10210,7 @@ rmh_readme_body_lines() {
   mkdir -p "$project"
   run bash "$SCRIPT" --path "$project" --platforms claude --yes < /dev/null
   [ "$status" -eq 0 ]
-  echo "5.0.0" > "$project/Docs/.agtoosa-version"
+  echo "0.2.0" > "$project/Docs/.agtoosa-version"
 
   run pwsh -NoProfile -File "$BATS_TEST_DIRNAME/../agtoosa.ps1" -Update -UpdatePath "$project"
   [ "$status" -eq 0 ]
