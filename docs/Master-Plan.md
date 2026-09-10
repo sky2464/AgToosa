@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-08-27 (DEV-151 shipped as v0.3.63; backfilled — see #140)
+> **Last updated:** 2026-09-10 (DEV-154 + DEV-155 merged-to-main status corrected — see #166)
 
 ## Project Charter
 
@@ -25,7 +25,7 @@
 |----|-------|------|----------|--------|-----------|
 | DEV-152 | Chore: Bats Cleanup & Version Pin Consolidation | Chore | S | 🟦 Todo — Spec Ready for Approval (human review pending) | 0/5 |
 | DEV-153 | Feature: Bats Tiering & Smoke-Set Extraction | Feature | M | 🟦 Todo — Spec Ready for Approval (human review pending) | 0/5 |
-| DEV-155 | Fix: Cross-Platform Fallback Guidance for Unrecognized `/agtoosa-*` Commands | Fix | S | 🟦 Todo — Build Complete | 6/6 |
+| DEV-155 | Fix: Cross-Platform Fallback Guidance for Unrecognized `/agtoosa-*` Commands | Fix | S | ✅ Done — Merged to main (PR #145), awaiting next release | 6/6 |
 
 <!-- Archived to docs/archived/cycle-2026-08-01-release-5.3.60.md (DEV-147 + DEV-148 + DEV-149 v5.3.60) -->
 
@@ -238,8 +238,8 @@ Conflict playbook: _DEV-150 + DEV-151 active for v0.3.63; demand-gated DEV-057 d
 | DEV-149 | Fix: Issues-Sync Dry-Run README Corruption | Fix | S | DEV-139 / DEV-147 | P0 | 🏁 Shipped — v0.3.60 |
 | DEV-150 | Feature: Corporate Runtime Release Asset | Feature | M | DEV-001 / DEV-148 | P0 | 🟦 Todo — Spec Approved |
 | DEV-151 | Chore: Tracker Publish CI Automation | Chore | S | DEV-139 / DEV-147 | P1 | 🟦 Todo — Spec Approved |
-| DEV-154 | Chore: Fix PR Hygiene Checks Stale Label-Event Gate | Chore | S | DEV-004 | P2 | 🟨 In Review — PR open (closes #156), pending merge |
-| DEV-155 | Fix: Cross-Platform Fallback Guidance for Unrecognized `/agtoosa-*` Commands | Fix | S | DEV-004 | P1 | 🟦 Todo — Build Complete |
+| DEV-154 | Chore: Fix PR Hygiene Checks Stale Label-Event Gate | Chore | S | DEV-004 | P2 | ✅ Done — Merged to main (PR #158, closes #156), awaiting next release |
+| DEV-155 | Fix: Cross-Platform Fallback Guidance for Unrecognized `/agtoosa-*` Commands | Fix | S | DEV-004 | P1 | ✅ Done — Merged to main (PR #145), awaiting next release |
 | DEV-139 | Feature: GitHub Issues PM Bridge (Phased B) | Feature | L | DEV-051 / DEV-004 | P1 | 🏁 Shipped — v0.3.52 |
 | DEV-044 | Feature: EARS-to-Test TDD Gate | Feature | M | DEV-004 | P0 | ✅ Done — delivered via DEV-061 (EARS lint + AC↔test check) and DEV-067 (RED/GREEN evidence gate) |
 | DEV-045 | Feature: Work Package Wave DAG | Feature | M | DEV-002 | P1 | 🏁 Shipped — v0.3.9 |
@@ -545,6 +545,7 @@ Conflict playbook: _DEV-150 + DEV-151 active for v0.3.63; demand-gated DEV-057 d
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-09-10 02:16 | 🧹 Master-Plan drift fix (#166) — DEV-154 and DEV-155 status rows still read pre-merge state though both PRs are already on `main`: DEV-154 said "PR open ..., pending merge" (PR #158 merged), DEV-155 said "Todo — Build Complete" in the Active Cycle and Backlog tables (all 6 subtasks checked, PR #145 merged 2026-09-07). Both now read "✅ Done — Merged to main ..., awaiting next release" — not "🏁 Shipped", since no tagged release has cut since v0.3.63 and every other Shipped row here points at a real version. Header `Last updated` line refreshed to match. | AgToosa |
 | 2026-09-04 10:00 | 🔧 DEV-154 — `require-labels` (`.github/workflows/branch-protection.yml`) now re-fetches live PR labels via `gh pr view` with a bounded retry (was trusting the stale `pull_request` event-payload snapshot, which races `auto-label.yml` and fails almost every new PR). Bats: DEV-154 T-001–T-003. PR open, closes #156; pending human merge — do not mark this row shipped until then. | AgToosa |
 | 2026-08-27 12:20 | 🚀 Ship backfill — DEV-151 (Tracker Publish CI Automation) moved to Completed This Cycle; merged 2026-08-24 via PR #129 (commit `5a56e37`) as part of v0.3.63 but never transitioned out of Active Cycle or logged here. CHANGELOG.md and agtoosa-events.jsonl backfilled to match. See #140. | AgToosa |
 | 2026-08-27 07:40 | 🏁 AgToosa Project Intake (Plan Mode) → Build 🏁 Complete — DEV-155 — User-reported friction: `/agtoosa-init` not recognized in a non-CLI Claude surface. Scoped via Plan Mode (full per-platform parity, confirmed by user), then built: CLI next-steps tip (`lib/install.sh`), central Project Intake fallback bullet (`docs/AgToosa_Agent.md` + `template/Docs/` mirror), identical `## If a Command Isn't Recognized` section in all 6 platform entry points, maintainer parity-table row (`docs/agtoosa-maintainer.md`), 2 new bats tests. No regressions; 2 pre-existing unrelated bats failures (`--update detects installed Claude platform and merges CLAUDE.md`, `SAU-003`) confirmed via git-stash baseline, not caused by this change. Next: `/agtoosa-review`. | AgToosa |
