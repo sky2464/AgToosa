@@ -306,6 +306,8 @@ Story-code prefixes in that alternation match high-signal suites (behavioral con
 
 For a single story while developing: `bats tests/agtoosa.bats -f 'DEV-XXX'`.
 
+**Local prerequisites:** step 3 needs `python3` and packages from `.github/requirements-dev.txt` (at minimum `jsonschema` for BCL scenario gates in step 4). CI installs that file before bats; for a bare laptop, run `pip install -r .github/requirements-dev.txt` once.
+
 ## Validation
 
 - During development and PR iterations, run `bash scripts/test-fast.sh` or the curated smoke command above, or targeted story coverage (`bats tests/agtoosa.bats -f 'DEV-XXX'`). Reserve full `bats tests/agtoosa.bats` (1,290+ tests) for pre-release validation.
