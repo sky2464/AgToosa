@@ -11459,11 +11459,32 @@ _mwz_seed_install() {
     > "$proj/Docs/agtoosa-lock.json"
 }
 
+_mwz_major_from_ver() {
+  printf '%s' "0.2.0"
+}
+
+_mwz_major_to_ver() {
+  printf '%s' "1.0.0"
+}
+
+# Generator at a synthetic 1.x target so MAJOR wizard tests stay valid on the 0.x line.
+_mwz_major_script() {
+  local root="$BATS_TEST_DIRNAME/.."
+  local tmp="${BATS_TEST_TMPDIR}/agtoosa-mwz-major.sh"
+  if [[ ! -x "$tmp" ]]; then
+    sed -e 's/^AGTOOSA_VERSION="[^"]*"/AGTOOSA_VERSION="1.0.0"/' \
+        -e "s|^SCRIPT_DIR=.*|SCRIPT_DIR=\"$(cd "$root" && pwd)\"|" \
+        "$SCRIPT" > "$tmp"
+    chmod +x "$tmp"
+  fi
+  printf '%s' "$tmp"
+}
+
 _mwz_seed_major() {
   local proj="$1"
   local fx="$BATS_TEST_DIRNAME/fixtures/migration"
   _mwz_seed_install "$proj"
-  echo "4.9.0" > "$proj/Docs/.agtoosa-version"
+  echo "$(_mwz_major_from_ver)" > "$proj/Docs/.agtoosa-version"
   cp "$fx/claude-outside-markers.md" "$proj/CLAUDE.md"
   cp "$fx/orphan-AgToosa_LegacyRemoved.md" "$proj/Docs/AgToosa_LegacyRemoved.md"
 }
@@ -11472,17 +11493,17 @@ _mwz_seed_major() {
   _mwz_seed_major "$TEST_PROJECT"
   local before
   before="$(shasum "$TEST_PROJECT/Docs/AgToosa_Agent.md" | awk '{print $1}')"
-  run bash "$SCRIPT" --update --yes "$TEST_PROJECT"
+  run bash "$(_mwz_major_script)" --update --yes "$TEST_PROJECT"
   [ "$status" -ne 0 ]
   [[ "$output" == *"MAJOR"* || "$output" == *"accept-breaking"* || "$output" == *"blocked"* ]]
   [ "$(shasum "$TEST_PROJECT/Docs/AgToosa_Agent.md" | awk '{print $1}')" = "$before" ]
-  [ "$(cat "$TEST_PROJECT/Docs/.agtoosa-version")" = "4.9.0" ]
+  [ "$(cat "$TEST_PROJECT/Docs/.agtoosa-version")" = "$(_mwz_major_from_ver)" ]
   [ ! -d "$TEST_PROJECT/.agtoosa/rollback" ] || [ -z "$(ls -A "$TEST_PROJECT/.agtoosa/rollback" 2>/dev/null || true)" ]
 }
 
 @test "DEV-091 @smoke MWZ-002: Dry-run plan uses DEV-090 action categories" {
   _mwz_seed_major "$TEST_PROJECT"
-  run bash "$SCRIPT" --update --dry-run "$TEST_PROJECT"
+  run bash "$(_mwz_major_script)" --update --dry-run "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" == *"overwrite"* ]]
   [[ "$output" == *"merge"* || "$output" == *"preserve"* ]]
@@ -11494,51 +11515,50 @@ _mwz_seed_major() {
 
 @test "DEV-091 @smoke MWZ-003: Apply writes timestamped rollback manifest" {
   _mwz_seed_major "$TEST_PROJECT"
-  run bash "$SCRIPT" --update --accept-breaking "$TEST_PROJECT"
+  run bash "$(_mwz_major_script)" --update --accept-breaking "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   local manifest
   manifest="$(find "$TEST_PROJECT/.agtoosa/rollback" -maxdepth 1 -name '*.json' | head -1)"
   [ -n "$manifest" ]
   [ -f "$manifest" ]
   jq -e '.schema_version == 1 and (.entries | type == "array") and (.entries | length) >= 1' "$manifest" >/dev/null
-  jq -e '.agtoosa_from == "4.9.0" and (.agtoosa_to | length) > 0 and (.created_at | length) > 0' "$manifest" >/dev/null
+  jq -e --arg from "$(_mwz_major_from_ver)" --arg to "$(_mwz_major_to_ver)" \
+    '.agtoosa_from == $from and .agtoosa_to == $to and (.created_at | length) > 0' "$manifest" >/dev/null
 }
 
 @test "DEV-091 MWZ-004: Content outside markers is preserved" {
   _mwz_seed_major "$TEST_PROJECT"
   grep -q "USER_SUFFIX_OUTSIDE_MARKERS" "$TEST_PROJECT/CLAUDE.md"
-  run bash "$SCRIPT" --update --accept-breaking "$TEST_PROJECT"
+  run bash "$(_mwz_major_script)" --update --accept-breaking "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   grep -q "USER_SUFFIX_OUTSIDE_MARKERS" "$TEST_PROJECT/CLAUDE.md"
 }
 
 @test "DEV-091 MWZ-005: accept-breaking prints plan before apply" {
   _mwz_seed_major "$TEST_PROJECT"
-  run bash "$SCRIPT" --update --accept-breaking "$TEST_PROJECT"
+  run bash "$(_mwz_major_script)" --update --accept-breaking "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   [[ "$output" == *"MAJOR migration plan"* || "$output" == *"overwrite"* ]]
   [[ "$output" == *"preserve"* || "$output" == *"merge"* ]]
-  local gen
-  gen="$(_mwz_gen_ver)"
-  [ "$(cat "$TEST_PROJECT/Docs/.agtoosa-version")" = "$gen" ]
+  [ "$(cat "$TEST_PROJECT/Docs/.agtoosa-version")" = "$(_mwz_major_to_ver)" ]
 }
 
 @test "DEV-091 @smoke MWZ-006: Dry-run makes no writes" {
   _mwz_seed_major "$TEST_PROJECT"
   local before after
   before="$(find "$TEST_PROJECT" -type f -print0 | sort -z | xargs -0 shasum | shasum | awk '{print $1}')"
-  run bash "$SCRIPT" --update --dry-run "$TEST_PROJECT"
+  run bash "$(_mwz_major_script)" --update --dry-run "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   after="$(find "$TEST_PROJECT" -type f -print0 | sort -z | xargs -0 shasum | shasum | awk '{print $1}')"
   [ "$before" = "$after" ]
   [ ! -d "$TEST_PROJECT/.agtoosa/rollback" ] || [ -z "$(find "$TEST_PROJECT/.agtoosa/rollback" -type f 2>/dev/null | head -1)" ]
-  [ "$(cat "$TEST_PROJECT/Docs/.agtoosa-version")" = "4.9.0" ]
+  [ "$(cat "$TEST_PROJECT/Docs/.agtoosa-version")" = "$(_mwz_major_from_ver)" ]
 }
 
 @test "DEV-091 MWZ-007: JSON mode emits valid plan object" {
   _mwz_seed_major "$TEST_PROJECT"
   local json_out
-  json_out="$(bash "$SCRIPT" --update --json "$TEST_PROJECT")"
+  json_out="$(bash "$(_mwz_major_script)" --update --json "$TEST_PROJECT")"
   echo "$json_out" | jq -e '.schema_version == "plan-result-v1" and .operation == "update" and (.actions | type == "array")' >/dev/null
   echo "$json_out" | jq -e '[.actions[].category] | unique | .[]' >/dev/null
   # Must include migration categories
@@ -11548,7 +11568,7 @@ _mwz_seed_major() {
   # No ANSI escapes
   ! echo "$json_out" | grep -qE $'\033\[|[0-9]+;[0-9]+m'
   # No writes
-  [ "$(cat "$TEST_PROJECT/Docs/.agtoosa-version")" = "4.9.0" ]
+  [ "$(cat "$TEST_PROJECT/Docs/.agtoosa-version")" = "$(_mwz_major_from_ver)" ]
   [ ! -d "$TEST_PROJECT/.agtoosa/rollback" ] || [ -z "$(find "$TEST_PROJECT/.agtoosa/rollback" -type f 2>/dev/null | head -1)" ]
 }
 
@@ -11584,7 +11604,7 @@ _mwz_seed_major() {
   grep -q 'is_major_migration\|run_major_migration\|write_rollback_manifest' "$root/lib/migrate.sh"
 
   _mwz_seed_major "$TEST_PROJECT"
-  run bash "$SCRIPT" --update --accept-breaking "$TEST_PROJECT"
+  run bash "$(_mwz_major_script)" --update --accept-breaking "$TEST_PROJECT"
   [ "$status" -eq 0 ]
   local manifest
   manifest="$(find "$TEST_PROJECT/.agtoosa/rollback" -maxdepth 1 -name '*.json' | head -1)"
