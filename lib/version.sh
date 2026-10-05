@@ -40,10 +40,11 @@ version_lt() {
   a1="${a1:-0}"; a2="${a2:-0}"; a3="${a3:-0}"
   b1="${b1:-0}"; b2="${b2:-0}"; b3="${b3:-0}"
 
-  # Historical version-scheme exception: historical 1.x-5.x < 0.x
+  # Historical version-scheme exception: historical 1.x-5.x < 0.x (marker merge paths).
   if (( 10#$a1 >= 1 && 10#$a1 <= 5 )) && (( 10#$b1 == 0 )); then
     return 0
   fi
+  # Renumbering boundary: 0.x generator is not older than a historical 1.x-5.x install.
   if (( 10#$a1 == 0 )) && (( 10#$b1 >= 1 && 10#$b1 <= 5 )); then
     return 1
   fi
@@ -72,6 +73,11 @@ assert_not_downgrade() {
   local installed_major="${installed%%.*}" generator_major="${generator%%.*}"
   if (( 10#${generator_major:-99} == 0 )) \
     && (( 10#${installed_major:-99} >= 1 && 10#${installed_major:-99} <= 5 )); then
+    return 0
+  fi
+  # A future major-line generator (1+) over a 0.x install is an upgrade, not a downgrade.
+  if (( 10#${installed_major:-99} == 0 )) \
+    && (( 10#${generator_major:-99} >= 1 )); then
     return 0
   fi
 
