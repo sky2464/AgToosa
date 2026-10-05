@@ -54,14 +54,20 @@ Closes #123
 
 ### Testing
 
-Run the full test suite before submitting:
+Use layered validation — fast checks on every change, full suite before release:
 
 ```bash
-# Run all BATS tests
-bash tests/agtoosa.bats
+# Fast path (matches CI validate job; ~30s)
+bash scripts/test-fast.sh
 
-# Run with verbose output
-bash tests/agtoosa.bats --verbose
+# Same smoke subset as CI when bats is already installed
+bats tests/agtoosa.bats -f '@smoke (BCL|PN|WP2|ACC|NET|PSP|CORE)'
+
+# Full regression (1,290+ tests) — pre-release or before large generator changes
+bats tests/agtoosa.bats
+
+# Verbose full suite
+bats tests/agtoosa.bats --verbose
 ```
 
 Tests cover:
@@ -76,7 +82,10 @@ Tests cover:
 When changing `agtoosa.sh`, `lib/maintain.sh`, or `agtoosa-verify.sh`, run these checks from the repo root before opening a PR:
 
 ```bash
-# Full regression suite
+# Fast smoke + guards (CI parity)
+bash scripts/test-fast.sh
+
+# Full regression suite (pre-release)
 bats tests/agtoosa.bats
 
 # Deterministic lifecycle gate (maintainer uses lowercase docs/)

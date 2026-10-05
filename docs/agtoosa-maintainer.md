@@ -78,6 +78,7 @@ Inline comments in `lib/*.sh` and `agtoosa.sh` should describe behavior in plain
 - `ship/` is temporary staging output and must never be treated as durable project state.
 - `.agtoosa/pack-queue/` is the durable staging area for `--registry install` packs until the next project install merges them.
 - Downstream installs merge an operational `.gitignore` marker block via `lib/gitignore.sh` (DEV-144) — `.agtoosa/`, `*.bak.*`, `.worktrees/` only; workflow docs and provenance markers stay committed.
+- `OPTIONAL_TEMPLATE_FILES` in `lib/config.sh` lists platform adapters and optional entry points (not core lifecycle docs). CI validates that every listed path exists under `template/`; install/update copies only the platforms the user selected. Contract detail: `docs/AgToosa_Core_Contract.md` → Optional Platform Surfaces.
 - The canonical version lives in `AGTOOSA_VERSION` at the top of `agtoosa.sh` and must match `agtoosa.ps1` and `packaging/npm/package.json`.
 - `lib/maintain.sh` owns `--verify`, `--doctor`, and `--uninstall` (sourced by `agtoosa.sh`).
 - `lib/cleanup.sh` owns `--cleanup` (merge backups, orphan docs, deselected platform files).
@@ -96,6 +97,7 @@ Beyond the interactive install wizard, `agtoosa.sh` exposes these maintainer-rel
 | `--uninstall [path]` | `lib/maintain.sh:run_uninstall` | Remove AgToosa-owned files; preserves Master-Plan, Context/, archived/, and merged entry points | Blocks uninstall on the generator source tree; prompts unless `--yes` |
 | `--cleanup [path]` | `lib/cleanup.sh:run_cleanup` | Remove merge backups (`*.bak.*`), removed workflow docs, and deselected platform outputs; `--only backups` limits to merge backups | Plan with `--dry-run` or `--format json`; apply requires confirmation (`--yes` non-interactive) |
 | `--reinstall --clean [path]` | `lib/reinstall.sh:run_reinstall_clean` | ADR-004 Option C: archive generated files, regenerate fresh for platforms, rewrite `Docs/agtoosa-lock.json` | Destructive; requires confirmation (`--yes` non-interactive); default upgrade remains `bash agtoosa.sh` or `--update` |
+| `--update` (MAJOR delta) | `lib/migrate.sh` | Interactive migration wizard when `is_major_migration` is true (installed major strictly below target) | Historical semver schemes: installed `1.x`–`5.x` is treated as older than current `0.x` (and not vice versa) so legacy test fixtures and pre-0.x pins still trigger the wizard correctly |
 | `--force` | `agtoosa.sh` / `lib/copy.sh` | Advanced/CI: full replace on Context and platform entry points when version guard allows | Hidden from interactive UX; never overwrites Master-Plan, Changelog, or Master-Architecture |
 | `--path <dir>` | `agtoosa.sh` | Skip the interactive path prompt | Requires valid path |
 | `--platforms <list>` | `agtoosa.sh` | Comma-separated platform list (e.g. `cursor,claude`) | Used with `--yes` for non-interactive installs |
@@ -283,9 +285,30 @@ Do **not** advance MINOR for every small story. Update Project Charter **Milesto
 4. Run the narrowest validation available.
 5. Report what changed, how it was verified, and any remaining risk.
 
+## Fast local validation (`scripts/test-fast.sh`)
+
+`bash scripts/test-fast.sh` mirrors the **validate** job in `.github/workflows/ci.yml` for day-to-day generator work (typically under ~30s locally):
+
+| Step | What it checks |
+|------|----------------|
+| 1 | `AGTOOSA_VERSION` parity across `agtoosa.sh`, `agtoosa.ps1`, and `packaging/npm/package.json` |
+| 2 | Every path from `bash agtoosa.sh --list-template-files` exists under `template/` |
+| 3 | Product Truth contract (`scripts/product-truth.py` check/render + `tests/product-truth.bats`) when `python3` is available |
+| 4 | Curated generator smoke subset in `tests/agtoosa.bats` (see below) |
+
+**Curated smoke filter (CI + test-fast):** use the same `-f` expression everywhere — do not run bare `@smoke` in tight loops (hundreds of tagged tests; slower and broader than CI):
+
+```bash
+bats tests/agtoosa.bats -f '@smoke (BCL|PN|WP2|ACC|NET|PSP|CORE)'
+```
+
+Story-code prefixes in that alternation match high-signal suites (behavioral conformance, product truth adjacent guards, work packages, acceptance contracts, network/registry, portable semantics, core inventory). **Keep the alternation parenthesized** — `bats -f` treats `|` as regex OR; without parentheses, precedence can match unintended tests (see bats filter fix on `main`).
+
+For a single story while developing: `bats tests/agtoosa.bats -f 'DEV-XXX'`.
+
 ## Validation
 
-- During development and PR iterations, run fast smoke validation: `bash scripts/test-fast.sh` or `bats tests/agtoosa.bats -f '@smoke'`, or targeted story coverage (`bats tests/agtoosa.bats -f 'DEV-XXX'`). Reserve full `bats tests/agtoosa.bats` (1,290+ tests) for pre-release validation.
+- During development and PR iterations, run `bash scripts/test-fast.sh` or the curated smoke command above, or targeted story coverage (`bats tests/agtoosa.bats -f 'DEV-XXX'`). Reserve full `bats tests/agtoosa.bats` (1,290+ tests) for pre-release validation.
 - Use narrow `bash agtoosa.sh --help`, `--version`, `--list-template-files`, or `--update` checks when they directly cover the touched surface.
 - After touching verifier or maintain helpers: `bash agtoosa.sh --verify .` and `bash docs/agtoosa-verify.sh --strict` on this repo. Use `--doctor` against a generated fixture (doctor checks `Docs/`, not maintainer `docs/`).
 - After changing `lib/maintain.sh` uninstall paths: run focused bats (`-f "DEV-073"` or `-f "UN"`) before the full suite.
