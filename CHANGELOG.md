@@ -7,6 +7,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ## [Unreleased]
 
+### Changed
+
+- **CI validate job and maintainer fast path share a curated smoke filter (#146).** `.github/workflows/ci.yml` and `scripts/test-fast.sh` run `bats tests/agtoosa.bats -f '@smoke (BCL|PN|WP2|ACC|NET|PSP|CORE)'` instead of the full `@smoke` tag set (~230 tests). Maintainer guide documents the split, `pip install -r .github/requirements-dev.txt` for local BCL/jsonschema parity, Windows `windows-smoke` job, and the 5.x→0.x version-scheme exception in `lib/version.sh` / `lib/migrate.sh`.
+
 ### Fixed
 
 - **Dependabot high-severity vulnerabilities in `docs/media/agtoosa-hero` (#141).** Resolved 5 high-severity Dependabot security advisories (`security/dependabot/4`–`8`) in the Remotion media project by bumping `nanoid` (3.3.16 → 3.3.18, fixing GHSA-2v37-7h3g-55p8 / alert 4), `fast-uri` (3.1.5 → 3.1.7, fixing GHSA-5jgf-p345-68v8, GHSA-f65p-4m7j-42xc, GHSA-fph4-wmhf-6fwf, GHSA-jqff-g426-hqxp / alerts 5–8), and `js-yaml` (4.3.1 → 4.3.2, fixing GHSA-2883-xcg3-v3hh). Added `npm` ecosystem updates for `docs/media/agtoosa-hero` to `.github/dependabot.yml` to prevent automated update failures.
