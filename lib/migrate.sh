@@ -28,8 +28,12 @@ is_major_migration() {
   tm="$(_migrate_major "$target")"
   [[ -n "$im" && -n "$tm" ]] || return 1
 
-  # Historical version-scheme exception: historical 1.x-5.x < 0.x
-  if (( 10#$im >= 1 && 10#$im <= 5 )) && (( 10#$tm == 0 )); then
+  # Version-scheme renumber: historical 5.x → 0.x is a normal update (UPG-012).
+  if (( 10#$im == 5 )) && (( 10#$tm == 0 )); then
+    return 1
+  fi
+  # Other historical majors crossing into 0.x still use the MAJOR migration wizard.
+  if (( 10#$im >= 1 && 10#$im <= 4 )) && (( 10#$tm == 0 )); then
     return 0
   fi
   if (( 10#$im == 0 )) && (( 10#$tm >= 1 && 10#$tm <= 5 )); then
