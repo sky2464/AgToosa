@@ -130,7 +130,7 @@
 
 ## 3.2 Test Plan
 
-- `docs/AgToosa_TestPlan-DEV-152.md`
+- `docs/archived/testplans/AgToosa_TestPlan-DEV-152.md`
 
 ### Success Metrics
 
@@ -151,3 +151,9 @@
 
 **Recommendation:** Approve for enrollment in v5.3.63 cycle alongside DEV-150/151.  
 **Prerequisite:** DEV-152 should complete before DEV-153 (tiering) to ensure clean version-pin state.
+
+## ✅ Spec Approved
+
+**Approved:** 2026-10-13 via `/agtoosa-next` (Sequential Approval Contract).  
+**Milestone:** v0.3.63 cycle (maintainer renumbering; spec header v5.3.63 label retained for traceability).  
+**Next:** `/agtoosa-build` — catalog and consolidate version pins per task tree.
