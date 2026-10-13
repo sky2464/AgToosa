@@ -283,9 +283,30 @@ Do **not** advance MINOR for every small story. Update Project Charter **Milesto
 4. Run the narrowest validation available.
 5. Report what changed, how it was verified, and any remaining risk.
 
+## Fast validation and CI smoke scope
+
+PR CI (`.github/workflows/ci.yml` → job `validate`) and local maintainer loops share the same **curated** generator smoke filter — not every `@smoke`-tagged test in `tests/agtoosa.bats`.
+
+| Command | What it runs |
+|---------|----------------|
+| `bash scripts/test-fast.sh` | Version parity (`agtoosa.sh`, `agtoosa.ps1`, `packaging/npm/package.json`), template completeness (`agtoosa.sh --list-template-files`), Product Truth (`scripts/product-truth.py` + `tests/product-truth.bats` when Python is available), then the curated smoke filter below. **Local BCL smokes need** `pip install -r .github/requirements-dev.txt` **(jsonschema)** — CI installs this before bats; without it, BCL-002+ fail with `jsonschema required` |
+| `bats tests/agtoosa.bats -f '@smoke (BCL\|PN\|WP2\|ACC\|NET\|PSP\|CORE)'` | ~20 tests covering BCL scenario corpus, Product Truth (PN), WP2, ACC, NET, PSP, and CORE invariants — same filter as CI step **Run generator smoke tests** |
+| `bats tests/agtoosa.bats -f '@smoke'` | Full smoke tag set (~230 tests); slower; use before release or when changing smoke tagging |
+| `bats tests/agtoosa.bats -f 'DEV-XXX'` | Story- or prefix-scoped regression |
+
+**Pitfall:** `-f '@smoke'` alone is **not** what CI runs. After smoke-set trimming (DEV-152 scope), unscoped `@smoke` is appropriate for pre-ship validation; day-to-day generator work should prefer `scripts/test-fast.sh` or the curated filter above.
+
+Windows coverage is separate: CI job `windows-smoke` exercises `agtoosa.ps1` registry and PSScriptAnalyzer gates.
+
+### Historical version scheme (5.x → 0.x renumber)
+
+AgToosa shipped on a `5.3.x` line, then renumbered to `0.3.x` (see `CHANGELOG.md` [0.3.63]). Numeric semver would treat `0.3.62` as a downgrade from `5.3.61`.
+
+`lib/version.sh` (`version_lt`, downgrade guard) and `lib/migrate.sh` (`is_major_migration`) share a one-time exception: installed **1.x–5.x** is treated as older than target **0.x**, and the reverse crossing is not a MAJOR migration. Genuine downgrades within `0.x` and bogus future markers are still blocked. Bats: `UPG-012`, `UPG-013`, migration wizard (`MWZ-*`, DEV-091).
+
 ## Validation
 
-- During development and PR iterations, run fast smoke validation: `bash scripts/test-fast.sh` or `bats tests/agtoosa.bats -f '@smoke'`, or targeted story coverage (`bats tests/agtoosa.bats -f 'DEV-XXX'`). Reserve full `bats tests/agtoosa.bats` (1,290+ tests) for pre-release validation.
+- During development and PR iterations, run `bash scripts/test-fast.sh` or the curated smoke filter (`bats tests/agtoosa.bats -f '@smoke (BCL|PN|WP2|ACC|NET|PSP|CORE)'`), or targeted story coverage (`bats tests/agtoosa.bats -f 'DEV-XXX'`). Reserve unscoped `-f '@smoke'` and full `bats tests/agtoosa.bats` (1,290+ tests) for pre-release validation.
 - Use narrow `bash agtoosa.sh --help`, `--version`, `--list-template-files`, or `--update` checks when they directly cover the touched surface.
 - After touching verifier or maintain helpers: `bash agtoosa.sh --verify .` and `bash docs/agtoosa-verify.sh --strict` on this repo. Use `--doctor` against a generated fixture (doctor checks `Docs/`, not maintainer `docs/`).
 - After changing `lib/maintain.sh` uninstall paths: run focused bats (`-f "DEV-073"` or `-f "UN"`) before the full suite.
