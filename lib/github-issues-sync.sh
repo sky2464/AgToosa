@@ -35,19 +35,16 @@ github_issues_sync_dry_run() {
 
 github_issues_sync_apply() {
   local manifest="$1"
-  local milestone_title milestone_number milestone_state ms_json issue upsert_key story_id title body state labels existing new_num
+  local milestone_title milestone_number ms_json issue upsert_key story_id title body state labels existing new_num
   milestone_title=$(jq -r '.milestone // empty' "$manifest")
   milestone_number=""
   if [[ -n "$milestone_title" && "$milestone_title" != "null" ]]; then
     ms_json=$(_github_issues_sync_gh api "repos/:owner/:repo/milestones?state=all" --paginate 2>/dev/null | jq -c --arg t "$milestone_title" '[.[] | select(.title==$t)] | .[0] // empty' 2>/dev/null || true)
     if [[ -n "$ms_json" && "$ms_json" != "null" ]]; then
       milestone_number=$(echo "$ms_json" | jq -r '.number')
-      milestone_state=$(echo "$ms_json" | jq -r '.state // empty')
     fi
     if [[ -z "$milestone_number" ]]; then
       milestone_number=$(_github_issues_sync_gh api repos/:owner/:repo/milestones -f title="$milestone_title" -f state=open --jq .number)
-    elif [[ "$milestone_state" == "closed" ]]; then
-      _github_issues_sync_gh api -X PATCH "repos/:owner/:repo/milestones/${milestone_number}" -f state=open >/dev/null
     fi
   fi
 
