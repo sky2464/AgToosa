@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-09-10 (DEV-154 + DEV-155 merged-to-main status corrected — see #166)
+> **Last updated:** 2026-10-13 (DEV-152 Spec Approved via `/agtoosa-next`)
 
 ## Project Charter
 
@@ -9,7 +9,7 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Spec — DEV-152 / DEV-153 (v0.3.63 milestone; DEV-150 + DEV-151 shipped) |
+| Current phase | Build — DEV-152 (v0.3.63 milestone; DEV-153 spec pending approval) |
 | Milestone | `v0.3.63` (shipped) |
 | Active cycle | DEV-152, DEV-153 |
 | Cycle state | Active |
@@ -23,7 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-152 | Chore: Bats Cleanup & Version Pin Consolidation | Chore | S | 🟦 Todo — Spec Ready for Approval (human review pending) | 0/5 |
+| DEV-152 | Chore: Bats Cleanup & Version Pin Consolidation | Chore | S | 🟨 In Progress — Spec Approved | 0/5 |
 | DEV-153 | Feature: Bats Tiering & Smoke-Set Extraction | Feature | M | 🟦 Todo — Spec Ready for Approval (human review pending) | 0/5 |
 | DEV-155 | Fix: Cross-Platform Fallback Guidance for Unrecognized `/agtoosa-*` Commands | Fix | S | ✅ Done — Merged to main (PR #145), awaiting next release | 6/6 |
 
