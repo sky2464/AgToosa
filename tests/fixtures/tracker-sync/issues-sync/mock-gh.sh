@@ -17,11 +17,13 @@ _apply_jq() {
 if [[ "${1:-}" == "api" ]]; then
   jq_filter=""
   create_milestone=false
+  list_all_milestones=false
   shift
   while [[ $# -gt 0 ]]; do
     case "$1" in
       -f) [[ "${2:-}" == title=* ]] && create_milestone=true; shift 2 ;;
       --jq) jq_filter="$2"; shift 2 ;;
+      *state=all*) list_all_milestones=true; shift ;;
       *) shift ;;
     esac
   done
@@ -29,7 +31,11 @@ if [[ "${1:-}" == "api" ]]; then
     _apply_jq '{"number": 7}' "$jq_filter"
     exit 0
   fi
-  _apply_jq "${GH_MOCK_MILESTONES_JSON:-[]}" "$jq_filter"
+  if [[ "$list_all_milestones" == true ]]; then
+    _apply_jq "${GH_MOCK_MILESTONES_JSON:-[]}" "$jq_filter"
+  else
+    _apply_jq "${GH_MOCK_OPEN_MILESTONES_JSON:-[]}" "$jq_filter"
+  fi
   exit 0
 fi
 

@@ -15,6 +15,8 @@ _gh_issues_require_jq() {
 
 _gh_issues_story_shipped() {
   local status="$1"
+  # Done-but-unreleased stories stay open until a release actually ships them.
+  [[ "$status" == *"awaiting next release"* ]] && return 1
   [[ "$status" =~ [Ss]hipped|[Dd]one|🏁 ]] && return 0
   return 1
 }

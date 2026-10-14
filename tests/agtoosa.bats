@@ -16644,6 +16644,37 @@ PY
   ! grep -q 'title=9.9.9' "$log"
 }
 
+@test "DEV-147 GIP-013: closed milestone with the manifest title is reused, not re-created" {
+  local fixture="$BATS_TEST_DIRNAME/fixtures/tracker-sync/project-shipped"
+  local fake_bin="$TEST_PROJECT/gip-closed-ms-bin"
+  local log="$TEST_PROJECT/gip-closed-ms.log"
+  mkdir -p "$fake_bin"
+  cp "$BATS_TEST_DIRNAME/fixtures/tracker-sync/issues-sync/mock-gh.sh" "$fake_bin/gh"
+  chmod +x "$fake_bin/gh"
+  : >"$log"
+  run env PATH="$fake_bin:$PATH" GH_MOCK_LOG="$log" \
+    GH_MOCK_MILESTONES_JSON='[{"title": "9.9.9", "number": 77, "state": "closed"}]' \
+    bash "$BATS_TEST_DIRNAME/../scripts/agtoosa-issues-sync.sh" --path "$fixture"
+  [ "$status" -eq 0 ]
+  grep -q 'milestones?state=all' "$log"
+  run grep -q 'title=9.9.9' "$log"
+  [ "$status" -ne 0 ]
+  run grep -q -- '--milestone' "$log"
+  [ "$status" -ne 0 ]
+  grep -q 'issues/1001 -F milestone=77' "$log"
+  grep -q 'issues/55 -F milestone=77' "$log"
+}
+
+@test "DEV-147 GIP-014: only stories awaiting a release stay open; shipped and done stories still close" {
+  local root="$BATS_TEST_DIRNAME/.."
+  run bash -c 'source "$1/lib/github-issues.sh" && _gh_issues_story_shipped "$2"' _ "$root" "✅ Done — Merged to main (PR #145), awaiting next release"
+  [ "$status" -ne 0 ]
+  run bash -c 'source "$1/lib/github-issues.sh" && _gh_issues_story_shipped "$2"' _ "$root" "🏁 Shipped — v0.3.63"
+  [ "$status" -eq 0 ]
+  run bash -c 'source "$1/lib/github-issues.sh" && _gh_issues_story_shipped "$2"' _ "$root" "✅ Done — delivered via DEV-061"
+  [ "$status" -eq 0 ]
+}
+
 @test "DEV-147 GIP-007: doctor emits GIP-003 when workflow present but script missing" {
   _gig_install_cursor_only "$TEST_PROJECT"
   mkdir -p "$TEST_PROJECT/.github/workflows"

@@ -39,7 +39,7 @@ github_issues_sync_apply() {
   milestone_title=$(jq -r '.milestone // empty' "$manifest")
   milestone_number=""
   if [[ -n "$milestone_title" && "$milestone_title" != "null" ]]; then
-    milestone_number=$(_github_issues_sync_gh api "repos/:owner/:repo/milestones" 2>/dev/null | jq -r --arg t "$milestone_title" '.[] | select(.title==$t) | .number' 2>/dev/null | head -n1 || true)
+    milestone_number=$(_github_issues_sync_gh api "repos/:owner/:repo/milestones?state=all" --paginate 2>/dev/null | jq -r --arg t "$milestone_title" '.[] | select(.title==$t) | .number' 2>/dev/null | head -n1 || true)
     if [[ -z "$milestone_number" ]]; then
       milestone_number=$(_github_issues_sync_gh api repos/:owner/:repo/milestones -f title="$milestone_title" -f state=open --jq .number)
     fi
@@ -58,8 +58,9 @@ github_issues_sync_apply() {
 
     if [[ -n "$existing" && "$existing" != "null" ]]; then
       _github_issues_sync_gh issue edit "$existing" --title "$title" --body "$body"
-      if [[ -n "$milestone_title" && "$milestone_title" != "null" ]]; then
-        _github_issues_sync_gh issue edit "$existing" --milestone "$milestone_title" 2>/dev/null || true
+      if [[ -n "$milestone_number" ]]; then
+        _github_issues_sync_gh api -X PATCH "repos/:owner/:repo/issues/${existing}" -F milestone="$milestone_number" >/dev/null \
+          || echo "Warning: could not set milestone on issue #${existing} (${story_id})" >&2
       fi
       _github_issues_sync_gh issue edit "$existing" --add-label "$labels" 2>/dev/null || true
       if [[ "$state" == "closed" ]]; then
@@ -70,10 +71,11 @@ github_issues_sync_apply() {
       echo "Updated issue #${existing} (${story_id})"
     else
       local -a create_args=(--title "$title" --body "$body" --label "$labels")
-      if [[ -n "$milestone_title" && "$milestone_title" != "null" ]]; then
-        create_args+=(--milestone "$milestone_title")
-      fi
       new_num=$(_github_issues_sync_gh issue create "${create_args[@]}" --json number --jq .number)
+      if [[ -n "$milestone_number" ]]; then
+        _github_issues_sync_gh api -X PATCH "repos/:owner/:repo/issues/${new_num}" -F milestone="$milestone_number" >/dev/null \
+          || echo "Warning: could not set milestone on issue #${new_num} (${story_id})" >&2
+      fi
       if [[ "$state" == "closed" ]]; then
         _github_issues_sync_gh issue close "$new_num" --comment "AgToosa sync: story ${story_id} shipped."
       fi
