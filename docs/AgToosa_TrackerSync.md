@@ -184,7 +184,18 @@ Unmapped Linear fields (cycles, dependencies, custom fields) appear as `unsuppor
 4. Optionally update the README `AGTOOSA-ROADMAP` block via `--readme`.
 5. CI (`agtoosa-issues-sync.yml`) or `scripts/agtoosa-issues-sync.sh` applies the manifest with `gh` — **not** the core generator.
 
-**Rows mirrored:** active cycle + non-shipped backlog. Shipped active-cycle rows emit `state: closed`.
+**Rows mirrored:** active cycle + non-shipped backlog. Manifest `state` is `open` or `closed` (see **Issue open/closed semantics** below).
+
+**Issue open/closed semantics (`lib/github-issues.sh`):**
+
+| Master-Plan status text | Manifest `state` | GitHub issue after sync |
+|-------------------------|------------------|-------------------------|
+| Contains `🏁` / `Shipped` / `Done` **and** is in **Active Cycle** | `closed` | Closed with comment `AgToosa sync: story DEV-XXX shipped.` |
+| Contains **`awaiting next release`** (merged to `main`, not yet in a tagged release) | `open` | Stays **open** until `/agtoosa-ship` marks the story shipped |
+| Other active-cycle or backlog rows | `open` | Open (labels/body updated) |
+| Shipped rows **outside** Active Cycle | *(not in manifest)* | Unchanged by sync — row dropped from publish set |
+
+Use the phrase **`awaiting next release`** in the Status column for done-but-unreleased stories so Issues do not close prematurely.
 
 ---
 
@@ -249,7 +260,7 @@ AgToosa defines **translation guidance only**. Transport and provider-side creat
 |---------------|---------------|----------------------|
 | `story_id` | Label `agtoosa:DEV-XXX` + HTML comment in body | **Not** in issue title |
 | `title` | `feat:` / `fix:` / `chore:` / `docs:` + story title | DEV- prefix in title → rejected |
-| `status` | Open / closed + `status-*` labels | Map lifecycle emojis to labels; shipped → closed |
+| `status` | Open / closed + `status-*` labels | Active-cycle shipped/Done → closed; **`awaiting next release`** → open until release |
 | `estimate` | Issue body table field | S/M/L/XL in body |
 | `epic` | `area-*` label heuristic | — |
 | `spec_path` | Issue body link | — |
@@ -342,7 +353,29 @@ cp template/lib/github-issues-sync.sh lib/
 # Copy .github/workflows/agtoosa-issues-sync.yml.example → .github/workflows/agtoosa-issues-sync.yml
 ```
 
-Bats coverage: `GIP-001`–`GIP-010` in `tests/agtoosa.bats` (mock `gh` via `GH_CMD` / `tests/fixtures/tracker-sync/issues-sync/mock-gh.sh`).
+Bats coverage: `GIP-001`–`GIP-014` in `tests/agtoosa.bats` (mock `gh` via `GH_CMD` / `tests/fixtures/tracker-sync/issues-sync/mock-gh.sh`). `GIP-013`/`GIP-014` cover closed-milestone reuse and awaiting-release open semantics.
+
+---
+
+## Milestone assignment (`lib/github-issues-sync.sh`)
+
+Publish manifests carry a `milestone` title from the Project Charter **Milestone** row (`_gh_issues_charter_milestone`). On apply:
+
+1. **Lookup** — `GET repos/:owner/:repo/milestones?state=all` (paginated) and match by title. Reuse the first hit whether the milestone is **open or closed**.
+2. **Create** — Only when no title match exists: `POST` a new **open** milestone.
+3. **Assign** — `PATCH repos/:owner/:repo/issues/{number}` with `milestone=<number>`. Do **not** use `gh issue create/edit --milestone` — the CLI resolves milestone titles against **open** milestones only, so a closed release milestone would be skipped.
+
+**Why:** Closing PATCH milestones after ship (see `.github/GITHUB-SURFACES.md`) is normal. An apply path that listed only open milestones tried to create a duplicate title, GitHub returned **HTTP 422**, and the `sync-issues` job exited before updating any issue.
+
+**Symptoms and checks:**
+
+| Symptom | Likely cause | Fix |
+|---------|----------------|-----|
+| `sync-issues` fails on milestone create (422) | Stale script listing open milestones only | Ensure `lib/github-issues-sync.sh` uses `state=all` lookup + REST milestone number assignment |
+| Done story issue closed before release tag | Status missing `awaiting next release` | Fix Master-Plan status text; re-run sync |
+| Warning: `could not set milestone on issue #N` | Token scope or deleted milestone | Check `GITHUB_TOKEN` permissions; verify milestone still exists |
+
+Local repro (no network): `bats tests/agtoosa.bats -f 'GIP-013|GIP-014'`.
 
 ---
 

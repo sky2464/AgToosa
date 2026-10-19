@@ -298,6 +298,18 @@ PR CI (`.github/workflows/ci.yml` → job `validate`) and local maintainer loops
 
 Windows coverage is separate: CI job `windows-smoke` exercises `agtoosa.ps1` registry and PSScriptAnalyzer gates.
 
+## GitHub Issues sync (maintainer)
+
+Master-Plan edits on `main` trigger `.github/workflows/agtoosa-issues-sync.yml` (GIP bats preflight, then live `gh` upsert). Canonical workflow doc: `docs/AgToosa_TrackerSync.md` → **publish**, **Milestone assignment**, and **CI automation**.
+
+| Check | Command |
+|-------|---------|
+| Issues-sync regression | `bats tests/agtoosa.bats -f 'GIP-'` (same preflight as CI) |
+| Closed milestone + awaiting-release semantics | `bats tests/agtoosa.bats -f 'GIP-013|GIP-014'` |
+| Dry-run manifest only | `bash scripts/agtoosa-issues-sync.sh --path . --dry-run` |
+
+**Pitfall:** Archived **closed** milestones remain the manifest title after ship. Apply must reuse them by number (`state=all` lookup); otherwise the job can 422 and skip all issue updates. Done-but-unreleased stories must include **`awaiting next release`** in the Status column or Issues close early.
+
 ### Historical version scheme (5.x → 0.x renumber)
 
 AgToosa shipped on a `5.3.x` line, then renumbered to `0.3.x` (see `CHANGELOG.md` [0.3.63]). Numeric semver would treat `0.3.62` as a downgrade from `5.3.61`.
