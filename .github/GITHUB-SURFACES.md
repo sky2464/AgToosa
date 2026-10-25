@@ -65,6 +65,8 @@ Dispatch **Sync Docs to Wiki** workflow (`.github/workflows/wiki-sync.yml`). Thi
 
 Keep open milestones for the **current release** and the **last three** PATCH releases. Archive older PATCH milestones when shipping.
 
+**Closed milestones and Issues sync:** `agtoosa-issues-sync` still attaches issues to a **closed** milestone when the manifest title matches (lookup uses `state=all`; assignment is by milestone number). Do not delete closed release milestones that mirrored stories still reference — reuse is expected. See `docs/AgToosa_TrackerSync.md` → **Milestone assignment**.
+
 ## Verification
 
 ### Local (no network — CI on pull requests)
