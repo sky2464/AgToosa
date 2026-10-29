@@ -162,6 +162,23 @@ When installed `Docs/.agtoosa-version` MAJOR is behind the generator MAJOR, `bas
 
 `--yes` alone does **not** bypass the MAJOR gate. Prefer dry-run (or `--json`) in CI before `--accept-breaking`.
 
+#### Historical version scheme (5.x → 0.x renumber)
+
+AgToosa shipped on a **`5.3.x`** public line, then **renumbered** to **`0.3.x`** at the `5.3.62` → `0.3.62` boundary (same cadence; major reset to `0`). See root `CHANGELOG.md` **[0.3.63]** for the release note.
+
+Plain numeric semver treats `0.3.62` as *older* than `5.3.61`, which would block `--update` and can mislead agents during Stage 1b drift checks. The generator applies a **one-time, scoped exception** in `lib/version.sh` and `lib/migrate.sh`:
+
+| Situation | CLI behavior |
+|-----------|----------------|
+| Installed marker is **1.x–5.x**, generator is **0.x** | Normal **upgrade** — not a downgrade; **no** DEV-091 MAJOR migration wizard |
+| Installed **0.x**, generator **0.x** (higher patch/minor) | Normal upgrade |
+| Generator **older** than installed (within `0.x`, or bogus markers) | **Blocked** unless `--force` (same as DEV-128 downgrade guard) |
+| Genuine cross into a future **1+** MAJOR from **0.x** | Treated as upgrade; use MAJOR wizard rules when MAJOR delta applies |
+
+**Agent pitfall:** Do not refuse Apply because `5.3.x` sorts above `0.3.x` on paper — trust `bash agtoosa.sh --update --dry-run` / the CLI plan. Users still on a `5.x` marker should update into `0.3.x` without `--accept-breaking` solely for the renumber.
+
+**Maintainer regression:** `bats tests/agtoosa.bats -f 'UPG-012|UPG-013'`.
+
 If the user invoked **`plan` only**, print the plan and preflight, then **stop** (no mutation).
 
 ### Stage 3 — Apply (approval gate)

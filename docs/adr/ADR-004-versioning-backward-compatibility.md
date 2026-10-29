@@ -41,6 +41,8 @@ Version markers (`<!-- AgToosa vX.Y.Z START/END -->`) delineate AgToosa-owned co
 
 **Release cadence (maintainer):** How often to bump PATCH vs MINOR during `/agtoosa-ship` is defined in [ADR-005](ADR-005-release-cadence.md) (patch-first on the active MINOR train).
 
+**Historical renumbering (5.x → 0.x):** At the `5.3.62` → `0.3.62` boundary, the public major was reset from `5` to `0` while continuing the same patch cadence (`CHANGELOG.md` [0.3.63]). Numeric semver would treat that as a downgrade. `lib/version.sh` (`version_lt`, `assert_not_downgrade`) and `lib/migrate.sh` (`is_major_migration`) implement a **scoped** exception: installed **1.x–5.x** is considered older than generator **0.x**, and the crossing does **not** trigger the DEV-091 MAJOR migration wizard. Downgrades within **0.x** and invalid markers remain blocked. User-facing update guidance: `Docs/AgToosa_Update.md` → *Historical version scheme*; maintainer detail: `docs/agtoosa-maintainer.md`.
+
 ---
 
 ## Options Considered
