@@ -135,6 +135,8 @@ Pipe-based installs (`curl … | bash`) and some Windows Git Bash launches leave
 
 User-facing troubleshooting for pipe bootstrap lives in `docs/guides/readme-reference.md` (v0.3.62+). Bats: `DEV-149 B33-001`–`B33-005` in `tests/agtoosa.bats`.
 
+**Maintainer pitfall:** do not add raw `read -rp` in generator libs — route through `agtoosa_prompt_read` so piped bootstrap and Git Bash launches keep working.
+
 ## GitHub branch hygiene (Cursor agent sprawl)
 
 Cursor Cloud agents can leave many `cursor/*` remote branches and duplicate open PRs. Stale PR automation (`.github/workflows/stale.yml`) waits 30 days — too slow for same-day sprawl. Use the maintainer cleanup tool instead.
@@ -200,22 +202,6 @@ Registry and bootstrap behavior changed in the v0.3.0 supply-chain wave. Touch t
 | Pinned bootstrap | `bootstrap.sh`, `packaging/homebrew/agtoosa.rb` | `--ref vX.Y.Z` fails closed (no branch fallback); optional `--sha256`; releases publish `SHA256SUMS` |
 
 User-facing registry docs live in `template/Docs/AgToosa_Registry.md` (mirror: `docs/AgToosa_Registry.md`). Threat-model detail: `docs/security/template-injection-threat-model.md`.
-
-## Interactive prompts (TTY plumbing)
-
-Interactive flows must work when stdin is **not** a TTY — for example `curl … | bash` bootstrap, Windows `bootstrap.ps1` launching Git Bash, or CI wrappers that pipe the generator script.
-
-| Helper | Location | Behavior |
-|--------|----------|----------|
-| `agtoosa_prompt_read` | `lib/config.sh` | Reads a line for path/confirm prompts. Uses stdin when `-t 0`; otherwise reads from `/dev/tty` when `_agtoosa_tty_usable` |
-| `_agtoosa_tty_usable` | `lib/config.sh` | Returns 0 when `/dev/tty` is readable (pipe-bootstrap case) |
-| `Read-AgToosaPrompt` | `agtoosa.ps1` | PowerShell parity for install path prompts |
-
-**Call sites (v0.3.62+):** install wizard (`agtoosa.sh`), `--cleanup`, `--reinstall --clean`, `--uninstall`, MAJOR migration confirm, and post-install cleanup offer in `lib/cleanup.sh` / `lib/reinstall.sh` / `lib/maintain.sh` / `lib/migrate.sh` / `lib/apply.sh`.
-
-**Non-interactive escape hatch:** pass `--path <dir> [--platforms …] --yes` for installs; `--yes` for `--cleanup` / `--reinstall --clean` / `--uninstall`. When neither a TTY nor `/dev/tty` is available, `agtoosa_prompt_read` exits non-zero with a message to re-run with those flags.
-
-**Maintainer pitfall:** do not add raw `read -rp` in generator libs — route through `agtoosa_prompt_read` so piped bootstrap and Git Bash launches keep working. Bats: `DEV-149 B33-001`–`B33-005` in `tests/agtoosa.bats`.
 
 ## Operating Rules
 
@@ -297,6 +283,22 @@ PR CI (`.github/workflows/ci.yml` → job `validate`) and local maintainer loops
 **Pitfall:** `-f '@smoke'` alone is **not** what CI runs. After smoke-set trimming (DEV-152 scope), unscoped `@smoke` is appropriate for pre-ship validation; day-to-day generator work should prefer `scripts/test-fast.sh` or the curated filter above.
 
 Windows coverage is separate: CI job `windows-smoke` exercises `agtoosa.ps1` registry and PSScriptAnalyzer gates.
+
+## PR hygiene checks (maintainer)
+
+Pull requests to `main` run **PR Hygiene Checks** (`.github/workflows/branch-protection.yml`). The workflow uses a single `pr-hygiene` job with three sequential steps (consolidated from four separate jobs to reduce check noise):
+
+| Step | Hard fail? | Rule |
+|------|------------|------|
+| Check PR has at least one label | Yes | At least one label (e.g. `bug`, `enhancement`, `documentation`, `chore`) |
+| Check PR has description | Yes | Non-empty PR body |
+| Check PR links to issue | No | Warns when body lacks `Closes #`, `Fixes #`, or `Resolves #` |
+
+**Auto-label interaction:** `.github/workflows/auto-label.yml` applies heuristic labels on `pull_request` `opened`/`edited`. Those labels land **after** the hygiene job starts, so the label step must not read `github.event.pull_request.labels` from the triggering payload (DEV-154). It polls live state with `gh pr view … --json labels` up to six times (5s apart) so a slower auto-label run still satisfies the gate.
+
+**Triggers:** `pull_request` to `main` only — no `push` trigger (saves Actions minutes; avoids empty failed runs from the pre–DEV-029 era). This repo does not configure GitHub branch rulesets on the private plan; hygiene checks are advisory gates, not enforced branch protection.
+
+**Validation:** `bats tests/agtoosa.bats -f 'DEV-029|DEV-154'`. Historical push-safe layout (`push-main-ok`, separate `require-*` jobs) lives in archived `docs/archived/spec-DEV-029.md` only.
 
 ## GitHub Issues sync (maintainer)
 
