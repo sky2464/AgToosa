@@ -32,6 +32,8 @@ AgToosa uses **`docs/Master-Plan.md` as the sole PM authority**. GitHub Issues a
 3. Accepted work is enrolled in Master-Plan; sync updates the public mirror
 4. Open a PR referencing the issue; merge closes linked work when applicable
 
+**PR gates:** **PR Hygiene Checks** (`.github/workflows/branch-protection.yml`) requires at least one label and a non-empty description; issue linking is recommended (warn-only). Heuristic labels come from `auto-label.yml` on open — see `docs/agtoosa-maintainer.md` → **PR hygiene checks** for the DEV-154 live-label poll.
+
 ## Release planning
 
 - **Milestones** — match `docs/Master-Plan.md` Project Charter; `release-advanced.yml` creates next PATCH on tag push
