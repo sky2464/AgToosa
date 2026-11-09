@@ -11,6 +11,7 @@ This guide inventories every **nav-visible** GitHub community surface, how to co
 |---------|---------|------------|
 | **About** | Description, topics, homepage URL | `docs/github-surface-manifest.json` + one-time `gh repo edit` |
 | **Issues** | Bug/feature intake + synced backlog | `agtoosa-issues-sync.yml`, templates, labels |
+| **Pull requests** | Contributor PRs to `main` | `auto-label.yml` (heuristic labels) + `branch-protection.yml` (**PR Hygiene Checks** — label, description, issue-link warn) |
 | **Discussions** | Q&A, Ideas, Show & Tell, Announcements | `.github/DISCUSSIONS.md` |
 | **Projects** | **Intentionally unused** — Issues + milestones are canonical | Audit only; no Projects v2 board |
 | **Wiki** | Browsable workflow docs | `wiki-sync.yml` → `Home.md` |
@@ -89,6 +90,10 @@ Checks About, topics, homepage, Pages source, community profile health (≥95%),
 
 - `.github/workflows/github-surface-audit.yml` — local mode on PR; live mode on `main` push and `workflow_dispatch`
 - `pre-release-checklist.yml` — live mode before tagging
+
+### PR hygiene (DEV-154)
+
+New PRs must pass **PR Hygiene Checks** (`branch-protection.yml`). Labels often come from **Auto-Label Issues and PRs** (`auto-label.yml`) on the same `opened` event; the hygiene workflow polls live label state instead of the stale event snapshot. Maintainer detail: `docs/agtoosa-maintainer.md` → **PR hygiene checks**.
 
 ## Projects tab (no v2 board)
 
