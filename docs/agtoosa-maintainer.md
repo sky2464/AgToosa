@@ -280,7 +280,7 @@ PR CI (`.github/workflows/ci.yml` → job `validate`) and local maintainer loops
 | `bats tests/agtoosa.bats -f '@smoke'` | Full smoke tag set (~230 tests); slower; use before release or when changing smoke tagging |
 | `bats tests/agtoosa.bats -f 'DEV-XXX'` | Story- or prefix-scoped regression |
 
-**Pitfall:** `-f '@smoke'` alone is **not** what CI runs. After smoke-set trimming (DEV-152 scope), unscoped `@smoke` is appropriate for pre-ship validation; day-to-day generator work should prefer `scripts/test-fast.sh` or the curated filter above.
+**Pitfall:** `-f '@smoke'` alone is **not** what CI runs. CI and `scripts/test-fast.sh` use the **curated** regex above (interim #146; full `@smoke` tiering is DEV-153). Unscoped `-f '@smoke'` (~230 tests) is for pre-ship validation; day-to-day work should prefer `bash scripts/test-fast.sh` or the curated filter.
 
 Windows coverage is separate: CI job `windows-smoke` exercises `agtoosa.ps1` registry and PSScriptAnalyzer gates.
 
@@ -316,7 +316,7 @@ Master-Plan edits on `main` trigger `.github/workflows/agtoosa-issues-sync.yml` 
 
 AgToosa shipped on a `5.3.x` line, then renumbered to `0.3.x` (see `CHANGELOG.md` [0.3.63]). Numeric semver would treat `0.3.62` as a downgrade from `5.3.61`.
 
-`lib/version.sh` (`version_lt`, downgrade guard) and `lib/migrate.sh` (`is_major_migration`) share a one-time exception: installed **1.x–5.x** is treated as older than target **0.x**, and the reverse crossing is not a MAJOR migration. Genuine downgrades within `0.x` and bogus future markers are still blocked. Bats: `UPG-012`, `UPG-013`, migration wizard (`MWZ-*`, DEV-091).
+`lib/version.sh` (`version_lt`, downgrade guard) and `lib/migrate.sh` (`is_major_migration`) share a one-time exception: installed **1.x–5.x** is treated as older than target **0.x**, and the reverse crossing is not a MAJOR migration. A **0.x** install updating to a future **1+** generator is treated as an upgrade (not blocked by the downgrade guard); cross-major wizard rules apply when `is_major_migration` is true. Genuine downgrades within `0.x` and bogus future markers are still blocked. Bats: `UPG-012`, `UPG-013`, migration wizard (`MWZ-*`, DEV-091).
 
 ## Validation
 

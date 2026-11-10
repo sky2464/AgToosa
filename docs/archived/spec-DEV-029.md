@@ -1,5 +1,7 @@
 # Spec: DEV-029 — Stop Branch-Protection Workflow Failure Emails
 
+> **As-built (2026+):** The shipped `push-main-ok` / multi-job layout described below was later replaced by a single `pr-hygiene` job on `pull_request` only (no `push` trigger). **PR Hygiene Checks** behavior, DEV-154 live-label polling, and `auto-label.yml` interaction are documented in `docs/agtoosa-maintainer.md` → **PR hygiene checks**. This file remains the historical spec for DEV-029 acceptance criteria and the original push-safe fix.
+
 > **Story ID:** DEV-029
 > **Epic:** DEV-004 — Maintainer CI / Release Hygiene
 > **Status:** 🏁 Shipped (v5.2.1 — 2026-05-25; manual tasks 3–4 complete 2026-06-06)
