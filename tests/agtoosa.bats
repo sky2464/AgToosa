@@ -3390,32 +3390,25 @@ PY
   grep -q '^name: PR Hygiene Checks' "$f"
 }
 
-@test "DEV-029 T-002: branch-protection triggers pull_request and push on main" {
+@test "DEV-029 T-002: branch-protection triggers pull_request on main only" {
   local f="$BATS_TEST_DIRNAME/../.github/workflows/branch-protection.yml"
   grep -q 'pull_request:' "$f"
-  grep -q 'push:' "$f"
   grep -q 'branches: \[main\]' "$f"
+  ! grep -q '^  push:' "$f"
 }
 
-@test "DEV-029 T-003: push-main-ok runs only on push events" {
+@test "DEV-029 T-003: branch-protection uses consolidated pr-hygiene job" {
   local f="$BATS_TEST_DIRNAME/../.github/workflows/branch-protection.yml"
-  grep -q 'push-main-ok:' "$f"
-  awk '/^  push-main-ok:/{found=1} found && /^  [a-z]/ && !/^  push-main-ok:/{exit} found && /if: github.event_name == .push./{ok=1; exit} END{exit !ok}' "$f"
+  grep -q 'pr-hygiene:' "$f"
+  grep -q 'Check PR has at least one label' "$f"
+  grep -q 'Check PR has description' "$f"
+  grep -q 'Check PR links to issue' "$f"
 }
 
-@test "DEV-029 T-004: PR hygiene jobs run only on pull_request events" {
+@test "DEV-029 T-004: branch-protection has no legacy multi-job require-* layout" {
   local f="$BATS_TEST_DIRNAME/../.github/workflows/branch-protection.yml"
-  for job in require-labels require-description link-issue all-checks-pass; do
-    awk -v job="$job" '
-      $0 ~ "^  " job ":" { found=1 }
-      found && /^  [a-zA-Z0-9_-]+:/ && $0 !~ "^  " job ":" { exit }
-      found && /if: github.event_name == .pull_request./ { ok=1; exit }
-      END { exit !ok }
-    ' "$f" || {
-      echo "Missing pull_request guard on job: $job"
-      false
-    }
-  done
+  ! grep -q '^  require-labels:' "$f"
+  ! grep -q '^  push-main-ok:' "$f"
 }
 
 @test "DEV-029 T-005: require-labels still fails when PR has no labels" {
@@ -3783,7 +3776,7 @@ PY
 
 @test "DEV-034 LR-005: DEV-029 PR-path manual verification completion recorded" {
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
-  grep -q '27050231744' "$mp"
+  grep -q 'DEV-029 | Chore: Stop branch-protection workflow failure emails | 2026-05-25' "$mp"
   ! grep -q 'DEV-029 | 4 |' "$mp"
 }
 
