@@ -196,7 +196,7 @@ Registry and bootstrap behavior changed in the v0.3.0 supply-chain wave. Touch t
 |---------|-------------|----------|
 | Tar-slip pre-scan | `lib/registry.sh:assert_safe_tarball`, `bootstrap.sh`, `bootstrap.ps1` | Reject absolute paths and `..` members **before** extraction |
 | Pack file allowlist | `lib/registry.sh:validate_pack_files` | Only `.md`, `.json`, `.toml`, `.mdc` allowed |
-| Sensitive destination denylist | `lib/install.sh:PACK_DENYLIST_PATTERNS` | Packs cannot merge into `.claude/settings.json`, `.claude/hooks/`, `.github/workflows/`, or `Docs/Master-Plan.md` / `docs/Master-Plan.md` (project-owned PM state) |
+| Sensitive destination denylist | `lib/install.sh:PACK_DENYLIST_PATTERNS` | Packs cannot merge into `.claude/settings.json`, `.claude/hooks/`, `.github/workflows/`, or `Docs/Master-Plan.md` / `docs/Master-Plan.md` (project-owned PM state). Merge-time skip stderr abbreviates to *hook or CI surfaces*; Master-Plan paths use the same denylist — preview output lists all blocked paths |
 | Verified flag | `lib/registry.sh` | `verified: false` packs require `--allow-unverified` or `AGTOOSA_ALLOW_UNVERIFIED=1` |
 | Content preview | `lib/registry.sh:_print_pack_preview` | Lists staged files, flags AI-instruction surfaces, shows blocked destinations before consent |
 | Pinned bootstrap | `bootstrap.sh`, `packaging/homebrew/agtoosa.rb` | `--ref vX.Y.Z` fails closed (no branch fallback); optional `--sha256`; releases publish `SHA256SUMS` |
@@ -238,18 +238,20 @@ These strings are part of the user-facing contract and must appear verbatim in e
 
 Adding a new fix-command? It must emit the closure line on successful completion and be added to the table above.
 
+**Regression (DEV-155):** `bats tests/agtoosa.bats -f 'fallback tip for unrecognized|command not recognized'` — install next-steps tip plus parity across platform entry points and `template/Docs/AgToosa_Agent.md` → Project Intake Protocol.
+
 ## Release Checklist
 
 **Bump decision tree (patch-first — see `docs/adr/ADR-005-release-cadence.md`):**
 
-| Story profile | Bump | Example (from 5.2.0) |
+| Story profile | Bump | Example (from 0.3.63) |
 |---------------|------|----------------------|
-| Fix, Chore, docs-only, estimate **S** | **PATCH** (default) | 5.2.1 |
-| Feature **S**, same MINOR train, non-breaking | **PATCH** | 5.2.1 |
-| New MINOR train, multi-story batched release | **MINOR** (Z=0) | 5.3.0 |
-| Breaking per ADR-004 | **MAJOR** | 6.0.0 |
+| Fix, Chore, docs-only, estimate **S** | **PATCH** (default) | 0.3.64 |
+| Feature **S**, same MINOR train, non-breaking | **PATCH** | 0.3.64 |
+| New MINOR train, multi-story batched release | **MINOR** (Z=0) | 0.4.0 |
+| Breaking per ADR-004 | **MAJOR** | 1.0.0 |
 
-Do **not** advance MINOR for every small story. Update Project Charter **Milestone** to the **next PATCH** on the active MINOR (e.g. `v5.2.1 (next)` while shipped is `5.2.0`).
+Do **not** advance MINOR for every small story. Update Project Charter **Milestone** to the **next PATCH** on the active MINOR (e.g. `v0.3.64 (next)` while shipped is `0.3.63`). Historical `5.x` examples in archived cycle docs predate the 0.x renumber (see **Historical version scheme** below).
 
 - Bump `AGTOOSA_VERSION` in `agtoosa.sh`, `agtoosa.ps1`, and `packaging/npm/package.json` to identical values (bats checks parity).
 - Update `README.md` version badge AND any pinned `--ref vX.Y.Z` install snippets — they drift silently across releases.
@@ -281,6 +283,18 @@ PR CI (`.github/workflows/ci.yml` → job `validate`) and local maintainer loops
 | `bats tests/agtoosa.bats -f 'DEV-XXX'` | Story- or prefix-scoped regression |
 
 **Pitfall:** `-f '@smoke'` alone is **not** what CI runs. CI and `scripts/test-fast.sh` use the **curated** regex above (interim #146; full `@smoke` tiering is DEV-153). Unscoped `-f '@smoke'` (~230 tests) is for pre-ship validation; day-to-day work should prefer `bash scripts/test-fast.sh` or the curated filter.
+
+**CI `validate` vs `test-fast.sh`:** Both run template completeness and the curated smoke filter. PR CI (`.github/workflows/ci.yml` → job `validate`) also runs ShellCheck on `agtoosa.sh`, `bootstrap.sh`, and `lib/*.sh`; blocks legacy one-file README install snippets; validates **optional** template paths from `OPTIONAL_TEMPLATE_FILES` in `lib/config.sh`; and checks bash ↔ PowerShell version parity only (not `packaging/npm/package.json`). `test-fast.sh` adds npm version parity and skips ShellCheck, README guard, and optional-template steps. A green local `test-fast.sh` does not imply a green `validate` job — push or run ShellCheck locally before generator shell changes.
+
+| Check | CI `validate` | `scripts/test-fast.sh` |
+|-------|---------------|------------------------|
+| ShellCheck | Yes | No |
+| README install command guard | Yes | No |
+| Version parity bash / ps1 / npm | bash + ps1 only | bash + ps1 + npm |
+| Required template files | Yes | Yes |
+| Optional template files (`OPTIONAL_TEMPLATE_FILES`) | Yes | No |
+| Product Truth + `product-truth.bats` | Always | When `python3` and contract exist |
+| Curated `@smoke` filter | Yes | Yes |
 
 Windows coverage is separate: CI job `windows-smoke` exercises `agtoosa.ps1` registry and PSScriptAnalyzer gates.
 
