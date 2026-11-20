@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-10-13 (DEV-152 Spec Approved via `/agtoosa-next`)
+> **Last updated:** 2026-11-20 (DEV-152 Build complete via `/agtoosa-next`)
 
 ## Project Charter
 
@@ -23,7 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-152 | Chore: Bats Cleanup & Version Pin Consolidation | Chore | S | 🟨 In Progress — Spec Approved | 0/5 |
+| DEV-152 | Chore: Bats Cleanup & Version Pin Consolidation | Chore | S | 🟨 In Progress — Build Complete | 5/5 |
 | DEV-153 | Feature: Bats Tiering & Smoke-Set Extraction | Feature | M | 🟦 Todo — Spec Ready for Approval (human review pending) | 0/5 |
 | DEV-155 | Fix: Cross-Platform Fallback Guidance for Unrecognized `/agtoosa-*` Commands | Fix | S | ✅ Done — Merged to main (PR #145), awaiting next release | 6/6 |
 
@@ -146,11 +146,11 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 ### DEV-152 — Bats Cleanup & Version Pin Consolidation
 
-- [ ] 1. Catalog and analyze 170 stale version pins — _AC-001_
-- [ ] 2. Consolidate version pins (lines 7321–15437) — _AC-001, AC-002, AC-003_
-- [ ] 3. Parameterize version reference (AGTOOSA_VERSION env or fixture) — _AC-001_
-- [ ] 4. Validate clean state (bats compile, grep stale refs) — _AC-004_
-- [ ] 5. Update docs and CHANGELOG — _AC-005_
+- [x] 1. Catalog and analyze 170 stale version pins — _AC-001_
+- [x] 2. Consolidate version pins (lines 7321–15437) — _AC-001, AC-002, AC-003_
+- [x] 3. Parameterize version reference (AGTOOSA_VERSION env or fixture) — _AC-001_
+- [x] 4. Validate clean state (bats compile, grep stale refs) — _AC-004_
+- [x] 5. Update docs and CHANGELOG — _AC-005_
 
 ### DEV-153 — Bats Tiering & Smoke-Set Extraction
 

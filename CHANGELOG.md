@@ -9,6 +9,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), version
 
 ### Changed
 
+- **DEV-152 — Bats version-pin consolidation.** Ship-regression release versions moved to `tests/fixtures/ship-regression-versions.tsv` with helpers in `tests/lib/ship-regression.bash`; ship-wave SR tests tagged `@regression`; BCP-001–BCP-005 contract tests added. Maintainer loop: `bats tests/agtoosa.bats -f 'DEV-152|BCP-'`.
 - **CI validate job and maintainer fast path share a curated smoke filter (#146).** `.github/workflows/ci.yml` and `scripts/test-fast.sh` run `bats tests/agtoosa.bats -f '@smoke (BCL|PN|WP2|ACC|NET|PSP|CORE)'` instead of the full `@smoke` tag set (~230 tests). Maintainer guide documents the split, `pip install -r .github/requirements-dev.txt` for local BCL/jsonschema parity, Windows `windows-smoke` job, and the 5.x→0.x version-scheme exception in `lib/version.sh` / `lib/migrate.sh`.
 
 ### Fixed
