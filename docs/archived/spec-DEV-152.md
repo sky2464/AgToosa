@@ -103,30 +103,30 @@
 
 ### 3.1 Task Tree
 
-- [ ] **1.** Catalog and analyze 170 stale version pins
-  - [ ] 1.1 Grep all `v5\.3\.[0-9]` refs; categorize by version + line ranges — _AC-001_
-  - [ ] 1.2 Identify v5.3.8–v5.3.18 Wave 2–4 pins (lines 7321–7860) — _AC-002_
-  - [ ] 1.3 Identify DEV-119–124 old milestone pins (lines 13113–15437) — _AC-003_
+- [x] **1.** Catalog and analyze 170 stale version pins
+  - [x] 1.1 Grep all `v5\.3\.[0-9]` refs; categorize by version + line ranges — _AC-001_
+  - [x] 1.2 Identify v5.3.8–v5.3.18 Wave 2–4 pins (lines 7321–7860) — _AC-002_
+  - [x] 1.3 Identify DEV-119–124 old milestone pins (lines 13113–15437) — _AC-003_
   
-- [ ] **2.** Consolidate version pins
-  - [ ] 2.1 Lines 7321–7341 (v5.3.8–9): extract or parameterize — _AC-001_
-  - [ ] 2.2 Lines 7490–7860 (v5.3.10–18 Wave 2–4): tag with `@regression` or extract — _AC-002_
-  - [ ] 2.3 Lines 13113–14708 (v5.3.20, v5.3.26, v5.3.31): consolidate; tag `@regression` — _AC-003_
-  - [ ] 2.4 Lines 14709–15437 (DEV-119–124 v5.3.32–39): consolidate; tag `@regression` — _AC-003_
+- [x] **2.** Consolidate version pins
+  - [x] 2.1 Lines 7321–7341 (v5.3.8–9): extract or parameterize — _AC-001_
+  - [x] 2.2 Lines 7490–7860 (v5.3.10–18 Wave 2–4): tag with `@regression` or extract — _AC-002_
+  - [x] 2.3 Lines 13113–14708 (v5.3.20, v5.3.26, v5.3.31): consolidate; tag `@regression` — _AC-003_
+  - [x] 2.4 Lines 14709–15437 (DEV-119–124 v5.3.32–39): consolidate; tag `@regression` — _AC-003_
 
-- [ ] **3.** Parameterize version reference (candidate approach)
-  - [ ] 3.1 Option A: `AGTOOSA_VERSION` env var preamble; replace hardcodes with `$AGTOOSA_VERSION`
-  - [ ] 3.2 Option B: Ship-wave fixture matrix (lines 1–50); reference matrix in wave sections
-  - [ ] 3.3 Choose approach during build; document in CHANGELOG
+- [x] **3.** Parameterize version reference (candidate approach)
+  - [x] 3.1 Option A: `AGTOOSA_VERSION` env var preamble; replace hardcodes with `$AGTOOSA_VERSION`
+  - [x] 3.2 Option B: Ship-wave fixture matrix (lines 1–50); reference matrix in wave sections
+  - [x] 3.3 Choose approach during build; document in CHANGELOG
 
-- [ ] **4.** Validate clean state
-  - [ ] 4.1 Run `bats --compile tests/agtoosa.bats` — _AC-004_
-  - [ ] 4.2 Verify `grep -c "v5\.3\.[0-9]"` ≤ 10 (active refs only) — _AC-001_
-  - [ ] 4.3 Spot-check @regression boundaries (lines 7220–8000, 13113–15437) — _AC-002, AC-003_
+- [x] **4.** Validate clean state
+  - [x] 4.1 Run `bats --compile tests/agtoosa.bats` — _AC-004_
+  - [x] 4.2 Verify `grep -c "v5\.3\.[0-9]"` ≤ 10 (active refs only) — _AC-001_
+  - [x] 4.3 Spot-check @regression boundaries (lines 7220–8000, 13113–15437) — _AC-002, AC-003_
 
-- [ ] **5.** Update docs
-  - [ ] 5.1 `docs/Master-Plan.md` → mark DEV-152 complete — _AC-005_
-  - [ ] 5.2 Add cleanup summary to CHANGELOG (optional) — _AC-005_
+- [x] **5.** Update docs
+  - [x] 5.1 `docs/Master-Plan.md` → mark DEV-152 complete — _AC-005_
+  - [x] 5.2 Add cleanup summary to CHANGELOG (optional) — _AC-005_
 
 ## 3.2 Test Plan
 

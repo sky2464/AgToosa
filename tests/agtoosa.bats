@@ -16,6 +16,9 @@ teardown() {
   rm -rf "$TEST_PROJECT"
   rm -rf "${AGTOOSA_SHIP_DIR:-}" 2>/dev/null || true
 }
+
+# shellcheck source=lib/ship-regression.bash
+load "${BATS_TEST_DIRNAME}/lib/ship-regression.bash"
 # ── Flag tests ────────────────────────────────────────────────────────────────
 @test "--version prints version string" {
   local cur_ver
@@ -4131,7 +4134,10 @@ JSON
 
 # -- DEV-035-DEV-040 Ship state (SR-001-SR-003) ------------------------------
 
-@test "DEV-041 SR-001: v5.2.7 release pins are aligned" {
+@test "DEV-041 @regression SR-001: v5.2.7 release pins are aligned" {
+  local _sr_story="DEV-041"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver readme_badge readme_ref formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -4149,7 +4155,10 @@ JSON
   [ "$formula_ver" = "$bash_ver" ]
 }
 
-@test "DEV-041 SR-002: v5.2.7 changelog and review artifacts exist" {
+@test "DEV-041 @regression SR-002: v5.2.7 changelog and review artifacts exist" {
+  local _sr_story="DEV-041"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   grep -q '## \[5.2.7\]' "$root/CHANGELOG.md"
   grep -q 'DEV-041.*Public launch publication proof' "$root/CHANGELOG.md"
@@ -4159,7 +4168,10 @@ JSON
   grep -q 'Verdict.*PASS' "$root/docs/archived/review-DEV-041.md"
 }
 
-@test "DEV-041 SR-003: Master-Plan records v5.2.7 ship and next patch milestone" {
+@test "DEV-041 @regression SR-003: Master-Plan records v5.2.7 ship and next patch milestone" {
+  local _sr_story="DEV-041"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
   grep -q 'Ship complete — DEV-041 v5.2.7' "$mp" || grep -q 'Ship complete — DEV-041 v5.2.7' "$log"
@@ -6958,7 +6970,7 @@ JSON
 
 @test "DEV-148 B32-001: bootstrap guards empty forwarded_args for bash 3.2 nounset" {
   grep -q 'macOS ships bash 3.2' "$BOOTSTRAP_SCRIPT"
-  grep -q '\${#forwarded_args\[@\]}' "$BOOTSTRAP_SCRIPT"
+  grep -q "\${#forwarded_args\[@\]}" "$BOOTSTRAP_SCRIPT"
 }
 
 @test "DEV-148 B32-002: bootstrap --ref only succeeds without forwarded args" {
@@ -6972,7 +6984,7 @@ echo "AgToosa bootstrap-b32-ok"
 EOF
   chmod +x "$fixture_dir/AgToosa-b32/agtoosa.sh"
   tar -czf "$archive_path" -C "$fixture_dir" AgToosa-b32
-  run bash "$BOOTSTRAP_SCRIPT" --ref v0.3.60 --archive "$archive_path"
+  run bash "$BOOTSTRAP_SCRIPT" --ref "v$(agtoosa_live_version "$BATS_TEST_DIRNAME/..")" --archive "$archive_path"
   [ "$status" -eq 0 ]
   [[ "$output" == *"bootstrap-b32-ok"* ]]
   rm -rf "$fixture_dir" "$archive_path"
@@ -7296,78 +7308,103 @@ JSON
 
 # -- DEV-074 ship regression (SR-001–SR-003) -----------------------------------
 
-@test "DEV-074 SR-001: v0.3.2 release was published" {
+@test "DEV-074 @regression SR-001: release was published" {
+  local _sr_story="DEV-074"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.2\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-074' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/review-DEV-074.md" ]
   [ -f "$root/docs/archived/spec-DEV-074.md" ]
 }
 
-@test "DEV-074 SR-002: v0.3.2 changelog and review artifacts exist" {
+@test "DEV-074 @regression SR-002: changelog and review artifacts exist" {
+  local _sr_story="DEV-074"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.2\]' "$root/CHANGELOG.md"
-  grep -q '## \[0.3.1\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
+  local _sr_prev; _sr_prev="$(ship_regression_ver DEV-074-PREV)"
+  ship_regression_changelog_has "$root" "$_sr_prev"
   [ -f "$root/docs/archived/review-DEV-074.md" ]
   [ -f "$root/docs/archived/spec-DEV-074.md" ]
 }
 
-@test "DEV-074 SR-003: Master-Plan records v0.3.2 ship and next patch milestone" {
+@test "DEV-074 @regression SR-003: Master-Plan records ship and next patch milestone" {
+  local _sr_story="DEV-074"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
-  grep -q 'Ship complete — v0.3.2' "$mp" || grep -q 'Ship complete — v0.3.2' "$log"
-  grep -q 'Release 0.3.2 shipped' "$mp" || grep -q 'Release 0.3.2 shipped' "$log"
-  grep -q 'Milestone v0.3.3 (next)' "$mp" || grep -q 'Milestone v0.3.3 (next)' "$log"
+  ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_milestone_next_mp "$mp" "$log" "$_sr_next"
 }
 
 # -- DEV-047/048 ship regression (SR-001–SR-003) --------------------------------
 
-@test "DEV-047 SR-001: v0.3.3 release was published" {
+@test "DEV-047 @regression SR-001: release was published" {
+  local _sr_story="DEV-047"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.3\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-047' "$root/CHANGELOG.md"
   grep -q 'DEV-048' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/review-DEV-047-048.md" ]
 }
 
-@test "DEV-047 SR-002: v0.3.3 changelog and review artifacts exist" {
+@test "DEV-047 @regression SR-002: changelog and review artifacts exist" {
+  local _sr_story="DEV-047"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.3\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   [ -f "$root/docs/archived/spec-DEV-047.md" ]
   [ -f "$root/docs/archived/spec-DEV-048.md" ]
   grep -q '## ✅ Spec Approved' "$root/docs/archived/spec-DEV-047.md"
   grep -q '## ✅ Spec Approved' "$root/docs/archived/spec-DEV-048.md"
 }
 
-@test "DEV-047 SR-003: Master-Plan records v0.3.3 ship and next patch milestone" {
+@test "DEV-047 @regression SR-003: Master-Plan records ship and next patch milestone" {
+  local _sr_story="DEV-047"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
-  grep -q 'Ship complete — v0.3.3' "$mp" || grep -q 'Ship complete — v0.3.3' "$log"
-  grep -q 'Release 0.3.3 shipped' "$mp" || grep -q 'Release 0.3.3 shipped' "$log"
-  grep -q 'Milestone v0.3.4 (next)' "$mp" || grep -q 'Milestone v0.3.4 (next)' "$log"
+  ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_milestone_next_mp "$mp" "$log" "$_sr_next"
   grep -q '| DEV-047 | Feature: Async Agent Handoff Packs | 2026-07-08 |' "$mp" || grep -q '| DEV-047 | Feature: Async Agent Handoff Packs | 2026-07-08 |' "$log"
   grep -q '| DEV-048 | Feature: Agent Result Import Gate | 2026-07-08 |' "$mp" || grep -q '| DEV-048 | Feature: Agent Result Import Gate | 2026-07-08 |' "$log"
 }
 
 # -- DEV-049 ship regression (SR-001–SR-003) --------------------------------
 
-@test "DEV-049 SR-001: v0.3.4 release pins are aligned" {
+@test "DEV-049 @regression SR-001: release pins are aligned" {
+  local _sr_story="DEV-049"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  grep -q '## \[0.3.4\]' "$root/CHANGELOG.md"
-  grep -q 'Release 0.3.4 shipped' "$root/docs/Master-Plan.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
+  grep -q "Release ${_sr_ver} shipped" "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
   grep -qE "version-${bash_ver}" "$root/README.md"
   grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
-@test "DEV-049 SR-002: v0.3.4 changelog and review/evidence artifacts exist" {
+@test "DEV-049 @regression SR-002: changelog and review/evidence artifacts exist" {
+  local _sr_story="DEV-049"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.4\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-049' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/review-DEV-049.md" ]
   [ -f "$root/docs/archived/spec-DEV-049.md" ]
@@ -7376,34 +7413,43 @@ JSON
   grep -q 'phase=ship\|ship |' "$root/docs/archived/evidence-DEV-049.md" || grep -q '| ship |' "$root/docs/archived/evidence-DEV-049.md"
 }
 
-@test "DEV-049 SR-003: Master-Plan records v0.3.4 ship and next patch milestone" {
+@test "DEV-049 @regression SR-003: Master-Plan records ship and next patch milestone" {
+  local _sr_story="DEV-049"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
-  grep -q 'Ship complete — v0.3.4' "$mp" || grep -q 'Ship complete — v0.3.4' "$log"
-  grep -q 'Release 0.3.4 shipped' "$mp" || grep -q 'Release 0.3.4 shipped' "$log"
-  grep -q 'v0.3.5 (next)' "$mp" || grep -q 'v0.3.5 (next)' "$log"
+  ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_milestone_next_mp "$mp" "$log" "$_sr_next"
   grep -q '| DEV-049 | Feature: Evidence Ledger | 2026-07-08 |' "$mp" || grep -q '| DEV-049 | Feature: Evidence Ledger | 2026-07-08 |' "$log"
 }
 
 # -- DEV-054 ship regression (SR-001–SR-003) --------------------------------
 
-@test "DEV-054 SR-001: v0.3.5 release pins are aligned" {
+@test "DEV-054 @regression SR-001: release pins are aligned" {
+  local _sr_story="DEV-054"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  grep -q '## \[0.3.5\]' "$root/CHANGELOG.md"
-  grep -q 'Release 0.3.5 shipped' "$root/docs/Master-Plan.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
+  grep -q "Release ${_sr_ver} shipped" "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
   grep -qE "version-${bash_ver}" "$root/README.md"
   grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
-@test "DEV-054 SR-002: v0.3.5 changelog and review/evidence artifacts exist" {
+@test "DEV-054 @regression SR-002: changelog and review/evidence artifacts exist" {
+  local _sr_story="DEV-054"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.5\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-054' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/review-DEV-054.md" ]
   [ -f "$root/docs/archived/spec-DEV-054.md" ]
@@ -7412,34 +7458,43 @@ JSON
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-054.md"
 }
 
-@test "DEV-054 SR-003: Master-Plan records v0.3.5 ship and next patch milestone" {
+@test "DEV-054 @regression SR-003: Master-Plan records ship and next patch milestone" {
+  local _sr_story="DEV-054"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
-  grep -q 'Ship complete — v0.3.5' "$mp" || grep -q 'Ship complete — v0.3.5' "$log"
-  grep -q 'Release 0.3.5 shipped' "$mp" || grep -q 'Release 0.3.5 shipped' "$log"
-  grep -q 'v0.3.6 (next)' "$mp" || grep -q 'v0.3.6 (next)' "$log"
+  ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_milestone_next_mp "$mp" "$log" "$_sr_next"
   grep -q '| DEV-054 | Feature: Signed Registry Provenance | 2026-07-08 |' "$mp" || grep -q '| DEV-054 | Feature: Signed Registry Provenance | 2026-07-08 |' "$log"
 }
 
 # -- DEV-050 ship regression (SR-001–SR-003) --------------------------------
 
-@test "DEV-050 SR-001: v0.3.6 release pins are aligned" {
+@test "DEV-050 @regression SR-001: release pins are aligned" {
+  local _sr_story="DEV-050"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  grep -q '## \[0.3.6\]' "$root/CHANGELOG.md"
-  grep -q 'Release 0.3.6 shipped' "$root/docs/Master-Plan.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
+  grep -q "Release ${_sr_ver} shipped" "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
   grep -qE "version-${bash_ver}" "$root/README.md"
   grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
-@test "DEV-050 SR-002: v0.3.6 changelog and review/evidence artifacts exist" {
+@test "DEV-050 @regression SR-002: changelog and review/evidence artifacts exist" {
+  local _sr_story="DEV-050"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.6\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-050' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/review-DEV-050.md" ]
   [ -f "$root/docs/archived/spec-DEV-050.md" ]
@@ -7448,34 +7503,43 @@ JSON
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-050.md"
 }
 
-@test "DEV-050 SR-003: Master-Plan records v0.3.6 ship and next patch milestone" {
+@test "DEV-050 @regression SR-003: Master-Plan records ship and next patch milestone" {
+  local _sr_story="DEV-050"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
-  grep -q 'Ship complete — v0.3.6' "$mp" || grep -q 'Ship complete — v0.3.6' "$log"
-  grep -q 'Release 0.3.6 shipped' "$mp" || grep -q 'Release 0.3.6 shipped' "$log"
-  grep -q 'v0.3.7 (next)' "$mp" || grep -q 'v0.3.7 (next)' "$log"
+  ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_milestone_next_mp "$mp" "$log" "$_sr_next"
   grep -q '| DEV-050 | Feature: Cross-Model Review Gate | 2026-07-11 |' "$mp" || grep -q '| DEV-050 | Feature: Cross-Model Review Gate | 2026-07-11 |' "$log"
 }
 
 # -- DEV-055 ship regression (SR-001–SR-003) --------------------------------
 
-@test "DEV-055 SR-001: v0.3.7 release pins are aligned" {
+@test "DEV-055 @regression SR-001: release pins are aligned" {
+  local _sr_story="DEV-055"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  grep -q '## \[0.3.7\]' "$root/CHANGELOG.md"
-  grep -q 'Release 0.3.7 shipped' "$root/docs/Master-Plan.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
+  grep -q "Release ${_sr_ver} shipped" "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
   grep -qE "version-${bash_ver}" "$root/README.md"
   grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
-@test "DEV-055 SR-002: v0.3.7 changelog and review/evidence artifacts exist" {
+@test "DEV-055 @regression SR-002: changelog and review/evidence artifacts exist" {
+  local _sr_story="DEV-055"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.7\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-055' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/review-DEV-055.md" ]
   [ -f "$root/docs/archived/spec-DEV-055.md" ]
@@ -7484,35 +7548,44 @@ JSON
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-055.md"
 }
 
-@test "DEV-055 SR-003: Master-Plan records v0.3.7 ship and next patch milestone" {
+@test "DEV-055 @regression SR-003: Master-Plan records ship and next patch milestone" {
+  local _sr_story="DEV-055"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
-  grep -q 'Ship complete — v0.3.7' "$mp" || grep -q 'Ship complete — v0.3.7' "$log"
-  grep -q 'Release 0.3.7 shipped' "$mp" || grep -q 'Release 0.3.7 shipped' "$log"
-  grep -q 'v0.3.8 (next)' "$mp" || grep -q 'v0.3.8 (next)' "$log"
+  ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_milestone_next_mp "$mp" "$log" "$_sr_next"
   grep -q '| DEV-055 | Feature: Agent Capability Matrix | 2026-07-11 |' "$mp" || grep -q '| DEV-055 | Feature: Agent Capability Matrix | 2026-07-11 |' "$log"
 }
 
-# -- DEV-053 batched ship regression v0.3.8 (SR-001–SR-003) -------------------
+# -- DEV-053 batched ship regression (SR-001–SR-003) -------------------
 
-@test "DEV-053 SR-001: v0.3.8 release pins are aligned" {
+@test "DEV-053 @regression SR-001: release pins are aligned" {
+  local _sr_story="DEV-053"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   # Historical release still recorded; live pins stay mutually consistent on the active train.
-  grep -q '## \[0.3.8\]' "$root/CHANGELOG.md"
-  grep -q 'Release 0.3.8 shipped' "$root/docs/Master-Plan.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
+  grep -q "Release ${_sr_ver} shipped" "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
   grep -qE "version-${bash_ver}" "$root/README.md"
   grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
-@test "DEV-053 SR-002: v0.3.8 batched changelog and review/evidence artifacts exist" {
+@test "DEV-053 @regression SR-002: batched changelog and review/evidence artifacts exist" {
+  local _sr_story="DEV-053"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.8\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-075' "$root/CHANGELOG.md"
   grep -q 'DEV-053' "$root/CHANGELOG.md"
   grep -q 'DEV-078' "$root/CHANGELOG.md"
@@ -7526,12 +7599,15 @@ JSON
   done
 }
 
-@test "DEV-053 SR-003: Master-Plan records v0.3.8 batched ship and next patch milestone" {
+@test "DEV-053 @regression SR-003: Master-Plan records batched ship and next patch milestone" {
+  local _sr_story="DEV-053"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
-  grep -q 'Ship complete — v0.3.8' "$mp" || grep -q 'Ship complete — v0.3.8' "$log"
-  grep -q 'Release 0.3.8 shipped' "$mp" || grep -q 'Release 0.3.8 shipped' "$log"
-  grep -q 'Milestone v0.3.9 (next)' "$mp" || grep -q 'Milestone v0.3.9 (next)' "$log"
+  ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_milestone_next_mp "$mp" "$log" "$_sr_next"
   grep -q '| DEV-075 | Docs: Subagent and Persona Guide Suite | 2026-07-11 |' "$mp" || grep -q '| DEV-075 | Docs: Subagent and Persona Guide Suite | 2026-07-11 |' "$log"
   grep -q '| DEV-053 | Feature: Extension and Preset Catalog | 2026-07-11 |' "$mp" || grep -q '| DEV-053 | Feature: Extension and Preset Catalog | 2026-07-11 |' "$log"
   grep -q '| DEV-078 | Chore: First-15-Minutes Maintenance Gate | 2026-07-11 |' "$mp" || grep -q '| DEV-078 | Chore: First-15-Minutes Maintenance Gate | 2026-07-11 |' "$log"
@@ -7539,25 +7615,31 @@ JSON
 }
 
 
-# -- remaining-specs wave 1 ship regression v0.3.9 (SR-001–SR-003) ------------
+# -- remaining-specs wave 1 ship regression (SR-001–SR-003) ------------
 
-@test "DEV-045 SR-001: v0.3.9 release pins are aligned" {
+@test "DEV-045 @regression SR-001: release pins are aligned" {
+  local _sr_story="DEV-045"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  grep -q '## \[0.3.9\]' "$root/CHANGELOG.md"
-  grep -q 'Release 0.3.9 shipped' "$root/docs/Master-Plan.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
+  grep -q "Release ${_sr_ver} shipped" "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
   grep -qE "version-${bash_ver}" "$root/README.md"
   grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
-@test "DEV-045 SR-002: v0.3.9 changelog and wave-1 review/evidence artifacts exist" {
+@test "DEV-045 @regression SR-002: changelog and wave-1 review/evidence artifacts exist" {
+  local _sr_story="DEV-045"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.9\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   for id in 045 076 077 079 080 082 083 084; do
     [ -f "$root/docs/archived/review-DEV-${id}.md" ]
     [ -f "$root/docs/archived/spec-DEV-${id}.md" ]
@@ -7565,32 +7647,41 @@ JSON
   done
 }
 
-@test "DEV-045 SR-003: Master-Plan records v0.3.9 ship" {
+@test "DEV-045 @regression SR-003: Master-Plan records ship" {
+  local _sr_story="DEV-045"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
-  grep -q 'Ship complete — v0.3.9' "$mp" || grep -q 'Ship complete — v0.3.9' "$log"
-  grep -q 'Release 0.3.9 shipped' "$mp" || grep -q 'Release 0.3.9 shipped' "$log"
+  ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
 }
 
-# -- wave 2 ship regression v0.3.10 (SR-001–SR-003) ---------------------------
+# -- wave 2 ship regression (SR-001–SR-003) ---------------------------
 
-@test "DEV-046 SR-001: v0.3.10 release pins are aligned" {
+@test "DEV-046 @regression SR-001: release pins are aligned" {
+  local _sr_story="DEV-046"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  grep -q '## \[0.3.10\]' "$root/CHANGELOG.md"
-  grep -q 'Release 0.3.10 shipped' "$root/docs/Master-Plan.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
+  grep -q "Release ${_sr_ver} shipped" "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
   grep -qE "version-${bash_ver}" "$root/README.md"
   grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
-@test "DEV-046 SR-002: v0.3.10 changelog and wave-2 review/evidence artifacts exist" {
+@test "DEV-046 @regression SR-002: changelog and wave-2 review/evidence artifacts exist" {
+  local _sr_story="DEV-046"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.10\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-046' "$root/CHANGELOG.md"
   grep -q 'DEV-059' "$root/CHANGELOG.md"
   for id in 046 059; do
@@ -7601,36 +7692,45 @@ JSON
   done
 }
 
-@test "DEV-046 SR-003: Master-Plan records v0.3.10 ship and next patch milestone" {
+@test "DEV-046 @regression SR-003: Master-Plan records ship and next patch milestone" {
+  local _sr_story="DEV-046"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
-  grep -q 'Ship complete — v0.3.10' "$mp" || grep -q 'Ship complete — v0.3.10' "$log"
-  grep -q 'Release 0.3.10 shipped' "$mp" || grep -q 'Release 0.3.10 shipped' "$log"
-  grep -q 'v0.3.11 (next)' "$mp" || grep -q 'v0.3.11 (next)' "$log"
+  ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_milestone_next_mp "$mp" "$log" "$_sr_next"
   grep -q '| DEV-046 | Feature: Optional Worktree Isolation | 2026-07-11 |' "$mp" || grep -q '| DEV-046 | Feature: Optional Worktree Isolation | 2026-07-11 |' "$log"
   grep -q '| DEV-059 | Feature: Governance Policy-as-Code | 2026-07-11 |' "$mp" || grep -q '| DEV-059 | Feature: Governance Policy-as-Code | 2026-07-11 |' "$log"
 }
 
 
-# -- wave 3 ship regression v0.3.11 (SR-001–SR-003) -------------------------
+# -- wave 3 ship regression (SR-001–SR-003) -------------------------
 
-@test "DEV-052 SR-001: v0.3.11 release pins are aligned" {
+@test "DEV-052 @regression SR-001: release pins are aligned" {
+  local _sr_story="DEV-052"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  grep -q '## \[0.3.11\]' "$root/CHANGELOG.md"
-  grep -q 'Release 0.3.11 shipped' "$root/docs/Master-Plan.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
+  grep -q "Release ${_sr_ver} shipped" "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
   grep -qE "version-${bash_ver}" "$root/README.md"
   grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
-@test "DEV-052 SR-002: v0.3.11 changelog and wave-3 review/evidence artifacts exist" {
+@test "DEV-052 @regression SR-002: changelog and wave-3 review/evidence artifacts exist" {
+  local _sr_story="DEV-052"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.11\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-052' "$root/CHANGELOG.md"
   grep -q 'DEV-056' "$root/CHANGELOG.md"
   for id in 052 056; do
@@ -7641,34 +7741,43 @@ JSON
   done
 }
 
-@test "DEV-052 SR-003: Master-Plan records v0.3.11 ship and next patch milestone" {
+@test "DEV-052 @regression SR-003: Master-Plan records ship and next patch milestone" {
+  local _sr_story="DEV-052"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
-  grep -q 'Ship complete — v0.3.11' "$mp" || grep -q 'Ship complete — v0.3.11' "$log"
-  grep -q 'Release 0.3.11 shipped' "$mp" || grep -q 'Release 0.3.11 shipped' "$log"
-  grep -q 'v0.3.12 (next)' "$mp" || grep -q 'v0.3.12 (next)' "$log"
+  ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_milestone_next_mp "$mp" "$log" "$_sr_next"
 }
 
 
-# -- wave 4 ship regression v0.3.12 (SR-001–SR-003) -------------------------
+# -- wave 4 ship regression (SR-001–SR-003) -------------------------
 
-@test "DEV-058 SR-001: v0.3.12 release pins are aligned" {
+@test "DEV-058 @regression SR-001: release pins are aligned" {
+  local _sr_story="DEV-058"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  grep -q '## \[0.3.12\]' "$root/CHANGELOG.md"
-  grep -q 'Release 0.3.12 shipped' "$root/docs/Master-Plan.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
+  grep -q "Release ${_sr_ver} shipped" "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
   grep -qE "version-${bash_ver}" "$root/README.md"
   grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
-@test "DEV-058 SR-002: v0.3.12 changelog and review/evidence artifacts exist" {
+@test "DEV-058 @regression SR-002: changelog and review/evidence artifacts exist" {
+  local _sr_story="DEV-058"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.12\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-058' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/review-DEV-058.md" ]
   [ -f "$root/docs/archived/spec-DEV-058.md" ]
@@ -7676,34 +7785,43 @@ JSON
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-058.md"
 }
 
-@test "DEV-058 SR-003: Master-Plan records v0.3.12 ship and next patch milestone" {
+@test "DEV-058 @regression SR-003: Master-Plan records ship and next patch milestone" {
+  local _sr_story="DEV-058"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
-  grep -q 'Ship complete — v0.3.12' "$mp" || grep -q 'Ship complete — v0.3.12' "$log"
-  grep -q 'Release 0.3.12 shipped' "$mp" || grep -q 'Release 0.3.12 shipped' "$log"
-  grep -q 'v0.3.13 (next)' "$mp" || grep -q 'v0.3.13 (next)' "$log"
+  ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_milestone_next_mp "$mp" "$log" "$_sr_next"
   grep -q '| DEV-058 | Feature: Local Dashboard | 2026-07-11 |' "$mp" || grep -q '| DEV-058 | Feature: Local Dashboard | 2026-07-11 |' "$log"
 }
 
-# -- post-v0.3.12 hygiene ship regression v0.3.13 (SR-001–SR-003) ---------------
+# -- DEV-085 hygiene ship regression (SR-001–SR-003) ---------------
 
-@test "DEV-085 SR-001: v0.3.13 release pins are aligned" {
+@test "DEV-085 @regression SR-001: release pins are aligned" {
+  local _sr_story="DEV-085"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  grep -q '## \[0.3.13\]' "$root/CHANGELOG.md"
-  grep -q 'Release 0.3.13 shipped' "$root/docs/Master-Plan.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
+  grep -q "Release ${_sr_ver} shipped" "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
   grep -qE "version-${bash_ver}" "$root/README.md"
   grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
-@test "DEV-085 SR-002: v0.3.13 changelog and review/evidence/spec artifacts exist" {
+@test "DEV-085 @regression SR-002: changelog and review/evidence/spec artifacts exist" {
+  local _sr_story="DEV-085"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.13\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-085' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/review-DEV-085.md" ]
   [ -f "$root/docs/archived/spec-DEV-085.md" ]
@@ -7711,34 +7829,44 @@ JSON
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-085.md"
 }
 
-@test "DEV-085 SR-003: Master-Plan records v0.3.13 ship and v0.3.14 next milestone" {
+@test "DEV-085 @regression SR-003: Master-Plan records ship and next milestone" {
+  local _sr_story="DEV-085"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
-  grep -q 'Ship complete — v0.3.13' "$mp" || grep -q 'Ship complete — v0.3.13' "$log"
-  grep -q 'Release 0.3.13 shipped' "$mp" || grep -q 'Release 0.3.13 shipped' "$log"
-  grep -q 'v0.3.14 (next)' "$mp" || grep -q 'v0.3.14 (next)' "$log"
-  grep -q '| DEV-085 | Chore: Post-v0.3.12 release hygiene' "$mp" || grep -q '| DEV-085 | Chore: Post-v0.3.12 release hygiene' "$log"
+  ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_milestone_next_mp "$mp" "$log" "$_sr_next"
+  local _hyg; _hyg="$(ship_regression_ver DEV-085-HYGIENE)"
+  grep -q "| DEV-085 | Chore: Post-v${_hyg} release hygiene" "$mp" || grep -q "| DEV-085 | Chore: Post-v${_hyg} release hygiene" "$log"
 }
 
-# -- DEV-051 ship regression v0.3.14 (SR-001–SR-003) ----------------------------
+# -- DEV-051 ship regression (SR-001–SR-003) ----------------------------
 
-@test "DEV-051 SR-001: v0.3.14 release pins are aligned" {
+@test "DEV-051 @regression SR-001: release pins are aligned" {
+  local _sr_story="DEV-051"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  grep -q '## \[0.3.14\]' "$root/CHANGELOG.md"
-  grep -q 'Release 0.3.14 shipped' "$root/docs/Master-Plan.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
+  grep -q "Release ${_sr_ver} shipped" "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
   grep -qE "version-${bash_ver}" "$root/README.md"
   grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
-@test "DEV-051 SR-002: v0.3.14 changelog and review/evidence/spec artifacts exist" {
+@test "DEV-051 @regression SR-002: changelog and review/evidence/spec artifacts exist" {
+  local _sr_story="DEV-051"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.14\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-051' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/review-DEV-051.md" ]
   [ -f "$root/docs/archived/spec-DEV-051.md" ]
@@ -7746,34 +7874,43 @@ JSON
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-051.md"
 }
 
-@test "DEV-051 SR-003: Master-Plan records v0.3.14 ship and v0.3.15 next milestone" {
+@test "DEV-051 @regression SR-003: Master-Plan records ship and next milestone" {
+  local _sr_story="DEV-051"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
-  grep -q 'Ship complete — v0.3.14' "$mp" || grep -q 'Ship complete — v0.3.14' "$log"
-  grep -q 'Release 0.3.14 shipped' "$mp" || grep -q 'Release 0.3.14 shipped' "$log"
-  grep -q 'v0.3.15 (next)' "$mp" || grep -q 'v0.3.15 (next)' "$log"
+  ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_milestone_next_mp "$mp" "$log" "$_sr_next"
   grep -q '| DEV-051 | Feature: Tracker Sync Bridge' "$mp" || grep -q '| DEV-051 | Feature: Tracker Sync Bridge' "$log"
 }
 
-# -- Wave 1b ship regression v0.3.15 (SR-001–SR-003) ----------------------------
+# -- Wave 1b ship regression (SR-001–SR-003) ----------------------------
 
-@test "DEV-087 SR-001: v0.3.15 release pins are aligned" {
+@test "DEV-087 @regression SR-001: release pins are aligned" {
+  local _sr_story="DEV-087"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  grep -q '## \[0.3.15\]' "$root/CHANGELOG.md"
-  grep -q 'Release 0.3.15 shipped' "$root/docs/Master-Plan.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
+  grep -q "Release ${_sr_ver} shipped" "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
   grep -qE "version-${bash_ver}" "$root/README.md"
   grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
-@test "DEV-087 SR-002: v0.3.15 changelog and Wave 1b review/evidence/spec artifacts exist" {
+@test "DEV-087 @regression SR-002: changelog and Wave 1b review/evidence/spec artifacts exist" {
+  local _sr_story="DEV-087"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.15\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-087' "$root/CHANGELOG.md"
   grep -q 'DEV-088' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/review-DEV-087.md" ]
@@ -7786,35 +7923,44 @@ JSON
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-088.md"
 }
 
-@test "DEV-087 SR-003: Master-Plan records v0.3.15 ship and v0.3.16 next milestone" {
+@test "DEV-087 @regression SR-003: Master-Plan records ship and next milestone" {
+  local _sr_story="DEV-087"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
-  grep -q 'Ship complete — v0.3.15' "$mp" || grep -q 'Ship complete — v0.3.15' "$log"
-  grep -q 'Release 0.3.15 shipped' "$mp" || grep -q 'Release 0.3.15 shipped' "$log"
-  grep -q 'v0.3.16 (next)' "$mp" || grep -q 'v0.3.16 (next)' "$log"
+  ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_milestone_next_mp "$mp" "$log" "$_sr_next"
   grep -q '| DEV-087 | Feature: Delivery Evidence Contract' "$mp" || grep -q '| DEV-087 | Feature: Delivery Evidence Contract' "$log"
   grep -q '| DEV-088 | Feature: Verifier and Doctor Machine Output' "$mp" || grep -q '| DEV-088 | Feature: Verifier and Doctor Machine Output' "$log"
 }
 
-# -- Wave 2 ship regression v0.3.16 (SR-001–SR-003) ----------------------------
+# -- Wave 2 ship regression (SR-001–SR-003) ----------------------------
 
-@test "DEV-092 SR-001: v0.3.16 release pins are aligned" {
+@test "DEV-092 @regression SR-001: release pins are aligned" {
+  local _sr_story="DEV-092"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  grep -q '## \[0.3.16\]' "$root/CHANGELOG.md"
-  grep -q 'Release 0.3.16 shipped' "$root/docs/Master-Plan.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
+  grep -q "Release ${_sr_ver} shipped" "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
   grep -qE "version-${bash_ver}" "$root/README.md"
   grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
-@test "DEV-092 SR-002: v0.3.16 changelog and Wave 2 review/evidence/spec artifacts exist" {
+@test "DEV-092 @regression SR-002: changelog and Wave 2 review/evidence/spec artifacts exist" {
+  local _sr_story="DEV-092"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.16\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-092' "$root/CHANGELOG.md"
   grep -q 'DEV-094' "$root/CHANGELOG.md"
   grep -q 'DEV-097' "$root/CHANGELOG.md"
@@ -7832,36 +7978,45 @@ JSON
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-097.md"
 }
 
-@test "DEV-092 SR-003: Master-Plan records v0.3.16 ship and v0.3.17 next milestone" {
+@test "DEV-092 @regression SR-003: Master-Plan records ship and next milestone" {
+  local _sr_story="DEV-092"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
-  grep -q 'Ship complete — v0.3.16' "$mp" || grep -q 'Ship complete — v0.3.16' "$log"
-  grep -q 'Release 0.3.16 shipped' "$mp" || grep -q 'Release 0.3.16 shipped' "$log"
-  grep -q 'v0.3.17 (next)' "$mp" || grep -q 'v0.3.17 (next)' "$log"
+  ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_milestone_next_mp "$mp" "$log" "$_sr_next"
   grep -q '| DEV-092 | Chore: Transactional Apply' "$mp" || grep -q '| DEV-092 | Chore: Transactional Apply' "$log"
   grep -q '| DEV-094 | Feature: Assistant Compatibility Contract' "$mp" || grep -q '| DEV-094 | Feature: Assistant Compatibility Contract' "$log"
   grep -q '| DEV-097 | Docs: Framework Supply-Chain Threat Model' "$mp" || grep -q '| DEV-097 | Docs: Framework Supply-Chain Threat Model' "$log"
 }
 
-# -- Wave 1a ship regression v0.3.17 (SR-001–SR-003) ----------------------------
+# -- Wave 1a ship regression (SR-001–SR-003) ----------------------------
 
-@test "DEV-086 SR-001: v0.3.17 release pins are aligned" {
+@test "DEV-086 @regression SR-001: release pins are aligned" {
+  local _sr_story="DEV-086"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  grep -q '## \[0.3.17\]' "$root/CHANGELOG.md"
-  grep -q 'Release 0.3.17 shipped' "$root/docs/Master-Plan.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
+  grep -q "Release ${_sr_ver} shipped" "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
   grep -qE "version-${bash_ver}" "$root/README.md"
   grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
-@test "DEV-086 SR-002: v0.3.17 changelog and Wave 1a review/evidence/spec artifacts exist" {
+@test "DEV-086 @regression SR-002: changelog and Wave 1a review/evidence/spec artifacts exist" {
+  local _sr_story="DEV-086"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.17\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-086' "$root/CHANGELOG.md"
   grep -q 'DEV-090' "$root/CHANGELOG.md"
   grep -q 'DEV-105' "$root/CHANGELOG.md"
@@ -7879,36 +8034,45 @@ JSON
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-105.md"
 }
 
-@test "DEV-086 SR-003: Master-Plan records v0.3.17 ship and v0.3.18 next milestone" {
+@test "DEV-086 @regression SR-003: Master-Plan records ship and next milestone" {
+  local _sr_story="DEV-086"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
-  grep -q 'Ship complete — v0.3.17' "$mp" || grep -q 'Ship complete — v0.3.17' "$log"
-  grep -q 'Release 0.3.17 shipped' "$mp" || grep -q 'Release 0.3.17 shipped' "$log"
-  grep -q 'v0.3.18 (next)' "$mp" || grep -q 'v0.3.18 (next)' "$log"
+  ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_milestone_next_mp "$mp" "$log" "$_sr_next"
   grep -q '| DEV-086 | Chore: Canonical Proof Product Experience' "$mp" || grep -q '| DEV-086 | Chore: Canonical Proof Product Experience' "$log"
   grep -q '| DEV-090 | Feature: Unified Install/Update Plan Engine' "$mp" || grep -q '| DEV-090 | Feature: Unified Install/Update Plan Engine' "$log"
   grep -q '| DEV-105 | Feature: PowerShell Maintain + Update Parity' "$mp" || grep -q '| DEV-105 | Feature: PowerShell Maintain + Update Parity' "$log"
 }
 
-# -- Wave 1b/2 remainder ship regression v0.3.18 (SR-001–SR-003) ---------------
+# -- Wave 1b/2 remainder ship regression (SR-001–SR-003) ---------------
 
-@test "DEV-089 SR-001: v0.3.18 release pins are aligned" {
+@test "DEV-089 @regression SR-001: release pins are aligned" {
+  local _sr_story="DEV-089"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"
   npm_ver="$(grep -m1 '"version"' "$root/packaging/npm/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
-  grep -q '## \[0.3.18\]' "$root/CHANGELOG.md"
-  grep -q 'Release 0.3.18 shipped' "$root/docs/Master-Plan.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
+  grep -q "Release ${_sr_ver} shipped" "$root/docs/Master-Plan.md"
   [ "$bash_ver" = "$ps_ver" ]
   [ "$bash_ver" = "$npm_ver" ]
   grep -qE "version-${bash_ver}" "$root/README.md"
   grep -qE -- "--ref v${bash_ver}" "$root/README.md"
 }
 
-@test "DEV-089 SR-002: v0.3.18 changelog and remainder review/evidence/spec artifacts exist" {
+@test "DEV-089 @regression SR-002: changelog and remainder review/evidence/spec artifacts exist" {
+  local _sr_story="DEV-089"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.18\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   for id in 089 091 093 100; do
     grep -q "DEV-$id" "$root/CHANGELOG.md"
     [ -f "$root/docs/archived/review-DEV-$id.md" ]
@@ -7918,12 +8082,15 @@ JSON
   done
 }
 
-@test "DEV-089 SR-003: Master-Plan records v0.3.18 ship and v0.3.20 milestone progression" {
+@test "DEV-089 @regression SR-003: Master-Plan records ship and milestone progression" {
+  local _sr_story="DEV-089"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
-  grep -q 'Ship complete — v0.3.18' "$mp" || grep -q 'Ship complete — v0.3.18' "$log"
-  grep -q 'Release 0.3.18 shipped' "$mp" || grep -q 'Release 0.3.18 shipped' "$log"
-  grep -q 'Release 0.3.20 shipped' "$mp" || grep -q 'Release 0.3.20 shipped' "$log"
+  ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "0.3.20"
   grep -q '| DEV-089 | Feature: Evidence-Profile Verifier Gates' "$mp" || grep -q '| DEV-089 | Feature: Evidence-Profile Verifier Gates' "$log"
   grep -q '| DEV-091 | Feature: Migration Wizard' "$mp" || grep -q '| DEV-091 | Feature: Migration Wizard' "$log"
   grep -q '| DEV-093 | Feature: Install State File' "$mp" || grep -q '| DEV-093 | Feature: Install State File' "$log"
@@ -10065,10 +10232,11 @@ rmh_readme_body_lines() {
 
 @test "DEV-127 @smoke RMH-001: README references hero motion assets" {
   local readme="$BATS_TEST_DIRNAME/../README.md"
+  local _hero_rel; _hero_rel="$(ship_regression_readme_hero_release)"
   # DEV-152: hero assets moved to GitHub Release storage (docs/media/agtoosa-hero/
   # is no longer tracked in git) to keep the bootstrap.sh install tarball small.
-  grep -q 'github.com/sky2464/AgToosa/releases/download/v0.3.60/agtoosa-hero.gif' "$readme"
-  grep -q 'github.com/sky2464/AgToosa/releases/download/v0.3.60/lifecycle-accent.svg' "$readme"
+  grep -q "github.com/sky2464/AgToosa/releases/download/v${_hero_rel}/agtoosa-hero.gif" "$readme"
+  grep -q "github.com/sky2464/AgToosa/releases/download/v${_hero_rel}/lifecycle-accent.svg" "$readme"
 }
 
 @test "DEV-127 RMH-002: README body stays within line budget" {
@@ -10110,10 +10278,11 @@ rmh_readme_body_lines() {
 
 @test "DEV-146 RMF-001: README quick install includes Windows PowerShell block" {
   local readme="$BATS_TEST_DIRNAME/../README.md"
+  local _ref; _ref="$(ship_regression_readme_install_ref)"
   grep -q '## Quick install' "$readme"
   grep -q 'Windows (PowerShell)' "$readme"
   grep -q 'bootstrap.ps1' "$readme"
-  grep -q '\$Ref = "v0.3.62"' "$readme"
+  grep -q "\$Ref = \"v${_ref}\"" "$readme"
 }
 
 @test "DEV-146 RMF-002: README presents confirmed first-visit tagline" {
@@ -10124,8 +10293,9 @@ rmh_readme_body_lines() {
 @test "DEV-146 RMF-003: README quick install precedes hero motion asset" {
   local readme="$BATS_TEST_DIRNAME/../README.md"
   local install_line hero_line
+  local _hero_rel; _hero_rel="$(ship_regression_readme_hero_release)"
   install_line="$(grep -n '^## Quick install' "$readme" | head -n1 | cut -d: -f1)"
-  hero_line="$(grep -n 'releases/download/v0.3.60/agtoosa-hero.gif' "$readme" | head -n1 | cut -d: -f1)"
+  hero_line="$(grep -n "releases/download/v${_hero_rel}/agtoosa-hero.gif" "$readme" | head -n1 | cut -d: -f1)"
   [[ -n "$install_line" ]]
   [[ -n "$hero_line" ]]
   [[ "$install_line" -lt "$hero_line" ]]
@@ -10135,7 +10305,8 @@ rmh_readme_body_lines() {
 
 @test "DEV-147 INS-001: README quick install uses AV-friendly bootstrap patterns" {
   local readme="$BATS_TEST_DIRNAME/../README.md"
-  grep -q 'bash -s -- --ref v0.3.62' "$readme"
+  local _ref; _ref="$(ship_regression_readme_install_ref)"
+  grep -q "bash -s -- --ref v${_ref}" "$readme"
   grep -q 'OutFile \$BootstrapPath' "$readme"
   ! grep -q 'scriptblock]::Create' "$readme"
   ! grep -q '| iex' "$readme"
@@ -10166,7 +10337,8 @@ rmh_readme_body_lines() {
   grep -q 'SHA256SUMS' "$ref"
   grep -q 'For IT / security reviewers' "$ref"
   grep -q 'Development only (full repository' "$ref"
-  ! grep -q 'git clone --depth 1 --branch v0.3.62' "$ref"
+  local _ref; _ref="$(ship_regression_readme_install_ref)"
+  ! grep -q "git clone --depth 1 --branch v${_ref}" "$ref"
 }
 
 # ── DEV-105: PowerShell maintain + update parity (PSP-001–PSP-008) ───────────
@@ -13224,9 +13396,12 @@ PY
   [ "$status" -eq 0 ]
 }
 
-# -- Wave 3 ship regression v0.3.20 (SR-001–SR-003) + v0.3.26 current pins --------
+# -- Wave 3 ship regression (SR-001–SR-003) + live pin checks --------
 
-@test "DEV-096 SR-001: v0.3.26 release pins are aligned" {
+@test "DEV-096 @regression SR-001: release pins are aligned" {
+  local _sr_story="DEV-096"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
   ps_ver="$(grep -m1 'AGTOOSA_VERSION' "$root/agtoosa.ps1" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -13234,13 +13409,16 @@ PY
   [ "$bash_ver" = "$ps_ver" ]
 
   [ "$bash_ver" = "$npm_ver" ]
-  grep -q '## \[0.3.26\]' "$root/CHANGELOG.md"
-  grep -q 'version-0.3.26' "$root/README.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
+  grep -qE "version-${bash_ver}" "$root/README.md"
 }
 
-@test "DEV-096 SR-002: v0.3.20 changelog and Wave 3 review/evidence/spec artifacts exist" {
+@test "DEV-096 @regression SR-002: changelog and Wave 3 review/evidence/spec artifacts exist" {
+  local _sr_story="DEV-096"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.20\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-096' "$root/CHANGELOG.md"
   grep -q 'DEV-095' "$root/CHANGELOG.md"
   grep -q 'DEV-104' "$root/CHANGELOG.md"
@@ -13252,14 +13430,17 @@ PY
   done
 }
 
-@test "DEV-096 SR-003: Master-Plan records v0.3.26 ship and v0.3.27 next milestone" {
+@test "DEV-096 @regression SR-003: Master-Plan records ship and next milestone" {
+  local _sr_story="DEV-096"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local mp="$BATS_TEST_DIRNAME/../docs/Master-Plan.md"
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
-  grep -q 'Ship complete — v0.3.26' "$mp" || grep -q 'Ship complete — v0.3.26' "$log"
-  grep -q 'Release 0.3.26 shipped' "$mp" || grep -q 'Release 0.3.26 shipped' "$log"
-  grep -q 'v0.3.27 (next)' "$mp" || grep -q 'v0.3.27 (next)' "$log"
+  ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_milestone_next_mp "$mp" "$log" "$_sr_next"
   grep -q 'DEV-113' "$mp" || grep -q 'DEV-113' "$log"
-  grep -q 'Shipped — v0.3.26' "$mp" || grep -q 'Shipped — v0.3.26' "$log"
+  grep -q "Shipped — v${_sr_ver}" "$mp" || grep -q "Shipped — v${_sr_ver}" "$log"
 }
 
 # ── DEV-109: Lifecycle Next-Step Sync + Multi-Spec Clarity (LNS-001–LNS-010) ───
@@ -13347,11 +13528,14 @@ PY
   rm -rf "$tmp"
 }
 
-# -- DEV-109 ship regression v0.3.21 (SR-001–SR-002) ---------------------------
+# -- DEV-109 ship regression (SR-001–SR-002) ---------------------------
 
-@test "DEV-109 SR-001: v0.3.21 changelog and DEV-109 review/evidence/spec artifacts exist" {
+@test "DEV-109 @regression SR-001: changelog and DEV-109 review/evidence/spec artifacts exist" {
+  local _sr_story="DEV-109"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.21\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-109' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-109.md" ]
   [ -f "$root/docs/archived/review-DEV-109.md" ]
@@ -13359,7 +13543,10 @@ PY
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-109.md"
 }
 
-@test "DEV-109 SR-002: lifecycle-next-step-sync capability spec merged" {
+@test "DEV-109 @regression SR-002: lifecycle-next-step-sync capability spec merged" {
+  local _sr_story="DEV-109"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   [ -f "$root/docs/specs/system/lifecycle-next-step-sync.md" ]
   grep -q 'DEV-109' "$root/docs/specs/system/lifecycle-next-step-sync.md"
@@ -13451,11 +13638,14 @@ PY
   grep -q 'Project Intake' "$root/template/Docs/AgToosa_Quickref.md"
 }
 
-# -- DEV-110 ship regression v0.3.23 (SR-001–SR-002) ---------------------------
+# -- DEV-110 ship regression (SR-001–SR-002) ---------------------------
 
-@test "DEV-110 SR-001: v0.3.22 changelog and DEV-110 review/evidence/spec artifacts exist" {
+@test "DEV-110 @regression SR-001: changelog and DEV-110 review/evidence/spec artifacts exist" {
+  local _sr_story="DEV-110"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.22\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-110' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-110.md" ]
   [ -f "$root/docs/archived/review-DEV-110.md" ]
@@ -13463,7 +13653,10 @@ PY
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-110.md"
 }
 
-@test "DEV-110 SR-002: ADR-013 project intake accepted" {
+@test "DEV-110 @regression SR-002: ADR-013 project intake accepted" {
+  local _sr_story="DEV-110"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   [ -f "$root/docs/adr/ADR-013-project-intake.md" ]
   grep -q 'Accepted' "$root/docs/adr/ADR-013-project-intake.md"
@@ -13737,9 +13930,12 @@ PY
   [[ "$output" != *"1 framework files"* ]]
 }
 
-@test "DEV-111 SR-001: v0.3.23 changelog and DEV-111 review/evidence/spec artifacts exist" {
+@test "DEV-111 @regression SR-001: changelog and DEV-111 review/evidence/spec artifacts exist" {
+  local _sr_story="DEV-111"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.23\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-111' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-111.md" ]
   [ -f "$root/docs/archived/review-DEV-111.md" ]
@@ -14048,9 +14244,12 @@ _cln_seed_project() {
   [[ "$output" == *"CLAUDE.md"* ]]
 }
 
-@test "DEV-115 SR-001: v0.3.27 changelog and DEV-115 review/evidence/spec artifacts exist" {
+@test "DEV-115 @regression SR-001: changelog and DEV-115 review/evidence/spec artifacts exist" {
+  local _sr_story="DEV-115"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.27\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-115' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-115.md" ]
   [ -f "$root/docs/archived/review-DEV-115.md" ]
@@ -14058,9 +14257,12 @@ _cln_seed_project() {
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-115.md"
 }
 
-@test "DEV-114 SR-001: v0.3.25 changelog and DEV-114 review/evidence/spec artifacts exist" {
+@test "DEV-114 @regression SR-001: changelog and DEV-114 review/evidence/spec artifacts exist" {
+  local _sr_story="DEV-114"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.25\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-114' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-114.md" ]
   [ -f "$root/docs/archived/review-DEV-114.md" ]
@@ -14068,9 +14270,12 @@ _cln_seed_project() {
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-114.md"
 }
 
-@test "DEV-113 SR-001: v0.3.26 changelog and DEV-113 review/evidence/spec artifacts exist" {
+@test "DEV-113 @regression SR-001: changelog and DEV-113 review/evidence/spec artifacts exist" {
+  local _sr_story="DEV-113"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.26\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-113' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-113.md" ]
   [ -f "$root/docs/archived/review-DEV-113.md" ]
@@ -14078,9 +14283,12 @@ _cln_seed_project() {
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-113.md"
 }
 
-@test "DEV-112 SR-001: v0.3.24 changelog and DEV-112 review/evidence/spec artifacts exist" {
+@test "DEV-112 @regression SR-001: changelog and DEV-112 review/evidence/spec artifacts exist" {
+  local _sr_story="DEV-112"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.24\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-112' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-112.md" ]
   [ -f "$root/docs/archived/review-DEV-112.md" ]
@@ -14149,11 +14357,14 @@ _cln_seed_project() {
   echo "$output" | grep -q '"spec_approved":'
 }
 
-# -- DEV-116 ship regression v0.3.28 (SR-001–SR-002) ---------------------------
+# -- DEV-116 ship regression (SR-001–SR-002) ---------------------------
 
-@test "DEV-116 SR-001: v0.3.28 changelog and DEV-116 review/evidence/spec artifacts exist" {
+@test "DEV-116 @regression SR-001: changelog and DEV-116 review/evidence/spec artifacts exist" {
+  local _sr_story="DEV-116"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.28\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-116' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-116.md" ]
   [ -f "$root/docs/archived/review-DEV-116.md" ]
@@ -14161,18 +14372,24 @@ _cln_seed_project() {
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-116.md"
 }
 
-@test "DEV-116 SR-002: ADR-014 lifecycle compass accepted" {
+@test "DEV-116 @regression SR-002: ADR-014 lifecycle compass accepted" {
+  local _sr_story="DEV-116"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   [ -f "$root/docs/adr/ADR-014-lifecycle-compass.md" ]
   grep -q 'Accepted' "$root/docs/adr/ADR-014-lifecycle-compass.md"
   grep -q 'DEV-116' "$root/docs/adr/ADR-014-lifecycle-compass.md"
 }
 
-# -- DEV-117 ship regression v0.3.29 (SR-001) ---------------------------------
+# -- DEV-117 ship regression (SR-001) ---------------------------------
 
-@test "DEV-117 SR-001: v0.3.29 changelog and DEV-117 review/evidence/spec artifacts exist" {
+@test "DEV-117 @regression SR-001: changelog and DEV-117 review/evidence/spec artifacts exist" {
+  local _sr_story="DEV-117"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.29\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-117' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-117.md" ]
   [ -f "$root/docs/archived/review-DEV-117.md" ]
@@ -14180,11 +14397,14 @@ _cln_seed_project() {
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-117.md"
 }
 
-# -- DEV-118 ship regression v0.3.30 (SR-001–SR-002) ---------------------------
+# -- DEV-118 ship regression (SR-001–SR-002) ---------------------------
 
-@test "DEV-118 SR-001: v0.3.30 changelog and DEV-118 review/evidence/spec artifacts exist" {
+@test "DEV-118 @regression SR-001: changelog and DEV-118 review/evidence/spec artifacts exist" {
+  local _sr_story="DEV-118"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.30\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-118' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-118.md" ]
   [ -f "$root/docs/archived/review-DEV-118.md" ]
@@ -14192,7 +14412,10 @@ _cln_seed_project() {
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-118.md"
 }
 
-@test "DEV-118 SR-002: ADR-015–ADR-017 product truth accepted" {
+@test "DEV-118 @regression SR-002: ADR-015–ADR-017 product truth accepted" {
+  local _sr_story="DEV-118"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   for adr in ADR-015-product-truth-contract ADR-016-bounded-adapter-rendering ADR-017-fresh-claims-and-windows-truth; do
     [ -f "$root/docs/adr/${adr}.md" ]
@@ -14301,7 +14524,7 @@ EOF
   done
 }
 
-# -- Cross-model consent ship v0.3.31 (SR-001–SR-002) --------------------------
+# -- Cross-model consent ship (SR-001–SR-002) --------------------------
 
 # ── DEV-125: /agtoosa-next Lifecycle Dispatcher (NXT-001–NXT-008) ─────────────
 
@@ -14808,22 +15031,27 @@ EOF
   grep -q "gitignore_merge_operational" "$root/lib/gitignore.sh"
 }
 
-@test "v0.3.31 SR-001: v0.3.31 changelog and cross-model consent release recorded" {
+@test "RELEASE-031 @regression SR-001: changelog and cross-model consent release recorded" {
+  local _sr_story="RELEASE-031"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.31\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'cross-model review consent' "$root/CHANGELOG.md"
 }
 
-@test "v0.3.31 SR-002: cross-model consent contract shipped in template" {
+@test "RELEASE-031 @regression SR-002: cross-model consent contract shipped in template" {
   local root="$BATS_TEST_DIRNAME/.."
   grep -q 'User consent and model ceiling' "$root/template/Docs/AgToosa_CrossModelReview.md"
   grep -q 'cross_model: recommended' "$root/template/Docs/Context/workflow.md"
   grep -q 'reviewer_model: parent' "$root/template/Docs/Context/workflow.md"
 }
 
-# -- DEV-119 ship regression v0.3.32 (SR-001–SR-002) --------------------------
+# -- DEV-119 ship regression (SR-001–SR-002) --------------------------
 
-@test "DEV-119 SR-001: v0.3.32 release pins and changelog exist" {
+@test "DEV-119 @regression SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-119"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -14835,7 +15063,7 @@ EOF
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.32\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-119' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-119.md" ]
   [ -f "$root/docs/archived/review-DEV-119.md" ]
@@ -14843,7 +15071,10 @@ EOF
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-119.md"
 }
 
-@test "DEV-119 SR-002: transaction journal module and CLI flags exist" {
+@test "DEV-119 @regression SR-002: transaction journal module and CLI flags exist" {
+  local _sr_story="DEV-119"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   [ -f "$root/lib/transaction.sh" ]
   grep -q 'transaction-recover' "$root/agtoosa.sh"
@@ -14851,9 +15082,12 @@ EOF
   grep -q '\.agtoosa/transactions' "$root/template/.gitignore"
 }
 
-# -- DEV-127 ship regression v0.3.33 (SR-001) --------------------------------
+# -- DEV-127 ship regression (SR-001) --------------------------------
 
-@test "DEV-127 @smoke SR-001: v0.3.33 release pins and changelog exist" {
+@test "DEV-127 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-127"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -14865,18 +15099,22 @@ EOF
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.33\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-127' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-127.md" ]
   [ -f "$root/docs/archived/review-DEV-127.md" ]
   [ -f "$root/docs/archived/evidence-DEV-127.md" ]
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-127.md"
-  grep -q 'releases/download/v0.3.60/agtoosa-hero.gif' "$root/README.md"
+  local _hero_rel; _hero_rel="$(ship_regression_readme_hero_release)"
+  grep -q "releases/download/v${_hero_rel}/agtoosa-hero.gif" "$root/README.md"
 }
 
-# -- DEV-121 ship regression v0.3.34 (SR-001) --------------------------------
+# -- DEV-121 ship regression (SR-001) --------------------------------
 
-@test "DEV-121 @smoke SR-001: v0.3.34 release pins and changelog exist" {
+@test "DEV-121 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-121"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -14888,7 +15126,7 @@ EOF
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.34\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-121' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-121.md" ]
   [ -f "$root/docs/archived/review-DEV-121.md" ]
@@ -15368,11 +15606,14 @@ EOF
   grep -q '"story_id": "DEV-120"' "$root/tests/fixtures/drift-assess/context-compilation-DEV-120.json"
 }
 
-# -- DEV-125 ship regression v0.3.35 (SR-001) --------------------------------
+# -- DEV-125 ship regression (SR-001) --------------------------------
 
-@test "DEV-125 SR-001: v0.3.35 changelog and DEV-125 artifacts exist" {
+@test "DEV-125 @regression SR-001: changelog and DEV-125 artifacts exist" {
+  local _sr_story="DEV-125"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.35\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-125' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-125.md" ]
   [ -f "$root/docs/archived/review-DEV-125.md" ]
@@ -15380,22 +15621,28 @@ EOF
   [ -f "$root/docs/AgToosa_Next.md" ]
 }
 
-# -- DEV-126 ship regression v0.3.36 (SR-001) --------------------------------
+# -- DEV-126 ship regression (SR-001) --------------------------------
 
-@test "DEV-126 SR-001: v0.3.36 changelog and DEV-126 artifacts exist" {
+@test "DEV-126 @regression SR-001: changelog and DEV-126 artifacts exist" {
+  local _sr_story="DEV-126"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.36\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-126' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-126.md" ]
   [ -f "$root/docs/archived/review-DEV-126.md" ]
   [ -f "$root/docs/archived/evidence-DEV-126.md" ]
 }
 
-# -- DEV-120 ship regression v0.3.37 (SR-001) --------------------------------
+# -- DEV-120 ship regression (SR-001) --------------------------------
 
-@test "DEV-120 @smoke SR-001: v0.3.37 changelog and DEV-120 artifacts exist" {
+@test "DEV-120 @regression @smoke SR-001: changelog and DEV-120 artifacts exist" {
+  local _sr_story="DEV-120"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.37\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-120' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-120.md" ]
   [ -f "$root/docs/archived/review-DEV-120.md" ]
@@ -15404,9 +15651,12 @@ EOF
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-120.md"
 }
 
-# -- DEV-122 ship regression v0.3.38 (SR-001) --------------------------------
+# -- DEV-122 ship regression (SR-001) --------------------------------
 
-@test "DEV-122 @smoke SR-001: v0.3.38 release pins and changelog exist" {
+@test "DEV-122 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-122"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -15418,7 +15668,7 @@ EOF
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.38\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-122' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-122.md" ]
   [ -f "$root/docs/archived/review-DEV-122.md" ]
@@ -15555,9 +15805,12 @@ EOF
   grep -q '"story_id": "DEV-123"' "$root/tests/fixtures/capsule/execution-capsule-DEV-120.json"
 }
 
-# -- DEV-123 ship regression v0.3.39 (SR-001) --------------------------------
+# -- DEV-123 ship regression (SR-001) --------------------------------
 
-@test "DEV-123 @smoke SR-001: v0.3.39 release pins and changelog exist" {
+@test "DEV-123 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-123"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -15569,7 +15822,7 @@ EOF
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.39\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-123' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-123.md" ]
   [ -f "$root/docs/archived/review-DEV-123.md" ]
@@ -15726,9 +15979,12 @@ PY
   grep -q '"story_id": "DEV-120"' "$root/tests/fixtures/interchange/interchange-manifest-DEV-120.json"
 }
 
-# -- DEV-124 ship regression v0.3.40 (SR-001) --------------------------------
+# -- DEV-124 ship regression (SR-001) --------------------------------
 
-@test "DEV-124 @smoke SR-001: v0.3.40 release pins and changelog exist" {
+@test "DEV-124 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-124"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -15740,7 +15996,7 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.40\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-124' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-124.md" ]
   [ -f "$root/docs/archived/review-DEV-124.md" ]
@@ -15834,9 +16090,12 @@ PY
   [[ "$output" == *"older than installed"* ]]
 }
 
-# -- DEV-128 ship regression v0.3.41 (SR-001) ---------------------------------
+# -- DEV-128 ship regression (SR-001) ---------------------------------
 
-@test "DEV-128 @smoke SR-001: v0.3.42 release pins and changelog exist" {
+@test "DEV-128 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-128"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -15848,7 +16107,7 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.42\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-128' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-128.md" ]
   [ -f "$root/docs/archived/review-DEV-128.md" ]
@@ -15856,7 +16115,10 @@ PY
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-128.md"
 }
 
-@test "DEV-129 @smoke SR-001: v0.3.43 release pins and changelog exist" {
+@test "DEV-129 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-129"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -15868,7 +16130,7 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.43\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-129' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-129.md" ]
   [ -f "$root/docs/archived/review-DEV-129.md" ]
@@ -15915,7 +16177,10 @@ PY
   [ "$status" -eq 0 ]
 }
 
-@test "DEV-130 @smoke SR-001: v0.3.44 release pins and changelog exist" {
+@test "DEV-130 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-130"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -15927,7 +16192,7 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.44\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-130' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-130.md" ]
   [ -f "$root/docs/archived/review-DEV-130.md" ]
@@ -15969,7 +16234,10 @@ PY
   grep -q "gh release create" "$advanced"
 }
 
-@test "DEV-131 @smoke SR-001: v0.3.45 release pins and changelog exist" {
+@test "DEV-131 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-131"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -15981,7 +16249,7 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.45\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-131' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-131.md" ]
   [ -f "$root/docs/archived/review-DEV-131.md" ]
@@ -16067,7 +16335,10 @@ PY
   [[ "$output" == "preserve|project-owned state preserved" ]]
 }
 
-@test "DEV-132 @smoke SR-001: v0.3.46 release pins and changelog exist" {
+@test "DEV-132 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-132"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -16079,7 +16350,7 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.46\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-132' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-132.md" ]
   [ -f "$root/docs/archived/review-DEV-132.md" ]
@@ -16156,7 +16427,10 @@ PY
   grep -q 'BRH-001' "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-133.md"
 }
 
-@test "DEV-133 @smoke SR-001: v0.3.47 release pins and changelog exist" {
+@test "DEV-133 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-133"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -16168,7 +16442,7 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.47\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-133' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-133.md" ]
   [ -f "$root/docs/archived/review-DEV-133.md" ]
@@ -16176,7 +16450,7 @@ PY
 
 # -- DEV-134: README hero media catch-up (MED-001–004) --------------------------
 # DEV-152: docs/media/agtoosa-hero/ (the Remotion source tree) is no longer
-# tracked in git — the rendered GIF/PNG/SVG are hosted on the v0.3.60 GitHub
+# tracked in git — the rendered GIF/PNG/SVG are hosted on a pinned GitHub
 # Release instead, to keep the bootstrap.sh install tarball small. MED-001,
 # MED-002, and MED-004 asserted on the now-untracked Remotion source and
 # have no remaining subject in this repo; MED-003 is kept, updated to check
@@ -16184,10 +16458,14 @@ PY
 
 @test "DEV-134 @smoke MED-003: README references published hero GIF assets" {
   local readme="$BATS_TEST_DIRNAME/../README.md"
-  grep -q 'releases/download/v0.3.60/agtoosa-hero.gif' "$readme"
+  local _hero_rel; _hero_rel="$(ship_regression_readme_hero_release)"
+  grep -q "releases/download/v${_hero_rel}/agtoosa-hero.gif" "$readme"
 }
 
-@test "DEV-134 @smoke SR-001: v0.3.48 release pins and changelog exist" {
+@test "DEV-134 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-134"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -16199,7 +16477,7 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.48\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-134' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-134.md" ]
   [ -f "$root/docs/archived/review-DEV-134.md" ]
@@ -16267,7 +16545,10 @@ PY
   grep -q 'not.*`/agtoosa-ship`' "$root/docs/AgToosa_Next.md"
 }
 
-@test "DEV-135 @smoke SR-001: v0.3.49 release pins and changelog exist" {
+@test "DEV-135 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-135"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -16279,13 +16560,16 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.49\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-135' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-135.md" ]
   [ -f "$root/docs/archived/review-DEV-135.md" ]
 }
 
-@test "DEV-136 @smoke SR-001: v0.3.50 release pins and changelog exist" {
+@test "DEV-136 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-136"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -16297,13 +16581,16 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.50\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-136' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-136.md" ]
   [ -f "$root/docs/archived/review-DEV-136.md" ]
 }
 
-@test "DEV-137 @smoke SR-001: v0.3.51 release pins and changelog exist" {
+@test "DEV-137 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-137"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -16315,13 +16602,16 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.51\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-137' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-137.md" ]
   [ -f "$root/docs/archived/review-DEV-137.md" ]
 }
 
-@test "DEV-138 @smoke SR-001: v0.3.53 release pins and changelog exist" {
+@test "DEV-138 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-138"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -16333,13 +16623,16 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.53\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-138' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-138.md" ]
   [ -f "$root/docs/archived/review-DEV-138.md" ]
 }
 
-@test "DEV-139 @smoke SR-001: v0.3.52 release pins and changelog exist" {
+@test "DEV-139 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-139"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -16351,7 +16644,7 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.52\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-139' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-139.md" ]
   [ -f "$root/docs/archived/review-DEV-139.md" ]
@@ -16660,9 +16953,10 @@ PY
 
 @test "DEV-147 GIP-014: only stories awaiting a release stay open; shipped and done stories still close" {
   local root="$BATS_TEST_DIRNAME/.."
+  local _live; _live="$(agtoosa_live_version "$root")"
   run bash -c 'source "$1/lib/github-issues.sh" && _gh_issues_story_shipped "$2"' _ "$root" "✅ Done — Merged to main (PR #145), awaiting next release"
   [ "$status" -ne 0 ]
-  run bash -c 'source "$1/lib/github-issues.sh" && _gh_issues_story_shipped "$2"' _ "$root" "🏁 Shipped — v0.3.63"
+  run bash -c 'source "$1/lib/github-issues.sh" && _gh_issues_story_shipped "$2"' _ "$root" "🏁 Shipped — v${_live}"
   [ "$status" -eq 0 ]
   run bash -c 'source "$1/lib/github-issues.sh" && _gh_issues_story_shipped "$2"' _ "$root" "✅ Done — delivered via DEV-061"
   [ "$status" -eq 0 ]
@@ -16781,7 +17075,10 @@ PY
   grep -q 'DEV-140' "$root/docs/adr/ADR-019-agtoosa-next-dispatcher.md"
 }
 
-@test "DEV-140 @smoke SR-001: v0.3.54 release pins and changelog exist" {
+@test "DEV-140 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-140"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -16793,7 +17090,7 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.54\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-140' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-140.md" ]
 }
@@ -16897,7 +17194,10 @@ PY
   [ "$status" -eq 0 ]
 }
 
-@test "DEV-141 @smoke SR-001: v0.3.55 release pins and changelog exist" {
+@test "DEV-141 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-141"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -16909,7 +17209,7 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.55\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-141' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-141.md" ]
   [ -f "$root/docs/archived/review-DEV-141.md" ]
@@ -16998,7 +17298,10 @@ PY
   grep -q 'deploy-pages' "$wf"
 }
 
-@test "DEV-142 @smoke SR-001: v0.3.56 release pins and changelog exist" {
+@test "DEV-142 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-142"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -17010,7 +17313,7 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.56\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-142' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-142.md" ]
   [ -f "$root/docs/archived/review-DEV-142.md" ]
@@ -17124,16 +17427,22 @@ PY
   [ "$status" -eq 0 ]
 }
 
-@test "DEV-143 @smoke SR-001: v0.3.57 release pins and changelog exist" {
+@test "DEV-143 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-143"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
-  grep -q '## \[0.3.57\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-143' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-143.md" ]
   [ -f "$root/docs/archived/review-DEV-143.md" ]
   [ -f "$root/docs/archived/ship-check-DEV-143.md" ]
 }
 
-@test "DEV-144 @smoke SR-001: v0.3.58 release pins and changelog exist" {
+@test "DEV-144 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-144"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -17145,7 +17454,7 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.58\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-144' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-144.md" ]
   [ -f "$root/docs/archived/review-DEV-144.md" ]
@@ -17346,7 +17655,10 @@ PY
   [ "$status" -eq 0 ]
 }
 
-@test "DEV-147 @smoke SR-001: v0.3.62 release pins and changelog exist" {
+@test "DEV-147 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-147"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -17358,12 +17670,15 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.62\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'agtoosa_prompt_read' "$root/lib/config.sh"
-  grep -q '## \[0.3.61\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "0.3.61"
 }
 
-@test "DEV-146 @smoke SR-001: v0.3.59 release pins and changelog exist" {
+@test "DEV-146 @regression @smoke SR-001: release pins and changelog exist" {
+  local _sr_story="DEV-146"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   local bash_ver ps_ver npm_ver formula_ver
   bash_ver="$(grep -m1 'AGTOOSA_VERSION=' "$root/agtoosa.sh" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
@@ -17375,13 +17690,16 @@ PY
   [ "$bash_ver" = "$npm_ver" ]
 
   [ "$bash_ver" = "$formula_ver" ]
-  grep -q '## \[0.3.59\]' "$root/CHANGELOG.md"
+  ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'DEV-146' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-146.md" ]
   [ -f "$root/docs/archived/review-DEV-146.md" ]
 }
 
-@test "DEV-145 @smoke SR-001: v0.3.59 release includes bootstrap apply" {
+@test "DEV-145 @regression @smoke SR-001: release includes bootstrap apply" {
+  local _sr_story="DEV-145"
+  local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
+  local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
   local root="$BATS_TEST_DIRNAME/.."
   grep -q 'DEV-145' "$root/CHANGELOG.md"
   [ -f "$root/docs/archived/spec-DEV-145.md" ]
@@ -17552,4 +17870,47 @@ PY
   grep -qi 'pull_request' "$doc"
   grep -qi 'bats' "$doc"
   grep -qi 'post-ship' "$doc"
+}
+
+# ── DEV-152: Bats cleanup & version pin consolidation (BCP-001–BCP-005) ────────
+
+@test "DEV-152 BCP-001: stale patch hardcodes absent from agtoosa.bats" {
+  local root="$BATS_TEST_DIRNAME/.."
+  local bats_file="$root/tests/agtoosa.bats"
+  local count
+  count="$(grep -Ec 'v0\.3\.[0-9]+|v5\.3\.[0-9]+' "$bats_file" || true)"
+  [[ "$count" -le 10 ]]
+}
+
+@test "DEV-152 BCP-002: ship wave 2–4 SR block tagged @regression" {
+  local f="$BATS_TEST_DIRNAME/agtoosa.bats"
+  local block tagged total
+  block="$(sed -n '7570,7900p' "$f")"
+  total="$(printf '%s\n' "$block" | grep -c '@test "DEV-' || true)"
+  tagged="$(printf '%s\n' "$block" | grep -c '@regression' || true)"
+  [[ "$tagged" -ge 1 ]]
+  [[ "$tagged" -ge "$(( total / 2 ))" ]]
+}
+
+@test "DEV-152 BCP-003: DEV-119–124 ship wave SR tests tagged @regression" {
+  local f="$BATS_TEST_DIRNAME/agtoosa.bats"
+  local block tagged
+  block="$(sed -n '14900,15600p' "$f")"
+  tagged="$(printf '%s\n' "$block" | grep -c '@regression SR-' || true)"
+  [[ "$tagged" -ge 3 ]]
+}
+
+@test "DEV-152 BCP-004: bats file parses and ship-regression lib loads" {
+  local lib="$BATS_TEST_DIRNAME/lib/ship-regression.bash"
+  [ -f "$lib" ]
+  run bash -n "$lib"
+  [ "$status" -eq 0 ]
+  run ship_regression_ver DEV-074
+  [ "$status" -eq 0 ]
+  [[ "$output" == "0.3.2" ]]
+}
+
+@test "DEV-152 BCP-005: CHANGELOG records bats version-pin consolidation" {
+  local cl="$BATS_TEST_DIRNAME/../CHANGELOG.md"
+  grep -qi 'DEV-152' "$cl" || grep -qi 'version.pin' "$cl" || grep -qi 'ship-regression' "$cl"
 }
