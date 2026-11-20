@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-11-20 (DEV-152 Build complete via `/agtoosa-next`)
+> **Last updated:** 2026-11-20 (DEV-152 Review ✅ Approved via `/agtoosa-next`)
 
 ## Project Charter
 
@@ -9,7 +9,7 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Build — DEV-152 (v0.3.63 milestone; DEV-153 spec pending approval) |
+| Current phase | Review — DEV-152 approved (v0.3.63 shipped; suggested next patch v0.3.64; DEV-153 spec pending approval) |
 | Milestone | `v0.3.63` (shipped) |
 | Active cycle | DEV-152, DEV-153 |
 | Cycle state | Active |
@@ -23,7 +23,7 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-152 | Chore: Bats Cleanup & Version Pin Consolidation | Chore | S | 🟨 In Progress — Build Complete | 5/5 |
+| DEV-152 | Chore: Bats Cleanup & Version Pin Consolidation | Chore | S | 🔍 In Review | 5/5 |
 | DEV-153 | Feature: Bats Tiering & Smoke-Set Extraction | Feature | M | 🟦 Todo — Spec Ready for Approval (human review pending) | 0/5 |
 | DEV-155 | Fix: Cross-Platform Fallback Guidance for Unrecognized `/agtoosa-*` Commands | Fix | S | ✅ Done — Merged to main (PR #145), awaiting next release | 6/6 |
 
@@ -545,6 +545,8 @@ Conflict playbook: _DEV-150 + DEV-151 active for v0.3.63; demand-gated DEV-057 d
 
 | Date | Event | By |
 |------|-------|----|
+| 2026-11-20 05:48 | ✅ /agtoosa-review — Review ✅ Approved — DEV-152 — PASS, 0 critical, 2 warnings (brittle BCP line windows; `bats --compile` is not a flag in this bats-core). BCP-001–BCP-005 passed on main. Suggested release v0.3.64. | AgToosa |
+| 2026-11-20 05:44 | 🔍 /agtoosa-review — Review 🔍 Started — DEV-152 — 4-persona review running. | AgToosa |
 | 2026-09-10 02:16 | 🧹 Master-Plan drift fix (#166) — DEV-154 and DEV-155 status rows still read pre-merge state though both PRs are already on `main`: DEV-154 said "PR open ..., pending merge" (PR #158 merged), DEV-155 said "Todo — Build Complete" in the Active Cycle and Backlog tables (all 6 subtasks checked, PR #145 merged 2026-09-07). Both now read "✅ Done — Merged to main ..., awaiting next release" — not "🏁 Shipped", since no tagged release has cut since v0.3.63 and every other Shipped row here points at a real version. Header `Last updated` line refreshed to match. | AgToosa |
 | 2026-09-04 10:00 | 🔧 DEV-154 — `require-labels` (`.github/workflows/branch-protection.yml`) now re-fetches live PR labels via `gh pr view` with a bounded retry (was trusting the stale `pull_request` event-payload snapshot, which races `auto-label.yml` and fails almost every new PR). Bats: DEV-154 T-001–T-003. PR open, closes #156; pending human merge — do not mark this row shipped until then. | AgToosa |
 | 2026-08-27 12:20 | 🚀 Ship backfill — DEV-151 (Tracker Publish CI Automation) moved to Completed This Cycle; merged 2026-08-24 via PR #129 (commit `5a56e37`) as part of v0.3.63 but never transitioned out of Active Cycle or logged here. CHANGELOG.md and agtoosa-events.jsonl backfilled to match. See #140. | AgToosa |
