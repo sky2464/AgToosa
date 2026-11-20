@@ -7003,7 +7003,7 @@ EOF
 @test "DEV-149 B33-002: install wizard documents . and Enter for current folder" {
   grep -q 'Press Enter or type' "$SCRIPT"
   grep -q 'Project path \[.\]' "$SCRIPT"
-  grep -q "PROJECT_PATH="${PROJECT_PATH:-.}"" "$SCRIPT"
+  grep -q 'PROJECT_PATH="${PROJECT_PATH:-.}"' "$SCRIPT"
 }
 
 @test "DEV-149 B33-003: install wizard routes interactive reads through agtoosa_prompt_read" {
@@ -8090,7 +8090,7 @@ JSON
   local log="$BATS_TEST_DIRNAME/../docs/archived/updatelog-2026.md"
   ship_regression_ship_complete_mp "$mp" "$log" "$_sr_ver"
   ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
-  ship_regression_release_shipped_mp "$mp" "$log" "$_sr_ver"
+  ship_regression_release_shipped_mp "$mp" "$log" "0.3.20"
   grep -q '| DEV-089 | Feature: Evidence-Profile Verifier Gates' "$mp" || grep -q '| DEV-089 | Feature: Evidence-Profile Verifier Gates' "$log"
   grep -q '| DEV-091 | Feature: Migration Wizard' "$mp" || grep -q '| DEV-091 | Feature: Migration Wizard' "$log"
   grep -q '| DEV-093 | Feature: Install State File' "$mp" || grep -q '| DEV-093 | Feature: Install State File' "$log"
@@ -17672,7 +17672,7 @@ PY
   [ "$bash_ver" = "$formula_ver" ]
   ship_regression_changelog_has "$root" "$_sr_ver"
   grep -q 'agtoosa_prompt_read' "$root/lib/config.sh"
-  ship_regression_changelog_has "$root" "$_sr_ver"
+  ship_regression_changelog_has "$root" "0.3.61"
 }
 
 @test "DEV-146 @regression @smoke SR-001: release pins and changelog exist" {
@@ -17765,7 +17765,7 @@ PY
   local doc="$BATS_TEST_DIRNAME/../docs/guides/readme-reference.md"
   [ -f "$doc" ]
   # Must be a concrete download instruction, not just the old "Roadmap" aside.
-  grep -q "releases/download/${VERSION}/agtoosa-runtime-" "$doc"
+  grep -q 'releases/download/${VERSION}/agtoosa-runtime-' "$doc"
   ! grep -q 'Roadmap:.*runtime-only.*release asset' "$doc"
 }
 

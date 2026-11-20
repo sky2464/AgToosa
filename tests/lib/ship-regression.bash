@@ -35,7 +35,7 @@ agtoosa_live_version() {
 ship_regression_changelog_has() {
   local root="$1"
   local ver="$2"
-  grep -q "## [${ver}]" "$root/CHANGELOG.md"
+  grep -qF "## [${ver}]" "$root/CHANGELOG.md"
 }
 
 ship_regression_ship_complete_mp() {
