@@ -2,7 +2,7 @@
 
 > **Story ID:** DEV-153
 > **Epic:** DEV-001 — Core Generator Engine / DEV-004 — Test Modernization
-> **Status:** 🟦 Todo
+> **Status:** 🟨 In Progress — Spec Approved (2026-11-20)
 > **Estimate:** M
 > **Clarity:** `ready`
 > **Spec created:** 2026-08-23

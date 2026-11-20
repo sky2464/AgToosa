@@ -15084,7 +15084,7 @@ EOF
 
 # -- DEV-127 ship regression (SR-001) --------------------------------
 
-@test "DEV-127 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-127 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-127"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -15111,7 +15111,7 @@ EOF
 
 # -- DEV-121 ship regression (SR-001) --------------------------------
 
-@test "DEV-121 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-121 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-121"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -15637,7 +15637,7 @@ EOF
 
 # -- DEV-120 ship regression (SR-001) --------------------------------
 
-@test "DEV-120 @regression @smoke SR-001: changelog and DEV-120 artifacts exist" {
+@test "DEV-120 @regression SR-001: changelog and DEV-120 artifacts exist" {
   local _sr_story="DEV-120"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -15653,7 +15653,7 @@ EOF
 
 # -- DEV-122 ship regression (SR-001) --------------------------------
 
-@test "DEV-122 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-122 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-122"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -15807,7 +15807,7 @@ EOF
 
 # -- DEV-123 ship regression (SR-001) --------------------------------
 
-@test "DEV-123 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-123 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-123"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -15981,7 +15981,7 @@ PY
 
 # -- DEV-124 ship regression (SR-001) --------------------------------
 
-@test "DEV-124 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-124 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-124"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -16092,7 +16092,7 @@ PY
 
 # -- DEV-128 ship regression (SR-001) ---------------------------------
 
-@test "DEV-128 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-128 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-128"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -16115,7 +16115,7 @@ PY
   grep -q '| ship |' "$root/docs/archived/evidence-DEV-128.md"
 }
 
-@test "DEV-129 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-129 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-129"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -16177,7 +16177,7 @@ PY
   [ "$status" -eq 0 ]
 }
 
-@test "DEV-130 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-130 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-130"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -16234,7 +16234,7 @@ PY
   grep -q "gh release create" "$advanced"
 }
 
-@test "DEV-131 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-131 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-131"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -16335,7 +16335,7 @@ PY
   [[ "$output" == "preserve|project-owned state preserved" ]]
 }
 
-@test "DEV-132 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-132 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-132"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -16427,7 +16427,7 @@ PY
   grep -q 'BRH-001' "$root/docs/archived/testplans/AgToosa_TestPlan-DEV-133.md"
 }
 
-@test "DEV-133 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-133 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-133"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -16462,7 +16462,7 @@ PY
   grep -q "releases/download/v${_hero_rel}/agtoosa-hero.gif" "$readme"
 }
 
-@test "DEV-134 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-134 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-134"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -16545,7 +16545,7 @@ PY
   grep -q 'not.*`/agtoosa-ship`' "$root/docs/AgToosa_Next.md"
 }
 
-@test "DEV-135 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-135 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-135"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -16566,7 +16566,7 @@ PY
   [ -f "$root/docs/archived/review-DEV-135.md" ]
 }
 
-@test "DEV-136 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-136 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-136"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -16587,7 +16587,7 @@ PY
   [ -f "$root/docs/archived/review-DEV-136.md" ]
 }
 
-@test "DEV-137 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-137 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-137"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -16608,7 +16608,7 @@ PY
   [ -f "$root/docs/archived/review-DEV-137.md" ]
 }
 
-@test "DEV-138 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-138 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-138"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -16629,7 +16629,7 @@ PY
   [ -f "$root/docs/archived/review-DEV-138.md" ]
 }
 
-@test "DEV-139 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-139 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-139"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -17075,7 +17075,7 @@ PY
   grep -q 'DEV-140' "$root/docs/adr/ADR-019-agtoosa-next-dispatcher.md"
 }
 
-@test "DEV-140 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-140 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-140"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -17194,7 +17194,7 @@ PY
   [ "$status" -eq 0 ]
 }
 
-@test "DEV-141 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-141 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-141"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -17298,7 +17298,7 @@ PY
   grep -q 'deploy-pages' "$wf"
 }
 
-@test "DEV-142 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-142 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-142"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -17427,7 +17427,7 @@ PY
   [ "$status" -eq 0 ]
 }
 
-@test "DEV-143 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-143 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-143"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -17439,7 +17439,7 @@ PY
   [ -f "$root/docs/archived/ship-check-DEV-143.md" ]
 }
 
-@test "DEV-144 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-144 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-144"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -17655,7 +17655,7 @@ PY
   [ "$status" -eq 0 ]
 }
 
-@test "DEV-147 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-147 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-147"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -17675,7 +17675,7 @@ PY
   ship_regression_changelog_has "$root" "0.3.61"
 }
 
-@test "DEV-146 @regression @smoke SR-001: release pins and changelog exist" {
+@test "DEV-146 @regression SR-001: release pins and changelog exist" {
   local _sr_story="DEV-146"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"
@@ -17696,7 +17696,7 @@ PY
   [ -f "$root/docs/archived/review-DEV-146.md" ]
 }
 
-@test "DEV-145 @regression @smoke SR-001: release includes bootstrap apply" {
+@test "DEV-145 @regression SR-001: release includes bootstrap apply" {
   local _sr_story="DEV-145"
   local _sr_ver; _sr_ver="$(ship_regression_ver "$_sr_story")"
   local _sr_next; _sr_next="$(ship_regression_next_ver "$_sr_story" 2>/dev/null || true)"

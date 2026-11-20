@@ -1,7 +1,7 @@
 # Master-Plan
 
 > **Source of truth for active work.** Completed work lives in `docs/archived/` — see Completed This Cycle for links.
-> **Last updated:** 2026-11-20 (DEV-152 Build complete via `/agtoosa-next`)
+> **Last updated:** 2026-11-20 (DEV-152 merged #187; DEV-153 spec approved — build started)
 
 ## Project Charter
 
@@ -9,7 +9,7 @@
 |-------|-------|
 | Product | `AgToosa` |
 | GitHub repo | `https://github.com/sky2464/AgToosa` |
-| Current phase | Build — DEV-152 (v0.3.63 milestone; DEV-153 spec pending approval) |
+| Current phase | Build — DEV-153 (v0.3.63 milestone; DEV-152 merged) |
 | Milestone | `v0.3.63` (shipped) |
 | Active cycle | DEV-152, DEV-153 |
 | Cycle state | Active |
@@ -23,8 +23,8 @@
 
 | ID | Title | Type | Estimate | Status | Tasks Done |
 |----|-------|------|----------|--------|-----------|
-| DEV-152 | Chore: Bats Cleanup & Version Pin Consolidation | Chore | S | 🟨 In Progress — Build Complete | 5/5 |
-| DEV-153 | Feature: Bats Tiering & Smoke-Set Extraction | Feature | M | 🟦 Todo — Spec Ready for Approval (human review pending) | 0/5 |
+| DEV-152 | Chore: Bats Cleanup & Version Pin Consolidation | Chore | S | ✅ Done — Merged to main (PR #187) | 5/5 |
+| DEV-153 | Feature: Bats Tiering & Smoke-Set Extraction | Feature | M | 🟨 In Progress — Spec Approved | 1/5 |
 | DEV-155 | Fix: Cross-Platform Fallback Guidance for Unrecognized `/agtoosa-*` Commands | Fix | S | ✅ Done — Merged to main (PR #145), awaiting next release | 6/6 |
 
 <!-- Archived to docs/archived/cycle-2026-08-01-release-5.3.60.md (DEV-147 + DEV-148 + DEV-149 v5.3.60) -->
@@ -154,7 +154,7 @@ Status key: ⬜ Backlog · 🟦 Todo · 🟨 In Progress · ✅ Done · 🚫 Blo
 
 ### DEV-153 — Bats Tiering & Smoke-Set Extraction
 
-- [ ] 1. Analyze current @smoke tags; categorize by speed — _AC-001_
+- [x] 1. Analyze current @smoke tags; categorize by speed — _AC-001_ (`scripts/analyze-bats-tags.sh`, test plan baseline)
 - [ ] 2. Re-tag smoke-set (trim 228 → 75 tests) — _AC-001_
 - [ ] 3. Create @regression tier (103+ ship wave tests) — _AC-002_
 - [ ] 4. Update CI workflows (PR: smoke; main/release: full/regression) — _AC-004_
