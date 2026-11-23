@@ -70,6 +70,43 @@ When adding bats coverage:
 
 Inline comments in `lib/*.sh` and `agtoosa.sh` should describe behavior in plain English, not legacy DEV-1XX tags.
 
+### Ship regression version matrix (DEV-152)
+
+Ship-wave bats (`SR-001`…`SR-00N`) assert that a story’s release left CHANGELOG, `docs/Master-Plan.md`, and review artifacts in the expected state. **Historical version numbers must not be hardcoded in `tests/agtoosa.bats`** — they live in `tests/fixtures/ship-regression-versions.tsv` and are read through `tests/lib/ship-regression.bash` (loaded at the top of the bats file).
+
+| TSV column | Meaning |
+|------------|---------|
+| `story_id` | Master-Plan story (e.g. `DEV-074`) or a pseudo id (`README-HERO`, `README-REF`, `RELEASE-031`, `DEV-074-PREV`) |
+| `ship_version` | Semver **without** a `v` prefix — the release that story shipped on |
+| `next_patch` | Optional expected “next patch” milestone recorded in Master-Plan after ship |
+
+Common helpers (see the library for the full set):
+
+| Helper | Role |
+|--------|------|
+| `ship_regression_ver STORY` | Read `ship_version` for a row |
+| `ship_regression_next_ver STORY` | Read `next_patch` when present |
+| `agtoosa_live_version [root]` | Current `AGTOOSA_VERSION` from `agtoosa.sh` (preferred for “live” pins) |
+| `ship_regression_readme_hero_release` / `ship_regression_readme_install_ref` | README badge vs `--ref` install pin rows |
+
+**Tags:** Ship-wave test titles include `@regression` (e.g. `DEV-074 @regression SR-001: …`). Those tests are **outside** the curated PR smoke filter in `scripts/test-fast.sh` and CI `validate`. Run them before release or when touching ship regression:
+
+```bash
+bats tests/agtoosa.bats -f '@regression'              # full ship-regression wave
+bats tests/agtoosa.bats -f 'DEV-152|BCP-'             # consolidation contract (BCP-001–BCP-005)
+bats tests/agtoosa.bats -f 'DEV-074 @regression'      # one story’s SR block
+```
+
+**BCP-001 constraint:** `tests/agtoosa.bats` may contain at most **10** literal `v0.3.N` / `v5.3.N` strings; prefer `ship_regression_ver` or `agtoosa_live_version` in new tests.
+
+**When shipping or adding SR coverage:**
+
+1. Add or update the story row in `tests/fixtures/ship-regression-versions.tsv` (tab-separated).
+2. Implement SR tests with the helpers above; name tests with `@regression`.
+3. If README hero badge or pinned `--ref vX.Y.Z` install snippets change, update `README-HERO` / `README-REF` in the TSV (bats still grep README via those rows — they are not always equal to `AGTOOSA_VERSION` on every patch).
+
+Archived design: `docs/archived/spec-DEV-152.md`, `docs/archived/testplans/AgToosa_TestPlan-DEV-152.md`.
+
 ## Repository Facts
 
 - AgToosa is a framework generator, not an SDK runtime.
@@ -254,7 +291,8 @@ Adding a new fix-command? It must emit the closure line on successful completion
 Do **not** advance MINOR for every small story. Update Project Charter **Milestone** to the **next PATCH** on the active MINOR (e.g. `v0.3.64 (next)` while shipped is `0.3.63`). Historical `5.x` examples in archived cycle docs predate the 0.x renumber (see **Historical version scheme** below).
 
 - Bump `AGTOOSA_VERSION` in `agtoosa.sh`, `agtoosa.ps1`, and `packaging/npm/package.json` to identical values (bats checks parity).
-- Update `README.md` version badge AND any pinned `--ref vX.Y.Z` install snippets — they drift silently across releases.
+- Update `README.md` version badge AND any pinned `--ref vX.Y.Z` install snippets — they drift silently across releases. When those pins change, update `README-HERO` / `README-REF` in `tests/fixtures/ship-regression-versions.tsv` (see **Ship regression version matrix**).
+- If the release adds or changes ship-wave SR tests, extend the TSV and run `bats tests/agtoosa.bats -f 'DEV-152|BCP-'` plus the affected `@regression` filter.
 - Publish `SHA256SUMS` for bootstrap tarballs; pin `packaging/homebrew/agtoosa.rb` to the tagged tarball + sha256.
 - **Publish the GitHub release** per [`.github/RELEASE.md`](../.github/RELEASE.md): after version bump commits land on `main`, run `git tag vX.Y.Z && git push origin vX.Y.Z`, then confirm `release-advanced.yml` is green and `gh release view vX.Y.Z` shows notes + assets. Do **not** log `Release X shipped` in Master-Plan until the tag is pushed and CI succeeds.
 - Run `bash agtoosa.sh --verify .` on this repo before shipping generator or template changes that touch lifecycle state.
@@ -281,6 +319,8 @@ PR CI (`.github/workflows/ci.yml` → job `validate`) and local maintainer loops
 | `bats tests/agtoosa.bats -f '@smoke (BCL\|PN\|WP2\|ACC\|NET\|PSP\|CORE)'` | ~20 tests covering BCL scenario corpus, Product Truth (PN), WP2, ACC, NET, PSP, and CORE invariants — same filter as CI step **Run generator smoke tests** |
 | `bats tests/agtoosa.bats -f '@smoke'` | Full smoke tag set (~230 tests); slower; use before release or when changing smoke tagging |
 | `bats tests/agtoosa.bats -f 'DEV-XXX'` | Story- or prefix-scoped regression |
+| `bats tests/agtoosa.bats -f '@regression'` | Ship-wave SR tests (version matrix via TSV; not in curated CI smoke) |
+| `bats tests/agtoosa.bats -f 'DEV-152\|BCP-'` | DEV-152 consolidation contract (pin count, `@regression` tagging, TSV lib) |
 
 **Pitfall:** `-f '@smoke'` alone is **not** what CI runs. CI and `scripts/test-fast.sh` use the **curated** regex above (interim #146; full `@smoke` tiering is DEV-153). Unscoped `-f '@smoke'` (~230 tests) is for pre-ship validation; day-to-day work should prefer `bash scripts/test-fast.sh` or the curated filter.
 
